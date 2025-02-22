@@ -1,0 +1,86 @@
+{% if link.links.size > 0 %}
+  {%- if type == 'classic' -%}
+    <div
+      class="sub-menu"
+    >
+      {%- if menu_mobile != blank -%}
+        <back-button
+          tabindex="0"
+          class="flex align-center w-full gap-15 px-30 hidden-1025 heading-color lh-normal menu-weight  pointer relative py-15 border-bottom hidden-no-js{% if section.settings.uppercase_first_level %} uppercase{% endif %}"
+        >
+          <svg class="icon-back min-w-custom" width="6" height="11" viewBox="0 0 6 11" fill="none">
+            <use href="#icon-back" />
+          </svg>
+          {{- link.title -}}
+          <close-button tabindex="0" class="touch-target heading-color flex-1 flex-end">
+            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
+              <use href="#icon-close"></use>
+            </svg>
+          </close-button>
+        </back-button>
+      {%- endif -%}
+  {%- endif -%}
+  <ul
+    class="menu list-unstyled dropdown-child flex-1 bg-white grid grid-cols word-break{% if type != 'classic' and sub != blank %} {{ sub }}{% endif %}{% if type == 'classic' %} px-20 px-1025-0 row-gap-10{% endif %}"
+    {% if column != blank %}
+      style="--col-number: 1; --col-tablet: 1;--col-desktop-small: 1;--col-desktop: {{ column }}"
+    {% endif %}
+    {% if level1_index != blank %}
+      id="HeaderMenu-MenuList-{{ level1_index }}"
+    {% endif %}
+  >
+    {% for child_link in link.links %}
+      <li class="menu-link level-1 border-bottom border-bottom-1025-0{% if child_link.links.size > 0 %} have-child{% endif %}">
+        {%- if child_link.links.size > 0 -%}
+          <details open>
+            <summary
+              class="remove-underline relative level-1 heading-color menu-weight flex align-center w-full py-16{% if type == 'classic' %} py-1025-5{% else %} py-1025-0{% endif %}{% if section.settings.uppercase_first_level %} uppercase{% endif %}{% if link.links.size > 0 %} pe-44 pe-1025-0{% endif %}{% if type != "classic" %} block{% endif %}"
+              aria-label="{{ child_link.title }}"
+            >
+        {%- else -%}
+          <a
+            class="remove-underline relative level-1 heading-color menu-weight flex align-center w-full py-16{% if section.settings.uppercase_first_level %} uppercase{% endif %}{% if type == 'classic' %} py-1025-5{% else %} py-1025-0{% endif %}{% if link.links.size > 0 %} pe-44 pe-1025-0{% endif %}{% if type != "classic" %} block{% endif %}"
+            aria-label="{{ child_link.title }}"
+            href="{{ child_link.url }}"
+          >
+        {%- endif -%}
+        <span class="submenu__item-tex link_text">
+          {{- child_link.title -}}
+        </span>
+        {% if child_link.links.size > 0 %}
+          <span class="open-children-toggle touch-target absolute inset-0 w-full h-full">
+            <span class="icon_plus-animation"> </span>
+          </span>
+        {% endif %}
+        {%- if child_link.links.size > 0 -%}
+          </summary>
+        {%- else -%}
+          </a>
+        {%- endif -%}
+        {% if child_link.links.size > 0 %}
+          <ul class="sub-children-menu list-unstyled opacity-lg-0 pb-20 pb-1025-0{% if type != 'classic' %} mt-1025-10{% endif %}">
+            {% for grandchild_link in child_link.links %}
+              <li class="menu-link">
+                <a
+                  class="remove-underline py-5 block transition"
+                  href="{{ grandchild_link.url }}"
+                  aria-label="{{ grandchild_link.title }}"
+                >
+                  <span class="submenu__item-tex link_text">
+                    {{- grandchild_link.title -}}
+                  </span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {%- if child_link.links.size > 0 -%}
+          </details>
+        {%- endif -%}
+      </li>
+    {% endfor %}
+  </ul>
+  {%- if type == 'classic' -%}
+    </div>
+  {%- endif -%}
+{% endif %}

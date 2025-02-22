@@ -1,16 +1,75 @@
 {%- liquid
   assign section_st = section.settings
+  assign menu = section_st.menu
+  assign transparent = section_st.transparent_on_desktop
+  assign transparent_mobile = section_st.transparent_on_mobile
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'full-width-gap'
+  endif
+  assign transparent_class = ''
+  if request.page_type == 'index' and transparent
+    assign transparent_class = ' transparent'
+    if transparent_mobile
+      assign transparent_class = transparent_class | append: ' transparent-mobile'
+    endif
+  endif
 -%}
-{% if section_st.sticky_header_type != 'none' -%}
-  <sticky-header
-    data-sticky-type="{{ section_st.sticky_header_type }}"
-    data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
-    class="header-wrapper block"
-  >
-{%- else %}
-  <div class="header-wrapper">
-{% endif %}
-{% if section_st.sticky_header_type != 'none' %}</sticky-header>{% else %}</div>{% endif %}
+<header
+  data-sticky-type="{{ section_st.sticky_header_type }}"
+  data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
+  class="header-wrapper{{ transparent_class }}"
+>
+  <div class="{{ section_width }}">
+    <div class="header__toggle-menu">
+      <button
+        class="menu-toggle-button"
+        aria-controls="MenuDrawer"
+        aria-label="{{ 'accessibility.toggle_menu' | t }}"
+      >
+        <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+          <path d="M1.00703 7.99665C0.725995 7.99665 0.483997 7.90285 0.28103 7.71524C0.0936768 7.512 0 7.26968 0 6.98828C0 6.7225 0.0936768 6.49581 0.28103 6.30821C0.483997 6.10497 0.725995 6.00335 1.00703 6.00335H18.993C19.274 6.00335 19.5082 6.10497 19.6956 6.30821C19.8985 6.49581 20 6.7225 20 6.98828C20 7.26968 19.8985 7.512 19.6956 7.71524C19.5082 7.90285 19.274 7.99665 18.993 7.99665H1.00703ZM1.00703 1.9933C0.725995 1.9933 0.483997 1.8995 0.28103 1.71189C0.0936768 1.50865 0 1.26633 0 0.984925C0 0.719151 0.0936768 0.492462 0.28103 0.304858C0.483997 0.101619 0.725995 0 1.00703 0H18.993C19.274 0 19.5082 0.101619 19.6956 0.304858C19.8985 0.492462 20 0.719151 20 0.984925C20 1.26633 19.8985 1.50865 19.6956 1.71189C19.5082 1.8995 19.274 1.9933 18.993 1.9933H1.00703ZM1.00703 14C0.725995 14 0.483997 13.9062 0.28103 13.7186C0.0936768 13.5154 0 13.273 0 12.9916C0 12.7259 0.0936768 12.4992 0.28103 12.3116C0.483997 12.1083 0.725995 12.0067 1.00703 12.0067H18.993C19.274 12.0067 19.5082 12.1083 19.6956 12.3116C19.8985 12.4992 20 12.7259 20 12.9916C20 13.273 19.8985 13.5154 19.6956 13.7186C19.5082 13.9062 19.274 14 18.993 14H1.00703Z" fill="currentColor"></path>
+        </svg>
+      </button>
+    </div>
+    {%- render 'logo', section_st: section_st -%}
+    {%- if menu != blank -%}
+      <nav class="header__menu">
+        <ul>
+          {%- for link in menu.links -%}
+            <li>
+              {%- if link.links.size > 0 -%}
+                <a
+                  class="menu__item"
+                  href="{{ link.url }}"
+                  aria-label="{{ link.title }}"
+                  ><span class="menu__item-text">{{ link.title }}</span></a
+                >
+              {%- else -%}
+                <details class="details-header-menu">
+                  <summary
+                    class="menu__item{% if section_st.uppercase_first_level %} uppercase{% endif %}"
+                    data-href="{{ link.url }}"
+                    aria-label="{{ link.title }}"
+                  ></summary>
+                  {%- render 'horizontal-menu',
+                    section_st: section_st,
+                    link: link,
+                    type: 'classic',
+                    level1_index: forloop.index
+                  -%}
+                </details>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+  </div>
+</header>
 {% schema %}
 {
   "name": "t:sections.header.name",
@@ -327,7 +386,7 @@
           "type": "text",
           "id": "promotion_button_label_1",
           "default": "Button label",
-          "label": "t:sections.all.content_setting.button_label.label",
+          "label": "t:sections.all.content_setting.button_label.label"
         },
         {
           "type": "url",
@@ -365,7 +424,7 @@
           "type": "text",
           "id": "promotion_button_label_2",
           "default": "Button label",
-          "label": "t:sections.all.content_setting.button_label.label",
+          "label": "t:sections.all.content_setting.button_label.label"
         },
         {
           "type": "url",
@@ -403,7 +462,7 @@
           "type": "text",
           "id": "promotion_button_label_3",
           "default": "Button label",
-          "label": "t:sections.all.content_setting.button_label.label",
+          "label": "t:sections.all.content_setting.button_label.label"
         },
         {
           "type": "url",
@@ -441,7 +500,7 @@
           "type": "text",
           "id": "promotion_button_label_4",
           "default": "Button label",
-          "label": "t:sections.all.content_setting.button_label.label",
+          "label": "t:sections.all.content_setting.button_label.label"
         },
         {
           "type": "url",
@@ -479,7 +538,7 @@
           "type": "text",
           "id": "promotion_button_label_5",
           "default": "Button label",
-          "label": "t:sections.all.content_setting.button_label.label",
+          "label": "t:sections.all.content_setting.button_label.label"
         },
         {
           "type": "url",
