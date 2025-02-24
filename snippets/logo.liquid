@@ -11,13 +11,10 @@
 {%- endif -%}
 <a
   href="{{ routes.root_url }}"
-  class="header__heading-link"
+  class="header__heading-link no-underline"
   aria-label="{{ shop.name }}"
 >
-  {%- if section_st.transparent_on_desktop
-    and logo_transparent != blank
-    and request.page_type == 'index'
-  -%}
+  {%- if section_st.transparent_on_desktop and logo_transparent != blank and request.page_type == 'index' -%}
     {%- liquid
       assign img_transparent_alt = logo_transparent.alt | default: shop.name | escape
       assign logo_height = logo_width | divided_by: logo_transparent.aspect_ratio

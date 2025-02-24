@@ -26,13 +26,13 @@
 <header
   data-sticky-type="{{ section_st.sticky_header_type }}"
   data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
-  class="header-wrapper{{ transparent_class }}"
+  class="header-wrapper {{ transparent_class }}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div class="header__toggle-menu">
+    <div class="header__inner grid logo-{{ section_st.logo_position }}">
       <button
-        class="menu-toggle-button"
+        class="btn-reset btn-toggle hidden-1025"
         aria-controls="MenuDrawer"
         aria-label="{{ 'accessibility.toggle_menu' | t }}"
       >
@@ -40,159 +40,187 @@
           <path d="M1.00703 7.99665C0.725995 7.99665 0.483997 7.90285 0.28103 7.71524C0.0936768 7.512 0 7.26968 0 6.98828C0 6.7225 0.0936768 6.49581 0.28103 6.30821C0.483997 6.10497 0.725995 6.00335 1.00703 6.00335H18.993C19.274 6.00335 19.5082 6.10497 19.6956 6.30821C19.8985 6.49581 20 6.7225 20 6.98828C20 7.26968 19.8985 7.512 19.6956 7.71524C19.5082 7.90285 19.274 7.99665 18.993 7.99665H1.00703ZM1.00703 1.9933C0.725995 1.9933 0.483997 1.8995 0.28103 1.71189C0.0936768 1.50865 0 1.26633 0 0.984925C0 0.719151 0.0936768 0.492462 0.28103 0.304858C0.483997 0.101619 0.725995 0 1.00703 0H18.993C19.274 0 19.5082 0.101619 19.6956 0.304858C19.8985 0.492462 20 0.719151 20 0.984925C20 1.26633 19.8985 1.50865 19.6956 1.71189C19.5082 1.8995 19.274 1.9933 18.993 1.9933H1.00703ZM1.00703 14C0.725995 14 0.483997 13.9062 0.28103 13.7186C0.0936768 13.5154 0 13.273 0 12.9916C0 12.7259 0.0936768 12.4992 0.28103 12.3116C0.483997 12.1083 0.725995 12.0067 1.00703 12.0067H18.993C19.274 12.0067 19.5082 12.1083 19.6956 12.3116C19.8985 12.4992 20 12.7259 20 12.9916C20 13.273 19.8985 13.5154 19.6956 13.7186C19.5082 13.9062 19.274 14 18.993 14H1.00703Z" fill="currentColor"></path>
         </svg>
       </button>
-    </div>
-    {%- render 'logo', section_st: section_st -%}
-    {%- if menu != blank -%}
-      <nav class="header__menu">
-        <ul>
-          {%- for link in menu.links -%}
-            {%- if section.blocks.size > 0 -%}
-              <li>
-                {%- liquid
-                  assign last_block = null
-                  assign mega_width = 100
-                  for block in section.blocks
-                    assign block_st = block.settings
-                    if block_st.text == link.title
-                      assign last_block = block
-                    endif
-                  endfor
-                -%}
-                {%- if last_block != null -%}
-                  {%- assign has_content = false -%}
-                  {%- case last_block.type -%}
-                    {%- when 'menu_mega' -%}
-                      {%- for i in (1..5) -%}
-                        {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}
+      {%- render 'logo', section_st: section_st -%}
+      {%- if menu != blank -%}
+        <nav class="header__menu">
+          <ul class="list-unstyled flex">
+            {%- for link in menu.links -%}
+              {%- if section.blocks.size > 0 -%}
+                <li>
+                  {%- liquid
+                    assign last_block = null
+                    assign mega_width = 100
+                    for block in section.blocks
+                      assign block_st = block.settings
+                      if block_st.text == link.title
+                        assign last_block = block
+                      endif
+                    endfor
+                  -%}
+                  {%- if last_block != null -%}
+                    {%- assign has_content = false -%}
+                    {%- case last_block.type -%}
+                      {%- when 'menu_mega' -%}
+                        {%- for i in (1..5) -%}
+                          {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}
+                          {%- liquid
+                            if last_block.settings[promotion] != blank
+                              assign has_content = true
+                            endif
+                          -%}
+                        {%- endfor -%}
+                      {%- when 'menu_product' -%}
+                      {%- else -%}
+                    {%- endcase -%}
+                    {%- if link.links.size > 0 or has_content -%}
+                      <details class="details-header-menu">
+                        <summary
+                          class="menu__item"
+                          data-href="{{ link.url }}"
+                          aria-label="{{ link.title }}"
+                        >
+                          {{ link.title }}
+                        </summary>
                         {%- liquid
-                          if last_block.settings[promotion] != blank
-                            assign has_content = true
+                          if has_content and link.links.size > 0
+                            assign mega_width = last_block.settings.mega_width
                           endif
                         -%}
-                      {%- endfor -%}
-                    {%- when 'menu_product' -%}
-                    {%- else -%}
-                  {%- endcase -%}
-                  {%- if link.links.size > 0 or has_content -%}
-                    <details class="details-header-menu">
-                      <summary
-                        class="menu__item"
-                        data-href="{{ link.url }}"
-                        aria-label="{{ link.title }}"
-                      >
-                        {{ link.title }}
-                      </summary>
-                      {%- liquid
-                        if has_content and link.links.size > 0
-                          assign mega_width = last_block.settings.mega_width
-                        endif
-                      -%}
-                      <div class="mega-menu" style="--col-mega-width: {{ mega_width }}%">
-                        {%- if link.links.size > 0 -%}
-                          <div
-                            class="menu-list"
-                            style="--col-desktop: {{ last_block.settings.menu_column }}"
-                          >
-                            {%- render 'horizontal-menu', section_st: section_st, menu_mega: true, link: link -%}
-                          </div>
-                        {%- endif -%}
-                        {%- if has_content -%}
-                          {%- case last_block.type -%}
-                            {%- when 'menu_mega' -%}
-                              <div
-                                class="mega-banner"
-                                style="--banner-column: {{ last_block.settings.banner_column }};"
-                              >
-                                {%- for i in (1..5) -%}
-                                  {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}
-                                  {%- capture promotion_subheading -%}promotion_subheading_{{ i }}{%- endcapture -%}
-                                  {%- capture promotion_heading -%}promotion_heading_{{ i }}{%- endcapture -%}
-                                  {%- capture promotion_description -%}promotion_description_{{ i }}{%- endcapture -%}
-                                  {%- capture promotion_button_label -%}promotion_button_label_{{ i }}{%- endcapture -%}
-                                  {%- capture promotion_button_link -%}promotion_button_link_{{ i }}{%- endcapture -%}
-                                  {%- if last_block.settings[promotion] != blank -%}
-                                    {%- liquid
-                                      assign image = last_block.settings[promotion]
-                                      assign subheading = last_block.settings[promotion_subheading]
-                                      assign heading = last_block.settings[promotion_heading]
-                                      assign description = last_block.settings[promotion_description]
-                                      assign button_label = last_block.settings[promotion_button_label]
-                                      assign banner_link = last_block.settings[promotion_button_link]
-                                      assign banner_default = 'accessibility.promotion_banner'
-                                      assign image_alt = image.alt | default: banner_default | escape
-                                    -%}
-                                    <div class="banner__item">
-                                      <div class="banner__inner position-{{ last_block.settings.content_position }}">
-                                        <div
-                                          class="banner__item-media"
-                                          style="--aspect-ratio: {{ image.aspect_ratio }};--point:{{ image.presentation.focal_point }};"
-                                        >
-                                          {% if banner_link != blank %}
-                                            <a href="{{ banner_link }}">
-                                          {%- endif -%}
-                                          {% render 'responsive-image', image: image, type: 'other', alt: image_alt %}
-                                          {% if banner_link != blank %}
-                                            </a>
+                        <div class="mega-menu" style="--col-mega-width: {{ mega_width }}%">
+                          {%- if link.links.size > 0 -%}
+                            <div
+                              class="menu-list"
+                              style="--col-desktop: {{ last_block.settings.menu_column }}"
+                            >
+                              {%- render 'horizontal-menu', section_st: section_st, menu_mega: true, link: link -%}
+                            </div>
+                          {%- endif -%}
+                          {%- if has_content -%}
+                            {%- case last_block.type -%}
+                              {%- when 'menu_mega' -%}
+                                <div
+                                  class="mega-banner"
+                                  style="--banner-column: {{ last_block.settings.banner_column }};"
+                                >
+                                  {%- for i in (1..5) -%}
+                                    {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}
+                                    {%- capture promotion_subheading -%}promotion_subheading_{{ i }}{%- endcapture -%}
+                                    {%- capture promotion_heading -%}promotion_heading_{{ i }}{%- endcapture -%}
+                                    {%- capture promotion_description -%}promotion_description_{{ i }}{%- endcapture -%}
+                                    {%- capture promotion_button_label -%}promotion_button_label_{{ i }}{%- endcapture -%}
+                                    {%- capture promotion_button_link -%}promotion_button_link_{{ i }}{%- endcapture -%}
+                                    {%- if last_block.settings[promotion] != blank -%}
+                                      {%- liquid
+                                        assign image = last_block.settings[promotion]
+                                        assign subheading = last_block.settings[promotion_subheading]
+                                        assign heading = last_block.settings[promotion_heading]
+                                        assign description = last_block.settings[promotion_description]
+                                        assign button_label = last_block.settings[promotion_button_label]
+                                        assign banner_link = last_block.settings[promotion_button_link]
+                                        assign banner_default = 'accessibility.promotion_banner'
+                                        assign image_alt = image.alt | default: banner_default | escape
+                                      -%}
+                                      <div class="banner__item">
+                                        <div class="banner__inner position-{{ last_block.settings.content_position }}">
+                                          <div
+                                            class="banner__item-media"
+                                            style="--aspect-ratio: {{ image.aspect_ratio }};--point:{{ image.presentation.focal_point }};"
+                                          >
+                                            {% if banner_link != blank %}
+                                              <a href="{{ banner_link }}">
+                                            {%- endif -%}
+                                            {% render 'responsive-image', image: image, type: 'other', alt: image_alt %}
+                                            {% if banner_link != blank %}
+                                              </a>
+                                            {%- endif -%}
+                                          </div>
+                                          {% if heading != blank
+                                            or subheading != blank
+                                            or description != blank
+                                            or button_label != blank
+                                          %}
+                                            <div class="banner__item-info alignment-{{ last_block.settings.content_alignment }}">
+                                              {% if subheading != blank %}
+                                                <div class="subheading">
+                                                  {{ subheading | escape }}
+                                                </div>
+                                              {% endif %}
+                                              {% if heading != blank %}
+                                                <h2 class="heading">
+                                                  {{ block_st.heading }}
+                                                </h2>
+                                              {% endif %}
+                                              {% if description != blank %}
+                                                <div class="description">
+                                                  {{ description }}
+                                                </div>
+                                              {% endif %}
+                                              {% if button_label != blank %}
+                                                <div class="button">
+                                                  <a
+                                                    {% if banner_link == blank %}
+                                                      role="link" aria-disabled="true"
+                                                    {% else %}
+                                                      href="{{ banner_link | default: "#" }}"
+                                                    {% endif %}
+                                                    aria-label="{{ button_label }}"
+                                                  >
+                                                    {{ button_label }}
+                                                  </a>
+                                                </div>
+                                              {% endif %}
+                                            </div>
                                           {%- endif -%}
                                         </div>
-                                        {% if heading != blank
-                                          or subheading != blank
-                                          or description != blank
-                                          or button_label != blank
-                                        %}
-                                          <div class="banner__item-info alignment-{{ last_block.settings.content_alignment }}">
-                                            {% if subheading != blank %}
-                                              <div class="subheading">
-                                                {{ subheading | escape }}
-                                              </div>
-                                            {% endif %}
-                                            {% if heading != blank %}
-                                              <h2 class="heading">
-                                                {{ block_st.heading }}
-                                              </h2>
-                                            {% endif %}
-                                            {% if description != blank %}
-                                              <div class="description">
-                                                {{ description }}
-                                              </div>
-                                            {% endif %}
-                                            {% if button_label != blank %}
-                                              <div class="button">
-                                                <a
-                                                  {% if banner_link == blank %}
-                                                    role="link" aria-disabled="true"
-                                                  {% else %}
-                                                    href="{{ banner_link | default: "#" }}"
-                                                  {% endif %}
-                                                  aria-label="{{ button_label }}"
-                                                >
-                                                  {{ button_label }}
-                                                </a>
-                                              </div>
-                                            {% endif %}
-                                          </div>
-                                        {%- endif -%}
                                       </div>
-                                    </div>
-                                  {%- endif -%}
-                                {%- endfor -%}
-                              </div>
-                            {%- when 'menu_product' -%}
-                            {%- when 'menu_collection' -%}
-                          {%- endcase -%}
-                        {%- endif -%}
-                      </div>
-                    </details>
+                                    {%- endif -%}
+                                  {%- endfor -%}
+                                </div>
+                              {%- when 'menu_product' -%}
+                              {%- when 'menu_collection' -%}
+                            {%- endcase -%}
+                          {%- endif -%}
+                        </div>
+                      </details>
+                    {%- else -%}
+                      <a
+                        class="menu__item no-underline"
+                        href="{{ link.url }}"
+                        aria-label="{{ link.title }}"
+                      >
+                        {{- link.title -}}
+                      </a>
+                    {%- endif -%}
                   {%- else -%}
-                    <a
-                      class="menu__item"
-                      href="{{ link.url }}"
-                      aria-label="{{ link.title }}"
-                    >
-                      {{- link.title -}}
-                    </a>
+                    {%- if link.links.size > 0 -%}
+                      <details class="details-header-menu">
+                        <summary
+                          class="menu__item"
+                          data-href="{{ link.url }}"
+                          aria-label="{{ link.title }}"
+                        >
+                          {{ link.title }}
+                        </summary>
+                        {%- render 'horizontal-menu',
+                          section_st: section_st,
+                          link: link,
+                          type: 'classic',
+                          level1_index: forloop.index
+                        -%}
+                      </details>
+                    {%- else -%}
+                      <a
+                        class="menu__item no-underline"
+                        href="{{ link.url }}"
+                        aria-label="{{ link.title }}"
+                      >
+                        {{- link.title -}}
+                      </a>
+                    {%- endif -%}
                   {%- endif -%}
-                {%- else -%}
+                </li>
+              {%- else -%}
+                <li>
                   {%- if link.links.size > 0 -%}
                     <details class="details-header-menu">
                       <summary
@@ -211,137 +239,109 @@
                     </details>
                   {%- else -%}
                     <a
-                      class="menu__item"
+                      class="menu__item no-underline"
                       href="{{ link.url }}"
                       aria-label="{{ link.title }}"
                     >
                       {{- link.title -}}
                     </a>
                   {%- endif -%}
-                {%- endif -%}
-              </li>
-            {%- else -%}
-              <li>
-                {%- if link.links.size > 0 -%}
-                  <details class="details-header-menu">
-                    <summary
-                      class="menu__item"
-                      data-href="{{ link.url }}"
-                      aria-label="{{ link.title }}"
-                    >
-                      {{ link.title }}
-                    </summary>
-                    {%- render 'horizontal-menu',
-                      section_st: section_st,
-                      link: link,
-                      type: 'classic',
-                      level1_index: forloop.index
-                    -%}
-                  </details>
-                {%- else -%}
-                  <a
-                    class="menu__item"
-                    href="{{ link.url }}"
-                    aria-label="{{ link.title }}"
-                  >
-                    {{- link.title -}}
-                  </a>
-                {%- endif -%}
-              </li>
-            {%- endif -%}
-          {%- endfor -%}
-        </ul>
-      </nav>
-    {%- endif -%}
-    {%- if section_st.show_account
-      or section_st.show_search
-      or section_st.show_cart
-      or section_st.show_language
-      or section_st.show_currency
-    -%}
-      <div class="header__action">
-        {% if section_st.show_language or section_st.show_currency %}
-          <div class="desktop-localization-wrapper">
-            {% if section_st.show_currency %}
-              {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
-            {% endif %}
-            {% if section_st.show_language %}
-              {%- render 'language-localization', localPosition: 'HeaderLanguage' -%}
-            {% endif %}
-          </div>
-        {% endif %}
-        {%- if section_st.show_search -%}
-          {% # theme-check-disable NestedSnippet %}
-          <a
-            href="{{ routes.search_url }}"
-            class="header__icon"
-            id="search-icon-bubble"
-            data-custom-class="{{ section_width }}"
-          >
-            <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
-              {{ 'general.search.search' | t }}
-            </span>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M9.587 17.4245C13.9153 17.4245 17.424 13.9157 17.424 9.58749C17.424 5.25923 13.9153 1.75049 9.587 1.75049C5.25874 1.75049 1.75 5.25923 1.75 9.58749C1.75 13.9157 5.25874 17.4245 9.587 17.4245Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M18.2495 18.2494L16.5996 16.5995" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="visually-hidden">{{ 'general.search.search' | t }}</span>
-          </a>
-          {% # theme-check-enable NestedSnippet %}
-        {%- endif -%}
-        {%- if section_st.show_account -%}
-          <a
-            href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-            class="header__icon"
-            aria-label="{{ 'customer.account_fallback' | t }}"
-          >
-            <svg class="icon-account" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19 18.4c-.985-1.657-2.322-3.017-3.89-3.96A9.929 9.929 0 0 0 10.009 13a9.923 9.923 0 0 0-5.106 1.42c-1.571.935-2.912 2.29-3.903 3.942"/><circle cx="10" cy="5.6" r="4" stroke="currentColor" stroke-width="1.5"/>
-            </svg>
-          </a>
-        {%- endif -%}
-        {%- if section_st.show_cart -%}
-          <a
-            href="{{ routes.cart_url }}"
-            class="header__icon"
-            id="cart-icon-bubble"
-          >
-            <span class="header__icon">
-              {%- if theme_st.cart_icon == 'shopping_bag' -%}
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M6.23303 1.75H13.76C17.3144 1.75 17.6699 3.44257 17.9103 5.50772L18.8512 13.4916C19.1544 16.1102 18.3598 18.2499 14.7009 18.2499H5.30261C1.63321 18.2499 0.838693 16.1102 1.15232 13.4916L2.0932 5.50772C2.32319 3.44257 2.67862 1.75 6.23303 1.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M7 5.68958C7 7.6897 8.67188 8.5 10 8.5C11.3281 8.5 13 7.6897 13 5.68958" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              {%- else -%}
-                <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
-                  <path d="M0.878906 1.75L5.5448 13.6018C5.69245 13.9758 6.05667 14.2219 6.46026 14.2219H17.6525C18.125 14.2219 18.5384 13.8774 18.6172 13.4049L20.1036 4.75232C20.2119 4.15185 19.7492 3.60061 19.1389 3.60061H6.42089" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-                  <path d="M16.7734 16.75C16.7734 17.5781 16.0263 18.25 15.1055 18.25C14.1846 18.25 13.4375 17.5781 13.4375 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-                  <path d="M10.5625 16.75C10.5625 17.5781 9.81539 18.25 8.89453 18.25C7.97367 18.25 7.22656 17.5781 7.22656 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-                </svg>
+                </li>
               {%- endif -%}
-            </span>
-            <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
-              {{ 'templates.cart.minicart' | t }}
-            </span>
-            <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
-            {%- if cart != empty -%}
-              <div class="cart-count rounded-50 bg-dark p-5 color-light fs-10 inline-flex content-center absolute">
-                {%- if cart.item_count < 100 -%}
-                  <span>{{ cart.item_count }}</span>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+      {%- if section_st.show_account
+        or section_st.show_search
+        or section_st.show_cart
+        or section_st.show_language
+        or section_st.show_currency
+      -%}
+        <div class="header__action flex flex-end">
+          {% if section_st.show_language or section_st.show_currency %}
+            <div class="desktop-localization-wrapper">
+              {% if section_st.show_currency %}
+                {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
+              {% endif %}
+              {% if section_st.show_language %}
+                {%- render 'language-localization', localPosition: 'HeaderLanguage' -%}
+              {% endif %}
+            </div>
+          {% endif %}
+          {%- if section_st.show_search -%}
+            {% # theme-check-disable NestedSnippet %}
+            <a
+              href="{{ routes.search_url }}"
+              class="header__icon"
+              id="search-icon-bubble"
+              data-custom-class="{{ section_width }}"
+            >
+              <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
+                {{ 'general.search.search' | t }}
+              </span>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M9.587 17.4245C13.9153 17.4245 17.424 13.9157 17.424 9.58749C17.424 5.25923 13.9153 1.75049 9.587 1.75049C5.25874 1.75049 1.75 5.25923 1.75 9.58749C1.75 13.9157 5.25874 17.4245 9.587 17.4245Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18.2495 18.2494L16.5996 16.5995" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="visually-hidden">{{ 'general.search.search' | t }}</span>
+            </a>
+            {% # theme-check-enable NestedSnippet %}
+          {%- endif -%}
+          {%- if section_st.show_account -%}
+            <a
+              href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+              class="header__icon"
+              aria-label="{{ 'customer.account_fallback' | t }}"
+            >
+              <svg class="icon-account" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19 18.4c-.985-1.657-2.322-3.017-3.89-3.96A9.929 9.929 0 0 0 10.009 13a9.923 9.923 0 0 0-5.106 1.42c-1.571.935-2.912 2.29-3.903 3.942"/><circle cx="10" cy="5.6" r="4" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </a>
+          {%- endif -%}
+          {%- if section_st.show_cart -%}
+            <a
+              href="{{ routes.cart_url }}"
+              class="header__icon"
+              id="cart-icon-bubble"
+            >
+              <span class="header__icon">
+                {%- if theme_st.cart_icon == 'shopping_bag' -%}
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M6.23303 1.75H13.76C17.3144 1.75 17.6699 3.44257 17.9103 5.50772L18.8512 13.4916C19.1544 16.1102 18.3598 18.2499 14.7009 18.2499H5.30261C1.63321 18.2499 0.838693 16.1102 1.15232 13.4916L2.0932 5.50772C2.32319 3.44257 2.67862 1.75 6.23303 1.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 5.68958C7 7.6897 8.67188 8.5 10 8.5C11.3281 8.5 13 7.6897 13 5.68958" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
                 {%- else -%}
-                  <span aria-hidden="true">~</span>
+                  <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                    <path d="M0.878906 1.75L5.5448 13.6018C5.69245 13.9758 6.05667 14.2219 6.46026 14.2219H17.6525C18.125 14.2219 18.5384 13.8774 18.6172 13.4049L20.1036 4.75232C20.2119 4.15185 19.7492 3.60061 19.1389 3.60061H6.42089" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                    <path d="M16.7734 16.75C16.7734 17.5781 16.0263 18.25 15.1055 18.25C14.1846 18.25 13.4375 17.5781 13.4375 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                    <path d="M10.5625 16.75C10.5625 17.5781 9.81539 18.25 8.89453 18.25C7.97367 18.25 7.22656 17.5781 7.22656 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                  </svg>
                 {%- endif -%}
-                <span class="visually-hidden">{{ 'templates.cart.cart_count' | t: count: cart.item_count }}</span>
-              </div>
-            {%- else -%}
-              <div class="cart-count rounded-50 bg-dark p-5 color-light fs-10 inline-flex content-center absolute">
-                <span aria-hidden="true">0</span>
-              </div>
-            {%- endif -%}
-          </a>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
+              </span>
+              <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
+                {{ 'templates.cart.minicart' | t }}
+              </span>
+              <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+              {%- if cart != empty -%}
+                <div class="cart-count rounded-50 bg-dark p-5 color-light fs-10 inline-flex content-center absolute">
+                  {%- if cart.item_count < 100 -%}
+                    <span>{{ cart.item_count }}</span>
+                  {%- else -%}
+                    <span aria-hidden="true">~</span>
+                  {%- endif -%}
+                  <span class="visually-hidden">{{ 'templates.cart.cart_count' | t: count: cart.item_count }}</span>
+                </div>
+              {%- else -%}
+                <div class="cart-count rounded-50 bg-dark p-5 color-light fs-10 inline-flex content-center absolute">
+                  <span aria-hidden="true">0</span>
+                </div>
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
   </div>
   <menu-drawer id="Menu-Drawer" class="menu-drawer modal">
     <div class="modal-overlay"></div>
@@ -504,7 +504,7 @@
                       </details>
                     {%- else -%}
                       <a
-                        class="menu__item"
+                        class="menu__item no-underline"
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
@@ -531,7 +531,7 @@
                       </details>
                     {%- else -%}
                       <a
-                        class="menu__item"
+                        class="menu__item no-underline"
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
@@ -561,7 +561,7 @@
                     </details>
                   {%- else -%}
                     <a
-                      class="menu__item"
+                      class="menu__item no-underline"
                       href="{{ link.url }}"
                       aria-label="{{ link.title }}"
                     >
