@@ -1,0 +1,61 @@
+{%- liquid
+  assign the_settings = settings
+  assign logo_img = the_settings.logo
+  assign logo_transparent = the_settings.logo_on_transparent
+  assign logo_width = the_settings.logo_width
+-%}
+{%- if request.page_type == 'index' -%}
+  <h1 class="header__logo">
+{%- else -%}
+  <div class="header__logo">
+{%- endif -%}
+<a
+  href="{{ routes.root_url }}"
+  class="header__heading-link"
+  aria-label="{{ shop.name }}"
+>
+  {%- if section_st.transparent_on_desktop
+    and logo_transparent != blank
+    and request.page_type == 'index'
+  -%}
+    {%- liquid
+      assign img_transparent_alt = logo_transparent.alt | default: shop.name | escape
+      assign logo_height = logo_width | divided_by: logo_transparent.aspect_ratio
+    -%}
+    {{
+      logo_transparent
+      | image_url: width: logo_width
+      | image_tag:
+        class: 'header__heading-logo transparent-logo',
+        widths: '50, 100, 150, 200, 250, 300, 400, 500, 600',
+        height: logo_height,
+        width: logo_width,
+        alt: img_transparent_alt,
+        sizes: '100vw'
+    }}
+  {%- endif -%}
+  {%- if logo_img != blank -%}
+    {%- assign img_alt = logo_img.alt | default: shop.name | escape -%}
+    {%- assign logo_height = logo_width | divided_by: logo_img.aspect_ratio -%}
+    {%- liquid
+      assign logo_class = 'header__heading-logo logo-normal'
+      if request.page_type == 'index' and transparent and section_st.logo_transparent != blank
+        assign logo_class = logo_class | append: ' hidden'
+      endif
+    -%}
+    {{
+      logo_img
+      | image_url: width: logo_width
+      | image_tag:
+        class: logo_class,
+        widths: '50, 100, 150, 200, 250, 300, 400, 500, 600',
+        height: logo_height,
+        width: logo_width,
+        alt: img_alt,
+        sizes: '100vw'
+    }}
+  {%- else -%}
+    <span class="site-logo {{ logo_class }}">{{ shop.name }}</span>
+  {%- endif -%}
+</a>
+{%- if request.page_type == 'index' -%}</h1>{%- else -%}</div>{%- endif -%}
