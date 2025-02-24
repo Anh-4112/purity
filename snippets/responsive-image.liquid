@@ -62,10 +62,10 @@
   endif
 
   if disable_lazy_loading == true
-    assign image_lazy_loading = false;
+    assign image_lazy_loading = false
   endif
   if image_lazy_loading != blank
-    assign widths = widths | split: ", "
+    assign widths = widths | split: ', '
   endif
 
   assign image_size = 10
@@ -102,41 +102,43 @@
   {% if image_mobile != blank %}
     <picture class="image-picture {{ class }}">
       {% if lazy_load == true %}
-      {%- liquid
-        assign srcset_mobile = image_mobile | image_url: width: image_mobile.width | image_tag: widths: '720, 480, 360', alt: image_alt | split: 'srcset="' | last
-        unless srcset_mobile contains 'src='
-          echo '<source media="(max-width: 767px)" srcset="' | append: srcset_mobile
-        endunless
-        if image == blank
-          assign image = image_mobile
-        endif
-      -%}
+        {%- liquid
+          assign srcset_mobile = image_mobile | image_url: width: image_mobile.width | image_tag: widths: '720, 480, 360', alt: image_alt | split: 'srcset="' | last
+          unless srcset_mobile contains 'src='
+            echo '<source media="(max-width: 767px)" srcset="' | append: srcset_mobile
+          endunless
+          if image == blank
+            assign image = image_mobile
+          endif
+        -%}
       {% else %}
-      {%- liquid
-        assign srcset_mobile = image_mobile | image_url: width: image_mobile.width | image_tag: widths: '720, 480, 360', alt: image_alt | split: 'srcset="' | last
-        unless srcset_mobile contains 'src='
-          echo '<source media="(max-width: 767px)" data-srcset="' | append: srcset_mobile
-        endunless
-        if image == blank
-          assign image = image_mobile
-        endif
-      -%}
+        {%- liquid
+          assign srcset_mobile = image_mobile | image_url: width: image_mobile.width | image_tag: widths: '720, 480, 360', alt: image_alt | split: 'srcset="' | last
+          unless srcset_mobile contains 'src='
+            echo '<source media="(max-width: 767px)" data-srcset="' | append: srcset_mobile
+          endunless
+          if image == blank
+            assign image = image_mobile
+          endif
+        -%}
       {% endif %}
       <img
         {% if load_first_screen == true %}
           srcset="
-          {% for width in widths %}
-            {% assign width_format = width | times: 1 %}
-            {%- if image.width >= width_format -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- endif -%}
-          {% endfor %}"
+            {% for width in widths %}
+              {% assign width_format = width | times: 1 %}
+              {%- if image.width >= width_format -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- endif -%}
+            {% endfor %}
+          "
           loading="eager"
           fetchpriority="high"
         {% else %}
           data-srcset="
-          {% for width in widths %}
-            {% assign width_format = width | times: 1 %}
-            {%- if image.width >= width_format -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- endif -%}
-          {% endfor %}"
+            {% for width in widths %}
+              {% assign width_format = width | times: 1 %}
+              {%- if image.width >= width_format -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- endif -%}
+            {% endfor %}
+          "
           loading="lazy"
         {% endif %}
         sizes="{{ sizes }}"
@@ -186,7 +188,7 @@
         image
         | image_url: width: image.width
         | image_tag:
-          loading: "lazy",
+          loading: 'lazy',
           width: image.width,
           height: image.height,
           sizes: sizes,
@@ -200,7 +202,7 @@
       image
       | image_url: width: image.width
       | image_tag:
-        loading: "lazy",
+        loading: 'lazy',
         width: width,
         height: image.height,
         sizes: sizes,
