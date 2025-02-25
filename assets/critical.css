@@ -1,39 +1,5 @@
 /* Reset */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-html {
-  font-size: 62.5%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  height: 100%;
-  vertical-align: baseline;
-  overflow-x: hidden;
-  box-sizing: border-box;
-  -webkit-text-size-adjust: 100%;
-}
-body {
-  min-height: 100vh;
-  margin: 0;
-  font-family: var(--body-font);
-  font-size: var(--body-font-size, 1.4rem);
-  font-style: var(--body-font-style);
-  font-weight: var(--body-weight);
-  line-height: var(
-    --body-line-height,
-    calc(1 + 0.71428 / var(--body-font-scale))
-  );
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-size-adjust: 100%;
-  text-rendering: optimizeSpeed;
-  overflow-wrap: break-word;
-  display: flex;
-  flex-direction: column;
-}
+
 :where(.container, .fluid_container) {
   padding-left: var(--bs-gutter-x, 1.5rem);
   padding-right: var(--bs-gutter-x, 1.5rem);
@@ -83,8 +49,7 @@ summary::-webkit-details-marker {
   line-height: calc(1 + 0.21 / var(--heading-font-scale));
   word-break: break-word;
   font-size: calc(var(--heading-font-scale) * var(--size));
-  margin-block-start: calc(var(--size) * 0.7);
-  margin-block-end: calc(var(--size) * 0.7);
+  margin: 0;
 }
 :where(h1, .h1),
 .h1-size {
@@ -141,17 +106,13 @@ video {
   }
 }
 :is(a, a strong) {
+  color: inherit;
   transition: var(--transition);
+  text-decoration: inherit;
 }
-:where(a:not(:hover)) {
-  color: var(--color-link);
-}
+
 .primary-color {
   color: var(--color-primary);
-}
-:where(a:hover),
-:where(a:hover strong) {
-  color: var(--color-link-hover);
 }
 .bg-white {
   background-color: var(--color-white);
@@ -187,6 +148,10 @@ video {
 }
 .shadow {
   box-shadow: var(--shadow, 0px 30px 0px rgba(0, 0, 0, 0.08));
+}
+.wh-40 {
+  width: 4rem;
+  height: 4rem;
 }
 :where(.btn-primary, .btn-outline, .btn, .btn-white),
 :is(
@@ -371,63 +336,6 @@ strong {
 .flex-nowrap {
   flex-wrap: nowrap;
 }
-.gap-0 {
-  gap: 0;
-}
-:where(.gap) {
-  gap: var(--col-gap, 0);
-}
-.gap-custom {
-  gap: calc(var(--gap, 15) * 1px);
-}
-.gap-custom-big {
-  gap: clamp(
-    1.5rem,
-    calc(
-      (var(--gap) * 0.64px) + (var(--gap) - (var(--gap) * 0.64)) *
-        var(--responsive-rate)
-    ),
-    calc(var(--gap) * 1px)
-  );
-}
-:where(.gap-5) {
-  gap: 0.5rem;
-}
-:where(.gap-10) {
-  --col-gap: 1rem;
-  gap: var(--col-gap);
-}
-:where(.gap-15) {
-  --col-gap: 1.5rem;
-  gap: var(--col-gap);
-}
-:where(.gap-20) {
-  --col-gap: 2rem;
-  gap: var(--col-gap);
-}
-:where(.gap-30) {
-  --col-gap: 3rem;
-  gap: var(--col-gap);
-}
-:where(.gap-40) {
-  gap: 4rem;
-}
-.row-gap {
-  row-gap: var(--col-gap, 0);
-}
-.row-gap-5 {
-  row-gap: 5px;
-}
-.row-gap-custom {
-  row-gap: var(--row-gap, 0);
-}
-
-.row-gap-30 {
-  row-gap: 3rem;
-}
-.rounded-0 {
-  border-radius: 0;
-}
 :where(.rounded) {
   border-radius: var(--rounded-radius);
   overflow: hidden;
@@ -470,6 +378,10 @@ strong {
 .flex-col-custom > *:not(.swiper-wrapper) {
   padding-left: calc(var(--gap, var(--bs-gutter-x)) * 0.5);
   padding-right: calc(var(--gap, var(--bs-gutter-x)) * 0.5);
+}
+
+.text-center {
+  text-align: center;
 }
 .object-fit-cover {
   object-fit: cover;
@@ -540,27 +452,14 @@ strong {
 .section.pb-min {
   padding-bottom: calc(var(--section-pb) * 1px);
 }
-#MainContent {
-  flex-grow: 1;
-}
-#MainContent section:not(:last-child) .section:not(.remove_spacing) {
-  margin-bottom: calc(var(--section-spacing) - var(--gutter-x, 0px));
-}
 .section-spacing-top {
   margin-top: calc(var(--section-spacing) - var(--gutter-x, 0px));
 }
-
-.bls_header {
-  --menu-item-padding: 1.5rem;
-  --transition: 0.3s;
-}
 .header__logo {
   grid-area: logo;
-  min-width: var(--logo-mobile-width);
 }
 .header__heading-logo {
-  width: var(--logo-mobile-width);
-  min-width: var(--logo-mobile-width);
+  width: var(--logo-width);
 }
 .header__menu {
   grid-area: menu;
@@ -573,6 +472,7 @@ strong {
       0,
       1fr
     );
+  gap: 2.5rem;
 }
 body:not(.template-index) .transparent-logo {
   display: none;
@@ -589,7 +489,9 @@ body:not(.template-index) .transparent-logo {
   top: 5px;
   line-height: 1;
 }
-
+.list-menu {
+  gap: 2rem 4rem;
+}
 @media screen and (min-width: 1025px) {
   .logo-left {
     grid-template-areas: "logo menu icon";
@@ -605,10 +507,6 @@ body:not(.template-index) .transparent-logo {
   .logo-center {
     grid-template-areas: "menu logo icon";
     grid-template-columns: 1fr minmax(auto, 300px) 1fr;
-  }
-  .header__heading-logo {
-    min-width: var(--logo-width);
-    width: var(--logo-width);
   }
 }
 @media only screen and (min-width: 1025px) and (max-width: 1054px) {

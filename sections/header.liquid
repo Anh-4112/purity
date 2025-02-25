@@ -30,7 +30,7 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div class="header__inner grid logo-{{ section_st.logo_position }}">
+    <div class="header__inner grid logo-{{ section_st.logo_position }} align-center">
       <button
         class="btn-reset btn-toggle hidden-1025"
         aria-controls="MenuDrawer"
@@ -43,7 +43,7 @@
       {%- render 'logo', section_st: section_st -%}
       {%- if menu != blank -%}
         <nav class="header__menu">
-          <ul class="list-unstyled flex">
+          <ul class="list-menu list-unstyled flex">
             {%- for link in menu.links -%}
               {%- if section.blocks.size > 0 -%}
                 <li>
@@ -258,7 +258,7 @@
         or section_st.show_language
         or section_st.show_currency
       -%}
-        <div class="header__action flex flex-end">
+        <div class="header__action flex flex-end align-center">
           {% if section_st.show_language or section_st.show_currency %}
             <div class="desktop-localization-wrapper">
               {% if section_st.show_currency %}
@@ -273,7 +273,7 @@
             {% # theme-check-disable NestedSnippet %}
             <a
               href="{{ routes.search_url }}"
-              class="header__icon"
+              class="header__icon wh-40 flex content-center"
               id="search-icon-bubble"
               data-custom-class="{{ section_width }}"
             >
@@ -291,7 +291,7 @@
           {%- if section_st.show_account -%}
             <a
               href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-              class="header__icon"
+              class="header__icon wh-40 flex content-center"
               aria-label="{{ 'customer.account_fallback' | t }}"
             >
               <svg class="icon-account" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -302,29 +302,27 @@
           {%- if section_st.show_cart -%}
             <a
               href="{{ routes.cart_url }}"
-              class="header__icon"
+              class="header__icon wh-40 flex content-center"
               id="cart-icon-bubble"
             >
-              <span class="header__icon">
-                {%- if theme_st.cart_icon == 'shopping_bag' -%}
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M6.23303 1.75H13.76C17.3144 1.75 17.6699 3.44257 17.9103 5.50772L18.8512 13.4916C19.1544 16.1102 18.3598 18.2499 14.7009 18.2499H5.30261C1.63321 18.2499 0.838693 16.1102 1.15232 13.4916L2.0932 5.50772C2.32319 3.44257 2.67862 1.75 6.23303 1.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 5.68958C7 7.6897 8.67188 8.5 10 8.5C11.3281 8.5 13 7.6897 13 5.68958" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                {%- else -%}
-                  <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
-                    <path d="M0.878906 1.75L5.5448 13.6018C5.69245 13.9758 6.05667 14.2219 6.46026 14.2219H17.6525C18.125 14.2219 18.5384 13.8774 18.6172 13.4049L20.1036 4.75232C20.2119 4.15185 19.7492 3.60061 19.1389 3.60061H6.42089" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-                    <path d="M16.7734 16.75C16.7734 17.5781 16.0263 18.25 15.1055 18.25C14.1846 18.25 13.4375 17.5781 13.4375 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-                    <path d="M10.5625 16.75C10.5625 17.5781 9.81539 18.25 8.89453 18.25C7.97367 18.25 7.22656 17.5781 7.22656 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-                  </svg>
-                {%- endif -%}
-              </span>
+              {%- if theme_st.cart_icon == 'shopping_bag' -%}
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M6.23303 1.75H13.76C17.3144 1.75 17.6699 3.44257 17.9103 5.50772L18.8512 13.4916C19.1544 16.1102 18.3598 18.2499 14.7009 18.2499H5.30261C1.63321 18.2499 0.838693 16.1102 1.15232 13.4916L2.0932 5.50772C2.32319 3.44257 2.67862 1.75 6.23303 1.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M7 5.68958C7 7.6897 8.67188 8.5 10 8.5C11.3281 8.5 13 7.6897 13 5.68958" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              {%- else -%}
+                <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                  <path d="M0.878906 1.75L5.5448 13.6018C5.69245 13.9758 6.05667 14.2219 6.46026 14.2219H17.6525C18.125 14.2219 18.5384 13.8774 18.6172 13.4049L20.1036 4.75232C20.2119 4.15185 19.7492 3.60061 19.1389 3.60061H6.42089" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                  <path d="M16.7734 16.75C16.7734 17.5781 16.0263 18.25 15.1055 18.25C14.1846 18.25 13.4375 17.5781 13.4375 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                  <path d="M10.5625 16.75C10.5625 17.5781 9.81539 18.25 8.89453 18.25C7.97367 18.25 7.22656 17.5781 7.22656 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                </svg>
+              {%- endif -%}
               <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
                 {{ 'templates.cart.minicart' | t }}
               </span>
               <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
               {%- if cart != empty -%}
-                <div class="cart-count rounded-50 bg-dark p-5 color-light fs-10 inline-flex content-center absolute">
+                <div class="cart-count rounded-50 inline-flex content-center absolute">
                   {%- if cart.item_count < 100 -%}
                     <span>{{ cart.item_count }}</span>
                   {%- else -%}
@@ -333,7 +331,7 @@
                   <span class="visually-hidden">{{ 'templates.cart.cart_count' | t: count: cart.item_count }}</span>
                 </div>
               {%- else -%}
-                <div class="cart-count rounded-50 bg-dark p-5 color-light fs-10 inline-flex content-center absolute">
+                <div class="cart-count hidden">
                   <span aria-hidden="true">0</span>
                 </div>
               {%- endif -%}
@@ -343,7 +341,7 @@
       {%- endif -%}
     </div>
   </div>
-  <menu-drawer id="Menu-Drawer" class="menu-drawer modal">
+  <menu-drawer id="Menu-Drawer" class="menu-drawer modal hidden-1025">
     <div class="modal-overlay"></div>
     <div class="modal-inner">
       <div class="drawer-header">

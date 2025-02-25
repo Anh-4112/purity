@@ -5,13 +5,13 @@
   assign logo_width = the_settings.logo_width
 -%}
 {%- if request.page_type == 'index' -%}
-  <h1 class="header__logo">
+  <h1 class="header__logo{% if section_st.logo_position =='center' %} text-center{% endif %}">
 {%- else -%}
-  <div class="header__logo">
+  <div class="header__logo{% if section_st.logo_position =='center' %} text-center{% endif %}">
 {%- endif -%}
 <a
   href="{{ routes.root_url }}"
-  class="header__heading-link no-underline"
+  class="header__heading-link no-underline h3"
   aria-label="{{ shop.name }}"
 >
   {%- if section_st.transparent_on_desktop and logo_transparent != blank and request.page_type == 'index' -%}
