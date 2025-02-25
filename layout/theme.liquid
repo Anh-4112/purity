@@ -24,8 +24,20 @@
 
     {% render 'meta-tags' %}
 
+    <script defer="defer" src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "theme": "{{ 'theme.js' | asset_url }}",
+          "module_slide": "{{ 'module_slide.js' | asset_url }}"
+        }
+      }
+    </script>
+    <script type="module" src="{{ 'theme.js' | asset_url }}"></script>
     {{ content_for_header }}
+    {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
     {{ 'critical.css' | asset_url | stylesheet_tag }}
+
     <script>
       if (Shopify.designMode) {
         document.documentElement.classList.add('shopify-design-mode');
