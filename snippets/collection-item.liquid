@@ -1,0 +1,160 @@
+{% comment %}
+  Renders a collection card
+
+  Accepts:
+  - card_collection: {Object} collection Liquid object (optional)
+  - section: {String} Section (required)
+  - block: {String} block (required)
+  - class: {String} custom class (optional)
+
+  Usage:
+  {% render 'card-collection', section: section, block: block %}
+{% endcomment %}
+{% liquid
+  assign section_st = section.settings
+  assign block_st = block.settings
+  assign image_ratio = section_st.image_ratio
+  assign show_product_count = section_st.show_product_count
+  assign content_position = section_st.content_position
+  assign content_alignment = section_st.content_alignment
+  assign collection_image = block_st.collection_image
+  assign collection_title = block_st.collection_title
+  assign ratio = '3/4'
+  if image_ratio != 'adapt'
+    case image_ratio
+      when 'square'
+        assign ratio = '1/1'
+      when 'landscape'
+        assign ratio = '4/3'
+      when 'portrait'
+        assign ratio = '3/4'
+    endcase
+  else
+    if collection_image != blank
+      assign ratio = collection_image.aspect_ratio
+    elsif card_collection.featured_image
+      assign ratio = card_collection.featured_image.aspect_ratio
+    endif
+  endif
+
+  if collection_image.alt != blank
+    assign alt_text = collection_image.alt
+  elsif card_collection.featured_image.alt != blank
+    assign alt_text = card_collection.featured_image.alt
+  elsif collection_title != blank
+    assign alt_text = collection_title
+  elsif card_collection.title != blank
+    assign alt_text = card_collection.title
+  else
+    assign alt_text = 'Collection Title'
+  endif
+%}
+{% if card_collection %}
+  <div
+    class="collection-item__wrapper {% if content_position == 'overlay' %} position-{{ content_position }}{% endif %}"
+  >
+    <div class="collection-item__media">
+      <a
+        class="block collection-item__media--ratio"
+        draggable="false"
+        href="{{ card_collection.url }}"
+        aria-label="{{- card_collection.title -}}"
+        style="--aspect-ratio: {{ ratio }};"
+      >
+        {% assign collection_media = card_collection.featured_image %}
+        {%- if collection_media -%}
+          {% if collection_image != blank %}
+            {% render 'responsive-image',
+              type: 'other',
+              image: collection_image,
+              image_alt: alt_text,
+              container: container,
+              column: column,
+              column_mobile: column_mobile,
+              padding: padding
+            %}
+          {% else %}
+            {% render 'responsive-image',
+              type: 'other',
+              image: collection_media,
+              image_alt: alt_text,
+              container: container,
+              column: column,
+              column_mobile: column_mobile,
+              padding: padding,
+              class: 'rounded'
+            %}
+          {% endif %}
+        {%- else -%}
+          {% render 'placeholder-render', type: 'collection' %}
+        {%- endif -%}
+      </a>
+    </div>
+    <div
+      class="collection-information text-{{ content_alignment }}{% if content_position == 'overlay' %} absolute{% endif %}"
+      {% if content_position == 'overlay' %}
+        style="--heading-color: {{ section_st.overlay_image_color }};--text-color: {{ section_st.overlay_image_color }}"
+      {% endif %}
+    >
+      {%- if block_st.collection_title == blank -%}
+        {%- if block_st.collection != blank -%}
+          {%- liquid
+            assign p_url = ''
+            if block_st.collection != blank
+              assign p_url = block_st.collection.url
+            endif
+          -%}
+          <a
+            class="remove-underline"
+            {% if p_url == blank %}
+              role="link" aria-disabled="true"
+            {% else %}
+              href="{{ p_url }}"
+            {% endif %}
+            aria-label="{{ block_st.collection.title }}"
+          >
+            {{ block_st.collection.title }}
+          </a>
+        {%- else -%}
+          <a
+            class="remove-underline"
+            role="link"
+            aria-disabled="true"
+            aria-label="{{ 'sections.collection_list.sample_name' | t }}"
+          >
+            {{ 'sections.collection_list.sample_name' | t }}
+          </a>
+        {%- endif -%}
+      {%- else -%}
+        {%- liquid
+          assign p_url = ''
+          if block_st.collection != blank
+            assign p_url = block_st.collection.url
+          endif
+        -%}
+        <a
+          class="remove-underline"
+          {% if p_url == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ p_url }}"
+          {% endif %}
+          aria-label="{{ block_st.collection_title }}"
+        >
+          {{ block_st.collection_title }}
+        </a>
+      {%- endif -%}
+      {%- if show_product_count -%}
+        <div class="product-count">
+          {%- assign pc = block_st.collection.products_count | default: 0 -%}
+          {{ pc }}
+          {%- if pc < 2 -%}
+            {{ 'sections.collection_list.item' | t }}
+          {%- else -%}
+            {{ 'sections.collection_list.items' | t }}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{% endif %}
