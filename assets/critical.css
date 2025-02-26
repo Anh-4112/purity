@@ -105,7 +105,7 @@ video {
     );
   }
 }
-:is(a, a strong) {
+:where(a, a strong) {
   color: inherit;
   transition: var(--transition);
   text-decoration: inherit;
@@ -330,7 +330,7 @@ strong {
 :where(.flex-column-reverse) {
   flex-direction: column-reverse;
 }
-:where(.flex-wrap) {
+:where(.wrap) {
   flex-wrap: wrap;
 }
 .flex-nowrap {
@@ -352,9 +352,7 @@ strong {
   row-gap: var(--gap);
   gap: var(--gap);
 }
-.row-gap-20 {
-  row-gap: 2rem;
-}
+
 .flex-cols > * {
   flex: 0 0 auto;
   width: calc((100% - var(--gap, 0px) * calc(var(--col) - 1)) / var(--col));
@@ -379,7 +377,13 @@ strong {
   padding-left: calc(var(--gap, var(--bs-gutter-x)) * 0.5);
   padding-right: calc(var(--gap, var(--bs-gutter-x)) * 0.5);
 }
-
+:where(.gap-5) {
+  gap: 0.5rem;
+}
+:where(.gap-15) {
+  --col-gap: 1.5rem;
+  gap: var(--col-gap);
+}
 .text-center {
   text-align: center;
 }
@@ -468,10 +472,7 @@ strong {
   grid-area: icon;
 }
 .header__inner {
-  grid-template: "menu logo icon" / minmax(0, 1fr) fit-content(60%) minmax(
-      0,
-      1fr
-    );
+  grid-template: var(--header-grid-template);
   gap: 2.5rem;
 }
 body:not(.template-index) .transparent-logo {
@@ -491,37 +492,4 @@ body:not(.template-index) .transparent-logo {
 }
 .list-menu {
   gap: 2rem 4rem;
-}
-@media screen and (min-width: 1025px) {
-  .logo-left {
-    grid-template-areas: "logo menu icon";
-    grid-template-columns: minmax(0, 1fr) fit-content(70%) minmax(0, 1fr);
-  }
-  .logo-menu-left {
-    grid-template-areas: "logo menu icon";
-    grid-template-columns: auto 1fr auto;
-  }
-  .logo-menu-left .header__menu {
-    padding-inline-start: 7rem;
-  }
-  .logo-center {
-    grid-template-areas: "menu logo icon";
-    grid-template-columns: 1fr minmax(auto, 300px) 1fr;
-  }
-}
-@media only screen and (min-width: 1025px) and (max-width: 1054px) {
-  .logo-left.grid-reset-mobile {
-    grid-template-columns: auto 1fr auto;
-  }
-  .header__logo {
-    max-width: var(--logo-mobile-width);
-  }
-}
-@media screen and (max-width: 1024px) {
-  .header__logo {
-    max-width: var(--logo-mobile-width);
-  }
-}
-.header__action .use-heading-font .disclosure__button {
-  font-family: var(--heading-font-family);
 }
