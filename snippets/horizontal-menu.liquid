@@ -1,46 +1,36 @@
 {% if link.links.size > 0 %}
   {%- if type == 'classic' -%}
     <div
-      class="submenu"
+      class="submenu bg-white z-1 transition{% if menu_mobile == blank %} absolute{% else %} sub-mb absolute inset-0 invisible drawer drawer-right{% endif %}"
     >
       {%- if menu_mobile != blank -%}
         <div class="submenu-header">
-          <back-button tabindex="0">
+          <back-button tabindex="0" class="flex gap-5 align-center px-20 py-5">
             <svg class="icon-back min-w-custom" width="6" height="11" viewBox="0 0 6 11" fill="none">
               <use href="#icon-back" />
             </svg>
             {{- link.title -}}
           </back-button>
-          <close-button tabindex="0">
-            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-              <use href="#icon-close"></use>
-            </svg>
-          </close-button>
         </div>
       {%- endif -%}
   {%- else -%}
     {%- if menu_mobile != blank -%}
       <div class="submenu-header">
-        <back-button tabindex="0">
+        <back-button tabindex="0" class="flex gap-5 align-center px-20 py-5">
           <svg class="icon-back min-w-custom" width="6" height="11" viewBox="0 0 6 11" fill="none">
             <use href="#icon-back" />
           </svg>
           {{- link.title -}}
         </back-button>
-        <close-button tabindex="0">
-          <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-            <use href="#icon-close"></use>
-          </svg>
-        </close-button>
       </div>
     {%- endif -%}
   {%- endif -%}
   <ul
-    class="menu{% if type != 'classic' %} sub-menu-mega{% endif %}"
+    class="menu list-unstyled{% if type != 'classic' %} sub-menu-mega flex wrap flex-cols gap-30{% endif %}"
   >
     {%- if menu_mobile != blank -%}
       <li class="menu-link active">
-        <a href="{{ link.url }}">{{ link.title }}</a>
+        <a class="py-5" href="{{ link.url }}">{{ link.title }}</a>
       </li>
     {%- endif -%}
     {% for child_link in link.links %}
@@ -48,26 +38,26 @@
         {%- if child_link.links.size > 0 -%}
           {% if menu_mega != blank %}
             <a
-              class="menu__item"
+              class="menu__item py-5 heading-style"
               href="{{ link.url }}"
               aria-label="{{ grandchild_link.title }}"
             >
               {{- child_link.title -}}
           {%- else -%}
-            <details>
+            <details open>
               <summary
-                class="menu__item"
+                class="menu__item py-5"
                 data-href="{{ link.url }}"
                 aria-label="{{ child_link.title }}"
               >
                 {{- child_link.title -}}
               </summary>
           {% endif %}
-          <ul class="sub-children-menu">
+          <ul class="sub-children-menu list-unstyled">
             {% for grandchild_link in child_link.links %}
               <li class="menu-link">
                 <a
-                  class="menu__item"
+                  class="menu__item py-5"
                   href="{{ grandchild_link.url }}"
                   aria-label="{{ grandchild_link.title }}"
                 >
@@ -84,7 +74,7 @@
 
         {%- else -%}
           <a
-            class="menu__item"
+            class="menu__item py-5"
             aria-label="{{ child_link.title }}"
             href="{{ child_link.url }}"
           >
@@ -100,17 +90,12 @@
 {%- else -%}
   {%- if menu_mobile != blank -%}
     <div class="submenu-header">
-      <back-button tabindex="0">
+      <back-button tabindex="0" class="flex gap-5 align-center px-20 py-5">
         <svg class="icon-back min-w-custom" width="6" height="11" viewBox="0 0 6 11" fill="none">
           <use href="#icon-back" />
         </svg>
         {{- link.title -}}
       </back-button>
-      <close-button tabindex="0">
-        <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-          <use href="#icon-close"></use>
-        </svg>
-      </close-button>
     </div>
   {%- endif -%}
 {% endif %}

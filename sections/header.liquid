@@ -22,6 +22,11 @@
 {%- capture style -%}
   --section-padding-top: {{ section_st.padding_top }}px; --section-padding-bottom: {{ section_st.padding_bottom }}px;
   {% if transparent %}--transparent-color: {{ section_st.header_text_icon_transparent }};{% endif %}
+  {% if section_st.logo_position == 'center' %}
+    --header-grid-template: 'menu logo icon' / minmax(0, 1fr) auto minmax(0, 1fr);
+  {% else %}
+    --header-grid-template: 'logo menu icon' / minmax(0, 1fr) fit-content(60%) minmax(0,1fr);
+  {% endif %}
 {%- endcapture -%}
 <header
   data-sticky-type="{{ section_st.sticky_header_type }}"
@@ -42,8 +47,25 @@
       </button>
       {%- render 'logo', section_st: section_st -%}
       {%- if menu != blank -%}
-        <nav class="header__menu">
-          <ul class="list-menu list-unstyled flex">
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          role="presentation"
+          class="hidden"
+          hidden
+        >
+          <symbol id="icon-arrow-down">
+            <path fill="currentColor" d="M.174.845A.424.424 0 0 1 0 .505C0 .363.058.241.174.14A.587.587 0 0 1 .575 0c.16 0 .295.047.402.14L4 2.793 7.023.14A.587.587 0 0 1 7.425 0c.16 0 .294.047.401.14A.468.468 0 0 1 8 .505a.424.424 0 0 1-.174.34L4.401 3.849A.56.56 0 0 1 4 4a.56.56 0 0 1-.401-.152L.174.845Z"/>
+          </symbol>
+          <symbol id="icon-back" viewBox="0 0 6 11" fill="none">
+            <path d="M4.7193 10.7605C4.85965 10.9202 5.03509 11 5.24561 11C5.45614 11 5.63158 10.9202 5.77193 10.7605C5.92398 10.6131 6 10.435 6 10.2261C6 10.005 5.92398 9.81463 5.77193 9.65494L1.80702 5.49079L5.77193 1.32663C5.92398 1.17923 6 1.00112 6 0.792295C6 0.571189 5.92398 0.380793 5.77193 0.221106C5.63158 0.0737018 5.45614 0 5.24561 0C5.03509 0 4.85965 0.0737018 4.7193 0.221106L0.22807 4.93802C0.0760236 5.09771 0 5.28811 0 5.50921C0 5.71803 0.0760236 5.89615 0.22807 6.04355L4.7193 10.7605Z" fill="currentColor"/>
+          </symbol>
+          <symbol id="icon-next" viewBox="0 0 6 11" fill="none">
+            <path fill="currentColor" d="M1.278 10.721a.688.688 0 0 1-.528.229.688.688 0 0 1-.527-.229.669.669 0 0 1-.229-.51c0-.21.077-.392.229-.544l3.973-3.973L.223 1.721a.669.669 0 0 1-.229-.51c0-.21.077-.392.229-.544C.363.527.539.456.75.456c.211 0 .387.07.528.21l4.5 4.5a.744.744 0 0 1 .228.546c0 .199-.076.369-.228.51l-4.5 4.5Z"/>
+          </symbol>
+        </svg>
+        <nav class="header__menu hidden block-1025">
+          <ul class="list-menu list-unstyled flex wrap">
             {%- for link in menu.links -%}
               {%- if section.blocks.size > 0 -%}
                 <li>
@@ -80,106 +102,118 @@
                           aria-label="{{ link.title }}"
                         >
                           {{ link.title }}
+                          <svg class="icon icon-down transition-short" width="10" height="6">
+                            <use href="#icon-arrow-down" />
+                          </svg>
                         </summary>
                         {%- liquid
                           if has_content and link.links.size > 0
                             assign mega_width = last_block.settings.mega_width
                           endif
                         -%}
-                        <div class="mega-menu" style="--col-mega-width: {{ mega_width }}%">
-                          {%- if link.links.size > 0 -%}
-                            <div
-                              class="menu-list"
-                              style="--col-desktop: {{ last_block.settings.menu_column }}"
-                            >
-                              {%- render 'horizontal-menu', section_st: section_st, menu_mega: true, link: link -%}
-                            </div>
-                          {%- endif -%}
-                          {%- if has_content -%}
-                            {%- case last_block.type -%}
-                              {%- when 'menu_mega' -%}
-                                <div
-                                  class="mega-banner"
-                                  style="--banner-column: {{ last_block.settings.banner_column }};"
-                                >
-                                  {%- for i in (1..5) -%}
-                                    {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}
-                                    {%- capture promotion_subheading -%}promotion_subheading_{{ i }}{%- endcapture -%}
-                                    {%- capture promotion_heading -%}promotion_heading_{{ i }}{%- endcapture -%}
-                                    {%- capture promotion_description -%}promotion_description_{{ i }}{%- endcapture -%}
-                                    {%- capture promotion_button_label -%}promotion_button_label_{{ i }}{%- endcapture -%}
-                                    {%- capture promotion_button_link -%}promotion_button_link_{{ i }}{%- endcapture -%}
-                                    {%- if last_block.settings[promotion] != blank -%}
-                                      {%- liquid
-                                        assign image = last_block.settings[promotion]
-                                        assign subheading = last_block.settings[promotion_subheading]
-                                        assign heading = last_block.settings[promotion_heading]
-                                        assign description = last_block.settings[promotion_description]
-                                        assign button_label = last_block.settings[promotion_button_label]
-                                        assign banner_link = last_block.settings[promotion_button_link]
-                                        assign banner_default = 'accessibility.promotion_banner'
-                                        assign image_alt = image.alt | default: banner_default | escape
-                                      -%}
-                                      <div class="banner__item">
-                                        <div class="banner__inner position-{{ last_block.settings.content_position }}">
-                                          <div
-                                            class="banner__item-media"
-                                            style="--aspect-ratio: {{ image.aspect_ratio }};--point:{{ image.presentation.focal_point }};"
-                                          >
-                                            {% if banner_link != blank %}
-                                              <a href="{{ banner_link }}">
-                                            {%- endif -%}
-                                            {% render 'responsive-image', image: image, type: 'other', alt: image_alt %}
-                                            {% if banner_link != blank %}
-                                              </a>
+                        <div
+                          class="mega-menu absolute inset-x-0 z-1 bg-white"
+                          style="--col-mega-width: {{ mega_width }}%"
+                        >
+                          <div class="container flex gap-medium">
+                            {%- if link.links.size > 0 -%}
+                              <div
+                                class="menu-list flex-1"
+                                style="--col-desktop: {{ last_block.settings.menu_column }}"
+                              >
+                                {%- render 'horizontal-menu', section_st: section_st, menu_mega: true, link: link -%}
+                              </div>
+                            {%- endif -%}
+                            {%- if has_content -%}
+                              {%- case last_block.type -%}
+                                {%- when 'menu_mega' -%}
+                                  <div
+                                    class="mega-banner"
+                                    style="--banner-column: {{ last_block.settings.banner_column }};"
+                                  >
+                                    {%- for i in (1..5) -%}
+                                      {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}
+                                      {%- capture promotion_subheading -%}promotion_subheading_{{ i }}{%- endcapture -%}
+                                      {%- capture promotion_heading -%}promotion_heading_{{ i }}{%- endcapture -%}
+                                      {%- capture promotion_description -%}promotion_description_{{ i }}{%- endcapture -%}
+                                      {%- capture promotion_button_label -%}promotion_button_label_{{ i }}{%- endcapture -%}
+                                      {%- capture promotion_button_link -%}promotion_button_link_{{ i }}{%- endcapture -%}
+                                      {%- if last_block.settings[promotion] != blank -%}
+                                        {%- liquid
+                                          assign image = last_block.settings[promotion]
+                                          assign subheading = last_block.settings[promotion_subheading]
+                                          assign heading = last_block.settings[promotion_heading]
+                                          assign description = last_block.settings[promotion_description]
+                                          assign button_label = last_block.settings[promotion_button_label]
+                                          assign banner_link = last_block.settings[promotion_button_link]
+                                          assign banner_default = 'accessibility.promotion_banner'
+                                          assign image_alt = image.alt | default: banner_default | escape
+                                        -%}
+                                        <div class="banner__item">
+                                          <div class="banner__inner position-{{ last_block.settings.content_position }}">
+                                            <div
+                                              class="banner__item-media"
+                                              style="--aspect-ratio: {{ image.aspect_ratio }};--point:{{ image.presentation.focal_point }};"
+                                            >
+                                              {% if banner_link != blank %}
+                                                <a href="{{ banner_link }}">
+                                              {%- endif -%}
+                                              {% render 'responsive-image',
+                                                image: image,
+                                                type: 'other',
+                                                alt: image_alt
+                                              %}
+                                              {% if banner_link != blank %}
+                                                </a>
+                                              {%- endif -%}
+                                            </div>
+                                            {% if heading != blank
+                                              or subheading != blank
+                                              or description != blank
+                                              or button_label != blank
+                                            %}
+                                              <div class="banner__item-info alignment-{{ last_block.settings.content_alignment }}">
+                                                {% if subheading != blank %}
+                                                  <div class="subheading">
+                                                    {{ subheading | escape }}
+                                                  </div>
+                                                {% endif %}
+                                                {% if heading != blank %}
+                                                  <h2 class="heading">
+                                                    {{ block_st.heading }}
+                                                  </h2>
+                                                {% endif %}
+                                                {% if description != blank %}
+                                                  <div class="description">
+                                                    {{ description }}
+                                                  </div>
+                                                {% endif %}
+                                                {% if button_label != blank %}
+                                                  <div class="button">
+                                                    <a
+                                                      {% if banner_link == blank %}
+                                                        role="link" aria-disabled="true"
+                                                      {% else %}
+                                                        href="{{ banner_link | default: "#" }}"
+                                                      {% endif %}
+                                                      aria-label="{{ button_label }}"
+                                                    >
+                                                      {{ button_label }}
+                                                    </a>
+                                                  </div>
+                                                {% endif %}
+                                              </div>
                                             {%- endif -%}
                                           </div>
-                                          {% if heading != blank
-                                            or subheading != blank
-                                            or description != blank
-                                            or button_label != blank
-                                          %}
-                                            <div class="banner__item-info alignment-{{ last_block.settings.content_alignment }}">
-                                              {% if subheading != blank %}
-                                                <div class="subheading">
-                                                  {{ subheading | escape }}
-                                                </div>
-                                              {% endif %}
-                                              {% if heading != blank %}
-                                                <h2 class="heading">
-                                                  {{ block_st.heading }}
-                                                </h2>
-                                              {% endif %}
-                                              {% if description != blank %}
-                                                <div class="description">
-                                                  {{ description }}
-                                                </div>
-                                              {% endif %}
-                                              {% if button_label != blank %}
-                                                <div class="button">
-                                                  <a
-                                                    {% if banner_link == blank %}
-                                                      role="link" aria-disabled="true"
-                                                    {% else %}
-                                                      href="{{ banner_link | default: "#" }}"
-                                                    {% endif %}
-                                                    aria-label="{{ button_label }}"
-                                                  >
-                                                    {{ button_label }}
-                                                  </a>
-                                                </div>
-                                              {% endif %}
-                                            </div>
-                                          {%- endif -%}
                                         </div>
-                                      </div>
-                                    {%- endif -%}
-                                  {%- endfor -%}
-                                </div>
-                              {%- when 'menu_product' -%}
-                              {%- when 'menu_collection' -%}
-                            {%- endcase -%}
-                          {%- endif -%}
+                                      {%- endif -%}
+                                    {%- endfor -%}
+                                  </div>
+                                {%- when 'menu_product' -%}
+                                {%- when 'menu_collection' -%}
+                              {%- endcase -%}
+                            {%- endif -%}
+                          </div>
                         </div>
                       </details>
                     {%- else -%}
@@ -200,6 +234,9 @@
                           aria-label="{{ link.title }}"
                         >
                           {{ link.title }}
+                          <svg class="icon icon-down transition-short" width="10" height="6">
+                            <use href="#icon-arrow-down" />
+                          </svg>
                         </summary>
                         {%- render 'horizontal-menu',
                           section_st: section_st,
@@ -224,11 +261,14 @@
                   {%- if link.links.size > 0 -%}
                     <details class="details-header-menu">
                       <summary
-                        class="menu__item"
+                        class="menu__item flex align-center gap-5 justify-between"
                         data-href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
                         {{ link.title }}
+                        <svg class="icon icon-down transition-short" width="10" height="6">
+                          <use href="#icon-arrow-down" />
+                        </svg>
                       </summary>
                       {%- render 'horizontal-menu',
                         section_st: section_st,
@@ -260,7 +300,7 @@
       -%}
         <div class="header__action flex flex-end align-center">
           {% if section_st.show_language or section_st.show_currency %}
-            <div class="desktop-localization-wrapper">
+            <div class="desktop-localization-wrapper flex wrap gap-15">
               {% if section_st.show_currency %}
                 {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
               {% endif %}
@@ -341,16 +381,14 @@
       {%- endif -%}
     </div>
   </div>
-  <menu-drawer id="Menu-Drawer" class="menu-drawer modal hidden-1025">
+  <menu-drawer id="Menu-Drawer" class="drawer drawer-left transition-drawer hidden-1025 fixed inset-y-0 flex">
     <div class="modal-overlay"></div>
-    <div class="modal-inner">
-      <div class="drawer-header">
-        <button aria-label="Close">
-          <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-            <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
-          </svg>
-        </button>
-      </div>
+    <div class="modal-inner relative">
+      <button class="btn-reset wh-40 inline-flex content-center absolute top-0 right-0" aria-label="Close">
+        <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
+          <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
+        </svg>
+      </button>
       <div class="drawer__body">
         {%- if section_st.banner_image != blank -%}
           <div class="banner gap-small tablet-1 mb-1 row-as-column-gap">
@@ -364,12 +402,12 @@
               {% endif %}
               class="header-banner"
             >
-              {% render 'responsive-image', image: image, type: 'other', image_alt: image_alt %}
+              {% render 'responsive-image', image: section_st.banner_image, type: 'other', image_alt: image_alt %}
             </a>
           </div>
         {%- endif -%}
-        <nav class="header__menu">
-          <ul>
+        <nav class="header__menu-mobile">
+          <ul class="list-unstyled">
             {%- for link in menu.links -%}
               {%- if section.blocks.size > 0 -%}
                 <li>
@@ -401,11 +439,20 @@
                     {%- if link.links.size > 0 or has_content -%}
                       <details class="details-header-menu">
                         <summary
-                          class="menu__item"
+                          class="menu__item flex align-center gap-5 justify-between justify-between"
                           data-href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
                           {{ link.title }}
+                          {% if settings.rtl %}
+                            <svg class="icon-down block hidden-1025" width="6" height="11">
+                              <use href="#icon-back" />
+                            </svg>
+                          {% else %}
+                            <svg class="icon-down block hidden-1025" width="6" height="11">
+                              <use href="#icon-next" />
+                            </svg>
+                          {% endif %}
                         </summary>
                         <div class="submenu">
                           {%- render 'horizontal-menu', section_st: section_st, menu_mobile: true, link: link -%}
@@ -502,7 +549,7 @@
                       </details>
                     {%- else -%}
                       <a
-                        class="menu__item no-underline"
+                        class="menu__item no-underline py-5"
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
@@ -513,11 +560,20 @@
                     {%- if link.links.size > 0 -%}
                       <details class="details-header-menu">
                         <summary
-                          class="menu__item"
+                          class="menu__item flex align-center gap-5 justify-between py-5"
                           data-href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
                           {{ link.title }}
+                          {% if settings.rtl %}
+                            <svg class="icon-down block hidden-1025" width="6" height="11">
+                              <use href="#icon-back" />
+                            </svg>
+                          {% else %}
+                            <svg class="icon-down block hidden-1025" width="6" height="11">
+                              <use href="#icon-next" />
+                            </svg>
+                          {% endif %}
                         </summary>
                         {%- render 'horizontal-menu',
                           section_st: section_st,
@@ -529,7 +585,7 @@
                       </details>
                     {%- else -%}
                       <a
-                        class="menu__item no-underline"
+                        class="menu__item no-underline py-5"
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
@@ -543,11 +599,20 @@
                   {%- if link.links.size > 0 -%}
                     <details class="details-header-menu">
                       <summary
-                        class="menu__item"
+                        class="menu__item flex align-center gap-5 justify-between py-5"
                         data-href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
                         {{ link.title }}
+                        {% if settings.rtl %}
+                          <svg class="icon-down block hidden-1025" width="6" height="11">
+                            <use href="#icon-back" />
+                          </svg>
+                        {% else %}
+                          <svg class="icon-down block hidden-1025" width="6" height="11">
+                            <use href="#icon-next" />
+                          </svg>
+                        {% endif %}
                       </summary>
                       {%- render 'horizontal-menu',
                         section_st: section_st,
@@ -559,7 +624,7 @@
                     </details>
                   {%- else -%}
                     <a
-                      class="menu__item no-underline"
+                      class="menu__item no-underline py-5"
                       href="{{ link.url }}"
                       aria-label="{{ link.title }}"
                     >
@@ -697,7 +762,8 @@
     {
       "type": "collection_list",
       "id": "banner_collection",
-      "label": "t:sections.header.settings.menu_mobile.collections.label"
+      "label": "t:sections.header.settings.menu_mobile.collections.label",
+      "limit": 5
     },
     {
       "type": "header",
