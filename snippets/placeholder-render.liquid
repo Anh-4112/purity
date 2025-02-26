@@ -1,0 +1,66 @@
+{%- liquid
+  assign cls_placeholder = 'img-placeholder rounded'
+  if class != blank
+    assign cls_placeholder = class
+  endif
+  assign img_type = 'product'
+  if type != blank
+    assign img_type = type
+  endif
+
+  if index
+    case img_type
+      when 'product'
+        if index > 4
+          assign remainder = index | modulo: 4
+          assign remainder = remainder | plus: 1
+          echo 'product-apparel-' | append: remainder | placeholder_svg_tag: cls_placeholder
+        else
+          echo 'product-apparel-' | append: index | placeholder_svg_tag: cls_placeholder
+        endif
+      when 'collection'
+        if index > 4
+          assign remainder = index | modulo: 4
+          assign remainder = remainder | plus: 1
+          echo 'collection-apparel-' | append: remainder | placeholder_svg_tag: cls_placeholder
+        else
+          echo 'collection-apparel-' | append: index | placeholder_svg_tag: cls_placeholder
+        endif
+      when 'blog'
+        if index > 3
+          assign remainder = index | modulo: 3
+          assign remainder = remainder | plus: 1
+          echo 'blog-apparel-' | append: remainder | placeholder_svg_tag: cls_placeholder
+        else
+          echo 'blog-apparel-' | append: index | placeholder_svg_tag: cls_placeholder
+        endif
+      else
+        if index > 2
+          assign remainder = index | modulo: 2
+          assign remainder = remainder | plus: 1
+          echo 'lifestyle-' | append: remainder | placeholder_svg_tag: cls_placeholder
+        else
+          echo 'lifestyle-' | append: index | placeholder_svg_tag: cls_placeholder
+        endif
+    endcase
+  else
+    case img_type
+      when 'product'
+        assign diff = 4 | minus: 0
+        assign random_number = 'now' | date: '%N' | modulo: diff | plus: 1
+        echo 'product-apparel-' | append: random_number | placeholder_svg_tag: cls_placeholder
+      when 'collection'
+        assign diff = 4 | minus: 1
+        assign random_number = 'now' | date: '%N' | modulo: diff | plus: 1
+        echo 'collection-apparel-' | append: random_number | placeholder_svg_tag: cls_placeholder
+      when 'blog'
+        assign diff = 3 | minus: 1
+        assign random_number = 'now' | date: '%N' | modulo: diff | plus: 1
+        echo 'blog-apparel-' | append: random_number | placeholder_svg_tag: cls_placeholder
+      else
+        assign diff = 2 | minus: 1
+        assign random_number = 'now' | date: '%N' | modulo: diff | plus: 1
+        echo 'lifestyle-' | append: random_number | placeholder_svg_tag: cls_placeholder
+    endcase
+  endif
+-%}
