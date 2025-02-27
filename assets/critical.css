@@ -10,6 +10,13 @@
   padding-left: var(--bs-gutter-x);
   padding-right: var(--bs-gutter-x);
 }
+.flex,
+.swiper.flex {
+  display: flex;
+}
+:where(.hidden, [hidden], .no-js .no-js-hidden) {
+  display: none;
+}
 @media (min-width: 1025px) {
   .container {
     width: 90%;
@@ -19,6 +26,9 @@
   }
   .hidden-1025 {
     display: none;
+  }
+  .block-1025 {
+    display: block;
   }
 }
 @media (min-width: 1200px) {
@@ -31,6 +41,10 @@
   .stretch_width {
     --bs-gutter-x: 3rem;
   }
+}
+.content-center {
+  justify-content: center;
+  align-items: center;
 }
 summary {
   cursor: pointer;
@@ -88,6 +102,35 @@ summary::-webkit-details-marker {
 video {
   max-width: 100%;
 }
+[style*="--aspect-ratio"] {
+  position: relative;
+  overflow: hidden;
+}
+[style*="--aspect-ratio"]:before {
+  content: "";
+  height: 0;
+  display: block;
+  padding-top: calc(100% / (0 + var(--aspect-ratio, 16 / 9)));
+  pointer-events: none;
+}
+@media screen and (max-width: 767.98px) {
+  [style*="--aspect-ratio-mb"]::before {
+    padding-top: calc(100% / (0 + var(--aspect-ratio-mb, 16 / 9)));
+  }
+}
+:where([style*="--aspect-ratio"] > :is(*:first-child, .secondary-image)),
+:where([style*="--aspect-ratio"]) > picture > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+[style*="--point"],
+[style*="--point"] :is(img, picture) {
+  object-position: var(--point);
+}
 @media (min-width: 992px) {
   .h-full_screen {
     min-height: calc(
@@ -139,7 +182,10 @@ video {
 .absolute {
   position: absolute;
 }
-
+.invisible {
+  opacity: 0;
+  visibility: hidden;
+}
 .opacity-0 {
   opacity: 0;
 }
@@ -152,6 +198,9 @@ video {
 .wh-40 {
   width: 4rem;
   height: 4rem;
+}
+.w-full {
+  width: 100%;
 }
 :where(.btn-primary, .btn-outline, .btn, .btn-white),
 :is(
@@ -245,42 +294,6 @@ button[disabled],
 strong {
   font-weight: var(--heading-weight, 600);
 }
-[style*="--aspect-ratio"] {
-  position: relative;
-  overflow: hidden;
-}
-[style*="--aspect-ratio"]:before {
-  content: "";
-  height: 0;
-  display: block;
-  padding-top: calc(100% / (0 + var(--aspect-ratio, 16 / 9)));
-  pointer-events: none;
-}
-@media screen and (max-width: 767.98px) {
-  [style*="--aspect-ratio-mb"]::before {
-    padding-top: calc(100% / (0 + var(--aspect-ratio-mb, 16 / 9)));
-  }
-}
-:where([style*="--aspect-ratio"] > :is(*:first-child, .secondary-image)),
-:where([style*="--aspect-ratio"]) > picture > * {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-[style*="--point"],
-[style*="--point"] :is(img, picture) {
-  object-position: var(--point);
-}
-.flex,
-.swiper.flex {
-  display: flex;
-}
-:where(.hidden, [hidden], .no-js .no-js-hidden) {
-  display: none;
-}
 .visually-hidden {
   clip: rect(0 0 0 0);
   border: 0;
@@ -324,10 +337,10 @@ strong {
 :where(.flex-row-reverse) {
   flex-direction: row-reverse;
 }
-:where(.flex-column) {
+:where(.column) {
   flex-direction: column;
 }
-:where(.flex-column-reverse) {
+:where(.column-reverse) {
   flex-direction: column-reverse;
 }
 :where(.wrap) {
@@ -348,8 +361,6 @@ strong {
 }
 .flex-cols {
   --col: var(--col-number);
-  --gap: var(--col-gap);
-  row-gap: var(--gap);
   gap: var(--gap);
 }
 
@@ -376,6 +387,9 @@ strong {
 .flex-col-custom > *:not(.swiper-wrapper) {
   padding-left: calc(var(--gap, var(--bs-gutter-x)) * 0.5);
   padding-right: calc(var(--gap, var(--bs-gutter-x)) * 0.5);
+}
+:where(.gap) {
+  gap: var(--gap, 2rem);
 }
 :where(.gap-5) {
   gap: 0.5rem;
@@ -411,18 +425,6 @@ strong {
 .grid,
 .swiper.grid {
   display: grid;
-}
-.overflow-hidden {
-  overflow: hidden;
-}
-.overflow-x-hidden {
-  overflow-x: hidden;
-}
-.overflow-y-auto {
-  overflow-y: auto;
-}
-.overflow-visible-important {
-  overflow: visible !important;
 }
 .last-0:last-child,
 .last-0:last-of-type {
