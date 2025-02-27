@@ -122,23 +122,19 @@
           endif
         -%}
       {% endif %}
+      {%- capture srcset_image -%}
+        {% for width in widths %}{{- -}}
+          {% assign width_format = width | times: 1 %}{{- -}}
+          {%- if image.width >= width_format -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- endif -%}{{- -}}
+        {% endfor %}{{- -}}
+      {%- endcapture -%}
       <img
         {% if load_first_screen == true %}
-          srcset="
-            {% for width in widths %}
-              {% assign width_format = width | times: 1 %}
-              {%- if image.width >= width_format -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- endif -%}
-            {% endfor %}
-          "
+          srcset="{{ srcset_image }}"
           loading="eager"
           fetchpriority="high"
         {% else %}
-          data-srcset="
-            {% for width in widths %}
-              {% assign width_format = width | times: 1 %}
-              {%- if image.width >= width_format -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- endif -%}
-            {% endfor %}
-          "
+          data-srcset="{{ srcset_image }}"
           loading="lazy"
         {% endif %}
         sizes="{{ sizes }}"
@@ -152,13 +148,14 @@
     </picture>
   {% else %}
     {% assign width = width | default: image.width %}
+    {%- capture srcset_image -%}
+      {% for width in widths %}{{- -}}
+        {% assign width_format = width | times: 1 %}{{- -}}
+        {%- if image.width >= width_format -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- endif -%}{{- -}}
+      {% endfor %}{{- -}}
+    {%- endcapture -%}
     <img
-      data-srcset="
-        {% for width in widths %}
-          {% assign width_format = width | times: 1 %}
-          {%- if image.width >= width_format -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- endif -%}
-        {% endfor %}
-      "
+      data-srcset="{{ srcset_image }}"
       sizes="{{ sizes }}"
       src="{{ image | image_url: width: image_size }}"
       alt="{{ image_alt }}"
