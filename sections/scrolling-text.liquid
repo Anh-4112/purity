@@ -8,7 +8,6 @@
   else
     assign section_width = 'full-width-gap'
   endif
-
   assign heading_size = section_st.heading_size
 
   assign header_size = ''
@@ -19,6 +18,15 @@
   else
     assign header_size = ' h2-size'
   endif
+
+  assign space_between_item = 0
+  if section_st.space_between == 'large'
+    assign space_between_item = 30
+  elsif section_st.space_between == 'medium'
+    assign space_between_item = 15
+  elsif section_st.space_between == 'small'
+    assign space_between_item = 10
+  endif
 -%}
 
 {%- capture style -%}
@@ -26,49 +34,51 @@
     --section-padding-bottom: {{ section_st.padding_bottom }}px;
 {%- endcapture -%}
 
+{%- capture col_style -%}
+  {% if space_between_item < 15 %}--col-gap: {{ space_between_item }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  space_between_item }}px;{% endif %}
+{%- endcapture -%}
 <div
-  class="section section__scrolling-text color-{{ section_st.color_scheme }} gradient"
+  class="section__scrolling-text color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     <div
-      class="flex {% if section_st.uppercase %} uppercase{% endif %} {{ header_size }}"
+      class="flex {% if section_st.uppercase %} uppercase{% endif %} {{ header_size }} gap"
+      style="{{ col_style | strip | strip_newlines }}"
     >
-      {%- for i in (0..5) -%}
-        <div class="flex scrolling-text">
-          {%- for block in section.blocks -%}
-            {%- liquid
-              assign block_st = block.settings
-              assign image = block_st.image_block
-            -%}
-            {%- case block.type -%}
-              {%- when 'text' -%}
-                {% if block_st.content != blank %}
-                  {% if block_st.link_text != blank %}
-                    <a href="{{ block_st.link_text }}">
-                  {%- endif -%}
-                  {{ block_st.content }}
-                  {% if block_st.link_text != blank %}
-                    </a>
-                  {%- endif -%}
-                {% endif %}
-              {%- when 'image' -%}
-                {% if image != blank %}
-                  <div class="scrolling-image">
-                    {% if block_st.link_image != blank %}
-                      <a href="{{ block_st.link_image }}">
-                    {%- endif -%}
-                    {% render 'responsive-image', image: image, type: 'other', image_alt: block_st.image.alt %}
-                    {% if block_st.link_image != blank %}
-                      </a>
-                    {%- endif -%}
-                  </div>
-                {% else %}
-                  {%- render 'placeholder-render' -%}
-                {% endif %}
-            {%- endcase -%}
-          {%- endfor -%}
-        </div>
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign block_st = block.settings
+          assign image = block_st.image_block
+        -%}
+        {%- case block.type -%}
+          {%- when 'text' -%}
+            {% if block_st.content != blank %}
+              {% if block_st.link_text != blank %}
+                <a href="{{ block_st.link_text }}">
+              {%- endif -%}
+              {{ block_st.content }}
+              {% if block_st.link_text != blank %}
+                </a>
+              {%- endif -%}
+            {% endif %}
+          {%- when 'image' -%}
+            <div class="scrolling-image">
+              {% if image != blank %}
+                {%- assign image_alt = block_st.image.alt | default: '' -%}
+
+                {% if block_st.link_image != blank %}
+                  <a href="{{ block_st.link_image }}">
+                {%- endif -%}
+                {% render 'responsive-image', image: image, type: 'other', image_alt: image_alt %}
+                {% if block_st.link_image != blank %}
+                  </a>
+                {%- endif -%}
+              {% else %}
+                {%- render 'placeholder-render', class: 'block' -%}
+              {% endif %}
+            </div>
+        {%- endcase -%}
       {%- endfor -%}
     </div>
   </div>
@@ -145,15 +155,15 @@
       "options": [
         {
           "value": "small",
-          "label": "t:sections.all.content_header.heading_size.options__1.label"
+          "label": "t:sections.all.padding.column_gap.small"
         },
         {
           "value": "medium",
-          "label": "t:sections.all.content_header.heading_size.options__2.label"
+          "label": "t:sections.all.padding.column_gap.medium"
         },
         {
           "value": "large",
-          "label": "t:sections.all.content_header.heading_size.options__3.label"
+          "label": "t:sections.all.padding.column_gap.large"
         }
       ],
       "default": "medium",
@@ -268,6 +278,30 @@
     {
       "name": "t:sections.scrolling_text.name",
       "blocks": [
+        {
+          "type": "text"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "image"
+        },
         {
           "type": "text"
         },
