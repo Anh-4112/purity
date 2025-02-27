@@ -1,3 +1,111 @@
+{{ 'marquee.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign section_st = section.settings
+
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width'
+  else
+    assign section_width = 'full-width-gap'
+  endif
+  assign heading_size = section_st.heading_size
+
+  assign header_size = ''
+  if heading_size == 'small'
+    assign header_size = ' h3-size'
+  elsif heading_size == 'large'
+    assign header_size = ' h1-size'
+  else
+    assign header_size = ' h2-size'
+  endif
+
+  assign space_between_item = 0
+  if section_st.space_between == 'large'
+    assign space_between_item = 30
+  elsif section_st.space_between == 'medium'
+    assign space_between_item = 15
+  elsif section_st.space_between == 'small'
+    assign space_between_item = 10
+  endif
+-%}
+
+{%- capture style -%}
+    --section-padding-top: {{ section_st.padding_top }}px; 
+    --section-padding-bottom: {{ section_st.padding_bottom }}px;
+    --speed: {{ section_st.speed }}s;
+{%- endcapture -%}
+
+{%- capture col_style -%}
+  {% if space_between_item < 15 %}--col-gap: {{ space_between_item }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  space_between_item }}px;{% endif %}
+{%- endcapture -%}
+<div
+  class="section__scrolling-text color-{{ section_st.color_scheme }} gradient"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }}">
+    <div
+      class="flex {% if section_st.uppercase %} uppercase{% endif %} {{ header_size }} marquee overflow-hidden w-full justify-center"
+    >
+      {%- for i in (0..5) -%}
+        <div
+          class="flex animation-marquee {{ section_st.direction }} whitespace-nowrap gap align-center"
+          style="{{ col_style | strip | strip_newlines }}"
+        >
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign block_st = block.settings
+              assign image = block_st.image_block
+            -%}
+            {%- case block.type -%}
+              {%- when 'text' -%}
+                {% if block_st.content != blank %}
+                  {% if block_st.link_text != blank %}
+                    <a
+                      aria-label="{{ 'sections.scrolling_text.alt' | t }}"
+                      href="{{ block_st.link_text }}"
+                    >
+                  {%- endif -%}
+                  {{ block_st.content }}
+                  {% if block_st.link_text != blank %}
+                    </a>
+                  {%- endif -%}
+                {% endif %}
+              {%- when 'image' -%}
+                <div
+                  class="scrolling-image image_icon_scroll {% if block_st.rounded_image %} rounded{% endif %}"
+                  style="aspect-ratio: 1 / 1;  height: {{ block_st.image_height }}px;"
+                >
+                  {%- liquid
+                    assign image_alt = image.alt | default: '' | escape
+                  -%}
+                  {% if image != blank %}
+                    {% if block_st.link_image != blank %}
+                      <a
+                        aria-label="{{ 'sections.scrolling_text.alt' | t }}"
+                        href="{{ block_st.link_image }}"
+                      >
+                    {%- endif -%}
+                    {% render 'responsive-image',
+                      image: image,
+                      type: 'other',
+                      image_alt: image_alt
+                    %}
+                    {% if block_st.link_image != blank %}
+                      </a>
+                    {%- endif -%}
+                  {% else %}
+                    {%- render 'placeholder-render', class: 'block w-full h-full' -%}
+                  {% endif %}
+                </div>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.scrolling_text.name",
@@ -57,7 +165,7 @@
       "type": "range",
       "id": "speed",
       "label": "t:sections.scrolling_text.settings.speed.label",
-      "default": 5,
+      "default": 15,
       "min": 5,
       "max": 50,
       "step": 1,
@@ -173,7 +281,7 @@
           "step": 1,
           "unit": "px",
           "label": "t:sections.scrolling_text.settings.blocks.image.image_height.label",
-          "default": 50
+          "default": 70
         },
         {
           "type": "checkbox",
