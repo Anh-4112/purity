@@ -4,7 +4,6 @@
   assign color_scheme = section_st.color_scheme
   assign menu = section_st.menu
   assign transparent = section_st.transparent_on_desktop
-  assign transparent_mobile = section_st.transparent_on_mobile
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -14,31 +13,38 @@
   endif
   assign transparent_class = ''
   if request.page_type == 'index' and transparent
-    assign transparent_class = ' transparent'
-    if transparent_mobile
-      assign transparent_class = transparent_class | append: ' transparent-mobile'
-    endif
+    assign transparent_class = 'absolute inset-x-0 transparent'
   endif
 -%}
 {%- capture style -%}
-  --section-padding-top: {{ section_st.padding_top }}px; --section-padding-bottom: {{ section_st.padding_bottom }}px;
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
   {% if transparent %}--transparent-color: {{ section_st.header_text_icon_transparent }};{% endif %}
+    --header-grid-template: 'menu logo icon' / minmax(0, 1fr) fit-content(60%) minmax(0,1fr);
   {% if section_st.logo_position == 'center' %}
-    --header-grid-template: 'menu logo icon' / minmax(0, 1fr) auto minmax(0, 1fr);
-  {% else %}
-    --header-grid-template: 'logo menu icon' / minmax(0, 1fr) fit-content(60%) minmax(0,1fr);
+    @media only screen and (min-width: 1025px) {
+      .logo-left{
+        --header-grid-template: 'menu logo icon' / minmax(0, 1fr) fit-content(60%) minmax(0,1fr);
+      }
+    }  
+  {% endif %}
+  {% if request.page_type == 'index' and transparent %}
+    .transparent{
+      --color-background: transparent;
+      --text-color: {{ section_st.header_text_icon_transparent }};
+    }
+
   {% endif %}
 {%- endcapture -%}
 <header
   data-sticky-type="{{ section_st.sticky_header_type }}"
   data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
-  class="header-wrapper {{ transparent_class }} color-{{ color_scheme }}"
+  class="header-wrapper p-min {{ transparent_class }} color-{{ color_scheme }}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     <div class="header__inner grid logo-{{ section_st.logo_position }} align-center">
       <button
-        class="btn-reset btn-toggle hidden-1025"
+        class="btn-reset btn-toggle hidden-1025 text-start"
         aria-controls="MenuDrawer"
         aria-label="{{ 'accessibility.toggle_menu' | t }}"
       >
@@ -837,12 +843,6 @@
       "id": "transparent_on_desktop",
       "default": false,
       "label": "t:sections.header.settings.transparent.transparent_on_desktop.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "transparent_on_mobile",
-      "default": false,
-      "label": "t:sections.header.settings.transparent.transparent_on_mobile.label"
     },
     {
       "type": "color",

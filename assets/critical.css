@@ -30,6 +30,9 @@
   .block-1025 {
     display: block;
   }
+  .absolute-1025 {
+    position: absolute;
+  }
 }
 @media (min-width: 1200px) {
   .container {
@@ -181,6 +184,10 @@ video {
 }
 .absolute {
   position: absolute;
+}
+.inset-x-0 {
+  left: 0;
+  right: 0;
 }
 .invisible {
   opacity: 0;
@@ -398,6 +405,9 @@ strong {
   --col-gap: 1.5rem;
   gap: var(--col-gap);
 }
+.text-start {
+  text-align: start;
+}
 .text-center {
   text-align: center;
 }
@@ -432,30 +442,27 @@ strong {
   padding: 0;
   border: 0;
 }
+
 .section {
   padding-top: clamp(
-    (var(--section-pt) * 0.75px),
+    calc(var(--section-pt) * 0.75px),
     calc(
-      (var(--section-pt) * 0.75px) +
-        (var(--section-pt) - (var(--section-pt) * 0.75)) *
+      var(--section-pt) * 0.75px + var(--section-pt) * 0.25px *
         var(--responsive-rate)
     ),
-    calc(var(--section-pt) * 1px)
+    var(--section-pt)
   );
   padding-bottom: clamp(
-    (var(--section-pb) * 0.75px),
+    calc(var(--section-pb) * 0.75px),
     calc(
-      (var(--section-pb) * 0.75px) +
-        (var(--section-pb) - (var(--section-pb) * 0.75)) *
+      var(--section-pb) * 0.75px + var(--section-pb) * 0.25px *
         var(--responsive-rate)
     ),
-    calc(var(--section-pb) * 1px)
+    var(--section-pb)
   );
 }
-.section.pt-min {
+.p-min {
   padding-top: calc(var(--section-pt) * 1px);
-}
-.section.pb-min {
   padding-bottom: calc(var(--section-pb) * 1px);
 }
 .section-spacing-top {
@@ -480,9 +487,11 @@ strong {
 body:not(.template-index) .transparent-logo {
   display: none;
 }
-
 .header-color {
   color: var(--heading-color);
+}
+.color-inherit {
+  color: inherit;
 }
 .cart-count {
   width: 1.9rem;
