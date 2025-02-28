@@ -553,26 +553,36 @@
           "label": "Link"
         }
       },
-      "heading_size": {
-        "label": "Heading size",
-        "options__1": {
-          "label": "Small"
-        },
-        "options__2": {
-          "label": "Medium"
-        },
-        "options__3": {
-          "label": "Large"
-        },
-        "options__4": {
-          "label": "Extra large"
+      "content_header": {
+        "label": "Section header",
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        }
+      },
+      "image": {
+        "label": "Image",
+        "aspect_ratio": {
+          "label": "Image ratio",
+          "options__1": "Square (1:1)",
+          "options__2": "Portrait (3:4)",
+          "options__3": "Landscape (4:3)",
+          "adapt": "Adapt to image"
         }
       },
       "carousel": {
-        "header": "Settings for carousel",
+        "header": "Carousel settings",
         "enable_carousel": {
           "label": "Enable carousel",
-          "description": "Carousel shows only when the total collection exceed collections per row on desktop."
+          "description": "Carousel shows only when total collections is larger than the items per row on desktop."
         },
         "show_navigation": {
           "label": "Show navigation"
@@ -581,145 +591,19 @@
           "label": "Show pagination",
           "info": "Navigation will automatically be shown on mobile"
         },
-        "desktop_panigation_position": {
-          "label": "Desktop pagination position"
-        },
-        "change_slide_every": "Change slides every",
-        "slide_auto_change": "Auto-change slide",
-        "slideshow_style": {
-          "label": "Slide controls type",
-          "option__1": "Default",
-          "option__2": "Group"
-        },
-        "enable_carousel_mobile": {
-          "label": "Enable carousel on mobile"
+        "reveal_slide": {
+          "label": "Reveal next slide",
         }
       },
       "mobile_options": {
         "label": "Mobile options"
       },
       "items": {
-        "items_per_row": "Items per row"
+        "items_per_row": "Items per row",
+        "items_per_row_mobile": "Items per row on mobile"
       },
-      "separator_line": {
-        "label": "Separator line",
-        "unset": {
-          "label": "Unset"
-        },
-        "show_on_homepage": {
-          "label": "Show on homepage"
-        },
-        "show_inner_page": {
-          "label": "Show on inner page"
-        },
-        "show_all_page": {
-          "label": "Show all page"
-        }
-      },
-      "heigth": {
-        "slider_header": "Slide height",
-        "adapt_to_first_image": "Adapt to first image",
-        "full_screen": "Full screen",
-        "desktop_height": "Desktop height",
-        "mobile_height": "Mobile height"
-      },
-      "mobile_layout": {
-        "header": "Mobile layout",
-        "text_bellow_image": "Show text bellow on mobile",
-        "reset_color": "Reset to site default color on mobile",
-        "info": "Reset this section's color scheme setting back to the site's default colors on mobile"
-      },
-      "size": {
-        "label": "Size",
-        "small": "Small",
-        "medium": "Medium",
-        "large": "Large",
-        "extra_small": "Extra Small"
-      },
-      "image": {
-        "label": "Image",
-        "width": "Image width",
-        "info_width": "Image width is automatically optimized for mobile.",
-        "adapt_height_image": {
-          "label": "Adapt section height to image size",
-          "info": "Overwrites desktop and mobile height setting when checked.",
-          "info_padding": "Overwrites top padding and bottom padding setting when checked."
-        },
-        "desktop_position": {
-          "label": "Desktop image position",
-          "top": "Top",
-          "right": "Right",
-          "bottom": "Bottom",
-          "left": "Left",
-          "info": "Image first is the default mobile layout."
-        }
-      },
-      "section_setting": {
-        "label": "Section setting",
-        "page_heading": {
-          "label": "Page heading",
-          "label_title": "Page title",
-          "description": {
-            "label": "Page description",
-            "info": "Leave the description blank empty to use default page description"
-          },
-          "heading": {
-            "label": "Page heading",
-            "info": "Leave the heading blank empty to use default page heading"
-          },
-          "breadcrumb": {
-            "label": "Breadcrumb"
-          }
-        },
-        "heading": {
-          "label": "Heading"
-        },
-        "description": {
-          "label": "Description"
-        }
-      },
-      "setting": {
-        "label": "Settings",
-        "products_to_show": {
-          "label": "Maximum items to show"
-        },
-        "columns_desktop": {
-          "label": "Items per row on desktop"
-        }
-      },
-      "background": {
-        "label": "Background"
-      },
-      "background_color": {
-        "label": "Background color",
-        "info": "Used when no background image is selected.",
-        "dark": "Dark",
-        "light": "Light"
-      },
-      "background_img": {
-        "label": "Background image"
-      },
-      "button_style": {
-        "label": "Button style",
-        "fill": "Fill",
-        "outline": "Outline",
-        "link": "Link",
-        "white": "White",
-        "use_outline_button_style": "Use outline button style"
-      },
-      "pagination": {
-        "name": "Pagination",
-        "settings": {
-          "option_1": {
-            "label": "Default"
-          },
-          "option_2": {
-            "label": "Load more"
-          },
-          "option_3": {
-            "label": "Infinite scrolling"
-          }
-        }
+      "columns_desktop": {
+        "label": "Items per row on desktop"
       }
     },
     "footer": {
@@ -855,6 +739,44 @@
             "header": "Collections"
           }
         }
+      }
+    },
+    "custom_liquid": {
+      "name": "Custom Liquid",
+      "info": "Add app snippets or other Liquid code to create advanced customizations."
+    },
+    "collection-list": {
+      "name": "Collection list",
+      "settings": {
+        "header": {
+          "collection": "Collection"
+        },
+        "show_product_count": {
+          "label": "Show product count"
+        },
+        "overlay_image_settings": "Overlay image settings",
+        "overlay_image_color": "Text color"
+      },
+      "blocks": {
+        "featured_collection": {
+          "name": "Collection",
+          "settings": {
+            "collection": {
+              "label": "Collection"
+            },
+            "image": {
+              "label": "Image",
+              "info": "Leave blank to use collection's image"
+            },
+            "title": {
+              "label": "Collection title",
+              "info": "Leave blank to use collection's title"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Collection list"
       }
     }
   }
