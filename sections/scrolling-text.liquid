@@ -1,4 +1,4 @@
-{{ 'marquee.css' | asset_url | stylesheet_tag }}
+{{ 'scrolling-text.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
 
@@ -13,11 +13,11 @@
 
   assign header_size = ''
   if heading_size == 'small'
-    assign header_size = ' h3-size'
+    assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = ' h1-size'
+    assign header_size = 'h1'
   else
-    assign header_size = ' h2-size'
+    assign header_size = ' h2'
   endif
 
   assign space_between_item = 0
@@ -49,51 +49,49 @@
     >
       {%- for i in (0..5) -%}
         <div
-          class="flex animation-marquee {{ section_st.direction }} whitespace-nowrap gap align-center"
+          class="flex animation-marquee animation-marquee-{{ section_st.direction }} whitespace-nowrap gap align-center"
           style="{{ col_style | strip | strip_newlines }}"
         >
           {%- for block in section.blocks -%}
             {%- liquid
               assign block_st = block.settings
               assign image = block_st.image_block
+              assign link_text = block_st.link_text
+              assign link_image = block_st.link_image
             -%}
             {%- case block.type -%}
               {%- when 'text' -%}
                 {% if block_st.content != blank %}
-                  {% if block_st.link_text != blank %}
-                    <a
-                      aria-label="{{ 'sections.scrolling_text.alt' | t }}"
-                      href="{{ block_st.link_text }}"
-                    >
-                  {%- endif -%}
-                  {{ block_st.content }}
-                  {% if block_st.link_text != blank %}
-                    </a>
-                  {%- endif -%}
+                  <a
+                    {% if link_text == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ link_text | default: "#" }}"
+                    {% endif %}
+                    aria-label="{{ 'sections.scrolling_text.alt' | t }}"
+                    class="no-underline"
+                  >
+                    {{ block_st.content }}
+                  </a>
                 {% endif %}
               {%- when 'image' -%}
                 <div
                   class="scrolling-image image_icon_scroll {% if block_st.rounded_image %} rounded{% endif %}"
                   style="aspect-ratio: 1 / 1;  height: {{ block_st.image_height }}px;"
                 >
-                  {%- liquid
-                    assign image_alt = image.alt | default: '' | escape
-                  -%}
+                  {%- assign image_alt = image.alt | default: 'Scrolling image' | escape -%}
+
                   {% if image != blank %}
-                    {% if block_st.link_image != blank %}
-                      <a
-                        aria-label="{{ 'sections.scrolling_text.alt' | t }}"
-                        href="{{ block_st.link_image }}"
-                      >
-                    {%- endif -%}
-                    {% render 'responsive-image',
-                      image: image,
-                      type: 'other',
-                      image_alt: image_alt
-                    %}
-                    {% if block_st.link_image != blank %}
-                      </a>
-                    {%- endif -%}
+                    <a
+                      {% if link_image == blank %}
+                        role="link" aria-disabled="true"
+                      {% else %}
+                        href="{{ link_image | default: "#" }}"
+                      {% endif %}
+                      aria-label="{{ 'sections.scrolling_text.alt' | t }}"
+                    >
+                      {% render 'responsive-image', image: image, type: 'other', image_alt: image_alt %}
+                    </a>
                   {% else %}
                     {%- render 'placeholder-render', class: 'block w-full h-full' -%}
                   {% endif %}
