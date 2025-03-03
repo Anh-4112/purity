@@ -45,7 +45,7 @@
 >
   <div class="{{ section_width }}">
     <div
-      class="flex {% if section_st.uppercase %} uppercase{% endif %} {{ header_size }} marquee overflow-hidden w-full justify-center"
+      class="flex{% if section_st.uppercase %} uppercase{% endif %} {{ header_size }} marquee overflow-hidden w-full justify-center"
     >
       {%- for i in (0..5) -%}
         <div
@@ -75,13 +75,14 @@
                 {%- liquid
                   assign image = block_st.image_block
                   assign link_image = block_st.link_image
-                  assign scrolling_image = 'sections.scrolling_text.scrolling_image' | t
-                  assign image_alt = image.alt | default: scrolling_image | escape
+                  assign image_alt = 'sections.scrolling_text.alt' | t
+                  assign image_alt = image.alt | default: image_alt | escape
                 -%}
                 <div
                   class="scrolling-image image_icon_scroll {% if block_st.rounded_image %} rounded{% endif %}"
                   style="aspect-ratio: 1 / 1;  height: {{ block_st.image_height }}px;"
                 >
+
                   {% if image != blank %}
                     <a
                       {% if link_image == blank %}
