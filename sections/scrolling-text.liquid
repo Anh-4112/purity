@@ -53,14 +53,11 @@
           style="{{ col_style | strip | strip_newlines }}"
         >
           {%- for block in section.blocks -%}
-            {%- liquid
-              assign block_st = block.settings
-              assign image = block_st.image_block
-              assign link_text = block_st.link_text
-              assign link_image = block_st.link_image
-            -%}
+            {% assign block_st = block.settings %}
+
             {%- case block.type -%}
               {%- when 'text' -%}
+                {% assign link_text = block_st.link_text %}
                 {% if block_st.content != blank %}
                   <a
                     {% if link_text == blank %}
@@ -75,12 +72,16 @@
                   </a>
                 {% endif %}
               {%- when 'image' -%}
+                {%- liquid
+                  assign image = block_st.image_block
+                  assign link_image = block_st.link_image
+                  assign scrolling_image = 'sections.scrolling_text.scrolling_image' | t
+                  assign image_alt = image.alt | default: scrolling_image | escape
+                -%}
                 <div
                   class="scrolling-image image_icon_scroll {% if block_st.rounded_image %} rounded{% endif %}"
                   style="aspect-ratio: 1 / 1;  height: {{ block_st.image_height }}px;"
                 >
-                  {%- assign image_alt = image.alt | default: 'Scrolling image' | escape -%}
-
                   {% if image != blank %}
                     <a
                       {% if link_image == blank %}
