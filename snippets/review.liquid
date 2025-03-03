@@ -1,0 +1,49 @@
+{% if review_star %}
+  {%- if product.metafields.reviews.rating.value != blank -%}
+    {% liquid
+      assign rating_decimal = 0
+      assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1
+      if decimal >= 0.3 and decimal <= 0.7
+        assign rating_decimal = 0.5
+      elsif decimal > 0.7
+        assign rating_decimal = 1
+      endif
+    %}
+    <div class="product-rating">
+      <div
+        class="rating relative"
+        role="img"
+        aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}"
+      >
+        <span
+          aria-hidden="true"
+          class="star-rating"
+          style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"
+        >
+          <span class="rate-summary relative">
+            <svg width="74" height="14" viewBox="0 0 74 14" fill="none">
+              <path d="M7 0L8.65299 5.34777H14L9.67241 8.65223L11.3254 14L7 10.6933L2.67241 14L4.3254 8.65223L0 5.34777H5.34701L7 0Z" fill="currentColor"/>
+              <path d="M22 0L23.653 5.34777H29L24.6724 8.65223L26.3254 14L22 10.6933L17.6724 14L19.3254 8.65223L15 5.34777H20.347L22 0Z" fill="currentColor"/>
+              <path d="M37 0L38.653 5.34777H44L39.6724 8.65223L41.3254 14L37 10.6933L32.6724 14L34.3254 8.65223L30 5.34777H35.347L37 0Z" fill="currentColor"/>
+              <path d="M52 0L53.653 5.34777H59L54.6724 8.65223L56.3254 14L52 10.6933L47.6724 14L49.3254 8.65223L45 5.34777H50.347L52 0Z" fill="currentColor"/>
+              <path d="M67 0L68.653 5.34777H74L69.6724 8.65223L71.3254 14L67 10.6933L62.6724 14L64.3254 8.65223L60 5.34777H65.347L67 0Z" fill="currentColor"/>
+            </svg>
+          </span>
+        </span>
+      </div>
+      <span class="rating-count caption">
+        <span aria-hidden="true" class="fs-small">
+          {{- product.metafields.reviews.rating_count }}
+          {{ 'accessibility.total_reviews' | t -}}
+        </span>
+        <span aria-hidden="true" class="visually-hidden">({{ product.metafields.reviews.rating_count }})</span>
+      </span>
+      <p class="rating-text caption">
+        <span aria-hidden="true">
+          {{- product.metafields.reviews.rating.value }} /
+          {{ product.metafields.reviews.rating.value.scale_max -}}
+        </span>
+      </p>
+    </div>
+  {%- endif -%}
+{% endif %}
