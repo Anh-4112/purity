@@ -1,4 +1,4 @@
-{{ 'scrolling-text.css' | asset_url | stylesheet_tag }}
+{{ 'section-scrolling-text.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -48,7 +48,7 @@
     >
       {%- for i in (0..5) -%}
         <div
-          class="flex animation-marquee animation-marquee-{{ section_st.direction }} whitespace-nowrap gap align-center"
+          class="flex animation-marquee animation__marquee-{{ section_st.direction }} whitespace-nowrap gap align-center"
           style="{{ col_style | strip | strip_newlines }}"
         >
           {%- for block in section.blocks -%}
@@ -84,7 +84,6 @@
                   class="scrolling-image image_scroll{% if block_st.rounded_image %} rounded{% endif %}"
                   style="--image-height: {{ block_st.image_height }}px;"
                 >
-
                   {%- if image != blank -%}
                     <a
                       {% if link_image == blank %}
@@ -96,8 +95,6 @@
                     >
                       {% render 'responsive-image', image: image, type: 'other', image_alt: image_alt %}
                     </a>
-                  {%- else -%}
-                    {%- render 'placeholder-render', class: 'block w-full h-full' -%}
                   {%- endif -%}
                 </div>
             {%- endcase -%}
