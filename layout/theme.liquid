@@ -2,7 +2,7 @@
   assign theme_st = settings
 %}
 <!doctype html>
-<html class="js" lang="{{ request.locale.iso_code }}">
+<html class="js{% if theme_st.rtl %} rtl{% endif %}" lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -41,7 +41,7 @@
     {{ content_for_header }}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
     {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
-
+    {% if theme_st.rtl %}{{ 'rtl.css' | asset_url | stylesheet_tag: preload: true }}{% endif %}
     <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="{{ 'theme.css' | asset_url }}"></noscript>
     {% liquid
