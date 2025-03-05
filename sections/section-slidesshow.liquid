@@ -1,0 +1,423 @@
+{% schema %}
+{
+  "name": "t:sections.slideshow.name",
+  "tag": "section",
+  "class": "section section-slideshow",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.general"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "fix_width",
+          "label": "t:sections.all.layout.fix_width"
+        },
+        {
+          "value": "stretch_width",
+          "label": "t:sections.all.layout.stretch_width"
+        },
+        {
+          "value": "full_width",
+          "label": "t:sections.all.layout.full_width"
+        }
+      ],
+      "default": "fix_width",
+      "label": "t:sections.all.layout.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.info",
+      "default": "default-color-scheme"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.carousel.header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "default": true,
+      "label": "t:sections.all.carousel.show_navigation.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "default": false,
+      "label": "t:sections.all.carousel.show_pagination.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "slide_auto_change",
+      "default": false,
+      "label": "t:sections.all.carousel.slide_auto_change"
+    },
+    {
+      "type": "checkbox",
+      "id": "change_slide_every",
+      "default": false,
+      "label": "t:sections.all.carousel.change_slide_every"
+    },
+    {
+      "type": "select",
+      "id": "slide_height",
+      "options": [
+        {
+          "value": "full_screen",
+          "label": "t:sections.slideshow.settings.slide_height.full_screen"
+        },
+        {
+          "value": "adapt_to_first_image",
+          "label": "t:sections.slideshow.settings.slide_height.adapt_to_first_image"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.slideshow.settings.slide_height.small"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.slideshow.settings.slide_height.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.slideshow.settings.slide_height.large"
+        }
+      ],
+      "default": "adapt_to_first_image",
+      "label": "t:sections.slideshow.settings.slide_height.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.mobile_options.mobile_layout.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_text_bellow_image",
+      "default": false,
+      "label": "t:sections.slideshow.settings.show_text_bellow_image.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "t:sections.all.image.label",
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.all.image.image_setting"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.all.image.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "t:sections.all.image.mobile_image"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_opacity",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "t:sections.slideshow.settings.blocks.image.image_overlay_opacity.label",
+          "default": 30
+        },
+        {
+          "type": "header",
+          "content": "t:sections.all.content.label"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "default": "Subheading",
+          "label": "t:sections.all.content_setting.subheading.label"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Image slide",
+          "label": "t:sections.all.content_setting.heading.label"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "t:sections.all.content_setting.description.label",
+          "default": "<p>Tell your brand's story through images</p>"
+        },
+        {
+          "type": "text",
+          "id": "first_button_label",
+          "default": "Button label",
+          "label": "t:sections.all.content_setting.first_button_label.label",
+          "info": "t:sections.all.content_setting.button_label.info"
+        },
+        {
+          "type": "url",
+          "id": "first_button_link",
+          "label": "t:sections.all.content_setting.first_button_label.link"
+        },
+        {
+          "type": "text",
+          "id": "second_button_label",
+          "label": "t:sections.all.content_setting.second_button_label.label",
+          "info": "t:sections.all.content_setting.button_label.info"
+        },
+        {
+          "type": "url",
+          "id": "second_button_link",
+          "label": "t:sections.all.content_setting.second_button_label.link"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.all.content_setting.label"
+        },
+        {
+          "type": "select",
+          "id": "desktop_content_position",
+          "default": "middle-left",
+          "label": "t:sections.all.desktop_content_position.label",
+          "info": "t:sections.all.desktop_content_position.info",
+          "options": [
+            {
+              "value": "top-left",
+              "label": "t:sections.all.desktop_content_position.options__1.label"
+            },
+            {
+              "value": "top-center",
+              "label": "t:sections.all.desktop_content_position.options__2.label"
+            },
+            {
+              "value": "top-right",
+              "label": "t:sections.all.desktop_content_position.options__3.label"
+            },
+            {
+              "value": "middle-left",
+              "label": "t:sections.all.desktop_content_position.options__4.label"
+            },
+            {
+              "value": "middle-center",
+              "label": "t:sections.all.desktop_content_position.options__5.label"
+            },
+            {
+              "value": "middle-right",
+              "label": "t:sections.all.desktop_content_position.options__6.label"
+            },
+            {
+              "value": "bottom-left",
+              "label": "t:sections.all.desktop_content_position.options__7.label"
+            },
+            {
+              "value": "bottom-center",
+              "label": "t:sections.all.desktop_content_position.options__8.label"
+            },
+            {
+              "value": "bottom-right",
+              "label": "t:sections.all.desktop_content_position.options__9.label"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:sections.all.text_alignment.options__1.label"
+            },
+            {
+              "value": "center",
+              "label": "t:sections.all.text_alignment.options__2.label"
+            },
+            {
+              "value": "right",
+              "label": "t:sections.all.text_alignment.options__3.label"
+            }
+          ],
+          "default": "left",
+          "label": "t:sections.all.text_alignment.label"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "name": "t:sections.all.video.label",
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.slideshow.settings.blocks.video.video_setting"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "t:sections.all.video.label"
+        },
+        {
+          "type": "range",
+          "id": "video_overlay_opacity",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "t:sections.slideshow.settings.blocks.video.video_overlay_opacity.label",
+          "default": 30
+        },
+        {
+          "type": "header",
+          "content": "t:sections.all.content.label"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "default": "Subheading",
+          "label": "t:sections.all.content_setting.subheading.label"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Video slide",
+          "label": "t:sections.all.content_setting.heading.label"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "t:sections.all.content_setting.description.label",
+          "default": "<p>Tell your brand's story through videos</p>"
+        },
+        {
+          "type": "text",
+          "id": "first_button_label",
+          "default": "Button label",
+          "label": "t:sections.all.content_setting.first_button_label.label",
+          "info": "t:sections.all.content_setting.button_label.info"
+        },
+        {
+          "type": "url",
+          "id": "first_button_link",
+          "label": "t:sections.all.content_setting.first_button_label.link"
+        },
+        {
+          "type": "text",
+          "id": "second_button_label",
+          "label": "t:sections.all.content_setting.second_button_label.label",
+          "info": "t:sections.all.content_setting.button_label.info"
+        },
+        {
+          "type": "url",
+          "id": "second_button_link",
+          "label": "t:sections.all.content_setting.second_button_label.link"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.all.content_setting.label"
+        },
+        {
+          "type": "select",
+          "id": "desktop_content_position",
+          "default": "middle-left",
+          "label": "t:sections.all.desktop_content_position.label",
+          "info": "t:sections.all.desktop_content_position.info",
+          "options": [
+            {
+              "value": "top-left",
+              "label": "t:sections.all.desktop_content_position.options__1.label"
+            },
+            {
+              "value": "top-center",
+              "label": "t:sections.all.desktop_content_position.options__2.label"
+            },
+            {
+              "value": "top-right",
+              "label": "t:sections.all.desktop_content_position.options__3.label"
+            },
+            {
+              "value": "middle-left",
+              "label": "t:sections.all.desktop_content_position.options__4.label"
+            },
+            {
+              "value": "middle-center",
+              "label": "t:sections.all.desktop_content_position.options__5.label"
+            },
+            {
+              "value": "middle-right",
+              "label": "t:sections.all.desktop_content_position.options__6.label"
+            },
+            {
+              "value": "bottom-left",
+              "label": "t:sections.all.desktop_content_position.options__7.label"
+            },
+            {
+              "value": "bottom-center",
+              "label": "t:sections.all.desktop_content_position.options__8.label"
+            },
+            {
+              "value": "bottom-right",
+              "label": "t:sections.all.desktop_content_position.options__9.label"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:sections.all.text_alignment.options__1.label"
+            },
+            {
+              "value": "center",
+              "label": "t:sections.all.text_alignment.options__2.label"
+            },
+            {
+              "value": "right",
+              "label": "t:sections.all.text_alignment.options__3.label"
+            }
+          ],
+          "default": "left",
+          "label": "t:sections.all.text_alignment.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.slideshow.name"
+    }
+  ]
+}
+{% endschema %}
