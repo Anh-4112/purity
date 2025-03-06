@@ -1,0 +1,301 @@
+{% schema %}
+{
+  "name": "t:sections.rich-text.name",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.general"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "fix_width",
+          "label": "t:sections.all.layout.fix_width"
+        },
+        {
+          "value": "stretch_width",
+          "label": "t:sections.all.layout.stretch_width"
+        },
+        {
+          "value": "full_width",
+          "label": "t:sections.all.layout.full_width"
+        }
+      ],
+      "default": "fix_width",
+      "label": "t:sections.all.layout.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.info",
+      "default": "default-color-scheme"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.all.text_alignment.label"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 40,
+      "max": 100,
+      "unit": "%",
+      "default": 100,
+      "label": "t:sections.rich-text.settings.max_width.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "t:sections.all.content_setting.heading-block.label",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Talk about your brand",
+          "label": "t:sections.all.content_setting.heading.label"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:sections.all.content_header.heading_size.options__1.label"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.all.content_header.heading_size.options__2.label"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.all.content_header.heading_size.options__3.label"
+            }
+          ],
+          "default": "medium",
+          "label": "t:sections.all.content_header.heading_size.size"
+        },
+        {
+          "type": "checkbox",
+          "id": "uppercase",
+          "default": false,
+          "label": "t:settings_schema.typography.settings.heading.text_transform.uppercase"
+        }
+      ]
+    },
+    {
+      "type": "subheading",
+      "name": "t:sections.all.content_setting.subheading-block.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "subheading",
+          "default": "Subheading text",
+          "label": "t:sections.all.content_setting.subheading.label"
+        },
+        {
+          "type": "select",
+          "id": "subheading_size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:sections.all.content_header.heading_size.options__1.label"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.all.content_header.heading_size.options__2.label"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.all.content_header.heading_size.options__3.label"
+            }
+          ],
+          "default": "medium",
+          "label": "t:sections.all.content_header.heading_size.size"
+        },
+        {
+          "type": "checkbox",
+          "id": "uppercase",
+          "default": false,
+          "label": "t:settings_schema.typography.settings.heading.text_transform.uppercase"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.all.content_setting.description-block.label",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "description",
+          "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
+          "label": "t:sections.all.content_setting.description.label"
+        },
+        {
+          "type": "select",
+          "id": "description_size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:sections.all.content_header.heading_size.options__1.label"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.all.content_header.heading_size.options__2.label"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.all.content_header.heading_size.options__3.label"
+            }
+          ],
+          "default": "medium",
+          "label": "t:sections.all.content_header.heading_size.size"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "t:sections.all.content_setting.button_label-block.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.all.content_setting.first_button_label.name"
+        },
+        {
+          "type": "text",
+          "id": "first_button_label",
+          "default": "Button label",
+          "label": "t:sections.all.content_setting.button_label-block.name"
+        },
+        {
+          "type": "url",
+          "id": "first_button_link",
+          "label": "t:sections.all.content_setting.link.label"
+        },
+        {
+          "type": "select",
+          "id": "first_button_type",
+          "label": "t:sections.all.content_setting.button_type.label",
+          "default": "primary",
+          "options": [
+            {
+              "value": "primary",
+              "label": "t:sections.all.content_setting.button_type.primary.label"
+            },
+            {
+              "value": "outline",
+              "label": "t:sections.all.content_setting.button_type.outline.label"
+            },
+            {
+              "value": "link",
+              "label": "t:sections.all.content_setting.button_type.link.label"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "t:sections.all.content_setting.second_button_label.name"
+        },
+        {
+          "type": "text",
+          "id": "second_button_label",
+          "label": "t:sections.all.content_setting.button_label-block.name"
+        },
+        {
+          "type": "url",
+          "id": "second_button_link",
+          "label": "t:sections.all.content_setting.link.label"
+        },
+        {
+          "type": "select",
+          "id": "second_button_type",
+          "label": "t:sections.all.content_setting.button_type.label",
+          "default": "primary",
+          "options": [
+            {
+              "value": "primary",
+              "label": "t:sections.all.content_setting.button_type.primary.label"
+            },
+            {
+              "value": "outline",
+              "label": "t:sections.all.content_setting.button_type.outline.label"
+            },
+            {
+              "value": "link",
+              "label": "t:sections.all.content_setting.button_type.link.label"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.rich-text.name",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
