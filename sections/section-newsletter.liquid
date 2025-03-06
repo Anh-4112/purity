@@ -1,0 +1,144 @@
+{% schema %}
+{
+  "name": "t:sections.newsletter.name",
+  "tag": "section",
+  "class": "section section-newsletter",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.general"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "fix_width",
+          "label": "t:sections.all.layout.fix_width"
+        },
+        {
+          "value": "stretch_width",
+          "label": "t:sections.all.layout.stretch_width"
+        },
+        {
+          "value": "full_width",
+          "label": "t:sections.all.layout.full_width"
+        }
+      ],
+      "default": "fix_width",
+      "label": "t:sections.all.layout.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.info",
+      "default": "default-color-scheme"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_header.label"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.all.content_setting.heading.label",
+      "default": "Newsletter"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.all.content_setting.description.label",
+      "default": "<p>Add a short description for this section.</p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:sections.all.content_header.heading_size.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.all.content_header.heading_size.options__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.all.content_header.heading_size.options__3.label"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.all.content_header.heading_size.label"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.all.text_alignment.alignment"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header.heading_setting"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "t:sections.all.newsletter_setting.email_placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.all.content_setting.button_label.label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.newsletter.name"
+    }
+  ]
+}
+{% endschema %}
