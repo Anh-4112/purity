@@ -91,7 +91,7 @@
       </a>
     </div>
     <div
-      class="collection-information text-{{ content_alignment }}{% if content_position == 'overlay' %} absolute bottom-30 z-2{% if content_alignment == 'center' %} inset-x-0{% else %}{% if settings.rtl %} right-30{% else %} left-30{% endif %}{% endif %}{% endif %}"
+      class="collection-information text-{{ content_alignment }}{% if content_position == 'overlay' %} absolute bottom-30 z-2{% if content_alignment == 'center' %} inset-x-0{% else %}{% if settings.rtl %} right-30{% else %} left-30{% endif %}{% endif %}{% else %} mt-15{% endif %}"
       {% if content_position == 'overlay' %}
         style="--color-heading: {{ section_st.overlay_image_color }};--color-text: {{ section_st.overlay_image_color }}"
       {% endif %}

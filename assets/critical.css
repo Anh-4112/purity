@@ -374,11 +374,6 @@ strong {
   --col: var(--col-number);
   gap: var(--gap);
 }
-
-.flex-cols > * {
-  flex: 0 0 auto;
-  width: calc((100% - var(--gap, 0px) * calc(var(--col) - 1)) / var(--col));
-}
 .grid-cols {
   --col: var(--col-number);
   --gap: var(--col-gap);
@@ -387,6 +382,11 @@ strong {
     calc((100% - var(--gap, 0px) * calc(var(--col) - 1)) / var(--col))
   );
 }
+.flex-cols > * {
+  flex: 0 0 auto;
+  width: calc((100% - var(--gap, 0px) * calc(var(--col) - 1)) / var(--col));
+}
+
 .row-gap-0 {
   row-gap: 0;
 }
@@ -446,7 +446,12 @@ strong {
   padding: 0;
   border: 0;
 }
-
+.mt-15 {
+  margin-top: 1.5rem;
+}
+.overflow-hidden {
+  overflow: hidden;
+}
 .section {
   padding-top: clamp(
     calc(var(--section-pt) * 0.75px),
