@@ -3,6 +3,9 @@
   "name": "t:sections.quickview.name",
   "tag": "section",
   "class": "section section-quickview",
+  "disabled_on": {
+    "groups": ["custom.overlay"]
+  },
   "blocks": [
     {
       "type": "@app"
@@ -26,9 +29,6 @@
       "type": "_text"
     },
     {
-      "type": "_pickup-availability"
-    },
-    {
       "type": "_buy-buttons"
     },
     {
@@ -39,9 +39,6 @@
     },
     {
       "type": "_product-meta"
-    },
-    {
-      "type": "_complementary"
     },
     {
       "type": "_collapsible-row"
@@ -141,7 +138,27 @@
   ],
   "presets": [
     {
-      "name": "t:sections.quickview.name"
+      "name": "t:sections.quickview.name",
+      "blocks": [
+        {
+          "type": "_title-product"
+        },
+        {
+          "type": "_price-product"
+        },
+        {
+          "type": "_description"
+        },
+        {
+          "type": "_variant-picker"
+        },
+        {
+          "type": "_inventory-status"
+        },
+        {
+          "type": "_buy-buttons"
+        }
+      ]
     }
   ]
 }
