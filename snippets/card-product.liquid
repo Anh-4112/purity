@@ -1,0 +1,339 @@
+{% liquid
+  assign theme_st = settings
+  assign product_alignment = theme_st.product_alignment
+  assign product_enable_quickview = theme_st.product_enable_quickview
+  assign product_enable_color_swatches = theme_st.product_enable_color_swatches
+  assign product_show_vendor = theme_st.product_show_vendor
+  assign product_show_rate = theme_st.product_show_rate
+  assign product_show_image_hover = theme_st.product_show_image_hover
+  assign product_image_ratio = theme_st.product_image_ratio
+  assign product_show_video_featured = theme_st.product_show_video_featured
+  assign product_show_quick_add_mobile = theme_st.product_show_quick_add_mobile
+  assign show_sale = theme_st.show_sale
+  assign show_pre_order = theme_st.show_pre_order
+  assign show_sold_out = theme_st.show_sold_out
+%}
+{% if card_product and card_product != empty %}
+  <div
+    class="product-item product__item-js {{ class }}"
+    data-show-badges-sale="{%- if show_sale and disable_badge != true -%}true{%- else -%}false{%- endif -%}"
+    data-show-badges-pre-order="{%- if show_pre_order and disable_badge != true -%}true{%- else -%}false{%- endif -%}"
+    data-show-badges-sold-out="{%- if show_sold_out and disable_badge != true -%}true{%- else -%}false{%- endif -%}"
+    data-product-id="{{ card_product.id }}"
+  >
+    <div class="product-item__wrapper">
+      <div class="product-item__inner relative">
+        {%- if disable_image != true -%}
+          {%- liquid
+            assign p_media = card_product.featured_media
+            assign ratio = '3/4'
+            if product_image_ratio != 'adapt_to_image'
+              case product_image_ratio
+                when 'square'
+                  assign ratio = '1/1'
+                when 'landscape'
+                  assign ratio = '4/3'
+                when 'portrait'
+                  assign ratio = '3/4'
+              endcase
+            else
+              if p_media.media_type == 'model'
+                assign ratio = '3/4'
+              else
+                assign ratio = p_media.aspect_ratio
+              endif
+            endif
+            if p_media.media_type == 'video' or p_media.media_type == 'external_video'
+              assign type_video = true
+              assign product_show_image_hover = false
+            endif
+          -%}
+          <div class="product__inner relative overflow-hidden {{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image == blank %} show-hover-img{% endif %} hover-effect">
+            <a
+              class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
+              draggable="false"
+              href="{{ card_product.url }}"
+              aria-label="{{ card_product.title }}"
+            >
+              {%- if p_media -%}
+                <div
+                  class="product__media animation-swatches rounded"
+                  style="--aspect-ratio: {{ ratio }};"
+                >
+                  {%- liquid
+                    assign source = p_media.sources
+                    assign source_url = ''
+                    for s in source
+                      if s.format == 'mp4'
+                        assign source_url = s.url
+                        break
+                      endif
+                    endfor
+                  -%}
+                  {% if type_video and product_show_video_featured %}
+                    {% if p_media.media_type == 'video' %}
+                      {% if the_settings.image_video_autoplay != blank -%}
+                        <video
+                          playsinline="true"
+                          muted="muted"
+                          loop="loop"
+                          autoplay
+                          preload="metadata"
+                          class="product__img product__img_video lazy-video-item"
+                          src="{{ source_url }}"
+                          poster="{{ p_media.preview_image.src | image_url }}"
+                        ></video>
+                      {% else %}
+                        <video-product class="product__img product__img_video lazy-video-item">
+                          {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
+                          {% render 'responsive-image',
+                            type: 'product',
+                            class: 'product__img',
+                            image: p_media,
+                            image_alt: alt_features,
+                            container: container,
+                            column: column,
+                            column_mobile: column_mobile,
+                            padding: padding
+                          %}
+                          <template class="video-template max-w-100">
+                            {{
+                              p_media
+                              | media_tag:
+                                image_size: '2048x',
+                                autoplay: true,
+                                controls: true,
+                                loop: true,
+                                preload: 'none'
+                            }}
+                          </template>
+                        </video-product>
+                      {% endif %}
+                    {% elsif p_media.media_type == 'external_video' %}
+                      {% liquid
+                        assign video_id = p_media.external_id
+                      %}
+                      <video-product class="product__img product__img_video lazy-video-item">
+                        {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
+                        {% render 'responsive-image',
+                          type: 'product',
+                          class: 'product__img',
+                          image: p_media,
+                          image_alt: alt_features,
+                          container: container,
+                          column: column,
+                          column_mobile: column_mobile,
+                          padding: padding
+                        %}
+                        <template class="video-template">
+                          {%- if p_media.host == 'youtube' -%}
+                            <iframe
+                              src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1&mute=1&loop=0"
+                              class="js-youtube"
+                            ></iframe>
+                          {%- else -%}
+                            {{
+                              p_media
+                              | external_video_url: autoplay: true
+                              | external_video_tag: class: video_class, loading: 'lazy'
+                            }}
+                          {%- endif -%}
+                        </template>
+                      </video-product>
+                    {% endif %}
+                    {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
+                    {% render 'responsive-image',
+                      type: 'product',
+                      class: 'product__img secondary-image hidden',
+                      image: p_media,
+                      image_alt: alt_features,
+                      container: container,
+                      column: column,
+                      column_mobile: column_mobile,
+                      padding: padding
+                    %}
+                  {% else %}
+                    {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
+                    {% render 'responsive-image',
+                      type: 'product',
+                      class: 'product__img',
+                      image: p_media,
+                      image_alt: alt_features,
+                      container: container,
+                      column: column,
+                      column_mobile: column_mobile,
+                      padding: padding
+                    %}
+                    {%- liquid
+                      if card_product.media[1] != blank and product_show_image_hover and disable_hover_image == blank
+                        assign alt_features = card_product.media[1].alt | default: card_product.title | escape
+                        render 'responsive-image', type: 'product', class: 'product__hover-img', image: card_product.media[1], image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding
+                      endif
+                    -%}
+                  {% endif %}
+                </div>
+              {%- else -%}
+                {%- liquid
+                  assign ratio = '3/4'
+                  if product_image_ratio != 'adapt_to_image'
+                    case product_image_ratio
+                      when 'square'
+                        assign ratio = '1/1'
+                      when 'landscape'
+                        assign ratio = '4/3'
+                      when 'portrait'
+                        assign ratio = '3/4'
+                    endcase
+                  endif
+                -%}
+                <div
+                  class="product__media rounded"
+                  style="--aspect-ratio: {{ ratio }};"
+                >
+                  {% render 'placeholder-render' %}
+                </div>
+              {%- endif -%}
+
+              {%- if disable_badge != true -%}
+                {% render 'product-badges', card_product: card_product, type: 'product_item' %}
+              {%- endif -%}
+            </a>
+            {% if p_media and type_video and product_show_video_featured %}
+              {% if p_media.media_type == 'video' or p_media.media_type == 'external_video' -%}
+                <button-playvideo
+                  class="deferred-media__poster-button pointer motion-reduce btn-reset w-full btn-reset w-full overlay-btn p-0 outline-focus-none border-0 p-0 outline-focus-none border-0"
+                  type="button"
+                  aria-label="{{ 'products.product.xr_button_label' | t }}"
+                >
+                  {%- render 'icon-play' -%}
+                </button-playvideo>
+              {% endif %}
+            {% endif %}
+            {%- if product_enable_quickview
+              and disable_quickview != true
+              and card_product.metafields.custom.external_affiliate == blank
+            -%}
+              <button-quickview
+                tabindex="0"
+                data-item="overlay-quickbuy"
+                class="btn button-quickview{%- if product_show_quick_add_mobile == blank %} hidden-mobile{% endif %}"
+                data-product-handle="{{ card_product.id }}"
+                data-url="{{ shop.url }}/products/{{ card_product.handle }}?section_id=product-quickview"
+              >
+                <span class="product-quickview-btn">
+                  {{- 'products.product.quickview' | t -}}
+                </span>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  class="spin opacity-0 pointer-none icon-load absolute"
+                >
+                  <use href="#icon-load"></use>
+                </svg>
+              </button-quickview>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        <div class="product__information alignment-{{ product_alignment }}">
+          {% if product_show_vendor and disable_vendor != true and card_product.vendor != blank %}
+            <p class="product__vendor">
+              {{- card_product.vendor | link_to_vendor -}}
+            </p>
+          {% endif %}
+          <a
+            aria-label="{{ card_product.title }}"
+            class="product__name heading-style"
+            href="{{ card_product.url }}"
+          >
+            {{- card_product.title -}}
+          </a>
+          {%- if product_show_rate and disable_rate != true -%}
+            {%- liquid
+              render 'review', review_star: true, product: card_product
+            -%}
+          {%- endif -%}
+          {% if disable_price != true %}
+            <div class="product__price mt-4 heading-color">
+              {%- render 'price', scope: 'item', product: card_product -%}
+            </div>
+          {% endif %}
+          {%- if product_enable_color_swatches and disable_color_swatches != true -%}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {%- unless card_product.has_only_default_variant -%}
+      <script type="application/json" class="productItemVariantsQty">
+        [
+        {%- for variant in card_product.variants -%}
+          {%- assign op = variant.option1 | replace: '"', '\"' -%}
+
+          {%- liquid
+              assign option = '"option":"' | append: op | append: '"'
+              assign quantity = '"qty":' | append: variant.inventory_quantity
+              assign available = '"available":' | append: variant.available
+              assign mamagement = '"mamagement":"' | append: variant.inventory_management | append: '"'
+          -%}
+          { {{ option }},{{ quantity }},{{ available }},{{ mamagement }}}
+          {%- unless forloop.last -%},{%- endunless forloop.last -%}
+        {%- endfor -%}
+        ]
+      </script>
+    {%- endunless -%}
+  </div>
+{% else %}
+  <div class="product-item{{ class }} {{ product_style }}">
+    <div class="product-item__wrapper">
+      <div class="product-item__inner relative">
+        <div class="product-item__media">
+          <a
+            role="link"
+            aria-disabled="true"
+            title="{{ 'onboarding.product_title' | t }}"
+            aria-label="{{ 'onboarding.product_title' | t }}"
+          >
+            {%- liquid
+              assign ratio = '3/4'
+              if product_image_ratio != 'adapt'
+                case product_image_ratio
+                  when 'square'
+                    assign ratio = '1/1'
+                  when 'landscape'
+                    assign ratio = '4/3'
+                  when 'portrait'
+                    assign ratio = '3/4'
+                endcase
+              endif
+            -%}
+            <div
+              class="product-item__media--ratio rounded"
+              style="--aspect-ratio: {{ ratio }};"
+            >
+              {%- render 'placeholder-render', type: 'product', index: indexFor -%}
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="product-item__information">
+        <a
+          draggable="false"
+          aria-disabled="true"
+          role="link"
+          class="product-item__name"
+          title="{{ 'onboarding.product_title' | t }}"
+          aria-label="{{ 'onboarding.product_title' | t }}"
+        >
+          {{ 'onboarding.product_title' | t }}
+        </a>
+        <div
+          class="product-item__price mt-5 justify-content-{{ product_alignment }}"
+          style="--font-size: {{ settings.price_size }}"
+        >
+          {%- render 'price', scope: 'item' -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
