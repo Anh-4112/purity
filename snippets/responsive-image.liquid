@@ -17,9 +17,9 @@
   if container == 'stretch_width'
     assign section_width = '100vw - 60px'
     assign section_width_mobile = '100vw - 30px'
-  elsif container == 'fluid_container'
+  elsif container == 'full_width'
     assign section_width_mobile = '100vw - 30px'
-  elsif container == 'container'
+  elsif container == 'fix_width'
     assign section_width = theme_st.page_width | append: 'px'
     assign section_width_mobile = '100vw - 30px'
   else
@@ -100,7 +100,7 @@
 {% endif %}
 {% if image_lazy_loading != blank %}
   {% if image_mobile != blank %}
-    <picture class="image-picture {{ class }}">
+    <picture class="image-picture{{ class }}">
       {% if lazy_load == true %}
         {%- liquid
           assign srcset_mobile = image_mobile | image_url: width: image_mobile.width | image_tag: widths: '720, 480, 360', alt: image_alt | split: 'srcset="' | last
@@ -159,7 +159,7 @@
       sizes="{{ sizes }}"
       src="{{ image | image_url: width: image_size }}"
       alt="{{ image_alt }}"
-      class="image-lazy-load {{ class }}"
+      class="image-lazy-load{{ class }}"
       loading="lazy"
       {% if load_first_screen == true %}
         fetchpriority="high"
@@ -171,7 +171,7 @@
   {% endif %}
 {% else %}
   {% if image_mobile != blank %}
-    <picture class="image-picture {{ class }}">
+    <picture class="image-picture{{ class }}">
       {%- liquid
         assign srcset_mobile = image_mobile | image_url: width: image_mobile.width | image_tag: widths: '720, 480, 360', alt: image_alt | split: 'srcset="' | last
         unless srcset_mobile contains 'src='
