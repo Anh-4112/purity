@@ -39,6 +39,7 @@
 <header
   data-sticky-type="{{ section_st.sticky_header_type }}"
   data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
+  data-menu-trigger="{{ section_st.menu_trigger }}"
   class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }}"
   style="{{ style | strip | strip_newlines }}"
 >
@@ -115,7 +116,7 @@
                         -%}
                     {%- endcase -%}
                     {%- if link.links.size > 0 or has_content -%}
-                      <details is="details-dropdown" class="details-header-menu">
+                      <details is="details-mega-menu" class="details-header-menu">
                         <summary
                           class="menu__item"
                           data-href="{{ link.url }}"
@@ -327,7 +328,7 @@
                     {%- endif -%}
                   {%- else -%}
                     {%- if link.links.size > 0 -%}
-                      <details is="details-dropdown" class="details-header-menu">
+                      <details is="details-mega-menu" class="details-header-menu">
                         <summary
                           class="menu__item"
                           data-href="{{ link.url }}"
@@ -359,7 +360,7 @@
               {%- else -%}
                 <li>
                   {%- if link.links.size > 0 -%}
-                    <details is="details-dropdown" class="details-header-menu">
+                    <details is="details-mega-menu" class="details-header-menu">
                       <summary
                         class="menu__item flex align-center gap-5 justify-between"
                         data-href="{{ link.url }}"

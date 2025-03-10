@@ -94,28 +94,70 @@ class MenuDrawer extends HTMLElement {
 }
 customElements.define('menu-drawer', MenuDrawer);
 
-const clearDropdownCount = new WeakMap;
-class DetailsDropdown extends HTMLDetailsElement {
-  constructor(){
-    super();
-    this.summaryElement = this.firstElementChild;
-    this.contentElement = this.lastElementChild;
-    this._open = this.hasAttribute("open");
-    this.summaryElement.addEventListener("click", this.handleSummaryClick.bind(this));
+const megaMenuCount = new WeakMap;
+class DetailsMegaMenu extends HTMLDetailsElement {
+  constructor() {
+    super(),
+    this.summaryElement = this.firstElementChild,
+    this.contentElement = this.lastElementChild,
+    this._open = this.hasAttribute("open"),
+    this.header = document.querySelector('header'),
+    this.summaryElement.addEventListener("click", this.onSummaryClicked.bind(this)),
+    this.detectClickOutsideListener = this.detectClickOutside.bind(this),
+    this.detectEscKeyboardListener = this.detectEscKeyboard.bind(this),
+    this.detectFocusOutListener = this.detectFocusOut.bind(this),
+    this.detectHoverListener = this.detectHover.bind(this),
+    this.addEventListener("mouseenter", this.detectHoverListener.bind(this)),
+    this.addEventListener("mouseleave", this.detectHoverListener.bind(this))
   }
-
-  handleSummaryClick(e){
-    if (this._open){
-      this.removeAttribute("open");
-      this.summaryElement.removeAttribute("open");
-      this.contentElement.removeAttribute("open");
-    } else {
-      this.summaryElement.setAttribute("open", "");
-      this.contentElement.setAttribute("open", "");
+  set open(value) {
+    value !== this._open && (this._open = value,
+    this.isConnected ? this.transition(value) : value ? this.setAttribute("open", "") : this.removeAttribute("open"))
+  }
+  get open() {
+    return this._open
+  }
+  get menuTrigger() {
+    return this.header.hasAttribute("data-menu-trigger") ? this.header.getAttribute("data-menu-trigger") : "click"
+  }
+  onSummaryClicked(event) {
+    event.preventDefault(),
+    this.menuTrigger === "hover" && this.summaryElement.hasAttribute("data-href") && this.summaryElement.getAttribute("data-href").length > 0 ? window.location.href = this.summaryElement.getAttribute("data-href") : this.open = !this.open
+  }
+  async transition(value) {
+    return value ? (megaMenuCount.set(DetailsMegaMenu, megaMenuCount.get(DetailsMegaMenu) + 1),
+    this.setAttribute("open", ""),
+    this.summaryElement.setAttribute("open", ""),
+    setTimeout( () => this.contentElement.setAttribute("open", ""), 100),
+    document.addEventListener("click", this.detectClickOutsideListener),
+    document.addEventListener("keydown", this.detectEscKeyboardListener),
+    document.addEventListener("focusout", this.detectFocusOutListener),
+    this.classList.add("open-submenu")) : (megaMenuCount.set(DetailsMegaMenu, megaMenuCount.get(DetailsMegaMenu) - 1),
+    this.summaryElement.removeAttribute("open"),
+    this.contentElement.removeAttribute("open"),
+    document.removeEventListener("click", this.detectClickOutsideListener),
+    document.removeEventListener("keydown", this.detectEscKeyboardListener),
+    document.removeEventListener("focusout", this.detectFocusOutListener),
+    this.classList.remove("open-submenu"),
+    this.open || setTimeout( () => this.removeAttribute("open"), 400)
+  )}
+  detectClickOutside(event) {
+    !this.contains(event.target) && !(event.target.closest("details")instanceof DetailsMegaMenu) && (this.open = !1)
+  }
+  detectEscKeyboard(event) {
+    if (event.code === "Escape") {
+      const targetMenu = event.target.closest("details[open]");
+      targetMenu && (targetMenu.open = !1)
     }
   }
+  detectFocusOut(event) {
+    event.relatedTarget && !this.contains(event.relatedTarget) && (this.open = !1)
+  }
+  detectHover(event) {
+    this.menuTrigger !== "hover" || (event.type === "mouseenter" ? this.open = !0 : this.open = !1)
+  }
 }
-customElements.define("details-dropdown", DetailsDropdown, {
+customElements.define("details-mega-menu", DetailsMegaMenu, {
   extends: "details"
 }),
-clearDropdownCount.set(DetailsDropdown, 0);
+megaMenuCount.set(DetailsMegaMenu, 0);
