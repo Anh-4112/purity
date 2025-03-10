@@ -20,9 +20,6 @@
 .bold {
   font-weight: bold;
 }
-.text-start {
-  text-align: start;
-}
 .text-end {
   text-align: end;
 }
@@ -526,9 +523,6 @@ a.hover-heading-color:hover {
 .mt-12 {
   margin-top: 1.2rem;
 }
-.mt-15 {
-  margin-top: 1.5rem;
-}
 .mt-20 {
   margin-top: 2rem;
 }
@@ -941,18 +935,14 @@ a.hover-heading-color:hover {
 .transform-none {
   transform: none !important;
 }
-.overflow-hidden {
-  overflow: hidden;
-}
+
 .overflow-x-hidden {
   overflow-x: hidden;
 }
 .overflow-y-auto {
   overflow-y: auto;
 }
-.overflow-visible-important {
-  overflow: visible !important;
-}
+
 .border-animation {
   position: relative;
   background-image: linear-gradient(
@@ -969,9 +959,6 @@ a.hover-heading-color:hover {
   background-size: 100% var(--height, 1px);
 }
 @media (min-width: 576px) {
-  :is(.grid-cols, .flex-cols) {
-    --col: var(--col-tablet, var(--col-desktop));
-  }
   .block-sm {
     display: block;
   }
@@ -1048,9 +1035,6 @@ a.hover-heading-color:hover {
   }
 }
 @media (min-width: 768px) {
-  :is(.grid-cols, .flex-cols) {
-    --col: var(--col-desktop-small, var(--col-desktop));
-  }
   .block-md {
     display: block;
   }
@@ -1226,9 +1210,6 @@ a.hover-heading-color:hover {
   }
 }
 @media (min-width: 992px) {
-  :is(.grid-cols, .flex-cols) {
-    --col: var(--col-desktop, var(--col-number));
-  }
   .gap-lg-20 {
     gap: 2rem;
   }
@@ -1506,7 +1487,7 @@ a.hover-heading-color:hover {
 /* Hover */
 @media (min-width: 1025px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   :where(a:hover) {
-    color: var(--heading-color);
+    color: var(--color-heading);
   }
   :where(
       .btn,
@@ -1551,8 +1532,8 @@ a.hover-heading-color:hover {
     position: relative;
     background-image: linear-gradient(
       to right,
-      var(--heading-color) 0%,
-      var(--heading-color) 98%
+      var(--color-heading) 0%,
+      var(--color-heading) 98%
     );
     background-size: 0 1px;
     background-repeat: no-repeat;

@@ -68,6 +68,10 @@ summary::-webkit-details-marker {
   font-size: calc(var(--heading-font-scale) * var(--size));
   margin: 0;
 }
+.rte
+  :where(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .h0, .heading) {
+  margin-bottom: 1em;
+}
 :where(h1, .h1),
 .h1-size {
   --size: clamp(
@@ -357,7 +361,7 @@ strong {
   flex-wrap: nowrap;
 }
 :where(.rounded) {
-  border-radius: var(--rounded-radius);
+  border-radius: var(--img-rounded);
   overflow: hidden;
 }
 :where(.btn-rounded) {
@@ -370,11 +374,6 @@ strong {
   --col: var(--col-number);
   gap: var(--gap);
 }
-
-.flex-cols > * {
-  flex: 0 0 auto;
-  width: calc((100% - var(--gap, 0px) * calc(var(--col) - 1)) / var(--col));
-}
 .grid-cols {
   --col: var(--col-number);
   --gap: var(--col-gap);
@@ -383,6 +382,11 @@ strong {
     calc((100% - var(--gap, 0px) * calc(var(--col) - 1)) / var(--col))
   );
 }
+.flex-cols > * {
+  flex: 0 0 auto;
+  width: calc((100% - var(--gap, 0px) * calc(var(--col) - 1)) / var(--col));
+}
+
 .row-gap-0 {
   row-gap: 0;
 }
@@ -442,7 +446,12 @@ strong {
   padding: 0;
   border: 0;
 }
-
+.mt-15 {
+  margin-top: 1.5rem;
+}
+.overflow-hidden {
+  overflow: hidden;
+}
 .section {
   padding-top: clamp(
     calc(var(--section-pt) * 0.75px),
@@ -468,6 +477,9 @@ strong {
 .section-spacing-top {
   margin-top: calc(var(--section-spacing) - var(--gutter-x, 0px));
 }
+.section-header {
+  margin-block-end: var(--header-spacing-bottom);
+}
 .header__logo {
   grid-area: logo;
 }
@@ -488,7 +500,7 @@ body:not(.template-index) .transparent-logo {
   display: none;
 }
 .header-color {
-  color: var(--heading-color);
+  color: var(--color-heading);
 }
 .color-inherit {
   color: inherit;
