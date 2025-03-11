@@ -1,3 +1,4 @@
+{{ 'product.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -5,7 +6,7 @@
   elsif section_st.section_width == 'full_width'
     assign section_width = 'full-width px-20'
   else
-    assign section_width = 'full-width-gap'
+    assign section_width = 'fluid_container'
   endif
   assign heading_size = section_st.heading_size
   assign text_alignment = section_st.text_alignment
@@ -15,11 +16,11 @@
   assign show_navigation = section_st.show_navigation
   assign reveal_slide = section_st.reveal_slide
 
-  assign heading_size = ''
+  assign header_size = ''
   if heading_size == 'small'
-    assign header_size = ' h3-size'
+    assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = ' h1-size'
+    assign header_size = 'fs-medium'
   endif
 
   assign items_per_row_mobile = section_st.items_per_row_mobile
@@ -38,9 +39,9 @@
   assign column_gap_slide = 0
   if section_st.column_gap == 'large'
     assign column_gap_slide = 30
-  elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 20
   elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
     assign column_gap_slide = 10
   endif
 -%}
@@ -58,10 +59,10 @@
   <div class="{{ section_width }}">
     {%- if section_st.title != blank or section_st.description != blank -%}
       <div
-        class="section-header{{ header_size }} content-{{ text_alignment }}"
+        class="section-header text-{{ text_alignment }}"
       >
         {%- if section_st.title != blank -%}
-          <h2 class="section-heading">
+          <h2 class="section-heading {{ header_size }}">
             {{ section_st.title }}
           </h2>
         {%- endif -%}
@@ -218,7 +219,7 @@
       "id": "text_alignment",
       "options": [
         {
-          "value": "left",
+          "value": "start",
           "label": "t:sections.all.text_alignment.options__1.label"
         },
         {
@@ -226,11 +227,11 @@
           "label": "t:sections.all.text_alignment.options__2.label"
         },
         {
-          "value": "right",
+          "value": "end",
           "label": "t:sections.all.text_alignment.options__3.label"
         }
       ],
-      "default": "left",
+      "default": "start",
       "label": "t:sections.all.text_alignment.alignment"
     },
     {

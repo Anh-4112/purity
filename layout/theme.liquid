@@ -28,8 +28,7 @@
     {% endif %}
 
     {% render 'meta-tags' %}
-    <script defer="defer" src="{{ '
-    .min.js' | asset_url }}"></script>
+    <script defer="defer" src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
     <script type="importmap">
       {
         "imports": {
@@ -139,7 +138,7 @@
         --bs-gutter-y: 0;
 
         --color-white: #FFFFFF;
-        --dark-color: #000;
+        --color-dark: #000;
         --responsive-rate: ((100vw - 575px) / (1600 - 575));
         --heading-letter-spacing: {% if theme_st.heading_letter_spacing == '0.25em' %}0.15em{% else %}{{ theme_st.heading_letter_spacing }}{% endif %};
 
@@ -153,19 +152,9 @@
         --section-spacing: 6rem;
 
         --product-spacing-top: 2rem;
-        --product-name-size: 2.2rem;
-        --product-price-size: 1.4rem;
+        --product-name-size: 1.6rem;
+        --product-price-size: 1.6rem;
         --product-item-spacing: 4rem;
-        --sale-bg: rgb({{ theme_st.sale_background.red }}, {{ theme_st.sale_background.green }}, {{ theme_st.sale_background.blue }});
-        --sale-color: rgb({{ theme_st.sale_color.red }}, {{ theme_st.sale_color.green }}, {{ theme_st.sale_color.blue }});
-        --new-bg: rgb({{ theme_st.new_background.red }}, {{ theme_st.new_background.green }}, {{ theme_st.new_background.blue }});
-        --new-color: rgb({{ theme_st.new_color.red }}, {{ theme_st.new_color.green }}, {{ theme_st.new_color.blue }});
-        --preorder-bg: rgb({{ theme_st.pre_order_background.red }}, {{ theme_st.pre_order_background.green }}, {{ theme_st.pre_order_background.blue }});
-        --preorder-color: rgb({{ theme_st.pre_order_color.red }}, {{ theme_st.pre_order_color.green }}, {{ theme_st.pre_order_color.blue }});
-        ---outstock-bg: rgb({{ theme_st.sold_out_background.red }}, {{ theme_st.sold_out_background.green }}, {{ theme_st.sold_out_background.blue }});
-        --outstock-color: rgb({{ theme_st.sold_out_color.red }}, {{ theme_st.sold_out_color.green }}, {{ theme_st.sold_out_color.blue }});
-        ---custom-bg: rgb({{ theme_st.custom_badge_background.red }}, {{ theme_st.custom_badge_background.green }}, {{ theme_st.custom_badge_background.blue }});
-        --custom-color: rgb({{ theme_st.custom_badge_color.red }}, {{ theme_st.custom_badge_color.green }}, {{ theme_st.custom_badge_color.blue }});
         --shadow: 0px 5px 30px 0px rgba(0, 0, 0, 0.05);
 
         --header-spacing-bottom: 4rem;
