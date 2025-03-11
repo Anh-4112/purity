@@ -12,4 +12,26 @@
 }
 .product__name {
   font-size: var(--product-name-size, 1.6rem);
+  line-height: 1.5;
+}
+.product__price {
+  font-size: var(--product-price-size, 1.4rem);
+  margin-top: 6px;
+}
+@media (min-width: 1025px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .product__inner:hover :is(.product__hover-img, button-quickview) {
+    opacity: 1;
+    visibility: visible;
+  }
+  button-quickview {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(30%);
+    overflow: hidden;
+    transition: color var(--duration-long, 0.5s) ease,
+      transform var(--duration-default, 0.25s) ease;
+  }
+  .product__inner:hover button-quickview {
+    transform: translateY(0);
+  }
 }

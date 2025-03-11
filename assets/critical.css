@@ -196,6 +196,9 @@ video {
   left: 0;
   right: 0;
 }
+.inset-x-15 {
+  inset-inline: 1.5rem;
+}
 .invisible {
   opacity: 0;
   visibility: hidden;
@@ -216,7 +219,7 @@ video {
 .w-full {
   width: 100%;
 }
-:where(.btn-primary, .btn-outline, .btn, .btn-white),
+:where(.btn),
 :is(
     body .shopify-payment-button__more-options,
     body .shopify-payment-button__button--unbranded,
@@ -233,7 +236,7 @@ video {
   border-radius: var(--btn-radius);
   line-height: normal;
   cursor: pointer;
-  letter-spacing: calc(var(--btn-letter-spacing));
+  letter-spacing: var(--btn-letter-spacing);
   text-transform: var(--btn-text-transform);
 }
 :is(
@@ -461,20 +464,22 @@ strong {
 }
 .section {
   padding-top: clamp(
-    calc(var(--section-pt) * 0.75px),
+    (var(--section-pt) * 0.75px),
     calc(
-      var(--section-pt) * 0.75px + var(--section-pt) * 0.25px *
+      (var(--section-pt) * 0.75px) +
+        (var(--section-pt) - (var(--section-pt) * 0.75)) *
         var(--responsive-rate)
     ),
-    var(--section-pt)
+    calc(var(--section-pt) * 1px)
   );
   padding-bottom: clamp(
-    calc(var(--section-pb) * 0.75px),
+    (var(--section-pb) * 0.75px),
     calc(
-      var(--section-pb) * 0.75px + var(--section-pb) * 0.25px *
+      (var(--section-pb) * 0.75px) +
+        (var(--section-pb) - (var(--section-pb) * 0.75)) *
         var(--responsive-rate)
     ),
-    var(--section-pb)
+    calc(var(--section-pb) * 1px)
   );
 }
 .p-min {

@@ -98,12 +98,12 @@
         background-color: var(--color-background);
       }
       :root {
-        --body-font-size: 1.4rem;
+        --body-font-size: 1.6rem;
         --body-font-family: {{ theme_st.body_font.family }}, {{ theme_st.body_font.fallback_families }};
         --body-font-style: {{ theme_st.body_font.style }};
         --body-font-weight: {{ theme_st.body_font.weight }};
         --body-font-weight-bold: {{ theme_st.body_font.weight | plus: 300 | at_most: 1000 }};
-        --body-line-height: calc(1 + 0.71428 / var(--body-font-scale));
+        --body-line-height: calc(1.625 / var(--body-font-scale));
         --img-rounded: {{ theme_st.rounded_image }}px;
 
         --heading-font: {{ theme_st.heading_font.family }}, {{ theme_st.heading_font.fallback_families }};
@@ -122,12 +122,12 @@
 
         --btn-font: {% if theme_st.button_font == 'button_body_font' %}{{ theme_st.body_font.family }}{% else %}{{ theme_st.heading_font.family }}{% endif %}, {{ theme_st.body_font.fallback_families }};
         --btn-text-transform: {{ theme_st.button_text_transform }};
-        --btn-border-radius: {% if theme_st.rounded_corner %}{% if theme_st.rounded_corner_style == 'rounded_corner_large' %}10px{% else %}3px{% endif %}{% endif %};
+        --btn-radius: {{ theme_st.rounded_button }}px;
         --btn-font-weight:{% if theme_st.button_font == 'button_body_font' %}var(--subheading-weight,var(--body-font-weight)){% else %}var(--heading-font-weight){% endif %};
         --btn-padding-y: 1.6rem;
         --btn-padding-x: 4rem;
         --btn-font-size: {% if theme_st.button_text_transform == 'uppercase' %}calc(var(--body-font-size, 1.4rem) - 2px){% else %}var(--body-font-size, 1.4rem){% endif %};
-
+        --input-border-radius: {{ theme_st.rounded_input }}px;
         --input-height: 5rem;
         --rate-color: rgb({{ theme_st.color_product_rate.red }}, {{ theme_st.color_product_rate.green }}, {{ theme_st.color_product_rate.blue }});
         --page-width: {{ theme_st.page_width | divided_by: 10 }}rem;
@@ -144,6 +144,7 @@
 
         --transition: all 0.4s;
         --duration-short: 0.3s;
+        --duration-long: 0.5s;
         --transition-drawer: all 0.3s;
         --overlay-bg: rgba(0, 0, 0, 0.60);
         --responsive-ratio: 0.7;
@@ -208,7 +209,7 @@
     </script>
   </head>
 
-  <body>
+  <body class="{{ theme_st.animation_hover_effect }}">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
