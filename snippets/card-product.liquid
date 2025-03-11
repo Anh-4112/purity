@@ -167,7 +167,7 @@
                     {%- liquid
                       if card_product.media[1] != blank and product_show_image_hover and disable_hover_image == blank
                         assign alt_features = card_product.media[1].alt | default: card_product.title | escape
-                        render 'responsive-image', type: 'product', class: 'product__hover-img', image: card_product.media[1], image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding
+                        render 'responsive-image', type: 'product', class: 'product__hover-img transition invisible absolute inset-0', image: card_product.media[1], image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding
                       endif
                     -%}
                   {% endif %}
@@ -201,7 +201,7 @@
             {% if p_media and type_video and product_show_video_featured %}
               {% if p_media.media_type == 'video' or p_media.media_type == 'external_video' -%}
                 <button-playvideo
-                  class="deferred-media__poster-button pointer motion-reduce btn-reset w-full btn-reset w-full overlay-btn p-0 outline-focus-none border-0 p-0 outline-focus-none border-0"
+                  class="deferred-media__poster-button pointer motion-reduce btn-reset w-full outline-focus-none absolute inset-0 flex content-center"
                   type="button"
                   aria-label="{{ 'products.product.xr_button_label' | t }}"
                 >
@@ -216,7 +216,7 @@
               <button-quickview
                 tabindex="0"
                 data-item="overlay-quickbuy"
-                class="btn button-quickview{%- if product_show_quick_add_mobile == blank %} hidden-mobile{% endif %}"
+                class="btn button-quickview transition absolute inset-x-15 bottom-10 z-2 text-center bg-white{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
                 data-product-handle="{{ card_product.id }}"
                 data-url="{{ shop.url }}/products/{{ card_product.handle }}?section_id=product-quickview"
               >
@@ -236,15 +236,15 @@
             {%- endif -%}
           </div>
         {%- endif -%}
-        <div class="product__information alignment-{{ product_alignment }}">
+        <div class="product__information mt-15 text-{{ product_alignment }}">
           {% if product_show_vendor and disable_vendor != true and card_product.vendor != blank %}
-            <p class="product__vendor">
+            <div class="product__vendor">
               {{- card_product.vendor | link_to_vendor -}}
-            </p>
+            </div>
           {% endif %}
           <a
             aria-label="{{ card_product.title }}"
-            class="product__name heading-style"
+            class="product__name heading-style block"
             href="{{ card_product.url }}"
           >
             {{- card_product.title -}}
@@ -255,7 +255,7 @@
             -%}
           {%- endif -%}
           {% if disable_price != true %}
-            <div class="product__price mt-4 heading-color">
+            <div class="product__price heading-color">
               {%- render 'price', scope: 'item', product: card_product -%}
             </div>
           {% endif %}
@@ -316,19 +316,19 @@
           </a>
         </div>
       </div>
-      <div class="product-item__information">
+      <div class="product__information mt-15 text-{{ product_alignment }}">
         <a
           draggable="false"
           aria-disabled="true"
           role="link"
-          class="product-item__name"
+          class="product-item__name heading-style"
           title="{{ 'onboarding.product_title' | t }}"
           aria-label="{{ 'onboarding.product_title' | t }}"
         >
           {{ 'onboarding.product_title' | t }}
         </a>
         <div
-          class="product-item__price mt-5 justify-content-{{ product_alignment }}"
+          class="product-item__price mt-5 flex justify-{{ product_alignment }}"
           style="--font-size: {{ settings.price_size }}"
         >
           {%- render 'price', scope: 'item' -%}

@@ -45,7 +45,7 @@
   endif
 -%}
 {%- capture style -%}
-  --section-padding-top: {{ section_st.padding_top }}px; --section-padding-bottom: {{ section_st.padding_bottom }}px;
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
   {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- capture col_style -%}
@@ -54,7 +54,7 @@
 {%- endcapture -%}
 
 <div
-  class="color-{{ section_st.color_scheme }} gradient section__collection-list{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
+  class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">

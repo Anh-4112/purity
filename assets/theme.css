@@ -1491,36 +1491,50 @@ a.hover-heading-color:hover {
   }
   :where(
       .btn,
-      .btn-primary,
-      .btn-hover,
+      body .jdgm-write-rev-link,
+      body .jdgm-write-rev-link.jdgm-write-rev-link,
+      input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
+    )::after {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 120%;
+    height: 100%;
+    background-color: var(--btn-primary-hover-bg-color);
+    backface-visibility: hidden;
+    will-change: transform;
+    transform: rotate3d(0, 0, 1, 10deg) translate3d(-1.2em, 110%, 0);
+    transform-origin: 0% 100%;
+    transition: transform var(--duration, 0.5s) ease;
+  }
+  :where(
+      .btn,
       .shopify-payment-button__button--unbranded,
       body .jdgm-write-rev-link,
       body .jdgm-write-rev-link.jdgm-write-rev-link,
       input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
     ):hover {
-    --btn-bg: var(--btn-fill-hover-bg-color);
-    --btn-color: var(--btn-fill-hover-color);
-    --btn-border-color: var(--btn-fill-hover-bg-color);
+    --btn-bg: var(--btn-primary-hover-bg-color);
+    --btn-color: var(--btn-primary-hover-color);
     color: var(--btn-color);
   }
-  :is(
-      .btn-outline,
-      .btn-primary,
-      .btn-hover,
-      .btn-white,
-      button.shopify-payment-button__more-options,
-      .dmp_discount-form button
-    ):hover {
-    --btn-bg: var(--btn-fill-hover-bg-color);
-    --btn-color: var(--btn-fill-hover-color);
-    --btn-border-color: var(--btn-fill-hover-bg-color);
-    color: var(--btn-color);
+  :where(
+      .btn,
+      .shopify-payment-button__button--unbranded,
+      body .jdgm-write-rev-link,
+      body .jdgm-write-rev-link.jdgm-write-rev-link,
+      input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
+    ):hover::after {
+    transform: rotate3d(0, 0, 1, 0) translateZ(0);
   }
   .btn-hover:hover,
-  .btn-outline.bg-white:hover {
+  .btn.bg-white:hover {
     background-color: var(--btn-bg);
     color: var(--btn-color);
-    border-color: var(--btn-bg);
   }
   .smooth-padding-hover:hover {
     padding-inline-start: 1rem;
@@ -1542,6 +1556,22 @@ a.hover-heading-color:hover {
   }
   .underline-animation:hover {
     background-size: 100% 1px;
+  }
+  .hover-effect {
+    will-change: transform;
+  }
+  .hover-effect :is(img, .placeholder-image, picture) {
+    transition: var(--transition);
+    will-change: transform;
+  }
+  .hover_zoom .hover-effect:hover :is(img, .placeholder-image, picture) {
+    transform: var(--zoom-transform, scale(1.06));
+  }
+  .hover_fade .hover-effect:hover :is(img, .placeholder-image, picture) {
+    opacity: 0.8;
+  }
+  .hover_fade .hover-effect:hover .secondary-image {
+    opacity: 1;
   }
   @keyframes borderAnimation {
     0% {

@@ -4,12 +4,12 @@
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
     assign section_width = 'full-width px-20'
-  else  
+  else
     assign section_width = 'full-width-gap'
   endif
 -%}
 {%- capture style -%}
-  --section-padding-top: {{ section_st.padding_top }}px; --section-padding-bottom: {{ section_st.padding_bottom }}px;
+  --section-pt: {{ section_st.padding_top }}px; --section-pb: {{ section_st.padding_bottom }}px;
 {%- endcapture -%}
 {%- unless section_st.custom_liquid == blank -%}
   <div

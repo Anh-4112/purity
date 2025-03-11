@@ -141,7 +141,7 @@
   >
     {%- if card_product.metafields.custom.external_affiliate != blank -%}
       <div
-        class="product__badges-external rounded fs-small-1 subheading_weight"
+        class="product__badges-external rounded fs-13 subheading_weight"
         style="--badges-bg: #111; --badges-color: #fff;"
       >
         {{ card_product.metafields.custom.external_affiliate.value.button_text }}
@@ -149,7 +149,7 @@
     {%- else -%}
       {%- if sale and show_sale -%}
         <div
-          class="product__badges-sale rounded fs-small-1 subheading_weight"
+          class="product__badges-sale rounded fs-13 subheading_weight"
           style="--badges-bg: {{ theme_st.sale_background }}; --badges-color: {{ theme_st.sale_color }}"
         >
           {%- assign p = compare_at_price | minus: price -%}
@@ -168,7 +168,7 @@
       {%- endif -%}
       {%- if sold_out and show_sold_out -%}
         <div
-          class="product__badges-sold- rounded fs-small-1 subheading_weight"
+          class="product__badges-sold- rounded fs-13 subheading_weight"
           style="--badges-bg: {{ theme_st.sold_out_background }}; --badges-color: {{ theme_st.sold_out_color }}"
         >
           {{ 'products.product.sold_out' | t }}
@@ -176,7 +176,7 @@
       {%- else -%}
         {%- if pre_order and show_pre_order -%}
           <div
-            class=" product__badges-pre-order rounded fs-small-1 subheading_weight"
+            class=" product__badges-pre-order rounded fs-13 subheading_weight"
             style="--badges-bg: {{ theme_st.pre_order_background }}; --badges-color: {{ theme_st.pre_order_color }}"
           >
             {{ 'products.product.pre_order' | t }}
@@ -185,7 +185,7 @@
       {%- endif -%}
       {%- if show_new and diff_days < new_badge_display_period -%}
         <div
-          class="product__badges-new rounded fs-small-1 subheading_weight"
+          class="product__badges-new rounded fs-13 subheading_weight"
           style="--badges-bg: {{ theme_st.new_background }}; --badges-color: {{ theme_st.new_color }}"
         >
           {{ 'products.product.new_label' | t }}
@@ -193,7 +193,7 @@
       {%- endif -%}
       {%- if card_product.metafields.custom.custom_product_badge -%}
         <div
-          class="product__badges-custom rounded fs-small-1 subheading_weight"
+          class="product__badges-custom rounded fs-13 subheading_weight"
           style="--badges-bg: {{ theme_st.custom_badge_background }}; --badges-color: {{ theme_st.custom_badge_color }}"
         >
           {{ card_product.metafields.custom.custom_product_badge }}

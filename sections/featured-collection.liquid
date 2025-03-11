@@ -1,4 +1,5 @@
 {{ 'product.css' | asset_url | stylesheet_tag }}
+{{ 'carousel.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -46,14 +47,14 @@
   endif
 -%}
 {%- capture style -%}
-  --section-padding-top: {{ section_st.padding_top }}px; --section-padding-bottom: {{ section_st.padding_bottom }}px;
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- capture col_style -%}
   --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};
   {% if column_gap_slide < 20 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
 {%- endcapture -%}
 <div
-  class="color-{{ section_st.color_scheme }} gradient section__collection-list"
+  class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -78,7 +79,7 @@
         <div class="free-scroll">
       {% endif %}
       <slide-section
-        class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}"
+        class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
         data-section-id="{{ section.id }}"
         data-autoplay="false"
         data-effect="slide"
