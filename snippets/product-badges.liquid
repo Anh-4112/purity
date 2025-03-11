@@ -1,22 +1,11 @@
 {%- liquid
   assign theme_st = settings
   assign show_sale = theme_st.show_sale
-  assign sale_color = theme_st.sale_color
-  assign sale_background = theme_st.sale_background
   assign sale_format = theme_st.sale_format
   assign show_new = theme_st.show_new
-  assign new_color = theme_st.new_color
-  assign new_background = theme_st.new_background
   assign new_badge_display_period = theme_st.new_badge_display_period
   assign show_pre_order = theme_st.show_pre_order
-  assign pre_order_color = theme_st.pre_order_color
-  assign pre_order_background = theme_st.pre_order_background
   assign show_sold_out = theme_st.show_sold_out
-  assign sold_out_color = theme_st.sold_out_color
-  assign sold_out_background = theme_st.sold_out_background
-  assign custom_badge_color = theme_st.custom_badge_color
-  assign custom_badge_background = theme_st.custom_badge_background
-
   if card_product and card_product != empty
     assign option_name = 'Color'
     assign sale = false
@@ -148,23 +137,21 @@
 -%}
 {%- if sale or sold_out or pre_order or show_new or card_product.metafields.custom.custom_product_badge -%}
   <div
-    class="product__badges"
-    data-pre-order-color="{{ pre_order_color }}"
-    data-pre-order-background="{{ pre_order_background }}"
-    data-sale-color="{{ sale_color }}"
-    data-sale-background="{{ sale_background }}"
-    data-sold-out-color="{{ sold_out_color }}"
-    data-sold-out-background="{{ sold_out_background }}"
+    class="product__badges flex gap-5 column absolute top-15{% if theme_st.rtl %} right-15{% else %} left-15{% endif %}"
   >
     {%- if card_product.metafields.custom.external_affiliate != blank -%}
-      <div class="product__badges">
-        <div class="product__badges-external">
-          {{ card_product.metafields.custom.external_affiliate.value.button_text }}
-        </div>
+      <div
+        class="product__badges-external rounded fs-small-1 subheading_weight"
+        style="--badges-bg: #111; --badges-color: #fff;"
+      >
+        {{ card_product.metafields.custom.external_affiliate.value.button_text }}
       </div>
     {%- else -%}
       {%- if sale and show_sale -%}
-        <div class="product__badges-sale">
+        <div
+          class="product__badges-sale rounded fs-small-1 subheading_weight"
+          style="--badges-bg: {{ theme_st.sale_background }}; --badges-color: {{ theme_st.sale_color }}"
+        >
           {%- assign p = compare_at_price | minus: price -%}
           {%- if sale_format == 'text' -%}
             {{ 'products.product.sale_text' | t }}
@@ -180,23 +167,35 @@
         </div>
       {%- endif -%}
       {%- if sold_out and show_sold_out -%}
-        <div class="product__badges-sold-out">
+        <div
+          class="product__badges-sold- rounded fs-small-1 subheading_weight"
+          style="--badges-bg: {{ theme_st.sold_out_background }}; --badges-color: {{ theme_st.sold_out_color }}"
+        >
           {{ 'products.product.sold_out' | t }}
         </div>
       {%- else -%}
         {%- if pre_order and show_pre_order -%}
-          <div class=" product__badges-pre-order">
+          <div
+            class=" product__badges-pre-order rounded fs-small-1 subheading_weight"
+            style="--badges-bg: {{ theme_st.pre_order_background }}; --badges-color: {{ theme_st.pre_order_color }}"
+          >
             {{ 'products.product.pre_order' | t }}
           </div>
         {%- endif -%}
       {%- endif -%}
       {%- if show_new and diff_days < new_badge_display_period -%}
-        <div class="product__badges-new">
+        <div
+          class="product__badges-new rounded fs-small-1 subheading_weight"
+          style="--badges-bg: {{ theme_st.new_background }}; --badges-color: {{ theme_st.new_color }}"
+        >
           {{ 'products.product.new_label' | t }}
         </div>
       {%- endif -%}
       {%- if card_product.metafields.custom.custom_product_badge -%}
-        <div class="product__badges-customr">
+        <div
+          class="product__badges-custom rounded fs-small-1 subheading_weight"
+          style="--badges-bg: {{ theme_st.custom_badge_background }}; --badges-color: {{ theme_st.custom_badge_color }}"
+        >
           {{ card_product.metafields.custom.custom_product_badge }}
         </div>
       {%- endif -%}
