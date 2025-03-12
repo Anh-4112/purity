@@ -353,6 +353,9 @@ a.hover-heading-color:hover {
   padding-top: 3rem;
   padding-bottom: 3rem;
 }
+.py-40 {
+  padding-block: 4rem;
+}
 .py-50 {
   padding-top: clamp(3rem, 6vh, 5rem);
   padding-bottom: clamp(3rem, 6vh, 5rem);
@@ -1557,6 +1560,21 @@ a.hover-heading-color:hover {
   .underline-animation:hover {
     background-size: 100% 1px;
   }
+  .inside-out-effect:before {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 1px;
+    bottom: 2px;
+    left: 50%;
+    background-color: currentColor;
+    transition: width 0.3s ease, left 0.3s ease;
+  }
+  .inside-out-effect:hover:before,
+  .inside-out-hover:hover .inside-out-effect:before {
+    width: 100%;
+    left: 0;
+  }
   .hover-effect {
     will-change: transform;
   }
@@ -1624,9 +1642,9 @@ a.hover-heading-color:hover {
     }
   }
   /* Navigation desktop */
-  .down-to-up {
-    transform: translateY(2rem);
-    opacity: 0.01;
+  .down-to-up,
+  .down-to-up .classic .sub-children-menu {
+    transform: translateY(1.5rem);
   }
 }
 /* Open detail */
@@ -1673,7 +1691,7 @@ a.hover-heading-color:hover {
   margin-bottom: calc(var(--section-spacing) - var(--gutter-x, 0px));
 }
 details .icon {
-  transform-origin: center 2px;
+  transform-origin: center 3px;
 }
 details[open] .icon {
   transform: rotate(180deg);
@@ -1701,8 +1719,12 @@ details[open] .icon {
   right: 0;
   pointer-events: none;
 }
+.header__menu {
+  --transition: opacity 0.3s, visibility 0.3s, transform 0.3s,
+    -webkit-transform 0.3s;
+}
 .open-drawer .drawer.active,
-:is(.open-submenu, details[open]) .submenu,
+:is(.open-submenu) .submenu[open],
 .classic .have-child:hover .sub-children-menu {
   transform: translate3d(0, 0, 0);
   -webkit-transform: translate3d(0, 0, 0);
@@ -1716,7 +1738,7 @@ details[open] .icon {
   pointer-events: auto;
 }
 .submenu-desktop {
-  max-height: 80vh;
+  max-height: 90vh;
 }
 .col-mega {
   flex: 0 0 auto;
