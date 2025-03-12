@@ -1,3 +1,4 @@
+{{ 'carousel.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -5,7 +6,7 @@
   elsif section_st.section_width == 'full_width'
     assign section_width = 'full-width px-20'
   else
-    assign section_width = 'full-width-gap'
+    assign section_width = 'fluid_container'
   endif
   assign heading_size = section_st.heading_size
   assign text_alignment = section_st.text_alignment
@@ -14,11 +15,11 @@
   assign show_navigation = section_st.show_navigation
   assign reveal_slide = section_st.reveal_slide
 
-  assign heading_size = ''
+  assign header_size = ''
   if heading_size == 'small'
-    assign header_size = ' h3-size'
+    assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = ' h1-size'
+    assign header_size = 'fs-medium'
   endif
 
   assign items_per_row_mobile = section_st.items_per_row_mobile
@@ -37,9 +38,9 @@
   assign column_gap_slide = 0
   if section_st.column_gap == 'large'
     assign column_gap_slide = 30
-  elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 20
   elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
     assign column_gap_slide = 10
   endif
 
@@ -56,23 +57,23 @@
   endcase
 -%}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}px; --section-pb: {{ section_st.padding_bottom }}px;
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- capture col_style -%}
   --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};
   {% if column_gap_slide < 20 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
 {%- endcapture -%}
 <div
-  class="color-{{ section_st.color_scheme }} gradient section__blog-post"
+  class="section color-{{ section_st.color_scheme }} gradient section__blog-post{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}""
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     {%- if section_st.title != blank or section_st.description != blank -%}
       <div
-        class="section-header{{ header_size }} content-{{ text_alignment }}"
+        class="section-header text-{{ text_alignment }}"
       >
         {%- if section_st.title != blank -%}
-          <h2 class="section-heading">
+          <h2 class="section-heading {{ header_size }}">
             {{ section_st.title }}
           </h2>
         {%- endif -%}
@@ -84,11 +85,8 @@
       </div>
     {%- endif -%}
     {%- if section_st.enable_carousel -%}
-      {% if data_free_scroll == 'true' %}
-        <div class="free-scroll">
-      {% endif %}
       <slide-section
-        class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}"
+        class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
         data-section-id="{{ section.id }}"
         data-autoplay="false"
         data-effect="slide"
@@ -139,7 +137,7 @@
                     {%- render 'placeholder-render', type: 'blog', index: forloop.index -%}
                   </a>
                 </div>
-                <div class="card__content">
+                <div class="card__content mt-15">
                   <div class="card__heading{% if section_st.columns_desktop < 3 %} h4{% else %} h5{% endif %}">
                     <a
                       role="link"
@@ -150,7 +148,7 @@
                       {{ 'sections.featured_blog.onboarding_title' | t }}
                     </a>
                   </div>
-                  <p class="rte-width">
+                  <p class="rte-width rte mt-0">
                     {{ 'sections.featured_blog.onboarding_content' | t }}
                   </p>
                 </div>
@@ -164,9 +162,6 @@
           ></div>
         {% endif %}
       </slide-section>
-      {% if data_free_scroll == 'true' %}
-        </div>
-      {% endif %}
     {%- else -%}
       <grid-custom
         class="collection-list--grid grid grid-cols gap{% if data_free_scroll == 'true' %} grid_scroll{% endif %}"
@@ -209,7 +204,7 @@
                   {%- render 'placeholder-render', type: 'blog', index: forloop.index -%}
                 </a>
               </div>
-              <div class="card__content">
+              <div class="card__content mt-15">
                 <div class="card__heading{% if section_st.columns_desktop < 3 %} h4{% else %} h5{% endif %}">
                   <a
                     role="link"
@@ -220,7 +215,7 @@
                     {{ 'sections.featured_blog.onboarding_title' | t }}
                   </a>
                 </div>
-                <p class="rte-width">
+                <p class="rte-width rte mt-0">
                   {{ 'sections.featured_blog.onboarding_content' | t }}
                 </p>
               </div>
@@ -311,7 +306,7 @@
       "id": "text_alignment",
       "options": [
         {
-          "value": "left",
+          "value": "start",
           "label": "t:sections.all.text_alignment.options__1.label"
         },
         {
@@ -319,11 +314,11 @@
           "label": "t:sections.all.text_alignment.options__2.label"
         },
         {
-          "value": "right",
+          "value": "end",
           "label": "t:sections.all.text_alignment.options__3.label"
         }
       ],
-      "default": "left",
+      "default": "start",
       "label": "t:sections.all.text_alignment.alignment"
     },
     {
