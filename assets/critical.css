@@ -64,6 +64,9 @@ summary::-webkit-details-marker {
   font-size: calc(var(--heading-font-scale) * var(--size));
   margin: 0;
 }
+:where(blockquote, dl, dd, hr, figure, p, pre) {
+  margin: 0;
+}
 .rte
   :where(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .h0, .heading) {
   margin-bottom: 1em;
@@ -87,16 +90,16 @@ summary::-webkit-details-marker {
 }
 :where(h3, .h3) {
   --size: clamp(
-    2.2rem,
+    2.4rem,
     calc(2.8rem + (30 - 28) * var(--responsive-rate)),
-    2.4rem
+    3rem
   );
 }
 :where(h4, .h4) {
-  --size: 2.2rem;
+  --size: 2.4rem;
 }
 :where(h5, .h5) {
-  --size: 2rem;
+  --size: 2.2rem;
 }
 :where(h6, .h6) {
   --size: 1.8rem;
@@ -236,15 +239,18 @@ video {
   font-family: var(--btn-font);
   color: var(--btn-color);
   background-color: var(--btn-bg);
-  border: 1px solid var(--btn-border-color);
   transition: var(--transition);
   border-radius: var(--btn-radius);
   line-height: normal;
   cursor: pointer;
   letter-spacing: var(--btn-letter-spacing);
   text-transform: var(--btn-text-transform);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--btn-border-color);
 }
-:is(
+:where(
     .btn-primary,
     .shopify-payment-button__more-options,
     .shopify-payment-button__button--unbranded,
@@ -253,7 +259,7 @@ video {
   ) {
   --btn-bg: var(--btn-primary-bg-color);
   --btn-color: var(--btn-primary-color);
-  --btn-border-color: var(--btn-primary-bg-color);
+  --btn-border-color: var(--btn-bg);
 }
 .btn-outline {
   --btn-bg: var(--color-white);

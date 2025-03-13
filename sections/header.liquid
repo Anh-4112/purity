@@ -119,9 +119,9 @@
                         -%}
                     {%- endcase -%}
                     {%- if link.links.size > 0 or has_content -%}
-                      <details is="details-mega-menu" class="details-header-menu open-submenu" open>
+                      <details is="details-mega-menu" class="details-header-menu">
                         <summary
-                          class="menu__item menu_weight"
+                          class="menu__item menu_weight flex align-center gap-5 justify-between"
                           data-href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
@@ -136,8 +136,7 @@
                           endif
                         -%}
                         <div
-                          class="mega-menu py-40 submenu transition invisible submenu-desktop {{ section_st.dropdowns_animation }} overflow-y-auto absolute inset-x-0 z-1 bg-white shadow"
-                          open
+                          class="mega-menu py-40 submenu transition invisible submenu-desktop {{ section_st.dropdowns_animation }} border-top overflow-y-auto absolute inset-x-0 z-1 bg-white shadow"
                           style="--col-mega-width: {{ mega_width }}%; --col-gap: 20px;"
                         >
                           <div class="container flex wrap gap">
@@ -174,7 +173,7 @@
                                           assign banner_default = 'accessibility.promotion_banner'
                                           assign image_alt = image.alt | default: banner_default | escape
                                         -%}
-                                        <div class="banner__item">
+                                        <div class="banner__item rounded{% if last_block.settings.content_position != 'bellow' %} align-self-baseline{% endif %}">
                                           <a
                                             {% if banner_link != blank %}
                                               href="{{ banner_link }}"
@@ -182,14 +181,14 @@
                                               role="link" aria-disabled="true"
                                             {% endif %}
                                             arial-label="{{ image_alt }}"
-                                            class="banner__inner{% if last_block.settings.content_position == 'overlay' %} flex relative{% endif %}"
-                                            {% if last_block.settings.content_position == 'overlay' %}
+                                            class="banner__inner hover-effect{% if last_block.settings.content_position != 'bellow' %} flex relative align-{{ last_block.settings.content_position }}{% endif %}"
+                                            {% if last_block.settings.content_position != 'bellow' %}
                                               style="--aspect-ratio: {{ image.aspect_ratio }};"
                                             {% endif %}
                                           >
                                             <div
-                                              class="banner__item-media block{% if last_block.settings.content_position == 'overlay' %} absolute inset-0{% endif %}"
-                                              style="--aspect-ratio: {{ image.aspect_ratio }};--point:{{ image.presentation.focal_point }}; {% if last_block.settings.content_position != 'overlay' %}--aspect-ratio: {{ image.aspect_ratio }};{% endif %}"
+                                              class="banner__item-media block{% if last_block.settings.content_position != 'bellow' %} absolute inset-0{% else %} rounded{% endif %}"
+                                              style="--aspect-ratio: {{ image.aspect_ratio }};--point:{{ image.presentation.focal_point }};"
                                             >
                                               {% render 'responsive-image',
                                                 image: image,
@@ -202,28 +201,29 @@
                                               or description != blank
                                               or button_label != blank
                                             %}
-                                              <div class="banner__item-info w-full{% if last_block.settings.content_position == 'overlay' %} p-30{% else %} mt-20{% endif %} text-{{ last_block.settings.content_alignment }} relative z-1">
+                                              <div class="banner__item-info color-{{ last_block.settings.color_scheme }} w-full{% if last_block.settings.content_position != 'bellow' %} py-40 px-30{% else %} mt-20{% endif %} text-{{ last_block.settings.content_alignment }} relative z-1">
                                                 {% if subheading != blank %}
-                                                  <div class="subheading">
+                                                  <div class="subheading mb-3">
                                                     {{ subheading | escape }}
                                                   </div>
                                                 {% endif %}
                                                 {% if heading != blank %}
-                                                  <h2 class="heading">
-                                                    {{ block_st.heading }}
+                                                  <h2 class="heading{% if last_block.settings.banner_column > 3 %} h5{% else %} h3{% endif %}">
+                                                    {{ heading }}
                                                   </h2>
                                                 {% endif %}
                                                 {% if description != blank %}
-                                                  <div class="description">
+                                                  <div class="description mt-5">
                                                     {{ description }}
                                                   </div>
                                                 {% endif %}
                                                 {% if button_label != blank %}
                                                   <button
-                                                    class="btn btn-primary w-full"
+                                                    class="btn btn-primary mt-20 text-center min-w-custom"
+                                                    style="--min-width: 70%;--btn-padding-x: 2rem;"
                                                     aria-label="{{ button_label }}"
                                                   >
-                                                    {{ button_label }}
+                                                    <span class="btn-text relative z-1">{{ button_label }}</span>
                                                   </button>
                                                 {% endif %}
                                               </div>
@@ -334,7 +334,7 @@
                     {%- if link.links.size > 0 -%}
                       <details is="details-mega-menu" class="details-header-menu">
                         <summary
-                          class="menu__item menu_weight"
+                          class="menu__item menu_weight flex align-center gap-5 justify-between"
                           data-href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
@@ -606,13 +606,13 @@
                                         -%}
                                         <div class="banner__item">
                                           <div
-                                            class="banner__inner{% if last_block.settings.content_position == 'overlay' %} flex relative{% endif %}"
-                                            {% if last_block.settings.content_position == 'overlay' %}
+                                            class="banner__inner{% if last_block.settings.content_position != 'bellow' %} flex relative{% endif %}"
+                                            {% if last_block.settings.content_position != 'bellow' %}
                                               style="--aspect-ratio: {{ image.aspect_ratio }};"
                                             {% endif %}
                                           >
                                             <div
-                                              class="banner__item-media{% if last_block.settings.content_position == 'overlay' %} absolute inset-0{% endif %}"
+                                              class="banner__item-media{% if last_block.settings.content_position != 'bellow' %} absolute inset-0{% endif %}"
                                               style="--point:{{ image.presentation.focal_point }}; {% if last_block.settings.content_position != 'overlay' %}--aspect-ratio: {{ image.aspect_ratio }};{% endif %}"
                                             >
                                               <a
@@ -622,8 +622,8 @@
                                                   role="link" aria-disabled="true"
                                                 {% endif %}
                                                 arial-label="{{ image_alt }}"
-                                                class="banner__inner{% if last_block.settings.content_position == 'overlay' %} flex relative{% endif %}"
-                                                {% if last_block.settings.content_position == 'overlay' %}
+                                                class="banner__inner{% if last_block.settings.content_position != 'bellow' %} flex relative{% endif %}"
+                                                {% if last_block.settings.content_position != 'bellow' %}
                                                   style="--aspect-ratio: {{ image.aspect_ratio }};"
                                                 {% endif %}
                                               >
@@ -1126,15 +1126,27 @@
           "id": "content_position",
           "options": [
             {
-              "value": "overlay",
-              "label": "t:sections.all.content_position.options__1.label"
-            },
-            {
+              "group": "Bellow image",
               "value": "bellow",
               "label": "t:sections.all.content_position.options__2.label"
+            },
+            {
+              "group": "Overlay image",
+              "value": "start",
+              "label": "t:sections.all.content_position.options__1.top"
+            },
+            {
+              "group": "Overlay image",
+              "value": "center",
+              "label": "t:sections.all.content_position.options__1.middle"
+            },
+            {
+              "group": "Overlay image",
+              "value": "end",
+              "label": "t:sections.all.content_position.options__1.bottom"
             }
           ],
-          "default": "overlay",
+          "default": "end",
           "label": "t:sections.all.content_position.label"
         },
         {
@@ -1156,6 +1168,13 @@
           ],
           "default": "left",
           "label": "t:sections.all.text_alignment.label"
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "t:sections.all.colors.label",
+          "info": "t:sections.all.colors.info",
+          "default": "default-color-scheme"
         },
         {
           "type": "header",
