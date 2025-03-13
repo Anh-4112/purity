@@ -5,7 +5,7 @@
   elsif section_st.section_width == 'full_width'
     assign section_width = 'full-width'
   else
-    assign section_width = 'full-width-gap'
+    assign section_width = 'fluid_container'
   endif
   assign slide_height = section_st.slide_height
   assign color_scheme = section_st.color_scheme
@@ -14,6 +14,11 @@
   assign slide_auto_change = section_st.slide_auto_change
   assign change_slide_every = section_st.change_slide_every
   assign show_text_bellow_image = section_st.show_text_bellow_image
+  assign heading_size = section_st.heading_size
+  assign rounded = ''
+  if section_st.section_width != 'full_width'
+    assign rounded = 'rounded'
+  endif
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}px; --section-pb: {{ section_st.padding_bottom }}px;
@@ -87,11 +92,11 @@
             %}
             <div {{ block.shopify_attributes }} class="swiper-slide">
               <div
-                class="sec__inner{% if slide_height == 'adapt' and image_mobile != blank %} ratio-mobile{% endif %} h-{{ slide_height }}"
+                class="sec__inner flex {% if slide_height == 'adapt' and image_mobile != blank %} ratio-mobile{% endif %} h-{{ slide_height }}"
                 style="--overlay-opacity: {{ overlay_opacity }}%;{% if slide_height == 'adapt' or  slide_height == 'full_screen' %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
               >
                 <div
-                  class="banner__media w-full"
+                  class="banner__media w-full {{ rounded }} absolute inset-0"
                   style="--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};--point:{{ image.presentation.focal_point }};"
                 >
                   {%- if image != blank or image_mobile != blank or local_video != blank -%}
@@ -118,7 +123,7 @@
                         assign poster_mobile = image_mobile | default: desktop_url
                       -%}
                       <video
-                        class="slideshow"
+                        class="slideshow {{ rounded }}"
                         loop="true"
                         {% if poster_mobile != blank %}
                           data-posterMobile="{{ poster_mobile | image_url: width: 1100 }}"
@@ -126,7 +131,7 @@
                         {% if poster_desktop != blank %}
                           data-posterDesktop="{{ poster_desktop | image_url: width: 1100 }}"
                         {% endif %}
-                        data-src="{{ source_url }}"
+                        src="{{ source_url }}"
                         poster="{{ poster }}"
                         playsinline="true"
                         muted
@@ -141,6 +146,7 @@
                       -%}
                       {% render 'responsive-image',
                         type: 'banner',
+                        class: rounded,
                         container: section_st.section_width,
                         image: image,
                         image_mobile: image_mobile,
@@ -158,8 +164,8 @@
                   or first_button_label != blank
                   or second_button_label != blank
                 %}
-                  <div class="sec__content relative">
-                    <div class="sec__content-inner content-{{ desktop_content_position }} alignment-{{ text_alignment }}">
+                  <div class="sec__content {{ desktop_content_position }} container flex relative">
+                    <div class="sec__content-inner text-{{ text_alignment }}">
                       {% if subheading != blank %}
                         <div class="sec__content-subheading">
                           {% assign animate_delay = 30 %}
@@ -173,7 +179,7 @@
                         </div>
                       {% endif %}
                       {% if heading != blank %}
-                        <h2 class="sec__content-heading">
+                        <h2 class="sec__content-heading heading-{{ heading_size }}">
                           {% assign animate_delay = animate_delay | plus: 5 %}
                           <motion-effect
                             data-animate="fade-up"
@@ -522,7 +528,7 @@
           "id": "text_alignment",
           "options": [
             {
-              "value": "left",
+              "value": "start",
               "label": "t:sections.all.text_alignment.options__1.label"
             },
             {
@@ -530,11 +536,11 @@
               "label": "t:sections.all.text_alignment.options__2.label"
             },
             {
-              "value": "right",
+              "value": "end",
               "label": "t:sections.all.text_alignment.options__3.label"
             }
           ],
-          "default": "left",
+          "default": "start",
           "label": "t:sections.all.text_alignment.label"
         }
       ]
@@ -577,6 +583,26 @@
           "id": "heading",
           "default": "Heading",
           "label": "t:sections.all.content_setting.heading.label"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:sections.all.content_header.heading_size.options__1.label"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.all.content_header.heading_size.options__2.label"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.all.content_header.heading_size.options__3.label"
+            }
+          ],
+          "default": "medium",
+          "label": "t:sections.all.content_header.heading_size.label"
         },
         {
           "type": "richtext",
