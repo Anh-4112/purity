@@ -1,6 +1,174 @@
+{%- liquid
+  assign product = closest.product
+  assign gift_card_recipient_feature_active = false
+  assign show_dynamic_checkout = false
+-%}
+{%- if product.metafields.custom.external_affiliate == blank -%}
+  <div class="product-detail__buy-buttons button-trigger__sticky">
+    {%- if product != blank -%}
+      {%- liquid
+        if block.settings.show_gift_card_recipient and product.gift_card?
+          assign gift_card_recipient_feature_active = true
+        endif
+
+        if block.settings.show_dynamic_checkout and gift_card_recipient_feature_active == false
+          assign show_dynamic_checkout = true
+        endif
+        assign product_form_id = 'product-form-' | append: section.id
+      -%}
+      <div class="product__submit-form">
+        <product-form
+          class="block product-form flex-1"
+          data-hide-errors="{{ gift_card_recipient_feature_active }}"
+          data-section-id="{{ section.id }}"
+        >
+          <div class="product-form__error-message-wrapper" role="alert" hidden>
+            <div class="form__message error">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto">
+                <use href="#icon-error"></use>
+              </svg>
+              <span class="product-form__error-message ms-5"></span>
+            </div>
+          </div>
+          {%- form 'product',
+            product,
+            id: product_form_id,
+            class: 'main-product-form',
+            novalidate: 'novalidate',
+            data-type: 'add-to-cart-form'
+          -%}
+            <input
+              type="hidden"
+              name="id"
+              value="{{ product.selected_or_first_available_variant.id }}"
+              disabled
+              class="product-variant-id"
+            >
+            {%- if gift_card_recipient_feature_active -%}
+              {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
+            {%- endif -%}
+            <div class="product-form__buttons ">
+              <div class="product__submit-form-cart flex flex-wrap gap-10 align-center">
+                <label class="visually-hidden" for="Quantity-{{ section.id }}">
+                  {{- 'products.product.quantity.label' | t -}}
+                </label>
+                <div id="Quantity-Form-{{ section.id }}" class="product-form__input product-form__quantity">
+                  <quantity-input class="quantity flex align-center border rounded-3 olor-dark">
+                    <button
+                      class="quantity__button btn-reset lh-1 no-js-hidden ps-15 pe-10 heading-color"
+                      name="minus"
+                      type="button"
+                    >
+                      <span class="visually-hidden">
+                        {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+                      </span>
+                      <svg width="11" height="2" viewBox="0 0 11 2" fill="none">
+                        <use href="#icon-minus"></use>
+                      </svg>
+                    </button>
+
+                    <input
+                      class="quantity__input border-0 p-0 w-48 text-center heading-color"
+                      style="--input-height: 4.8rem;--input-border-radius: 0;--input-color: var(--dark-color);"
+                      type="number"
+                      name="quantity"
+                      id="Quantity-{{ section.id }}"
+                      min="{{ product.selected_or_first_available_variant.quantity_rule.min | default: '1' }}"
+                      {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
+                        max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                      {% endif -%}
+                      step="{{ product.selected_or_first_available_variant.quantity_rule.increment | default: '1' }}"
+                      value="{{ product.selected_or_first_available_variant.quantity_rule.min | default: '1' }}"
+                      form="{{ product_form_id }}"
+                    >
+                    <button
+                      class="quantity__button btn-reset lh-1 no-js-hidden pe-15 ps-10 heading-color"
+                      name="plus"
+                      type="button"
+                    >
+                      <span class="visually-hidden">
+                        {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
+                      </span>
+                      <svg width="11" height="12" viewBox="0 0 11 12" fill="none">
+                        <use href="#icon-plus"></use>
+                      </svg>
+                    </button>
+                  </quantity-input>
+                </div>
+                <div class="button_buy-now grow-2 shrink-1">
+                  <button
+                    id="ProductSubmitButton-{{ section.id }}"
+                    type="submit"
+                    name="add"
+                    class="btn btn-outline inline-flex content-center remove-underline pointer transition btn-text-transform w-full product_submit_button product-form__submit word-wrap relative"
+                    {% if product.selected_or_first_available_variant.available == false %}
+                      disabled
+                    {% endif %}
+                  >
+                    <span class="btn-label hidden-on-load">
+                      {%- if product.selected_or_first_available_variant.inventory_management == null -%}
+                        {{ 'products.product.add_to_cart' | t }}
+                      {%- else -%}
+                        {%- if product.selected_or_first_available_variant.available == false -%}
+                          {{ 'products.product.sold_out' | t }}
+                        {%- else -%}
+                          {%- if product.selected_or_first_available_variant.inventory_quantity < 1 -%}
+                            {{ 'products.product.pre_order' | t }}
+
+                          {%- else -%}
+                            {{ 'products.product.add_to_cart' | t }}
+                          {%- endif -%}
+                        {%- endif -%}
+                      {%- endif -%}
+                    </span>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      class="spin opacity-0 pointer-none icon-load absolute"
+                    >
+                      <use href="#icon-load"></use>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              {%- if show_dynamic_checkout -%}
+                {{ form | payment_button }}
+              {%- endif -%}
+            </div>
+          {%- endform -%}
+        </product-form>
+      </div>
+    {%- else -%}
+      <div class="product-form">
+        <div class="product-form__buttons form">
+          <button
+            type="submit"
+            name="add"
+            class="product_buy_now_button product-form__submit btn-primary disabled"
+            disabled
+          >
+            {{ 'products.product.sold_out' | t }}
+          </button>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+{%- else -%}
+  <a
+    href="{{ product.metafields.custom.external_affiliate.value.external_link }}"
+    rel="nofollow"
+    target="_blank"
+    class="btn product-form__submit relative text-center w-full whitespace-nowrap animation flash-move block btn-primary no-underline"
+  >
+    {{- product.metafields.custom.external_affiliate.value.button_text -}}
+  </a>
+{%- endif -%}
 {% schema %}
 {
   "name": "t:sections.all.product_setting.buy_buttons.name",
+  "class": "block-product__buttons",
   "settings": [
     {
       "type": "checkbox",

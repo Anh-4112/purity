@@ -1,4 +1,4 @@
-import { initSlide } from './module_slide.js?v=1';
+import { initSlide } from './module_slide.js?v=123';
 
 var Shopify = Shopify || {};
 var root = document.getElementsByTagName("html")[0];
@@ -17,9 +17,11 @@ class SlideSection extends HTMLElement {
   constructor() {
     super();
     this.init();
+    this.initSlideSection(this);
   }
 
-  init() {
+  init() {}
+  initSlideSection() {
     const _this = this;
     if (document.body.classList.contains("index")) {
       let pos = window.pageYOffset;

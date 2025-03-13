@@ -1,3 +1,36 @@
+{%- liquid
+  assign theme_st = settings
+  assign section_st = section.settings
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+-%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+{%- endcapture -%}
+<section
+  id="MainProduct-{{ section.id }}"
+  class="section sec__main-product"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }}">
+    <div
+      class="main-product"
+    >
+      {% if product.media.size > 0 %}
+        <div class="product-detail__media"></div>
+      {% endif %}
+      <div class="product-detail__information">
+        {% content_for 'blocks', closest.product: product %}
+      </div>
+    </div>
+  </div>
+</section>
 {% schema %}
 {
   "name": "t:sections.main-product.name",
@@ -8,22 +41,22 @@
       "type": "@app"
     },
     {
-      "type": "_badges"
-    },
-    {
-      "type": "_price-product"
-    },
-    {
-      "type": "_description"
+      "type": "_badges-product"
     },
     {
       "type": "_title-product"
     },
     {
-      "type": "_rate"
+      "type": "_price-product"
     },
     {
-      "type": "_text"
+      "type": "_description-product"
+    },
+    {
+      "type": "_rating-product"
+    },
+    {
+      "type": "_text-product"
     },
     {
       "type": "_pickup-availability"

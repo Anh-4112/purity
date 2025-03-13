@@ -1,6 +1,17 @@
+<h1
+  class="title"
+  {{ block.shopify_attributes }}
+>
+  {%- if closest.product.title != blank -%}
+    {{ closest.product.title | escape }}
+  {%- else -%}
+    {{ 'onboarding.product_title' | t }}
+  {% endif %}
+</h1>
 {% schema %}
 {
   "name": "t:sections.all.product_setting.title.name",
+  "class": "block-product__title",
   "presets": [{ "name": "t:sections.all.product_setting.title.name" }]
 }
 {% endschema %}
