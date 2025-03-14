@@ -490,7 +490,7 @@
   <template class="menu-drawer">
     <menu-drawer
       id="Menu-Drawer"
-      class="invisible modal drawer drawer-left transition-drawer hidden-1025 fixed z-15 inset-y-0 flex bg-white"
+      class="invisible modal drawer drawer-left transition-drawer hidden-1025 fixed z-15 inset-y-0 flex bg-white active-modal-js"
     >
       <modal-overlay class="modal-overlay invisible transition"></modal-overlay>
       <div class="modal-inner relative">
@@ -560,7 +560,7 @@
                           -%}
                       {%- endcase -%}
                       {%- if link.links.size > 0 or has_content -%}
-                        <details class="details-header-menu">
+                        <details is="details-mega-menu" class="details-header-menu">
                           <summary
                             class="menu__item menu_weight flex align-center gap-5 justify-between"
                             data-href="{{ link.url }}"
@@ -774,7 +774,7 @@
                       {%- endif -%}
                     {%- else -%}
                       {%- if link.links.size > 0 -%}
-                        <details class="details-header-menu">
+                        <details is="details-mega-menu" class="details-header-menu">
                           <summary
                             class="menu__item menu_weight flex align-center gap-5 justify-between py-5"
                             data-href="{{ link.url }}"
@@ -813,7 +813,7 @@
                 {%- else -%}
                   <li>
                     {%- if link.links.size > 0 -%}
-                      <details class="details-header-menu">
+                      <details is="details-mega-menu" class="details-header-menu">
                         <summary
                           class="menu__item menu_weight flex align-center gap-5 justify-between py-5"
                           data-href="{{ link.url }}"

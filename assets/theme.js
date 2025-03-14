@@ -4,11 +4,112 @@ var Shopify = Shopify || {};
 var root = document.getElementsByTagName("html")[0];
 var body = document.getElementsByTagName("body")[0];
 
+function getFocusableElements(container) {
+  return Array.from(
+    container.querySelectorAll(
+      "summary, a[href], button:enabled, [tabindex]:not([tabindex^='-']), [draggable], area, input:not([type=hidden]):enabled, select:enabled, textarea:enabled, object, iframe"
+    )
+  );
+}
+
+const trapFocusHandlers = {};
+
+function trapFocus(container, elementToFocus = container) {
+  var elements = getFocusableElements(container);
+  var first = elements[0];
+  var last = elements[elements.length - 1];
+
+  removeTrapFocus();
+
+  trapFocusHandlers.focusin = (event) => {
+    if (
+      event.target !== container &&
+      event.target !== last &&
+      event.target !== first
+    )
+      return;
+
+    document.addEventListener('keydown', trapFocusHandlers.keydown);
+  };
+
+  trapFocusHandlers.focusout = function() {
+    document.removeEventListener('keydown', trapFocusHandlers.keydown);
+  };
+
+  trapFocusHandlers.keydown = function(event) {
+    if (event.code.toUpperCase() !== 'TAB') return;
+    if (event.target === last && !event.shiftKey) {
+      event.preventDefault();
+      first?.focus();
+    }
+
+    if (
+      (event.target === container || event.target === first) &&
+      event.shiftKey
+    ) {
+      event.preventDefault();
+      last?.focus();
+    }
+  };
+
+  document.addEventListener('focusout', trapFocusHandlers.focusout);
+  document.addEventListener('focusin', trapFocusHandlers.focusin);
+
+  elementToFocus.focus();
+
+  if (elementToFocus.tagName === 'INPUT' &&
+    ['search', 'text', 'email', 'url'].includes(elementToFocus.type) &&
+    elementToFocus.value) {
+    elementToFocus.setSelectionRange(0, elementToFocus.value.length);
+  }
+}
+
+try {
+  document.querySelector(":focus-visible");
+} catch(e) {
+  focusVisiblePolyfill();
+}
+
+function focusVisiblePolyfill() {
+  const navKeys = ['ARROWUP', 'ARROWDOWN', 'ARROWLEFT', 'ARROWRIGHT', 'TAB', 'ENTER', 'SPACE', 'ESCAPE', 'HOME', 'END', 'PAGEUP', 'PAGEDOWN'];
+  let currentFocusedElement = null;
+  let mouseClick = null;
+
+  window.addEventListener('keydown', (event) => {
+    if(navKeys.includes(event.code.toUpperCase())) {
+      mouseClick = false;
+    }
+  });
+
+  window.addEventListener('mousedown', () => {
+    mouseClick = true;
+  });
+
+  window.addEventListener('focus', () => {
+    if (currentFocusedElement) currentFocusedElement.classList.remove('focused');
+
+    if (mouseClick) return;
+
+    currentFocusedElement = document.activeElement;
+    currentFocusedElement.classList.add('focused');
+
+  }, true);
+}
+
+function removeTrapFocus(elementToFocus = null) {
+  document.removeEventListener('focusin', trapFocusHandlers.focusin);
+  document.removeEventListener('focusout', trapFocusHandlers.focusout);
+  document.removeEventListener('keydown', trapFocusHandlers.keydown);
+  if (elementToFocus) elementToFocus.focus();
+}
+
 function eventModal(event) {
   if (event == "open") {
     root.classList.add("open-modal");
+    root.querySelector(".active-modal-js").classList.add("active-modal");
   } else {
     root.classList.remove("open-modal");
+    root.querySelector(".active-modal-js").classList.remove("active-modal");
   }
 }
 
@@ -116,6 +217,12 @@ class DetailsMegaMenu extends HTMLDetailsElement {
       (this.detectHoverListener = this.detectHover.bind(this)),
       this.addEventListener("mouseenter", this.detectHoverListener.bind(this)),
       this.addEventListener("mouseleave", this.detectHoverListener.bind(this));
+      if (this.querySelector(".back-menu")) {
+        this.querySelector(".back-menu").addEventListener(
+          "click",
+          this.onSummaryClicked.bind(this)
+        );
+      }
   }
   set open(value) {
     value !== this._open &&
@@ -191,4 +298,58 @@ class DetailsMegaMenu extends HTMLDetailsElement {
 customElements.define("details-mega-menu", DetailsMegaMenu, {
   extends: "details",
 }),
-  megaMenuCount.set(DetailsMegaMenu, 0);
+megaMenuCount.set(DetailsMegaMenu, 0);
+
+class SubMenuDetails extends HTMLDetailsElement {
+  constructor() {
+    super(),
+      (this.summaryElement = this.firstElementChild),
+      (this.contentElement = this.lastElementChild),
+      this._open = this.hasAttribute("open"),
+      this.content = this.closest('.menu-link').querySelector(".sub-children-menu"),
+      this.summaryElement.addEventListener(
+        "click",
+        this.onSummaryClicked.bind(this)
+      );
+  }
+
+  get open() {
+    return this._open;
+  }
+
+  set open(value) {
+    value !== this._open &&
+      ((this._open = value),
+      this.isConnected
+        ? this.transition(value)
+        : value
+        ? this.setAttribute("open", "")
+        : this.removeAttribute("open"));
+  }
+
+  onSummaryClicked(event) {
+    event.preventDefault(),
+      !event.target.closest('.toggle-menu') &&
+      this.summaryElement.hasAttribute("data-href") &&
+      this.summaryElement.getAttribute("data-href").length > 0
+        ? (window.location.href = this.summaryElement.getAttribute("data-href"))
+        : this.open = !this.open;
+  }
+
+  async transition(value) {
+    return value
+      ? (Motion.animate(
+        this.content,
+        true ? { height: "auto"} : { height: 0 },
+        { duration: 0.25 } ),
+        this.setAttribute("open", ""))
+      : (Motion.animate(
+        this.content,
+        false ? { height: "auto"} : { height: 0 },
+        { duration: 0.25 } ),
+        this.removeAttribute("open"))
+  }
+}
+customElements.define("submenu-details", SubMenuDetails, {
+  extends: "details"
+});

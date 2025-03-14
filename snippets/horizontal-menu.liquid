@@ -5,23 +5,23 @@
     >
       {%- if menu_mobile != blank -%}
         <div class="submenu-header">
-          <back-button tabindex="0" class="flex gap-5 align-center px-20 py-5">
+          <button type="button" class="back-menu flex gap-5 align-center px-20 py-5">
             <svg class="icon-back min-w-custom" width="6" height="11" viewBox="0 0 6 11" fill="none">
               <use href="#icon-back" />
             </svg>
             {{- link.title -}}
-          </back-button>
+          </button>
         </div>
       {%- endif -%}
   {%- else -%}
     {%- if menu_mobile != blank -%}
       <div class="submenu-header">
-        <back-button tabindex="0" class="flex gap-5 align-center px-20 py-5">
+        <button type="button" class="back-menu flex gap-5 align-center px-20 py-5">
           <svg class="icon-back min-w-custom" width="6" height="11" viewBox="0 0 6 11" fill="none">
             <use href="#icon-back" />
           </svg>
           {{- link.title -}}
-        </back-button>
+        </button>
       </div>
     {%- endif -%}
   {%- endif -%}
@@ -40,29 +40,31 @@
               {{- child_link.title -}}
             </a>
           {%- else -%}
-            <details open>
+            <details is="submenu-details" open>
               <summary
                 class="menu__item level-2 py-5 flex align-center gap-5 justify-between inside-out-hover"
                 data-href="{{ link.url }}"
                 aria-label="{{ child_link.title }}"
               >
-                <span class="inside-out-effect relative">
+                <span class="menu__title inside-out-effect relative">
                   {{- child_link.title -}}
                 </span>
                 {% if menu_mobile == blank %}
                   {% if settings.rtl %}
-                    <svg class="icon-down block hidden-1025" width="6" height="11">
+                    <svg class="icon-down block" width="6" height="11">
                       <use href="#icon-back" />
                     </svg>
                   {% else %}
-                    <svg class="icon-down block hidden-1025" width="6" height="11">
+                    <svg class="icon-down block" width="6" height="11">
                       <use href="#icon-next" />
                     </svg>
                   {% endif %}
                 {% else %}
-                  <svg class="icon icon-down transition-short" width="9" height="6" viewBox="0 0 9 6">
-                    <use href="#icon-arrow-down" />
-                  </svg>
+                  <span class="toggle-menu">
+                    <svg class="icon icon-down transition-short" width="9" height="6" viewBox="0 0 9 6">
+                      <use href="#icon-arrow-down" />
+                    </svg>
+                  </span>
                 {% endif %}
               </summary>
             </details>
