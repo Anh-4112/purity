@@ -111,6 +111,7 @@
         --heading-weight: {{ theme_st.heading_font.weight }};
         --heading-text-transform: {{ theme_st.heading_text_transform }};
         --subheading-weight: {{ theme_st.subheading_weight }};
+        --heading-letter-spacing: {{ theme_st.heading_letter_spacing | divided_by: 100 }}em;
 
         --menu-font: {% if theme_st.menu_font == 'menu_body_font' %}{{ theme_st.body_font.family }}{% else %}{{ theme_st.heading_font.family }}{% endif %}, {{ theme_st.body_font.fallback_families }};
         --medium-font-weight: {% if theme_st.heading_font.weight > '400' %}600{% else %}{{ theme_st.heading_font.weight }}{% endif %};
@@ -139,7 +140,6 @@
         --color-white: #FFFFFF;
         --color-dark: #000;
         --responsive-rate: ((100vw - 575px) / (1600 - 575));
-        --heading-letter-spacing: {% if theme_st.heading_letter_spacing == '0.25em' %}0.15em{% else %}{{ theme_st.heading_letter_spacing }}{% endif %};
 
         --transition: all 0.4s;
         --duration-short: 0.3s;
