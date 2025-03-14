@@ -106,10 +106,10 @@ function removeTrapFocus(elementToFocus = null) {
 function eventModal(event) {
   if (event == "open") {
     root.classList.add("open-modal");
-    root.querySelector(".active-modal-js").classList.add("active-modal");
+    root.querySelector(".active-modal-js").classList.add("active");
   } else {
     root.classList.remove("open-modal");
-    root.querySelector(".active-modal-js").classList.remove("active-modal");
+    root.querySelector(".active-modal-js").classList.remove("active");
   }
 }
 
