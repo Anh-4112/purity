@@ -1,0 +1,89 @@
+{%- liquid
+  assign theme_st = settings
+  assign product = closest.product
+  assign share_facebook = theme_st.share_facebook
+  assign share_pinterest = theme_st.share_pinterest
+  assign share_twitter = theme_st.share_twitter
+  assign share_whatsapp = theme_st.share_whatsapp
+  assign share_email = theme_st.share_email
+  assign title = block.settings.title
+-%}
+{%- if title != blank -%}
+  <h2 class="sharer-heading">
+    {{- title -}}
+  </h2>
+{% endif %}
+{% if share_facebook %}
+  <button
+    class="no-js-hidden transition pointer w-40 h-40 inline-flex middle-center link list-social__link  tooltip rounded-50 btn-reset"
+    tabindex="0"
+    aria-label="{{ 'general.social.alt_text.share_on_facebook' | t }}"
+    onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 'facebook-share-dialog', 'width=436,height=436'); return false;"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="18px">
+      <path d="M 19.253906 2 C 15.311906 2 13 4.0821719 13 8.8261719 L 13 13 L 8 13 L 8 18 L 13 18 L 13 30 L 18 30 L 18 18 L 22 18 L 23 13 L 18 13 L 18 9.671875 C 18 7.884875 18.582766 7 20.259766 7 L 23 7 L 23 2.2050781 C 22.526 2.1410781 21.144906 2 19.253906 2 z"></path>
+    </svg>
+  </button>
+{% endif %}
+{% if share_twitter %}
+  <button
+    tabindex="0"
+    aria-label="{{ 'general.social.alt_text.share_on_twitter' | t }}"
+    class="no-js-hidden transition pointer w-40 h-40 inline-flex middle-center link list-social__link  tooltip rounded-50 btn-reset"
+    onclick="window.open('http://twitter.com/home/?status='+encodeURIComponent(location.href), 'twitter-share-dialog', 'width=436,height=436'); return false;"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="18px">
+      <path d="M 28 8.558594 C 27.117188 8.949219 26.167969 9.214844 25.171875 9.332031 C 26.1875 8.722656 26.96875 7.757813 27.335938 6.609375 C 26.386719 7.171875 25.332031 7.582031 24.210938 7.804688 C 23.3125 6.847656 22.03125 6.246094 20.617188 6.246094 C 17.898438 6.246094 15.691406 8.453125 15.691406 11.171875 C 15.691406 11.558594 15.734375 11.933594 15.820313 12.292969 C 11.726563 12.089844 8.097656 10.128906 5.671875 7.148438 C 5.246094 7.875 5.003906 8.722656 5.003906 9.625 C 5.003906 11.332031 5.871094 12.839844 7.195313 13.722656 C 6.386719 13.695313 5.628906 13.476563 4.964844 13.105469 C 4.964844 13.128906 4.964844 13.148438 4.964844 13.167969 C 4.964844 15.554688 6.660156 17.546875 8.914063 17.996094 C 8.5 18.109375 8.066406 18.171875 7.617188 18.171875 C 7.300781 18.171875 6.988281 18.140625 6.691406 18.082031 C 7.316406 20.039063 9.136719 21.460938 11.289063 21.503906 C 9.605469 22.824219 7.480469 23.609375 5.175781 23.609375 C 4.777344 23.609375 4.386719 23.585938 4 23.539063 C 6.179688 24.9375 8.765625 25.753906 11.546875 25.753906 C 20.605469 25.753906 25.558594 18.25 25.558594 11.742188 C 25.558594 11.53125 25.550781 11.316406 25.542969 11.105469 C 26.503906 10.410156 27.339844 9.542969 28 8.558594 Z"></path>
+    </svg>
+  </button>
+{% endif %}
+{% if share_pinterest %}
+  <button
+    tabindex="0"
+    aria-label="{{ 'general.social.alt_text.share_on_pinterest' | t }}"
+    class="no-js-hidden transition pointer w-40 h-40 inline-flex middle-center link list-social__link  tooltip rounded-50 btn-reset"
+    onclick="window.open('http://pinterest.com/pin/create/button/?url='+encodeURIComponent(location.href), 'pinterest-share-dialog', 'width=436,height=436'); return false;"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="18px">
+      <path d="M 16.09375 4 C 11.01675 4 6 7.3833281 6 12.861328 C 6 16.344328 7.9584844 18.324219 9.1464844 18.324219 C 9.6364844 18.324219 9.9199219 16.958266 9.9199219 16.572266 C 9.9199219 16.112266 8.7460938 15.131797 8.7460938 13.216797 C 8.7460938 9.2387969 11.774359 6.4199219 15.693359 6.4199219 C 19.063359 6.4199219 21.556641 8.3335625 21.556641 11.851562 C 21.556641 14.478563 20.501891 19.40625 17.087891 19.40625 C 15.855891 19.40625 14.802734 18.516234 14.802734 17.240234 C 14.802734 15.370234 16 13.558906 16 11.628906 C 16 8.3529063 11.462891 8.94725 11.462891 12.90625 C 11.462891 13.73725 11.5665 14.657063 11.9375 15.414062 C 11.2555 18.353063 10 23.037406 10 26.066406 C 10 27.001406 10.133656 27.921422 10.222656 28.857422 C 10.390656 29.045422 10.307453 29.025641 10.564453 28.931641 C 13.058453 25.517641 12.827078 24.544172 13.955078 20.076172 C 14.564078 21.234172 16.137766 21.857422 17.384766 21.857422 C 22.639766 21.857422 25 16.736141 25 12.119141 C 25 7.2061406 20.75475 4 16.09375 4 z"></path>
+    </svg>
+  </button>
+{% endif %}
+{% if share_whatsapp %}
+  <button
+    tabindex="0"
+    aria-label="{{ 'general.social.alt_text.share_on_whatsapp' | t }}"
+    class="no-js-hidden transition pointer w-40 h-40 inline-flex middle-center link list-social__link  tooltip rounded-50 btn-reset"
+    onclick="window.open('//web.whatsapp.com/send?text='+encodeURIComponent(location.href)); return false;"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="18px">
+      <path d="M0 24L1.69 17.84C0.65 16.03 0.1 13.99 0.1 11.89C0.1 5.33 5.44 0 12 0C15.18 0 18.17 1.24 20.42 3.49C22.67 5.74 23.9 8.73 23.9 11.9C23.9 18.46 18.56 23.79 12 23.79C10.01 23.79 8.05 23.29 6.32 22.34L0.01 23.99L0 24ZM6.6 20.19L6.96 20.4C8.48 21.3 10.22 21.78 11.99 21.78C17.44 21.78 21.88 17.35 21.88 11.9C21.88 9.26 20.85 6.78 18.99 4.91C17.13 3.04 14.64 2.01 12 2.01C6.55 2.01 2.11 6.44 2.11 11.89C2.11 13.76 2.63 15.58 3.62 17.15L3.86 17.52L2.86 21.17L6.6 20.19ZM9.02 6.92C8.78 6.34 8.53 6.42 8.35 6.41C8.18 6.41 7.98 6.4 7.78 6.4C7.58 6.4 7.26 6.47 6.99 6.77C6.72 7.07 5.95 7.79 5.95 9.25C5.95 10.71 7.02 12.13 7.16 12.32C7.31 12.52 9.26 15.52 12.24 16.81C12.95 17.12 13.5 17.3 13.93 17.44C14.64 17.67 15.29 17.63 15.8 17.56C16.37 17.47 17.56 16.84 17.81 16.15C18.06 15.46 18.06 14.86 17.98 14.74C17.91 14.62 17.71 14.54 17.41 14.39C17.11 14.24 15.65 13.52 15.38 13.42C15.11 13.32 14.91 13.27 14.71 13.57C14.51 13.87 13.94 14.54 13.77 14.74C13.6 14.94 13.42 14.96 13.13 14.81C12.83 14.66 11.87 14.35 10.74 13.34C9.86 12.55 9.26 11.58 9.09 11.28C8.92 10.98 9.07 10.82 9.22 10.67C9.35 10.54 9.52 10.32 9.67 10.15C9.82 9.98 9.87 9.85 9.97 9.65C10.07 9.45 10.02 9.28 9.95 9.13C9.88 8.98 9.28 7.52 9.03 6.92H9.02Z"></path>
+    </svg>
+  </button>
+{% endif %}
+{% if share_email %}
+  <button
+    tabindex="0"
+    aria-label="{{ 'general.social.alt_text.share_on_email' | t }}"
+    class="no-js-hidden transition pointer w-40 h-40 inline-flex middle-center link list-social__link  tooltip rounded-50 btn-reset"
+    onclick="window.open('mailto:?&amp;subject={{ product.title }}&amp;body='+encodeURIComponent(location.href)); return false;"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="18px">
+      <path d="M2.73.545C3.8 0 5.2 0 8 0h8c2.8 0 4.2 0 5.27.545a5 5 0 0 1 2.185 2.185C24 3.8 24 5.2 24 8v5.767c0 2.8 0 4.2-.545 5.27a5 5 0 0 1-2.185 2.186c-1.07.544-2.47.544-5.27.544H8c-2.8 0-4.2 0-5.27-.544a5 5 0 0 1-2.185-2.186C0 17.967 0 16.567 0 13.767V8c0-2.8 0-4.2.545-5.27A5 5 0 0 1 2.73.545Zm2.988 5.25a.75.75 0 1 0-.832 1.248l1.117.744.256.17.139.093c1.791 1.195 2.858 1.906 4.029 2.187a6.75 6.75 0 0 0 3.146 0c1.171-.28 2.238-.992 4.03-2.187l.138-.092.256-.171 1.117-.744a.75.75 0 1 0-.832-1.248l-1.117.744-.256.17c-1.973 1.316-2.807 1.858-3.685 2.07a5.25 5.25 0 0 1-2.447 0c-.88-.212-1.713-.754-3.686-2.07l-.256-.17-1.117-.744Z"></path>
+    </svg>
+  </button>
+{% endif %}
+{% schema %}
+{
+  "name": "t:sections.all.product_setting.share.name",
+  "class": "block-product__share",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.all.text.label"
+    }
+  ],
+  "presets": [{ "name": "t:sections.all.product_setting.share.name" }]
+}
+{% endschema %}
