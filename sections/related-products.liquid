@@ -1,3 +1,150 @@
+{{ 'product.css' | asset_url | stylesheet_tag }}
+{{ 'carousel.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+  assign heading_size = section_st.heading_size
+  assign text_alignment = section_st.text_alignment
+  assign items_per_row = section_st.items_per_row
+  assign show_pagination = section_st.show_pagination
+  assign show_navigation = section_st.show_navigation
+  assign reveal_slide = section_st.reveal_slide
+
+  assign header_size = ''
+  if heading_size == 'small'
+    assign header_size = 'h3'
+  elsif heading_size == 'large'
+    assign header_size = 'fs-medium'
+  endif
+
+  assign items_per_row_mobile = section_st.items_per_row_mobile
+  assign data_free_scroll = 'false'
+  if items_per_row_mobile > 1 and items_per_row_mobile < 2
+    assign data_free_scroll = 'true'
+  elsif items_per_row_mobile > 2 and items_per_row_mobile < 3
+    assign data_free_scroll = 'true'
+  endif
+
+  assign items_per_row_tablet = items_per_row
+  if items_per_row > 3
+    assign items_per_row_tablet = items_per_row | minus: 1
+  endif
+
+  assign column_gap_slide = 0
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 30
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 10
+  endif
+-%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
+{%- endcapture -%}
+{%- capture col_style -%}
+  --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};
+  {% if column_gap_slide < 20 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
+{%- endcapture -%}
+<div
+  class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }}">
+    <product-recommendations data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section_st.items_to_show }}">
+      {% if recommendations.performed and recommendations.products_count > 0 %}
+        {%- if section_st.title != blank or section_st.description != blank -%}
+          <div class="section-header text-{{ text_alignment }}">
+            {%- if section_st.title != blank -%}
+              <h2 class="section-heading{{ header_size }}">
+                {{ section_st.title }}
+              </h2>
+            {%- endif -%}
+            {%- if section_st.description != blank -%}
+              <div class="section-description">
+                {{ section_st.description }}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        {%- if section_st.enable_carousel -%}
+          {% if data_free_scroll == 'true' %}
+            <div class="free-scroll">
+          {% endif %}
+          <slide-section
+            class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+            data-section-id="{{ section.id }}"
+            data-autoplay="false"
+            data-effect="slide"
+            data-loop="false"
+            data-speed="500"
+            data-spacing="{{ column_gap_slide }}"
+            data-mobile="{{ items_per_row_mobile }}"
+            data-desktop="{{ items_per_row }}"
+            data-tablet="{{ items_per_row_tablet }}"
+            data-free-scroll="{{ data_free_scroll }}"
+            style="{{ col_style | strip | strip_newlines }}"
+          >
+            {% if show_navigation %}
+              {%- render 'swiper-navigation' -%}
+            {% endif %}
+            <div class="swiper-wrapper">
+              {% for recommendation in recommendations.products %}
+                {% render 'card-product',
+                  card_product: recommendation,
+                  section_id: section.id,
+                  class: ' swiper-slide',
+                  show_video: true,
+                  container: section_width,
+                  column: items_per_row,
+                  column_mobile: items_per_row_mobile,
+                  padding: column_gap_slide,
+                  indexFor: forloop.index
+                %}
+              {% endfor %}
+            </div>
+            {%- if show_pagination -%}
+              <div
+                class="swiper-pagination"
+              ></div>
+            {% endif %}
+          </slide-section>
+          {% if data_free_scroll == 'true' %}
+            </div>
+          {% endif %}
+        {%- else -%}
+          <grid-custom
+            class="collection-list--grid grid grid-cols gap{% if data_free_scroll == 'true' %} grid_scroll{% endif %}"
+            style="{{ col_style | strip | strip_newlines }}"
+            data-mobile="{{ items_per_row_mobile }}"
+            data-spacing="{{ column_gap_slide }}"
+            data-free-scroll="{{ data_free_scroll }}"
+          >
+            {% for recommendation in recommendations.products %}
+              {% render 'card-product',
+                card_product: recommendation,
+                section_id: section.id,
+                class: ' grid-card-item',
+                show_video: true,
+                container: section_width,
+                column: items_per_row,
+                column_mobile: items_per_row_mobile,
+                padding: column_gap_slide,
+                indexFor: forloop.index
+              %}
+            {% endfor %}
+          </grid-custom>
+        {%- endif -%}
+      {%- endif -%}
+    </product-recommendations>
+  </div>
+</div>
 {% schema %}
 {
   "name": "t:sections.related-products.name",
@@ -93,11 +240,6 @@
     {
       "type": "header",
       "content": "t:sections.collection-list.settings.header.collection"
-    },
-    {
-      "type": "collection",
-      "id": "collection",
-      "label": "t:sections.collection-list.settings.header.collection"
     },
     {
       "type": "range",

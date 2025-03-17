@@ -1,7 +1,10 @@
 {%- liquid
-  assign theme_st = settings
   assign section_st = section.settings
-  assign section_st = section.settings
+  assign enable_sticky_desktop = section_st.enable_sticky_desktop
+  assign desktop_layout = section_st.desktop_layout
+  assign desktop_media_width = section_st.desktop_media_width
+  assign media_position = section_st.media_position
+  assign enable_image_zoom = section_st.enable_image_zoom
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -9,19 +12,24 @@
   else
     assign section_width = 'fluid_container'
   endif
+  assign user_variants_image_group = false
+  if product.metafields.custom.use_variants_image_group != blank and product.metafields.custom.use_variants_image_group
+    assign user_variants_image_group = true
+  endif
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 <section
   id="MainProduct-{{ section.id }}"
-  class="section sec__main-product"
+  class="section sec__main-product media-width-{{ desktop_media_width }} media-position-{{ media_position }}"
+  data-desktop-layout="{{ desktop_layout }}"
+  data-mobile-layout="{{ section_st.mobile_options }}"
+  data-zoom="{{ enable_image_zoom }}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div
-      class="main-product"
-    >
+    <div class="main-product">
       {% if product.media.size > 0 %}
         <div class="product-detail__media"></div>
       {% endif %}
@@ -30,61 +38,69 @@
       </div>
     </div>
   </div>
+  {% unless product == empty %}
+    <script
+      type="application/json"
+      data-product-json
+      class="productJson"
+    >
+      {{ product | json }}
+    </script>
+  {% endunless %}
 </section>
+{% if enable_sticky_desktop %}
+  {%- assign product_form_id = 'sticky-addcart-form-' | append: section.id -%}
+  <sticky-add-cart class="sticky-add-cart">
+    <div class="{{ section_width }}">
+      <div class="sticky-add-cart__inner">
+        {% render 'card-product',
+          card_product: product,
+          section_id: section.id,
+          template_enable_product_vendor: false,
+          template_enable_rate: false,
+          template_enable_product_short_description: false,
+          template_enable_color_swatches: false,
+          template_enable_add_cart: false,
+          template_enable_action: false,
+          template_enable_price: true
+        %}
+        <div class="sticky__item-info">
+          <div class="product-detail__variant-picker">
+            {% if user_variants_image_group %}
+            {% else %}
+
+            {% endif %}
+          </div>
+          <div class="product-detail__buy-buttons w-full">
+            {%- render 'buy-buttons', product: product, section_id: section.id, product_form_id: product_form_id -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </sticky-add-cart>
+{% endif %}
 {% schema %}
 {
   "name": "t:sections.main-product.name",
   "tag": "section",
   "class": "section main-product-section",
   "blocks": [
-    {
-      "type": "@app"
-    },
-    {
-      "type": "_badges-product"
-    },
-    {
-      "type": "_title-product"
-    },
-    {
-      "type": "_price-product"
-    },
-    {
-      "type": "_description-product"
-    },
-    {
-      "type": "_rating-product"
-    },
-    {
-      "type": "_text-product"
-    },
-    {
-      "type": "_pickup-availability"
-    },
-    {
-      "type": "_buy-buttons"
-    },
-    {
-      "type": "_variant-picker"
-    },
-    {
-      "type": "_inventory-status"
-    },
-    {
-      "type": "_product-meta"
-    },
-    {
-      "type": "_complementary"
-    },
-    {
-      "type": "_collapsible-row"
-    },
-    {
-      "type": "_custom-liquid"
-    },
-    {
-      "type": "_share-product"
-    }
+    { "type": "@app" },
+    { "type": "_badges-product" },
+    { "type": "_title-product" },
+    { "type": "_price-product" },
+    { "type": "_description-product" },
+    { "type": "_rating-product" },
+    { "type": "_text-product" },
+    { "type": "_pickup-availability" },
+    { "type": "_buy-buttons" },
+    { "type": "_variant-picker" },
+    { "type": "_inventory-status" },
+    { "type": "_product-meta" },
+    { "type": "_complementary" },
+    { "type": "_collapsible-row" },
+    { "type": "_custom-liquid" },
+    { "type": "_share-product" }
   ],
   "settings": [
     {

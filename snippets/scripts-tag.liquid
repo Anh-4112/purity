@@ -1,6 +1,7 @@
 {%- liquid
   assign template = template | split: '.' | first
 -%}
+<script defer="defer" src="{{ 'motion.js' | asset_url }}"></script>
 {%- case template -%}
   {%- when 'product' -%}
     <script type="module" src="{{ 'main-product.js' | asset_url }}"></script>

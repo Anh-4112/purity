@@ -13,10 +13,6 @@
     <inventory-progress-bar
       data-order="{{ product_qty }}"
       data-available="{{ product_available }}"
-      data-low-stock="{{ 'products.product.inventory_status.low_stock' | t }}"
-      data-sold-out="{{ 'products.product.inventory_status.sold_out' | t }}"
-      data-pre-order="{{ 'products.product.inventory_status.pre_order' | t }}"
-      data-available-message="{{ 'products.product.inventory_status.available' | t }}"
       data-fe-amount="{{ inventory_base }}"
       data-threshold="{{ inventory_threshold }}"
       class="{% if product_qty <= inventory_threshold %} notify{% endif %}{% if product_management != "shopify" %} d-none{% else %} block{%- endif -%}"
