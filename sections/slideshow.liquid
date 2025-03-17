@@ -5,7 +5,7 @@
   elsif section_st.section_width == 'full_width'
     assign section_width = 'full-width'
   else
-    assign section_width = 'full-width-gap'
+    assign section_width = 'fluid_container'
   endif
   assign slide_height = section_st.slide_height
   assign color_scheme = section_st.color_scheme
@@ -14,6 +14,10 @@
   assign slide_auto_change = section_st.slide_auto_change
   assign change_slide_every = section_st.change_slide_every
   assign show_text_bellow_image = section_st.show_text_bellow_image
+  assign rounded = ''
+  if section_st.section_width != 'full_width'
+    assign rounded = 'rounded'
+  endif
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}px; --section-pb: {{ section_st.padding_bottom }}px;
@@ -48,13 +52,14 @@
               assign image_mobile = block_st.image_mobile | default: image
               assign local_video = block_st.local_video
               assign overlay_opacity = block_st.overlay_opacity
+              assign circular_text = block_st.circular_text
               assign heading = block_st.heading
+              assign heading_size = block_st.heading_size
               assign subheading = block_st.subheading
               assign description = block_st.description
               assign first_button_label = block_st.first_button_label
               assign first_button_link = block_st.first_button_link
-              assign second_button_label = block_st.second_button_label
-              assign second_button_link = block_st.second_button_link
+              assign first_button_type = block_st.first_button_type
               assign text_alignment = block_st.text_alignment
               assign desktop_content_position = block_st.desktop_content_position
               assign lazy_load = false
@@ -87,11 +92,11 @@
             %}
             <div {{ block.shopify_attributes }} class="swiper-slide">
               <div
-                class="sec__inner{% if slide_height == 'adapt' and image_mobile != blank %} ratio-mobile{% endif %} h-{{ slide_height }}"
+                class="sec__inner flex {% if slide_height == 'adapt' and image_mobile != blank %} ratio-mobile{% endif %} h-{{ slide_height }}"
                 style="--overlay-opacity: {{ overlay_opacity }}%;{% if slide_height == 'adapt' or  slide_height == 'full_screen' %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
               >
                 <div
-                  class="banner__media w-full"
+                  class="banner__media w-full {{ rounded }} absolute inset-0"
                   style="--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};--point:{{ image.presentation.focal_point }};"
                 >
                   {%- if image != blank or image_mobile != blank or local_video != blank -%}
@@ -118,7 +123,7 @@
                         assign poster_mobile = image_mobile | default: desktop_url
                       -%}
                       <video
-                        class="slideshow"
+                        class="slideshow {{ rounded }}"
                         loop="true"
                         {% if poster_mobile != blank %}
                           data-posterMobile="{{ poster_mobile | image_url: width: 1100 }}"
@@ -126,7 +131,7 @@
                         {% if poster_desktop != blank %}
                           data-posterDesktop="{{ poster_desktop | image_url: width: 1100 }}"
                         {% endif %}
-                        data-src="{{ source_url }}"
+                        src="{{ source_url }}"
                         poster="{{ poster }}"
                         playsinline="true"
                         muted
@@ -141,6 +146,7 @@
                       -%}
                       {% render 'responsive-image',
                         type: 'banner',
+                        class: rounded,
                         container: section_st.section_width,
                         image: image,
                         image_mobile: image_mobile,
@@ -156,10 +162,19 @@
                   or subheading != blank
                   or description != blank
                   or first_button_label != blank
-                  or second_button_label != blank
+                  or circular_text != blank
                 %}
-                  <div class="sec__content relative">
-                    <div class="sec__content-inner content-{{ desktop_content_position }} alignment-{{ text_alignment }}">
+                  <div class="sec__content {{ desktop_content_position }} container flex relative">
+                    <div class="sec__content-inner text-{{ text_alignment }} banner__size-{{ heading_size }}">
+                      {% if circular_text != blank %}
+                        <motion-effect
+                          data-animate="fade-up"
+                          data-animate-delay="{{ animate_delay }}"
+                          class="block"
+                        >
+                          {{ circular_text | escape }}
+                        </motion-effect>
+                      {% endif %}
                       {% if subheading != blank %}
                         <div class="sec__content-subheading">
                           {% assign animate_delay = 30 %}
@@ -173,7 +188,7 @@
                         </div>
                       {% endif %}
                       {% if heading != blank %}
-                        <h2 class="sec__content-heading">
+                        <h2 class="sec__content-heading fs-{{ heading_size }}">
                           {% assign animate_delay = animate_delay | plus: 5 %}
                           <motion-effect
                             data-animate="fade-up"
@@ -212,29 +227,9 @@
                                   href="{{ first_button_link | default: "#" }}"
                                 {% endif %}
                                 aria-label="{{ first_button_label }}"
-                                class="inline-flex no-underline"
+                                class="btn btn-{{ first_button_type }} inline-flex no-underline"
                               >
                                 {{ first_button_label }}
-                              </a>
-                            </motion-effect>
-                          {% endif %}
-                          {% if second_button_label != blank %}
-                            {% assign animate_delay = animate_delay | plus: 5 %}
-                            <motion-effect
-                              data-animate="fade-up"
-                              data-animate-delay="{{ animate_delay }}"
-                              class="block"
-                            >
-                              <a
-                                {% if second_button_link == blank %}
-                                  role="link" aria-disabled="true"
-                                {% else %}
-                                  href="{{ second_button_link | default: "#" }}"
-                                {% endif %}
-                                aria-label="{{ second_button_label }}"
-                                class="inline-flex no-underline"
-                              >
-                                {{ second_button_label }}
                               </a>
                             </motion-effect>
                           {% endif %}
@@ -429,6 +424,12 @@
         },
         {
           "type": "text",
+          "id": "circular_text",
+          "default": "Rotating circular text",
+          "label": "t:sections.slideshow.settings.blocks.circular_text.label"
+        },
+        {
+          "type": "text",
           "id": "subheading",
           "default": "Subheading",
           "label": "t:sections.all.content_setting.subheading.label"
@@ -438,6 +439,26 @@
           "id": "heading",
           "default": "Image slide",
           "label": "t:sections.all.content_setting.heading.label"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:sections.all.content_header.heading_size.options__1.label"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.all.content_header.heading_size.options__2.label"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.all.content_header.heading_size.options__3.label"
+            }
+          ],
+          "default": "large",
+          "label": "t:sections.all.content_header.heading_size.label"
         },
         {
           "type": "richtext",
@@ -458,15 +479,20 @@
           "label": "t:sections.all.content_setting.first_button_label.link"
         },
         {
-          "type": "text",
-          "id": "second_button_label",
-          "label": "t:sections.all.content_setting.second_button_label.label",
-          "info": "t:sections.all.content_setting.button_label.info"
-        },
-        {
-          "type": "url",
-          "id": "second_button_link",
-          "label": "t:sections.all.content_setting.second_button_label.link"
+          "type": "select",
+          "id": "first_button_type",
+          "label": "t:sections.all.content_setting.button_type.label",
+          "default": "primary",
+          "options": [
+            {
+              "value": "primary",
+              "label": "t:sections.all.content_setting.button_type.primary.label"
+            },
+            {
+              "value": "outline",
+              "label": "t:sections.all.content_setting.button_type.outline.label"
+            }
+          ]
         },
         {
           "type": "header",
@@ -522,7 +548,7 @@
           "id": "text_alignment",
           "options": [
             {
-              "value": "left",
+              "value": "start",
               "label": "t:sections.all.text_alignment.options__1.label"
             },
             {
@@ -530,11 +556,11 @@
               "label": "t:sections.all.text_alignment.options__2.label"
             },
             {
-              "value": "right",
+              "value": "end",
               "label": "t:sections.all.text_alignment.options__3.label"
             }
           ],
-          "default": "left",
+          "default": "start",
           "label": "t:sections.all.text_alignment.label"
         }
       ]
@@ -568,6 +594,12 @@
         },
         {
           "type": "text",
+          "id": "circular_text",
+          "default": "Rotating circular text",
+          "label": "t:sections.slideshow.settings.blocks.circular_text.label"
+        },
+        {
+          "type": "text",
           "id": "subheading",
           "default": "Subheading",
           "label": "t:sections.all.content_setting.subheading.label"
@@ -575,8 +607,28 @@
         {
           "type": "text",
           "id": "heading",
-          "default": "Heading",
+          "default": "Video slide",
           "label": "t:sections.all.content_setting.heading.label"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:sections.all.content_header.heading_size.options__1.label"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.all.content_header.heading_size.options__2.label"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.all.content_header.heading_size.options__3.label"
+            }
+          ],
+          "default": "large",
+          "label": "t:sections.all.content_header.heading_size.label"
         },
         {
           "type": "richtext",
@@ -597,15 +649,20 @@
           "label": "t:sections.all.content_setting.first_button_label.link"
         },
         {
-          "type": "text",
-          "id": "second_button_label",
-          "label": "t:sections.all.content_setting.second_button_label.label",
-          "info": "t:sections.all.content_setting.button_label.info"
-        },
-        {
-          "type": "url",
-          "id": "second_button_link",
-          "label": "t:sections.all.content_setting.second_button_label.link"
+          "type": "select",
+          "id": "first_button_type",
+          "label": "t:sections.all.content_setting.button_type.label",
+          "default": "primary",
+          "options": [
+            {
+              "value": "primary",
+              "label": "t:sections.all.content_setting.button_type.primary.label"
+            },
+            {
+              "value": "outline",
+              "label": "t:sections.all.content_setting.button_type.outline.label"
+            }
+          ]
         },
         {
           "type": "header",

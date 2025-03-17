@@ -9,7 +9,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="">
     <link rel="canonical" href="{{ canonical_url }}">
-
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {%- endif -%}
@@ -28,7 +27,10 @@
     {% endif %}
 
     {% render 'meta-tags' %}
+    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+    {% if theme_st.rtl %}{{ 'rtl.css' | asset_url | stylesheet_tag: preload: true }}{% endif %}
     <script defer="defer" src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+    <script defer="defer" src="{{ 'motion.js' | asset_url }}"></script>
     <script type="importmap">
       {
         "imports": {
@@ -41,8 +43,6 @@
     {{ content_for_header }}
     <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}"></noscript>
-    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
-    {% if theme_st.rtl %}{{ 'rtl.css' | asset_url | stylesheet_tag: preload: true }}{% endif %}
     <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="{{ 'theme.css' | asset_url }}"></noscript>
     {% liquid
@@ -98,12 +98,12 @@
         background-color: var(--color-background);
       }
       :root {
-        --body-font-size: 1.6rem;
+        --body-font-size: {{ theme_st.base_size }}px;
         --body-font-family: {{ theme_st.body_font.family }}, {{ theme_st.body_font.fallback_families }};
         --body-font-style: {{ theme_st.body_font.style }};
         --body-font-weight: {{ theme_st.body_font.weight }};
         --body-font-weight-bold: {{ theme_st.body_font.weight | plus: 300 | at_most: 1000 }};
-        --body-line-height: calc(1.625 / var(--body-font-scale));
+        --body-line-height: 1.625;
         --img-rounded: {{ theme_st.rounded_image }}px;
 
         --heading-font: {{ theme_st.heading_font.family }}, {{ theme_st.heading_font.fallback_families }};
@@ -111,12 +111,12 @@
         --heading-weight: {{ theme_st.heading_font.weight }};
         --heading-text-transform: {{ theme_st.heading_text_transform }};
         --subheading-weight: {{ theme_st.subheading_weight }};
+        --heading-letter-spacing: {{ theme_st.heading_letter_spacing | divided_by: 100 }}em;
 
         --menu-font: {% if theme_st.menu_font == 'menu_body_font' %}{{ theme_st.body_font.family }}{% else %}{{ theme_st.heading_font.family }}{% endif %}, {{ theme_st.body_font.fallback_families }};
         --medium-font-weight: {% if theme_st.heading_font.weight > '400' %}600{% else %}{{ theme_st.heading_font.weight }}{% endif %};
-        --menu-font-weight: {{ theme_st.menu_weight }};
+        --menu-weight: {{ theme_st.menu_weight }};
 
-        --body-font-scale: {{ theme_st.body_font_size_scale | divided_by: 100.0 }};
         --heading-font-scale: {{ theme_st.heading_font_size_scale | divided_by: 100.0 }};
         --rounded-radius: {% if theme_st.rounded_corner %}5px{% endif %};
 
@@ -124,7 +124,7 @@
         --btn-text-transform: {{ theme_st.button_text_transform }};
         --btn-radius: {{ theme_st.rounded_button }}px;
         --btn-font-weight:{% if theme_st.button_font == 'button_body_font' %}var(--subheading-weight,var(--body-font-weight)){% else %}var(--heading-font-weight){% endif %};
-        --btn-padding-y: 1.6rem;
+        --btn-padding-y: 1.7rem;
         --btn-padding-x: 4rem;
         --btn-font-size: {% if theme_st.button_text_transform == 'uppercase' %}calc(var(--body-font-size, 1.4rem) - 2px){% else %}var(--body-font-size, 1.4rem){% endif %};
         --input-border-radius: {{ theme_st.rounded_input }}px;
@@ -140,7 +140,6 @@
         --color-white: #FFFFFF;
         --color-dark: #000;
         --responsive-rate: ((100vw - 575px) / (1600 - 575));
-        --heading-letter-spacing: {% if theme_st.heading_letter_spacing == '0.25em' %}0.15em{% else %}{{ theme_st.heading_letter_spacing }}{% endif %};
 
         --transition: all 0.4s;
         --duration-short: 0.3s;
@@ -168,9 +167,8 @@
         -moz-box-sizing: border-box;
         -webkit-tap-highlight-color: transparent;
       }
-
       html {
-        font-size: calc(var(--body-font-scale) * 62.5%);
+        font-size: 62.5%;
         margin: 0;
         padding: 0;
         border: 0;
@@ -187,10 +185,11 @@
         font-family: var(--body-font-family);
         font-style: var(--body-font-style);
         font-weight: var(--body-font-weight);
-        line-height: var(--body-line-height, calc(1 + 0.71428 / var(--body-font-scale)));
+        line-height: var(--body-line-height, 1.625);
         -webkit-font-smoothing: antialiased;
         -webkit-text-size-adjust: 100%;
         text-rendering: optimizeSpeed;
+        font-display: swap;
         overflow-wrap: break-word;
         display: flex;
         -webkit-flex-direction: column;
