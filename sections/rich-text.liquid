@@ -1,3 +1,101 @@
+{% liquid
+  assign section_st = section.settings
+  assign section_width = ''
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+  assign content_alignment = section_st.text_alignment
+%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+{%- endcapture -%}
+
+<div
+  class="section section__rich-text color-{{ section_st.color_scheme }} gradient "
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }}">
+    <div
+      class="rich-text__content-inner"
+      style="--max-width: {{ section_st.max_width }}%"
+    >
+      <div class="rich-text__content mx-auto max-w-custom text-{{ content_alignment }}">
+        {%- for block in section.blocks -%}
+          {% assign block_st = block.settings %}
+          {%- case block.type -%}
+            {%- when 'heading' -%}
+              <h2
+                class="rich-text__heading{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
+                {{ block.shopify_attributes }}
+              >
+                {{ block_st.heading }}
+              </h2>
+            {%- when 'subheading' -%}
+              <div
+                class="rich-text__subheading{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.subheading_size }}"
+                {{ block.shopify_attributes }}
+              >
+                {{ block_st.subheading | escape }}
+              </div>
+            {%- when 'text' -%}
+              <div
+                class="rich-text__description {{ block_st.description_size }}"
+                {{ block.shopify_attributes }}
+              >
+                {{ block_st.description }}
+              </div>
+            {%- when 'button' -%}
+              {%- liquid
+                assign first_button_label = block_st.first_button_label
+                assign first_button_link = block_st.first_button_link
+                assign first_button_type = block_st.first_button_type
+                assign second_button_label = block_st.second_button_label
+                assign second_button_link = block_st.second_button_link
+                assign second_button_type = block_st.second_button_type
+              %}
+              {% if first_button_label != blank or block_st.second_button_label != blank %}
+                <div
+                  class="rich-text__buttons flex justify-content-{{ content_alignment }}"
+                >
+                  {% if first_button_label != blank %}
+                    <a
+                      {% if first_button_link == blank %}
+                        role="link" aria-disabled="true"
+                      {% else %}
+                        href="{{ first_button_link | default: "#" }}"
+                      {% endif %}
+                      aria-label="{{ first_button_label }}"
+                      class="btn btn-{{ first_button_type }}"
+                    >
+                      {{ first_button_label }}
+                    </a>
+                  {% endif %}
+                  {% if second_button_label != blank %}
+                    <a
+                      {% if second_button_link == blank %}
+                        role="link" aria-disabled="true"
+                      {% else %}
+                        href="{{ second_button_link | default: "#" }}"
+                      {% endif %}
+                      aria-label="{{ second_button_label }}"
+                      class="btn btn-{{ second_button_type }}"
+                    >
+                      {{ second_button_label }}
+                    </a>
+                  {% endif %}
+                </div>
+              {% endif %}
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.rich-text.name",
@@ -109,19 +207,19 @@
           "id": "heading_size",
           "options": [
             {
-              "value": "small",
+              "value": "h3",
               "label": "t:sections.all.content_header.heading_size.options__1.label"
             },
             {
-              "value": "medium",
+              "value": "h2",
               "label": "t:sections.all.content_header.heading_size.options__2.label"
             },
             {
-              "value": "large",
+              "value": "h1",
               "label": "t:sections.all.content_header.heading_size.options__3.label"
             }
           ],
-          "default": "medium",
+          "default": "h2",
           "label": "t:sections.all.content_header.heading_size.size"
         },
         {
