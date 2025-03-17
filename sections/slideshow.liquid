@@ -62,6 +62,16 @@
               assign first_button_type = block_st.first_button_type
               assign text_alignment = block_st.text_alignment
               assign desktop_content_position = block_st.desktop_content_position
+              assign btn_margin_start = ''
+              if heading_size == 'h0' or heading_size == 'h1'
+                assign btn_margin_start = 'mt-50'
+              elsif heading_size == 'h2'
+                assign btn_margin_start = 'mt-40'
+              elsif heading_size == 'h3'
+                assign btn_margin_start = 'mt-30'
+              else
+                assign btn_margin_start = 'mt-20'
+              endif
               assign lazy_load = false
               assign ratio_dk = ''
               assign ratio_mb = ''
@@ -165,7 +175,7 @@
                   or circular_text != blank
                 %}
                   <div class="sec__content {{ desktop_content_position }} container flex relative">
-                    <div class="sec__content-inner text-{{ text_alignment }} banner__size-{{ heading_size }}">
+                    <div class="sec__content-inner prose text-{{ text_alignment }}">
                       {% if circular_text != blank %}
                         <motion-effect
                           data-animate="fade-up"
@@ -188,7 +198,7 @@
                         </div>
                       {% endif %}
                       {% if heading != blank %}
-                        <h2 class="sec__content-heading fs-{{ heading_size }}">
+                        <div class="sec__content-heading mb-10 {{ heading_size }}">
                           {% assign animate_delay = animate_delay | plus: 5 %}
                           <motion-effect
                             data-animate="fade-up"
@@ -197,7 +207,7 @@
                           >
                             {{ heading }}
                           </motion-effect>
-                        </h2>
+                        </div>
                       {% endif %}
                       {% if description != blank %}
                         <div class="sec__content-des">
@@ -211,8 +221,8 @@
                           </motion-effect>
                         </div>
                       {% endif %}
-                      {% if first_button_label != blank or second_button_label != blank %}
-                        <div class="sec__content-btn">
+                      {% if first_button_label != blank %}
+                        <div class="sec__content-btn {{ btn_margin_start }}">
                           {% if first_button_label != blank %}
                             {% assign animate_delay = animate_delay | plus: 5 %}
                             <motion-effect
@@ -392,7 +402,7 @@
   "blocks": [
     {
       "type": "image",
-      "name": "t:sections.all.image.label",
+      "name": "t:sections.slideshow.settings.blocks.image.label",
       "settings": [
         {
           "type": "header",
@@ -445,19 +455,27 @@
           "id": "heading_size",
           "options": [
             {
-              "value": "small",
+              "value": "h4",
+              "label": "t:sections.all.content_header.heading_size.x_small.label"
+            },
+            {
+              "value": "h3",
               "label": "t:sections.all.content_header.heading_size.options__1.label"
             },
             {
-              "value": "medium",
+              "value": "h2",
               "label": "t:sections.all.content_header.heading_size.options__2.label"
             },
             {
-              "value": "large",
+              "value": "h1",
               "label": "t:sections.all.content_header.heading_size.options__3.label"
+            },
+            {
+              "value": "h0",
+              "label": "t:sections.all.content_header.heading_size.x_large.label"
             }
           ],
-          "default": "large",
+          "default": "h0",
           "label": "t:sections.all.content_header.heading_size.label"
         },
         {
@@ -567,7 +585,7 @@
     },
     {
       "type": "video",
-      "name": "t:sections.all.video.label",
+      "name": "t:sections.slideshow.settings.blocks.video.label",
       "settings": [
         {
           "type": "header",
@@ -615,19 +633,27 @@
           "id": "heading_size",
           "options": [
             {
-              "value": "small",
+              "value": "h4",
+              "label": "t:sections.all.content_header.heading_size.x_small.label"
+            },
+            {
+              "value": "h3",
               "label": "t:sections.all.content_header.heading_size.options__1.label"
             },
             {
-              "value": "medium",
+              "value": "h2",
               "label": "t:sections.all.content_header.heading_size.options__2.label"
             },
             {
-              "value": "large",
+              "value": "h1",
               "label": "t:sections.all.content_header.heading_size.options__3.label"
+            },
+            {
+              "value": "h0",
+              "label": "t:sections.all.content_header.heading_size.x_large.label"
             }
           ],
-          "default": "large",
+          "default": "h0",
           "label": "t:sections.all.content_header.heading_size.label"
         },
         {
@@ -738,7 +764,15 @@
   ],
   "presets": [
     {
-      "name": "t:sections.slideshow.name"
+      "name": "t:sections.slideshow.name",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
     }
   ]
 }
