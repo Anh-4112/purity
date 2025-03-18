@@ -3,15 +3,16 @@
   assign logo_img = the_settings.logo
   assign logo_transparent = the_settings.logo_on_transparent
   assign logo_width = the_settings.logo_width
+  
 -%}
 {%- if request.page_type == 'index' -%}
-  <h1 class="header__logo color-inherit{% if section_st.logo_position =='center' %} text-center{% endif %}">
+  <h1 class="header__logo inline-flex align-center color-inherit{% if section_st.logo_position =='center' %} text-center{% endif %}">
 {%- else -%}
   <div class="header__logo{% if section_st.logo_position =='center' %} text-center{% endif %}">
 {%- endif -%}
 <a
   href="{{ routes.root_url }}"
-  class="header__heading-link no-underline h3"
+  class="header__heading-link no-underline h3 inline-flex align-center"
   aria-label="{{ shop.name }}"
 >
   {%- if section_st.transparent_on_desktop and logo_transparent != blank and request.page_type == 'index' -%}
@@ -36,7 +37,7 @@
     {%- assign logo_height = logo_width | divided_by: logo_img.aspect_ratio -%}
     {%- liquid
       assign logo_class = 'header__heading-logo logo-normal'
-      if request.page_type == 'index' and transparent and section_st.logo_transparent != blank
+      if request.page_type == 'index' and section_st.transparent_on_desktop and logo_transparent != blank
         assign logo_class = logo_class | append: ' hidden'
       endif
     -%}
