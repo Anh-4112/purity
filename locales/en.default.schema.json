@@ -145,7 +145,7 @@
             "label": "Font",
             "info": "Select a different font can affect the speed of your store. [Learn more about system fonts.](https://help.shopify.com/en/manual/online-store/store-speed/improving-speed#fonts)"
           },
-          "font_size_scale": "Font size scale"
+          "base_size": "Base size"
         },
         "heading": {
           "label": "Heading",
@@ -536,7 +536,10 @@
       "content_position": {
         "label": "Content position",
         "options__1": {
-          "label": "Overlay image"
+          "label": "Overlay image",
+          "top": "Top",
+          "middle": "Middle",
+          "bottom": "Bottom"
         },
         "options__2": {
           "label": "Bellow image"
@@ -572,18 +575,9 @@
           "label": "Button label",
           "info": "Leave the label blank to hide the button."
         },
-        "subheading-block": {
-          "label": "Subheading - Block"
-        },
-        "heading-block": {
-          "label": "Heading - Block"
-        },
-        "description-block": {
-          "label": "Description - Block"
-        },
         "button_label-block": {
           "name": "Label",
-          "label": "Button - Block"
+          "label": "Button"
         },
         "link": {
           "label": "Link"
@@ -616,6 +610,9 @@
         "heading_size": {
           "label": "Heading size",
           "size": "Size",
+          "x_small": {
+            "label": "X-Small"
+          },
           "options__1": {
             "label": "Small"
           },
@@ -624,6 +621,9 @@
           },
           "options__3": {
             "label": "Large"
+          },
+          "x_large": {
+            "label": "X-Large"
           }
         }
       },
@@ -637,6 +637,8 @@
       "image": {
         "label": "Image",
         "image_setting": "Image settings",
+        "width": "Image width",
+        "info_width": "Image is automatically optimized for mobile.",
         "mobile_image": "Mobile image",
         "aspect_ratio": {
           "label": "Image ratio",
@@ -644,6 +646,14 @@
           "options__2": "Portrait (3:4)",
           "options__3": "Landscape (4:3)",
           "adapt": "Adapt to image"
+        },
+        "desktop_position": {
+          "label": "Desktop image position",
+          "top": "Top",
+          "right": "Right",
+          "bottom": "Bottom",
+          "left": "Left",
+          "info": "Image first is the default mobile layout."
         }
       },
       "video": {
@@ -684,6 +694,18 @@
       },
       "newsletter_setting": {
         "email_placeholder": "Email placeholder",
+      },
+      "pagination_type": {
+        "label": "Pagination type",
+        "options__1": {
+          "label": "Page number"
+        },
+        "options__2": {
+          "label": "Load more button"
+        },
+        "options__3": {
+          "label": "Infinite scroll"
+        }
       },
       "product_setting": {
         "badges": {
@@ -857,10 +879,10 @@
       },
       "blocks": {
         "menu_block": {
-          "label": "Menu - Block",
+          "label": "Menu",
         },
         "newsletter_block": {
-          "name": "Newsletter - Block",
+          "name": "Newsletter",
           "info": "Subscribers are automatically added to your “accepted marketing” customer list. [Learn more](https:\/\/help.shopify.com\/manual\/customers\/manage-customers)",
           "settings": {
             "note": {
@@ -872,7 +894,7 @@
           }
         },
         "contact_bar_block": {
-          "name": "Contact bar - Block",
+          "name": "Contact bar",
           "settings": {
             "store_address": "Address",
             "store_phone": "Phone",
@@ -1133,11 +1155,16 @@
         },
         "blocks": {
           "image": {
+            "label": "Image slide",
             "image_overlay_opacity": {
               "label": "Image overlay opacity"
-            },
+            }
+          },
+          "circular_text":{
+            "label": "Circular text"
           },
           "video": {
+            "label": "Video slide",
             "video_setting": "Video settings",
             "video_overlay_opacity": {
               "label": "Video overlay opacity"
@@ -1167,6 +1194,18 @@
     },
     "recently-viewed-products": {
       "name": "Recently viewed products",
+    },
+    "image-with-text": {
+      "name": "Image with text",
+      "settings": {
+        "desktop_vertical_alignment": {
+          "label": "Desktop vertical alignment",
+          "top": "Top",
+          "middle": "Middle",
+          "bottom": "Bottom"
+        },
+        "background_color": "Background color"
+      },
     },
     "video": {
       "name": "Video",
@@ -1250,13 +1289,53 @@
         }
       },
       "blocks": {
-        "name": "Promotion - Block",
+        "name": "Promotion",
+      }
+    },
+    "main-article": {
+      "name": "Blog post",
+      "settings": {
+        "show_date": "Show published date",
+        "show_comment": "Show comment",
+        "show_author": "Show post author",
+        "show_excerpt": "Show post excerpt",
+        "show_share": "Show share button",
+        "blocks": {
+          "featured_image": "Featured image",
+          "content_article": "Content",
+          "addons": "Addons",
+          "prev_next_articles": "Previous and next articles",
+        }
+      },
+      "related": {
+        "heading": "Related articles",
+      },
+      "blocks": {
+        "featured_image": {
+          "settings": {
+            "image_height": {
+              "label": "Image height",
+              "options__1": {
+                "label": "Adapt to image"
+              },
+              "options__2": {
+                "label": "Small"
+              },
+              "options__3": {
+                "label": "Medium"
+              },
+              "options__4": {
+                "label": "Large"
+              }
+            }
+          }
+        },
       }
     },
     "main-list-collections": {
       "name": "Collections list page",
       "blocks": {
-        "name": "Collection - Block",
+        "name": "Collection",
         "settings": {
           "collection_image": "Collection image"
         }
@@ -1323,6 +1402,27 @@
           "label": "Collections per page"
         }
       }
+    },
+    "main-blog": {
+      "name": "Blog posts",
+      "settings": {
+        "header": {
+          "content": "General settings",
+          "content_post": "Post settings"
+        },
+        "maximum_posts_to_show": {
+          "label": "Maximum posts to show"
+        },
+        "post_per_row_desktop": {
+          "label": "Post per row on desktop"
+        },
+        "show_all_tags": {
+          "label": "Show tags list"
+        },
+        "show_share": {
+          "label": "Show share"
+        }
+      },
     },
     "main-product": {
       "name": "Product information",
