@@ -170,6 +170,94 @@ class ToggleMenu extends HTMLElement {
 }
 customElements.define("toggle-menu", ToggleMenu);
 
+class BackToTop extends HTMLElement {
+  constructor() {
+    super();
+    this.addEventListener("click", this.backToTop.bind(this), false);
+  }
+
+  connectedCallback() {
+    window.addEventListener("scroll", this.updateScrollPercentage.bind(this));
+  }
+
+  backToTop() {
+    if (document.documentElement.scrollTop > 0 || document.body.scrollTop > 0) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  }
+
+  updateScrollPercentage() {
+    const scrollHeight =
+      document.documentElement.scrollHeight || document.body.scrollHeight;
+    const scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    const clientHeight =
+      document.documentElement.clientHeight || document.body.clientHeight;
+    const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
+    this.style.setProperty(
+      "--scroll-percentage",
+      scrollPercentage.toFixed(2) + "%"
+    );
+    if (scrollTop > 200) {
+      this.classList.add("show");
+    } else {
+      this.classList.remove("show");
+    }
+  }
+}
+customElements.define("back-to-top", BackToTop);
+
+class CollapsibleSection extends HTMLElement {
+  constructor() {
+    super();
+    this.onClick = this.onClick.bind(this);
+    this.keyPressHandler = this.keyPressHandler.bind(this);
+    this.init();
+    window.addEventListener("resize", this.init.bind(this));
+  }
+
+  init() {
+    if (!this.querySelector(".collapsible-title")) return;
+    if (window.innerWidth < 768) {
+      this.querySelector(".collapsible-title").addEventListener(
+        "click",
+        this.onClick,
+        false
+      );
+      this.addEventListener("keypress", this.keyPressHandler, false);
+    } else {
+      this.querySelector(".collapsible-title").removeEventListener(
+        "click",
+        this.onClick,
+        false
+      );
+      this.removeEventListener("keypress", this.keyPressHandler, false);
+    }
+  }
+
+  onClick(e) {
+    e.preventDefault();
+    if (!this.querySelector(".footer-block-border")) return;
+    if (!this.querySelector(".collapsible-content")) return;
+    this.querySelector(".footer-block-border").classList.toggle("active");
+    slideAnime({
+      target: this.querySelector(".collapsible-content"),
+      animeType: "slideToggle",
+      parent: this.querySelector(".collapsible-title"),
+    });
+  }
+
+  keyPressHandler(event) {
+    if (event.key === "Enter") {
+      this.onClick(event);
+    }
+  }
+}
+customElements.define("collapsible-block", CollapsibleSection);
+
 class ModalOverlay extends HTMLElement {
   constructor() {
     super();

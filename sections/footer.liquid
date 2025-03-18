@@ -1,3 +1,353 @@
+{%- liquid
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+-%}
+
+<style>
+  .icon_plus-animation::before,
+  .icon_plus-animation::after {
+    position: absolute;
+    content: '';
+    top: 50%;
+    left: calc(100% - 7px);
+    -webkit-transform: translate(-50%, -50%) rotate(-90deg);
+    transform: translate(-50%, -50%) rotate(-90deg);
+    background-color: currentColor;
+    transition: var(--transition);
+  }
+  .icon_plus-animation:before {
+    width: var(--icon-width, 13px);
+    height: var(--icon-height, 1px);
+  }
+  .icon_plus-animation:after {
+    width: var(--icon-height, 1px);
+    height: var(--icon-width, 13px);
+  }
+  :is([aria-expanded='true'], .active) > .open-children-toggle .icon_plus-animation:before {
+    opacity: 0;
+    -webkit-transform: translate(-50%, -50%) rotate(90deg);
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .opened .icon_plus-animation:before,
+  .opened ~ .open-children-toggle .icon_plus-animation:before,
+  .touch-target.opened .icon_plus-animation:before,
+  .active > .open-children-toggle .icon_plus-animation:before {
+    opacity: 0;
+    -webkit-transform: translate(-50%, -50%) rotate(90deg);
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+</style>
+
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+{%- endcapture -%}
+
+<footer
+  class="footer color-{{ section_st.color_scheme }} gradient"
+  style="{{ style | strip | strip_newlines }}"
+>
+  {%- if section_st.enable_back_top -%}
+    <back-to-top class="bg-white touch-target fixed z-5 right-15 right-md-30 bottom-100 pointer blur rounded-50 overflow-hidden transition w-60 h-60 inline-flex content-center shadow">
+      <span
+        class="absolute left-0 bottom-0 w-full bg-dark h-custom"
+        style="--height: var(--scroll-percentage);"
+      ></span>
+      <svg class="color-white mix-blend" width="10" height="13" fill="none">
+        <path fill="currentColor" d="M9.746 5.254h.02A.795.795 0 0 1 10 5.84a.838.838 0 0 1-.234.586.862.862 0 0 1-.606.234.838.838 0 0 1-.586-.234L5 2.852 1.426 6.426a.862.862 0 0 1-.606.234.772.772 0 0 1-.566-.234A.805.805 0 0 1 0 5.84c0-.235.085-.43.254-.586l4.16-4.18A.795.795 0 0 1 5 .84c.234 0 .43.078.586.234l4.16 4.18Zm0 5.82h.02c.156.17.234.371.234.606 0 .221-.078.41-.234.566a.826.826 0 0 1-1.192 0L5 8.672l-3.574 3.574a.826.826 0 0 1-.606.254.743.743 0 0 1-.566-.254A.743.743 0 0 1 0 11.68c0-.235.085-.437.254-.606l4.16-4.16A.764.764 0 0 1 5 6.66c.234 0 .43.085.586.254l4.16 4.16Z"/>
+      </svg>
+    </back-to-top>
+  {%- endif -%}
+  <div class="footer__middle  section-padding{% if section_st.padding_top > 60 %} large-space-top{% endif %}{% if section_st.padding_bottom > 60 %} large-space-bottom{% endif %}">
+    <div class="{{ section_width }}">
+      {%- if section.blocks.size > 0 -%}
+        {%- liquid
+          assign menu_item = 0
+        -%}
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'menu_block' -%}
+              {%- liquid
+                assign menu_item = menu_item | plus: 1
+              -%}
+          {%- endcase -%}
+        {%- endfor -%}
+        <div class="footer__blocks flex flex-cols flex-wrap">
+          {%- for block in section.blocks -%}
+            {% assign block_st = block.settings %}
+            <div
+              class="footer-block w-full col-md-w-50 col-1025-w-custom mb-0 mb-md-65{% if block.type == 'menu_block' %} footer-block--menu{% endif %} {{ block.type }}{% if block.type == 'spacing' %} hidden block-1025{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger text-animation{% endif %}"
+              style="--col-width: {{ block_st.content_width }}; --menu-list: {{ menu_item }};{%- if settings.animations_reveal_on_scroll -%}--animation-order: {{ forloop.index }};{%- endif -%}"
+              {{ block.shopify_attributes }}
+            >
+              {%- case block.type -%}
+                {%- when 'newsletter_block' -%}
+                  <div class="footer-block__newsletter">
+                    <div
+                      class="footer-block__newsletter-inner{% if block_st.content_width == '100%' %} max-w-custom text-center m-auto{% endif %}"
+                      style="{% if block_st.content_width == '100%' %}--max-width: 63rem;{% else %}--max-width: 41rem;{% endif %}"
+                    >
+                      {%- if block_st.heading != blank or block_st.description != blank -%}
+                        <div class="footer-block__newsletter-heading mb-15">
+                          {%- if block_st.heading != blank -%}
+                            <h3 class="footer__block-heading heading-letter-spacing mt-0 fs-22 mb-md-30 py-18 pt-md-0 mb-0 collapsible-title relative">
+                              {{- block_st.heading | escape -}}
+                            </h3>
+                          {%- endif -%}
+                          {%- if block_st.description != blank -%}
+                            <div class="footer__block-description mb-15 rich__text-m0">
+                              {{ block_st.description }}
+                            </div>
+                          {%- endif -%}
+                        </div>
+                      {%- endif -%}
+                      {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
+                        <input type="hidden" name="contact[tags]" value="newsletter">
+                        <div class="newsletter-form__field-wrapper">
+                          <div class="field relative w-full flex flex-wrap transition mb-0 align-center gap-10">
+                            <div class="flex flex-1 w-full w-sm-auto">
+                              <input
+                                id="NewsletterForm--{{ section.id }}"
+                                type="email"
+                                name="contact[email]"
+                                class="field__input show-placeholder m-0 w-full bg-transparent"
+                                value="{{ form.email }}"
+                                aria-required="true"
+                                autocapitalize="off"
+                                autocomplete="email"
+                                {% if form.errors %}
+                                  aria-invalid="true"
+                                  aria-describedby="ContactFooter-error"
+                                {% elsif form.posted_successfully? %}
+                                  aria-describedby="ContactFooter-success"
+                                {% endif %}
+                                placeholder="{%- if block_st.email_placeholder != blank -%}{{ block_st.email_placeholder }} {%- else -%} {{ 'newsletter.label' | t }} {%- endif -%}"
+                                required
+                                pattern=".+\.[a-zA-Z]{2,6}"
+                              >
+                              <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
+                                {{ 'newsletter.label' | t }}
+                                <span class="required">*</span></label
+                              >
+                            </div>
+                            <button
+                              type="submit"
+                              class=" w-full w-sm-auto btn-primary newsletter-form__button word-break {% if block_st.content_width == '100%' %} right-0{% else %} right-20{% endif %} btn-text-transform"
+                              name="commit"
+                              id="Subscribe-{{ section.id }}"
+                              aria-label="{{ 'subscribe.button_label' | t }}"
+                            >
+                              {{ 'subscribe.button_label' | t }}
+                            </button>
+                          </div>
+                          {%- if form.errors -%}
+                            <small class="newsletter-form__message form__message" id="ContactFooter-error">
+                              <svg width="18" height="18" fill="none">
+                                <g stroke="#D0473E" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3"><path d="M7.978 1.199c.572-.483 1.497-.483 2.053 0l1.293 1.104a1.89 1.89 0 0 0 1.04.377h1.39c.867 0 1.58.711 1.58 1.579v1.39c0 .328.171.786.376 1.031l1.104 1.293c.483.573.483 1.497 0 2.054L15.71 11.32c-.205.245-.377.703-.377 1.03v1.391c0 .868-.712 1.58-1.579 1.58h-1.39c-.328 0-.786.171-1.032.376L10.04 16.8c-.573.483-1.498.483-2.054 0l-1.293-1.104c-.245-.205-.712-.377-1.03-.377H4.23c-.867 0-1.579-.711-1.579-1.579v-1.399c0-.319-.163-.785-.368-1.023l-1.104-1.3c-.475-.565-.475-1.481 0-2.046l1.104-1.3c.205-.246.368-.704.368-1.024V4.268c0-.868.712-1.58 1.58-1.58h1.415c.327 0 .785-.171 1.03-.376L7.979 1.2ZM7 11l4-4M11 11 7 7"/></g>
+                              </svg>
+                              {{- form.errors.translated_fields.email | capitalize }}
+                              {{ form.errors.messages.email -}}
+                            </small>
+                          {%- endif -%}
+                        </div>
+                        {%- if form.posted_successfully? -%}
+                          <div
+                            class="newsletter-form__message newsletter-form__message--success form__message"
+                            id="ContactFooter-success"
+                            tabindex="-1"
+                          >
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto">
+                              <use href="#icon-success">
+                            </svg>
+                            {{- 'newsletter.success' | t }}
+                          </div>
+                        {%- else -%}
+                        {%- endif -%}
+                      {%- endform -%}
+                      {%- if block_st.note != blank -%}
+                        <div class="footer__block-note mt-10 rich__text-m0 fs-small">
+                          {{ block_st.note }}
+                        </div>
+                      {%- endif -%}
+                      {%- liquid
+                        assign not_has_store_info = true
+                        for block in section.blocks
+                          if block.type == 'contact_bar_block'
+                            assign not_has_store_info = false
+                          endif
+                        endfor
+                      -%}
+                      {% if not_has_store_info %}
+                        {%- if section_st.show_social -%}
+                        {%- endif -%}
+                      {% endif %}
+                    </div>
+                  </div>
+                {%- when 'menu_block' -%}
+                  <collapsible-block class="block" tabindex="0">
+                    {%- if block_st.menu != blank or block_st.heading != blank -%}
+                      <h3 class="footer__block-heading heading-letter-spacing mt-0 fs-22 mb-md-30 py-18 pt-md-0 mb-0 collapsible-title relative">
+                        <span>
+                          {{- block_st.heading | default: block_st.menu.title | escape -}}
+                        </span>
+                        {%- if block_st.menu != blank -%}
+                          <span class="open-children-toggle flex hidden-md flex-end align-center absolute inset-0 hidden-no-js">
+                            <span class="icon_plus-animation"> </span>
+                          </span>
+                        {%- endif -%}
+                      </h3>
+                      {%- if block_st.menu != blank -%}
+                        <div class="footer-block-border">
+                          <ul class="footer__block-content mb-22 list-unstyled m-0 p-0 collapsible-content">
+                            {%- for link in block_st.menu.links -%}
+                              <li>
+                                <a
+                                  href="{{ link.url }}"
+                                  aria-label="{{ link.title }}"
+                                  class="block py-3 remove-underline word-break{% if link.active %} list-menu__item--active{% endif %}"
+                                >
+                                  {{ link.title }}
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      {%- endif -%}
+                    {%- endif -%}
+                  </collapsible-block>
+                {%- when 'contact_bar_block' -%}
+                  <collapsible-block class="block border-bottom border-bottom-md-0" tabindex="0">
+                    {%- if block_st.store_heading != blank -%}
+                      <h3 class="footer__block-heading heading-letter-spacing mt-0 fs-22 mb-md-30 py-18 pt-md-0 mb-0 collapsible-title relative">
+                        <span>
+                          {{ block_st.store_heading | escape }}
+                        </span>
+                        <span class="open-children-toggle flex hidden-md flex-end align-center absolute inset-0 hidden-no-js">
+                          <span class="icon_plus-animation"> </span>
+                        </span>
+                      </h3>
+                    {%- endif -%}
+                    <div class="footer-block-border">
+                      <div
+                        class="collapsible-content mb-22 mb-md-0"
+                      >
+                        {%- if block_st.store_description != blank -%}
+                          <div class="footer__block-info mb-15 rich__text-m0">
+                            {{ block_st.store_description }}
+                          </div>
+                        {%- endif -%}
+                        {%- if block_st.store_address or block_st.store_email or block_st['store_phone-'] %}
+                          <div class="footer_store-infor">
+                            {%- if block_st.store_address != blank -%}
+                              <div class="footer__block-info">
+                                {%- if block_st.store_address_heading != blank -%}
+                                  <div class="footer__store-info py-3 last-0 flex word-break">
+                                    {%- if block_st.store_address_heading != blank -%}
+                                      <span class="footer__info-title me-5">
+                                        {{- block_st.store_address_heading }}:
+                                      </span>
+                                    {%- endif -%}
+                                    <div class="footer__info-content rich__text-m0">
+                                      {{ block_st.store_address }}
+                                    </div>
+                                  </div>
+                                {%- endif -%}
+                              </div>
+                            {%- endif -%}
+                            {%- if block_st.store_email != blank -%}
+                              <div class="footer__store-info py-3 last-0">
+                                {%- if block_st.store_email_heading != blank -%}
+                                  <span class="footer__info-title me-3">{{- block_st.store_email_heading }}:</span>
+                                {%- endif -%}
+                                <a
+                                  href="mailto:{{ block_st.store_email }}"
+                                  class="footer__info-content remove-underline text-color transition -hover"
+                                >
+                                  {{ block_st.store_email }}
+                                </a>
+                              </div>
+                            {%- endif -%}
+                            {%- if block_st.store_phone != blank -%}
+                              <div class="footer__store-info py-3 last-0">
+                                {%- if block_st.store_phone_heading != blank -%}
+                                  <span class="footer__info-title me-3">{{- block_st.store_phone_heading }}: </span>
+                                {%- endif -%}
+                                <a
+                                  href="tel:{{ block_st.store_phone }}"
+                                  class="footer__info-content remove-underline text-color transition -hover"
+                                  aria-label=" {{ block_st.store_phone }}"
+                                >
+                                  {{ block_st.store_phone }}
+                                </a>
+                              </div>
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                        {%- if section_st.show_social -%}
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </collapsible-block>
+              {%- endcase -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      {%- if shop.features.follow_on_shop? and section_st.enable_follow_on_shop -%}
+        <div class="footer__follow-on-shop mt-15">
+          {% comment %} TODO: enable theme-check once `login_button` is accepted as valid filter {% endcomment %}
+          {% # theme-check-disable %}
+          {{ shop | login_button: action: 'follow' }}
+          {% # theme-check-enable %}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="footer__bottom{% if section_st.section_width != 'fix_width' %} border-top py-25 {% else %} {{ section_width }}{% endif %}">
+    <div class="{% if section_st.section_width == 'fix_width' %}border-top py-20 {% else %} {{ section_width }}{% endif %}">
+      <div
+        class="flex gap-30 row-gap-15 align-center flex-wrap justify-content-center justify-content-1025-unset"
+        style="--col-gap: 3rem"
+      >
+        {%- if section_st.enable_country_selector or section_st.enable_language_selector -%}
+          {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+            <div class="footer__column flex footer__localization isolate gap-20 align-center">
+              {%- if section_st.enable_country_selector -%}
+                {%- render 'country-localization', localPosition: 'FooterCountry' -%}
+              {%- endif -%}
+              {%- if section_st.enable_language_selector -%}
+                {%- render 'language-localization', localPosition: 'FooterLanguage' -%}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+        <div class="footer__copyright max-100">
+          &copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
+          . {{ powered_by_link }}
+        </div>
+        {%- if section_st.payment_enable -%}
+          <div class="footer__payment grow-1 flex flex-wrap justify-content-center flex-992-end align-center gap-10 row-gap-5 mt-3 mt-md-0 text-center text-md-unset">
+            <span class="payment-label w-full w-md-unset">{{ 'sections.footer.payment' | t }}: </span>
+            <ul class="list list-payment list-unstyled lh-1 inline-flex gap-5 align-center w-full w-md-unset justify-content-center justify-content-1025-unset">
+              {%- for type in shop.enabled_payment_types -%}
+                <li class="list-payment__item">
+                  {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</footer>
+
 {% schema %}
 {
   "name": "t:sections.footer.name",
