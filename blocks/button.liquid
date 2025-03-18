@@ -1,3 +1,47 @@
+{%- liquid
+  assign section_st = section.settings
+  assign block_st = block.settings
+  assign content_alignment = section_st.text_alignment
+  assign first_button_label = block_st.first_button_label
+  assign first_button_link = block_st.first_button_link
+  assign first_button_type = block_st.first_button_type
+  assign second_button_label = block_st.second_button_label
+  assign second_button_link = block_st.second_button_link
+  assign second_button_type = block_st.second_button_type
+%}
+{% if first_button_label != blank or block_st.second_button_label != blank %}
+  <div
+    class="rich-text__buttons flex justify-content-{{ content_alignment }}"
+  >
+    {% if first_button_label != blank %}
+      <a
+        {% if first_button_link == blank %}
+          role="link" aria-disabled="true"
+        {% else %}
+          href="{{ first_button_link | default: "#" }}"
+        {% endif %}
+        aria-label="{{ first_button_label }}"
+        class="btn btn-{{ first_button_type }}"
+      >
+        {{ first_button_label }}
+      </a>
+    {% endif %}
+    {% if second_button_label != blank %}
+      <a
+        {% if second_button_link == blank %}
+          role="link" aria-disabled="true"
+        {% else %}
+          href="{{ second_button_link | default: "#" }}"
+        {% endif %}
+        aria-label="{{ second_button_label }}"
+        class="btn btn-{{ second_button_type }}"
+      >
+        {{ second_button_label }}
+      </a>
+    {% endif %}
+  </div>
+{% endif %}
+
 {% schema %}
 {
   "name": "t:sections.all.content_setting.button_label-block.label",
