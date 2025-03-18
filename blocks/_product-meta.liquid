@@ -6,7 +6,7 @@
   assign show_type = block.settings.show_type
 -%}
 {%- if product.metafields.custom.external_affiliate == blank -%}
-  <ul class="product-meta list-unstyled p-0 my-20 pt-25 capitalize" {{ block.shopify_attributes }}>
+  <ul class="product-meta" {{ block.shopify_attributes }}>
     {% if show_sku %}
       <li>
         <span class="product-meta-label heading-color">{{ 'products.product.sku' | t }}:</span>

@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-class ProductRecommendations extends SlideSection {
+class ProductRecommendations extends HTMLElement {
   constructor() {
     super();
   }

@@ -1,4 +1,4 @@
-import { initSlide } from './module_slide.js?v=123';
+import { SlideSection } from './module_slide.js?v=1234';
 
 var Shopify = Shopify || {};
 var root = document.getElementsByTagName("html")[0];
@@ -12,34 +12,6 @@ function eventModal(event){
     root.classList.remove("open-modal");
   }
 }
-
-class SlideSection extends HTMLElement {
-  constructor() {
-    super();
-    this.init();
-    this.initSlideSection(this);
-  }
-
-  init() {}
-  initSlideSection() {
-    const _this = this;
-    if (document.body.classList.contains("index")) {
-      let pos = window.pageYOffset;
-      if (pos > 0 || document.body.classList.contains("swiper-lazy")) {
-        initSlide(_this);
-      } else {
-        if (this.classList.contains("lazy-loading-swiper-before")) {
-          initSlide(_this);
-        } else {
-          this.classList.add("lazy-loading-swiper-after");
-        }
-      }
-    } else {
-      initSlide(_this);
-    }
-  }
-}
-customElements.define("slide-section", SlideSection);
 
 class ToggleMenu extends HTMLElement {
   constructor(){

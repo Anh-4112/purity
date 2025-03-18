@@ -1,0 +1,70 @@
+{% liquid
+  assign mobile_options = section_st.mobile_options
+  assign layout = 'grid'
+  if desktop_layout == 'thumbnail_left' or desktop_layout == 'thumbnail_bottom'
+    assign layout = 'thumbnail'
+  elsif desktop_layout == 'stack'
+    assign layout = 'stack'
+  endif
+
+  if type == 'quickview'
+    assign layout = 'thumbnail'
+    assign desktop_layout = 'thumbnail_bottom'
+  endif
+%}
+<media-gallery class="media-gallery">
+  <div class="product__media-gallery">
+    {% case layout %}
+      {% when 'thumbnail' %}
+        <slide-gallery
+          id="GalleryViewer-{{ section.id }}"
+          class="block relative {{ desktop_layout }}"
+          data-section-id="{{ section.id }}"
+          data-effect="slide"
+          data-speed="500"
+          data-mobile="1"
+          data-tablet="1"
+          data-desktop="1"
+          data-thumb-direction="{% if desktop_layout == 'thumbnail_left' %}vertical{% else %}horizontal{% endif %}"
+          data-thumb-slides-per-view="4"
+          data-auto-play-video="{{ section_st.enable_video_autoplay }}"
+        >
+          <div id="GalleryMainViewer-{{ section.id }}" class="media-main-swiper">
+            <div class="swiper-wrapper-preview swiper">
+              <div class="swiper-wrapper">
+                {% render 'product-media', images: images, section_st: section_st, class: ' swiper-slide', type: type %}
+              </div>
+            </div>
+          </div>
+          {%- render 'swiper-navigation', type_controls: 'group' -%}
+          <div
+            id="GalleryThumbnailViewer-{{ section.id }}"
+            class="media-thumb-swiper{% if mobile_options == 'hidden_thumbnail' %} mobile-hidden{% endif %}"
+          >
+            <div class="thumbnail-slide swiper">
+              <div class="swiper-wrapper">
+                {%
+                  render 'product-media',
+                  images: images,
+                  section_st: section_st,
+                  class: ' swiper-slide',
+                  thumbnail: true;
+                  type: type
+                %}
+              </div>
+            </div>
+          </div>
+        </slide-gallery>
+      {% when 'grid' %}
+        <div id="GalleryViewer-{{ section.id }}" class="grid grid-cols">
+          {% render 'product-media', images: images, section_st: section_st, type: type %}
+        </div>
+        {%- render 'swiper-navigation', type_controls: 'group' -%}
+      {% else %}
+        <div id="GalleryViewer-{{ section.id }}" class="stacked">
+          {% render 'product-media', images: images, section_st: section_st, type: type %}
+        </div>
+        {%- render 'swiper-navigation', type_controls: 'group' -%}
+    {% endcase %}
+  </div>
+</media-gallery>

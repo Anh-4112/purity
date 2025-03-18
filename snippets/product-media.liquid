@@ -1,0 +1,357 @@
+{% liquid
+  assign theme_st = settings
+  assign product_image_ratio = theme_st.product_image_ratio
+  assign enable_video_looping = true
+  assign enable_video_autoplay = true
+  assign ratio = '3/4'
+  for image in images
+    if product_image_ratio != 'adapt'
+      case product_image_ratio
+        when 'square'
+          assign ratio = '1/1'
+        when 'landscape'
+          assign ratio = '4/3'
+        when 'portrait'
+          assign ratio = '3/4'
+      endcase
+    else
+      if image.preview_image != blank
+        assign ratio = image.preview_image.aspect_ratio
+      endif
+    endif
+  endfor
+%}
+{% if product.selected_or_first_available_variant.featured_media != null %}
+  {%- assign featured_media = product.selected_or_first_available_variant.featured_media -%}
+  {%- assign media_position = 1 -%}
+  {% liquid
+    assign ratio = ''
+    if product_image_ratio != 'adapt'
+      case product_image_ratio
+        when 'square'
+          assign ratio = '1/1'
+        when 'landscape'
+          assign ratio = '4/3'
+        when 'portrait'
+          assign ratio = '3/4'
+        else
+          if product_custom_ratio != empty
+            assign ratio = product_custom_ratio | replace: ':', '/'
+          else
+            assign ratio = '3/4'
+          endif
+      endcase
+    else
+      if featured_media.preview_image != blank
+        assign ratio = featured_media.preview_image.aspect_ratio
+      else
+        assign ratio = '3/4'
+      endif
+    endif
+  %}
+  {%- case featured_media.media_type -%}
+    {%- when 'external_video' -%}
+      {% liquid
+        assign video_id = featured_media.external_id
+      %}
+      {%- capture video_attribute -%}
+        {%- if enable_video_looping -%}
+          loop=1
+        {% endif %}
+      {%- endcapture -%}
+      <div
+        class="media-gallery__external-video{{ class }} rounded-5"
+        style="--aspect-ratio: {{ ratio }}"
+      >
+        {% if thumbnail == true %}
+          {%- assign image_alt = featured_media.alt | default: 'product' | escape -%}
+          {% render 'responsive-image', type: 'product', image: featured_media.preview_image, image_alt: image_alt %}
+        {% else %}
+          {%- if featured_media.host == 'youtube' -%}
+            <iframe
+              src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&rel=0&autoplay={% if enable_video_autoplay -%}1{% else %}0{%- endif -%}&mute={% if enable_video_autoplay -%}1{% else %}0{%- endif -%}&loop={%- if enable_video_looping -%}1&playlist={{ video_id }}{%else%}0{% endif %}"
+              class="js-youtube media-video"
+            ></iframe>
+          {%- else -%}
+            <iframe
+              class="js-vimeo media-video"
+              src="https://player.vimeo.com/video/{{ video_id }}?autoplay={% if enable_video_autoplay -%}1{% else %}0{%- endif -%}&muted={% if enable_video_autoplay -%}1{% else %}0{%- endif -%}&loop={%- if enable_video_looping -%}1{%else%}0{% endif %}"
+              frameborder="0"
+              allowfullscreen
+            ></iframe>
+          {%- endif -%}
+        {% endif %}
+      </div>
+    {%- when 'video' -%}
+      {%- capture video_attribute -%}
+        {%- if enable_video_looping -%}
+          loop 
+        {% endif %}
+        {% if enable_video_autoplay -%}
+          muted autoplay
+        {%- endif -%}
+      {%- endcapture -%}
+      <div
+        class="media-gallery__local-video{{ class }} rounded-5 w-full"
+        style="--aspect-ratio: {{ ratio }}"
+      >
+        {%- liquid
+          assign source = featured_media.sources
+          assign source_url = ''
+          for s in source
+            if s.format == 'mp4'
+              assign source_url = s.url
+              break
+            endif
+          endfor
+        -%}
+        {% if thumbnail == true %}
+          {%- assign image_alt = featured_media.alt | default: 'product' | escape -%}
+          {% render 'responsive-image',
+            type: 'product',
+            image: featured_media.preview_image,
+            image_alt: image_alt,
+            class: 'rounded-5'
+          %}
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 22 22"
+            fill="none"
+            class="absolute product_media-model-icon rounded-3"
+          >
+            <rect width="22" height="22" rx="2" fill="#111111"></rect>
+            <path d="M14.7181 10.4268L9.07977 6.13623C8.87285 5.97921 8.59817 5.95557 8.37137 6.07759C8.14277 6.19866 8 6.44459 8 6.71039V15.2887C8 15.5573 8.14277 15.8023 8.37137 15.9234C8.46805 15.9745 8.57377 16 8.68039 16C8.81954 16 8.9605 15.9537 9.07977 15.8619L14.7181 11.5751C14.8961 11.438 15 11.2261 15 11.001C15.0009 10.7721 14.8943 10.5611 14.7181 10.4268Z" fill="white"></path>
+          </svg>
+        {% else %}
+          <div class="test">
+            <video
+              playsinline="true"
+              muted="muted"
+              loop="loop"
+              controls="controls"
+              preload="metadata"
+              class="rounded-5 block w-full h-full absolute inset-0 media-video"
+              src="{{ source_url }}"
+              poster="{{ featured_media.preview_image | image_url: width: 800 }}"
+              {{ video_attribute }}
+            ></video>
+          </div>
+        {% endif %}
+      </div>
+    {%- when 'model' -%}
+      <div
+        class="media-gallery__model{{ class }}"
+        {% if thumbnail == true %}
+          style="--aspect-ratio: {{ ratio }}"
+        {% endif %}
+      >
+        {% if thumbnail == true %}
+          {%- assign image_alt = featured_media.alt | default: 'product' | escape -%}
+          {% render 'responsive-image',
+            type: 'product',
+            image: featured_media.preview_image,
+            image_alt: image_alt,
+            class: 'rounded-5'
+          %}
+          <svg width="22" height="22" fill="none" class="absolute product_media-model-icon rounded-3">
+            <rect width="22" height="22" fill="#111" rx="2"/><path fill="#fff" d="M15.4 8.063 12.104 6.16a1.203 1.203 0 0 0-1.2 0L7.6 8.063A1.198 1.198 0 0 0 7 9.1v3.8a1.194 1.194 0 0 0 .6 1.037l3.304 1.903a1.203 1.203 0 0 0 1.2 0l3.296-1.903A1.198 1.198 0 0 0 16 12.9V9.1a1.193 1.193 0 0 0-.6-1.037Zm-4.096 7.087L8 13.247a.4.4 0 0 1-.2-.347V9.1a.398.398 0 0 1 .2-.347l3.304-1.903a.401.401 0 0 1 .2-.052c.07 0 .139.018.2.052L15 8.753c.064.036.115.09.148.155l-3.152 1.803a1.005 1.005 0 0 0-.492.873v3.626a.437.437 0 0 1-.2-.06Z"/>
+          </svg>
+        {% else %}
+          <div class="responsive-image " style="--aspect-ratio: {{ ratio }}">
+            <product-model
+              class="deferred-media media media--transparent no-js-hidden rounded-5"
+              data-media-id="{{ featured_media.id }}"
+              style="--aspect-ratio: {{ ratio }}"
+            >
+              <button id="Deferred-Poster-Modal-{{ featured_media.id }}" class="deferred-media__poster" type="button">
+                <span class="deferred-media__poster-button motion-reduce">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="66" height="65" viewBox="0 0 66 65" fill="none">
+                    <rect x="0.5" y="0.000976562" width="65" height="65" rx="32.5" fill="white"/>
+                    <path d="M42.1 25.7451L34.4093 21.3697C33.9837 21.1281 33.5008 21.001 33.0093 21.001C32.5178 21.001 32.035 21.1281 31.6093 21.3697L23.9 25.7451C23.4741 25.9868 23.1204 26.3345 22.8747 26.7532C22.6289 27.1718 22.4997 27.6467 22.5 28.1301V36.8719C22.4997 37.3552 22.6289 37.8301 22.8747 38.2488C23.1204 38.6675 23.4741 39.0151 23.9 39.2568L31.6093 43.6323C32.035 43.8738 32.5178 44.001 33.0093 44.001C33.5008 44.001 33.9837 43.8738 34.4093 43.6323L42.1 39.2568C42.5259 39.0151 42.8796 38.6675 43.1253 38.2488C43.3711 37.8301 43.5003 37.3552 43.5 36.8719V28.1301C43.5003 27.6467 43.3711 27.1718 43.1253 26.7532C42.8796 26.3345 42.5259 25.9868 42.1 25.7451ZM32.5427 42.0454L24.8333 37.6699C24.6909 37.5891 24.5727 37.4727 24.4908 37.3326C24.4088 37.1924 24.366 37.0335 24.3667 36.8719V28.1301C24.366 27.9685 24.4088 27.8095 24.4908 27.6694C24.5727 27.5292 24.6909 27.4129 24.8333 27.332L32.5427 22.9566C32.6849 22.8773 32.8458 22.8362 33.0093 22.8373C33.1728 22.8362 33.3338 22.8773 33.476 22.9566L41.1667 27.332C41.3151 27.4153 41.4352 27.5397 41.512 27.6898L34.1573 31.8359C33.8039 32.0429 33.512 32.3373 33.3105 32.6898C33.1091 33.0423 33.0052 33.4405 33.0093 33.8448V42.183C32.8447 42.1749 32.6846 42.1277 32.5427 42.0454Z" fill="#111111"/>
+                  </svg>
+                </span>
+                {%- assign image_alt = featured_media.alt | default: 'product' | escape -%}
+                {% render 'responsive-image',
+                  type: 'product',
+                  image: featured_media.preview_image,
+                  image_alt: image_alt
+                %}
+              </button>
+              <template>
+                {%- liquid
+                  echo featured_media | media_tag: image_size: '2048x', toggleable: true
+                -%}
+              </template>
+            </product-model>
+          </div>
+          {% if type != 'single' and type != 'quickview' %}
+            <button
+              class="btn-primary w-full product__xr-button text-center"
+              type="button"
+              aria-label="{{ 'products.product.xr_button_label' | t }}"
+              data-shopify-xr
+              data-shopify-xr-hidden
+              data-shopify-model3d-id="{{ featured_media.id }}"
+              data-shopify-title="{{ product.title | escape }}"
+            >
+              {{ 'products.product.xr_button' | t }}
+            </button>
+          {% endif %}
+        {% endif %}
+      </div>
+  {%- endcase -%}
+{% endif %}
+{% for image in images %}
+  {%- unless image.id == product.selected_or_first_available_variant.featured_media.id -%}
+    {% assign media_position = media_position | default: 0 | plus: 1 %}
+    {%- case image.media_type -%}
+      {%- when 'external_video' -%}
+        {% liquid
+          assign video_id = image.external_id
+        %}
+        {%- capture video_attribute -%}
+          {%- if enable_video_looping -%}
+            loop=1
+          {% endif %}
+        {%- endcapture -%}
+        <div
+          class="media-gallery__external-video{{ class }} rounded-5"
+          style="--aspect-ratio: {{ ratio }}"
+        >
+          {% if thumbnail == true %}
+            {%- assign image_alt = image.alt | default: 'product' | escape -%}
+            {% render 'responsive-image', type: 'product', image: image.preview_image, image_alt: image_alt %}
+          {% else %}
+            {%- if image.host == 'youtube' -%}
+              <iframe
+                src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&rel=0&autoplay={% if enable_video_autoplay -%}1{% else %}0{%- endif -%}&mute={% if enable_video_autoplay -%}1{% else %}0{%- endif -%}&loop={%- if enable_video_looping -%}1&playlist={{ video_id }}{%else%}0{% endif %}"
+                class="js-youtube media-video"
+              ></iframe>
+            {%- else -%}
+              <iframe
+                class="js-vimeo media-video"
+                src="https://player.vimeo.com/video/{{ video_id }}?autoplay={% if enable_video_autoplay -%}1{% else %}0{%- endif -%}&muted={% if enable_video_autoplay -%}1{% else %}0{%- endif -%}&loop={%- if enable_video_looping -%}1{%else%}0{% endif %}"
+                frameborder="0"
+                allowfullscreen
+              ></iframe>
+            {%- endif -%}
+          {% endif %}
+        </div>
+      {%- when 'video' -%}
+        {%- capture video_attribute -%}
+          {%- if enable_video_looping -%}
+            loop 
+          {% endif %}
+          {% if enable_video_autoplay -%}
+            muted autoplay
+          {%- endif -%}
+        {%- endcapture -%}
+        <div
+          class="media-gallery__local-video{{ class }} rounded-5 w-full"
+          style="--aspect-ratio: {{ ratio }}"
+        >
+          {%- liquid
+            assign source = image.sources
+            assign source_url = ''
+            for s in source
+              if s.format == 'mp4'
+                assign source_url = s.url
+                break
+              endif
+            endfor
+          -%}
+          {% if thumbnail == true %}
+            {%- assign image_alt = image.alt | default: 'product' | escape -%}
+            {% render 'responsive-image',
+              type: 'product',
+              image: image.preview_image,
+              image_alt: image_alt,
+              class: 'rounded-5'
+            %}
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 22 22"
+              fill="none"
+              class="absolute product_media-model-icon rounded-3"
+            >
+              <rect width="22" height="22" rx="2" fill="#111111"></rect>
+              <path d="M14.7181 10.4268L9.07977 6.13623C8.87285 5.97921 8.59817 5.95557 8.37137 6.07759C8.14277 6.19866 8 6.44459 8 6.71039V15.2887C8 15.5573 8.14277 15.8023 8.37137 15.9234C8.46805 15.9745 8.57377 16 8.68039 16C8.81954 16 8.9605 15.9537 9.07977 15.8619L14.7181 11.5751C14.8961 11.438 15 11.2261 15 11.001C15.0009 10.7721 14.8943 10.5611 14.7181 10.4268Z" fill="white"></path>
+            </svg>
+          {% else %}
+            <div class="test">
+              <video
+                playsinline="true"
+                muted="muted"
+                loop="loop"
+                controls="controls"
+                preload="metadata"
+                class="rounded-5 block w-full h-full absolute inset-0 media-video"
+                src="{{ source_url }}"
+                poster="{{ image.preview_image | image_url: width: 800 }}"
+                {{ video_attribute }}
+              ></video>
+            </div>
+          {% endif %}
+        </div>
+      {%- when 'model' -%}
+        <div
+          class="media-gallery__model{{ class }} rounded-5 pointer"
+          {% if thumbnail == true %}
+            style="--aspect-ratio: {{ ratio }}"
+          {% endif %}
+        >
+          {% if thumbnail == true %}
+            {%- assign image_alt = image.alt | default: 'product' | escape -%}
+            {% render 'responsive-image',
+              type: 'product',
+              image: image.preview_image,
+              image_alt: image_alt,
+              class: 'rounded-5'
+            %}
+            <svg width="22" height="22" fill="none" class="absolute product_media-model-icon rounded-3">
+              <rect width="22" height="22" fill="#111" rx="2"/><path fill="#fff" d="M15.4 8.063 12.104 6.16a1.203 1.203 0 0 0-1.2 0L7.6 8.063A1.198 1.198 0 0 0 7 9.1v3.8a1.194 1.194 0 0 0 .6 1.037l3.304 1.903a1.203 1.203 0 0 0 1.2 0l3.296-1.903A1.198 1.198 0 0 0 16 12.9V9.1a1.193 1.193 0 0 0-.6-1.037Zm-4.096 7.087L8 13.247a.4.4 0 0 1-.2-.347V9.1a.398.398 0 0 1 .2-.347l3.304-1.903a.401.401 0 0 1 .2-.052c.07 0 .139.018.2.052L15 8.753c.064.036.115.09.148.155l-3.152 1.803a1.005 1.005 0 0 0-.492.873v3.626a.437.437 0 0 1-.2-.06Z"/>
+            </svg>
+          {% else %}
+            <div class="responsive-image" style="--aspect-ratio: {{ ratio }}">
+              <product-model
+                class="deferred-media media media--transparent no-js-hidden rounded-5"
+                data-media-id="{{ image.id }}"
+                style="--aspect-ratio: {{ ratio }}"
+              >
+                <button id="Deferred-Poster-Modal-{{ image.id }}" class="deferred-media__poster" type="button">
+                  <span class="deferred-media__poster-button motion-reduce">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="66" height="65" viewBox="0 0 66 65" fill="none">
+                      <rect x="0.5" y="0.000976562" width="65" height="65" rx="32.5" fill="white"/>
+                      <path d="M42.1 25.7451L34.4093 21.3697C33.9837 21.1281 33.5008 21.001 33.0093 21.001C32.5178 21.001 32.035 21.1281 31.6093 21.3697L23.9 25.7451C23.4741 25.9868 23.1204 26.3345 22.8747 26.7532C22.6289 27.1718 22.4997 27.6467 22.5 28.1301V36.8719C22.4997 37.3552 22.6289 37.8301 22.8747 38.2488C23.1204 38.6675 23.4741 39.0151 23.9 39.2568L31.6093 43.6323C32.035 43.8738 32.5178 44.001 33.0093 44.001C33.5008 44.001 33.9837 43.8738 34.4093 43.6323L42.1 39.2568C42.5259 39.0151 42.8796 38.6675 43.1253 38.2488C43.3711 37.8301 43.5003 37.3552 43.5 36.8719V28.1301C43.5003 27.6467 43.3711 27.1718 43.1253 26.7532C42.8796 26.3345 42.5259 25.9868 42.1 25.7451ZM32.5427 42.0454L24.8333 37.6699C24.6909 37.5891 24.5727 37.4727 24.4908 37.3326C24.4088 37.1924 24.366 37.0335 24.3667 36.8719V28.1301C24.366 27.9685 24.4088 27.8095 24.4908 27.6694C24.5727 27.5292 24.6909 27.4129 24.8333 27.332L32.5427 22.9566C32.6849 22.8773 32.8458 22.8362 33.0093 22.8373C33.1728 22.8362 33.3338 22.8773 33.476 22.9566L41.1667 27.332C41.3151 27.4153 41.4352 27.5397 41.512 27.6898L34.1573 31.8359C33.8039 32.0429 33.512 32.3373 33.3105 32.6898C33.1091 33.0423 33.0052 33.4405 33.0093 33.8448V42.183C32.8447 42.1749 32.6846 42.1277 32.5427 42.0454Z" fill="#111111"/>
+                    </svg>
+                  </span>
+                  {%- assign image_alt = image.alt | default: 'product' | escape -%}
+                  {% render 'responsive-image', type: 'product', image: image.preview_image, image_alt: image_alt %}
+                </button>
+                <template>
+                  {%- liquid
+                    echo image | media_tag: image_size: '2048x', toggleable: true
+                  -%}
+                </template>
+              </product-model>
+            </div>
+            {% if type != 'single' and type != 'quickview' %}
+              <button
+                class="btn-primary w-full product__xr-button text-center"
+                type="button"
+                aria-label="{{ 'products.product.xr_button_label' | t }}"
+                data-shopify-xr
+                data-shopify-xr-hidden
+                data-shopify-model3d-id="{{ image.id }}"
+                data-shopify-title="{{ product.title | escape }}"
+              >
+                {{ 'products.product.xr_button' | t }}
+              </button>
+            {% endif %}
+          {% endif %}
+        </div>
+    {%- endcase -%}
+  {%- endunless -%}
+{% endfor %}
