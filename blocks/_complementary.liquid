@@ -1,3 +1,59 @@
+{%- liquid
+  assign product = closest.product
+  assign block_heading = block.settings.block_heading
+  assign show_pagination = block.settings.show_pagination
+  assign show_navigation = block.settings.show_navigation
+  assign product_list_limit = block.settings.product_list_limit
+  assign products_per_page = block.settings.products_per_page
+-%}
+{% if product.metafields.custom.external_affiliate == blank %}
+  <product-recommendations
+    {{ block.shopify_attributes }}
+    data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&intent=complementary&limit={{ product_list_limit }}"
+  >
+    {%- if recommendations.performed and recommendations.products_count > 0 -%}
+      {%- if block_heading != blank -%}
+        <h2 class="recommendations-heading">
+          {{- block_heading -}}
+        </h2>
+      {% endif %}
+      <slide-section
+        class="swiper {% if block_heading == blank %} mt-30{% endif %}"
+        data-section-id="{{ section.id }}"
+        data-effect="slide"
+        data-speed="500"
+        data-desktop="{{ products_per_page }}"
+        data-mobile="2"
+        data-tablet="3"
+      >
+        <div class="swiper-wrapper">
+          {%- for product in recommendations.products limit: product_list_limit %}
+            {% render 'card-product',
+              card_product: product,
+              section_id: section.id,
+              template_enable_product_vendor: false,
+              template_enable_rate: false,
+              template_enable_product_short_description: false,
+              template_enable_color_swatches: false,
+              template_enable_add_cart: false,
+              template_enable_action: false,
+              template_enable_price: true,
+              class: ' swiper-slide'
+            %}
+          {%- endfor -%}
+        </div>
+        {% if show_navigation %}
+          {%- render 'swiper-navigation' -%}
+        {% endif %}
+        {% if show_pagination %}
+          <div
+            class="swiper-pagination"
+          ></div>
+        {% endif %}
+      </slide-section>
+    {% endif %}
+  </product-recommendations>
+{% endif %}
 {% schema %}
 {
   "name": "t:sections.all.product_setting.complementary_products.name",

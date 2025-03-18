@@ -1,4 +1,4 @@
-import { initSlide } from "./module_slide.js?v=1";
+import { SlideSection } from './module_slide.js?v=1234';
 
 var Shopify = Shopify || {};
 var root = document.getElementsByTagName("html")[0];
@@ -112,32 +112,6 @@ function eventModal(event) {
     root.querySelector(".active-modal-js").classList.remove("active");
   }
 }
-
-class SlideSection extends HTMLElement {
-  constructor() {
-    super();
-    this.init();
-  }
-
-  init() {
-    const _this = this;
-    if (document.body.classList.contains("index")) {
-      let pos = window.pageYOffset;
-      if (pos > 0 || document.body.classList.contains("swiper-lazy")) {
-        initSlide(_this);
-      } else {
-        if (this.classList.contains("lazy-loading-swiper-before")) {
-          initSlide(_this);
-        } else {
-          this.classList.add("lazy-loading-swiper-after");
-        }
-      }
-    } else {
-      initSlide(_this);
-    }
-  }
-}
-customElements.define("slide-section", SlideSection);
 
 class ToggleMenu extends HTMLElement {
   constructor() {
@@ -353,3 +327,144 @@ class SubMenuDetails extends HTMLDetailsElement {
 customElements.define("submenu-details", SubMenuDetails, {
   extends: "details"
 });
+class RecentlyViewedProducts extends HTMLElement {
+  constructor() {
+    super();
+  }
+  init() {
+    this.connectedCallback();
+  }
+  initData() {
+    const savedProductsArr = JSON.parse(
+      localStorage.getItem('recently-viewed-products')
+    );
+    this.getStoredProducts(savedProductsArr);
+  }
+  getStoredProducts(arr) {
+    const limit = this.dataset?.limit;
+    if (limit) {
+      let query = '';
+      var productAjaxURL = '';
+      if (arr && arr.length > 0) {
+        const sortedIds = arr.slice();
+        const idsToUse = sortedIds.slice(0, limit);
+        query = idsToUse.join('%20OR%20id:');
+        productAjaxURL = `&q=id:${query}`;
+      }
+    }
+    fetch(`${this.dataset.url}${productAjaxURL}`)
+      .then((response) => response.text())
+      .then((text) => {
+        const html = document.createElement("div");
+        html.innerHTML = text;
+        const recentlyViewedProducts = html.querySelector("recently-viewed-products");
+        if (recentlyViewedProducts && recentlyViewedProducts.innerHTML.trim().length) {
+          this.innerHTML = recentlyViewedProducts.innerHTML;
+        }
+      })
+      .finally(() => {})
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+  connectedCallback() {
+    const __this = this;
+    const handleIntersection = (entries, observer) => {
+      if (!entries[0].isIntersecting) return;
+      observer.unobserve(this);
+      __this.initData();
+    };
+
+    new IntersectionObserver(handleIntersection.bind(this), {
+      rootMargin: '0px 0px 400px 0px',
+    }).observe(this);
+  }
+}
+customElements.define('recently-viewed-products', RecentlyViewedProducts);
+
+class ProgressBar extends HTMLElement {
+  constructor() {
+    super();
+    const orders = this.dataset.order;
+    this.init(orders);
+  }
+  init(orders) {
+    const min = Number(this.dataset.feAmount);
+    const threshold = Number(this.dataset.threshold);
+    if (threshold > orders) {
+      this.classList.add("notify");
+    } else {
+      this.classList.remove("notify");
+    }
+    if (!min) return;
+    if (!orders) return;
+    const order = Number(orders);
+    if (!order) return;
+    if ((order / min) * 100 > 100) {
+      this.setProgressBar(100);
+    } else {
+      this.setProgressBar((order / min) * 100);
+    }
+  }
+  setProgressBar(progress) {
+    const p = this.querySelector(".progress");
+    if (!p) return;
+    const p_bar = p.closest(".progress-bar");
+    p.style.width = progress + "%";
+    if (!p_bar) return;
+    if (progress <= 0) {
+      p_bar.classList.add("d-none");
+    } else {
+      p_bar.classList.remove("d-none");
+    }
+  }
+}
+customElements.define("progress-bar", ProgressBar);
+
+class InventoryProgressBar extends ProgressBar {
+  constructor() {
+    super();
+    const orders = this.dataset.order;
+    const available = this.dataset.available;
+    this.init(orders, available);
+  }
+  init(orders, available) {
+    const handleIntersection = (entries, observer) => {
+      if (!entries[0].isIntersecting) return;
+      observer.unobserve(this);
+      const min = Number(this.dataset.feAmount);
+      const threshold = Number(this.dataset.threshold);
+      if (threshold > orders) {
+        if (orders > 0) {
+          this.classList.add("notify", "low_stock");
+          this.classList.remove("instock", "pre_order", "outstock");
+        } else {
+          if (available == false || available == "false") {
+            this.classList.add("notify", "outstock");
+            this.classList.remove("instock", "pre_order", "low_stock");
+          } else {
+            this.classList.remove("notify", "instock", "low_stock", "outstock");
+            this.classList.add("pre_order");
+          }
+        }
+      } else {
+        this.classList.remove("notify", "pre_order", "low_stock", "outstock");
+        this.classList.add("instock");
+      }
+      if (!min) return;
+      if (orders === undefined) return;
+      const order = Number(orders);
+      if (order === undefined) return;
+      if ((order / min) * 100 > 100) {
+        this.setProgressBar(100);
+      } else {
+        this.setProgressBar((order / min) * 100);
+      }
+    };
+
+    new IntersectionObserver(handleIntersection.bind(this), {
+      rootMargin: "0px 0px 400px 0px",
+    }).observe(this);
+  }
+}
+customElements.define("inventory-progress-bar", InventoryProgressBar);
