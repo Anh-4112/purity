@@ -70,6 +70,101 @@ try {
   focusVisiblePolyfill();
 }
 
+const slideAnime = (() => {
+  let isAnimating = false;
+
+  return (setOptions) => {
+    const defaultOptions = {
+      target: false,
+      animeType: "slideToggle",
+      duration: 250,
+      easing: "ease",
+      isDisplayStyle: "block",
+      parent: false,
+    };
+    const options = Object.assign({}, defaultOptions, setOptions);
+    const target = options.target;
+    const parent = options.parent;
+    if (!target) {
+      return;
+    }
+
+    if (isAnimating) {
+      return;
+    }
+    isAnimating = true;
+    parent.classList?.toggle("opened");
+
+    let animeType = options.animeType;
+    const styles = getComputedStyle(target);
+    if (animeType === "slideToggle") {
+      animeType = styles.display === "none" ? "slideDown" : "slideUp";
+    }
+    if (
+      (animeType === "slideUp" && styles.display === "none") ||
+      (animeType === "slideDown" && styles.display !== "none") ||
+      (animeType !== "slideUp" && animeType !== "slideDown")
+    ) {
+      isAnimating = false;
+      return false;
+    }
+    target.style.overflow = "hidden";
+    const duration = options.duration;
+    const easing = options.easing;
+    const isDisplayStyle = options.isDisplayStyle;
+
+    if (animeType === "slideDown") {
+      target.style.display = isDisplayStyle;
+    }
+    const heightVal = {
+      height: target.getBoundingClientRect().height + "px",
+      marginTop: styles.marginTop,
+      marginBottom: styles.marginBottom,
+      paddingTop: styles.paddingTop,
+      paddingBottom: styles.paddingBottom,
+    };
+
+    Object.keys(heightVal).forEach((key) => {
+      if (parseFloat(heightVal[key]) === 0) {
+        delete heightVal[key];
+      }
+    });
+    if (Object.keys(heightVal).length === 0) {
+      isAnimating = false;
+      return false;
+    }
+    let slideAnime;
+    if (animeType === "slideDown") {
+      Object.keys(heightVal).forEach((key) => {
+        target.style[key] = 0;
+      });
+      slideAnime = target.animate(heightVal, {
+        duration: duration,
+        easing: easing,
+      });
+    } else if (animeType === "slideUp") {
+      Object.keys(heightVal).forEach((key) => {
+        target.style[key] = heightVal[key];
+        heightVal[key] = 0;
+      });
+      slideAnime = target.animate(heightVal, {
+        duration: duration,
+        easing: easing,
+      });
+    }
+    slideAnime.finished.then(() => {
+      target.style.overflow = "";
+      Object.keys(heightVal).forEach((key) => {
+        target.style[key] = "";
+      });
+      if (animeType === "slideUp") {
+        target.style.display = "none";
+      }
+      isAnimating = false;
+    });
+  };
+})();
+
 function focusVisiblePolyfill() {
   const navKeys = ['ARROWUP', 'ARROWDOWN', 'ARROWLEFT', 'ARROWRIGHT', 'TAB', 'ENTER', 'SPACE', 'ESCAPE', 'HOME', 'END', 'PAGEUP', 'PAGEDOWN'];
   let currentFocusedElement = null;
