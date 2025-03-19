@@ -1,6 +1,27 @@
+{%- liquid
+  assign heading = block.settings.heading
+  assign content = block.settings.content
+  assign collapsible_page = block.settings.page
+-%}
+<details class="collapsible-row" is="collapsible-row">
+  <summary class="collapsible-row__summary">
+    <div class="collapsible-heading">{{- heading | default: page.title -}}</div>
+    <svg class="icon icon-down transition-short" width="10" height="6">
+      <use href="#icon-arrow-down"></use>
+    </svg>
+  </summary>
+  <div class="collapsible-row__content">
+    {% if collapsible_page != null and pages[collapsible_page].content %}
+      {{ pages[collapsible_page].content }}
+    {% else %}
+      {{ content }}
+    {% endif %}
+  </div>
+</details>
 {% schema %}
 {
   "name": "t:sections.all.product_setting.collapsible_row.name",
+  "class": "block-product__collapsible",
   "settings": [
     {
       "type": "text",
@@ -16,7 +37,7 @@
     },
     {
       "type": "page",
-      "id": "content_page",
+      "id": "page",
       "label": "t:sections.all.product_setting.collapsible_row.settings.content_page"
     }
   ],
