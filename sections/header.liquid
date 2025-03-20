@@ -3,7 +3,7 @@
   assign section_st = section.settings
   assign color_scheme = section_st.color_scheme
   assign menu = section_st.menu
-  assign transparent = section_st.transparent_on_desktop
+  assign transparent = section_st.transparent
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -13,7 +13,7 @@
   endif
   assign transparent_class = ''
   if request.page_type == 'index' and transparent
-    assign transparent_class = ' absolute inset-x-0 transparent'
+    assign transparent_class = ' absolute inset-x-0 transparent z-15'
   endif
 -%}
 <script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
@@ -36,6 +36,15 @@
       --color-background: transparent;
       --color-text: {{ section_st.header_text_icon_transparent }};
     }
+    @media only screen and (min-width: 1025px) {
+      .header:not(.shopify-section-header-sticky) .transparent:hover {
+        --color-background: {{ color_scheme.settings.background }}!important;
+        --color-text: {{ color_scheme.settings.text_color }}!important;
+        --header-background-opacity: 1;
+        --header-logo-opacity: 1;
+        --animation-nav-delay: 0.2s;
+       }
+    }
   {% endif %}
 {% endstyle %}
 
@@ -55,7 +64,7 @@
           aria-label="{{ 'accessibility.toggle_menu' | t }}"
         >
           <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
-            <path d="M1.00703 7.99665C0.725995 7.99665 0.483997 7.90285 0.28103 7.71524C0.0936768 7.512 0 7.26968 0 6.98828C0 6.7225 0.0936768 6.49581 0.28103 6.30821C0.483997 6.10497 0.725995 6.00335 1.00703 6.00335H18.993C19.274 6.00335 19.5082 6.10497 19.6956 6.30821C19.8985 6.49581 20 6.7225 20 6.98828C20 7.26968 19.8985 7.512 19.6956 7.71524C19.5082 7.90285 19.274 7.99665 18.993 7.99665H1.00703ZM1.00703 1.9933C0.725995 1.9933 0.483997 1.8995 0.28103 1.71189C0.0936768 1.50865 0 1.26633 0 0.984925C0 0.719151 0.0936768 0.492462 0.28103 0.304858C0.483997 0.101619 0.725995 0 1.00703 0H18.993C19.274 0 19.5082 0.101619 19.6956 0.304858C19.8985 0.492462 20 0.719151 20 0.984925C20 1.26633 19.8985 1.50865 19.6956 1.71189C19.5082 1.8995 19.274 1.9933 18.993 1.9933H1.00703ZM1.00703 14C0.725995 14 0.483997 13.9062 0.28103 13.7186C0.0936768 13.5154 0 13.273 0 12.9916C0 12.7259 0.0936768 12.4992 0.28103 12.3116C0.483997 12.1083 0.725995 12.0067 1.00703 12.0067H18.993C19.274 12.0067 19.5082 12.1083 19.6956 12.3116C19.8985 12.4992 20 12.7259 20 12.9916C20 13.273 19.8985 13.5154 19.6956 13.7186C19.5082 13.9062 19.274 14 18.993 14H1.00703Z" fill="currentColor"></path>
+            <path d="M1.00703 7.99665C0.725995 7.99665 0.483997 7.90285 0.28103 7.71524C0.0936768 7.512 0 7.26968 0 6.98828C0 6.7225 0.0936768 6.49581 0.28103 6.30821C0.483997 6.10497 0.725995 6.00335 1.00703 6.00335H18.993C19.274 6.00335 19.5082 6.10497 19.6956 6.30821C19.8985 6.49581 20 6.7225 20 6.98828C20 7.26968 19.8985 7.512 19.6956 7.71524C19.5082 7.90285 19.274 7.99665 18.993 7.99665H1.00703ZM1.00703 1.9933C0.725995 1.9933 0.483997 1.8995 0.28103 1.71189C0.0936768 1.50865 0 1.26633 0 0.984925C0 0.719151 0.0936768 0.492462 0.28103 0.304858C0.483997 0.101619 0.725995 0 1.00703 0H18.993C19.274 0 19.5082 0.101619 19.6956 0.304858C19.8985 0.492462 20 0.719151 20 0.984925C20 1.26633 19.8985 1.50865 19.6956 1.71189C19.5082 1.8995 19.274 1.9933 18.993 1.9933H1.00703ZM1.00703 14C0.725995 14 0.483997 13.9062 0.28103 13.7186C0.0936768 13.5154 0 13.273 0 12.9916C0 12.7259 0.0936768 12.4992 0.28103 12.3116C0.483997 12.1083 0.725995 12.0067 1.00703 12.0067H18.993C19.274 12.0067 19.5082 12.1083 19.6956 12.3116C19.8985 12.4992 20 12.7259 20 12.9916C20 13.273 19.8985 13.5154 19.6956 13.7186C19.5082 13.9062 19.274 14 18.993 14H1.00703Z" fill="{% if transparent  %}{{ section_st.header_text_icon_transparent }}{% else %}currentColor{% endif %}"></path>
           </svg>
         </button>
       </toggle-menu>
@@ -136,7 +145,7 @@
                           endif
                         -%}
                         <div
-                          class="mega-menu py-40 submenu transition invisible submenu-desktop {{ section_st.dropdowns_animation }} border-top overflow-y-auto absolute inset-x-0 z-1 bg-white shadow"
+                          class="mega-menu py-40 submenu transition invisible submenu-desktop {{ section_st.dropdowns_animation }} border-top overflow-y-auto absolute inset-x-0 z-2 bg-white shadow"
                           style="--col-mega-width: {{ mega_width }}%; --col-gap: 20px;"
                         >
                           <div class="container flex wrap gap">
@@ -163,6 +172,20 @@
                                       {%- capture promotion_button_label -%}promotion_button_label_{{ i }}{%- endcapture -%}
                                       {%- capture promotion_button_link -%}promotion_button_link_{{ i }}{%- endcapture -%}
                                       {%- if last_block.settings[promotion] != blank -%}
+                                      {% case i %}
+                                        {% when 1 %}
+                                            {% assign color_scheme_banner = last_block.settings.color_scheme_banner_1 %}
+                                        {% when 2 %}
+                                            {% assign color_scheme_banner = last_block.settings.color_scheme_banner_2 %}
+                                        {% when 3 %}
+                                            {% assign color_scheme_banner = last_block.settings.color_scheme_banner_3 %}
+                                        {% when 4 %}
+                                            {% assign color_scheme_banner = last_block.settings.color_scheme_banner_4 %}
+                                        {% when 5 %}
+                                            {% assign color_scheme_banner = last_block.settings.color_scheme_banner_5 %}
+                                        {% else %}
+                                            {% assign color_scheme_banner = 'default' %}
+                                      {% endcase %}
                                         {%- liquid
                                           assign image = last_block.settings[promotion]
                                           assign subheading = last_block.settings[promotion_subheading]
@@ -173,7 +196,7 @@
                                           assign banner_default = 'accessibility.promotion_banner'
                                           assign image_alt = image.alt | default: banner_default | escape
                                         -%}
-                                        <div class="banner__item rounded{% if last_block.settings.content_position != 'bellow' %} align-self-baseline{% endif %}">
+                                        <div class="banner__item rounded">
                                           <a
                                             {% if banner_link != blank %}
                                               href="{{ banner_link }}"
@@ -187,7 +210,7 @@
                                             {% endif %}
                                           >
                                             <div
-                                              class="banner__item-media block{% if last_block.settings.content_position != 'bellow' %} absolute inset-0{% else %} rounded{% endif %}"
+                                              class="banner__item-media block rounded hover-effect{% if last_block.settings.content_position != 'bellow' %} absolute inset-0{% endif %}"
                                               style="--aspect-ratio: {{ image.aspect_ratio }};--point:{{ image.presentation.focal_point }};"
                                             >
                                               {% render 'responsive-image',
@@ -201,7 +224,7 @@
                                               or description != blank
                                               or button_label != blank
                                             %}
-                                              <div class="banner__item-info color-{{ last_block.settings.color_scheme }} w-full{% if last_block.settings.content_position != 'bellow' %} py-40 px-30{% else %} mt-20{% endif %} text-{{ last_block.settings.content_alignment }} relative z-1">
+                                              <div class="banner__item-info color-{{ color_scheme_banner }} w-full{% if last_block.settings.content_position != 'bellow' %} py-40 px-30{% else %} mt-20{% endif %} text-{{ last_block.settings.content_alignment }} relative z-1">
                                                 {% if subheading != blank %}
                                                   <div class="subheading mb-3">
                                                     {{ subheading | escape }}
@@ -860,7 +883,7 @@
 {% schema %}
 {
   "name": "t:sections.header.name",
-  "class": "section-header",
+  "class": "header",
   "settings": [
     {
       "type": "header",
@@ -1043,9 +1066,9 @@
     },
     {
       "type": "checkbox",
-      "id": "transparent_on_desktop",
+      "id": "transparent",
       "default": false,
-      "label": "t:sections.header.settings.transparent.transparent_on_desktop.label"
+      "label": "t:sections.header.settings.transparent.transparent.label"
     },
     {
       "type": "color",
@@ -1170,13 +1193,6 @@
           "label": "t:sections.all.text_alignment.label"
         },
         {
-          "type": "color_scheme",
-          "id": "color_scheme",
-          "label": "t:sections.all.colors.label",
-          "info": "t:sections.all.colors.info",
-          "default": "default-color-scheme"
-        },
-        {
           "type": "header",
           "content": "t:sections.header.settings.blocks.mega_menu.promotion_1.label"
         },
@@ -1184,6 +1200,13 @@
           "type": "image_picker",
           "id": "promotion_image_1",
           "label": "t:sections.all.content_setting.image.label"
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme_banner_1",
+          "label": "t:sections.all.colors.label",
+          "info": "t:sections.all.colors.info",
+          "default": "default-color-scheme"
         },
         {
           "type": "text",
@@ -1220,6 +1243,13 @@
           "label": "t:sections.all.content_setting.image.label"
         },
         {
+          "type": "color_scheme",
+          "id": "color_scheme_banner_2",
+          "label": "t:sections.all.colors.label",
+          "info": "t:sections.all.colors.info",
+          "default": "default-color-scheme"
+        },
+        {
           "type": "text",
           "id": "promotion_subheading_2",
           "label": "t:sections.all.content_setting.subheading.label"
@@ -1252,6 +1282,13 @@
           "type": "image_picker",
           "id": "promotion_image_3",
           "label": "t:sections.all.content_setting.image.label"
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme_banner_3",
+          "label": "t:sections.all.colors.label",
+          "info": "t:sections.all.colors.info",
+          "default": "default-color-scheme"
         },
         {
           "type": "text",
@@ -1288,6 +1325,13 @@
           "label": "t:sections.all.content_setting.image.label"
         },
         {
+          "type": "color_scheme",
+          "id": "color_scheme_banner_4",
+          "label": "t:sections.all.colors.label",
+          "info": "t:sections.all.colors.info",
+          "default": "default-color-scheme"
+        },
+        {
           "type": "text",
           "id": "promotion_subheading_4",
           "label": "t:sections.all.content_setting.subheading.label"
@@ -1320,6 +1364,13 @@
           "type": "image_picker",
           "id": "promotion_image_5",
           "label": "t:sections.all.content_setting.image.label"
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme_banner_5",
+          "label": "t:sections.all.colors.label",
+          "info": "t:sections.all.colors.info",
+          "default": "default-color-scheme"
         },
         {
           "type": "text",
