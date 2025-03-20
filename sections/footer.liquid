@@ -185,61 +185,59 @@
                         </h3>
                       </summary>
                     {%- endif -%}
-                    <div class="footer-block-border">
-                      <div
-                        class="collapsible-row__content"
-                      >
-                        {%- if block_st.store_address or block_st.store_email or block_st.store_phone %}
-                          <div class="footer_store-infor">
-                            {%- if block_st.store_address != blank -%}
-                              <div class="footer__block-info">
-                                <div class="footer__info-content">
-                                  {{ block_st.store_address }}
-                                </div>
+                    <div
+                      class="collapsible-row__content"
+                    >
+                      {%- if block_st.store_address or block_st.store_email or block_st.store_phone %}
+                        <div class="footer_store-infor">
+                          {%- if block_st.store_address != blank -%}
+                            <div class="footer__block-info">
+                              <div class="footer__info-content">
+                                {{ block_st.store_address }}
                               </div>
-                            {%- endif -%}
-                            {%- if block_st.store_phone != blank -%}
-                              <div class="footer__store-info">
-                                <a
-                                  href="tel:{{ block_st.store_phone }}"
-                                  class="footer__info-content"
-                                  aria-label=" {{ block_st.store_phone }}"
-                                >
-                                  {{ block_st.store_phone }}
-                                </a>
-                              </div>
-                            {%- endif -%}
-                            {%- if block_st.store_email != blank -%}
-                              <div class="footer__store-info">
-                                <a
-                                  href="mailto:{{ block_st.store_email }}"
-                                  class="footer__info-content"
-                                >
-                                  {{ block_st.store_email }}
-                                </a>
-                              </div>
-                            {%- endif -%}
-                          </div>
-                        {%- endif -%}
-                        {%- if shop.features.follow_on_shop? and section_st.enable_follow_on_shop -%}
-                          <div class="footer__follow-on-shop">
-                            {% comment %} TODO: enable theme-check once `login_button` is accepted as valid filter {% endcomment %}
-                            {% # theme-check-disable %}
-                            {{ shop | login_button: action: 'follow' }}
-                            {% # theme-check-enable %}
-                          </div>
-                        {%- endif -%}
-                        {%- if block_st.show_social -%}
-                          <social-icon class="social-icon">
-                            {% render 'social-icons' %}
-                          </social-icon>
-                        {%- endif -%}
-                        {%- if block_st.store_description != blank -%}
-                          <div class="footer__block-info">
-                            {{ block_st.store_description }}
-                          </div>
-                        {%- endif -%}
-                      </div>
+                            </div>
+                          {%- endif -%}
+                          {%- if block_st.store_phone != blank -%}
+                            <div class="footer__store-info">
+                              <a
+                                href="tel:{{ block_st.store_phone }}"
+                                class="footer__info-content"
+                                aria-label=" {{ block_st.store_phone }}"
+                              >
+                                {{ block_st.store_phone }}
+                              </a>
+                            </div>
+                          {%- endif -%}
+                          {%- if block_st.store_email != blank -%}
+                            <div class="footer__store-info">
+                              <a
+                                href="mailto:{{ block_st.store_email }}"
+                                class="footer__info-content"
+                              >
+                                {{ block_st.store_email }}
+                              </a>
+                            </div>
+                          {%- endif -%}
+                        </div>
+                      {%- endif -%}
+                      {%- if shop.features.follow_on_shop? and section_st.enable_follow_on_shop -%}
+                        <div class="footer__follow-on-shop">
+                          {% comment %} TODO: enable theme-check once `login_button` is accepted as valid filter {% endcomment %}
+                          {% # theme-check-disable %}
+                          {{ shop | login_button: action: 'follow' }}
+                          {% # theme-check-enable %}
+                        </div>
+                      {%- endif -%}
+                      {%- if block_st.show_social -%}
+                        <social-icon class="social-icon">
+                          {% render 'social-icons' %}
+                        </social-icon>
+                      {%- endif -%}
+                      {%- if block_st.store_description != blank -%}
+                        <div class="footer__block-info">
+                          {{ block_st.store_description }}
+                        </div>
+                      {%- endif -%}
                     </div>
                   </details>
               {%- endcase -%}
