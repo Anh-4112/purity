@@ -13,7 +13,6 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
-
 <div
   class="section section__rich-text color-{{ section_st.color_scheme }} gradient "
   style="{{ style | strip | strip_newlines }}"
@@ -23,7 +22,7 @@
       class="rich-text__content-inner"
       style="--max-width: {{ section_st.max_width }}%"
     >
-      <div class="rich-text__content mx-auto max-w-custom text-{{ content_alignment }} justify-content-{{ content_alignment }}">
+      <div class="rich-text__content{% if section_st.text_alignment == 'center' %} mx-auto{% endif %} max-w-custom text-{{ content_alignment }} justify-content-{{ content_alignment }}">
         {% content_for 'blocks' %}
       </div>
     </div>

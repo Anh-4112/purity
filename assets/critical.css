@@ -179,13 +179,18 @@ video {
         var(--height-bar, 0px) - var(--bs-gutter-x)
     );
   }
+  .max-w-custom {
+    max-width: var(--max-width);
+  }
 }
 :where(a, a strong) {
   color: inherit;
   transition: var(--transition);
   text-decoration: inherit;
 }
-
+.text-size {
+  font-size: var(--body-font-size);
+}
 .fs-small {
   font-size: calc(var(--body-font-size) - 2px);
 }
@@ -253,6 +258,8 @@ video {
     body .shopify-payment-button__button--unbranded,
     .dmp_discount-form button
   ) {
+  position: relative;
+  z-index: 1;
   padding: var(--btn-padding-y) var(--btn-padding-x);
   font-size: var(--btn-font-size);
   font-weight: var(--heading-weight);
@@ -505,6 +512,12 @@ strong {
 .mb-10 {
   margin-bottom: 1rem;
 }
+.mt-custom {
+  margin-top: var(--space-top);
+}
+.mb-custom {
+  margin-bottom: calc(var(--space-bottom) * 1px);
+}
 .overflow-hidden {
   overflow: hidden;
 }
@@ -610,6 +623,12 @@ body:not(.template-index) .transparent-logo {
 .bottom-right {
   align-items: flex-end;
   justify-content: flex-end;
+}
+.fs-small {
+  font-size: calc(var(--body-font-size) - 2px);
+}
+.fs-big-2 {
+  font-size: calc(var(--body-font-size) + 2px);
 }
 .fs-large {
   font-size: clamp(
