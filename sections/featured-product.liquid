@@ -24,7 +24,6 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{{- -}}
   {% if column_gap_slide < 20 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}{{- -}}
 {%- endcapture -%}
-<script type="module" src="{{ 'featured-product.js' | asset_url }}"></script>
 {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
 {%- if first_3d_model -%}
   {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
