@@ -36,58 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-class MediaGallery extends SlideSection {
-  constructor() {
-    super();
-    this.init();
-    this.MediaGalleryHtml = null;
-    if (this.querySelector(".product__media-gallery").classList.contains("product-grid")) {
-      this.MediaGalleryHtml = this.querySelector(".product__media-gallery.product-grid").innerHTML;
-    } else if (this.querySelector(".product__media-gallery").classList.contains("product-stacked")) {
-      this.MediaGalleryHtml = this.querySelector(".product__media-gallery.product-stacked").innerHTML;
-    }
-  }
-
-  init() {
-    if (this.querySelector(".product__media-gallery").classList.contains("product-thumbnail")) {
-      let thumbnail = this.initSlideMediaGallery("thumbnail");
-      this.initSlideMediaGallery("main", thumbnail);
-    } else {
-      resize();
-    }
-    
-  }
-
-  resize() {
-    let width = window.innerWidth;
-    window.addEventListener("resize", () => {
-      const newWidth = window.innerWidth;
-      if (newWidth <= 767 && width > 767) {
-        this.actionOnMobile();
-      }
-      if (newWidth > 767 && width <= 767) {
-        this.actionOutMobile();
-      }
-      width = newWidth;
-    });
-    if (width <= 767) {
-      this.actionOnMobile();
-    } else {
-      this.actionOutMobile();
-    }
-  }
-
-  actionOnMobile() {
-    this.initSlideMediaGallery("gird");
-  }
-  actionOutMobile() {
-    this.querySelector(".product__media-gallery").innerHTML = this.MediaGalleryHtml;
-  }
-}
-if (!customElements.get("media-gallery")) {
-  customElements.define("media-gallery", MediaGallery);
-}
-
 class ProductRecommendations extends HTMLElement {
   constructor() {
     super();
