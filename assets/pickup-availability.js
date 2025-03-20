@@ -1,9 +1,12 @@
-if (!customElements.get('pickup-availability')) {
-  customElements.define('pickup-availability', class PickupAvailability extends HTMLElement {
+
+import * as global from "./global.js?v=23323323";
+
+if (!customElements.get("pickup-availability")) {
+  customElements.define("pickup-availability", class PickupAvailability extends HTMLElement {
     constructor() {
       super();
-      if(!this.hasAttribute('available')) return;
-      this.errorHtml = this.querySelector('template').content.firstElementChild.cloneNode(true);
+      if(!this.hasAttribute("available")) return;
+      this.errorHtml = this.querySelector("template").content.firstElementChild.cloneNode(true);
       this.onClickRefreshList = this.onClickRefreshList.bind(this);
       this.fetchAvailability(this.dataset.variantId);
     }
@@ -18,13 +21,13 @@ if (!customElements.get('pickup-availability')) {
         .then(response => response.text())
         .then(text => {
           const sectionInnerHTML = new DOMParser()
-            .parseFromString(text, 'text/html')
-            .querySelector('.shopify-section');
+            .parseFromString(text, "text/html")
+            .querySelector(".shopify-section");
           this.renderPreview(sectionInnerHTML);
         })
         .catch(e => {
-          const button = this.querySelector('button');
-          if (button) button.removeEventListener('click', this.onClickRefreshList);
+          const button = this.querySelector("button");
+          if (button) button.removeEventListener("click", this.onClickRefreshList);
           this.renderError();
         });
     }
@@ -34,27 +37,27 @@ if (!customElements.get('pickup-availability')) {
     }
 
     renderError() {
-      this.innerHTML = '';
+      this.innerHTML = "";
       this.appendChild(this.errorHtml);
-      this.querySelector('button').addEventListener('click', this.onClickRefreshList);
+      this.querySelector("button").addEventListener("click", this.onClickRefreshList);
     }
 
     renderPreview(sectionInnerHTML) {
-      const drawer = document.querySelector('.pickup-availability-drawer');
+      const drawer = document.querySelector(".pickup-availability-drawer");
       if (drawer) drawer.remove();
-      if (!sectionInnerHTML.querySelector('.pickup-availability-preview')) {
+      if (!sectionInnerHTML.querySelector(".pickup-availability-preview")) {
         this.innerHTML = "";
-        this.removeAttribute('available');
+        this.removeAttribute("available");
         return;
       }
-      this.innerHTML = sectionInnerHTML.querySelector('pickup-availability-preview').outerHTML;
-      this.setAttribute('available', '');
-      document.body.appendChild(sectionInnerHTML.querySelector('.pickup-availability-drawer'));
-      const button = this.querySelector('button');
+      this.innerHTML = sectionInnerHTML.querySelector("pickup-availability-preview").outerHTML;
+      this.setAttribute("available", "");
+      document.body.appendChild(sectionInnerHTML.querySelector(".pickup-availability-drawer"));
+      const button = this.querySelector("button");
       setTimeout(() => {
         if (button){
-          button.addEventListener('click', (evt) => {
-            document.querySelector('pickup-availability-drawer').show(evt.target);
+          button.addEventListener("click", (evt) => {
+            document.querySelector("pickup-availability-drawer").show(evt.target);
           });
         }
       }, 800);
@@ -62,28 +65,15 @@ if (!customElements.get('pickup-availability')) {
   });
 }
 
-if (!customElements.get('pickup-availability-drawer')) {
-  customElements.define('pickup-availability-drawer', class PickupAvailabilityDrawer extends HTMLElement {
+if (!customElements.get("pickup-availability-drawer")) {
+  customElements.define("pickup-availability-drawer", class PickupAvailabilityDrawer extends HTMLElement {
     constructor() {
       super();
-      this.close = this.querySelector(".modal__close");
-      this.close.addEventListener("click",  this.hide.bind(this), false);
-      this.addEventListener('keyup', (event) => {
-        if (event.code.toUpperCase() === 'ESCAPE') this.hide();
-      });
-    }
- 
-    hide() {
-      if (!this.classList.contains("active")) return;
-      this.focusElement.classList.remove("active");
-      this.classList.remove("active");
-      eventModal('close');
     }
 
     show(focusElement) {
       this.focusElement = focusElement;
-      this.classList.add("active");
-      eventModal('open');
+      global.eventModal(this, "open");
     }
   });
 }
