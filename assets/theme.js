@@ -70,6 +70,101 @@ try {
   focusVisiblePolyfill();
 }
 
+const slideAnime = (() => {
+  let isAnimating = false;
+
+  return (setOptions) => {
+    const defaultOptions = {
+      target: false,
+      animeType: "slideToggle",
+      duration: 250,
+      easing: "ease",
+      isDisplayStyle: "block",
+      parent: false,
+    };
+    const options = Object.assign({}, defaultOptions, setOptions);
+    const target = options.target;
+    const parent = options.parent;
+    if (!target) {
+      return;
+    }
+
+    if (isAnimating) {
+      return;
+    }
+    isAnimating = true;
+    parent.classList?.toggle("opened");
+
+    let animeType = options.animeType;
+    const styles = getComputedStyle(target);
+    if (animeType === "slideToggle") {
+      animeType = styles.display === "none" ? "slideDown" : "slideUp";
+    }
+    if (
+      (animeType === "slideUp" && styles.display === "none") ||
+      (animeType === "slideDown" && styles.display !== "none") ||
+      (animeType !== "slideUp" && animeType !== "slideDown")
+    ) {
+      isAnimating = false;
+      return false;
+    }
+    target.style.overflow = "hidden";
+    const duration = options.duration;
+    const easing = options.easing;
+    const isDisplayStyle = options.isDisplayStyle;
+
+    if (animeType === "slideDown") {
+      target.style.display = isDisplayStyle;
+    }
+    const heightVal = {
+      height: target.getBoundingClientRect().height + "px",
+      marginTop: styles.marginTop,
+      marginBottom: styles.marginBottom,
+      paddingTop: styles.paddingTop,
+      paddingBottom: styles.paddingBottom,
+    };
+
+    Object.keys(heightVal).forEach((key) => {
+      if (parseFloat(heightVal[key]) === 0) {
+        delete heightVal[key];
+      }
+    });
+    if (Object.keys(heightVal).length === 0) {
+      isAnimating = false;
+      return false;
+    }
+    let slideAnime;
+    if (animeType === "slideDown") {
+      Object.keys(heightVal).forEach((key) => {
+        target.style[key] = 0;
+      });
+      slideAnime = target.animate(heightVal, {
+        duration: duration,
+        easing: easing,
+      });
+    } else if (animeType === "slideUp") {
+      Object.keys(heightVal).forEach((key) => {
+        target.style[key] = heightVal[key];
+        heightVal[key] = 0;
+      });
+      slideAnime = target.animate(heightVal, {
+        duration: duration,
+        easing: easing,
+      });
+    }
+    slideAnime.finished.then(() => {
+      target.style.overflow = "";
+      Object.keys(heightVal).forEach((key) => {
+        target.style[key] = "";
+      });
+      if (animeType === "slideUp") {
+        target.style.display = "none";
+      }
+      isAnimating = false;
+    });
+  };
+})();
+
 function focusVisiblePolyfill() {
   const navKeys = ['ARROWUP', 'ARROWDOWN', 'ARROWLEFT', 'ARROWRIGHT', 'TAB', 'ENTER', 'SPACE', 'ESCAPE', 'HOME', 'END', 'PAGEUP', 'PAGEDOWN'];
   let currentFocusedElement = null;
@@ -113,6 +208,93 @@ function eventModal(event) {
   }
 }
 
+class BackToTop extends HTMLElement {
+  constructor() {
+    super();
+    this.addEventListener("click", this.backToTop.bind(this), false);
+  }
+
+  connectedCallback() {
+    window.addEventListener("scroll", this.updateScrollPercentage.bind(this));
+  }
+
+  backToTop() {
+    if (document.documentElement.scrollTop > 0 || document.body.scrollTop > 0) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  }
+
+  updateScrollPercentage() {
+    const scrollHeight =
+      document.documentElement.scrollHeight || document.body.scrollHeight;
+    const scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    const clientHeight =
+      document.documentElement.clientHeight || document.body.clientHeight;
+    const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
+    this.style.setProperty(
+      "--scroll-percentage",
+      scrollPercentage.toFixed(2) + "%"
+    );
+    if (scrollTop > 200) {
+      this.classList.add("show");
+    } else {
+      this.classList.remove("show");
+    }
+  }
+}
+customElements.define("back-to-top", BackToTop);
+
+class CollapsibleSection extends HTMLElement {
+  constructor() {
+    super();
+    this.onClick = this.onClick.bind(this);
+    this.keyPressHandler = this.keyPressHandler.bind(this);
+    this.init();
+    window.addEventListener("resize", this.init.bind(this));
+  }
+
+  init() {
+    if (!this.querySelector(".collapsible-title")) return;
+    if (window.innerWidth < 768) {
+      this.querySelector(".collapsible-title").addEventListener(
+        "click",
+        this.onClick,
+        false
+      );
+      this.addEventListener("keypress", this.keyPressHandler, false);
+    } else {
+      this.querySelector(".collapsible-title").removeEventListener(
+        "click",
+        this.onClick,
+        false
+      );
+      this.removeEventListener("keypress", this.keyPressHandler, false);
+    }
+  }
+
+  onClick(e) {
+    e.preventDefault();
+    if (!this.querySelector(".footer-block-border")) return;
+    if (!this.querySelector(".collapsible-content")) return;
+    this.querySelector(".footer-block-border").classList.toggle("active");
+    slideAnime({
+      target: this.querySelector(".collapsible-content"),
+      animeType: "slideToggle",
+      parent: this.querySelector(".collapsible-title"),
+    });
+  }
+
+  keyPressHandler(event) {
+    if (event.key === "Enter") {
+      this.onClick(event);
+    }
+  }
+}
+customElements.define("collapsible-block", CollapsibleSection);
 class ToggleMenu extends HTMLElement {
   constructor() {
     super();
