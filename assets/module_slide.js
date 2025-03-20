@@ -93,6 +93,93 @@ function initSlide(_this) {
   });
 };
 
+function initSlideMedia(_this, gallery, thumbnail) {
+  let swiperElement = _this.querySelector(".swiper-wrapper-main");
+  let watchSlidesProgress = true;
+  let watchSlidesVisibility = true;
+  let watchOverflow = true;
+  let itemMobile = gallery == "thumbnail" ? 5 : 1;
+  let direction = _this.dataset.thumbDirection
+      ? _this.dataset.thumbDirection
+      : "horizontal";
+  if (gallery == "thumbnail" && direction == "vertical") {
+    direction = "vertical";
+  }
+  const autoplayVideo = _this?.dataset.autoPlayVideo === "true";
+  if (gallery == "thumbnail") {
+    swiperElement = _this.querySelector(".swiper-wrapper-thumbnail");
+    watchSlidesVisibility = false;
+    watchOverflow = false;
+  } else if (gallery == "gird") {
+    swiperElement = _this;
+    if (_this.closest('.quickview-product')) {
+      itemMobile = 1.3;
+    }
+  }
+  console.log(itemMobile);
+  const swiperSlide = new Swiper(swiperElement, {
+    slidesPerView: itemMobile,
+    spaceBetween: 10,
+    autoplay: false,
+    direction: "horizontal",
+    loop: true,
+    watchSlidesProgress: watchSlidesProgress,
+    watchSlidesVisibility: watchSlidesVisibility,
+    watchOverflow: watchOverflow,
+    navigation: {
+      nextEl: swiperElement.querySelector(".swiper-button-next"),
+      prevEl: swiperElement.querySelector(".swiper-button-prev"),
+    },
+    breakpoints: {
+      768: {
+        direction: direction
+      }
+    },
+    pagination: {
+      clickable: true,
+      el: swiperElement.querySelector(".swiper-pagination"),
+      type: "custom",
+      renderCustom: function (swiper, current, total) {
+        return current + "/" + total;
+      },
+    },
+    thumbs: {
+      swiper: thumbnail ? thumbnail : null,
+    },
+    on: {
+      slideChangeTransitionEnd: function () {
+        if (autoplayVideo && !thumbnail){
+          const vimeoTag = document.createElement("script");
+          vimeoTag.src = "https://player.vimeo.com/api/player.js";
+          document.head.appendChild(vimeoTag);
+          const activeSlide = this.slides[this.activeIndex];
+          const video = activeSlide.querySelector(".media-video");
+          if (video) {
+            if (video.tagName === "VIDEO") {
+              video.play();
+            } else if (video.tagName === "IFRAME") {
+              // Play Vimeo
+              if (video.src.includes("vimeo")) {
+                const vimeoPlayer = new Vimeo.Player(video);
+                vimeoPlayer.play();
+              }
+              // Play YouTube
+              if (video.src.includes("youtube")) {
+                video.contentWindow.postMessage(
+                  '{"event":"command","func":"playVideo","args":""}',
+                  "*"
+                );
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+  return swiperSlide;
+};
+
+
 export class SlideSection extends HTMLElement {
   constructor() {
     super();
@@ -100,22 +187,41 @@ export class SlideSection extends HTMLElement {
   }
 
   init() {
-    const _this = this;
     if (document.body.classList.contains("index")) {
       let pos = window.pageYOffset;
       if (pos > 0 || document.body.classList.contains("swiper-lazy")) {
-        initSlide(_this);
+        initSlide(this);
       } else {
         if (this.classList.contains("lazy-loading-swiper-before")) {
-          initSlide(_this);
+          initSlide(this);
         } else {
           this.classList.add("lazy-loading-swiper-after");
         }
       }
     } else {
-      initSlide(_this);
+      initSlide(this);
     }
   }
+
+  initSlideMediaGallery(gallery, thumbnail = null) {
+    let swiperSlide = null;
+    if (document.body.classList.contains("index")) {
+      let pos = window.pageYOffset;
+      if (pos > 0 || document.body.classList.contains("swiper-lazy")) {
+        swiperSlide = initSlideMedia(this, gallery, thumbnail);
+      } else {
+        if (this.classList.contains("lazy-loading-swiper-before")) {
+          swiperSlide = initSlideMedia(this, gallery, thumbnail);
+        } else {
+          this.classList.add("lazy-loading-swiper-after");
+        }
+      }
+    } else {
+      swiperSlide = initSlideMedia(this, gallery, thumbnail);
+    }
+    return swiperSlide;
+  }
+
 }
 if (!customElements.get("slide-section")) {
   customElements.define("slide-section", SlideSection);

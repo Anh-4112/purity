@@ -1,3 +1,5 @@
+import { SlideSection } from "./module_slide.js?v=122";
+
 document.addEventListener("DOMContentLoaded", function () {
   function addProductEntry(productJson, storedProducts) {
     if (storedProducts === null) storedProducts = [];
@@ -34,6 +36,58 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+class MediaGallery extends SlideSection {
+  constructor() {
+    super();
+    this.init();
+    this.MediaGalleryHtml = null;
+    if (this.querySelector(".product__media-gallery").classList.contains("product-grid")) {
+      this.MediaGalleryHtml = this.querySelector(".product__media-gallery.product-grid").innerHTML;
+    } else if (this.querySelector(".product__media-gallery").classList.contains("product-stacked")) {
+      this.MediaGalleryHtml = this.querySelector(".product__media-gallery.product-stacked").innerHTML;
+    }
+  }
+
+  init() {
+    if (this.querySelector(".product__media-gallery").classList.contains("product-thumbnail")) {
+      let thumbnail = this.initSlideMediaGallery("thumbnail");
+      this.initSlideMediaGallery("main", thumbnail);
+    } else {
+      resize();
+    }
+    
+  }
+
+  resize() {
+    let width = window.innerWidth;
+    window.addEventListener("resize", () => {
+      const newWidth = window.innerWidth;
+      if (newWidth <= 767 && width > 767) {
+        this.actionOnMobile();
+      }
+      if (newWidth > 767 && width <= 767) {
+        this.actionOutMobile();
+      }
+      width = newWidth;
+    });
+    if (width <= 767) {
+      this.actionOnMobile();
+    } else {
+      this.actionOutMobile();
+    }
+  }
+
+  actionOnMobile() {
+    this.initSlideMediaGallery("gird");
+  }
+  actionOutMobile() {
+    this.querySelector(".product__media-gallery").innerHTML = this.MediaGalleryHtml;
+  }
+}
+if (!customElements.get("media-gallery")) {
+  customElements.define("media-gallery", MediaGallery);
+}
+
 class ProductRecommendations extends HTMLElement {
   constructor() {
     super();
@@ -67,56 +121,6 @@ class ProductRecommendations extends HTMLElement {
   }
 }
 customElements.define("product-recommendations", ProductRecommendations);
-
-class CollapsibleRowDetails extends HTMLDetailsElement {
-  constructor() {
-    super(),
-      (this.summaryElement = this.firstElementChild),
-      (this.contentElement = this.lastElementChild),
-      this._open = this.hasAttribute("open"),
-      this.content = this.querySelector(".collapsible-row__content"),
-      this.summaryElement.addEventListener(
-        "click",
-        this.onSummaryClicked.bind(this)
-      );
-  }
-
-  get open() {
-    return this._open;
-  }
-
-  set open(value) {
-    value !== this._open &&
-      ((this._open = value),
-      this.isConnected
-        ? this.transition(value)
-        : value
-        ? this.setAttribute("open", "")
-        : this.removeAttribute("open"));
-  }
-
-  onSummaryClicked(event) {
-    event.preventDefault(),
-    this.open = !this.open;
-  }
-
-  async transition(value) {
-    return value
-      ? (Motion.animate(
-        this.content,
-        true ? { height: "auto"} : { height: 0 },
-        { duration: 0.3 } ),
-        this.setAttribute("open", ""))
-      : (Motion.animate(
-        this.content,
-        false ? { height: "auto"} : { height: 0 },
-        { duration: 0.3 } ),
-        this.removeAttribute("open"))
-  }
-}
-customElements.define("collapsible-row", CollapsibleRowDetails, {
-  extends: "details"
-});
 
 class StickyAddCart extends HTMLElement {
   constructor() {
