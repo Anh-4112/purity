@@ -138,21 +138,23 @@
                     </div>
                   </div>
                 {%- when 'menu_block' -%}
-                  <collapsible-block class="block" tabindex="0">
-                    {%- if block_st.menu != blank or block_st.heading != blank -%}
-                      <h3 class="footer__block-heading collapsible-title">
-                        <span>
-                          {{- block_st.heading | default: block_st.menu.title | escape -}}
-                        </span>
-                        {%- if block_st.menu != blank -%}
-                          <span class="open-children-toggle flex hidden-md">
-                            {% render 'icon-plus-animation' %}
+                  {%- if block_st.menu != blank or block_st.heading != blank -%}
+                    <details class="collapsible-row" is="collapsible-row">
+                      <summary class="collapsible-row__summary">
+                        <h3 class="footer__block-heading collapsible-heading">
+                          <span>
+                            {{- block_st.heading | default: block_st.menu.title | escape -}}
                           </span>
-                        {%- endif -%}
-                      </h3>
+                          {%- if block_st.menu != blank -%}
+                            <svg class="icon icon-down transition-short" width="10" height="6">
+                              <use href="#icon-arrow-down"></use>
+                            </svg>
+                          {%- endif -%}
+                        </h3>
+                      </summary>
                       {%- if block_st.menu != blank -%}
                         <div class="footer-block-border">
-                          <ul class="footer__block-content collapsible-content">
+                          <ul class="footer__block-content collapsible-row__content">
                             {%- for link in block_st.menu.links -%}
                               <li>
                                 <a
@@ -167,23 +169,25 @@
                           </ul>
                         </div>
                       {%- endif -%}
-                    {%- endif -%}
-                  </collapsible-block>
+                    </details>
+                  {%- endif -%}
                 {%- when 'contact_bar_block' -%}
-                  <collapsible-block class="block" tabindex="0">
+                  <details class="collapsible-row" is="collapsible-row">
                     {%- if block_st.store_heading != blank -%}
-                      <h3 class="footer__block-heading collapsible-title relative">
-                        <span>
-                          {{ block_st.store_heading | escape }}
-                        </span>
-                        <span class="open-children-toggle flex hidden-md">
-                          {% render 'icon-plus-animation' %}
-                        </span>
-                      </h3>
+                      <summary class="collapsible-row__summary">
+                        <h3 class="footer__block-heading collapsible-heading relative">
+                          <span>
+                            {{ block_st.store_heading | escape }}
+                          </span>
+                          <svg class="icon icon-down transition-short" width="10" height="6">
+                            <use href="#icon-arrow-down"></use>
+                          </svg>
+                        </h3>
+                      </summary>
                     {%- endif -%}
                     <div class="footer-block-border">
                       <div
-                        class="collapsible-content"
+                        class="collapsible-row__content"
                       >
                         {%- if block_st.store_address or block_st.store_email or block_st.store_phone %}
                           <div class="footer_store-infor">
@@ -237,7 +241,7 @@
                         {%- endif -%}
                       </div>
                     </div>
-                  </collapsible-block>
+                  </details>
               {%- endcase -%}
             </div>
           {%- endfor -%}
