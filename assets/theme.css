@@ -67,9 +67,6 @@ a.hover-heading-color:hover {
 .text-size {
   font-size: var(--body-font-size);
 }
-.fs-small {
-  font-size: calc(var(--body-font-size) - 2px);
-}
 .fs-small-1 {
   font-size: calc(var(--body-font-size) - 1px);
 }
@@ -501,12 +498,6 @@ a.hover-heading-color:hover {
 .mt-60,
 .shopify-challenge__container {
   margin-top: clamp(4rem, 4.5vw, 6rem);
-}
-.mt-custom {
-  margin-top: var(--space-top);
-}
-.mb-custom {
-  margin-bottom: calc(var(--space-bottom) * 1px);
 }
 .pb-custom {
   padding-bottom: calc(var(--space-bottom) * 1px);
@@ -1190,9 +1181,6 @@ a.hover-heading-color:hover {
   .relative-lg {
     position: relative;
   }
-  .max-w-custom {
-    max-width: var(--max-width);
-  }
 }
 
 @media (min-width: 1025px) {
@@ -1352,12 +1340,12 @@ a.hover-heading-color:hover {
   .border-top-1025 {
     border-top: 1px solid var(--color-border);
   }
-  .header:not(.shopify-section-header-sticky) .transparent:hover
-  .transparent-logo {
+  .header:not(.shopify-section-header-sticky)
+    .transparent:hover
+    .transparent-logo {
     display: none;
   }
-  .header:not(.shopify-section-header-sticky) .transparent:hover
-    .logo-normal {
+  .header:not(.shopify-section-header-sticky) .transparent:hover .logo-normal {
     display: block;
   }
 }
@@ -1455,6 +1443,23 @@ a.hover-heading-color:hover {
   }
   :where(
       .btn,
+      .shopify-payment-button__button--unbranded,
+      body .jdgm-write-rev-link,
+      body .jdgm-write-rev-link.jdgm-write-rev-link,
+      input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
+    ):hover {
+    --btn-color: var(--btn-primary-hover-color);
+    color: var(--btn-color);
+  }
+  :where(.btn-outline):hover {
+    --btn-color: var(--btn-primary-color);
+  }
+  .btn-text {
+    transition: color 0.5s cubic-bezier(0.3, 1, 0.3, 1);
+    transition-delay: 0.1s;
+  }
+  :where(
+      .btn,
       body .jdgm-write-rev-link,
       body .jdgm-write-rev-link.jdgm-write-rev-link,
       input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
@@ -1470,22 +1475,13 @@ a.hover-heading-color:hover {
     background-color: var(--btn-primary-hover-bg-color);
     backface-visibility: hidden;
     will-change: transform;
-    transform: rotate3d(0, 0, 1, 10deg) translate3d(-1.2em, 110%, 0);
+    transform: rotate3d(0, 0, 2, 10deg) translate3d(-1.2em, 105%, 0);
     transform-origin: 0% 100%;
     transition: transform var(--duration, 0.5s) ease;
+    z-index: -1;
   }
-  :where(
-      .btn,
-      .shopify-payment-button__button--unbranded,
-      body .jdgm-write-rev-link,
-      body .jdgm-write-rev-link.jdgm-write-rev-link,
-      input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
-    ):hover {
-    --btn-color: var(--btn-primary-hover-color);
-  }
-  .btn-text {
-    transition: color 0.5s cubic-bezier(0.3, 1, 0.3, 1);
-    transition-delay: 0.1s;
+  :where(.btn-outline):after {
+    background-color: var(--btn-primary-bg-color);
   }
   :where(
       .btn,
@@ -1737,4 +1733,52 @@ details[open] .icon {
 .bottom-right {
   align-items: flex-end;
   justify-content: flex-end;
+}
+/* Product */
+.product__badges-sale {
+  animation: salePulse 2s infinite;
+}
+.product__badges-sale:after {
+  position: absolute;
+  content: "";
+  opacity: 0;
+  top: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to right,
+    #fff0,
+    #ffffff08 1%,
+    #fff9 30%,
+    #ffffffd9 50% 70%,
+    #ffffffd9 71%,
+    #fff0
+  );
+  width: 40%;
+  height: 100%;
+  transform: skew(-10deg);
+  animation: move 2s infinite;
+  animation-delay: 1s;
+}
+
+@keyframes move {
+  0% {
+    left: -50%;
+    opacity: 0;
+  }
+
+  5% {
+    opacity: 0;
+  }
+
+  48% {
+    opacity: 0.2;
+  }
+
+  80% {
+    opacity: 0;
+  }
+
+  100% {
+    left: 150%;
+  }
 }

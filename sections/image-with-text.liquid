@@ -1,3 +1,72 @@
+{%- liquid
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+
+  assign column_gap_slide = 0
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 30
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 10
+  endif
+-%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }}; --col-width: {{ section_st.desktop_image_width }}%"
+  {%- endcapture -%}
+
+{%- capture col_style -%}
+    {% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
+{%- endcapture -%}
+
+<div
+  class="section color-{{ section_st.color_scheme }} gradient section__image-with-text"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }}">
+    <div
+      class="flex flex-wrap flex-cols row-gap-20{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
+      style="{{ col_style | strip | strip_newlines }}"
+    >
+      <div class="image-with-text__media-item w-full col-md-w-custom">
+        <div
+          class="image-with-text__media banner__media"
+          {% if section_st.image != blank %}
+            style="--aspect-ratio: {{ section_st.image.aspect_ratio }}";
+          {% else %}
+            style="--aspect-ratio: 16/9";
+          {% endif %}
+        >
+          {%- if section_st.image != blank -%}
+            {{
+              section_st.image
+              | image_url: width: 1500
+              | image_tag: loading: 'lazy', sizes: '100vw', widths: '165, 360, 535, 750, 1070, 1500'
+            }}
+          {%- else -%}
+            {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="w-full col-md-remaining flex text-{{ section_st.text_alignment }}">
+        {% if section_st.background_color != blank %}
+          <div class="image-with-text__wrapper flex">
+        {% endif %}
+        <div class="image-with-text__text-item-inner align-self-{{ section_st.desktop_vertical_alignment }}">
+          {% content_for 'blocks' %}
+        </div>
+        {% if section_st.background_color != blank %}</div>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.image-with-text.name",

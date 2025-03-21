@@ -8,6 +8,35 @@
   --input-font-size: var(--body-font-size);
   --input-placeholder-color: rgb(var(--color-text-hsl));
 }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+:is(
+    input[type="search"],
+    input[type="tel"],
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="password"],
+    select,
+    textarea,
+    .input-style
+  ):focus {
+  outline: 0;
+  border-color: var(--color-heading);
+}
+input[type="checkbox"] {
+  display: inline-block;
+  margin-block-end: 0.5rem;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 input[type="search"],
 input[type="tel"],
 input[type="text"],

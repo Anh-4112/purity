@@ -1,3 +1,5 @@
+import { SlideSection } from "./module_slide.js?v=122";
+
 document.addEventListener("DOMContentLoaded", function () {
   function addProductEntry(productJson, storedProducts) {
     if (storedProducts === null) storedProducts = [];
@@ -67,56 +69,6 @@ class ProductRecommendations extends HTMLElement {
   }
 }
 customElements.define("product-recommendations", ProductRecommendations);
-
-class CollapsibleRowDetails extends HTMLDetailsElement {
-  constructor() {
-    super(),
-      (this.summaryElement = this.firstElementChild),
-      (this.contentElement = this.lastElementChild),
-      this._open = this.hasAttribute("open"),
-      this.content = this.querySelector(".collapsible-row__content"),
-      this.summaryElement.addEventListener(
-        "click",
-        this.onSummaryClicked.bind(this)
-      );
-  }
-
-  get open() {
-    return this._open;
-  }
-
-  set open(value) {
-    value !== this._open &&
-      ((this._open = value),
-      this.isConnected
-        ? this.transition(value)
-        : value
-        ? this.setAttribute("open", "")
-        : this.removeAttribute("open"));
-  }
-
-  onSummaryClicked(event) {
-    event.preventDefault(),
-    this.open = !this.open;
-  }
-
-  async transition(value) {
-    return value
-      ? (Motion.animate(
-        this.content,
-        true ? { height: "auto"} : { height: 0 },
-        { duration: 0.3 } ),
-        this.setAttribute("open", ""))
-      : (Motion.animate(
-        this.content,
-        false ? { height: "auto"} : { height: 0 },
-        { duration: 0.3 } ),
-        this.removeAttribute("open"))
-  }
-}
-customElements.define("collapsible-row", CollapsibleRowDetails, {
-  extends: "details"
-});
 
 class StickyAddCart extends HTMLElement {
   constructor() {

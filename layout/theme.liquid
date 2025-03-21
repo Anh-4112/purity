@@ -35,6 +35,7 @@
       {
         "imports": {
           "theme": "{{ 'theme.js' | asset_url }}",
+          "global": "{{ 'global.js' | asset_url }}",
           "module_slide": "{{ 'module_slide.js' | asset_url }}"
         }
       }
@@ -218,7 +219,10 @@
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
-
+    {%- liquid
+      section 'product-quickview'
+      sections 'overlay-group'
+    -%}
     {% sections 'footer-group' %}
     {%- render 'scripts-tag' -%}
 
