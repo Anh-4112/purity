@@ -579,43 +579,40 @@
                                 </svg>
                               {% endif %}
                             </summary>
-                            <div class="submenu absolute inset-0 z-2 bg-white flex column">
-                              {%- render 'horizontal-menu', section_st: section_st, menu_mobile: true, link: link -%}
-                              {%- if has_content -%}
-                                {%- case last_block.type -%}
-                                  {%- when 'menu_mega' -%}
-                                    <div
-                                      class="mega-banner flex column flex-cols gap p-24 overflow-auto"
-                                      style="--col-number: 1;--gap:24px;"
-                                    >
-                                      {%- for i in (1..5) -%}
-                                        {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}
-                                        {%- capture promotion_subheading -%}promotion_subheading_{{ i }}{%- endcapture -%}
-                                        {%- capture promotion_heading -%}promotion_heading_{{ i }}{%- endcapture -%}
-                                        {%- capture promotion_description -%}promotion_description_{{ i }}{%- endcapture -%}
-                                        {%- capture promotion_button_label -%}promotion_button_label_{{ i }}{%- endcapture -%}
-                                        {%- capture promotion_button_link -%}promotion_button_link_{{ i }}{%- endcapture -%}
-                                        {%- if last_block.settings[promotion] != blank -%}
-                                          {%- liquid
-                                            assign image = last_block.settings[promotion]
-                                            assign subheading = last_block.settings[promotion_subheading]
-                                            assign heading = last_block.settings[promotion_heading]
-                                            assign description = last_block.settings[promotion_description]
-                                            assign button_label = last_block.settings[promotion_button_label]
-                                            assign banner_link = last_block.settings[promotion_button_link]
-                                            assign banner_default = 'accessibility.promotion_banner'
-                                            assign banner_alt = image.alt | default: banner_default | escape
-                                          -%}
-                                          <div class="banner__item">
-                                            <div
-                                              class="banner__inner{% if last_block.settings.content_position != 'bellow' %} flex relative{% endif %}"
-                                              {% if last_block.settings.content_position != 'bellow' %}
-                                                style="--aspect-ratio: {{ image.aspect_ratio }};"
-                                              {% endif %}
-                                            >
+                            <div class="submenu absolute inset-0 z-2 bg-white flex column transition invisible sub-mb absolute inset-0 drawer drawer-left">
+                              <div class="overflow-auto custom-scrollbar">
+                                {%- render 'horizontal-menu', section_st: section_st, menu_mobile: true, link: link -%}
+                                {%- if has_content -%}
+                                  {%- case last_block.type -%}
+                                    {%- when 'menu_mega' -%}
+                                      <div
+                                        class="mega-banner flex column flex-cols gap p-24 overflow-auto"
+                                        style="--col-number: 1;--gap:24px;"
+                                      >
+                                        {%- for i in (1..5) -%}
+                                          {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}
+                                          {%- capture promotion_subheading -%}promotion_subheading_{{ i }}{%- endcapture -%}
+                                          {%- capture promotion_heading -%}promotion_heading_{{ i }}{%- endcapture -%}
+                                          {%- capture promotion_description -%}promotion_description_{{ i }}{%- endcapture -%}
+                                          {%- capture promotion_button_label -%}promotion_button_label_{{ i }}{%- endcapture -%}
+                                          {%- capture promotion_button_link -%}promotion_button_link_{{ i }}{%- endcapture -%}
+                                          {%- if last_block.settings[promotion] != blank -%}
+                                            {%- liquid
+                                              assign image = last_block.settings[promotion]
+                                              assign subheading = last_block.settings[promotion_subheading]
+                                              assign heading = last_block.settings[promotion_heading]
+                                              assign description = last_block.settings[promotion_description]
+                                              assign button_label = last_block.settings[promotion_button_label]
+                                              assign banner_link = last_block.settings[promotion_button_link]
+                                              assign banner_default = 'accessibility.promotion_banner'
+                                              assign banner_alt = image.alt | default: banner_default | escape
+                                            -%}
+                                            <div class="banner__item">
                                               <div
-                                                class="banner__item-media{% if last_block.settings.content_position != 'bellow' %} absolute inset-0{% endif %}"
-                                                style="--point:{{ image.presentation.focal_point }}; {% if last_block.settings.content_position != 'overlay' %}--aspect-ratio: {{ image.aspect_ratio }};{% endif %}"
+                                                class="banner__inner{% if last_block.settings.content_position != 'bellow' %} flex relative flex align-{{ last_block.settings.content_position }}{% endif %}"
+                                                {% if last_block.settings.content_position != 'bellow' %}
+                                                  style="--aspect-ratio: {{ image.aspect_ratio }};"
+                                                {% endif %}
                                               >
                                                 <a
                                                   {% if banner_link != blank %}
@@ -624,145 +621,150 @@
                                                     role="link" aria-disabled="true"
                                                   {% endif %}
                                                   arial-label="{{ image_alt }}"
-                                                  class="banner__inner{% if last_block.settings.content_position != 'bellow' %} flex relative{% endif %}"
+                                                  class="banner__inner{% if last_block.settings.content_position != 'bellow' %}{% endif %}"
                                                   {% if last_block.settings.content_position != 'bellow' %}
                                                     style="--aspect-ratio: {{ image.aspect_ratio }};"
                                                   {% endif %}
                                                 >
-                                                  {% render 'responsive-image',
-                                                    image: image,
-                                                    type: 'other',
-                                                    image_alt: banner_alt
-                                                  %}
-                                                </a>
-                                              </div>
-                                              {% if heading != blank
-                                                or subheading != blank
-                                                or description != blank
-                                                or button_label != blank
-                                              %}
-                                                <div class="banner__item-info text-{{ last_block.settings.content_alignment }} relative z-1">
-                                                  {% if subheading != blank %}
-                                                    <div class="subheading fs-18">
-                                                      {{ subheading | escape }}
-                                                    </div>
-                                                  {% endif %}
-                                                  {% if heading != blank %}
-                                                    <h6 class="heading">
-                                                      {{ heading }}
-                                                    </h6>
-                                                  {% endif %}
-                                                  {% if description != blank %}
-                                                    <div class="description fs-16">
-                                                      {{ description }}
-                                                    </div>
-                                                  {% endif %}
-                                                  {% if button_label != blank %}
-                                                    <div class="button">
-                                                      <a
-                                                        {% if banner_link == blank %}
-                                                          role="link" aria-disabled="true"
-                                                        {% else %}
-                                                          href="{{ banner_link | default: "#" }}"
-                                                        {% endif %}
-                                                        aria-label="{{ button_label }}"
-                                                      >
-                                                        {{ button_label }}
-                                                      </a>
-                                                    </div>
-                                                  {% endif %}
+                                                <div
+                                                  class="banner__item-media{% if last_block.settings.content_position != 'bellow' %} absolute inset-0{% endif %}"
+                                                  style="--point:{{ image.presentation.focal_point }}; {% if last_block.settings.content_position != 'overlay' %}--aspect-ratio: {{ image.aspect_ratio }};{% endif %}"
+                                                >
+                                                    {% render 'responsive-image',
+                                                      image: image,
+                                                      type: 'other',
+                                                      image_alt: banner_alt
+                                                    %}
                                                 </div>
-                                              {%- endif -%}
+                                              </a>
+                                                {% if heading != blank
+                                                  or subheading != blank
+                                                  or description != blank
+                                                  or button_label != blank
+                                                %}
+                                                  <div class="banner__item-info color-{{ last_block.settings.color_scheme }} w-full{% if last_block.settings.content_position != 'bellow' %} py-40 px-30 absolute{% else %} relative{% endif %} text-{{ last_block.settings.content_alignment }} z-1 mt-15">
+                                                    {% if subheading != blank %}
+                                                      <div class="subheading fs-18">
+                                                        {{ subheading | escape }}
+                                                      </div>
+                                                    {% endif %}
+                                                    {% if heading != blank %}
+                                                      <h6 class="heading">
+                                                        {{ heading }}
+                                                      </h6>
+                                                    {% endif %}
+                                                    {% if description != blank %}
+                                                      <div class="description fs-16">
+                                                        {{ description }}
+                                                      </div>
+                                                    {% endif %}
+                                                    {% if button_label != blank %}
+                                                      <div class="button">
+                                                        <a class="btn btn-primary inline-block text-center mt-20"
+                                                          {% if banner_link == blank %}
+                                                            role="link" aria-disabled="true"
+                                                          {% else %}
+                                                            href="{{ banner_link | default: "#" }}"
+                                                          {% endif %}
+                                                          aria-label="{{ button_label }}"
+                                                        >
+                                                          {{ button_label }}
+                                                        </a>
+                                                      </div>
+                                                    {% endif %}
+                                                  </div>
+                                                {%- endif -%}
+                                              </div>
                                             </div>
+                                          {%- endif -%}
+                                        {%- endfor -%}
+                                      </div>
+                                    {%- when 'menu_product' -%}
+                                      <div class="col-mega mega-product">
+                                        {%- liquid
+                                          assign heading = last_block.settings.heading
+                                          assign product_column = last_block.settings.product_column
+                                        -%}
+                                        {%- if heading != blank -%}
+                                          <div class="section-header">
+                                            {%- if heading != blank -%}
+                                              <h2 class="section-heading">
+                                                {{ heading }}
+                                              </h2>
+                                            {%- endif -%}
                                           </div>
                                         {%- endif -%}
-                                      {%- endfor -%}
-                                    </div>
-                                  {%- when 'menu_product' -%}
-                                    <div class="col-mega mega-product">
-                                      {%- liquid
-                                        assign heading = last_block.settings.heading
-                                        assign product_column = last_block.settings.product_column
-                                      -%}
-                                      {%- if heading != blank -%}
-                                        <div class="section-header">
-                                          {%- if heading != blank -%}
-                                            <h2 class="section-heading">
-                                              {{ heading }}
-                                            </h2>
-                                          {%- endif -%}
-                                        </div>
-                                      {%- endif -%}
-                                      <slide-section
-                                        class="swiper"
-                                        data-section-id="{{ section.id }}"
-                                        data-autoplay="false"
-                                        data-effect="slide"
-                                        data-loop="false"
-                                        data-speed="500"
-                                        data-spacing="20"
-                                        data-mobile="1"
-                                        data-desktop="{{ product_column }}"
-                                        data-tablet="{{ product_column }}"
-                                      >
-                                        {%- render 'swiper-navigation' -%}
-                                        <div class="swiper-wrapper">
-                                          {%- liquid
-                                            for product in last_block.settings.product_list
-                                              render 'card-product', card_product: product, section_id: section.id, class: ' swiper-slide', show_video: false, container: section_width, column: product_column, column_mobile: 1, padding: 20, indexFor: forloop.index
-                                            endfor
-                                          -%}
-                                        </div>
-                                        <div class="swiper-pagination"></div>
-                                      </slide-section>
-                                    </div>
-                                  {%- when 'menu_collection' -%}
-                                    <div class="col-mega mega-collection">
-                                      {%- liquid
-                                        assign heading = last_block.settings.heading
-                                        assign collection_column = last_block.settings.collection_column
-                                      -%}
-                                      {%- if heading != blank -%}
-                                        <div class="section-header">
-                                          {%- if heading != blank -%}
-                                            <h2 class="section-heading">
-                                              {{ heading }}
-                                            </h2>
-                                          {%- endif -%}
-                                        </div>
-                                      {%- endif -%}
-                                      <slide-section
-                                        class="swiper"
-                                        data-section-id="{{ section.id }}"
-                                        data-autoplay="false"
-                                        data-effect="slide"
-                                        data-loop="false"
-                                        data-speed="500"
-                                        data-spacing="20"
-                                        data-mobile="1"
-                                        data-desktop="{{ collection_column }}"
-                                        data-tablet="{{ collection_column }}"
-                                      >
-                                        {%- render 'swiper-navigation' -%}
-                                        <div class="swiper-wrapper">
-                                          {% for collection in last_block.settings.collection %}
-                                            <div class="collection-item swiper-slide">
-                                              {% render 'collection-item',
-                                                card_collection: collection,
-                                                section: section,
-                                                container: section_width,
-                                                column: collection_column,
-                                                column_mobile: 1,
-                                                padding: 20
-                                              %}
-                                            </div>
-                                          {% endfor %}
-                                        </div>
-                                        <div class="swiper-pagination"></div>
-                                      </slide-section>
-                                    </div>
-                                {%- endcase -%}
-                              {%- endif -%}
+                                        <slide-section
+                                          class="swiper"
+                                          data-section-id="{{ section.id }}"
+                                          data-autoplay="false"
+                                          data-effect="slide"
+                                          data-loop="false"
+                                          data-speed="500"
+                                          data-spacing="20"
+                                          data-mobile="1"
+                                          data-desktop="{{ product_column }}"
+                                          data-tablet="{{ product_column }}"
+                                        >
+                                          {%- render 'swiper-navigation' -%}
+                                          <div class="swiper-wrapper">
+                                            {%- liquid
+                                              for product in last_block.settings.product_list
+                                                render 'card-product', card_product: product, section_id: section.id, class: ' swiper-slide', show_video: false, container: section_width, column: product_column, column_mobile: 1, padding: 20, indexFor: forloop.index
+                                              endfor
+                                            -%}
+                                          </div>
+                                          <div class="swiper-pagination"></div>
+                                        </slide-section>
+                                      </div>
+                                    {%- when 'menu_collection' -%}
+                                      <div class="col-mega mega-collection">
+                                        {%- liquid
+                                          assign heading = last_block.settings.heading
+                                          assign collection_column = last_block.settings.collection_column
+                                        -%}
+                                        {%- if heading != blank -%}
+                                          <div class="section-header">
+                                            {%- if heading != blank -%}
+                                              <h2 class="section-heading">
+                                                {{ heading }}
+                                              </h2>
+                                            {%- endif -%}
+                                          </div>
+                                        {%- endif -%}
+                                        <slide-section
+                                          class="swiper"
+                                          data-section-id="{{ section.id }}"
+                                          data-autoplay="false"
+                                          data-effect="slide"
+                                          data-loop="false"
+                                          data-speed="500"
+                                          data-spacing="20"
+                                          data-mobile="1"
+                                          data-desktop="{{ collection_column }}"
+                                          data-tablet="{{ collection_column }}"
+                                        >
+                                          {%- render 'swiper-navigation' -%}
+                                          <div class="swiper-wrapper">
+                                            {% for collection in last_block.settings.collection %}
+                                              <div class="collection-item swiper-slide">
+                                                {% render 'collection-item',
+                                                  card_collection: collection,
+                                                  section: section,
+                                                  container: section_width,
+                                                  column: collection_column,
+                                                  column_mobile: 1,
+                                                  padding: 20
+                                                %}
+                                              </div>
+                                            {% endfor %}
+                                          </div>
+                                          <div class="swiper-pagination"></div>
+                                        </slide-section>
+                                      </div>
+                                  {%- endcase -%}
+                                {%- endif -%}
+                              </div>
                             </div>
                           </details>
                         {%- else -%}
@@ -873,23 +875,38 @@
                       </div>
                     {% endif %}
                     {%- if section_st.show_account -%}
-                      <div class="customer-account">
                         <a
                           href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                          class="header-account link tooltip mx-3 last-r-0 remove-underline{% if section.settings.uppercase_first_level %} uppercase{% endif %}"
-                          aria-label="{{ 'customer.account_fallback' | t }}"
+                          class="btn btn-primary block text-center mt-20 mb-15"
+                          aria-label="{% if customer %}{{ 'customer.account.title' | t }}{% else %}{{ 'customer.login_page.title' | t }}{% endif %}"
                         >
-                          <span>
-                            {%- liquid
-                              if customer
-                                echo 'customer.account_fallback' | t
-                              else
-                                echo "Login"
-                              endif
-                            -%}
-                          </span>
+                          {% if customer %}
+                            {{ 'customer.account.title' | t }}
+                          {% else %}
+                            {{ 'customer.login_page.title' | t }}
+                          {% endif %}
                         </a>
-                      <div>
+                      <div class="text-center">
+                        {%- if customer -%}
+                          <a
+                            href="{{ routes.account_logout_url }}"
+                            class="btn btn-outline block text-center"
+                            aria-label="{{ 'customer.account_fallback' | t }}"
+                          >
+                            {{- 'customer.log_out' | t -}}
+                          </a>
+                        {%- else -%}
+                          <span>  {{- 'customer.register.Do_not_have_an_account' | t -}} </span>
+                          <a
+                            href="{%- if customer -%}{{ routes.account_logout_url }}{%- else -%}{{ routes.account_register_url }}{%- endif -%}"
+                            class="heading-style underline"
+                            aria-label="{{ 'customer.account_fallback' | t }}"
+                          >
+                            {{- 'customer.register.title' | t -}}
+                          </a>
+                        {%- endif -%}
+
+                      </div>
                     {%- endif -%}
                   </div>
               </div>
