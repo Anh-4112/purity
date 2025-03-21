@@ -42,58 +42,57 @@
         {%- if gift_card_recipient_feature_active -%}
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
         {%- endif -%}
-        <div class="product-form__buttons ">
-          <div class="product__submit-form-cart">
+        <div class="product-form__buttons flex column gap-20">
+          <div class="product__submit-form-cart flex wrap gap-10">
             <label class="visually-hidden" for="Quantity-{{ section.id }}">
               {{- 'products.product.quantity.label' | t -}}
             </label>
-            <div id="Quantity-Form-{{ section.id }}" class="product-form__input product-form__quantity">
-              <quantity-input class="quantity">
-                <button
-                  class="quantity__button"
-                  name="minus"
-                  type="button"
-                >
-                  <span class="visually-hidden">
-                    {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
-                  </span>
-                  <svg width="11" height="2" viewBox="0 0 11 2" fill="none">
-                    <use href="#icon-minus"></use>
-                  </svg>
-                </button>
-                <input
-                  class="quantity__input"
-                  type="number"
-                  name="quantity"
-                  id="Quantity-{{ section.id }}"
-                  min="{{ product.selected_or_first_available_variant.quantity_rule.min | default: '1' }}"
-                  {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
-                    max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
-                  {% endif -%}
-                  step="{{ product.selected_or_first_available_variant.quantity_rule.increment | default: '1' }}"
-                  value="{{ product.selected_or_first_available_variant.quantity_rule.min | default: '1' }}"
-                  form="{{ product_form_id }}"
-                >
-                <button
-                  class="quantity__button"
-                  name="plus"
-                  type="button"
-                >
-                  <span class="visually-hidden">
-                    {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
-                  </span>
-                  <svg width="11" height="12" viewBox="0 0 11 12" fill="none">
-                    <use href="#icon-plus"></use>
-                  </svg>
-                </button>
-              </quantity-input>
-            </div>
-            <div class="button_buy-now grow-2 shrink-1">
+            <quantity-input id="Quantity-Form-{{ section.id }}" class="input-rounded border quantity flex">
+              <button
+                class="quantity__button flex align-center btn-reset ps-20 pe-10 pointer"
+                name="minus"
+                type="button"
+              >
+                <span class="visually-hidden">
+                  {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+                </span>
+                <svg width="11" height="2" viewBox="0 0 11 2" fill="none">
+                  <use href="#icon-minus"></use>
+                </svg>
+              </button>
+              <input
+                class="quantity__input w-custom text-center"
+                style="--input-padding: 0;--inputs-border-width: 0;--custom-width: 3.8rem;--input-border-radius: 0;--input-bg: transparent;--input-height: auto;"
+                type="number"
+                name="quantity"
+                id="Quantity-{{ section.id }}"
+                min="{{ product.selected_or_first_available_variant.quantity_rule.min | default: '1' }}"
+                {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
+                  max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                {% endif -%}
+                step="{{ product.selected_or_first_available_variant.quantity_rule.increment | default: '1' }}"
+                value="{{ product.selected_or_first_available_variant.quantity_rule.min | default: '1' }}"
+                form="{{ product_form_id }}"
+              >
+              <button
+                class="quantity__button flex align-center btn-reset ps-10 pe-20 pointer"
+                name="plus"
+                type="button"
+              >
+                <span class="visually-hidden">
+                  {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
+                </span>
+                <svg width="11" height="12" viewBox="0 0 11 12" fill="none">
+                  <use href="#icon-plus"></use>
+                </svg>
+              </button>
+            </quantity-input>
+            <div class="button_buy-now grow-1 shrink-1">
               <button
                 id="ProductSubmitButton-{{ section.id }}"
                 type="submit"
                 name="add"
-                class="product_submit_button product-form__submit word-wrap relative"
+                class="btn btn-outline w-full relative product_submit_button product-form__submit word-wrap relative"
                 {% if product.selected_or_first_available_variant.available == false %}
                   disabled
                 {% endif %}

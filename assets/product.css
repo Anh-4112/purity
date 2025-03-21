@@ -19,11 +19,11 @@
   margin-top: 6px;
 }
 @media (min-width: 1025px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .product__inner:hover :is(.product__hover-img, button-quickview) {
+  .product__inner:hover :is(.product__hover-img, .button-quickview) {
     opacity: 1;
     visibility: visible;
   }
-  button-quickview {
+  .button-quickview {
     opacity: 0;
     visibility: hidden;
     transform: translateY(30%);
@@ -31,7 +31,10 @@
     transition: color var(--duration-long, 0.5s) ease,
       transform var(--duration-default, 0.25s) ease;
   }
-  .product__inner:hover button-quickview {
+  .product__inner:hover .button-quickview {
     transform: translateY(0);
   }
+}
+.shopify-payment-button__button {
+  height: auto;
 }
