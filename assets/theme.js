@@ -1,11 +1,51 @@
-import { SlideSection } from './module_slide.js?v=1234';
-import * as global from './global.js?v=23323323';
+import { SlideSection } from 'module_slide';
+import * as global from 'global';
 
 try {
   document.querySelector(":focus-visible");
 } catch(e) {
   global.focusVisiblePolyfill();
 }
+
+class BackToTop extends HTMLElement {
+  constructor() {
+    super();
+    this.addEventListener("click", this.backToTop.bind(this), false);
+  }
+
+  connectedCallback() {
+    window.addEventListener("scroll", this.updateScrollPercentage.bind(this));
+  }
+
+  backToTop() {
+    if (document.documentElement.scrollTop > 0 || document.body.scrollTop > 0) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  }
+
+  updateScrollPercentage() {
+    const scrollHeight =
+      document.documentElement.scrollHeight || document.body.scrollHeight;
+    const scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    const clientHeight =
+      document.documentElement.clientHeight || document.body.clientHeight;
+    const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
+    this.style.setProperty(
+      "--scroll-percentage",
+      scrollPercentage.toFixed(2) + "%"
+    );
+    if (scrollTop > 200) {
+      this.classList.add("show");
+    } else {
+      this.classList.remove("show");
+    }
+  }
+}
+customElements.define("back-to-top", BackToTop);
 
 class ToggleMenu extends HTMLElement {
   constructor() {
@@ -62,6 +102,13 @@ class ButtonCloseModel extends HTMLButtonElement {
   }
   onClick(e) {
     global.eventModal(this, "close");
+    const details = this.closest('.details-header-menu');
+    if (details) {
+      details.classList.remove("open-submenu"),
+      this.removeAttribute("open"),
+      this.firstElementChild.removeAttribute("open"),
+      this.lastElementChild.removeAttribute("open")
+    }
   }
 }
 customElements.define("button-close-model", ButtonCloseModel, {
