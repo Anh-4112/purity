@@ -1,4 +1,4 @@
-import * as global from "./global.js";
+import * as global from "global";
 
 class ButtonQuickView extends HTMLButtonElement {
   constructor() {

@@ -1,5 +1,5 @@
-import { SlideSection } from './module_slide.js?v=1234';
-import * as global from './global.js?v=23323323';
+import { SlideSection } from 'module_slide';
+import * as global from 'global';
 
 try {
   document.querySelector(":focus-visible");
@@ -102,6 +102,13 @@ class ButtonCloseModel extends HTMLButtonElement {
   }
   onClick(e) {
     global.eventModal(this, "close");
+    const details = this.closest('.details-header-menu');
+    if (details) {
+      details.classList.remove("open-submenu"),
+      this.removeAttribute("open"),
+      this.firstElementChild.removeAttribute("open"),
+      this.lastElementChild.removeAttribute("open")
+    }
   }
 }
 customElements.define("button-close-model", ButtonCloseModel, {

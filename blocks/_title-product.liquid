@@ -1,13 +1,25 @@
-<h1
-  class="title"
-  {{ block.shopify_attributes }}
->
-  {%- if closest.product.title != blank -%}
-    {{ closest.product.title | escape }}
-  {%- else -%}
-    {{ 'onboarding.product_title' | t }}
-  {% endif %}
-</h1>
+{%- assign section_st = section.settings -%}
+{%- if section_st.desktop_layout != blank -%}
+  <h1
+    class="title"
+    {{ block.shopify_attributes }}
+  >
+{%- else -%}
+  <h2
+    class="title"
+    {{ block.shopify_attributes }}
+  >
+{%- endif -%}
+{%- if closest.product.title != blank -%}
+  {{ closest.product.title | escape }}
+{%- else -%}
+  {{ 'onboarding.product_title' | t }}
+{%- endif -%}
+{%- if section_st.desktop_layout != blank -%}
+  </h1>
+{%- else -%}
+  </h2>
+{%- endif -%}
 {% schema %}
 {
   "name": "t:sections.all.product_setting.title.name",

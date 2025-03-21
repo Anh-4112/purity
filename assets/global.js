@@ -129,14 +129,36 @@ export function removeTrapFocus(elementToFocus = null) {
   if (elementToFocus) elementToFocus.focus();
 }
 
+export var getScrollBarWidth = (function () {
+  return {
+    init: function () {
+      var scrollDiv = document.createElement('div');
+      scrollDiv.style.width = '100px';
+      scrollDiv.style.height = '100px';
+      scrollDiv.style.overflow = 'scroll';
+      scrollDiv.style.position = 'absolute';
+      scrollDiv.style.top = '-9999px';
+      document.body.appendChild(scrollDiv);
+      var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+      document.body.removeChild(scrollDiv);
+      return scrollbarWidth;
+    },
+  };
+})();
+
 export function eventModal(element, event) {
   if (event == "open") {
     root.classList.add("open-modal");
     element.classList.add("active");
+    root.style.setProperty(
+      'padding-right',
+      getScrollBarWidth.init() + 'px'
+    );
   } else {
     const active_modal = document.querySelectorAll(".active-modal-js.active");
     if (active_modal.length == 1) {
       root.classList.remove("open-modal");
+      root.style.removeProperty('padding-right');
     }
     if (element.classList.contains("active-modal-js")) {
       element.classList.remove("active");
