@@ -1,5 +1,5 @@
 
-import * as global from "./global.js?v=23323323";
+import * as global from "global";
 
 if (!customElements.get("pickup-availability")) {
   customElements.define("pickup-availability", class PickupAvailability extends HTMLElement {

@@ -1,4 +1,4 @@
-import { SlideSection } from "./module_slide.js";
+import { SlideSection } from "module_slide";
 
 class MediaGallery extends SlideSection {
   constructor() {
