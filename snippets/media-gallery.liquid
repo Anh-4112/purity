@@ -24,7 +24,7 @@
   data-thumb-direction="{% if desktop_layout == 'thumbnail_left' %}vertical{% else %}horizontal{% endif %}"
   data-auto-play-video="{% if enable_video_autoplay %}true{% else %}false{% endif %}"
 >
-  <div class="product__media-gallery product-{{ layout }}">
+  <div class="product__media-gallery product-{{ layout }} {{ desktop_layout }}">
     {% case layout %}
       {% when 'thumbnail' %}
         <div id="GalleryMainViewer-{{ section.id }}" class="media-main-swiper">
