@@ -19,7 +19,7 @@
 %}
 <script type="module" src="{{ 'media-gallery.js' | asset_url }}"></script>
 <media-gallery
-  class="media-gallery"
+  class="media-gallery block"
   data-section-id="{{ section.id }}"
   data-thumb-direction="{% if desktop_layout == 'thumbnail_left' %}vertical{% else %}horizontal{% endif %}"
   data-auto-play-video="{% if enable_video_autoplay %}true{% else %}false{% endif %}"
@@ -60,7 +60,7 @@
           </div>
         </div>
       {% when 'grid' %}
-        <grid-gallery id="GalleryViewer-{{ section.id }}" class="grid grid-cols grid-swiper-mobile">
+        <grid-gallery id="GalleryViewer-{{ section.id }}" class="grid grid-cols gap-10 grid-swiper-mobile">
           {% render 'product-media',
             images: images,
             product: product,

@@ -1,4 +1,3 @@
-{{ 'form.css' | asset_url | stylesheet_tag }}
 {% liquid
   assign section_st = section.settings
   assign section_width = ''
@@ -47,11 +46,11 @@
       </div>
     {%- endif -%}
     <div
-      class="newsletter__form-container flex flex-column text-{{ text_alignment }} justify-content-{{ text_alignment }}"
+      class="newsletter__form-container flex column text-{{ text_alignment }} justify-content-{{ text_alignment }}"
     >
       {%- form 'customer', class: 'newsletter__form flex' -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
-        <div class="flex gap-10 flex-wrap w-full justify-content-{{ text_alignment }}">
+        <div class="flex gap-10 wrap w-full justify-content-{{ text_alignment }}">
           <input
             id="NewsletterForm--{{ section.id }}"
             type="email"
