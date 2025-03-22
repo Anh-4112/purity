@@ -1,0 +1,60 @@
+{%- liquid
+  assign section_st = section.settings
+  assign open_all_question = section_st.open_all_question
+  assign question = block.settings.question
+  assign answer = block.settings.answer
+-%}
+{%- if question != blank and answer != blank -%}
+  <div
+    class="section__faq-items relative faq-block"
+  >
+    <details
+      class="collapsible-row"
+      is="collapsible-row"
+      {% if open_all_question %}
+        open
+      {% endif %}
+    >
+      <summary class="collapsible-row__summary">
+        <h3
+          tabindex="0"
+          class="collapsible-heading transition pointer relative flex"
+        >
+          {{ question }}
+          <svg class="icon icon-down transition-short" width="10" height="6">
+            <use href="#icon-arrow-down"></use>
+          </svg>
+        </h3>
+      </summary>
+      <div
+        class="collapsible-row__content"
+      >
+        <div class="faq_content-inner">{{ answer }}</div>
+      </div>
+    </details>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.faq.blocks.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.content.label"
+    },
+    {
+      "type": "text",
+      "id": "question",
+      "label": "t:sections.faq.blocks.settings.question.question",
+      "default": "Frequently asked questions?"
+    },
+    {
+      "type": "richtext",
+      "id": "answer",
+      "label": "t:sections.faq.blocks.settings.question.answer",
+      "default": "<p>Write the answer.</p>"
+    }
+  ]
+}
+{% endschema %}
