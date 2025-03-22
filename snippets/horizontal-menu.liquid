@@ -1,10 +1,10 @@
 {% if link.links.size > 0 %}
   {%- if type == 'classic' -%}
     <div
-      class="submenu classic transition invisible bg-white z-1{% if menu_mobile == blank %} py-30 absolute submenu-desktop {{ section_st.dropdowns_animation }} shadow{% else %} sub-mb absolute inset-0 drawer drawer-left overflow-auto{% endif %}"
+      class="submenu classic transition invisible bg-white z-1{% if menu_mobile == blank %} py-30 absolute submenu-desktop {{ section_st.dropdowns_animation }} shadow{% else %} sub-mb absolute inset-0 drawer drawer-left overflow-auto custom-scrollbar{% endif %}"
     >
       {%- if menu_mobile != blank -%}
-        <div class="submenu-header flex content-center p-24 border-bottom">
+        <div class="submenu-header flex align-center justify-between p-24 border-bottom">
           <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
             <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
               <use href="#icon-back" />
@@ -25,7 +25,7 @@
       {%- endif -%}
   {%- else -%}
     {%- if menu_mobile != blank -%}
-      <div class="submenu-header flex content-center p-24 border-bottom">
+      <div class="submenu-header flex align-center justify-between p-24 border-bottom">
         <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
           <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
             <use href="#icon-back" />
@@ -46,7 +46,7 @@
     {%- endif -%}
   {%- endif -%}
   <ul
-    class="menu list-unstyled{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% elsif menu_mobile != blank%} px-24 overflow-auto pt-12{% endif %}"
+    class="menu list-unstyled{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% elsif menu_mobile != blank%} px-24 overflow-auto custom-scrollbar pt-12{% endif %}"
   >
     {% for child_link in link.links %}
       <li class="menu-link{% if child_link.links.size > 0 %} have-child{% if menu_mega == blank %} relative{% endif %}{% endif %}{% if menu_mega == blank and menu_mobile == blank %} px-20{% endif %}">
@@ -119,7 +119,7 @@
   {%- endif -%}
 {%- else -%}
   {%- if menu_mobile != blank -%}
-    <div class="submenu-header flex content-center p-24 border-bottom">
+    <div class="submenu-header flex align-center justify-between p-24 border-bottom">
       <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
         <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
           <use href="#icon-back" />

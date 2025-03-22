@@ -520,7 +520,7 @@
               </a>
             </div>
           {%- endif -%}
-          <div class="drawer__content flex column h-full">
+          <div class="drawer__content flex column h-full{% if section_st.banner_image == blank %} pt-30{% endif %}">
             <nav class="header__menu-mobile overflow-hidden grow-1">
               <ul class="list-unstyled px-24 pt-12 overflow-y-auto overflow-x-hidden w-full h-full">
                 {%- for link in menu.links -%}
@@ -586,7 +586,7 @@
                                   {%- case last_block.type -%}
                                     {%- when 'menu_mega' -%}
                                       <div
-                                        class="mega-banner flex column flex-cols gap p-24 overflow-auto"
+                                        class="mega-banner flex column flex-cols gap p-24 overflow-auto custom-scrollbar"
                                         style="--col-number: 1;--gap:24px;"
                                       >
                                         {%- for i in (1..5) -%}
