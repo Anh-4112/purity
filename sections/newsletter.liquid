@@ -1,3 +1,112 @@
+{% liquid
+  assign section_st = section.settings
+  assign section_width = ''
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+  assign text_alignment = section_st.text_alignment
+  assign button_label = section_st.button_label
+  assign heading_size = section_st.heading_size
+  assign header_size = ''
+  if heading_size == 'small'
+    assign header_size = 'h3'
+  elsif heading_size == 'large'
+    assign header_size = 'fs-medium'
+  endif
+%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+  {% if heading_size == 'large' %}--font-size: 40;{% endif %}
+{%- endcapture -%}
+<div
+  class="section section__newsletter color-{{ section_st.color_scheme }} gradient"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }}">
+    {%- if section_st.heading != blank or section_st.description != blank -%}
+      <div class="section-header text-{{ text_alignment }}">
+        {%- if section_st.heading != blank -%}
+          <h2
+            class="section-heading {{ header_size }}"
+          >
+            {{ section_st.heading }}
+          </h2>
+        {%- endif -%}
+        {%- if section_st.description != blank -%}
+          <div
+            class="section-description"
+          >
+            {{ section_st.description }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    <div
+      class="newsletter__form-container flex column text-{{ text_alignment }} justify-content-{{ text_alignment }}"
+    >
+      {%- form 'customer', class: 'newsletter__form flex' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <div class="flex gap-10 wrap w-full justify-content-{{ text_alignment }}">
+          <input
+            id="NewsletterForm--{{ section.id }}"
+            type="email"
+            required
+            name="contact[email]"
+            autocomplete="email"
+            aria-required="true"
+            autocorrect="off"
+            autocapitalize="off"
+            value="{% if customer %}{{ customer.email }}{% endif %}"
+            placeholder="{% if section_st.email_placeholder != blank %}{{section_st.email_placeholder}}{% else %}{{ 'newsletter.label' | t }}{% endif %}"
+            class="newsletter__input"
+            {% if form.errors %}
+              aria-invalid="true"
+              aria-describedby="Newsletter-error--{{ section.id }}"
+            {% elsif form.posted_successfully? %}
+              aria-describedby="Newsletter-success--{{ section.id }}"
+            {% endif %}
+            pattern=".+\.[a-zA-Z]{2,6}"
+          >
+          <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
+            {{ 'newsletter.label' | t }}
+          </label>
+          <button
+            type="submit"
+            name="commit"
+            class="btn btn-primary newsletter__button"
+            aria-label="{%- if button_label != blank -%}{{ button_label }} {%- else -%} {{ 'subscribe.button_label' | t }} {% endif %}"
+          >
+            {%- if button_label != blank -%}
+              {{ button_label }}
+            {%- else -%}
+              {{ 'newsletter.button_label' | t }}
+            {% endif %}
+          </button>
+        </div>
+        {%- if form.errors -%}
+          <small class="newsletter__message newsletter__message--error" id="Newsletter-error--{{ section.id }}">
+            {{- form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email -}}
+          </small>
+        {%- endif -%}
+        {%- if form.posted_successfully? -%}
+          <div
+            class="newsletter__message newsletter__message--success"
+            id="Newsletter-success--{{ section.id }}"
+            tabindex="-1"
+          >
+            {{- 'newsletter.success' | t }}
+          </div>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.newsletter.name",
@@ -44,7 +153,7 @@
     },
     {
       "type": "text",
-      "id": "title",
+      "id": "heading",
       "label": "t:sections.all.content_setting.heading.label",
       "default": "Newsletter"
     },

@@ -35,6 +35,7 @@
       {
         "imports": {
           "theme": "{{ 'theme.js' | asset_url }}",
+          "global": "{{ 'global.js' | asset_url }}",
           "module_slide": "{{ 'module_slide.js' | asset_url }}"
         }
       }
@@ -128,7 +129,7 @@
         --btn-padding-x: 4rem;
         --btn-font-size: {% if theme_st.button_text_transform == 'uppercase' %}calc(var(--body-font-size, 1.4rem) - 2px){% else %}var(--body-font-size, 1.4rem){% endif %};
         --input-border-radius: {{ theme_st.rounded_input }}px;
-        --input-height: 5rem;
+        --input-height: 5.6rem;
         --rate-color: rgb({{ theme_st.color_product_rate.red }}, {{ theme_st.color_product_rate.green }}, {{ theme_st.color_product_rate.blue }});
         --page-width: {{ theme_st.page_width | divided_by: 10 }}rem;
         --page-width-margin: {% if theme_st.page_width == '1600' %}2{% else %}0{% endif %}rem;
@@ -208,7 +209,7 @@
     </script>
   </head>
 
-  <body class="{{ theme_st.animation_hover_effect }}">
+  <body class="{{ theme_st.animation_hover_effect }}{% if template.name == 'index' %} template-index{% endif %}">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
@@ -218,9 +219,13 @@
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
-
+    {%- liquid
+      section 'product-quickview'
+      sections 'overlay-group'
+    -%}
     {% sections 'footer-group' %}
-
+    {%- render 'scripts-tag' -%}
+    {%- render 'sprite-svg' -%}
     <ul hidden>
       <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
       <li id="a11y-new-window-message">{{ 'accessibility.link_messages.new_window' | t }}</li>

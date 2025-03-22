@@ -60,55 +60,32 @@
                   class="product__media animation-swatches rounded"
                   style="--aspect-ratio: {{ ratio }};"
                 >
-                  {%- liquid
-                    assign source = p_media.sources
-                    assign source_url = ''
-                    for s in source
-                      if s.format == 'mp4'
-                        assign source_url = s.url
-                        break
-                      endif
-                    endfor
-                  -%}
                   {% if type_video and product_show_video_featured %}
                     {% if p_media.media_type == 'video' %}
-                      {% if the_settings.image_video_autoplay != blank -%}
-                        <video
-                          playsinline="true"
-                          muted="muted"
-                          loop="loop"
-                          autoplay
-                          preload="metadata"
-                          class="product__img product__img_video lazy-video-item"
-                          src="{{ source_url }}"
-                          poster="{{ p_media.preview_image.src | image_url }}"
-                        ></video>
-                      {% else %}
-                        <video-product class="product__img product__img_video lazy-video-item">
-                          {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
-                          {% render 'responsive-image',
-                            type: 'product',
-                            class: 'product__img',
-                            image: p_media,
-                            image_alt: alt_features,
-                            container: container,
-                            column: column,
-                            column_mobile: column_mobile,
-                            padding: padding
-                          %}
-                          <template class="video-template max-w-100">
-                            {{
-                              p_media
-                              | media_tag:
-                                image_size: '2048x',
-                                autoplay: true,
-                                controls: true,
-                                loop: true,
-                                preload: 'none'
-                            }}
-                          </template>
-                        </video-product>
-                      {% endif %}
+                      <video-product class="product__img product__img_video lazy-video-item">
+                        {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
+                        {% render 'responsive-image',
+                          type: 'product',
+                          class: 'product__img',
+                          image: p_media,
+                          image_alt: alt_features,
+                          container: container,
+                          column: column,
+                          column_mobile: column_mobile,
+                          padding: padding
+                        %}
+                        <template class="video-template max-w-100">
+                          {{
+                            p_media
+                            | media_tag:
+                              image_size: '2048x',
+                              autoplay: true,
+                              controls: true,
+                              loop: true,
+                              preload: 'none'
+                          }}
+                        </template>
+                      </video-product>
                     {% elsif p_media.media_type == 'external_video' %}
                       {% liquid
                         assign video_id = p_media.external_id
@@ -198,30 +175,19 @@
                 {% render 'product-badges', card_product: card_product, type: 'product_item' %}
               {%- endif -%}
             </a>
-            {% if p_media and type_video and product_show_video_featured %}
-              {% if p_media.media_type == 'video' or p_media.media_type == 'external_video' -%}
-                <button-playvideo
-                  class="deferred-media__poster-button pointer motion-reduce btn-reset w-full outline-focus-none absolute inset-0 flex content-center"
-                  type="button"
-                  aria-label="{{ 'products.product.xr_button_label' | t }}"
-                >
-                  {%- render 'icon-play' -%}
-                </button-playvideo>
-              {% endif %}
-            {% endif %}
             {%- if product_enable_quickview
               and disable_quickview != true
               and card_product.metafields.custom.external_affiliate == blank
             -%}
-              <button-quickview
-                tabindex="0"
-                data-item="overlay-quickbuy"
+              <button
+                type="button"
+                is="button-quick-view"
                 class="btn button-quickview transition absolute inset-x-15 bottom-10 z-2 text-center bg-white{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
-                data-product-handle="{{ card_product.id }}"
                 data-url="{{ shop.url }}/products/{{ card_product.handle }}?section_id=product-quickview"
+                aria-label="{{ 'products.product.quickview' | t }}"
               >
-                <span class="product-quickview-btn">
-                  {{- 'products.product.quickview' | t -}}
+                <span class="product-quickview-btn hidden-on-load">
+                  {{ 'products.product.quickview' | t }}
                 </span>
                 <svg
                   width="14"
@@ -232,7 +198,7 @@
                 >
                   <use href="#icon-load"></use>
                 </svg>
-              </button-quickview>
+              </button>
             {%- endif -%}
           </div>
         {%- endif -%}
