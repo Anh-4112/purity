@@ -17,6 +17,9 @@
     assign desktop_layout = 'grid'
   endif
 %}
+{%- capture col -%}
+  {% if desktop_layout == 'grid' %} --col-number: 2;{% else %}--col-number: 1;{% endif %}
+{%- endcapture -%}
 <script type="module" src="{{ 'media-gallery.js' | asset_url }}"></script>
 <media-gallery
   class="media-gallery block"
@@ -24,7 +27,7 @@
   data-thumb-direction="{% if desktop_layout == 'thumbnail_left' %}vertical{% else %}horizontal{% endif %}"
   data-auto-play-video="{% if enable_video_autoplay %}true{% else %}false{% endif %}"
 >
-  <div class="product__media-gallery product-{{ layout }} {{ desktop_layout }}">
+  <div class="product__media-gallery product-{{ layout }} {{ desktop_layout }}{% if desktop_layout == 'thumbnail_left' %} flex flex-end relative overflow-hidden{% endif %}">
     {% case layout %}
       {% when 'thumbnail' %}
         <div id="GalleryMainViewer-{{ section.id }}" class="media-main-swiper">
@@ -59,8 +62,9 @@
             </div>
           </div>
         </div>
-      {% when 'grid' %}
-        <grid-gallery id="GalleryViewer-{{ section.id }}" class="grid grid-cols gap-10 grid-swiper-mobile">
+
+      {% when 'stack' %}
+        <grid-gallery id="GalleryViewer-{{ section.id }}" class="grid gap-10 stacked stacked-swiper-mobile">
           {% render 'product-media',
             images: images,
             product: product,
@@ -70,7 +74,11 @@
           %}
         </grid-gallery>
       {% else %}
-        <grid-gallery id="GalleryViewer-{{ section.id }}" class="stacked stacked-swiper-mobile">
+        <grid-gallery
+          id="GalleryViewer-{{ section.id }}"
+          class="grid grid-cols gap-10 grid-swiper-mobile"
+          style="{{ col | strip | strip_newlines }}"
+        >
           {% render 'product-media',
             images: images,
             product: product,

@@ -1,3 +1,4 @@
+{{ 'main-product.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign theme_st = settings
   assign section_st = section.settings
@@ -25,7 +26,7 @@
   endif
 -%}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--col-width: {{ desktop_media_width }};
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--col-width: {{ desktop_media_width }}%;
 {%- endcapture -%}
 {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
 {%- if first_3d_model -%}
@@ -320,12 +321,16 @@
       "id": "desktop_layout",
       "options": [
         {
-          "value": "stack",
-          "label": "t:sections.main-product.settings.desktop_layout.options__3.label"
+          "value": "one_columns",
+          "label": "t:sections.main-product.settings.desktop_layout.one_columns.label"
         },
         {
           "value": "grid",
           "label": "t:sections.main-product.settings.desktop_layout.options__1.label"
+        },
+        {
+          "value": "stack",
+          "label": "t:sections.main-product.settings.desktop_layout.options__3.label"
         },
         {
           "value": "thumbnail_bottom",
@@ -348,7 +353,7 @@
       "unit": "%",
       "label": "t:sections.main-product.settings.media_width.label",
       "default": 48
-    }
+    },
     {
       "type": "select",
       "id": "media_position",

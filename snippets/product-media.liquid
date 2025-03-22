@@ -4,22 +4,16 @@
   assign enable_video_looping = true
   assign enable_video_autoplay = true
   assign ratio = '3/4'
-  for image in images
-    if product_image_ratio != 'adapt'
-      case product_image_ratio
-        when 'square'
-          assign ratio = '1/1'
-        when 'landscape'
-          assign ratio = '4/3'
-        when 'portrait'
-          assign ratio = '3/4'
-      endcase
-    else
-      if image.preview_image != blank
-        assign ratio = image.preview_image.aspect_ratio
-      endif
-    endif
-  endfor
+  if product_image_ratio != 'adapt'
+    case product_image_ratio
+      when 'square'
+        assign ratio = '1/1'
+      when 'landscape'
+        assign ratio = '4/3'
+      when 'portrait'
+        assign ratio = '3/4'
+    endcase
+  endif
 %}
 {% if product.selected_or_first_available_variant.featured_media != null %}
   {%- assign featured_media = product.selected_or_first_available_variant.featured_media -%}
@@ -194,6 +188,13 @@
   {%- endcase -%}
 {% endif %}
 {% for image in images %}
+  {% liquid
+    if product_image_ratio == 'adapt'
+      if image.preview_image != blank
+        assign ratio = image.preview_image.aspect_ratio
+      endif
+    endif
+  %}
   {%- unless image.id == product.selected_or_first_available_variant.featured_media.id -%}
     {% assign media_position = media_position | default: 0 | plus: 1 %}
     {%- case image.media_type -%}

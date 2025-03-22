@@ -88,10 +88,10 @@ function initSlide(_this) {
             }
           }
         }
-      }
-    }
+      },
+    },
   });
-};
+}
 
 function initSlideMedia(_this, gallery, thumbnail) {
   let swiperElement = _this.querySelector(".swiper-wrapper-main");
@@ -100,8 +100,8 @@ function initSlideMedia(_this, gallery, thumbnail) {
   let watchOverflow = true;
   let itemMobile = gallery == "thumbnail" ? 5 : 1;
   let direction = _this.dataset.thumbDirection
-      ? _this.dataset.thumbDirection
-      : "horizontal";
+    ? _this.dataset.thumbDirection
+    : "horizontal";
   if (gallery == "thumbnail" && direction == "vertical") {
     direction = "vertical";
   } else if (gallery == "main" || gallery == "gird") {
@@ -114,7 +114,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
     watchOverflow = false;
   } else if (gallery == "gird") {
     swiperElement = _this;
-    if (_this.closest('.quickview-product')) {
+    if (_this.closest(".quickview-product")) {
       itemMobile = 1.3;
     }
   }
@@ -134,8 +134,8 @@ function initSlideMedia(_this, gallery, thumbnail) {
     },
     breakpoints: {
       768: {
-        direction: direction
-      }
+        direction: direction,
+      },
     },
     pagination: {
       clickable: true,
@@ -150,7 +150,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
     },
     on: {
       slideChangeTransitionEnd: function () {
-        if (autoplayVideo && !thumbnail){
+        if (autoplayVideo && !thumbnail) {
           const vimeoTag = document.createElement("script");
           vimeoTag.src = "https://player.vimeo.com/api/player.js";
           document.head.appendChild(vimeoTag);
@@ -175,12 +175,11 @@ function initSlideMedia(_this, gallery, thumbnail) {
             }
           }
         }
-      }
-    }
+      },
+    },
   });
   return swiperSlide;
-};
-
+}
 
 export class SlideSection extends HTMLElement {
   constructor() {
@@ -223,7 +222,6 @@ export class SlideSection extends HTMLElement {
     }
     return swiperSlide;
   }
-
 }
 if (!customElements.get("slide-section")) {
   customElements.define("slide-section", SlideSection);
