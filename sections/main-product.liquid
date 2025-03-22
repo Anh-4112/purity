@@ -25,7 +25,7 @@
   endif
 -%}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--col-width: {{ desktop_media_width }};
 {%- endcapture -%}
 {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
 {%- if first_3d_model -%}
@@ -51,9 +51,9 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div class="main-product">
+    <div class="main-product flex gap">
       {% if product.media.size > 0 %}
-        <div class="product-detail__media">
+        <div class="product-detail__media col-md-w-custom">
           {% liquid
             assign option_color_name = 'Color'
             if color_swatch_trigger != blank
@@ -136,7 +136,7 @@
           %}
         </div>
       {% endif %}
-      <div class="product-detail__information">
+      <div class="product-detail__information{% if product.media.size > 0 %} col-md-remaining w-full{% endif %}">
         {% content_for 'blocks', closest.product: product %}
       </div>
     </div>
@@ -340,25 +340,15 @@
       "label": "t:sections.main-product.settings.desktop_layout.label"
     },
     {
-      "type": "select",
+      "type": "range",
       "id": "desktop_media_width",
-      "options": [
-        {
-          "value": "small",
-          "label": "t:sections.main-product.settings.media_width.options__1.label"
-        },
-        {
-          "value": "medium",
-          "label": "t:sections.main-product.settings.media_width.options__2.label"
-        },
-        {
-          "value": "large",
-          "label": "t:sections.main-product.settings.media_width.options__3.label"
-        }
-      ],
-      "default": "medium",
-      "label": "t:sections.main-product.settings.media_width.label"
-    },
+      "min": 40,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "label": "t:sections.main-product.settings.media_width.label",
+      "default": 48
+    }
     {
       "type": "select",
       "id": "media_position",
