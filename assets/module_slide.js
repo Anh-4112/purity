@@ -98,15 +98,21 @@ function initSlideMedia(_this, gallery, thumbnail) {
   let watchSlidesProgress = true;
   let watchSlidesVisibility = true;
   let watchOverflow = true;
+  let loop = true;
   let itemMobile = gallery == "thumbnail" ? 5 : 1;
   let direction = _this.dataset.thumbDirection
     ? _this.dataset.thumbDirection
     : "horizontal";
   if (gallery == "thumbnail" && direction == "vertical") {
     direction = "vertical";
-    itemMobile = "auto";
+    if (window.innerWidth >= 768) {
+      itemMobile = "auto";
+    }
   } else if (gallery == "main" || gallery == "gird") {
     direction = "horizontal";
+  }
+  if (gallery == "thumbnail") {
+    loop = false;
   }
   const autoplayVideo = _this?.dataset.autoPlayVideo === "true";
   if (gallery == "thumbnail") {
@@ -126,7 +132,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
     spaceBetween: 10,
     autoplay: false,
     direction: "horizontal",
-    loop: true,
+    loop: loop,
     watchSlidesProgress: watchSlidesProgress,
     watchSlidesVisibility: watchSlidesVisibility,
     watchOverflow: watchOverflow,

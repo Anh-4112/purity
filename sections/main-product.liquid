@@ -1,4 +1,6 @@
 {{ 'main-product.css' | asset_url | stylesheet_tag }}
+{{ 'product.css' | asset_url | stylesheet_tag }}
+{{ 'carousel.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign theme_st = settings
   assign section_st = section.settings
@@ -48,11 +50,11 @@
 {% endif %}
 <section
   id="MainProduct-{{ section.id }}"
-  class="section sec__main-product media-width-{{ desktop_media_width }} media-position-{{ media_position }}"
+  class="section sec__main-product media-width-{{ desktop_media_width }}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div class="main-product flex gap">
+    <div class="main-product flex gap{% if media_position == 'right' %} row-reverse-md{% endif %}">
       {% if product.media.size > 0 %}
         <div class="product-detail__media w-full col-md-w-custom">
           {% liquid
@@ -364,7 +366,7 @@
         },
         {
           "value": "right",
-          "label": "t:sections.all.text_alignment.options__2.label"
+          "label": "t:sections.all.text_alignment.options__3.label"
         }
       ],
       "default": "left",
