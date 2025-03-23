@@ -1,3 +1,129 @@
+{% liquid
+  assign theme_st = settings
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+%}
+{%- capture style -%}
+  --overlay-opacity: {{ section_st.overlay_opacity }}%; --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+{%- endcapture -%}
+{%- capture sizes -%}
+  {% if section_st.full_width -%}
+    100vw
+  {%- else -%}
+    (min-width: {{ theme_st.page_width }}px) {{ theme_st.page_width | minus: 100 }}px, (min-width: 750px)
+    calc(100vw - 10rem), 100vw
+  {%- endif %}
+{%- endcapture -%}
+
+{% comment %}
+  {% style %}
+    .video-foreground,
+    .video-section video,
+    .video-section iframe {
+      display: block;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+    }
+  {% endstyle %}
+{% endcomment %}
+
+<div
+  id="{{ section.id }}"
+  class="color-{{ section_st.color_scheme }} section section__video-with-text-overlay"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div
+    class="{{ section_width }}"
+  >
+    <div
+      class="relative flex wrap overlay-bg h-{{ section_st.video_height }}"
+      {% if section_st.video_height == 'full_screen' %}
+        style=" {%- if section_st.video_local != blank %}--aspect-ratio: {{ section_st.video_local.aspect_ratio }};{% else %}--aspect-ratio: 16/9{% endif %}"
+      {% endif %}
+    >
+      {%- if section_st.video_local == null and section_st.video_url != null -%}
+        <video-section
+          class="block video-section overflow-hidden w-full banner__media banner absolute inset-0"
+          {% if section_st.video_height == 'full_screen' %}
+            style="--aspect-ratio: 16/9;"
+          {% endif %}
+        >
+          {% liquid
+            assign poster = section_st.video_poster | image_url: width: 1100
+            assign video_id = section_st.video_url.id
+          %}
+          <div class="video-foreground iframe-video video-has-bg">
+            {%- if section_st.video_url != null -%}
+              {%- if section_st.video_url.type == 'youtube' -%}
+                <iframe
+                  data-src="https://www.youtube.com/embed/{{ video_id }}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&playlist={{ video_id }}"
+                  class="js-youtube"
+                  title="{{ section_st.video_alt_text | escape }}"
+                  allowfullscreen
+                ></iframe>
+              {%- else -%}
+                <iframe
+                  data-src="https://player.vimeo.com/video/{{ video_id }}?controls=0background=1&autoplay=1&muted=1&loop=1"
+                  class="js-vimeo"
+                  title="{{ section_st.video_alt_text | escape }}"
+                  allowfullscreen
+                ></iframe>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        </video-section>
+      {%- elsif section_st.video_local != null -%}
+        <video-local
+          class="block video-section overflow-hidden w-full banner__media banner absolute inset-0"
+          style="--aspect-ratio: {{ section_st.video_local.aspect_ratio }}"
+        >
+          {% liquid
+            assign poster = section_st.video_local.preview_image | default: section_st.video_poster | image_url: width: 1100
+            assign source = section_st.video_local.sources
+            assign source_url = ''
+            for s in source
+              if s.format == 'mp4'
+                assign source_url = s.url
+                break
+              endif
+            endfor
+          %}
+          <div class="video-foreground video-has-bg">
+            <video
+              class="video-with-text"
+              loop="true"
+              data-src="{{ source_url }}"
+              poster="{{ poster }}"
+              playsinline="true"
+              size="{{ sizes }}"
+              muted
+              autoplay
+            ></video>
+          </div>
+        </video-local>
+      {%- endif -%}
+      <div class="section__video-content relative z-3 w-full flex {{ section_st.desktop_content_position }} text-{{ section_st.text_alignment }}">
+        <div
+          class="banner__box max-w-custom"
+          style="--max-width: {{ section_st.max_width }}%"
+        >
+          {% content_for 'blocks' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.video-with-text-overlay.name",
@@ -63,13 +189,20 @@
       "type": "video_url",
       "id": "video_url",
       "accept": ["youtube", "vimeo"],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
       "label": "t:sections.video-with-text-overlay.settings.video_link.label"
     },
+
     {
       "type": "video",
       "id": "video_local",
       "label": "t:sections.video-with-text-overlay.settings.video_local.label",
       "info": "t:sections.video-with-text-overlay.settings.video_local.info"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "t:sections.video.settings.video_poster.label"
     },
     {
       "type": "text",
