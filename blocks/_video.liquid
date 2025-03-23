@@ -16,11 +16,13 @@
   endif
 %}
 
-{%- style -%}
-  #shopify-block-{{ block.id }} {
-    width: {{ block_st.width }};
-  }
-{%- endstyle -%}
+{% comment %}
+  {%- style -%}
+    #shopify-block-{{ block.id }} {
+      width: {{ block_st.width }};
+    }
+  {%- endstyle -%}
+{% endcomment %}
 
 <div class="multi-content__block w-full h-full flex align-{{ block_st.vertical_alignment }}">
   <video-section

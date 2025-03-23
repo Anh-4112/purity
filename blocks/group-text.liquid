@@ -3,11 +3,13 @@
   assign block_st = block.settings
 %}
 
-{%- style -%}
-  #shopify-block-{{ block.id }} {
-    width: {{ block_st.width }};
-  }
-{%- endstyle -%}
+{% comment %}
+  {%- style -%}
+    #shopify-block-{{ block.id }} {
+      width: {{ block_st.width }};
+    }
+  {%- endstyle -%}
+{% endcomment %}
 
 <div class="group__text w-full h-full flex align-{{ block_st.vertical_alignment }}">
   <div
