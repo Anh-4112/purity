@@ -1,6 +1,26 @@
+{% liquid
+  assign section_st = section.settings
+  assign block_st = block.settings
+%}
+
+{%- style -%}
+  #shopify-block-{{ block.id }} {
+    width: {{ block_st.width }};
+  }
+{%- endstyle -%}
+
+<div class="group__text w-full h-full flex align-{{ block_st.vertical_alignment }}">
+  <div
+    class="color-{{ block.settings.color_scheme }} gradient flex column w-full{% if section_st.equal_height_adjustment %} h-full{% endif %} text-{{ block_st.text_alignment }} align-{{ block_st.text_alignment }}"
+  >
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.all.text.label",
+  "class": "multi-content__group--text",
   "blocks": [
     {
       "type": "@app"

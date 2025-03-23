@@ -1,3 +1,89 @@
+{% liquid
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+
+  assign column_gap_slide = 0
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 30
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 10
+  endif
+
+  assign heading_size = section_st.heading_size
+
+  assign header_size = ''
+  if heading_size == 'small'
+    assign header_size = 'h3'
+  elsif heading_size == 'large'
+    assign header_size = 'fs-medium'
+  endif
+%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+  {% if heading_size == 'large' %}--font-size: 40;{% endif %}
+{%- endcapture -%}
+
+{%- capture col_style -%}
+    {% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
+{%- endcapture -%}
+<div
+  class="section__multi-content overflow-hidden"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div
+    class="{{ section_width }}"
+  >
+    {%- if section_st.heading != blank or section_st.description != blank -%}
+      <div
+        class="section-header text-{{ section_st.alignment }}"
+      >
+        {%- if section_st.heading != blank -%}
+          <h2 class="block section-heading {{ header_size }}">
+            {{ section_st.heading }}
+          </h2>
+        {%- endif -%}
+        {%- if section_st.description != blank -%}
+          <div class="section-description">
+            {{ section_st.description }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    <div class="promotion-banner__blocks relative flex flex-col-custom wrap">
+      {% comment %}
+        {%- if section_st.enable_carousel_mobile -%}
+          <multi-content
+            data-enable="{{ section_st.enable_carousel_mobile }}"
+            data-mobile="{{ section_st.items_per_row }}"
+            data-spacing="{{ section_st.column_gap }}"
+            class="{% if section_st.items_per_row > 1 and section_st.items_per_row < 2 %} grid_scroll {% endif %}multi-content-js relative flex flex-col-custom flex-wrap"
+            style="--col-number: {{ section_st.items_per_row }};--swiper-pagination-mt: 3rem;"
+          >
+        {%- endif -%}
+      {% endcomment %}
+      <div
+        class="promotion-banner__blocks flex wrap w-full"
+        style="{{ col_style | strip | strip_newlines }}"
+      >
+        {% content_for 'blocks' %}
+      </div>
+      {% comment %}
+        {%- if section_st.enable_carousel_mobile -%}
+          </multi-content>
+        {%- endif -%}
+      {% endcomment %}
+    </div>
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.multi_content.name",
@@ -84,7 +170,7 @@
     },
     {
       "type": "select",
-      "id": "text_alignment",
+      "id": "alignment",
       "options": [
         {
           "value": "start",

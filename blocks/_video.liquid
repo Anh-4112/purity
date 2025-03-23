@@ -1,6 +1,68 @@
+{% liquid
+  assign section_st = section.settings
+  assign block_st = block.settings
+  assign video_local = block_st.video_local
+  assign poster = block_st.cover_image | default: block_st.video_local.preview_image | image_url: width: 1100
+  assign video_id = block_st.video_id | default: block_st.video_url.id
+  assign autoplay = false
+  assign loop = false
+  assign muted = false
+  if block_st.autoplay
+    assign autoplay = true
+    assign muted = true
+  endif
+  if block_st.looping
+    assign loop = true
+  endif
+%}
+
+{%- style -%}
+  #shopify-block-{{ block.id }} {
+    width: {{ block_st.width }};
+  }
+{%- endstyle -%}
+
+<div class="multi-content__block w-full h-full flex align-{{ block_st.vertical_alignment }}">
+  <video-section
+    class="w-full video-section relative{% if section_st.equal_height_adjustment %} h-full{% endif %}"
+  >
+    <div
+      class="video-has-bg block video-section relative z-3{% if section_st.equal_height_adjustment %} h-full{% endif %}"
+      style="
+        {%- if block_st.video_local != null -%}
+          {% if block_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ block_st.aspect_ratio }}{% else %}--aspect-ratio: {{ block_st.video_local.aspect_ratio }}{% endif %}
+        {% endif %}
+        {%- if block_st.video_local == null -%}
+          {% if block_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ block_st.aspect_ratio }}{% else %}--aspect-ratio: 16/9{% endif %}
+         {%- endif -%}
+      "
+    >
+      {%- if block_st.video_local == null and block_st.video_url != null -%}
+        {%- if block_st.video_url.type == 'youtube' -%}
+          <iframe
+            src="https://www.youtube.com/embed/{{ video_id }}?autoplay={% if block_st.autoplay -%}1{% else %}0{%- endif -%}&loop={% if block_st.looping -%}1{% else %}0{%- endif -%}&mute={% if block_st.autoplay -%}1{% else %}0{%- endif -%}&playsinline=1"
+            class="js-youtube"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+          ></iframe>
+        {%- else -%}
+          <iframe
+            src="https://player.vimeo.com/video/{{ video_id }}?autoplay={% if block_st.autoplay -%}1{% else %}0{%- endif -%}&loop={% if block_st.looping -%}1{% else %}0{%- endif -%}&muted={% if block.settings.autoplay -%}1{% else %}0{%- endif -%}&playsinline=1"
+            class="js-vimeo"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+          ></iframe>
+        {%- endif -%}
+      {%- else -%}
+        {{ video_local | video_tag: autoplay: autoplay, controls: true, muted: muted, poster: poster, loop: loop }}
+      {%- endif -%}
+    </div>
+  </video-section>
+</div>
 {% schema %}
 {
   "name": "t:sections.video.name",
+  "class": "multi-content__block--video",
   "settings": [
     {
       "type": "header",
@@ -10,13 +72,19 @@
       "type": "video_url",
       "id": "video_url",
       "accept": ["youtube", "vimeo"],
-      "label": "t:sections.video.settings.video_link.label"
+      "label": "t:sections.video.settings.video_link.label",
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
     },
     {
       "type": "video",
       "id": "video_local",
       "label": "t:sections.video.settings.video_local.label",
       "info": "t:sections.video.settings.video_local.info_2"
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "t:sections.video.settings.video_poster.label"
     },
     {
       "type": "checkbox",
