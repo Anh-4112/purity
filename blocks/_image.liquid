@@ -1,6 +1,53 @@
+{% liquid
+  assign section_st = section.settings
+  assign block_st = block.settings
+  assign image = block_st.image
+%}
+
+{% comment %}
+  {%- style -%}
+    #shopify-block-{{ block.id }} {
+      width: {{ block_st.width }};
+    }
+  {%- endstyle -%}
+{% endcomment %}
+
+<div class="multi-conten__block--image w-full h-full flex align-{{ block_st.vertical_alignment }}">
+  <div
+    class="w-full{% if section_st.equal_height_adjustment %} h-full{% endif %} block-image block overflow-hidden"
+  >
+    <a
+      class="banner__media rounded block{% if image == blank %} placeholder{% endif %}{% if section_st.equal_height_adjustment %} h-full{% endif %}"
+      {% if block_st.link != blank %}
+        href="{{ block_st.link }}"
+      {% else %}
+        role="link"
+      {% endif %}
+      style=" --aspect-ratio: {{ image.aspect_ratio }}{%- if image == blank -%} 16/9 {%- endif -%};"
+    >
+      {%- if image != blank -%}
+        {{
+          image
+          | image_url: width: 3840
+          | image_tag:
+            loading: 'lazy',
+            width: image.width,
+            data-sizes: 'auto',
+            sizes: '100vw',
+            widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+            alt: image.alt,
+            class: 'relative'
+        }}
+      {%- else -%}
+        {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </a>
+  </div>
+</div>
 {% schema %}
 {
   "name": "t:sections.all.image.label",
+  "class": "section__block",
   "settings": [
     {
       "type": "header",
