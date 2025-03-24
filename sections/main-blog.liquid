@@ -31,9 +31,9 @@
   endif
 
   assign post_text_alignment = ''
-  if section_st.post_text_alignment == 'left'
+  if section_st.text_alignment == 'left'
     assign post_text_alignment = 'flex-start'
-  elsif section_st.post_text_alignment == 'center'
+  elsif section_st.text_alignment == 'center'
     assign post_text_alignment = 'justify-content-center'
   else
     assign post_text_alignment = 'flex-end'
@@ -98,7 +98,7 @@
           id="section__content-items"
         >
           {%- for article in blog.articles limit: section_st.maximum_posts_to_show -%}
-            <div class="blog-articles__article article text-{{ section_st.post_text_alignment }}">
+            <div class="blog-articles__article article text-{{ section_st.text_alignment }}">
               {% render 'article-card',
                 article: article,
                 media_aspect_ratio: aspect_ratio,

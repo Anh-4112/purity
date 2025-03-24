@@ -74,7 +74,7 @@
             assign paginate_size = paginate.parts.size | times: 1
             assign cur_page = paginate.current_page | times: 1
             if t == 'blog'
-              assign number_page = sec_settings.post_limit | times: 1
+              assign number_page = section_st.maximum_posts_to_show | times: 1
               assign count = blog.articles_count
             endif
             assign amount = number_page | times: cur_page
