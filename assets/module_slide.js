@@ -88,24 +88,31 @@ function initSlide(_this) {
             }
           }
         }
-      }
-    }
+      },
+    },
   });
-};
+}
 
 function initSlideMedia(_this, gallery, thumbnail) {
   let swiperElement = _this.querySelector(".swiper-wrapper-main");
   let watchSlidesProgress = true;
   let watchSlidesVisibility = true;
   let watchOverflow = true;
+  let loop = true;
   let itemMobile = gallery == "thumbnail" ? 5 : 1;
   let direction = _this.dataset.thumbDirection
-      ? _this.dataset.thumbDirection
-      : "horizontal";
+    ? _this.dataset.thumbDirection
+    : "horizontal";
   if (gallery == "thumbnail" && direction == "vertical") {
     direction = "vertical";
+    if (window.innerWidth >= 768) {
+      itemMobile = "auto";
+    }
   } else if (gallery == "main" || gallery == "gird") {
     direction = "horizontal";
+  }
+  if (gallery == "thumbnail") {
+    loop = false;
   }
   const autoplayVideo = _this?.dataset.autoPlayVideo === "true";
   if (gallery == "thumbnail") {
@@ -114,17 +121,18 @@ function initSlideMedia(_this, gallery, thumbnail) {
     watchOverflow = false;
   } else if (gallery == "gird") {
     swiperElement = _this;
-    if (_this.closest('.quickview-product')) {
+    if (_this.closest(".quickview-product")) {
       itemMobile = 1.3;
     }
   }
+
   console.log(direction);
   const swiperSlide = new Swiper(swiperElement, {
     slidesPerView: itemMobile,
     spaceBetween: 10,
     autoplay: false,
     direction: "horizontal",
-    loop: true,
+    loop: loop,
     watchSlidesProgress: watchSlidesProgress,
     watchSlidesVisibility: watchSlidesVisibility,
     watchOverflow: watchOverflow,
@@ -134,8 +142,8 @@ function initSlideMedia(_this, gallery, thumbnail) {
     },
     breakpoints: {
       768: {
-        direction: direction
-      }
+        direction: direction,
+      },
     },
     pagination: {
       clickable: true,
@@ -150,7 +158,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
     },
     on: {
       slideChangeTransitionEnd: function () {
-        if (autoplayVideo && !thumbnail){
+        if (autoplayVideo && !thumbnail) {
           const vimeoTag = document.createElement("script");
           vimeoTag.src = "https://player.vimeo.com/api/player.js";
           document.head.appendChild(vimeoTag);
@@ -175,12 +183,11 @@ function initSlideMedia(_this, gallery, thumbnail) {
             }
           }
         }
-      }
-    }
+      },
+    },
   });
   return swiperSlide;
-};
-
+}
 
 export class SlideSection extends HTMLElement {
   constructor() {
@@ -223,7 +230,6 @@ export class SlideSection extends HTMLElement {
     }
     return swiperSlide;
   }
-
 }
 if (!customElements.get("slide-section")) {
   customElements.define("slide-section", SlideSection);
