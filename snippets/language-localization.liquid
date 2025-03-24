@@ -30,7 +30,7 @@
       <div class="disclosure">
         <button
           type="button"
-          class="button button-localization btn-reset color-inherit show-overlay body-weight pointer" 
+          class="button button-localization inline-flex align-center gap-10 btn-reset color-inherit show-overlay fs-small body-weight pointer" 
           style="--show-overlay-bg: #0005;"
           aria-expanded="false"
           aria-controls="{{ localPosition }}List"
@@ -43,7 +43,7 @@
         </button>
 
         <div
-          class="disclosure__list-wrapper bg-white p-24 z-3 fs-small body-weight transition"
+          class="disclosure__list-wrapper bg-white z-3 fs-small body-weight transition"
           hidden="true"
         >
           <icon-close class="disclosure__list-close pointer-none border inline-flex hidden-1025 mx-auto rounded-50 overflow-hidden absolute top-0 inset-x-0 w-50 h-50 content-center heading-color bg-white">
@@ -52,7 +52,7 @@
             </svg>
           </icon-close>
           <ul
-            class="disclosure__list list-unstyled transition"
+            class="disclosure__list list-unstyled transition p-24 overflow-auto"
             role="list"
           >
             {% for language in localization.available_languages %}
