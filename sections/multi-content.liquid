@@ -18,7 +18,6 @@
   endif
 
   assign heading_size = section_st.heading_size
-
   assign header_size = ''
   if heading_size == 'small'
     assign header_size = 'h3'
@@ -34,6 +33,7 @@
 {%- capture col_style -%}
     {% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
 {%- endcapture -%}
+
 <div
   class="section__multi-content overflow-hidden"
   style="{{ style | strip | strip_newlines }}"
