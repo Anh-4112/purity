@@ -1,3 +1,166 @@
+{%- liquid
+  assign theme_st = settings
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+  assign alt = 'sections.video.load_video' | t
+  assign poster = section_st.video_local.preview_image | default: section_st.video_poster
+  assign aspect_ratio = section_st.aspect_ratio
+  if aspect_ratio != 'adapt'
+    assign aspect_ratio = section_st.aspect_ratio
+  else
+    assign aspect_ratio = section_st.video_local.aspect_ratio
+  endif
+  assign video_id = section_st.video_url.id
+  assign heading_size = section_st.heading_size
+
+  assign header_size = ''
+  if heading_size == 'small'
+    assign header_size = 'h3'
+  elsif heading_size == 'large'
+    assign header_size = 'fs-medium'
+  endif
+-%}
+
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+  {% if heading_size == 'large' %}--font-size: 40;{% endif %}
+  {%- endcapture -%}
+{%- capture sizes -%}
+  {% if section_st.full_width -%}
+    100vw
+  {%- else -%}
+    (min-width: {{ theme_st.page_width }}px) {{ theme_st.page_width | minus: 100 }}px, (min-width: 750px)
+    calc(100vw - 10rem), 100vw
+  {%- endif %}
+{%- endcapture -%}
+
+<div
+  class="color-{{ section_st.color_scheme }} section gradient section__video"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }}">
+    {%- if section_st.heading != blank or section_st.description != blank -%}
+      <div class="section-header text-{{ section_st.text_alignment }}">
+        {%- if section_st.heading != blank -%}
+          <h2
+            class="section-heading {{ header_size }}"
+          >
+            {{ section_st.heading }}
+          </h2>
+        {%- endif -%}
+        {%- if section_st.description != blank -%}
+          <div
+            class="section-description"
+          >
+            {{ section_st.description }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    {%- if section_st.video_local == null and section_st.video_url != null -%}
+      <video-section class="video-section relative overflow-hidden">
+        <div
+          class="video-has-bg video-section relative"
+          style="{% if section_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ aspect_ratio }}{% else %}--aspect-ratio: 16/9;{% endif %}"
+        >
+          {%- if section_st.video_url.type == 'youtube' -%}
+            <iframe
+              src="https://www.youtube.com/embed/{{ video_id }}?autoplay={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&mute={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&playsinline=1"
+              class="js-youtube no-js-hidden"
+              allow="autoplay; encrypted-media"
+              title="{{ section_st.alt_description | escape }}"
+              allowfullscreen
+            ></iframe>
+          {%- else -%}
+            <iframe
+              src="https://player.vimeo.com/video/{{ video_id }}?autoplay={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&muted={% if section_st.autoplay -%}1{% else %}0{%- endif -%}"
+              class="js-vimeo no-js-hidden"
+              allow="autoplay; encrypted-media"
+              title="{{ section_st.alt_description | escape }}"
+              allowfullscreen
+            ></iframe>
+          {%- endif -%}
+        </div>
+      </video-section>
+    {%- elsif section_st.video_local != null -%}
+      {%- if section_st.autoplay -%}
+        <video-local
+          class="video-section relative overflow-hidden"
+          style="--aspect-ratio: {{ aspect_ratio }}"
+        >
+      {%- else -%}
+        <video-local-play
+          class="video-section relative overflow-hidden"
+          style="--aspect-ratio: {{ aspect_ratio }}"
+        >
+      {%- endif -%}
+      {% liquid
+        assign poster = section_st.video_poster | default: section_st.video_local.preview_image
+      %}
+      <div class="video-thumbnail absolute banner__media overflow-hidden">
+        {%- if poster != null -%}
+          {{
+            poster
+            | image_url: width: 3840
+            | image_tag: loading: 'lazy', sizes: sizes, widths: '375, 750, 1100, 1500, 1780, 2000, 3000, 3840', alt: alt
+          }}
+        {%- else -%}
+          {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+        {%- if section_st.autoplay == blank -%}
+          <button
+            class="deferred-media__poster-button w-full"
+            type="button"
+            aria-label="{{ 'sections.video.alt_text' | t }}"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              focusable="false"
+              class="icon icon-play"
+              fill="none"
+              viewBox="0 0 10 14"
+            >
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M1.48177 0.814643C0.81532 0.448245 0 0.930414 0 1.69094V12.2081C0 12.991 0.858787 13.4702 1.52503 13.0592L10.5398 7.49813C11.1918 7.09588 11.1679 6.13985 10.4965 5.77075L1.48177 0.814643Z" fill="currentColor"></path>
+            </svg>
+          </button>
+        {%- endif -%}
+      </div>
+      <template>
+        {{
+          section_st.video_local
+          | video_tag: image_size: '1100x', autoplay: true, controls: true, muted: true, alt: alt
+        }}
+      </template>
+      <noscript>
+        {% liquid
+          assign autoplay = false
+          assign muted = false
+          if section_st.autoplay
+            assign autoplay = true
+            assign muted = true
+          endif
+        %}
+        {{
+          section_st.video_local
+          | video_tag: image_size: '1100x', autoplay: autoplay, controls: true, muted: muted, alt: alt
+        }}
+      </noscript>
+      {%- if section_st.autoplay -%}
+        </video-local>
+      {%- else -%}
+        </video-local-play>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.video.name",
@@ -113,7 +276,7 @@
       "info": "t:sections.video.settings.video_local.info"
     },
     {
-      "type": "video",
+      "type": "image_picker",
       "id": "video_poster",
       "label": "t:sections.video.settings.video_poster.label"
     },
