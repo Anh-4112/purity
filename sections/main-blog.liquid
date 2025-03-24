@@ -1,3 +1,135 @@
+{{ 'carousel.css' | asset_url | stylesheet_tag }}
+{% liquid
+  assign section_st = section.settings
+  assign aspect_ratio = '1/1'
+  case section_st.image_ratio
+    when 'adapt'
+      assign aspect_ratio = 'adapt'
+    when 'square'
+      assign aspect_ratio = '1/1'
+    when 'portrait'
+      assign aspect_ratio = '3/4'
+    else
+      assign aspect_ratio = '4/3'
+  endcase
+
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+
+  assign column_gap_slide = 0
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 30
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 10
+  endif
+
+  assign post_text_alignment = ''
+  if section_st.post_text_alignment == 'left'
+    assign post_text_alignment = 'flex-start'
+  elsif section_st.post_text_alignment == 'center'
+    assign post_text_alignment = 'justify-content-center'
+  else
+    assign post_text_alignment = 'flex-end'
+  endif
+
+  assign active = ''
+  if blog.url contains request.path
+    assign active = 'active'
+  endif
+
+  assign pagination = section_st.pagination_type
+  assign scroll_animation = settings.scroll_animation
+%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+{%- endcapture -%}
+{%- capture col_style -%}
+  --col-desktop: {{ section_st.post_per_row_desktop }};--col-number: 1;--col-tablet: 2;
+  {% if column_gap_slide < 20 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ section_st.items_per_row_mobile }}
+{%- endcapture -%}
+
+<div
+  class="main-blog section section color-{{ section_st.color_scheme }} gradient"
+  id="main-items"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }}">
+    {%- if blog.articles.size > 0 -%}
+      {%- paginate blog.articles by section_st.maximum_posts_to_show -%}
+        <div class="section-header text-{{ section_st.text_alignment }}{% if section_st.text_alignment != 'center' %} flex wrap{% endif %}{% if section_st.text_alignment == 'right' %} row-reverse{% endif %}">
+          {%- if section_st.title != blank -%}
+            <h2 class="heading-letter-spacing cart__title">
+              {{ section_st.title }}
+            </h2>
+          {%- endif -%}
+          {%- if section_st.show_all_tags -%}
+            <ul class="blog-tags-list flex wrap justify-content-{{ section_st.text_alignment }}">
+              <li class="post-tags">
+                <a
+                  href="{{ blog.url }}"
+                  class="blog-tag-list {{ active }}"
+                >
+                  {{- 'blogs.article.label_all' | t -}}
+                </a>
+              </li>
+              {%- for tag in blog.all_tags -%}
+                <li class="post-tags">
+                  <a
+                    href="{{ blog.url }}/tagged/{{ tag | handle }}"
+                    class="blog-tag-list{% if current_tags contains tag %} active{% endif %}"
+                  >
+                    {{- tag -}}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+        <div
+          class="grid-cols"
+          style="{{ col_style | strip | strip_newlines }}"
+          id="section__content-items"
+        >
+          {%- for article in blog.articles limit: section_st.maximum_posts_to_show -%}
+            <div class="blog-articles__article article text-{{ section_st.post_text_alignment }}">
+              {% render 'article-card',
+                article: article,
+                media_aspect_ratio: aspect_ratio,
+                show_image: true,
+                show_date: section_st.show_date,
+                show_author: section_st.show_author,
+                show_excerpt: section_st.show_excerpt,
+                show_cate: section_st.show_category,
+                show_tags: section_st.show_tags,
+                customClass: scroll_animation,
+                indexFor: forloop.index,
+                class: post_text_alignment
+              %}
+            </div>
+          {%- endfor -%}
+        </div>
+        {%- if paginate.pages > 1 -%}
+          {%- render 'pagination',
+            paginate: paginate,
+            section_st: section.settings,
+            anchor: '',
+            pagination: pagination
+          -%}
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- else -%}
+      <p>{{ 'blogs.article.empty' | t }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.main-blog.name",
