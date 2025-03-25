@@ -217,7 +217,7 @@
           </a>
           {%- if product_show_rate and disable_rate != true -%}
             {%- liquid
-              render 'review', review_star: true, product: card_product
+              render 'review', review_star: true, product: card_product,scope: 'item'
             -%}
           {%- endif -%}
           {% if disable_price != true %}

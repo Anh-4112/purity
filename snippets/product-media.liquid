@@ -36,7 +36,7 @@
         {% endif %}
       {%- endcapture -%}
       <div
-        class="media-gallery__external-video{{ class }}"
+        class="hover-action media-gallery__external-video rounded{{ class }}"
         style="--aspect-ratio: {{ ratio }}"
       >
         {% if thumbnail == true %}
@@ -68,7 +68,7 @@
         {%- endif -%}
       {%- endcapture -%}
       <div
-        class="media-gallery__local-video{{ class }} rounded w-full"
+        class="hover-action media-gallery__local-video{{ class }} w-full"
         style="--aspect-ratio: {{ ratio }}"
       >
         {%- liquid
@@ -89,7 +89,7 @@
             height="22"
             viewBox="0 0 22 22"
             fill="none"
-            class="absolute product_media-model-icon rounded-3"
+            class="absolute product_media-model-icon rounded-3 left-0 top-0"
           >
             <rect width="22" height="22" rx="2" fill="#111111"></rect>
             <path d="M14.7181 10.4268L9.07977 6.13623C8.87285 5.97921 8.59817 5.95557 8.37137 6.07759C8.14277 6.19866 8 6.44459 8 6.71039V15.2887C8 15.5573 8.14277 15.8023 8.37137 15.9234C8.46805 15.9745 8.57377 16 8.68039 16C8.81954 16 8.9605 15.9537 9.07977 15.8619L14.7181 11.5751C14.8961 11.438 15 11.2261 15 11.001C15.0009 10.7721 14.8943 10.5611 14.7181 10.4268Z" fill="white"></path>
@@ -110,7 +110,7 @@
       </div>
     {%- when 'model' -%}
       <div
-        class="media-gallery__model rounded {{ class }}"
+        class="hover-action media-gallery__model rounded-10 {{ class }}"
         {% if thumbnail == true %}
           style="--aspect-ratio: {{ ratio }}"
         {% endif %}
@@ -129,7 +129,7 @@
               style="--aspect-ratio: {{ ratio }}"
             >
               <button id="Deferred-Poster-Modal-{{ featured_media.id }}" class="deferred-media__poster" type="button">
-                <span class="deferred-media__poster-button motion-reduce">
+                <span class="deferred-media__poster-button motion-reduce wh-55 bg-white shadow inline-flex content-center absolute z-1 rounded-50 transition">
                   <svg xmlns="http://www.w3.org/2000/svg" width="66" height="65" viewBox="0 0 66 65" fill="none">
                     <rect x="0.5" y="0.000976562" width="65" height="65" rx="32.5" fill="white"/>
                     <path d="M42.1 25.7451L34.4093 21.3697C33.9837 21.1281 33.5008 21.001 33.0093 21.001C32.5178 21.001 32.035 21.1281 31.6093 21.3697L23.9 25.7451C23.4741 25.9868 23.1204 26.3345 22.8747 26.7532C22.6289 27.1718 22.4997 27.6467 22.5 28.1301V36.8719C22.4997 37.3552 22.6289 37.8301 22.8747 38.2488C23.1204 38.6675 23.4741 39.0151 23.9 39.2568L31.6093 43.6323C32.035 43.8738 32.5178 44.001 33.0093 44.001C33.5008 44.001 33.9837 43.8738 34.4093 43.6323L42.1 39.2568C42.5259 39.0151 42.8796 38.6675 43.1253 38.2488C43.3711 37.8301 43.5003 37.3552 43.5 36.8719V28.1301C43.5003 27.6467 43.3711 27.1718 43.1253 26.7532C42.8796 26.3345 42.5259 25.9868 42.1 25.7451ZM32.5427 42.0454L24.8333 37.6699C24.6909 37.5891 24.5727 37.4727 24.4908 37.3326C24.4088 37.1924 24.366 37.0335 24.3667 36.8719V28.1301C24.366 27.9685 24.4088 27.8095 24.4908 27.6694C24.5727 27.5292 24.6909 27.4129 24.8333 27.332L32.5427 22.9566C32.6849 22.8773 32.8458 22.8362 33.0093 22.8373C33.1728 22.8362 33.3338 22.8773 33.476 22.9566L41.1667 27.332C41.3151 27.4153 41.4352 27.5397 41.512 27.6898L34.1573 31.8359C33.8039 32.0429 33.512 32.3373 33.3105 32.6898C33.1091 33.0423 33.0052 33.4405 33.0093 33.8448V42.183C32.8447 42.1749 32.6846 42.1277 32.5427 42.0454Z" fill="#111111"/>
@@ -162,7 +162,7 @@
       </div>
     {%- else -%}
       <div
-        class="media-gallery__image rounded{{ class }}"
+        class="hover-action media-gallery__image rounded{{ class }}"
         data-href="{{ featured_media.preview_image | image_url }}"
         data-position="{{ media_position }}"
         data-media-id="{{ section.id }}-{{ image.id }}"
@@ -175,7 +175,9 @@
             <button
               type="button"
               is="media-zoom-button"
+              class="btn-reset blur absolute top-15{% if settings.rtl %} left-15{% else %} right-15{% endif %}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center shadow bg-white wh-55 invisible show-on-hover transition"
               aria-label="{{ 'products.product.zoom_button' | t }}"
+              style="--opacity: 0.3"
               tabindex="-1"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -208,7 +210,7 @@
           {% endif %}
         {%- endcapture -%}
         <div
-          class="media-gallery__external-video{{ class }}"
+          class="hover-action media-gallery__external-video rounded{{ class }}"
           style="--aspect-ratio: {{ ratio }}"
         >
           {% if thumbnail == true %}
@@ -240,7 +242,7 @@
           {%- endif -%}
         {%- endcapture -%}
         <div
-          class="media-gallery__local-video{{ class }}"
+          class="hover-action media-gallery__local-video rounded-10{{ class }}"
           style="--aspect-ratio: {{ ratio }}"
         >
           {%- liquid
@@ -261,7 +263,7 @@
               height="22"
               viewBox="0 0 22 22"
               fill="none"
-              class="absolute product_media-model-icon rounded-3"
+              class="absolute product_media-model-icon rounded-3 left-0 top-0"
             >
               <rect width="22" height="22" rx="2" fill="#111111"></rect>
               <path d="M14.7181 10.4268L9.07977 6.13623C8.87285 5.97921 8.59817 5.95557 8.37137 6.07759C8.14277 6.19866 8 6.44459 8 6.71039V15.2887C8 15.5573 8.14277 15.8023 8.37137 15.9234C8.46805 15.9745 8.57377 16 8.68039 16C8.81954 16 8.9605 15.9537 9.07977 15.8619L14.7181 11.5751C14.8961 11.438 15 11.2261 15 11.001C15.0009 10.7721 14.8943 10.5611 14.7181 10.4268Z" fill="white"></path>
@@ -282,7 +284,7 @@
         </div>
       {%- when 'model' -%}
         <div
-          class="media-gallery__model{{ class }}"
+          class="hover-action media-gallery__model rounded-10 {{ class }}"
           {% if thumbnail == true %}
             style="--aspect-ratio: {{ ratio }}"
           {% endif %}
@@ -290,7 +292,7 @@
           {% if thumbnail == true %}
             {%- assign image_alt = image.alt | default: 'product' | escape -%}
             {% render 'responsive-image', type: 'product', image: image, image_alt: image_alt %}
-            <svg width="22" height="22" fill="none" class="absolute product_media-model-icon rounded-3">
+            <svg width="22" height="22" fill="none" class="absolute left-0 top-0 product_media-model-icon rounded-3">
               <rect width="22" height="22" fill="#111" rx="2"/><path fill="#fff" d="M15.4 8.063 12.104 6.16a1.203 1.203 0 0 0-1.2 0L7.6 8.063A1.198 1.198 0 0 0 7 9.1v3.8a1.194 1.194 0 0 0 .6 1.037l3.304 1.903a1.203 1.203 0 0 0 1.2 0l3.296-1.903A1.198 1.198 0 0 0 16 12.9V9.1a1.193 1.193 0 0 0-.6-1.037Zm-4.096 7.087L8 13.247a.4.4 0 0 1-.2-.347V9.1a.398.398 0 0 1 .2-.347l3.304-1.903a.401.401 0 0 1 .2-.052c.07 0 .139.018.2.052L15 8.753c.064.036.115.09.148.155l-3.152 1.803a1.005 1.005 0 0 0-.492.873v3.626a.437.437 0 0 1-.2-.06Z"/>
             </svg>
           {% else %}
@@ -301,7 +303,7 @@
                 style="--aspect-ratio: {{ ratio }}"
               >
                 <button id="Deferred-Poster-Modal-{{ image.id }}" class="deferred-media__poster" type="button">
-                  <span class="deferred-media__poster-button motion-reduce">
+                  <span class="deferred-media__poster-button motion-reduce wh-55 bg-white shadow inline-flex content-center absolute z-1 rounded-50 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" width="66" height="65" viewBox="0 0 66 65" fill="none">
                       <rect x="0.5" y="0.000976562" width="65" height="65" rx="32.5" fill="white"/>
                       <path d="M42.1 25.7451L34.4093 21.3697C33.9837 21.1281 33.5008 21.001 33.0093 21.001C32.5178 21.001 32.035 21.1281 31.6093 21.3697L23.9 25.7451C23.4741 25.9868 23.1204 26.3345 22.8747 26.7532C22.6289 27.1718 22.4997 27.6467 22.5 28.1301V36.8719C22.4997 37.3552 22.6289 37.8301 22.8747 38.2488C23.1204 38.6675 23.4741 39.0151 23.9 39.2568L31.6093 43.6323C32.035 43.8738 32.5178 44.001 33.0093 44.001C33.5008 44.001 33.9837 43.8738 34.4093 43.6323L42.1 39.2568C42.5259 39.0151 42.8796 38.6675 43.1253 38.2488C43.3711 37.8301 43.5003 37.3552 43.5 36.8719V28.1301C43.5003 27.6467 43.3711 27.1718 43.1253 26.7532C42.8796 26.3345 42.5259 25.9868 42.1 25.7451ZM32.5427 42.0454L24.8333 37.6699C24.6909 37.5891 24.5727 37.4727 24.4908 37.3326C24.4088 37.1924 24.366 37.0335 24.3667 36.8719V28.1301C24.366 27.9685 24.4088 27.8095 24.4908 27.6694C24.5727 27.5292 24.6909 27.4129 24.8333 27.332L32.5427 22.9566C32.6849 22.8773 32.8458 22.8362 33.0093 22.8373C33.1728 22.8362 33.3338 22.8773 33.476 22.9566L41.1667 27.332C41.3151 27.4153 41.4352 27.5397 41.512 27.6898L34.1573 31.8359C33.8039 32.0429 33.512 32.3373 33.3105 32.6898C33.1091 33.0423 33.0052 33.4405 33.0093 33.8448V42.183C32.8447 42.1749 32.6846 42.1277 32.5427 42.0454Z" fill="#111111"/>
@@ -334,7 +336,7 @@
         </div>
       {%- else -%}
         <div
-          class="media-gallery__image{{ class }}"
+          class="hover-action media-gallery__image{{ class }}"
           data-href="{{ image.preview_image | image_url }}"
           data-position="{{ media_position }}"
           data-media-id="{{ section.id }}-{{ image.id }}"
@@ -347,7 +349,9 @@
               <button
                 type="button"
                 is="media-zoom-button"
+                class="btn-reset blur absolute top-15{% if settings.rtl %} left-15{% else %} right-15{% endif %}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center shadow bg-white wh-55 invisible show-on-hover transition"
                 aria-label="{{ 'products.product.zoom_button' | t }}"
+                style="--opacity: 0.3"
                 tabindex="-1"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">

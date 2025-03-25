@@ -261,7 +261,14 @@ textarea {
 }
 :where(
     [style*="--aspect-ratio"]
-      > :is(*:first-child, img, svg, video, picture, picture > *)
+      > :is(
+        *:first-child,
+        img,
+        svg:not(.product_media-model-icon),
+        video,
+        picture,
+        picture > *
+      )
   ) {
   position: absolute;
   top: 0;
@@ -328,7 +335,7 @@ textarea {
   color: var(--color-primary);
 }
 .bg-white {
-  background-color: var(--color-white);
+  background-color: rgba(var(--color-white), var(--opacity, 1));
 }
 .underline {
   text-decoration-line: underline;
@@ -351,6 +358,13 @@ textarea {
 }
 .absolute {
   position: absolute;
+}
+.inset-0 {
+  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
 }
 .inset-x-0 {
   left: 0;
@@ -375,8 +389,14 @@ textarea {
 .opacity-1 {
   opacity: 1;
 }
+.lh-normal {
+  line-height: normal;
+}
 .shadow {
-  box-shadow: var(--shadow, 0px 30px 0px rgba(0, 0, 0, 0.08));
+  box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.05);
+}
+.blur {
+  backdrop-filter: blur(var(--blur, 3px));
 }
 :where(.btn),
 :is(
@@ -402,6 +422,7 @@ textarea {
   position: relative;
   overflow: hidden;
   border: 1px solid var(--btn-border-color);
+  text-decoration: none;
 }
 :where(
     .btn-primary,
@@ -415,16 +436,16 @@ textarea {
   --btn-border-color: var(--btn-bg);
 }
 .btn-outline {
-  --btn-bg: var(--color-white);
+  --btn-bg: rgb(var(--color-white));
   --btn-color: var(--btn-outline-color);
   --btn-border-color: var(--btn-outline-border-color);
 }
 .btn-white {
-  --btn-bg: var(--color-white);
+  --btn-bg: rgb(var(--color-white));
   --btn-color: var(--btn-outline-color);
-  --btn-border-color: var(--color-white);
+  --btn-border-color: rgb(var(--color-white));
 }
-.btn-reset {
+:where(.btn-reset) {
   background: transparent;
   border: 0;
   padding: 0;
@@ -547,6 +568,9 @@ strong {
 }
 :where(.rounded-50) {
   border-radius: 50%;
+}
+:where(.rounded-10) {
+  border-radius: 10px;
 }
 .border-0 {
   border: 0;
@@ -681,6 +705,13 @@ strong {
 .mb-custom {
   margin-bottom: calc(var(--space-bottom) * 1px);
 }
+
+.me-3 {
+  margin-inline-end: 3px;
+}
+.me-10 {
+  margin-inline-end: 1rem;
+}
 .overflow-hidden {
   overflow: hidden;
 }
@@ -741,6 +772,12 @@ body:not(.template-index) .transparent-logo {
 }
 .color-inherit {
   color: inherit;
+}
+.color-dark {
+  color: var(--color-dark);
+}
+.grey-color {
+  color: var(--color-grey);
 }
 .cart-count {
   width: 1.9rem;
