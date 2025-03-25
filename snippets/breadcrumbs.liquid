@@ -1,99 +1,80 @@
 {%- unless template == 'index' or template == '404' -%}
-  {%- style -%}
-    /* Breadcrumb */
-    .bls__breadcrumb-item a {
-      text-decoration: none;
-    }
-    .color-light .bls__breadcrumb-list {
-      --accent-color-second: transparent;
-      border: 1px solid var(--color-white);
-    }
-
-    .bls__breadcrumb-item:not(:last-child)::after {
-      content: '';
-      display: inline-block;
-      width: 20px;
-      height: 1px;
-      margin: 0 10px;
-      background-color: var(--border-color);
-    }
-
-    .bls__breadcrumb-item:last-child * {
-      color: var(--text-color);
-    }
-  {%- endstyle -%}
   {%- assign t = template | split: '.' | first -%}
   <nav class="breadcrumbs flex {{ class }}" role="navigation" aria-label="breadcrumbs">
-    <ol class="bls__breadcrumb-list list-unstyled my-0 p-0 fs-small flex flex-wrap justify-content-center">
-      <li class="bls__breadcrumb-item word-break inline-flex align-center">
-        <a class="bls__breadcrumb-link remove-underline heading-color" href="{{ routes.root_url }}">
+    <ol class="navigation__breadcrumb-list flex wrap">
+      <li class="bls__breadcrumb-item">
+        <a
+          class="navigation__breadcrumb-link"
+          href="{{ routes.root_url }}"
+          aria-label="{{- 'general.breadcrumb.home' | t -}}"
+        >
           {{- 'general.breadcrumb.home' | t -}}
         </a>
       </li>
       {%- case t -%}
         {%- when 'page' -%}
-          <li class="bls__breadcrumb-item word-break inline-flex align-center-flex align-center">
-            <span class="bls__breadcrumb-link remove-underline heading-color" aria-current="page">
+          <li class="navigation__breadcrumb-item">
+            <span class="navigation__breadcrumb-link" aria-current="page">
               {{- page.title -}}
             </span>
           </li>
         {%- when 'product' -%}
           {%- if collection.url -%}
-            <li class="bls__breadcrumb-item word-break inline-flex align-center">
+            <li class="navigation__breadcrumb-item">
               {{ collection.title | link_to: collection.url }}
             </li>
           {%- endif -%}
-          <li class="bls__breadcrumb-item word-break inline-flex align-center">
-            <span class="bls__breadcrumb-link remove-underline heading-color" aria-current="page">
+          <li class="navigation__breadcrumb-item">
+            <span class="navigation__breadcrumb-link" aria-current="page">
               {{- product.title -}}
             </span>
           </li>
         {%- when 'collection' and collection.handle -%}
           {%- if current_tags -%}
-            <li class="bls__breadcrumb-item word-break inline-flex align-center">
+            <li class="navigation__breadcrumb-item">
               {{ collection.title | link_to: collection.url }}
             </li>
-            <li class="bls__breadcrumb-item word-break inline-flex align-center">
-              <span class="bls__breadcrumb-link remove-underline heading-color" aria-current="page">
+            <li class="navigation__breadcrumb-item">
+              <span class="navigation__breadcrumb-link" aria-current="page">
                 {{- current_tags | join: ' + ' -}}
               </span>
             </li>
           {%- else -%}
-            <li class="bls__breadcrumb-item word-break inline-flex align-center">
-              <span class="bls__breadcrumb-link remove-underline heading-color" aria-current="page">
+            <li class="navigation__breadcrumb-item">
+              <span class="navigation__breadcrumb-link" aria-current="page">
                 {{- collection.title -}}
               </span>
             </li>
           {%- endif -%}
         {%- when 'blog' -%}
           {%- if current_tags -%}
-            <li class="bls__breadcrumb-item word-break inline-flex align-center">
+            <li class="navigation__breadcrumb-item">
               {{ blog.title | link_to: blog.url }}
             </li>
-            <li class="bls__breadcrumb-item word-break inline-flex align-center">
-              <span class="bls__breadcrumb-link remove-underline heading-color" aria-current="page">
+            <li class="navigation__breadcrumb-item">
+              <span class="navigation__breadcrumb-link" aria-current="page">
                 {{- current_tags | join: ' + ' -}}
               </span>
             </li>
           {%- else -%}
-            <li class="bls__breadcrumb-item word-break inline-flex align-center">
-              <span class="bls__breadcrumb-link remove-underline heading-color" aria-current="page">
+            <li class="navigation__breadcrumb-item">
+              <span class="navigation__breadcrumb-link" aria-current="page">
                 {{- blog.title -}}
               </span>
             </li>
           {%- endif -%}
         {%- when 'article' -%}
-          <li class="bls__breadcrumb-item word-break inline-flex align-center">
+          <li class="navigation__breadcrumb-item">
             {{ blog.title | link_to: blog.url }}
           </li>
-          <li class="bls__breadcrumb-item word-break inline-flex align-center">
-            <span class="bls__breadcrumb-link remove-underline heading-color" aria-current="page">
+          <li class="navigation__breadcrumb-item">
+            <span class="navigation__breadcrumb-link" aria-current="page">
               {{- article.title -}}
             </span>
           </li>
         {%- else -%}
-          <li class="bls__breadcrumb-item word-break inline-flex align-center">
-            <span class="bls__breadcrumb-link remove-underline heading-color" aria-current="page">
+          <li class="navigation__breadcrumb-item">
+            <span class="navigation__breadcrumb-link" aria-current="page">
               {{- page_title -}}
             </span>
           </li>
