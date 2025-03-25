@@ -104,7 +104,7 @@ class ButtonCloseModel extends HTMLButtonElement {
     global.eventModal(this, "close");
     const details = this.closest('.details-header-menu');
     if (details) {
-      details.classList.remove("open-submenu"),
+      details.classList.remove("detail-open"),
       this.removeAttribute("open"),
       this.firstElementChild.removeAttribute("open"),
       this.lastElementChild.removeAttribute("open")
@@ -177,7 +177,7 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         document.addEventListener("click", this.detectClickOutsideListener),
         document.addEventListener("keydown", this.detectEscKeyboardListener),
         document.addEventListener("focusout", this.detectFocusOutListener),
-        this.classList.add("open-submenu"))
+        this.classList.add("detail-open"))
       : (megaMenuCount.set(
           DetailsMegaMenu,
           megaMenuCount.get(DetailsMegaMenu) - 1
@@ -187,7 +187,7 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         document.removeEventListener("click", this.detectClickOutsideListener),
         document.removeEventListener("keydown", this.detectEscKeyboardListener),
         document.removeEventListener("focusout", this.detectFocusOutListener),
-        this.classList.remove("open-submenu"),
+        this.classList.remove("detail-open"),
         this.open || setTimeout(() => this.removeAttribute("open"), 400));
   }
   detectClickOutside(event) {
@@ -308,12 +308,14 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
         this.content,
         true ? { height: "auto"} : { height: 0 },
         { duration: 0.3 } ),
+        this.classList.add("detail-open"),
         this.setAttribute("open", ""))
       : (Motion.animate(
         this.content,
         false ? { height: "auto"} : { height: 0 },
         { duration: 0.3 } ),
-        this.removeAttribute("open"))
+        this.classList.remove("detail-open"),
+        this.open || setTimeout(() => this.removeAttribute("open"), 300));
   }
 }
 customElements.define("collapsible-row", CollapsibleRowDetails, {
