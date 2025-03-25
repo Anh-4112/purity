@@ -1,4 +1,3 @@
-{{ 'carousel.css' | asset_url | stylesheet_tag }}
 {% liquid
   assign section_st = section.settings
   assign aspect_ratio = '1/1'
@@ -75,6 +74,7 @@
                 <a
                   href="{{ blog.url }}"
                   class="blog-tag-list {{ active }}"
+                  aria-label="{{ 'blogs.article.label_all' | t }}"
                 >
                   {{- 'blogs.article.label_all' | t -}}
                 </a>
@@ -84,6 +84,7 @@
                   <a
                     href="{{ blog.url }}/tagged/{{ tag | handle }}"
                     class="blog-tag-list{% if current_tags contains tag %} active{% endif %}"
+                    aria-label="{{ 'blogs.article.tags' | t }}"
                   >
                     {{- tag -}}
                   </a>
