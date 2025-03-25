@@ -1,3 +1,89 @@
+{%- liquid
+  assign section_st = section.settings
+
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+
+  assign background_image = section_st.image
+  assign use_collection_image = section_st.use_collection_image
+
+  assign image_background = background_image
+  if use_collection_image and collection.image != blank
+    assign image_background = collection.image
+  endif
+  assign alt = image_background.alt | default: collection.title | escape
+  assign image_height = section_st.image_height
+-%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--overlay-opacity: {{ section_st.image_opacity }}%;
+{%- endcapture -%}
+
+<div
+  class="section section__page-heading color-{{ section_st.color_scheme }} gradient"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }} flex">
+    {% if use_collection_image or background_image != blank %}
+      <div
+        class="banner__media absolute inset-0 h-{{ image_height }}"
+        style="--aspect-ratio: {%- if image_height == 'adapt' and use_collection_image and collection.image -%}{{ collection.image.aspect_ratio }}{% elsif section_st.image != blank and image_height == 'adapt' %}{{ section_st.image.aspect_ratio }}{%- else -%} 16/9{%- endif -%}"
+      >
+        {%- liquid
+          assign alt = collection.image.alt | default: collection.title | escape
+          assign width = collection.image.width
+          assign height = collection.image.height
+        -%}
+        {%- if use_collection_image and collection.image -%}
+          {{
+            collection.image
+            | image_url: width: 1500
+            | image_tag:
+              loading: 'lazy',
+              sizes: '100vw',
+              widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+              height: height,
+              width: width,
+              alt: alt
+          }}
+        {%- elsif background_image != blank -%}
+          {{
+            section_st.image
+            | image_url: width: 1500
+            | image_tag: loading: 'lazy', sizes: '100vw', widths: '165, 360, 535, 750, 1070, 1500', alt: alt
+          }}
+        {%- else -%}
+          {% render 'placeholder-render' | type: "collection" %}
+        {%- endif -%}
+      </div>
+    {% endif %}
+    <div class="heading-content w-full flex z-2 relative {{ section_st.desktop_content_position }}">
+      <div class="flex column">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'heading' -%}
+              {% if collection.title != blank %}
+                <h2 class="heading-title">
+                  {{ collection.title }}
+                </h2>
+              {% endif %}
+            {%- when 'description' -%}
+              {% if collection.description != blank %}
+                <div class="heading-description rte">
+                  {{ collection.description }}
+                </div>
+              {% endif %}
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.main-collection-banner.name",
@@ -87,11 +173,11 @@
     {
       "type": "select",
       "id": "image_height",
-      "default": "adapt-image",
+      "default": "adapt",
       "label": "t:sections.main-collection-banner.settings.image_height.label",
       "options": [
         {
-          "value": "adapt-image",
+          "value": "adapt",
           "label": "t:sections.main-collection-banner.settings.image_height.option__1"
         },
         {
