@@ -15,7 +15,7 @@
   <div
     class="w-full color-{{ block_st.color_scheme }} gradient flex relative{% if section_st.equal_height_adjustment %} h-full{% else %} h-content{% endif %}{% if block_st.content_position != 'overlay' %} flex column{% endif %}"
     style="
-      {% if block_st.image != blank %}
+      {% if block_st.image != blank and block_st.content_position == 'overlay' %}
         --aspect-ratio: {{ block_st.image.aspect_ratio }};
       {% elsif block_st.content_position == 'overlay' and block_st.image == blank %}
         --aspect-ratio: 3/2;
@@ -29,7 +29,7 @@
         {%- assign alt = block_st.image.alt -%}
       {%- endif -%}
       <div
-        class="{% if block_st.content_position == 'overlay' %}banner banner__media rounded media absolute inset-0{% endif %}{% if block_st.mobile_image != blank %} d-none block-md{% endif %}{% if block_st.image == blank and block_st.content_position == 'overlay'%} placeholder absolute inset-0{% endif %}"
+        class="{% if block_st.content_position == 'overlay' %}banner banner__media rounded media absolute inset-0 {% endif %}{% if block_st.mobile_image != blank %}d-none block-md{% endif %}{% if block_st.image == blank and block_st.content_position == 'overlay'%} placeholder absolute inset-0{% endif %}"
         style="{% if block_st.content_position == 'overlay' %}--aspect-ratio: {{ block.settings.image.aspect_ratio }};{% endif %}"
       >
         {{
