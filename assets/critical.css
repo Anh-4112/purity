@@ -248,11 +248,18 @@ textarea {
   width: 4rem;
   height: 4rem;
 }
+.wh-55{
+  width: 5.5rem;
+  height: 5.5rem;
+}
 .w-full {
   width: 100%;
 }
 .w-custom {
   width: var(--custom-width);
+}
+.h-custom {
+  height: var(--custom-height);
 }
 .w-content {
   width: fit-content;
@@ -260,6 +267,14 @@ textarea {
 @media screen and (max-width: 767.98px) {
   [style*="--aspect-ratio-mb"]::before {
     padding-top: calc(100% / (0 + var(--aspect-ratio-mb, 16 / 9)));
+  }
+}
+@media screen and (max-width: 1024.98px) {
+  .overflow-visible-mb {
+    overflow: visible;
+  }
+  .overflow-hidden-mb {
+    overflow: hidden;
   }
 }
 :where(
@@ -332,6 +347,9 @@ textarea {
 }
 .bg-white {
   background-color: var(--color-white);
+}
+.bg-dark {
+  background-color: var(--color-dark);
 }
 .underline {
   text-decoration-line: underline;
@@ -573,6 +591,14 @@ strong {
   flex: 0 0 auto;
   width: calc((100% - var(--gap, 0px) * calc(var(--col) - 1)) / var(--col));
 }
+.cols {
+  margin-left: calc(-.5* var(--col-gap, var(--bs-gutter-x)));
+  margin-right: calc(-.5* var(--col-gap, var(--bs-gutter-x)));
+}
+.cols > * {
+  padding-inline-start: calc(var(--col-gap, var(--bs-gutter-x))* .5);
+  padding-inline-end: calc(var(--col-gap, var(--bs-gutter-x))* .5);
+}
 .row-gap-0 {
   row-gap: 0;
 }
@@ -592,6 +618,10 @@ strong {
 }
 :where(.gap-20) {
   --col-gap: 2rem;
+  gap: var(--col-gap);
+}
+:where(.gap-25) {
+  --col-gap: 2.5rem;
   gap: var(--col-gap);
 }
 :where(.gap-30) {
@@ -794,6 +824,9 @@ body:not(.template-index) .transparent-logo {
 .bottom-right {
   align-items: flex-end;
   justify-content: flex-end;
+}
+.lh-global {
+  line-height: var(--body-line-height);
 }
 .fs-small {
   font-size: calc(var(--body-font-size) - 2px);
