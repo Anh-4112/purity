@@ -261,6 +261,9 @@ textarea {
 .h-custom {
   height: var(--custom-height);
 }
+.w-content {
+  width: fit-content;
+}
 @media screen and (max-width: 767.98px) {
   [style*="--aspect-ratio-mb"]::before {
     padding-top: calc(100% / (0 + var(--aspect-ratio-mb, 16 / 9)));
@@ -652,6 +655,9 @@ strong {
 .block {
   display: block;
 }
+.d-none {
+  display: none;
+}
 .inline-block {
   display: inline-block;
 }
@@ -848,4 +854,30 @@ body:not(.template-index) .transparent-logo {
     ),
     calc(var(--font-size) * 1px)
   );
+}
+:where([style*="--aspect-ratio"]) {
+  position: relative;
+  overflow: hidden;
+}
+[style*="--aspect-ratio"]:before {
+  content: "";
+  height: 0;
+  display: block;
+  padding-top: calc(100% / (0 + var(--aspect-ratio, 16/9)));
+  pointer-events: none;
+}
+:is(.grid-cols) {
+  --col: var(--col-number);
+  display: grid;
+  grid-template-columns: repeat(
+    var(--col),
+    calc((100% - var(--col-gap, 0px) * calc(var(--col) - 1)) / var(--col))
+  );
+  gap: var(--row-gap, var(--col-gap)) var(--col-gap, 0px);
+}
+@media screen and (min-width: 1025px) {
+  :is(.grid-cols, .flex-cols) {
+    --col: var(--col-desktop, var(--col-desktop-small));
+    --col-gap: var(--col-gap-desktop, 20px);
+  }
 }
