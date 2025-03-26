@@ -624,3 +624,95 @@ class VideoLocalPlay extends VideoLocal {
   }
 }
 customElements.define("video-local-play", VideoLocalPlay);
+class PaginateLoadmore extends HTMLElement {
+  constructor() {
+    super();
+    this.initLoadMore();
+    if (this.classList.contains('collection-infinite-scroll')) {
+      this.querySelector('a').addEventListener(
+        'click',
+        (e) => {
+          for (var item of document.querySelectorAll(
+            '.sec__collections-list .collection-item.grid-custom-item'
+          )) {
+            item.classList.remove('hidden');
+          }
+          this.remove();
+        },
+        false
+      );
+    }
+  }
+  initLoadMore() {
+    this.querySelectorAll('.actions-loadmore').forEach((loadMore) => {
+      var _this = this;
+      if (loadMore.classList.contains('infinit-scrolling')) {
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach((entry) => {
+              if (entry.intersectionRatio === 1) {
+                _this.loadMoreItem(loadMore);
+              }
+            });
+          },
+          { threshold: 1.0 }
+        );
+        observer.observe(loadMore);
+      } else {
+        loadMore.addEventListener(
+          'click',
+          (event) => {
+            event.preventDefault();
+            const target = event.currentTarget;
+            _this.loadMoreItem(target);
+          },
+          false
+        );
+      }
+    });
+  }
+  loadMoreItem(target) {
+    const loadMore_url = target.getAttribute('href');
+    const _this = this;
+    _this.toggleLoading(target, true);
+    fetch(`${loadMore_url}`)
+      .then((response) => {
+        if (!response.ok) {
+          var error = new Error(response.status);
+          throw error;
+        }
+        return response.text();
+      })
+      .then((responseText) => {
+        const resultNodes = parser.parseFromString(responseText, 'text/html');
+        const resultNodesHtml = resultNodes.querySelectorAll(
+          '.loadmore-lists .loadmore-item'
+        );
+        resultNodesHtml.forEach((prodNode) =>
+          document.querySelector('.loadmore-lists').appendChild(prodNode)
+        );
+        const load_more = resultNodes.querySelector('.actions-loadmore');
+        document.querySelector('.load-more-bar').innerHTML =
+          resultNodes.querySelector('.load-more-bar').innerHTML;
+        if (load_more) {
+          target.setAttribute('href', load_more.getAttribute('href'));
+        } else {
+          target.remove();
+        }
+        _this.toggleLoading(target, false);
+      })
+      .catch((error) => {
+        throw error;
+      })
+      .finally(() => {
+        initLazyloadItem();
+      });
+  }
+  toggleLoading(event, loading) {
+    if (event) {
+      const method = loading ? 'add' : 'remove';
+      event.classList[method]('loading');
+    }
+  }
+}
+customElements.define('loadmore-button', PaginateLoadmore);
