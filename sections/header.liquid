@@ -428,7 +428,7 @@
       -%}
         <div class="header__action flex flex-end align-center gap" style="--gap: 7px;">
           {% if section_st.show_language or section_st.show_currency %}
-            <div class="desktop-localization-wrapper hidden flex-1025 wrap gap-15">
+            <div class="desktop-localization-wrapper hidden flex-1025 align-center gap-15">
               {% if section_st.show_currency %}
                 {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
               {% endif %}
@@ -887,32 +887,19 @@
               or section_st.show_language
               or section_st.show_currency
             -%}
-              <div class="navigation__footer sticky bottom-0 left-0 right-0 flex column gap-15 p-24 border-top">
-                <div class="align-center justify-content-end d-flex gap-10 space-between">
-                  {% if section_st.show_language or section_st.show_currency %}
-                    <div class="desktop-localization-wrapper last-r-0 pr-30 d-flex gap-15 align-center">
-                      {% if section_st.show_currency %}
-                        {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
-                      {% endif %}
-                      {% if section_st.show_language %}
-                        {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
-                      {% endif %}
-                    </div>
-                  {% endif %}
-                  {%- if section_st.show_account -%}
-                    <a
-                      href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                      class="btn btn-primary block text-center mt-20 mb-15"
-                      aria-label="{% if customer %}{{ 'customer.account.title' | t }}{% else %}{{ 'customer.login_page.title' | t }}{% endif %}"
-                    >
-                      {% if customer %}
-                        {{ 'customer.account.title' | t }}
-                      {% else %}
-                        {{ 'customer.login_page.title' | t }}
-                      {% endif %}
-                    </a>
-                    <div class="text-center">
-                      {%- if customer -%}
+              <div class="disclosure__footer sticky bottom-0 left-0 right-0 flex column gap-15 p-24 border-top">
+                  <div class="align-center justify-content-end d-flex gap-10 space-between">
+                    {% if section_st.show_language or section_st.show_currency %}
+                      <div class="desktop-localization-wrapper disclosure__footer last-r-0 pr-30 d-flex gap-15 align-center">
+                        {% if section_st.show_currency %}
+                          {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
+                        {% endif %}
+                        {% if section_st.show_language %}
+                          {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                    {%- if section_st.show_account -%}
                         <a
                           href="{{ routes.account_logout_url }}"
                           class="btn btn-outline block text-center"

@@ -104,7 +104,7 @@ class ButtonCloseModel extends HTMLButtonElement {
     global.eventModal(this, "close");
     const details = this.closest('.details-header-menu');
     if (details) {
-      details.classList.remove("open-submenu"),
+      details.classList.remove("detail-open"),
       this.removeAttribute("open"),
       this.firstElementChild.removeAttribute("open"),
       this.lastElementChild.removeAttribute("open")
@@ -177,7 +177,7 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         document.addEventListener("click", this.detectClickOutsideListener),
         document.addEventListener("keydown", this.detectEscKeyboardListener),
         document.addEventListener("focusout", this.detectFocusOutListener),
-        this.classList.add("open-submenu"))
+        this.classList.add("detail-open"))
       : (megaMenuCount.set(
           DetailsMegaMenu,
           megaMenuCount.get(DetailsMegaMenu) - 1
@@ -187,7 +187,7 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         document.removeEventListener("click", this.detectClickOutsideListener),
         document.removeEventListener("keydown", this.detectEscKeyboardListener),
         document.removeEventListener("focusout", this.detectFocusOutListener),
-        this.classList.remove("open-submenu"),
+        this.classList.remove("detail-open"),
         this.open || setTimeout(() => this.removeAttribute("open"), 400));
   }
   detectClickOutside(event) {
@@ -308,12 +308,14 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
         this.content,
         true ? { height: "auto"} : { height: 0 },
         { duration: 0.3 } ),
+        this.classList.add("detail-open"),
         this.setAttribute("open", ""))
       : (Motion.animate(
         this.content,
         false ? { height: "auto"} : { height: 0 },
         { duration: 0.3 } ),
-        this.removeAttribute("open"))
+        this.classList.remove("detail-open"),
+        this.open || setTimeout(() => this.removeAttribute("open"), 300));
   }
 }
 customElements.define("collapsible-row", CollapsibleRowDetails, {
@@ -521,3 +523,106 @@ class QuantityInput extends HTMLElement {
 }
 
 customElements.define('quantity-input', QuantityInput);
+
+class VideoSection extends HTMLElement {
+  constructor() {
+    super();
+    this.thumb = this.querySelector(".video-thumbnail");
+    this.video_iframe = this.querySelector(".video-has-bg iframe");
+    this.init();
+  }
+
+  init() {
+    if (this.video_iframe) {
+      this.video_iframe.addEventListener("load", () => {
+        if (this.thumb) {
+          this.thumb.remove();
+        }
+      });
+    }
+    const handleIntersection = (entries, observer) => {
+      if (!entries[0].isIntersecting) return;
+      observer.unobserve(this);
+      const videos = this.querySelectorAll("iframe");
+      videos.forEach((video) => {
+        const dataSrc = video.dataset.src;
+        if (dataSrc) {
+          video.src = dataSrc;
+          video.removeAttribute("data-src");
+        }
+      });
+    };
+    new IntersectionObserver(handleIntersection.bind(this), {
+      rootMargin: "0px 0px 200px 0px",
+    }).observe(this);
+  }
+}
+customElements.define("video-section", VideoSection);
+class VideoLocal extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    setTimeout(() => {
+      this.loadContent();
+    }, 100);
+  }
+
+  loadContent() {
+    const _this = this;
+    if (!this.getAttribute("loaded") && this.querySelector("template")) {
+      const content = document.createElement("div");
+      content.appendChild(
+        this.querySelector("template").content.firstElementChild.cloneNode(true)
+      );
+      this.setAttribute("loaded", true);
+      const deferredElement = this.appendChild(content.querySelector("video"));
+      const alt = deferredElement.getAttribute("alt");
+      const img = deferredElement.querySelector("img");
+      if (alt && img) {
+        img.setAttribute("alt", alt);
+      }
+      this.thumb = this.querySelector(".video-thumbnail");
+      if (this.thumb) {
+        this.thumb.remove();
+      }
+      if (
+        deferredElement.nodeName == "VIDEO" &&
+        deferredElement.getAttribute("autoplay")
+      ) {
+        deferredElement.play();
+      }
+    }
+
+    const handleIntersection = (entries, observer) => {
+      if (!entries[0].isIntersecting) return;
+      observer.unobserve(_this);
+      const videos = _this.querySelectorAll("video");
+      videos.forEach((video) => {
+        const dataSrc = video.dataset.src;
+        if (dataSrc) {
+          video.src = dataSrc;
+          video.removeAttribute("data-src");
+        }
+      });
+    };
+    new IntersectionObserver(handleIntersection.bind(_this), {
+      rootMargin: "0px 0px 200px 0px",
+    }).observe(_this);
+  }
+}
+customElements.define("video-local", VideoLocal);
+
+class VideoLocalPlay extends VideoLocal {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    const poster = this.querySelector("button");
+    if (!poster) return;
+    poster.addEventListener("click", this.loadContent.bind(this));
+  }
+}
+customElements.define("video-local-play", VideoLocalPlay);
