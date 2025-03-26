@@ -18,7 +18,7 @@
         </h2>
       {% endif %}
       <slide-section
-        class="swiper {% if block_heading == blank %} mt-30{% endif %}"
+        class="swiper hover-action {% if block_heading == blank %} mt-30{% endif %}"
         data-section-id="{{ section.id }}"
         data-effect="slide"
         data-speed="500"
@@ -43,7 +43,7 @@
           {%- endfor -%}
         </div>
         {% if show_navigation %}
-          {%- render 'swiper-navigation' -%}
+          {%- render 'swiper-navigation', show_on_hover: true -%}
         {% endif %}
         {% if show_pagination %}
           <div

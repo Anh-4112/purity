@@ -33,8 +33,8 @@
       {% case layout %}
         {% when 'thumbnail' %}
           <div id="GalleryMainViewer-{{ section.id }}" class="media-main-swiper">
-            <div class="swiper-wrapper-main swiper">
-              {%- render 'swiper-navigation' -%}
+            <div class="swiper-wrapper-main swiper hover-action">
+              {%- render 'swiper-navigation', show_on_hover: true -%}
               <div class="swiper-wrapper">
                 {% render 'product-media',
                   images: images,
@@ -49,7 +49,7 @@
           </div>
           <div
             id="GalleryThumbnailViewer-{{ section.id }}"
-            class="media-thumb-swiper{% if mobile_options == 'hidden_thumbnail' %} mobile-hidden{% endif %}{% if desktop_layout == 'thumbnail_left' %}{% if media_position == 'right' %} right-0{% else %} left-0{% endif %}{% endif %}"
+            class="media-thumb-swiper{% if desktop_layout == 'thumbnail_bottom' %} mt-10{% endif %}{% if mobile_options == 'hidden_thumbnail' %} mobile-hidden{% endif %}{% if desktop_layout == 'thumbnail_left' %}{% if media_position == 'right' %} right-0{% else %} left-0{% endif %}{% endif %}"
           >
             <div class="swiper-wrapper-thumbnail swiper">
               <div class="swiper-wrapper">
