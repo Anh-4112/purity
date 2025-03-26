@@ -513,10 +513,10 @@
   <template class="menu-drawer">
     <menu-drawer
       id="Menu-Drawer"
-      class="model active-modal-js"
+      class="invisible modal drawer transition-drawer w-full hidden-1025 fixed z-15 inset-y-0 flex active-modal-js"
     >
       <modal-overlay class="modal-overlay invisible transition"></modal-overlay>
-      <div class="modal-inner invisible transition-drawer fixed z-15 inset-y-0 flex relative drawer-left bg-white overflow-hidden">
+      <div class="modal-inner w-full relative drawer-left transition-drawer bg-white overflow-hidden">
         <button
           class="modal__close btn-close-menu absolute top-10 right-10 w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
           style="--custom-width: 2.4rem;"
@@ -888,18 +888,31 @@
               or section_st.show_currency
             -%}
               <div class="disclosure__footer sticky bottom-0 left-0 right-0 flex column gap-15 p-24 border-top">
-                  <div class="align-center justify-content-end d-flex gap-10 space-between">
-                    {% if section_st.show_language or section_st.show_currency %}
-                      <div class="desktop-localization-wrapper disclosure__footer last-r-0 pr-30 d-flex gap-15 align-center">
-                        {% if section_st.show_currency %}
-                          {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
-                        {% endif %}
-                        {% if section_st.show_language %}
-                          {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
-                        {% endif %}
-                      </div>
-                    {% endif %}
-                    {%- if section_st.show_account -%}
+                <div class="align-center justify-content-end d-flex gap-10 space-between">
+                  {% if section_st.show_language or section_st.show_currency %}
+                    <div class="desktop-localization-wrapper disclosure__footer last-r-0 pr-30 d-flex gap-15 align-center">
+                      {% if section_st.show_currency %}
+                        {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
+                      {% endif %}
+                      {% if section_st.show_language %}
+                        {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                  {%- if section_st.show_account -%}
+                    <a
+                      href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+                      class="btn btn-primary block text-center mt-20 mb-15"
+                      aria-label="{% if customer %}{{ 'customer.account.title' | t }}{% else %}{{ 'customer.login_page.title' | t }}{% endif %}"
+                    >
+                      {% if customer %}
+                        {{ 'customer.account.title' | t }}
+                      {% else %}
+                        {{ 'customer.login_page.title' | t }}
+                      {% endif %}
+                    </a>
+                    <div class="text-center">
+                      {%- if customer -%}
                         <a
                           href="{{ routes.account_logout_url }}"
                           class="btn btn-outline block text-center"
