@@ -16,6 +16,13 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 
+<style>
+  @media screen and (max-width: 767.98px) {
+    .footer__middle{
+      --section-pb: 0;
+    }
+  }
+</style>
 <footer
   class="footer color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
@@ -43,11 +50,11 @@
               -%}
           {%- endcase -%}
         {%- endfor -%}
-        <div class="footer__blocks flex wrap">
+        <div class="footer__blocks cols flex wrap">
           {%- for block in section.blocks -%}
             {% assign block_st = block.settings %}
             <div
-              class="footer-block w-full{% unless block.type == 'newsletter_block' and modulo == 1 %} col-md-w-custom-50 col-md-w-custom{% endunless %} col-1025-w-custom border-bottom border-bottom-md-0 {{ block.type }}"
+              class="footer-block w-full{% unless block.type == 'newsletter_block' and modulo == 1 %} col-md-w-custom-50 col-md-w-custom{% endunless %} col-1025-w-custom {{ block.type }}"
               style="--col-width: {{ block_st.width }}; --menu-list: {{ menu_item }};"
               {{ block.shopify_attributes }}
             >
@@ -75,7 +82,7 @@
                         <input type="hidden" name="contact[tags]" value="newsletter">
                         <div class="newsletter-form__field-wrapper mb-20">
                           <div class="field">
-                            <div class="flex gap-10 wrap">
+                            <div class="flex gap-10">
                               <input
                                 id="NewsletterForm--{{ section.id }}"
                                 type="email"
@@ -102,8 +109,7 @@
                               >
                               <button
                                 type="submit"
-                                class="w-full newsletter-form__button btn p-0 btn-primary w-custom h-custom"
-                                style="--custom-height: 55px;--custom-width: 55px"
+                                class="newsletter-form__button btn p-0 btn-primary btn-hover wh-55"
                                 name="commit"
                                 id="Subscribe-{{ section.id }}"
                                 aria-label="{{ 'subscribe.button_label' | t }}"
@@ -143,7 +149,7 @@
                   </div>
                 {%- when 'menu_block' -%}
                   {%- if block_st.menu != blank or block_st.heading != blank -%}
-                    <details class="collapsible-row detail-open" is="collapsible-row" open>
+                    <details class="collapsible-row border-bottom border-bottom-md-0" is="collapsible-row" open>
                       <summary class="collapsible-row__summary pointer-md-none py-20 mb-md-5">
                         <h6 class="footer__block-heading flex justify-between align-center collapsible-heading">
                           <span>
@@ -174,7 +180,7 @@
                     </details>
                   {%- endif -%}
                 {%- when 'contact_bar_block' -%}
-                  <details class="collapsible-row detail-open" is="collapsible-row" open>
+                  <details class="collapsible-row border-bottom border-bottom-md-0" is="collapsible-row" open>
                     {%- if block_st.store_heading != blank -%}
                       <summary class="collapsible-row__summary pointer-md-none py-20 mb-md-5">
                         <h6 class="footer__block-heading flex justify-between align-center collapsible-heading relative">
@@ -188,58 +194,60 @@
                       </summary>
                     {%- endif -%}
                     <div
-                      class="collapsible-row__content flex column gap-20 pb-30 overflow-hidden-mb"
+                      class="collapsible-row__content overflow-hidden-mb"
                     >
-                      {%- if block_st.store_address or block_st.store_email or block_st.store_phone %}
-                        <div class="footer_store-infor flex column gap-10">
-                          {%- if block_st.store_address != blank -%}
-                            <div class="footer__store-info">
-                              <div class="footer__info-content">
-                                {{ block_st.store_address }}
+                      <div class="pb-20 flex column gap-25">
+                        {%- if block_st.store_address or block_st.store_email or block_st.store_phone %}
+                          <div class="footer_store-infor flex column">
+                            {%- if block_st.store_address != blank -%}
+                              <div class="footer__store-info">
+                                <div class="footer__info-content">
+                                  {{ block_st.store_address }}
+                                </div>
                               </div>
-                            </div>
-                          {%- endif -%}
-                          {%- if block_st.store_phone != blank -%}
-                            <div class="footer__store-info">
-                              <a
-                                href="tel:{{ block_st.store_phone }}"
-                                class="footer__info-content"
-                                aria-label=" {{ block_st.store_phone }}"
-                              >
-                                {{ block_st.store_phone }}
-                              </a>
-                            </div>
-                          {%- endif -%}
-                          {%- if block_st.store_email != blank -%}
-                            <div class="footer__store-info">
-                              <a
-                                href="mailto:{{ block_st.store_email }}"
-                                class="footer__info-content"
-                              >
-                                {{ block_st.store_email }}
-                              </a>
-                            </div>
-                          {%- endif -%}
-                        </div>
-                      {%- endif -%}
-                      {%- if shop.features.follow_on_shop? and section_st.enable_follow_on_shop -%}
-                        <div class="footer__follow-on-shop">
-                          {% comment %} TODO: enable theme-check once `login_button` is accepted as valid filter {% endcomment %}
-                          {% # theme-check-disable %}
-                          {{ shop | login_button: action: 'follow' }}
-                          {% # theme-check-enable %}
-                        </div>
-                      {%- endif -%}
-                      {%- if block_st.show_social -%}
-                        <social-icon class="social-icon">
-                          {% render 'social-icons' %}
-                        </social-icon>
-                      {%- endif -%}
-                      {%- if block_st.store_description != blank -%}
-                        <div class="footer__block-info">
-                          {{ block_st.store_description }}
-                        </div>
-                      {%- endif -%}
+                            {%- endif -%}
+                            {%- if block_st.store_phone != blank -%}
+                              <div class="footer__store-info">
+                                <a
+                                  href="tel:{{ block_st.store_phone }}"
+                                  class="footer__info-content"
+                                  aria-label=" {{ block_st.store_phone }}"
+                                >
+                                  {{ block_st.store_phone }}
+                                </a>
+                              </div>
+                            {%- endif -%}
+                            {%- if block_st.store_email != blank -%}
+                              <div class="footer__store-info">
+                                <a
+                                  href="mailto:{{ block_st.store_email }}"
+                                  class="footer__info-content"
+                                >
+                                  {{ block_st.store_email }}
+                                </a>
+                              </div>
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                        {%- if shop.features.follow_on_shop? and section_st.enable_follow_on_shop -%}
+                          <div class="footer__follow-on-shop">
+                            {% comment %} TODO: enable theme-check once `login_button` is accepted as valid filter {% endcomment %}
+                            {% # theme-check-disable %}
+                            {{ shop | login_button: action: 'follow' }}
+                            {% # theme-check-enable %}
+                          </div>
+                        {%- endif -%}
+                        {%- if block_st.show_social -%}
+                          <social-icon class="social-icon">
+                            {% render 'social-icons' %}
+                          </social-icon>
+                        {%- endif -%}
+                        {%- if block_st.store_description != blank -%}
+                          <div class="footer__block-info">
+                            {{ block_st.store_description }}
+                          </div>
+                        {%- endif -%}
+                      </div>
                     </div>
                   </details>
               {%- endcase -%}
@@ -254,10 +262,10 @@
       <div
         class="footer_bottom-inner flex column flex-1025-row gap-20 justify-between border-top pt-30"
       >
-        <div class="footer__bottom--left">
+        <div class="footer__bottom--left disclosure__footer">
           {%- if section_st.enable_country_selector or section_st.enable_language_selector -%}
             {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
-              <div class="footer__column flex justify-center justify-start-1025 footer__localization gap-20">
+              <div class="footer__column flex wrap justify-center justify-start-1025 footer__localization gap-20">
                 {%- if section_st.enable_country_selector -%}
                   {%- render 'country-localization', localPosition: 'FooterCountry' -%}
                 {%- endif -%}
@@ -267,7 +275,7 @@
               </div>
             {%- endif -%}
           {%- endif -%}
-          <div class="footer__copyright text-center text-1025-start mt-15">
+          <div class="footer__copyright fs-small text-center text-1025-start mt-15">
             &copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
             . {{ powered_by_link }}
           </div>
@@ -275,9 +283,9 @@
         {%- if payment_enable or menu_store_policies != blank -%}
           <div class="footer__bottom--right">
             {%- if payment_enable -%}
-              <div class="footer__payment">
+              <div class="footer__payment mb-15">
                 <ul
-                  class="list-payment h-custom list-unstyled flex justify-center justify-end-1025 gap-5 mb-10"
+                  class="list-payment h-custom list-unstyled flex justify-center justify-end-1025 gap-5"
                   style="--custom-height: 22px;"
                 >
                   {%- for type in shop.enabled_payment_types -%}
@@ -290,7 +298,7 @@
             {%- endif -%}
             {%- if menu_store_policies != blank -%}
               <div class="menu__policies">
-                <ul class="menu__policies-list flex wrap justify-center justify-end-1025 gap-20 list-unstyled">
+                <ul class="menu__policies-list flex wrap justify-center justify-end-1025 gap-20 list-unstyled fs-small">
                   {%- for link in menu_store_policies.links -%}
                     <li>
                       <a
@@ -573,21 +581,9 @@
         },
         {
           "type": "richtext",
-          "id": "store_description",
-          "label": "t:sections.all.content_setting.description.label",
-          "default": "<p>Find the nearest location. Get direction.</p>"
-        },
-        {
-          "type": "richtext",
           "id": "store_address",
           "label": "t:sections.footer.blocks.contact_bar_block.settings.store_address",
           "default": "<p>Store's address</p>"
-        },
-        {
-          "type": "text",
-          "id": "store_email",
-          "label": "t:sections.footer.blocks.contact_bar_block.settings.store_email",
-          "default": "Store's email"
         },
         {
           "type": "text",
@@ -596,11 +592,23 @@
           "default": "Store's phone number"
         },
         {
+          "type": "text",
+          "id": "store_email",
+          "label": "t:sections.footer.blocks.contact_bar_block.settings.store_email",
+          "default": "Store's email"
+        },
+        {
           "type": "checkbox",
           "id": "show_social",
           "default": false,
           "label": "t:sections.footer.blocks.contact_bar_block.settings.show_social.label",
           "info": "t:sections.footer.blocks.contact_bar_block.settings.show_social.info"
+        },
+        {
+          "type": "richtext",
+          "id": "store_description",
+          "label": "t:sections.all.content_setting.description.label",
+          "default": "<p>Find the nearest location. Get direction.</p>"
         },
         {
           "type": "select",
