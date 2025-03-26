@@ -162,22 +162,26 @@
       </div>
     {%- else -%}
       <div
-        class="hover-action media-gallery__image rounded{{ class }}"
+        class="transition media-gallery__image{{ class }}"
         data-href="{{ featured_media.preview_image | image_url }}"
         data-position="{{ media_position }}"
         data-media-id="{{ section.id }}-{{ image.id }}"
         style="--aspect-ratio: {{ ratio }}"
       >
         {%- assign image_alt = image.alt | default: 'product' | escape -%}
-        {% render 'responsive-image', type: 'product', image: featured_media, image_alt: image_alt, class: 'rounded' %}
+        {% render 'responsive-image',
+          type: 'product',
+          image: featured_media,
+          image_alt: image_alt,
+          class: 'rounded-10'
+        %}
         {% if thumbnail != true %}
           {% if type_section != 'featured' and type_section != 'quickview' %}
             <button
               type="button"
               is="media-zoom-button"
-              class="btn-reset blur absolute top-15{% if settings.rtl %} left-15{% else %} right-15{% endif %}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center shadow bg-white wh-55 invisible show-on-hover transition"
+              class="btn-reset blur transition absolute top-15{% if settings.rtl %} left-15{% else %} right-15{% endif %}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center shadow bg-white wh-55{% if desktop_layout == 'thumbnail_left' or desktop_layout == 'thumbnail_bottom' %} invisible show-on-hover{% endif %}"
               aria-label="{{ 'products.product.zoom_button' | t }}"
-              style="--opacity: 0.3"
               tabindex="-1"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -343,15 +347,14 @@
           style="--aspect-ratio: {{ ratio }}"
         >
           {%- assign image_alt = image.alt | default: 'product' | escape -%}
-          {% render 'responsive-image', type: 'product', image: image, image_alt: image_alt, class: 'rounded' %}
+          {% render 'responsive-image', type: 'product', image: image, image_alt: image_alt, class: 'rounded-10' %}
           {% if thumbnail != true %}
             {% if type_section != 'featured' and type_section != 'quickview' %}
               <button
                 type="button"
                 is="media-zoom-button"
-                class="btn-reset blur absolute top-15{% if settings.rtl %} left-15{% else %} right-15{% endif %}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center shadow bg-white wh-55 invisible show-on-hover transition"
+                class="btn-reset blur transition absolute top-15{% if settings.rtl %} left-15{% else %} right-15{% endif %}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center shadow bg-white wh-55{% if desktop_layout == 'thumbnail_left' or desktop_layout == 'thumbnail_bottom' %} invisible show-on-hover{% endif %}"
                 aria-label="{{ 'products.product.zoom_button' | t }}"
-                style="--opacity: 0.3"
                 tabindex="-1"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">

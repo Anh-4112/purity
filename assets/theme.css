@@ -89,11 +89,6 @@ blockquote {
 a.hover-heading-color:hover {
   color: var(--color-heading);
 }
-:where(.heading-style) {
-  font-family: var(--heading-font);
-  font-weight: var(--heading-weight, 600);
-  color: var(--color-heading);
-}
 .rich__text-m0 p:only-child {
   margin-block: 0;
 }
@@ -647,9 +642,6 @@ a.hover-heading-color:hover {
 .top-10 {
   top: 1rem;
 }
-.top-15 {
-  top: 1.5rem;
-}
 .top-100 {
   top: 100%;
 }
@@ -677,9 +669,6 @@ a.hover-heading-color:hover {
 .left-7 {
   left: 7px;
 }
-.left-15 {
-  left: 1.5rem;
-}
 .left-20 {
   left: 2rem;
 }
@@ -706,9 +695,6 @@ a.hover-heading-color:hover {
 }
 .right-10 {
   right: 1rem;
-}
-.right-15 {
-  right: 1.5rem;
 }
 .right-20 {
   right: 2rem;
@@ -1205,10 +1191,6 @@ a.hover-heading-color:hover {
   .justify-between-1025 {
     justify-content: space-between;
   }
-  .invisible-1025 {
-    opacity: 0;
-    visibility: hidden;
-  }
   .pointer-none-1025 {
     pointer-events: none;
   }
@@ -1383,6 +1365,8 @@ a.hover-heading-color:hover {
     ):hover {
     --btn-color: var(--btn-primary-hover-color);
     color: var(--btn-color);
+    /* --btn-border-color: var(--btn-primary-hover-bg-color);
+    --btn-bg: var(--btn-primary-hover-bg-color); */
   }
   :where(.btn-outline):hover {
     --btn-color: var(--btn-primary-color);
@@ -1542,6 +1526,9 @@ a.hover-heading-color:hover {
     visibility: visible;
     transform: translateX(0);
   }
+  .blur {
+    --opacity: 0.3;
+  }
   .blur:hover {
     --opacity: 1;
   }
@@ -1614,6 +1601,7 @@ details[open] > summary .icon {
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 10;
   pointer-events: none;
 }
 .modal-inner {

@@ -32,6 +32,10 @@
   .absolute-1025 {
     position: absolute;
   }
+  .invisible-1025 {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 @media (min-width: 1200px) {
   .container {
@@ -80,6 +84,11 @@ summary::-webkit-details-marker {
   font-size: calc(var(--heading-font-scale) * var(--size));
   letter-spacing: var(--heading-letter-spacing);
   margin: 0;
+}
+:where(.heading-style) {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight, 600);
+  color: var(--color-heading);
 }
 :where(blockquote, dl, dd, hr, figure, p, pre) {
   margin: 0;
@@ -359,6 +368,9 @@ textarea {
 .absolute {
   position: absolute;
 }
+.top-15 {
+  top: 1.5rem;
+}
 .inset-0 {
   inset: 0;
   left: 0;
@@ -375,6 +387,12 @@ textarea {
 }
 .right-0 {
   inset-inline-end: 0;
+}
+.right-15 {
+  right: 1.5rem;
+}
+.left-15 {
+  left: 1.5rem;
 }
 .inset-x-15 {
   inset-inline: 1.5rem;

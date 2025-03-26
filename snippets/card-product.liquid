@@ -179,26 +179,28 @@
               and disable_quickview != true
               and card_product.metafields.custom.external_affiliate == blank
             -%}
-              <button
-                type="button"
-                is="button-quick-view"
-                class="btn button-quickview transition absolute inset-x-15 bottom-10 z-2 text-center bg-white{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
-                data-url="{{ shop.url }}/products/{{ card_product.handle }}?section_id=product-quickview"
-                aria-label="{{ 'products.product.quickview' | t }}"
-              >
-                <span class="product-quickview-btn hidden-on-load">
-                  {{ 'products.product.quickview' | t }}
-                </span>
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 14 14"
-                  fill="none"
-                  class="spin opacity-0 pointer-none icon-load absolute"
+              <div class="absolute inset-x-15 bottom-15 z-2 overflow-hidden">
+                <button
+                  type="button"
+                  is="button-quick-view"
+                  class="btn button-quickview w-full btn-white invisible-1025 text-center{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
+                  data-url="{{ shop.url }}/products/{{ card_product.handle }}?section_id=product-quickview"
+                  aria-label="{{ 'products.product.quickview' | t }}"
                 >
-                  <use href="#icon-load"></use>
-                </svg>
-              </button>
+                  <span class="product-quickview-btn hidden-on-load transition-short">
+                    {{ 'products.product.quickview' | t }}
+                  </span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    class="spin opacity-0 pointer-none icon-load absolute transition-short"
+                  >
+                    <use href="#icon-load"></use>
+                  </svg>
+                </button>
+              </div>
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -217,7 +219,7 @@
           </a>
           {%- if product_show_rate and disable_rate != true -%}
             {%- liquid
-              render 'review', review_star: true, product: card_product,scope: 'item'
+              render 'review', review_star: true, product: card_product, scope: 'item'
             -%}
           {%- endif -%}
           {% if disable_price != true %}
