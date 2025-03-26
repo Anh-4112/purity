@@ -18,7 +18,7 @@
 
 <style>
   @media screen and (max-width: 767.98px) {
-    .footer__middle{
+    .footer__middle {
       --section-pb: 0;
     }
   }
@@ -60,7 +60,7 @@
             >
               {%- case block.type -%}
                 {%- when 'newsletter_block' -%}
-                  <div class="footer-block__newsletter pb-30">
+                  <div class="footer-block__newsletter border-bottom border-bottom-md-0 pb-30">
                     <div
                       class="footer-block__newsletter-inner"
                     >
@@ -121,21 +121,24 @@
                             </div>
                           </div>
                           {%- if form.errors -%}
-                            <small class="newsletter-form__message form__message" id="ContactFooter-error">
-                              {%- render 'icon-error' -%}
-                              {{- form.errors.translated_fields.email | capitalize }}
-                              {{ form.errors.messages.email -}}
-                            </small>
+                            <div class="newsletter-form__message form__message error fs-small inline-flex align-center gap-10 mt-10" id="ContactFooter-error">
+                                {%- render 'icon-error' -%}
+                                <span>
+                                {{- form.errors.translated_fields.email | capitalize }}
+                                {{ form.errors.messages.email -}}
+                                Invalid email or already subscribed"
+                              </span>
+                            </div>
                           {%- endif -%}
                         </div>
                         {%- if form.posted_successfully? -%}
                           <div
-                            class="newsletter-form__message newsletter-form__message--success form__message"
+                            class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex align-center gap-10"
                             id="ContactFooter-success"
                             tabindex="-1"
                           >
                             {%- render 'icon-success' -%}
-                            {{- 'newsletter.success' | t }}
+                            <span>{{- 'newsletter.success' | t }}</span>
                           </div>
                         {%- else -%}
                         {%- endif -%}
