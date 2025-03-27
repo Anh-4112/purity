@@ -20,7 +20,7 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};{{- -}}
   {% if transparent %}--transparent-color: {{ section_st.header_text_icon_transparent }};{% endif %}{{- -}}
-    --header-grid-template: 'menu logo icon' / minmax(0, 1fr) fit-content(60%) minmax(0,1fr);{{- -}}
+    --header-grid-template: 'menu logo icon' / minmax(0, 1fr) minmax(var(--logo-width), 45%)  minmax(0,1fr);{{- -}}
 {%- endcapture -%}
 
 {% style %}
@@ -426,7 +426,7 @@
         or section_st.show_language
         or section_st.show_currency
       -%}
-        <div class="header__action flex flex-end align-center gap" style="--gap: 7px;">
+        <div class="header__action flex wrap flex-end align-center gap" style="--gap: 7px;">
           {% if section_st.show_language or section_st.show_currency %}
             <div class="desktop-localization-wrapper hidden flex-1025 align-center gap-15">
               {% if section_st.show_currency %}
@@ -513,10 +513,10 @@
   <template class="menu-drawer">
     <menu-drawer
       id="Menu-Drawer"
-      class="invisible modal drawer transition-drawer w-full hidden-1025 fixed z-15 inset-y-0 flex active-modal-js"
-    >
+      class="modal active-modal-js">
       <modal-overlay class="modal-overlay invisible transition"></modal-overlay>
-      <div class="modal-inner w-full relative drawer-left transition-drawer bg-white overflow-hidden">
+      <div class="modal-inner invisible w-full fixed z-15 left-0 inset-y-0 drawer-left transition-drawer bg-white overflow-hidden">
+
         <button
           class="modal__close btn-close-menu absolute top-10 right-10 w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
           style="--custom-width: 2.4rem;"
