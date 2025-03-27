@@ -224,9 +224,9 @@
 </section>
 {% if enable_sticky_desktop %}
   {%- assign product_form_id = 'sticky-addcart-form-' | append: section.id -%}
-  <sticky-add-cart class="sticky-add-cart">
+  <sticky-add-cart class="sticky-add-cart fixed bottom-0 inset-x-0 bg-white z-5">
     <div class="{{ section_width }}">
-      <div class="sticky-add-cart__inner">
+      <div class="sticky-add-cart__inner flex gap-10">
         {% render 'card-product',
           card_product: product,
           section_id: section.id,

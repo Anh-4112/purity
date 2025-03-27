@@ -51,7 +51,12 @@
             id="GalleryThumbnailViewer-{{ section.id }}"
             class="media-thumb-swiper{% if layout == 'thumbnail' %} mt-10{% endif %}{% if desktop_layout == 'thumbnail_left' %} mt-md-0{% endif %}{% if mobile_thumbnails == 'hidden_thumbnail' %} hidden block-md{% endif %}{% if desktop_layout == 'thumbnail_left' %}{% if media_position == 'right' %} right-0{% else %} left-0{% endif %}{% endif %}"
           >
-            <div class="swiper-wrapper-thumbnail swiper">
+            <div
+              class="swiper-wrapper-thumbnail swiper"
+              data-mobile="5"
+              data-desktop="5"
+              data-tablet="5"
+            >
               <div class="swiper-wrapper">
                 {% render 'product-media',
                   images: images,
