@@ -914,25 +914,25 @@ body:not(.template-index) .transparent-logo {
   position: relative;
   overflow: hidden;
 }
-[style*="--aspect-ratio"]:before {
-  content: "";
-  height: 0;
-  display: block;
-  padding-top: calc(100% / (0 + var(--aspect-ratio, 16/9)));
-  pointer-events: none;
+[style*="--aspect-ratio"] > *:first-child,
+[style*="--aspect-ratio"] > video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-:is(.grid-cols) {
-  --col: var(--col-number);
-  display: grid;
-  grid-template-columns: repeat(
-    var(--col),
-    calc((100% - var(--col-gap, 0px) * calc(var(--col) - 1)) / var(--col))
-  );
-  gap: var(--row-gap, var(--col-gap)) var(--col-gap, 0px);
-}
-@media screen and (min-width: 1025px) {
-  :is(.grid-cols, .flex-cols) {
-    --col: var(--col-desktop, var(--col-desktop-small));
-    --col-gap: var(--col-gap-desktop, 20px);
-  }
+[style*="--aspect-ratio"] img,
+[style*="--aspect-ratio"] svg,
+.banner__media img,
+.banner__media svg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

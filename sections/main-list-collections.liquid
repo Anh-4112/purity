@@ -1,3 +1,314 @@
+{%- liquid
+  assign section_st = section.settings
+  assign items_to_show = section_st.items_to_show
+  assign aspect_ratio = '1/1'
+  case section_st.image_ratio
+    when 'adapt'
+      assign aspect_ratio = 'adapt'
+    when 'square'
+      assign aspect_ratio = '1/1'
+    when 'portrait'
+      assign aspect_ratio = '3/4'
+    else
+      assign aspect_ratio = '4/3'
+  endcase
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+
+  assign column_gap_slide = 0
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 30
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 10
+  endif
+-%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+{%- endcapture -%}
+
+{%- capture style_col -%}
+  --col-number: 1;--col-tablet: 2;--col-desktop: {{ section_st.columns_desktop }};
+  {% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
+  {%- endcapture -%}
+<div
+  class="section color-{{ section_st.color_scheme }} gradient"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }}">
+    {%- if section_st.collection_to_show == 'all' -%}
+      {%- liquid
+        case section_st.sort
+          when 'products_high', 'products_low'
+            assign collections = collections | sort: 'all_products_count'
+          when 'date', 'date_reversed'
+            assign collections = collections | sort: 'published_at'
+        endcase
+
+        if section_st.sort == 'products_high' or section_st.sort == 'date_reversed' or section_st.sort == 'alphabetical_reversed'
+          assign collections = collections | reverse
+        endif
+      -%}
+
+      {%- paginate collections by items_to_show -%}
+        {%- assign alt_collection = 'sections.collection_list.sample_name' | t -%}
+        <div
+          class="collection-list-grid grid-cols gap grid"
+          style="{{ style_col | strip | strip_newlines }};"
+        >
+          {% for collection in collections limit: items_to_show %}
+            <div
+              class="collection-items relative"
+            >
+              <div
+                class="banner__media collection-media"
+                style="
+                  {%- if aspect_ratio == "adapt" -%}
+                    {%- if collection == blank -%}
+                      --aspect-ratio: 3/4;
+                    {%- endif -%}
+                    {%- else -%}
+                    --aspect-ratio: {{ aspect_ratio }};
+                  {%- endif -%}
+                "
+              >
+                {%- if collection != blank -%}
+                  {%- liquid
+                    assign collection_url = collection.url
+                    assign collection_img = collection.featured_image
+                  -%}
+                  <a
+                    class="collection_banner-image{% if section.settings.information_position == 'overlay' %} overlay-image{% endif %} block relative z-2"
+                    {% if collection_url == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ collection_url }}"
+                      aria-label="{{ collection.title | default: alt_collection }}"
+                    {% endif %}
+                    style="--aspect-ratio: {% if aspect_ratio == "adapt" %}{% if collection_img %}{{ collection_img.aspect_ratio }}{% else %}1/1{% endif %}{% else %}{{ aspect_ratio }}{% endif %}"
+                  >
+                    {%- assign banner_alt = collection_img.alt | default: collection.title | escape -%}
+                    {%- if collection_img -%}
+                      {{
+                        collection_img
+                        | image_url: width: 750
+                        | image_tag:
+                          loading: 'lazy',
+                          sizes: '100vw',
+                          widths: '165, 360, 535, 750, 1070, 1500',
+                          alt: banner_alt
+                      }}
+                    {%- else -%}
+                      {% render 'placeholder-render' | type: "product" %}
+                    {%- endif -%}
+                  </a>
+                {%- else -%}
+                  {%- assign default_alt = 'sections.collection_list.sample_name' | t -%}
+                  <a
+                    class="collection_banner-image{% if section.settings.information_position == 'overlay' %} overlay-image{% endif %} block relative z-2{% if section.settings.information_position == 'overlay' %} overlay-bg{% endif %}"
+                    role="link"
+                    aria-disabled="true"
+                    aria-label="{{ default_alt }}"
+                  >
+                    {% render 'placeholder-render' | type: "collection" | index: forloop.index %}
+                  </a>
+                {%- endif -%}
+              </div>
+              <div
+                class="collection-information text-{{ section.settings.text_alignment }}{% if section.settings.information_position == 'overlay' %} absolute{% endif %}"
+                {% if section.settings.information_position == 'overlay' %}
+                  style="--heading-color: {{ section_st.overlay_image_color }};--text-color: {{ section_st.overlay_image_color }}"
+                {% endif %}
+              >
+                {%- if collection != blank -%}
+                  {%- liquid
+                    assign collection_url = ''
+                    if collection != blank
+                      assign collection_url = collection.url
+                    endif
+                  -%}
+                  <a
+                    class="relative z-3"
+                    {% if collection_url == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ collection_url }}"
+                      aria-label="{{ collection.title | default: alt_collection }}"
+                    {% endif %}
+                  >
+                    <span> {{ collection.title }}</span>
+                  </a>
+                {%- else -%}
+                  <a
+                    class="relative z-3"
+                    role="link"
+                    aria-disabled="true"
+                  >
+                    {{ 'sections.collection_list.sample_name' | t }}
+                  </a>
+                {%- endif -%}
+                {%- if section_st.show_product_count -%}
+                  <div class="product-count relative z-3">
+                    {%- assign products_count = collection.products_count | default: 0 -%}
+                    {{ products_count }}
+                    {%- if products_count < 2 -%}
+                      {{ 'sections.collection_list.item' | t }}
+                    {%- else -%}
+                      {{ 'sections.collection_list.items' | t }}
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        {% render 'pagination', paginate: paginate, section_st: section.settings %}
+      {%- endpaginate -%}
+    {%- else -%}
+      <div
+        class="collection-list-grid grid-cols gap grid"
+        style="{{ style_col | strip | strip_newlines }};"
+      >
+        {% for block in section.blocks %}
+          <div
+            class="collection-items"
+          >
+            <div
+              class="banner__media collection-media"
+              style="
+                {%- if aspect_ratio == "adapt" -%}
+                  {%- if block.settings.collection == blank -%}
+                    --aspect-ratio: 3/4;
+                  {%- endif -%}
+                  {%- else -%}
+                  --aspect-ratio: {{ aspect_ratio }};
+                {%- endif -%}
+              "
+            >
+              {%- if block.settings.collection != blank -%}
+                {%- liquid
+                  assign collection_url = block.settings.collection.url
+                  assign collection_img = block.settings.collection.featured_image
+                -%}
+                {%- if block.settings.collection_image != blank -%}
+                  {%- assign collection_img = block.settings.collection_image -%}
+                {%- endif -%}
+                <a
+                  class="collection_banner-image{% if section.settings.information_position == 'overlay' %} overlay-image{% endif %} block remove-underline h6 m-0 relative z-2 hover-effect{% if the_settings.enable_zoom_effect %} zoom-in {% else %} fade-in {% endif %}"
+                  {% if collection_url == blank %}
+                    role="link" aria-disabled="true"
+                  {% else %}
+                    href="{{ collection_url }}"
+                    aria-label="{{ block.settings.collection.title | default: "collection" }}"
+                  {% endif %}
+                  style="--aspect-ratio: {% if aspect_ratio == "adapt" %}{% if collection_img %}{{ collection_img.aspect_ratio }}{% else %}1/1{% endif %}{% else %}{{ aspect_ratio }}{% endif %}"
+                >
+                  {%- assign banner_alt = collection_img.alt | default: block.settings.collection.title | escape -%}
+                  {%- if collection_img -%}
+                    {{
+                      collection_img
+                      | image_url: width: 750
+                      | image_tag:
+                        loading: 'lazy',
+                        sizes: '100vw',
+                        widths: '165, 360, 535, 750, 1070, 1500',
+                        alt: banner_alt
+                    }}
+                  {%- else -%}
+                    {% render 'placeholder-render' | type: "product" %}
+                  {%- endif -%}
+                </a>
+              {%- else -%}
+                {%- assign default_alt = 'sections.collection_list.sample_name' | t -%}
+                <a
+                  class="collection_banner-image{% if section.settings.information_position == 'overlay' %} overlay-image{% endif %} block relative"
+                  role="link"
+                  aria-disabled="true"
+                  aria-label="{{ default_alt }}"
+                >
+                  {% render 'placeholder-render' | type: "collection" | index: forloop.index %}
+                </a>
+              {%- endif -%}
+            </div>
+            <div
+              class="collection-information text-{{ section.settings.text_alignment }}{% if section.settings.information_position == 'overlay' %} absolute{% endif %}"
+              {% if section.settings.information_position == 'overlay' %}
+                style="--heading-color: {{ section_st.overlay_image_color }};--text-color: {{ section_st.overlay_image_color }}"
+              {% endif %}
+            >
+              {%- if block.settings.collection_title == blank -%}
+                {%- if block.settings.collection != blank -%}
+                  {%- liquid
+                    assign collection_url = ''
+                    if block.settings.collection != blank
+                      assign collection_url = block.settings.collection.url
+                    endif
+                  -%}
+                  <a
+                    class="zelative z-3"
+                    {% if collection_url == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ collection_url }}"
+                    {% endif %}
+                    aria-label="{{ block.settings.collection.title }}"
+                  >
+                    {{ block.settings.collection.title }}
+                  </a>
+                {%- else -%}
+                  <a
+                    class="relative z-3"
+                    role="link"
+                    aria-disabled="true"
+                    aria-label="{{ 'sections.collection_list.sample_name' | t }}"
+                  >
+                    {{ 'sections.collection_list.sample_name' | t }}
+                  </a>
+                {%- endif -%}
+              {%- else -%}
+                {%- liquid
+                  assign collection_url = ''
+                  if block.settings.collection != blank
+                    assign collection_url = block.settings.collection.url
+                  endif
+                -%}
+                <a
+                  class="relative z-3"
+                  {% if collection_url == blank %}
+                    role="link" aria-disabled="true"
+                  {% else %}
+                    href="{{ collection_url }}"
+                  {% endif %}
+                  aria-label="{{ block.settings.collection_title }}"
+                >
+                  {{ block.settings.collection_title }}
+                </a>
+              {%- endif -%}
+              {%- if section.settings.show_product_count -%}
+                <div class="product-count relative">
+                  {%- assign products_count = block.settings.collection.products_count | default: 0 -%}
+                  {{ products_count }}
+                  {%- if products_count < 2 -%}
+                    {{ 'sections.collection_list.item' | t }}
+                  {%- else -%}
+                    {{ 'sections.collection_list.items' | t }}
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.main-list-collections.name",
