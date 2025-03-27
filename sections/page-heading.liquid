@@ -1,3 +1,50 @@
+{% liquid
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+{%- endcapture -%}
+
+<div
+  class="page-heading section color-{{ section_st.color_scheme }} gradient text-{{ section_st.text_alignment }}"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }}">
+    <div class="section-header">
+      {% for block in section.blocks %}
+        {%- liquid
+          assign block_st = block.settings
+        -%}
+        {% case block.type %}
+          {% when 'heading' %}
+            <h1 class="heading-title">
+              {% if block_st.heading != blank %}
+                {{ block_st.heading }}
+              {% else %}
+                {{ page.title }}
+              {% endif %}
+            </h1>
+          {% when 'description' %}
+            <div class="heading-description rte">
+              {%- if block_st.description != blank -%}
+                {{ block_st.description }}
+              {%- else -%}
+                {{ page.content }}
+              {%- endif -%}
+            </div>
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
 {% schema %}
 {
   "name": "t:sections.all.section_setting.page_heading.label",

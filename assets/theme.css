@@ -54,7 +54,7 @@ blockquote {
   font-weight: var(--body-font-weight);
 }
 .heading-weight {
-  font-size: var(--heading-weight);
+  font-weight: var(--heading-weight);
 }
 .medium-weight {
   font-weight: 500;
@@ -575,9 +575,6 @@ a.hover-heading-color:hover {
 }
 .me-20 {
   margin-inline-end: 2rem;
-}
-.min-w-custom {
-  min-width: var(--min-width);
 }
 .min-h-55 {
   min-height: 55px;
@@ -1936,4 +1933,29 @@ details > summary .icon {
   border-radius: 5px;
   gap: 0.5rem;
   font-weight: var(--subheading_weight, 500);
+}
+.icon_plus-animation::before,
+.icon_plus-animation::after {
+  position: absolute;
+  content: "";
+  top: 50%;
+  left: calc(100% - 7px);
+  -webkit-transform: translate(-50%, -50%) rotate(-90deg);
+  transform: translate(-50%, -50%) rotate(-90deg);
+  background-color: currentColor;
+  transition: var(--transition);
+}
+.icon_plus-animation:before {
+  width: var(--icon-width, 13px);
+  height: var(--icon-height, 1px);
+}
+.icon_plus-animation:after {
+  width: var(--icon-height, 1px);
+  height: var(--icon-width, 13px);
+}
+
+.detail-open .icon_plus-animation:before {
+  opacity: 0;
+  -webkit-transform: translate(-50%, -50%) rotate(90deg);
+  transform: translate(-50%, -50%) rotate(90deg);
 }
