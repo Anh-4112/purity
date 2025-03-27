@@ -22,10 +22,9 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div class="js-contents">
+    <div class="main-cart__wrapper js-contents">
       <div
         class="main-cart flex"
-        style="--col-width: 45rem;--gap: 60;"
       >
         <div class="cart-left w-full{% if cart != empty %} col-1025-remaining{% endif %}">
           <div class="sticky-1025">
@@ -65,9 +64,9 @@
                         class="cart-item product__item"
                         id="CartItem-{{ item.index | plus: 1 }}"
                       >
-                        <div class="cart-item_inner" style="--gap: 15">
+                        <div class="cart-item_inner">
                           {% if item.image %}
-                            <div class="cart-item__media w-custom" style="--width: 120px">
+                            <div class="cart-item__media w-custom">
                               {%- liquid
                                 assign ratio = ''
                                 if theme_st.product_image_ratio != 'adapt'
@@ -276,7 +275,6 @@
                                   <input
                                     class="quantity__input w-custom"
                                     type="number"
-                                    style="--width: 5rem;--input-height: 38px;"
                                     type="number"
                                     data-quantity-variant-id="{{ item.variant.id }}"
                                     name="updates[]"
@@ -371,7 +369,7 @@
                   <div class="cart__note-title active relative flex">
                     <label>{{ 'sections.cart.note' | t }}</label>
                   </div>
-                  <div class="cart__note-content" style="display: block;">
+                  <div class="cart__note-content block">
                     <textarea
                       class="text-area field__input w-full"
                       name="note"
