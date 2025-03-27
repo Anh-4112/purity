@@ -1,5 +1,5 @@
 {% liquid
-  assign mobile_options = section_st.mobile_options
+  assign mobile_thumbnails = section_st.mobile_thumbnails
   assign enable_video_autoplay = section_st.enable_video_autoplay
   assign media_position = section_st.media_position
   assign layout = 'grid'
@@ -44,12 +44,12 @@
                   class: ' swiper-slide'
                 %}
               </div>
-              <div class="swiper-pagination"></div>
+              <div class="swiper-pagination absolute bottom-15 left-15 bg-white shadow rounded px-15 py-5"></div>
             </div>
           </div>
           <div
             id="GalleryThumbnailViewer-{{ section.id }}"
-            class="media-thumb-swiper{% if desktop_layout == 'thumbnail_bottom' %} mt-10{% endif %}{% if mobile_options == 'hidden_thumbnail' %} mobile-hidden{% endif %}{% if desktop_layout == 'thumbnail_left' %}{% if media_position == 'right' %} right-0{% else %} left-0{% endif %}{% endif %}"
+            class="media-thumb-swiper{% if layout == 'thumbnail' %} mt-10{% endif %}{% if desktop_layout == 'thumbnail_left' %} mt-md-0{% endif %}{% if mobile_thumbnails == 'hidden_thumbnail' %} hidden block-md{% endif %}{% if desktop_layout == 'thumbnail_left' %}{% if media_position == 'right' %} right-0{% else %} left-0{% endif %}{% endif %}"
           >
             <div class="swiper-wrapper-thumbnail swiper">
               <div class="swiper-wrapper">
