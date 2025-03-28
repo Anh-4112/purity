@@ -1959,30 +1959,32 @@ details > summary .icon {
   -webkit-transform: translate(-50%, -50%) rotate(90deg);
   transform: translate(-50%, -50%) rotate(90deg);
 }
-.rounded-left, .rtl .rounded-right{
-  border-top-left-radius: var(--img-rounded);
-  border-bottom-left-radius: var(--img-rounded);
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.rounded-right, .rtl .rounded-left{
-  border-top-right-radius: var(--img-rounded);
-  border-bottom-right-radius: var(--img-rounded);
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+@media screen and (min-width: 1025px) {
+  .rounded-1025-left, .rtl .rounded-1025-right{
+    border-top-left-radius: var(--img-rounded);
+    border-bottom-left-radius: var(--img-rounded);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .rounded-1025-right, .rtl .rounded-1025-left{
+    border-top-right-radius: var(--img-rounded);
+    border-bottom-right-radius: var(--img-rounded);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }
 @media screen and (max-width: 1025px) {
-  .rounded-left, .rtl .rounded-left {
+  .rounded-top-mb {
     border-top-left-radius: var(--img-rounded);
     border-top-right-radius: var(--img-rounded);
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
-  .rounded-right, .rtl .rounded-right {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+  .rounded-bottom-mb {
     border-bottom-left-radius: var(--img-rounded);
     border-bottom-right-radius: var(--img-rounded);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 }
 @media (min-width: 1025px) {
