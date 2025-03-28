@@ -1,7 +1,7 @@
 {% assign block_st = block.settings %}
 <div
-  class="block__subheading mb-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }}"
-  style="--space-bottom: {{ block_st.spacing_bottom }};"
+  class="block__subheading subheading_weight lh-1 inline-block mb-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }} text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != blank  %} py-10 px-15 btn-rounded{% endif %}"
+  style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
   {{ block.shopify_attributes }}
 >
   {{ block_st.subheading | escape }}
@@ -35,6 +35,18 @@
       ],
       "default": "",
       "label": "t:sections.all.content_header.heading_size.size"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings_schema.colors.settings.background.label",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings_schema.colors.settings.general_text.label",
+      "default": "#000000"
     },
     {
       "type": "checkbox",

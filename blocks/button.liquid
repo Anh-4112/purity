@@ -11,7 +11,7 @@
 %}
 {% if first_button_label != blank or block_st.second_button_label != blank %}
   <div
-    class="block__buttons mb-custom flex gap-10 w-content{% if content_alignment %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
+    class="block__buttons mb-custom flex wrap gap-10 text-center {% if content_alignment %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
     style="--space-bottom: {{ block_st.spacing_bottom }};"
   >
     {% if first_button_label != blank %}
@@ -22,7 +22,8 @@
           href="{{ first_button_link | default: "#" }}"
         {% endif %}
         aria-label="{{ first_button_label }}"
-        class="btn btn-{{ first_button_type }}"
+        class="btn btn-{{ first_button_type }} min-w-custom"
+        style="--min-width: 20rem;"
       >
         {{ first_button_label }}
       </a>
@@ -35,7 +36,8 @@
           href="{{ second_button_link | default: "#" }}"
         {% endif %}
         aria-label="{{ second_button_label }}"
-        class="btn btn-{{ second_button_type }}"
+        class="btn btn-{{ second_button_type }} min-w-custom"
+        style="--min-width: 20rem;"
       >
         {{ second_button_label }}
       </a>
@@ -46,7 +48,7 @@
 {% schema %}
 {
   "name": "t:sections.all.content_setting.button_label-block.label",
-  "class": "w-content",
+  "class": "block__buttons",
   "settings": [
     {
       "type": "header",
