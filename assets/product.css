@@ -6,7 +6,7 @@
   background-color: var(--badges-bg);
   color: var(--badges-color);
 }
-:is([class*="product__badges-"], .rating-text) {
+:is([class*="product__badges-"], .rating-total) {
   padding: 4px 14px;
   line-height: 20px;
 }
@@ -18,23 +18,27 @@
   font-size: var(--product-price-size, 1.4rem);
   margin-top: 6px;
 }
+.rating {
+  color: #c4c4c4;
+}
+.rate-color {
+  color: var(--rate-color);
+}
 @media (min-width: 1025px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .product__inner:hover :is(.product__hover-img, .button-quickview) {
     opacity: 1;
     visibility: visible;
   }
   .button-quickview {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(30%);
-    overflow: hidden;
-    transition: color var(--duration-long, 0.5s) ease,
-      transform var(--duration-default, 0.25s) ease;
+    --btn-padding-y: 1.5rem;
+    transform: translateY(100%);
+    transition: 0.35s cubic-bezier(0.04, 0.24, 0.37, 0.95);
   }
   .product__inner:hover .button-quickview {
     transform: translateY(0);
   }
 }
-.shopify-payment-button__button {
-  height: auto;
+.shopify-payment-button__more-options.shopify-payment-button__skeleton {
+  width: 100%;
+  margin-inline: auto;
 }

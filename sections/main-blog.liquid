@@ -50,8 +50,8 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 {%- capture col_style -%}
-  --col-desktop: {{ section_st.post_per_row_desktop }};--col-number: 1;--col-tablet: 2;
-  {% if column_gap_slide < 20 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ section_st.items_per_row_mobile }}
+  --col-number: 1;--col-tablet: 2;--col-desktop: {{ section_st.post_per_row_desktop }};
+  {% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
 {%- endcapture -%}
 
 <div
@@ -94,7 +94,7 @@
           {%- endif -%}
         </div>
         <div
-          class="grid-cols"
+          class="grid-cols gap grid"
           style="{{ col_style | strip | strip_newlines }}"
           id="section__content-items"
         >

@@ -202,7 +202,7 @@
                     height="14"
                     viewBox="0 0 14 14"
                     fill="none"
-                    class="spin opacity-0 pointer-none icon-load absolute"
+                    class="spin opacity-0 pointer-none icon-load absolute transition-short"
                   >
                     <use href="#icon-load"></use>
                   </svg>
@@ -273,7 +273,7 @@
           </a>
           {%- if product_show_rate and disable_rate != true -%}
             {%- liquid
-              render 'review', review_star: true, product: card_product
+              render 'review', review_star: true, product: card_product, scope: 'item'
             -%}
           {%- endif -%}
           {% if disable_price != true %}

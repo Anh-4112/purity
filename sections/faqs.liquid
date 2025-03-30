@@ -19,21 +19,27 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
+{%  style %}
+  .faq-container .shopify-block:first-child details {
+    padding-top:0;
+  }
+{% endstyle %}
 <section
   class="section section__faq color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     <div
-      class="section__faqs-content{% if show_faqs_message %} flex flex-wrap{% endif %}{% if desktop_content_position == 'right' %} flex-1025-row-reverse{% endif %}"
+      class="section__faqs-content w-full{% if show_faqs_message %} flex wrap gap{% endif %}{% if desktop_content_position == 'right' %} flex-1025-row-reverse{% endif %}"
+      style="--gap: clamp(3rem, 5vw, 10rem);--col-gap: clamp(3rem, 5vw, 10rem);--col-width: 30%;"
     >
       {% if show_faqs_message %}
-        <div class="faqs__info">
+        <div class="faqs__info w-full col-1025-w-custom">
           {%- if subheading != blank -%}
-            <div class="faqs__subheading">{{ subheading }}</div>
+            <div class="faqs__subheading h7 heading-letter-spacing subheading_weight mb-10">{{ subheading }}</div>
           {%- endif -%}
           {%- if heading != blank -%}
-            <div class="faqs__heading">{{ heading }}</div>
+            <div class="faqs__heading h2 mb-15">{{ heading }}</div>
           {%- endif -%}
           {%- if description != blank -%}
             <div class="faqs__description">{{ description }}</div>
@@ -46,14 +52,15 @@
                 href="{{ button_link | default: "#" }}"
               {% endif %}
               aria-label="{{ button_label }}"
-              class="w-full"
+              class="btn btn-primary inline-block mt-40 min-w-custom text-center"
+              style="--min-width: 20rem;"
             >
               {{ button_label }}
             </a>
           {%- endif -%}
         </div>
       {% endif %}
-      <div class="{% if show_faqs_message %}w-full{% endif %}">
+      <div class="faq-container w-full{% if show_faqs_message %} col-1025-remaining{% endif %}">
         {% content_for 'blocks' %}
       </div>
     </div>

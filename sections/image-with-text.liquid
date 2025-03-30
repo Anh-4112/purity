@@ -7,7 +7,6 @@
   else
     assign section_width = 'fluid_container'
   endif
-
   assign column_gap_slide = 0
   if section_st.column_gap == 'large'
     assign column_gap_slide = 30
@@ -16,13 +15,36 @@
   elsif section_st.column_gap == 'small'
     assign column_gap_slide = 10
   endif
+  assign radius_image_class = ''
+  assign radius_content_class = ''
+  if column_gap_slide == 0 and section_st.background_color != "rgba(0,0,0,0)" and section_st.background_color != "transparent" and section_st.background_color != blank and section_st.background_color != "#fff" and section_st.background_color != "#ffffff"
+    if section_st.image_desktop_position == 'left'
+      assign radius_image_class = "rounded-1025-left rounded-top-mb"
+      assign radius_content_class = "rounded-1025-right rounded-bottom-mb"
+    else
+      assign radius_image_class = "rounded-1025-right rounded-top-mb"
+      assign radius_content_class = "rounded-1025-left rounded-bottom-mb"
+    endif
+  else
+    assign radius_image_class = "rounded"
+    assign radius_content_class = "rounded"
+  endif
+  if section_st.background_color != "rgba(0,0,0,0)" and section_st.background_color != "transparent" and section_st.background_color != blank and section_st.background_color != "#fff" and section_st.background_color != "#ffffff"
+    assign padding_content_class = "p-30"
+  else
+    if column_gap_slide != 0
+      assign padding_content_class = ""
+    else
+      assign padding_content_class = "image-with-text__container"
+    endif
+  endif
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }}; --col-width: {{ section_st.desktop_image_width }}%"
   {%- endcapture -%}
 
 {%- capture col_style -%}
-    {% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
+    {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--gap: {{  column_gap_slide }}px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
 {%- endcapture -%}
 
 <div
@@ -31,12 +53,12 @@
 >
   <div class="{{ section_width }}">
     <div
-      class="flex flex-wrap flex-cols row-gap-20{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
+      class="flex wrap gap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
       style="{{ col_style | strip | strip_newlines }}"
     >
-      <div class="image-with-text__media-item w-full col-md-w-custom">
+      <div class="image-with-text__media-item w-full col-1025-w-custom">
         <div
-          class="image-with-text__media banner__media"
+          class="image-with-text__media banner__media {{ radius_image_class }} h-full"
           {% if section_st.image != blank %}
             style="--aspect-ratio: {{ section_st.image.aspect_ratio }}";
           {% else %}
@@ -54,14 +76,14 @@
           {%- endif -%}
         </div>
       </div>
-      <div class="w-full col-md-remaining flex text-{{ section_st.text_alignment }}">
-        {% if section_st.background_color != blank %}
-          <div class="image-with-text__wrapper flex">
+      <div class="w-full col-1025-remaining flex text-{{ section_st.text_alignment }}">
+        {% if section_st.background_color != "rgba(0,0,0,0)" and section_st.background_color != "transparent" and section_st.background_color != blank and section_st.background_color != "#fff" and section_st.background_color != "#ffffff" %}
+          <div class="image-with-text__wrapper w-full flex bg-custom {{ radius_content_class }}" style="--bg-color-custom: {{ section_st.background_color }};">
         {% endif %}
-        <div class="image-with-text__text-item-inner align-self-{{ section_st.desktop_vertical_alignment }}">
+        <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }}">
           {% content_for 'blocks' %}
         </div>
-        {% if section_st.background_color != blank %}</div>{% endif %}
+        {% if section_st.background_color != "rgba(0,0,0,0)" and section_st.background_color != "transparent" and section_st.background_color != blank and section_st.background_color != "#fff" and section_st.background_color != "#ffffff" %}</div>{% endif %}
       </div>
     </div>
   </div>

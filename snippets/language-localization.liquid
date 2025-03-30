@@ -27,23 +27,23 @@
   <localization-form class="no-js-hidden">
     {%- assign form_id = 'localization-language-' | append: section.id -%}
     {% form 'localization', id: form_id %}
-      <div class="disclosure">
+      <div class="disclosure flex content-center text-center relative">
         <button
           type="button"
-          class="button button-localization inline-flex align-center gap-10 btn-reset color-inherit show-overlay fs-small body-weight pointer" 
+          class="button button-localization lh-global inline-flex align-center gap-10 btn-reset color-inherit show-overlay fs-small body-weight pointer" 
           style="--show-overlay-bg: #0005;"
           aria-expanded="false"
           aria-controls="{{ localPosition }}List"
           aria-describedby="{{ localPosition }}Label"
         >
           {{ localization.language.endonym_name | capitalize }}
-          <svg class="icon icon-down transition-short ms-20" width="9" height="6" viewBox="0 0 9 6">
+          <svg class="icon icon-down transition-short" width="9" height="6" viewBox="0 0 9 6">
             <use href="#icon-arrow-down" />
           </svg>
         </button>
 
         <div
-          class="disclosure__list-wrapper bg-white z-3 fs-small body-weight transition"
+          class="disclosure__list-wrapper block invisible bg-white z-3 fs-small body-weight transition-short absolute left-0 shadow"
           hidden="true"
         >
           <icon-close class="disclosure__list-close pointer-none border inline-flex hidden-1025 mx-auto rounded-50 overflow-hidden absolute top-0 inset-x-0 w-50 h-50 content-center heading-color bg-white">
@@ -52,7 +52,7 @@
             </svg>
           </icon-close>
           <ul
-            class="disclosure__list list-unstyled transition p-24 overflow-auto"
+            class="disclosure__list h-full text-start list-unstyled p-24 overflow-auto custom-scrollbar"
             role="list"
           >
             {% for language in localization.available_languages %}

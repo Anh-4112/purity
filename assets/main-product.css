@@ -1,3 +1,14 @@
+.media-thumb-swiper .swiper-slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  transition: var(--transition);
+  border-radius: 1rem;
+}
+.media-thumb-swiper .swiper-slide-thumb-active:after {
+  border-color: var(--color-dark);
+}
 @media (min-width: 768px) {
   .stacked {
     grid-template-columns: repeat(2, 1fr);

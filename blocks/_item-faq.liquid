@@ -6,30 +6,30 @@
 -%}
 {%- if question != blank and answer != blank -%}
   <div
-    class="section__faq-items relative faq-block"
+    class="section__faq-items relative faq-block border-bottom"
   >
     <details
-      class="collapsible-row"
+      class="collapsible-row py-25{% if open_all_question %} detail-open{% endif %}"
       is="collapsible-row"
       {% if open_all_question %}
         open
       {% endif %}
     >
       <summary class="collapsible-row__summary">
-        <h3
+        <h6
           tabindex="0"
           class="collapsible-heading transition pointer relative flex"
         >
           {{ question }}
-          <svg class="icon icon-down transition-short" width="10" height="6">
-            <use href="#icon-arrow-down"></use>
-          </svg>
-        </h3>
+          <span class="open-children-toggle transition">
+            <span class="icon_plus-animation"> </span>
+          </span>
+        </h6>
       </summary>
       <div
-        class="collapsible-row__content"
+        class="collapsible-row__content overflow-hidden"
       >
-        <div class="faq_content-inner">{{ answer }}</div>
+        <div class="faq_content-inner mt-20">{{ answer }}</div>
       </div>
     </details>
   </div>
@@ -55,6 +55,7 @@
       "label": "t:sections.faq.blocks.settings.question.answer",
       "default": "<p>Write the answer.</p>"
     }
-  ]
+  ],
+  "presets": [{ "name": "t:sections.faq.blocks.name" }]
 }
 {% endschema %}
