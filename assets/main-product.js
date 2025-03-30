@@ -1,4 +1,4 @@
-import { SlideSection } from "module-slide";
+import { SlideSection } from "module_slide";
 
 document.addEventListener("DOMContentLoaded", function () {
   function addProductEntry(productJson, storedProducts) {
