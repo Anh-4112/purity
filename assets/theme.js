@@ -696,29 +696,29 @@ class VariantInput extends HTMLElement {
       });
     }
 
-    this.productTarget = target.closest(".product__item-js");
-    this.position_swatch = target.getAttribute("data-position");
-    const type_swatch = "item";
-    if (!target.classList.contains("active")) {
-      const activeSwatches = target
-        .closest(".product-swatches-js")
-        .querySelectorAll(".swatch-items-js");
-      activeSwatches.forEach((el) => {
-        el.classList.remove("active");
-      });
-      target.classList.toggle("active");
-      const variantQtyData = JSON.parse(
-        this.productTarget.querySelector(".productVariantsQty").textContent
-      );
-      this.updateOptions();
-      const currentVariant = this.updateMasterId(this.variantData);
-      if (currentVariant) {
-        this.updateMedia(type_swatch);
-        this.updatePrice(this.productTarget);
-        this.renderProductInfo(variantQtyData);
-        this.updateShareUrl();
-      }
-    }
+    // this.productTarget = target.closest(".product__item-js");
+    // this.position_swatch = target.getAttribute("data-position");
+    // const type_swatch = "item";
+    // if (!target.classList.contains("active")) {
+    //   const activeSwatches = target
+    //     .closest(".product-swatches-js")
+    //     .querySelectorAll(".swatch-items-js");
+    //   activeSwatches.forEach((el) => {
+    //     el.classList.remove("active");
+    //   });
+    //   target.classList.toggle("active");
+    //   const variantQtyData = JSON.parse(
+    //     this.productTarget.querySelector(".productVariantsQty").textContent
+    //   );
+    //   this.updateOptions();
+    //   const currentVariant = this.updateMasterId(this.variantData);
+    //   if (currentVariant) {
+    //     this.updateMedia(type_swatch);
+    //     this.updatePrice(this.productTarget);
+    //     this.renderProductInfo(variantQtyData);
+    //     this.updateShareUrl();
+    //   }
+    // }
   }
 
   onSwatchClick(event) {
