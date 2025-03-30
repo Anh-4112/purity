@@ -1,4 +1,4 @@
-import { SlideSection } from "module_slide";
+import { SlideSection } from "module-slide";
 import { AddToCart } from "module-addToCart";
 import * as global from "global";
 
@@ -100,9 +100,9 @@ class ButtonCloseModel extends HTMLButtonElement {
     const details = this.closest(".details-header-menu");
     if (details) {
       details.classList.remove("detail-open"),
-      this.removeAttribute("open"),
-      this.firstElementChild.removeAttribute("open"),
-      this.lastElementChild.removeAttribute("open")
+        this.removeAttribute("open"),
+        this.firstElementChild.removeAttribute("open"),
+        this.lastElementChild.removeAttribute("open");
     }
   }
 }
@@ -302,15 +302,17 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
   async transition(value) {
     return value
       ? (Motion.animate(
-        this.content,
-        true ? { height: "auto"} : { height: 0 },
-        { duration: 0.3 } ),
+          this.content,
+          true ? { height: "auto" } : { height: 0 },
+          { duration: 0.3 }
+        ),
         this.classList.add("detail-open"),
         this.setAttribute("open", ""))
       : (Motion.animate(
-        this.content,
-        false ? { height: "auto"} : { height: 0 },
-        { duration: 0.3 } ),
+          this.content,
+          false ? { height: "auto" } : { height: 0 },
+          { duration: 0.3 }
+        ),
         this.classList.remove("detail-open"),
         this.open || setTimeout(() => this.removeAttribute("open"), 300));
   }
