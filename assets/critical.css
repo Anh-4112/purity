@@ -320,6 +320,11 @@ textarea {
 [style*="--point"] :is(img, picture) {
   object-position: var(--point);
 }
+@media (min-width: 576px) {
+  :is(.grid-cols, .flex-cols) {
+    --col: var(--col-tablet, var(--col-desktop));
+  }
+}
 @media (min-width: 768px) {
   .flex-md {
     display: flex;
@@ -1003,6 +1008,11 @@ body:not(.template-index) .transparent-logo {
   .swiper:not([class*="initialized"])[data-desktop="1"] .swiper-slide {
     width: 100%;
   }
+  :is(.grid-cols, .flex-cols) {
+    --col: var(--col-desktop, var(--col-number));
+    --col-gap: var(--col-gap-desktop, 20px);
+    --gap: var(--col-gap-desktop, var(--col-gap));
+  }
 }
 .reveal_on_scroll {
   scrollbar-width: none;
@@ -1010,7 +1020,7 @@ body:not(.template-index) .transparent-logo {
   overscroll-behavior-x: contain;
   overflow: visible;
 }
-}
+
 @media screen and (max-width: 767.98px) {
   .grid_scroll {
     grid-template-columns: repeat(
