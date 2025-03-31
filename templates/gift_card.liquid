@@ -101,8 +101,6 @@
       <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
       {% comment %}theme-check-enable AssetPreload{% endcomment %}
     {%- endunless -%}
-
-    {{ 'template-giftcard.css' | asset_url | stylesheet_tag }}
   </head>
 
   <body class="gradient gift-card">
@@ -150,7 +148,11 @@
       <p id="gift-card-code" class="gift-card__number">{{ gift_card.code | format_code }}</p>
       <div class="gift-card__qr-code" data-identifier="{{ gift_card.qr_identifier }}"></div>
       {%- if gift_card.pass_url -%}
-        <a href="{{ gift_card.pass_url }}" class="gift_card__apple-wallet no-print">
+        <a
+          href="{{ gift_card.pass_url }}"
+          aria-label="{{ 'gift_cards.issued.add_to_apple_wallet' | t }}"
+          class="gift_card__apple-wallet no-print"
+        >
           <img
             src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}"
             width="120"

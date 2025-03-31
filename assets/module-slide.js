@@ -125,8 +125,6 @@ function initSlideMedia(_this, gallery, thumbnail) {
       itemMobile = 1.3;
     }
   }
-
-  console.log(direction);
   const swiperSlide = new Swiper(swiperElement, {
     slidesPerView: itemMobile,
     spaceBetween: 10,

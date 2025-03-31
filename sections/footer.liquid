@@ -67,7 +67,7 @@
                       {%- if block_st.heading != blank or block_st.description != blank -%}
                         <div class="footer-block__newsletter-heading">
                           {%- if block_st.heading != blank -%}
-                            <h6 class="footer__block-heading flex justify-between align-center collapsible-title relative py-20 mb-md-5">
+                            <h6 class="footer__block-heading flex space-between align-center collapsible-title relative py-20 mb-md-5">
                               {{- block_st.heading | escape -}}
                             </h6>
                           {%- endif -%}
@@ -121,9 +121,12 @@
                             </div>
                           </div>
                           {%- if form.errors -%}
-                            <div class="newsletter-form__message form__message error fs-small inline-flex align-center gap-10 mt-10" id="ContactFooter-error">
-                                {%- render 'icon-error' -%}
-                                <span>
+                            <div
+                              class="newsletter-form__message form__message error fs-small inline-flex align-center gap-10 mt-10"
+                              id="ContactFooter-error"
+                            >
+                              {%- render 'icon-error' -%}
+                              <span>
                                 {{- form.errors.translated_fields.email | capitalize }}
                                 {{ form.errors.messages.email -}}
                                 Invalid email or already subscribed"
@@ -154,7 +157,7 @@
                   {%- if block_st.menu != blank or block_st.heading != blank -%}
                     <details class="collapsible-row border-bottom border-bottom-md-0" is="collapsible-row" open>
                       <summary class="collapsible-row__summary pointer-md-none py-20 mb-md-5">
-                        <h6 class="footer__block-heading flex justify-between align-center collapsible-heading">
+                        <h6 class="footer__block-heading flex space-between align-center collapsible-heading">
                           <span>
                             {{- block_st.heading | default: block_st.menu.title | escape -}}
                           </span>
@@ -186,7 +189,7 @@
                   <details class="collapsible-row border-bottom border-bottom-md-0" is="collapsible-row" open>
                     {%- if block_st.store_heading != blank -%}
                       <summary class="collapsible-row__summary pointer-md-none py-20 mb-md-5">
-                        <h6 class="footer__block-heading flex justify-between align-center collapsible-heading relative">
+                        <h6 class="footer__block-heading flex space-between align-center collapsible-heading relative">
                           <span>
                             {{ block_st.store_heading | escape }}
                           </span>
@@ -263,7 +266,7 @@
   <div class="footer__bottom">
     <div class="{{ section_width }} pb-custom" style="--space-bottom: 100">
       <div
-        class="footer_bottom-inner flex column flex-1025-row gap-20 justify-between border-top pt-30"
+        class="footer_bottom-inner flex column flex-1025-row gap-20 space-between border-top pt-30"
       >
         <div class="footer__bottom--left disclosure__footer">
           {%- if section_st.enable_country_selector or section_st.enable_language_selector -%}

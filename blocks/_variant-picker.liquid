@@ -1,6 +1,22 @@
+{%- liquid
+  assign product = closest.product
+  assign variant_type = block.settings.variant_type
+-%}
+{% if product.metafields.custom.external_affiliate == blank %}
+  {%- unless product.has_only_default_variant -%}
+    <div class="main-product-block main-product-variant-picker" {{ block.shopify_attributes }}>
+      {%- assign is_dropdown = false -%}
+      {% if variant_type == 'dropdown' %}
+        {%- assign is_dropdown = true -%}
+      {% endif %}
+      {%- render 'variant-swatches', product: product, block: block, scope: 'detail', is_dropdown: is_dropdown -%}
+    </div>
+  {%- endunless -%}
+{% endif %}
 {% schema %}
 {
   "name": "t:sections.all.product_setting.variant_picker.name",
+  "class": "block-product__variant-picker",
   "settings": [
     {
       "type": "select",
@@ -14,6 +30,22 @@
         {
           "value": "dropdown",
           "label": "t:sections.all.product_setting.variant_picker.settings.picker_type.options__1.label"
+        }
+      ],
+      "default": "swatches"
+    },
+    {
+      "type": "select",
+      "id": "color_variant_style",
+      "label": "t:sections.all.product_setting.variant_picker.settings.color_variant_style.label",
+      "options": [
+        {
+          "value": "swatches",
+          "label": "t:sections.all.product_setting.variant_picker.settings.color_variant_style.options__1.label"
+        },
+        {
+          "value": "none",
+          "label": "t:sections.all.product_setting.variant_picker.settings.color_variant_style.options__2.label"
         }
       ],
       "default": "swatches"
