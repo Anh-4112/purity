@@ -1,24 +1,24 @@
 {% assign block_st = block.settings %}
 <div
-  class="block__subheading subheading_weight lh-normal inline-block mb-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }}"
-  style="--space-bottom: {{ block_st.spacing_bottom }};"
+  class="block__highlight_text subheading_weight lh-normal inline-block mb-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-10 px-15 btn-rounded{% endif %}"
+  style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
   {{ block.shopify_attributes }}
 >
-  {{ block_st.subheading | escape }}
+  {{ block_st.highlight_text | escape }}
 </div>
 {% schema %}
 {
-  "name": "t:sections.all.content_setting.subheading.label",
+  "name": "t:sections.all.content_setting.highlight_text.label",
   "settings": [
     {
       "type": "text",
-      "id": "subheading",
-      "default": "Subheading text",
+      "id": "highlight_text",
+      "default": "Highlight text",
       "label": "t:sections.all.content_setting.subheading.label"
     },
     {
       "type": "select",
-      "id": "subheading_size",
+      "id": "highlight_text_size",
       "options": [
         {
           "value": "small-1",
@@ -37,6 +37,18 @@
       "label": "t:sections.all.content_header.heading_size.size"
     },
     {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.image-with-text.settings.background_color",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.image-with-text.settings.text_color",
+      "default": "#000000"
+    },
+    {
       "type": "checkbox",
       "id": "uppercase",
       "default": false,
@@ -53,6 +65,6 @@
       "default": 10
     }
   ],
-  "presets": [{ "name": "t:sections.all.content_setting.subheading.label" }]
+  "presets": [{ "name": "t:sections.all.content_setting.highlight_text.label" }]
 }
 {% endschema %}
