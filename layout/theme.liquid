@@ -192,8 +192,8 @@
         flex-grow: 1;
       }
     {% endstyle %}
-    {{ 'critical.css' | asset_url | stylesheet_tag }}
     {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
     {% if theme_st.rtl %}{{ 'rtl.css' | asset_url | stylesheet_tag: preload: true }}{% endif %}
     <script defer="defer" src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
     <script defer="defer" src="{{ 'motion.js' | asset_url }}"></script>

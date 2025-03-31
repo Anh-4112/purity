@@ -137,7 +137,7 @@
 -%}
 {%- if sale or sold_out or pre_order or show_new or card_product.metafields.custom.custom_product_badge -%}
   <div
-    class="product__badges flex wrap gap-5{% if type == 'product_item'%} absolute top-15 column{% if theme_st.rtl %} right-15{% else %} left-15{% endif %}{% endif %}"
+    class="product__badges flex wrap gap-5{% if scope == 'item' %} absolute top-15 column{% if theme_st.rtl %} right-15{% else %} left-15{% endif %}{% endif %}"
   >
     {%- if card_product.metafields.custom.external_affiliate != blank -%}
       <div

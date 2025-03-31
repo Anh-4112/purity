@@ -1,5 +1,5 @@
 import { SlideSection } from "module-slide";
-import { AddToCart } from "module-addToCart";
+import * as AddToCart from "module-addToCart";
 import * as global from "global";
 
 class BackToTop extends HTMLElement {
