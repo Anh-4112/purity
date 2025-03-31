@@ -1,4 +1,4 @@
-import { SlideSection } from "module_slide";
+import { SlideSection } from "module-slide";
 
 class MediaGallery extends SlideSection {
   constructor() {
@@ -7,7 +7,11 @@ class MediaGallery extends SlideSection {
   }
 
   init() {
-    if (this.querySelector(".product__media-gallery").classList.contains("product-thumbnail")) {
+    if (
+      this.querySelector(".product__media-gallery").classList.contains(
+        "product-thumbnail"
+      )
+    ) {
       let thumbnail = this.initSlideMediaGallery("thumbnail");
       this.initSlideMediaGallery("main", thumbnail);
     }
@@ -27,7 +31,7 @@ class GridGallery extends MediaGallery {
   init() {
     if (this.MediaGalleryHtml) {
       let width = window.innerWidth;
-      window.addEventListener('resize', () => {
+      window.addEventListener("resize", () => {
         const newWidth = window.innerWidth;
         if (newWidth <= 767 && width > 767) {
           this.actionOnMobile();
@@ -48,10 +52,7 @@ class GridGallery extends MediaGallery {
   actionOnMobile() {
     this.classList.add("swiper");
     this.classList.remove("grid", "grid-cols", "stacked");
-    const html = this.MediaGalleryHtml.replaceAll(
-      "grid-item",
-      "swiper-slide"
-    );
+    const html = this.MediaGalleryHtml.replaceAll("grid-item", "swiper-slide");
     const wrapper = `<div class='swiper-wrapper'>${html}</div> <div
       class="swiper-pagination"
     ></div> `;

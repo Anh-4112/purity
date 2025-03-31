@@ -1,11 +1,6 @@
-import { SlideSection } from 'module_slide';
-import * as global from 'global';
-
-try {
-  document.querySelector(":focus-visible");
-} catch(e) {
-  global.focusVisiblePolyfill();
-}
+import { SlideSection } from "module-slide";
+import { AddToCart } from "module-addToCart";
+import * as global from "global";
 
 class BackToTop extends HTMLElement {
   constructor() {
@@ -55,10 +50,6 @@ class ToggleMenu extends HTMLElement {
   }
   init() {
     this.addEventListener("click", this.onClick.bind(this), false);
-    this.container.addEventListener(
-      "keyup",
-      (event) => event.code.toUpperCase() === "ESCAPE" && this.close()
-    );
   }
   onClick(e) {
     e.preventDefault();
@@ -71,9 +62,12 @@ class ToggleMenu extends HTMLElement {
         menu_drawer.content.firstElementChild.cloneNode(true)
       );
       global.body.appendChild(content.querySelector("menu-drawer"));
-      menu_drawer.remove();
     }
-    global.eventModal(document.querySelector("menu-drawer"), "open");
+    setTimeout(
+      () =>
+        global.eventModal(document.querySelector("menu-drawer"), "open", true),
+      100
+    );
   }
 }
 customElements.define("toggle-menu", ToggleMenu);
@@ -84,6 +78,10 @@ class ModalOverlay extends HTMLElement {
     this.init();
   }
   init() {
+    this.parentElement.addEventListener(
+      "keyup",
+      (event) => event.code.toUpperCase() === "ESCAPE" && this.onClick()
+    );
     this.addEventListener("click", this.onClick.bind(this), false);
   }
   onClick(e) {
@@ -102,17 +100,17 @@ class ButtonCloseModel extends HTMLButtonElement {
   }
   onClick(e) {
     global.eventModal(this, "close");
-    const details = this.closest('.details-header-menu');
+    const details = this.closest(".details-header-menu");
     if (details) {
       details.classList.remove("detail-open"),
-      this.removeAttribute("open"),
-      this.firstElementChild.removeAttribute("open"),
-      this.lastElementChild.removeAttribute("open")
+        this.removeAttribute("open"),
+        this.firstElementChild.removeAttribute("open"),
+        this.lastElementChild.removeAttribute("open");
     }
   }
 }
 customElements.define("button-close-model", ButtonCloseModel, {
-  extends: "button"
+  extends: "button",
 });
 
 const megaMenuCount = new WeakMap();
@@ -133,12 +131,12 @@ class DetailsMegaMenu extends HTMLDetailsElement {
       (this.detectHoverListener = this.detectHover.bind(this)),
       this.addEventListener("mouseenter", this.detectHoverListener.bind(this)),
       this.addEventListener("mouseleave", this.detectHoverListener.bind(this));
-      if (this.querySelector(".back-menu")) {
-        this.querySelector(".back-menu").addEventListener(
-          "click",
-          this.onSummaryClicked.bind(this)
-        );
-      }
+    if (this.querySelector(".back-menu")) {
+      this.querySelector(".back-menu").addEventListener(
+        "click",
+        this.onSummaryClicked.bind(this)
+      );
+    }
   }
   set open(value) {
     value !== this._open &&
@@ -214,15 +212,16 @@ class DetailsMegaMenu extends HTMLDetailsElement {
 customElements.define("details-mega-menu", DetailsMegaMenu, {
   extends: "details",
 }),
-megaMenuCount.set(DetailsMegaMenu, 0);
+  megaMenuCount.set(DetailsMegaMenu, 0);
 
 class SubMenuDetails extends HTMLDetailsElement {
   constructor() {
     super(),
       (this.summaryElement = this.firstElementChild),
       (this.contentElement = this.lastElementChild),
-      this._open = this.hasAttribute("open"),
-      this.content = this.closest('.menu-link').querySelector(".sub-children-menu"),
+      (this._open = this.hasAttribute("open")),
+      (this.content =
+        this.closest(".menu-link").querySelector(".sub-children-menu")),
       this.summaryElement.addEventListener(
         "click",
         this.onSummaryClicked.bind(this)
@@ -245,29 +244,31 @@ class SubMenuDetails extends HTMLDetailsElement {
 
   onSummaryClicked(event) {
     event.preventDefault(),
-      !event.target.closest('.toggle-menu') &&
+      !event.target.closest(".toggle-menu") &&
       this.summaryElement.hasAttribute("data-href") &&
       this.summaryElement.getAttribute("data-href").length > 0
         ? (window.location.href = this.summaryElement.getAttribute("data-href"))
-        : this.open = !this.open;
+        : (this.open = !this.open);
   }
 
   async transition(value) {
     return value
       ? (Motion.animate(
-        this.content,
-        true ? { height: "auto"} : { height: 0 },
-        { duration: 0.25 } ),
+          this.content,
+          true ? { height: "auto" } : { height: 0 },
+          { duration: 0.25 }
+        ),
         this.setAttribute("open", ""))
       : (Motion.animate(
-        this.content,
-        false ? { height: "auto"} : { height: 0 },
-        { duration: 0.25 } ),
-        this.removeAttribute("open"))
+          this.content,
+          false ? { height: "auto" } : { height: 0 },
+          { duration: 0.25 }
+        ),
+        this.removeAttribute("open"));
   }
 }
 customElements.define("submenu-details", SubMenuDetails, {
-  extends: "details"
+  extends: "details",
 });
 
 class CollapsibleRowDetails extends HTMLDetailsElement {
@@ -275,8 +276,8 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
     super(),
       (this.summaryElement = this.firstElementChild),
       (this.contentElement = this.lastElementChild),
-      this._open = this.hasAttribute("open"),
-      this.content = this.querySelector(".collapsible-row__content"),
+      (this._open = this.hasAttribute("open")),
+      (this.content = this.querySelector(".collapsible-row__content")),
       this.summaryElement.addEventListener(
         "click",
         this.onSummaryClicked.bind(this)
@@ -298,28 +299,29 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
   }
 
   onSummaryClicked(event) {
-    event.preventDefault(),
-    this.open = !this.open;
+    event.preventDefault(), (this.open = !this.open);
   }
 
   async transition(value) {
     return value
       ? (Motion.animate(
-        this.content,
-        true ? { height: "auto"} : { height: 0 },
-        { duration: 0.3 } ),
+          this.content,
+          true ? { height: "auto" } : { height: 0 },
+          { duration: 0.3 }
+        ),
         this.classList.add("detail-open"),
         this.setAttribute("open", ""))
       : (Motion.animate(
-        this.content,
-        false ? { height: "auto"} : { height: 0 },
-        { duration: 0.3 } ),
+          this.content,
+          false ? { height: "auto" } : { height: 0 },
+          { duration: 0.3 }
+        ),
         this.classList.remove("detail-open"),
         this.open || setTimeout(() => this.removeAttribute("open"), 300));
   }
 }
 customElements.define("collapsible-row", CollapsibleRowDetails, {
-  extends: "details"
+  extends: "details",
 });
 
 class RecentlyViewedProducts extends HTMLElement {
@@ -331,19 +333,19 @@ class RecentlyViewedProducts extends HTMLElement {
   }
   initData() {
     const savedProductsArr = JSON.parse(
-      localStorage.getItem('recently-viewed-products')
+      localStorage.getItem("recently-viewed-products")
     );
     this.getStoredProducts(savedProductsArr);
   }
   getStoredProducts(arr) {
     const limit = this.dataset?.limit;
     if (limit) {
-      let query = '';
-      var productAjaxURL = '';
+      let query = "";
+      var productAjaxURL = "";
       if (arr && arr.length > 0) {
         const sortedIds = arr.slice();
         const idsToUse = sortedIds.slice(0, limit);
-        query = idsToUse.join('%20OR%20id:');
+        query = idsToUse.join("%20OR%20id:");
         productAjaxURL = `&q=id:${query}`;
       }
     }
@@ -352,8 +354,13 @@ class RecentlyViewedProducts extends HTMLElement {
       .then((text) => {
         const html = document.createElement("div");
         html.innerHTML = text;
-        const recentlyViewedProducts = html.querySelector("recently-viewed-products");
-        if (recentlyViewedProducts && recentlyViewedProducts.innerHTML.trim().length) {
+        const recentlyViewedProducts = html.querySelector(
+          "recently-viewed-products"
+        );
+        if (
+          recentlyViewedProducts &&
+          recentlyViewedProducts.innerHTML.trim().length
+        ) {
           this.innerHTML = recentlyViewedProducts.innerHTML;
         }
       })
@@ -371,11 +378,11 @@ class RecentlyViewedProducts extends HTMLElement {
     };
 
     new IntersectionObserver(handleIntersection.bind(this), {
-      rootMargin: '0px 0px 400px 0px',
+      rootMargin: "0px 0px 400px 0px",
     }).observe(this);
   }
 }
-customElements.define('recently-viewed-products', RecentlyViewedProducts);
+customElements.define("recently-viewed-products", RecentlyViewedProducts);
 
 class ProgressBar extends HTMLElement {
   constructor() {
@@ -467,11 +474,11 @@ customElements.define("inventory-progress-bar", InventoryProgressBar);
 class QuantityInput extends HTMLElement {
   constructor() {
     super();
-    this.input = this.querySelector('input');
-    this.changeEvent = new Event('change', { bubbles: true });
-    this.input.addEventListener('change', this.onInputChange.bind(this));
-    this.querySelectorAll('button').forEach((button) =>
-      button.addEventListener('click', this.onButtonClick.bind(this))
+    this.input = this.querySelector("input");
+    this.changeEvent = new Event("change", { bubbles: true });
+    this.input.addEventListener("change", this.onInputChange.bind(this));
+    this.querySelectorAll("button").forEach((button) =>
+      button.addEventListener("click", this.onButtonClick.bind(this))
     );
   }
 
@@ -499,8 +506,8 @@ class QuantityInput extends HTMLElement {
     event.preventDefault();
     const previousValue = this.input.value;
 
-    event.target.name === 'plus' ||
-    event.target.closest('button').name === 'plus'
+    event.target.name === "plus" ||
+    event.target.closest("button").name === "plus"
       ? this.input.stepUp()
       : this.input.stepDown();
     if (previousValue !== this.input.value)
@@ -512,17 +519,17 @@ class QuantityInput extends HTMLElement {
     if (this.input.min) {
       const min = parseInt(this.input.min);
       const buttonMinus = this.querySelector(".quantity__button[name='minus']");
-      buttonMinus.classList.toggle('disabled', value <= min);
+      buttonMinus.classList.toggle("disabled", value <= min);
     }
     if (this.input.max) {
       const max = parseInt(this.input.max);
       const buttonPlus = this.querySelector(".quantity__button[name='plus']");
-      buttonPlus.classList.toggle('disabled', value >= max);
+      buttonPlus.classList.toggle("disabled", value >= max);
     }
   }
 }
 
-customElements.define('quantity-input', QuantityInput);
+customElements.define("quantity-input", QuantityInput);
 
 class VideoSection extends HTMLElement {
   constructor() {
@@ -626,3 +633,145 @@ class VideoLocalPlay extends VideoLocal {
   }
 }
 customElements.define("video-local-play", VideoLocalPlay);
+
+class VariantInput extends HTMLElement {
+  constructor() {
+    super(),
+      (this._delegate = new global.eventDelegate()),
+      (this.show_more = this.querySelector(".number-showmore")),
+      (this.size_chart = this.querySelector(".open-size-chart")),
+      (this.swatch = this.querySelector(
+        ".product-card-swatch-js .variant-input"
+      )),
+      this._delegate.on(
+        "change",
+        '.product-card-swatch-js [type="radio"], .product-card-variant-js [type="radio"]',
+        this.onSwatchChanged.bind(this)
+      ),
+      this._delegate.on(
+        "click",
+        '.product-card-swatch-js .variant-input [type="radio"]',
+        this.onSwatchClick.bind(this)
+      ),
+      this._delegate.on(
+        "keydown",
+        '.product-card-swatch-js .variant-input [type="radio"]',
+        function (event) {
+          if (event.key === "Enter") {
+            this.onSwatchClick(event);
+          }
+        }.bind(this)
+      );
+    this.init();
+  }
+
+  init() {
+    if (this.show_more) {
+      this.show_more.addEventListener(
+        "click",
+        this.onShowMoreClicked.bind(this)
+      );
+    }
+    if (this.size_chart) {
+      this.size_chart.addEventListener(
+        "click",
+        this.onShowSizeChartClicked.bind(this)
+      );
+    }
+  }
+
+  async onSwatchChanged(event) {
+    event.preventDefault();
+    const target = event.target;
+    if (target.hasAttribute("value")) {
+      this.querySelectorAll("li.variant-input").forEach((variant) => {
+        variant.classList.remove("active");
+      });
+      target.closest(".variant-input").classList.add("active");
+      this.querySelectorAll(".product-variants-option").forEach((v) => {
+        v.classList.remove("active");
+      });
+    }
+  }
+
+  onSwatchClick(event) {
+    const variant = event.target.closest(".variant-input");
+    if (
+      variant.querySelector('[type="radio"]').checked &&
+      variant.classList.contains("active")
+    ) {
+      window.location.href = variant
+        .querySelector('[type="radio"]')
+        .getAttribute("data-href");
+    }
+  }
+
+  onShowMoreClicked(event) {
+    const swatch_hidden = event.target
+      .closest(".swatch-color")
+      .querySelectorAll("li.hidden");
+    swatch_hidden.forEach((swatch) => {
+      swatch.classList.remove("hidden");
+    });
+    this.show_more.closest("li").remove();
+  }
+
+  onShowSizeChartClicked(event) {
+    event.preventDefault();
+    const size_chart = event.target
+      .closest(".product-variants-info")
+      .querySelector("template");
+    if (size_chart) {
+      const content = document.createElement("div");
+      content.appendChild(size_chart.content.firstElementChild.cloneNode(true));
+      global.body.appendChild(content.querySelector("modal-popup"));
+    }
+    setTimeout(
+      () =>
+        global.eventModal(document.querySelector("modal-popup"), "open", true),
+      100
+    );
+  }
+}
+customElements.define("variant-input", VariantInput);
+
+class VariantsDropdown extends HTMLElement {
+  constructor() {
+    super(),
+      (this.variants = this.closest(".product-variants-option")),
+      this.init();
+  }
+
+  init() {
+    if (this.variants) {
+      this.variants
+        .querySelector(".variants__option-dropdown")
+        .addEventListener("click", this.onShowDropdownClicked.bind(this));
+    }
+    document.addEventListener("click", this.handleClickOutside.bind(this));
+  }
+
+  onShowDropdownClicked(event) {
+    this.closest(".product-variants-js")
+      .querySelectorAll(".product-variants-option.active")
+      .forEach((element) => {
+        element.classList.remove("active");
+      });
+    if (this.closest(".product-variants-option").classList.contains("active")) {
+      this.closest(".product-variants-option").classList.remove("active");
+    } else {
+      this.closest(".product-variants-option").classList.add("active");
+    }
+  }
+
+  handleClickOutside(event) {
+    if (!event.target.closest(".product-variants-option")) {
+      document
+        .querySelectorAll(".product-variants-option.active")
+        .forEach((element) => {
+          element.classList.remove("active");
+        });
+    }
+  }
+}
+customElements.define("variants-dropdown", VariantsDropdown);

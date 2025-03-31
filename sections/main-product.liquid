@@ -1,6 +1,5 @@
 {{ 'main-product.css' | asset_url | stylesheet_tag }}
 {{ 'product.css' | asset_url | stylesheet_tag }}
-{{ 'carousel.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign theme_st = settings
   assign section_st = section.settings
@@ -139,8 +138,10 @@
           %}
         </div>
       {% endif %}
-      <div class="product-detail__information{% if product.media.size > 0 %} col-md-remaining w-full{% endif %}">
-        {% content_for 'blocks', closest.product: product %}
+      <div class="product-detail__information w-full{% if product.media.size > 0 %} col-md-remaining{% endif %}">
+        <div class="sticky top-20">
+          {% content_for 'blocks', closest.product: product %}
+        </div>
       </div>
     </div>
   </div>
@@ -224,9 +225,9 @@
 </section>
 {% if enable_sticky_desktop %}
   {%- assign product_form_id = 'sticky-addcart-form-' | append: section.id -%}
-  <sticky-add-cart class="sticky-add-cart">
+  <sticky-add-cart class="sticky-add-cart fixed bottom-0 inset-x-0 bg-white z-5">
     <div class="{{ section_width }}">
-      <div class="sticky-add-cart__inner">
+      <div class="sticky-add-cart__inner flex gap-10">
         {% render 'card-product',
           card_product: product,
           section_id: section.id,
@@ -327,7 +328,7 @@
           "label": "t:sections.main-product.settings.desktop_layout.one_columns.label"
         },
         {
-          "value": "grid",
+          "value": "two_columns",
           "label": "t:sections.main-product.settings.desktop_layout.options__1.label"
         },
         {
