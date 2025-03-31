@@ -1,0 +1,51 @@
+:is(.h-small, .h-medium, .h-large) {
+    min-height: var(--item-height-mb);
+  }
+  .h-small {
+    --item-height-mb: 390px;
+    --item-height: clamp(
+      40rem,
+      calc(40rem + (500 - 400) * var(--responsive-rate)),
+      50rem
+    );
+  }
+  .h-medium {
+    --item-height-mb: 450px;
+    --item-height: clamp(
+      50rem,
+      calc(45rem + (600 - 500) * var(--responsive-rate)),
+      60rem
+    );
+  }
+  .h-large {
+    --item-height-mb: 555px;
+    --item-height: clamp(
+      60rem,
+      calc(45rem + (700 - 600) * var(--responsive-rate)),
+      70rem
+    );
+  }
+  @media screen and (min-width: 768px) {
+    :is(.h-small, .h-medium, .h-large) {
+      min-height: var(--item-height);
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .text-bellow-mb > .banner__media {
+      position: relative;
+    }
+    .banner__box {
+      padding-inline: 0;
+    }
+  }
+  .banner__media img{
+    position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+  }
+  

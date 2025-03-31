@@ -1,3 +1,4 @@
+{{ 'banner.css' | asset_url | stylesheet_tag }}
 {% liquid
   assign section_st = section.settings
   assign image = section_st.image
@@ -15,7 +16,6 @@
 
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
-  --overlay-opacity: {{ section_st.overlay_opacity }}%;
 {%- endcapture -%}
 
 {%- if image_height == 'adapt' -%}
@@ -29,19 +29,19 @@
 {% endif %}
 
 <div
-  class="section section__image-with-text-overlay color-{{ section_st.color_scheme }} gradient"
+  class="{% if image_height != 'base_on_content' %}section{%- endif -%} section__image-with-text-overlay color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     <div
-      class="w-full flex relative h-{{ image_height }} overflow-hidden"
+      class="{% if image_height == 'base_on_content' %}section{% endif %} w-full flex relative h-{{ image_height }} overflow-hidden{% if section_st.show_text_bellow_mobile %} column flex-md-row text-bellow-mb{% endif %}"
       {%- if section_st.image_height == 'adapt' -%}
         style="{{ style_ratio | strip | strip_newlines }}"
       {%- endif -%}
     >
       {%- if image != blank -%}
         <div
-          class="banner__media absolute{% if mobile_image != blank %} d-none block-md{% endif %}{% if image == blank %} placeholder absolute inset-0{% endif %}{% if image_height != 'adapt' %} absolute inset-0{% endif %}"
+          class="banner__media absolute rounded{% if mobile_image != blank %} d-none block-md{% endif %}{% if image == blank %} placeholder inset-0{% endif %}{% if image_height != 'adapt' %} inset-0{% endif %}"
           {%- if image_height == 'adapt' and section_st.image != blank -%}
             style="--aspect-ratio: {{ image.aspect_ratio }}"
           {%- endif -%}
@@ -58,7 +58,7 @@
         </div>
       {%- else -%}
         <div
-          class="banner__media{% if mobile_image != blank %} d-none block-md{% endif %}{% if section_st.image == blank %} placeholder absolute inset-0{% endif %}"
+          class="banner__media rounded{% if mobile_image != blank %} d-none block-md{% endif %}{% if section_st.image == blank %} placeholder absolute inset-0{% endif %}"
           style="--aspect-ratio: 3/2"
         >
           {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}
@@ -71,7 +71,7 @@
           {%- assign alt_mobile = mobile_image.alt -%}
         {%- endif -%}
         <div
-          class="image_mobile banner__media overflow-hidden{% if section_st.show_text_bellow == blank %} absolute inset-0{% endif %}{% if mobile_image == blank %} placeholder absolute inset-0 inset-0{% endif %}{% if mobile_image != blank %} block hidden-md{% endif %}"
+          class="image_mobile banner__media overflow-hidden rounded{% if section_st.show_text_bellow == blank %} absolute inset-0{% endif %}{% if mobile_image == blank %} placeholder absolute inset-0 inset-0{% endif %}{% if mobile_image != blank %} block hidden-md{% endif %}"
           style="--aspect-ratio-mb: {{ mobile_image.aspect_ratio }};"
         >
           {{
@@ -90,12 +90,13 @@
         class="banner__content relative z-3 flex w-full {{ section_st.desktop_content_position }} text-{{ section_st.text_alignment }}"
       >
         <div
-          class="banner__box max-w-custom image-with-text__text-item"
+          class="banner__box max-w-custom image-with-text__text-item p-24"
           style="--max-width: {{ section_st.max_width }}%"
         >
           {% content_for 'blocks' %}
         </div>
       </div>
+      <div class="overlay absolute inset-0 bg-dark z-2 d-none block-md rounded" style="--opacity: {{ section_st.overlay_opacity | times: 0.01 }}"></div>
     </div>
   </div>
 </div>
@@ -189,8 +190,12 @@
           "label": "t:sections.slideshow.settings.slide_height.full_screen"
         },
         {
+          "value": "base_on_content",
+          "label": "t:sections.main-collection-banner.settings.image_height.option__2"
+        },
+        {
           "value": "adapt",
-          "label": "t:sections.slideshow.settings.slide_height.adapt_to_first_image"
+          "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__1.label"
         },
         {
           "value": "small",
@@ -210,6 +215,16 @@
     },
     {
       "type": "header",
+      "content": "t:sections.all.mobile_options.mobile_layout.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_text_bellow_mobile",
+      "label": "t:sections.all.mobile_options.mobile_layout.show_text_bellow.label",
+      "info": "t:sections.all.mobile_options.mobile_layout.show_text_bellow.info",
+    },
+    {
+      "type": "header",
       "content": "t:sections.all.content_setting.label"
     },
     {
@@ -220,38 +235,47 @@
       "info": "t:sections.all.desktop_content_position.info",
       "options": [
         {
+          "group": "t:sections.all.desktop_content_position.group.top.label",
           "value": "top-left",
           "label": "t:sections.all.desktop_content_position.options__1.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.top.label",
           "value": "top-center",
           "label": "t:sections.all.desktop_content_position.options__2.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.top.label",
           "value": "top-right",
           "label": "t:sections.all.desktop_content_position.options__3.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.middle.label",
           "value": "middle-left",
           "label": "t:sections.all.desktop_content_position.options__4.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.middle.label",
           "value": "middle-center",
           "label": "t:sections.all.desktop_content_position.options__5.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.middle.label",
           "value": "middle-right",
           "label": "t:sections.all.desktop_content_position.options__6.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.bottom.label",
           "value": "bottom-left",
           "label": "t:sections.all.desktop_content_position.options__7.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.bottom.label",
           "value": "bottom-center",
           "label": "t:sections.all.desktop_content_position.options__8.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.bottom.label",
           "value": "bottom-right",
           "label": "t:sections.all.desktop_content_position.options__9.label"
         }
