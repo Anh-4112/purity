@@ -39,6 +39,7 @@ export var PUB_SUB_EVENTS = {
 export function onKeyUpEscape(event) {
   if (event.code.toUpperCase() !== "ESCAPE") return;
   const element = event.target;
+  console.log(element);
   eventModal(element, "close");
 }
 
@@ -186,19 +187,24 @@ export function eventModal(element, event, removeElementAfter = false) {
     trapFocus(element);
   } else {
     const active_modal = document.querySelectorAll(".active-modal-js.active");
+    if (element.classList.contains("active-modal-js")) {
+      element.classList.remove("active");
+      if (element.classList.contains("remove-after")) {
+        setTimeout(() => element.remove(), 600);
+      }
+    } else {
+      element.closest(".active-modal-js").classList.remove("active");
+      if (
+        element.closest(".active-modal-js").classList.contains("remove-after")
+      ) {
+        setTimeout(() => element.closest(".active-modal-js").remove(), 600);
+      }
+    }
     if (active_modal.length == 1) {
       root.classList.remove("open-modal");
       root.style.removeProperty("padding-right");
+      removeTrapFocus(element);
     }
-    if (element.classList.contains("active-modal-js")) {
-      element.classList.remove("active");
-    } else {
-      element.closest(".active-modal-js").classList.remove("active");
-    }
-    if (element.classList.contains("remove-after")) {
-      element.remove();
-    }
-    removeTrapFocus(element);
   }
 }
 
@@ -219,4 +225,14 @@ export class eventDelegate {
       handler.call(this, event);
     }
   }
+}
+
+export function fetchConfig(type = "json") {
+  return {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: `application/${type}`,
+    },
+  };
 }

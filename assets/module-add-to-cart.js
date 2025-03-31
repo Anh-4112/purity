@@ -30,7 +30,7 @@ if (!customElements.get("product-form")) {
         this.submitButton.setAttribute("aria-disabled", true);
         this.submitButton.classList.add("loading");
 
-        const config = fetchConfig("javascript");
+        const config = global.fetchConfig("javascript");
         config.headers["X-Requested-With"] = "XMLHttpRequest";
         delete config.headers["Content-Type"];
 
