@@ -1183,7 +1183,7 @@ a.hover-heading-color:hover {
   .flex-1025-nowrap {
     flex-wrap: nowrap;
   }
-  .justify-between-1025 {
+  .space-between-1025 {
     justify-content: space-between;
   }
   .justify-start-1025 {
@@ -1314,7 +1314,7 @@ a.hover-heading-color:hover {
   .pe-xl-25 {
     padding-inline-end: 2.5rem;
   }
-  .justify-between-xl {
+  .space-between-xl {
     justify-content: space-between;
   }
 }
@@ -1523,14 +1523,17 @@ a.hover-heading-color:hover {
   .down-to-up {
     transform: translateY(1.5rem);
   }
-
   .show-on-hover {
     transform: translateX(var(--transform-x, 0));
+    will-change: transform;
+  }
+  .media-gallery__image .show-on-hover {
+    transform: scale(0.8);
   }
   .hover-action:hover .show-on-hover {
     opacity: 1;
     visibility: visible;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
   .blur:hover {
     --opacity: 1;

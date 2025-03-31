@@ -138,8 +138,10 @@
           %}
         </div>
       {% endif %}
-      <div class="product-detail__information{% if product.media.size > 0 %} col-md-remaining w-full{% endif %}">
-        {% content_for 'blocks', closest.product: product %}
+      <div class="product-detail__information w-full{% if product.media.size > 0 %} col-md-remaining{% endif %}">
+        <div class="sticky top-20">
+          {% content_for 'blocks', closest.product: product %}
+        </div>
       </div>
     </div>
   </div>
@@ -326,7 +328,7 @@
           "label": "t:sections.main-product.settings.desktop_layout.one_columns.label"
         },
         {
-          "value": "grid",
+          "value": "two_columns",
           "label": "t:sections.main-product.settings.desktop_layout.options__1.label"
         },
         {

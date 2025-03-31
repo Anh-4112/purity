@@ -15,11 +15,11 @@
   endif
   if type_section == 'quickview'
     assign layout = 'grid'
-    assign desktop_layout = 'grid'
+    assign desktop_layout = 'two_columns'
   endif
 %}
 {%- capture col -%}
-  {% if desktop_layout == 'grid' and type_section != 'quickview' %} --col-number: 2;{% else %}--col-number: 1;{% endif %}
+  {% if desktop_layout == 'two_columns' and type_section != 'quickview' %} --col-number: 2;{% else %}--col-number: 1;{% endif %}
 {%- endcapture -%}
 <script type="module" src="{{ 'media-gallery.js' | asset_url }}"></script>
 <div class="sticky top-20">
@@ -45,7 +45,7 @@
                 %}
               </div>
               <div
-                class="swiper-pagination absolute bottom-15 left-15 bg-white shadow rounded px-15 py-5 fs-small lh-normal"
+                class="swiper-pagination absolute fs-small lh-normal"
               ></div>
             </div>
           </div>

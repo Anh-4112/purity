@@ -4,7 +4,7 @@
       class="submenu classic transition invisible bg-white z-5{% if menu_mobile == blank %} py-30 absolute submenu-desktop {{ section_st.dropdowns_animation }} shadow{% else %} sub-mb absolute inset-0 drawer drawer-right{% endif %}"
     >
       {%- if menu_mobile != blank -%}
-        <div class="submenu-header flex align-center justify-between p-24 border-bottom sticky top-0 bg-white z-3">
+        <div class="submenu-header flex align-center space-between p-24 border-bottom sticky top-0 bg-white z-3">
           <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
             <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
               <use href="#icon-back" />
@@ -25,7 +25,7 @@
       {%- endif -%}
   {%- else -%}
     {%- if menu_mobile != blank -%}
-      <div class="submenu-header flex align-center justify-between p-24 border-bottom sticky top-0 bg-white z-3">
+      <div class="submenu-header flex align-center space-between p-24 border-bottom sticky top-0 bg-white z-3">
         <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
           <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
             <use href="#icon-back" />
@@ -62,7 +62,7 @@
           {%- else -%}
             <details class="details-normal" is="submenu-details" open>
               <summary
-                class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %} flex align-center gap-5 justify-between inside-out-hover"
+                class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %} flex align-center gap-5 space-between inside-out-hover"
                 {% if menu_mobile != blank %}
                   data-href="{{ link.url }}"
                 {% endif %}
@@ -112,7 +112,7 @@
   {%- endif -%}
 {%- else -%}
   {%- if menu_mobile != blank -%}
-    <div class="submenu-header flex align-center justify-between p-24 border-bottom sticky top-0 bg-white z-3">
+    <div class="submenu-header flex align-center space-between p-24 border-bottom sticky top-0 bg-white z-3">
       <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
         <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
           <use href="#icon-back" />
