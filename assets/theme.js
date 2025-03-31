@@ -62,9 +62,12 @@ class ToggleMenu extends HTMLElement {
         menu_drawer.content.firstElementChild.cloneNode(true)
       );
       global.body.appendChild(content.querySelector("menu-drawer"));
-      menu_drawer.remove();
     }
-    global.eventModal(document.querySelector("menu-drawer"), "open");
+    setTimeout(
+      () =>
+        global.eventModal(document.querySelector("menu-drawer"), "open", true),
+      100
+    );
   }
 }
 customElements.define("toggle-menu", ToggleMenu);
@@ -636,11 +639,6 @@ class VariantInput extends HTMLElement {
     super(),
       (this._delegate = new global.eventDelegate()),
       (this.show_more = this.querySelector(".number-showmore")),
-      (this.variantData =
-        this.variantData ||
-        JSON.parse(
-          this.querySelector('[type="application/json"]').textContent
-        )),
       (this.size_chart = this.querySelector(".open-size-chart")),
       (this.swatch = this.querySelector(
         ".product-card-swatch-js .variant-input"
@@ -674,7 +672,6 @@ class VariantInput extends HTMLElement {
         this.onShowMoreClicked.bind(this)
       );
     }
-    console.log(this);
     if (this.size_chart) {
       this.size_chart.addEventListener(
         "click",
@@ -695,30 +692,6 @@ class VariantInput extends HTMLElement {
         v.classList.remove("active");
       });
     }
-
-    // this.productTarget = target.closest(".product__item-js");
-    // this.position_swatch = target.getAttribute("data-position");
-    // const type_swatch = "item";
-    // if (!target.classList.contains("active")) {
-    //   const activeSwatches = target
-    //     .closest(".product-swatches-js")
-    //     .querySelectorAll(".swatch-items-js");
-    //   activeSwatches.forEach((el) => {
-    //     el.classList.remove("active");
-    //   });
-    //   target.classList.toggle("active");
-    //   const variantQtyData = JSON.parse(
-    //     this.productTarget.querySelector(".productVariantsQty").textContent
-    //   );
-    //   this.updateOptions();
-    //   const currentVariant = this.updateMasterId(this.variantData);
-    //   if (currentVariant) {
-    //     this.updateMedia(type_swatch);
-    //     this.updatePrice(this.productTarget);
-    //     this.renderProductInfo(variantQtyData);
-    //     this.updateShareUrl();
-    //   }
-    // }
   }
 
   onSwatchClick(event) {
@@ -747,49 +720,17 @@ class VariantInput extends HTMLElement {
     event.preventDefault();
     const size_chart = event.target
       .closest(".product-variants-info")
-      .querySelector("modal-popup");
+      .querySelector("template");
     if (size_chart) {
-      global.body.appendChild(size_chart);
+      const content = document.createElement("div");
+      content.appendChild(size_chart.content.firstElementChild.cloneNode(true));
+      global.body.appendChild(content.querySelector("modal-popup"));
     }
-    global.eventModal(document.querySelector("modal-popup"), "open", true);
-  }
-
-  updateURL() {
-    if (!this.currentVariant || this.dataset.updateUrl === "false") return;
-    window.history.replaceState(
-      {},
-      "",
-      `${this.dataset.url}?variant=${this.currentVariant.id}`
+    setTimeout(
+      () =>
+        global.eventModal(document.querySelector("modal-popup"), "open", true),
+      100
     );
-  }
-
-  updateOptions() {
-    this.options = Array.from(
-      this.productTarget.querySelectorAll(".swatch-items-js.active"),
-      (select) => select.getAttribute("data-value")
-    );
-    this.variantData.find((variant) => {
-      if (this.options.length == 1) {
-        const variantOptions = {
-          1: variant.option1,
-          2: variant.option2,
-          3: variant.option3,
-        };
-        if (variantOptions[this.position_swatch] === this.options[0]) {
-          this.options = variant.options;
-        }
-      }
-    });
-  }
-
-  updateMasterId(variantData) {
-    return (this.currentVariant = variantData.find((variant) => {
-      return !variant.options
-        .map((option, index) => {
-          return this.options[index] === option;
-        })
-        .includes(false);
-    }));
   }
 }
 customElements.define("variant-input", VariantInput);
