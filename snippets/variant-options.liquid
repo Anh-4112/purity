@@ -92,6 +92,7 @@
         id="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-position-{{ value.id }}"
         value="{%- if scope == 'item' -%}{{ variants.first.id }}{%- else -%}{{ value }}{%- endif -%}"
         data-option-position="{{ option.position }}"
+        class="variant-option"
         {%- if scope == 'item' -%}
           data-href="{{ product.url }}?variant={{ variants.first.id }}"
         {%- endif -%}

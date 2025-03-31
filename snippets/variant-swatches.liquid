@@ -23,9 +23,9 @@
       class="product-variants-js"
       {{ block.shopify_attributes }}
     >
-      <fieldset class="product-card-swatch-js product-variants__input">
-        <legend>{{ 'products.product.colors' | t }}</legend>
-        <ul class="swatch-color">
+      <fieldset class="product-card-swatch-js product-variants__input m-0 p-0 border-0">
+        <legend class="{% if scope == 'item' %}visually-hidden{% endif %}">{{ 'products.product.colors' | t }}</legend>
+        <ul class="swatch-color list-unstyled flex wrap gap-10">
           {%- for option in product.options_with_values -%}
             {%- liquid
               assign is_color_option = false
