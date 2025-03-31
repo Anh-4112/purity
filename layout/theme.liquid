@@ -27,30 +27,10 @@
     {% endif %}
 
     {% render 'meta-tags' %}
-    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
-    {% if theme_st.rtl %}{{ 'rtl.css' | asset_url | stylesheet_tag: preload: true }}{% endif %}
-    <script defer="defer" src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
-    <script defer="defer" src="{{ 'motion.js' | asset_url }}"></script>
-    <script type="importmap">
-      {
-        "imports": {
-          "theme": "{{ 'theme.js' | asset_url }}",
-          "global": "{{ 'global.js' | asset_url }}",
-          "module-slide": "{{ 'module-slide.js' | asset_url }}",
-          "module-addToCart": "{{ 'module-add-to-cart.js' | asset_url }}"
-        }
-      }
-    </script>
-    <script type="module" src="{{ 'theme.js' | asset_url }}"></script>
-    {{ content_for_header }}
-    <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}"></noscript>
-    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="{{ 'theme.css' | asset_url }}"></noscript>
     {% liquid
       assign scheme_classes = ''
-      assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
-      assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
+      assign body_font_bold = settings.body_font | font_modify: 'weight', 'bold'
+      assign body_font_italic = settings.body_font | font_modify: 'style', 'italic'
       assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
     %}
 
@@ -201,7 +181,6 @@
         -webkit-font-smoothing: antialiased;
         -webkit-text-size-adjust: 100%;
         text-rendering: optimizeSpeed;
-        font-display: swap;
         overflow-wrap: break-word;
         display: flex;
         -webkit-flex-direction: column;
@@ -213,11 +192,61 @@
         flex-grow: 1;
       }
     {% endstyle %}
+    {{ 'critical.css' | asset_url | stylesheet_tag }}
+    {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+    {% if theme_st.rtl %}{{ 'rtl.css' | asset_url | stylesheet_tag: preload: true }}{% endif %}
+    <script defer="defer" src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+    <script defer="defer" src="{{ 'motion.js' | asset_url }}"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "theme": "{{ 'theme.js' | asset_url }}",
+          "global": "{{ 'global.js' | asset_url }}",
+          "module_slide": "{{ 'module_slide.js' | asset_url }}"
+        }
+      }
+    </script>
+    <script type="module" src="{{ 'theme.js' | asset_url }}"></script>
+    {{ content_for_header }}
+    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ 'theme.css' | asset_url }}"></noscript>
+    {%- unless settings.body_font.system? -%}
+      {% comment %}theme-check-disable AssetPreload{% endcomment %}
+      <link rel="preload" as="font" href="{{ settings.body_font | font_url }}" type="font/woff2" crossorigin>
+      {% comment %}theme-check-enable AssetPreload{% endcomment %}
+    {%- endunless -%}
+    {%- unless settings.heading_font.system? -%}
+      {% comment %}theme-check-disable AssetPreload{% endcomment %}
+      <link rel="preload" as="font" href="{{ settings.heading_font | font_url }}" type="font/woff2" crossorigin>
+      {% comment %}theme-check-enable AssetPreload{% endcomment %}
+    {%- endunless -%}
+
     <script>
       if (Shopify.designMode) {
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
+    <link
+      rel="stylesheet"
+      href="{{ 'component-deferred-media.css' | asset_url }}"
+      media="print"
+      onload="this.media='all'"
+    >
+    {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
+    <link
+      id="ModelViewerStyle"
+      rel="stylesheet"
+      href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
+      media="print"
+      onload="this.media='all'"
+    >
+    <link
+      id="ModelViewerOverride"
+      rel="stylesheet"
+      href="{{ 'component-model-viewer-ui.css' | asset_url }}"
+      media="print"
+      onload="this.media='all'"
+    >
   </head>
 
   <body class="{{ theme_st.animation_hover_effect }}{% if template.name == 'index' %} template-index{% endif %}">
