@@ -70,6 +70,7 @@
   display: block;
   background: var(--swatch-background);
   background-position: center;
+  border-radius: 50%;
 }
 .color-swatch-label::before {
   content: "";
@@ -81,6 +82,7 @@
   transition: box-shadow 0.3s ease;
   box-shadow: inset 0 0 0 var(--shadow-position, 0)
     rgb(var(--color-white, #fff));
+  border-radius: 50%;
 }
 .rounded-corner .color-swatch-label::before {
   border-radius: 50%;
@@ -91,14 +93,11 @@
     input[type="radio"]:checked + .color-swatch-label,
 
   ) {
-  --border-color: var(--dark-color);
+  --color-border: var(--color-dark);
 }
 :is(
-    .color-swatch-label.active,
     .color-swatch-label:hover,
-    input[type="radio"]:checked + label.color-swatch-label,
-    .facet-checkbox > input[type="checkbox"]:checked ~ .color-swatch-label,
-    .facet-checkbox:hover .color-swatch-label
+    input[type="radio"]:checked + .color-swatch-label
   ):before {
   --shadow-position: 3px;
 }
