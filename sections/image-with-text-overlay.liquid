@@ -71,7 +71,7 @@
           {%- assign alt_mobile = mobile_image.alt -%}
         {%- endif -%}
         <div
-          class="image_mobile banner__media overflow-hidden rounded{% if section_st.show_text_bellow == blank %} absolute inset-0{% endif %}{% if mobile_image == blank %} placeholder absolute inset-0 inset-0{% endif %}{% if mobile_image != blank %} block hidden-md{% endif %}"
+          class="image_mobile banner__media h-{{ image_height }} overflow-hidden rounded{% if section_st.show_text_bellow == blank %} absolute inset-0{% endif %}{% if mobile_image == blank %} placeholder absolute inset-0 inset-0{% endif %}{% if mobile_image != blank %} block hidden-md{% endif %}"
           style="--aspect-ratio-mb: {{ mobile_image.aspect_ratio }};"
         >
           {{
@@ -90,13 +90,13 @@
         class="banner__content relative z-2 flex w-full {{ section_st.desktop_content_position }} text-{{ section_st.text_alignment_mobile }} text-md-{{ section_st.text_alignment }}"
       >
         <div
-          class="banner__box max-w-custom image-with-text__text-item px-custom py-custom"
+          class="banner__box max-w-custom image-with-text__text-item {% unless section_st.show_text_bellow_mobile %} px-custom py-custom{% endunless %}{% if section_st.padding_content_inline < 15 %} min-value{% endif %}"
           style="--max-width: {{ section_st.max_width }}%;--padding-inline: {{ section_st.padding_content_inline }};--padding-block: {{ section_st.padding_content_block }};"
         >
           {% content_for 'blocks' %}
         </div>
       </div>
-      <div class="overlay absolute inset-0 bg-dark d-none block-md rounded" style="--opacity: {{ section_st.overlay_opacity | times: 0.01 }}"></div>
+      <div class="overlay absolute inset-0 bg-dark rounded{% if section_st.show_text_bellow_mobile %} d-none block-md{% endif %}" style="--opacity: {{ section_st.overlay_opacity | times: 0.01 }}"></div>
     </div>
   </div>
 </div>

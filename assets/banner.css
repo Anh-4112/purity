@@ -39,8 +39,6 @@
     }
 
     .text-bellow-mb>.banner__content .banner__box {
-        padding-inline: 0;
-        padding-block: 0;
         margin-top: 4rem;
     }
 }
@@ -56,20 +54,29 @@
     object-fit: cover;
 }
 
-:where(.px-custom:not(.x-min-value)) {
-    padding-left: clamp(00px,
+:where(.px-custom) {
+    padding-left: clamp(15px,
             calc(15px + (var(--padding-inline) - 15) * var(--responsive-rate)),
             calc(var(--padding-inline) * 1px));
-    padding-right: clamp(0px,
+    padding-right: clamp(15px,
             calc(15px + (var(--padding-inline) - 15) * var(--responsive-rate)),
             calc(var(--padding-inline) * 1px));
 }
 
-:where(.py-custom:not(.y-min-value)) {
-    padding-top: clamp((var(--padding-block) * 0.64px),
+:where(.px-custom.min-value) {
+    padding-left: clamp(calc(var(--padding-inline) * 1px),
+            calc(15px + (var(--padding-inline) - 15) * var(--responsive-rate)),
+            calc(var(--padding-inline) * 1px));
+    padding-right: clamp(calc(var(--padding-inline) * 1px),
+            calc(15px + (var(--padding-inline) - 15) * var(--responsive-rate)),
+            calc(var(--padding-inline) * 1px));
+}
+
+:where(.py-custom) {
+    padding-top: clamp(calc((var(--padding-block) * 0.64px)),
             calc((var(--padding-block) * 0.64px) + (var(--padding-block) - (var(--padding-block) * 0.64)) * var(--responsive-rate)),
             calc(var(--padding-block) * 1px));
-    padding-bottom: clamp((var(--padding-block) * 0.64px),
+    padding-bottom: clamp(calc((var(--padding-block) * 0.64px)),
             calc((var(--padding-block) * 0.64px) + (var(--padding-block) - (var(--padding-block) * 0.64)) * var(--responsive-rate)),
             calc(var(--padding-block) * 1px));
 }
