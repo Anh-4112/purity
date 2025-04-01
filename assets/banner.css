@@ -29,7 +29,7 @@
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767.98px) {
     .text-bellow-mb[style*="--aspect-ratio"]:before {
         display: none;
     }
@@ -40,6 +40,9 @@
 
     .text-bellow-mb>.banner__content .banner__box {
         margin-top: 4rem;
+    }
+    .padding-inline-gutter {
+        padding-inline: calc(var(--bs-gutter-x) / 2);
     }
 }
 
@@ -54,29 +57,17 @@
     object-fit: cover;
 }
 
-:where(.px-custom) {
-    padding-left: clamp(15px,
-            calc(15px + (var(--padding-inline) - 15) * var(--responsive-rate)),
-            calc(var(--padding-inline) * 1px));
-    padding-right: clamp(15px,
-            calc(15px + (var(--padding-inline) - 15) * var(--responsive-rate)),
+:where(.px-custom:not(.x-min-value)) {
+    padding-inline: clamp(calc((var(--padding-inline) * 0.64px)),
+            calc((var(--padding-inline) * 0.64px) + (var(--padding-inline) - (var(--padding-inline) * 0.64)) * var(--responsive-rate)),
             calc(var(--padding-inline) * 1px));
 }
+:where(.x-min-value) {
+    padding-inline: calc(var(--padding-inline) * 1px);
 
-:where(.px-custom.min-value) {
-    padding-left: clamp(calc(var(--padding-inline) * 1px),
-            calc(15px + (var(--padding-inline) - 15) * var(--responsive-rate)),
-            calc(var(--padding-inline) * 1px));
-    padding-right: clamp(calc(var(--padding-inline) * 1px),
-            calc(15px + (var(--padding-inline) - 15) * var(--responsive-rate)),
-            calc(var(--padding-inline) * 1px));
-}
-
+  }
 :where(.py-custom) {
-    padding-top: clamp(calc((var(--padding-block) * 0.64px)),
-            calc((var(--padding-block) * 0.64px) + (var(--padding-block) - (var(--padding-block) * 0.64)) * var(--responsive-rate)),
-            calc(var(--padding-block) * 1px));
-    padding-bottom: clamp(calc((var(--padding-block) * 0.64px)),
+    padding-block: clamp(calc((var(--padding-block) * 0.64px)),
             calc((var(--padding-block) * 0.64px) + (var(--padding-block) - (var(--padding-block) * 0.64)) * var(--responsive-rate)),
             calc(var(--padding-block) * 1px));
 }

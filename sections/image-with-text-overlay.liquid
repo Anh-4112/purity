@@ -4,11 +4,12 @@
   assign image = section_st.image
   assign mobile_image = section_st.mobile_image | default: image
   assign image_height = section_st.image_height
+  assign show_text_bellow_mobile = section_st.show_text_bellow_mobile
 
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
-    assign section_width = 'full-width px-20'
+    assign section_width = 'full-width'
   else
     assign section_width = 'fluid_container'
   endif
@@ -34,14 +35,14 @@
 >
   <div class="{{ section_width }}">
     <div
-      class="w-full flex relative h-{{ image_height }} overflow-hidden{% if section_st.show_text_bellow_mobile %} column flex-md-row text-bellow-mb{% endif %}"
+      class="w-full flex relative h-{{ image_height }} overflow-hidden{% if show_text_bellow_mobile %} column flex-md-row text-bellow-mb{% endif %}"
       {%- if section_st.image_height == 'adapt' -%}
         style="{{ style_ratio | strip | strip_newlines }}"
       {%- endif -%}
     >
       {%- if image != blank -%}
         <div
-          class="banner__media absolute rounded{% if mobile_image != blank %} d-none block-md{% endif %}{% if image == blank %} placeholder inset-0{% endif %}{% if image_height != 'adapt' %} inset-0{% endif %}"
+          class="banner__media absolute{% if section_width != "full-width" %} rounded{% endif %}{% if mobile_image != blank %} d-none block-md{% endif %}{% if image == blank %} placeholder inset-0{% endif %}{% if image_height != 'adapt' %} inset-0{% endif %}"
           {%- if image_height == 'adapt' and section_st.image != blank -%}
             style="--aspect-ratio: {{ image.aspect_ratio }}"
           {%- endif -%}
@@ -58,7 +59,7 @@
         </div>
       {%- else -%}
         <div
-          class="banner__media rounded{% if mobile_image != blank %} d-none block-md{% endif %}{% if section_st.image == blank %} placeholder absolute inset-0{% endif %}"
+          class="banner__media {% if section_width != "full-width" %} rounded{% endif %}{% if mobile_image != blank %} d-none block-md{% endif %}{% if section_st.image == blank %} placeholder absolute inset-0{% endif %}"
           style="--aspect-ratio: 3/2"
         >
           {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}
@@ -71,7 +72,7 @@
           {%- assign alt_mobile = mobile_image.alt -%}
         {%- endif -%}
         <div
-          class="image_mobile banner__media h-{{ image_height }} overflow-hidden rounded{% if section_st.show_text_bellow == blank %} absolute inset-0{% endif %}{% if mobile_image == blank %} placeholder absolute inset-0 inset-0{% endif %}{% if mobile_image != blank %} block hidden-md{% endif %}"
+          class="image_mobile banner__media h-{{ image_height }} overflow-hidden {% if section_width != "full-width" %} rounded{% endif %}{% if section_st.show_text_bellow == blank %} absolute inset-0{% endif %}{% if mobile_image == blank %} placeholder absolute inset-0 inset-0{% endif %}{% if mobile_image != blank %} block hidden-md{% endif %}"
           style="--aspect-ratio-mb: {{ mobile_image.aspect_ratio }};"
         >
           {{
@@ -90,13 +91,13 @@
         class="banner__content relative z-2 flex w-full {{ section_st.desktop_content_position }} text-{{ section_st.text_alignment_mobile }} text-md-{{ section_st.text_alignment }}"
       >
         <div
-          class="banner__box max-w-custom image-with-text__text-item {% unless section_st.show_text_bellow_mobile %} px-custom py-custom{% endunless %}{% if section_st.padding_content_inline < 15 %} min-value{% endif %}"
+          class="banner__box max-w-custom image-with-text__text-item {% unless show_text_bellow_mobile %} px-custom py-custom{% endunless %}{% if section_st.padding_content_inline < 15 %} x-min-value{% endif %}{% if show_text_bellow_mobile and section_width == "full-width" %} padding-inline-gutter{% endif %}"
           style="--max-width: {{ section_st.max_width }}%;--padding-inline: {{ section_st.padding_content_inline }};--padding-block: {{ section_st.padding_content_block }};"
         >
           {% content_for 'blocks' %}
         </div>
       </div>
-      <div class="overlay absolute inset-0 bg-dark rounded{% if section_st.show_text_bellow_mobile %} d-none block-md{% endif %}" style="--opacity: {{ section_st.overlay_opacity | times: 0.01 }}"></div>
+      <div class="overlay absolute inset-0 bg-dark {% if section_width != "full-width" %} rounded{% endif %}{% if show_text_bellow_mobile %} d-none block-md{% endif %}" style="--opacity: {{ section_st.overlay_opacity | times: 0.01 }}"></div>
     </div>
   </div>
 </div>
