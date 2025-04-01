@@ -92,6 +92,7 @@
         id="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-position-{{ value.id }}"
         value="{%- if scope == 'item' -%}{{ variants.first.id }}{%- else -%}{{ value }}{%- endif -%}"
         data-option-position="{{ option.position }}"
+        class="variant-options"
         {%- if scope == 'item' -%}
           data-href="{{ product.url }}?variant={{ variants.first.id }}"
         {%- endif -%}
@@ -102,7 +103,7 @@
       >
       {%- if is_color -%}
         <label
-          class="color-swatch-label{% if disable_variant %} disable{% endif %}{% if is_swatch_image %} swatch-image{% endif %}"
+          class="color-swatch-label{% if disable_variant %} disable{% else %} pointer{% endif %}{% if is_swatch_image %} swatch-image{% endif %}"
           style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }}{% endif %}"
           for="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
         >
@@ -110,7 +111,7 @@
         </label>
       {%- else -%}
         <label
-          class="color-swatch-label{% if disable_variant %} disable{% endif %}"
+          class="color-swatch-label{% if disable_variant %} disable{% else %} pointer{% endif %}"
           for="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
         >
           <span>{{ value }}</span>
