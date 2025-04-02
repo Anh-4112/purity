@@ -85,7 +85,7 @@
     endif
   -%}
   {%- if color_limit == 0 or count < color_limit or scope == 'detail' -%}
-    <li class="variant-input">
+    <li class="variant-input{% if is_dropdown and dropdown %} py-5{% endif %}">
       <input
         type="radio"
         name="swatch-product-{{ product.id }}-{{ option.position }}-{{ section.id }}"

@@ -137,7 +137,7 @@
               {%- endif -%}
             {%- endif -%}
           </div>
-          <div class="product-variants-option{% if is_dropdown and dropdown-%} relative{% endif %}">
+          <div class="product-variants-option relative">
             {%- liquid
               assign is_color_option = false
               assign dropdown = is_dropdown
@@ -168,7 +168,7 @@
               </button>
               <variants-dropdown
                 id="dropdown-{{ section.id }}-product-{{ product.id }}-position-{{ forloop.index0 }}"
-                class="variants-dropdown block shadow invisible absolute inset-x-0 top-100"
+                class="variants-dropdown active-show pointer-none bg-white block shadow invisible px-24 py-20 absolute z-5 inset-x-0 top-100"
               >
                 <ul class="dropdown-options list-unstyled">
                   {% render 'variant-options',
