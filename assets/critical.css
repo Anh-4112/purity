@@ -97,7 +97,29 @@ summary::-webkit-details-marker {
   margin: 0;
 }
 .rte
-  :where(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .h0, .heading) {
+  :where(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .h1,
+    .h2,
+    .h3,
+    .h4,
+    .h5,
+    .h6,
+    .h0,
+    .heading,
+    blockquote,
+    dl,
+    dd,
+    hr,
+    figure,
+    p,
+    pre
+  ) {
   margin-bottom: 1em;
 }
 .rte p:first-child {
@@ -496,6 +518,29 @@ textarea {
   text-decoration: none;
 }
 :where(
+    .btn,
+    .btn-hover,
+    body .jdgm-write-rev-link,
+    body .jdgm-write-rev-link.jdgm-write-rev-link,
+    input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
+  )::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 120%;
+  height: 100%;
+  background-color: var(--btn-primary-hover-bg-color);
+  backface-visibility: hidden;
+  will-change: transform;
+  transform: rotate3d(0, 0, 2, 10deg) translate3d(-1.2em, 105%, 0);
+  transform-origin: 0% 100%;
+  transition: transform var(--duration, 0.5s) ease;
+  z-index: -1;
+}
+:where(
     .btn-primary,
     .shopify-payment-button__more-options,
     .shopify-payment-button__button--unbranded,
@@ -527,10 +572,11 @@ button[disabled],
   pointer-events: none;
   opacity: 0.6;
 }
-.btn-active.active {
-  color: var(--btn-primary-color);
-  background-color: var(--btn-primary-bg-color);
-  border-color: var(--btn-primary-bg-color);
+.btn-active.active,
+input[type="radio"]:checked + .text-swatch-label.pill {
+  background: var(--btn-primary-hover-bg-color);
+  color: var(--btn-primary-hover-color);
+  border-color: var(--btn-primary-hover-bg-color);
 }
 .btn-link {
   color: var(--btn-link-color);
