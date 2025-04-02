@@ -57,16 +57,16 @@
       assign size_guide_page = block_st.size_guide_page
       assign size_guide_page = block_st.size_guide_page
     -%}
-    <variant-input class="product-variants-js">
+    <variant-input class="product-variants-js flex column wrap gap-25 pt-25 border-top">
       {%- for option in product.options_with_values -%}
         {%- liquid
           assign op = 'option' | append: option.position
           assign op_value = product.selected_or_first_available_variant[op]
         -%}
-        <fieldset class="product-card-variant-js product-variants__input">
+        <fieldset class="product-card-variant-js product-variants__input m-0 p-0 border-0">
           <div class="product-variants-info">
-            <legend class="form__label">
-              {{ option.name }}: <span class="option_value">{{ op_value }}</span>
+            <legend class="form__label p-0 mb-10">
+              <span class="heading-style">{{ option.name }}:</span> <span class="option_value">{{ op_value }}</span>
             </legend>
             {%- if option.name == 'Size' -%}
               {%- if show_size_guide -%}
@@ -98,18 +98,21 @@
                         tabindex="0"
                         role="dialog"
                       >
-                        <modal-overlay class="modal-overlay invisible transition"></modal-overlay>
-                        <div class="modal-inner invisible drawer drawer-right fixed right-0 z-15 inset-y-0 bg-white w-full transition-drawer ">
+                        <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
+                        <div
+                          class="modal-popup-inner rounded max-w-custom m-auto invisible fixed inset-0 z-15 bg-white w-full"
+                          style="--max-width: 80rem;"
+                        >
                           <button
                             is="button-close-model"
-                            class="modal__close btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
+                            class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
                             aria-label="Close"
                           >
                             <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
                               <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
                             </svg>
                           </button>
-                          <div class="drawer__body h-full overflow-y-auto custom-scrollbar">
+                          <div class="drawer__body h-full overflow-y-auto custom-scrollbar p-30">
                             {% if product.metafields.custom.size_chart != blank %}
                               {% assign size_chart_html = product.metafields.custom.size_chart
                                 | replace: '&lt;', '<'
@@ -167,7 +170,7 @@
                 id="dropdown-{{ section.id }}-product-{{ product.id }}-position-{{ forloop.index0 }}"
                 class="variants-dropdown"
               >
-                <ul class="dropdown-options">
+                <ul class="dropdown-options list-unstyled flex wrap gap-10">
                   {% render 'variant-options',
                     product: product,
                     option: option,
@@ -179,7 +182,7 @@
                 </ul>
               </variants-dropdown>
             {%- else -%}
-              <ul class="{% if is_color_option %}swatch-color{% else %}swatch-text{% endif %}">
+              <ul class="list-unstyled flex wrap gap-10 {% if is_color_option %}swatch-color{% else %}swatch-text{% endif %}">
                 {% render 'variant-options',
                   product: product,
                   option: option,

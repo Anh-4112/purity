@@ -18,7 +18,7 @@
       class="{% if product_qty <= inventory_threshold %} notify{% endif %}{% if product_management != "shopify" %} d-none{% else %} block{%- endif -%}"
     >
       <div class="progress-bar-message heading_weight">
-        <div class="message">
+        <div class="message fs-small">
           {%- if product_qty <= inventory_threshold -%}
             {%- if product_qty > 0 -%}
               {{ 'products.product.inventory_status.low_stock' | t: count: product_qty }}

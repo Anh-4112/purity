@@ -111,7 +111,8 @@
         </label>
       {%- else -%}
         <label
-          class="color-swatch-label{% if disable_variant %} disable{% else %} pointer{% endif %}"
+          class="text-swatch-label inline-flex content-center min-w-custom btn-rounded border px-20 py-7{% if disable_variant %} disable{% else %} pointer{% endif %}"
+          style="--min-width: 6.6rem;"
           for="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
         >
           <span>{{ value }}</span>
