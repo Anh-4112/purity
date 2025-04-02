@@ -12,7 +12,7 @@
 %}
 {% if first_button_label != blank or block_st.second_button_label != blank %}
   <div
-    class="block__buttons mb-custom flex wrap gap-10 text-center{% if text_alignment_mobile %} justify-content-{{ text_alignment_mobile }} justify-content-md-{{ content_alignment }} {% else %} justify-content-{{ content_alignment }} {% endif %} {% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
+    class="block__buttons mb-custom flex wrap gap-10 text-center{% if text_alignment_mobile %} justify-content-{{ text_alignment_mobile }} flex-md-{{ content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
     style="--space-bottom: {{ block_st.spacing_bottom }};"
   >
     {% if first_button_label != blank %}

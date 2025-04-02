@@ -111,6 +111,7 @@
               size="{{ sizes }}"
               muted
               autoplay
+              title="{{ section_st.video_alt_text | escape }}"
             ></video>
           </div>
         </video-local>
@@ -233,12 +234,16 @@
       "step": 1,
       "unit": "%",
       "label": "t:sections.video-with-text-overlay.settings.overlay_opacity",
-      "default": 48
+      "default": 0
     },
     {
       "type": "select",
       "id": "video_height",
       "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.video-with-text-overlay.settings.video_height.options__1.label"
+        },
         {
           "value": "full_screen",
           "label": "t:sections.slideshow.settings.slide_height.full_screen"
@@ -246,10 +251,6 @@
         {
           "value": "base_on_content",
           "label": "t:sections.main-collection-banner.settings.image_height.option__2"
-        },
-        {
-          "value": "adapt",
-          "label": "t:sections.video-with-text-overlay.settings.video_height.options__1.label"
         },
         {
           "value": "small",
@@ -264,7 +265,7 @@
           "label": "t:sections.video-with-text-overlay.settings.video_height.options__4.label"
         }
       ],
-      "default": "large",
+      "default": "adapt",
       "label": "t:sections.video-with-text-overlay.settings.video_height.label"
     },
     {
@@ -352,7 +353,8 @@
       "max": 100,
       "unit": "%",
       "default": 100,
-      "label": "t:sections.rich-text.settings.max_width.label"
+      "label": "t:sections.rich-text.settings.max_width.label",
+      "info": "t:sections.rich-text.settings.max_width.info"
     },
     {
       "type": "range",
@@ -361,7 +363,8 @@
       "max": 150,
       "step": 5,
       "unit": "px",
-      "label": "t:sections.all.padding.padding_inline",
+      "label": "t:sections.all.padding.padding_inline.label",
+      "info": "t:sections.all.padding.padding_inline.info",
       "default": 20
     },
     {
@@ -371,7 +374,8 @@
       "max": 150,
       "step": 5,
       "unit": "px",
-      "label": "t:sections.all.padding.padding_block",
+      "label": "t:sections.all.padding.padding_block.label",
+      "info": "t:sections.all.padding.padding_block.info",
       "default": 20
     }, 
     {

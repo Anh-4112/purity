@@ -91,7 +91,7 @@
         class="banner__content media__content relative z-2{% if show_text_bellow_mobile == false %} flex{% else %} flex-md{% endif %} w-full {{ section_st.desktop_content_position }} text-{{ section_st.text_alignment_mobile }} text-md-{{ section_st.text_alignment }}"
       >
         <div
-          class="banner__box max-w-custom image-with-text__text-item px-custom py-custom{% if section_st.padding_content_inline < 15 %} x-min-value{% endif %}{% if show_text_bellow_mobile and section_width == "full-width" %} padding-inline-gutter{% endif %}"
+          class="banner__box max-w-custom image-with-text__text-item px-custom py-custom{% if section_st.padding_content_inline < 15 %} x-min-value{% endif %}{% if show_text_bellow_mobile and section_width == "full-width" %} padding-inline-gutter{% endif %}{% if show_text_bellow_mobile %} mt-40 mt-md-0{% endif %}"
           style="--max-width: {{ section_st.max_width }}%;--padding-inline: {{ section_st.padding_content_inline }};--padding-block: {{ section_st.padding_content_block }};"
         >
           {% content_for 'blocks' %}
@@ -302,7 +302,8 @@
       "max": 100,
       "unit": "%",
       "default": 100,
-      "label": "t:sections.rich-text.settings.max_width.label"
+      "label": "t:sections.rich-text.settings.max_width.label",
+      "info": "t:sections.rich-text.settings.max_width.info"
     },   
     {
       "type": "range",
@@ -311,8 +312,9 @@
       "max": 150,
       "step": 5,
       "unit": "px",
-      "label": "t:sections.all.padding.padding_inline",
-      "default": 20
+      "label": "t:sections.all.padding.padding_inline.label",
+      "info": "t:sections.all.padding.padding_inline.info",
+      "default": 0
     },
     {
       "type": "range",
@@ -321,8 +323,9 @@
       "max": 150,
       "step": 5,
       "unit": "px",
-      "label": "t:sections.all.padding.padding_block",
-      "default": 20
+      "label": "t:sections.all.padding.padding_block.label",
+      "info": "t:sections.all.padding.padding_block.info",
+      "default": 0
     }, 
     {
       "type": "header",
