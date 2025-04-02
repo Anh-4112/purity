@@ -38,9 +38,13 @@
         position: relative;
     }
 
-    .text-bellow-mb>.banner__content .banner__box {
+    .text-bellow-mb>.media__content .banner__box:not(.padding-inline-gutter) {
         margin-top: 4rem;
+        padding-inline: 0;       
+        padding-block: 0;
+
     }
+
     .padding-inline-gutter {
         padding-inline: calc(var(--bs-gutter-x) / 2);
     }
@@ -56,16 +60,28 @@
     height: 100%;
     object-fit: cover;
 }
+.video-foreground,
+.video-section video,
+.video-section iframe {
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border: none;
+}
 
 :where(.px-custom:not(.x-min-value)) {
-    padding-inline: clamp(calc((var(--padding-inline) * 0.64px)),
-            calc((var(--padding-inline) * 0.64px) + (var(--padding-inline) - (var(--padding-inline) * 0.64)) * var(--responsive-rate)),
+    padding-inline: clamp(20px,
+            calc(20px + (var(--padding-inline) - 20) * var(--responsive-rate)),
             calc(var(--padding-inline) * 1px));
 }
+
 :where(.x-min-value) {
     padding-inline: calc(var(--padding-inline) * 1px);
+}
 
-  }
 :where(.py-custom) {
     padding-block: clamp(calc((var(--padding-block) * 0.64px)),
             calc((var(--padding-block) * 0.64px) + (var(--padding-block) - (var(--padding-block) * 0.64)) * var(--responsive-rate)),
