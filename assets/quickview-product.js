@@ -39,7 +39,12 @@ class ButtonQuickView extends HTMLButtonElement {
       .finally(() => {
         this.classList.remove("loading");
         this.removeAttribute("aria-disabled");
-        global.eventModal(document.querySelector("quickview-drawer"), "open");
+        global.eventModal(
+          document.querySelector("quickview-drawer"),
+          "open",
+          false,
+          "delay"
+        );
       })
       .catch((e) => {
         console.error(e);
