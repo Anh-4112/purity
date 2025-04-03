@@ -37,12 +37,12 @@
   .text-bellow-mb > .banner__media {
     position: relative;
   }
-  .text-bellow-mb > .media__content .banner__box:not(.padding-inline-gutter) {
+  .text-bellow-mb > .media__content .banner__box {
     padding-inline: 0;
     padding-block: 0;
   }
   .padding-inline-gutter {
-    padding-inline: calc(var(--bs-gutter-x) / 2);
+    padding-inline: calc(var(--bs-gutter-x) / 2)!important;
   }
 }
 .banner__media img {
@@ -66,6 +66,17 @@
   width: 100%;
   border: none;
 }
+.video-section iframe.vimeo-video{
+  box-sizing: border-box;
+  width: 177.77777778vh;
+  height: 56.25vw;
+  min-width: 100%;
+  min-height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 :where(.px-custom:not(.x-min-value)) {
   padding-inline: clamp(
     20px,
@@ -76,7 +87,7 @@
 :where(.x-min-value) {
   padding-inline: calc(var(--padding-inline) * 1px);
 }
-:where(.py-custom:not(.padding-inline-gutter)) {
+:where(.py-custom) {
   padding-block: clamp(
     calc((var(--padding-block) * 0.64px)),
     calc(
