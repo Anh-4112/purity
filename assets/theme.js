@@ -816,3 +816,89 @@ class VariantsDropdown extends HTMLElement {
   }
 }
 customElements.define("variants-dropdown", VariantsDropdown);
+
+class AnnouncementBar extends HTMLElement {
+  constructor() {
+    super();
+    this.animationDuration = 300;
+    this.isAnimating = false;
+    this.animationFrame = null;
+  }
+
+  connectedCallback() {
+    requestAnimationFrame(() => this.init());
+  }
+
+  init() {
+    this.closeButton = this.querySelector('.announcement-bar__close');
+    this.parentSection = this.closest('.section-announcement-bar');
+    if (!this.closeButton || !this.parentSection) return;
+    this._naturalHeight = this.offsetHeight || 0;
+    if (this.closeButton) {
+      this.closeButton.addEventListener('click', this.onCloseClick.bind(this));
+      this.closeButton.addEventListener('keydown', this.onKeyDown.bind(this));
+    }
+  }
+  
+  onKeyDown(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.onCloseClick(event);
+    }
+  }
+
+  onCloseClick(event) {
+    event.preventDefault();
+    if (this.isAnimating) return;
+    this.isAnimating = true;
+    if (!this._naturalHeight || this._naturalHeight <= 0) {
+      this._naturalHeight = this.offsetHeight;
+    }
+    this.parentSection.classList.add('announcement-closing');
+    const startHeight = this._naturalHeight;
+    const startTime = performance.now();
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame);
+    }
+    
+    const animate = (currentTime) => {
+      const elapsedTime = currentTime - startTime;
+      const progress = Math.min(elapsedTime / this.animationDuration, 1);
+      const eased = this.easeOutCubic(progress);
+      const currentHeight = startHeight * (1 - eased);
+      const currentOpacity = 1 - eased;
+      this.parentSection.style.height = `${currentHeight}px`;
+      this.parentSection.style.opacity = String(currentOpacity);
+      if (progress < 1) {
+        this.animationFrame = requestAnimationFrame(animate);
+      } else {
+        this.finishClosingAnimation();
+      }
+    };
+    this.animationFrame = requestAnimationFrame(animate);
+  }
+
+  finishClosingAnimation() {
+    this.parentSection.style.height = '0px';
+    this.parentSection.style.opacity = '0';
+    this.parentSection.classList.remove('announcement-closing');
+    this.parentSection.classList.add('announcement-closed');
+    global.setCookie('announcement_closed', 'true', 1);
+    this.isAnimating = false;
+  }
+  
+  easeOutCubic(x) {
+    return 1 - Math.pow(1 - x, 3);
+  }
+  
+  disconnectedCallback() {
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame);
+    }
+    if (this.closeButton) {
+      this.closeButton.removeEventListener('click', this.onCloseClick);
+      this.closeButton.removeEventListener('keydown', this.onKeyDown);
+    }
+  }
+}
+customElements.define("announcement-bar", AnnouncementBar);
