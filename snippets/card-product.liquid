@@ -133,7 +133,7 @@
                     {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
                     {% render 'responsive-image',
                       type: 'product',
-                      class: 'product__img',
+                      class: 'product__img featured-image',
                       image: p_media,
                       image_alt: alt_features,
                       container: container,
@@ -172,34 +172,91 @@
               {%- endif -%}
 
               {%- if disable_badge != true -%}
-                {% render 'product-badges', card_product: card_product, type: 'product_item' %}
+                {% render 'product-badges', scope: 'item', card_product: card_product %}
               {%- endif -%}
             </a>
             {%- if product_enable_quickview
               and disable_quickview != true
               and card_product.metafields.custom.external_affiliate == blank
             -%}
+              {%- liquid
+                assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id
+                assign qty_rules = false
+                if card_product.selected_or_first_available_variant.quantity_rule.template > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1
+                  assign qty_rules = true
+                endif
+              -%}
               <div class="absolute inset-x-15 bottom-15 z-2 overflow-hidden">
-                <button
-                  type="button"
-                  is="button-quick-view"
-                  class="btn button-quickview w-full btn-white invisible-1025 text-center{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
-                  data-url="{{ shop.url }}/products/{{ card_product.handle }}?section_id=product-quickview"
-                  aria-label="{{ 'products.product.quickview' | t }}"
-                >
-                  <span class="product-quickview-btn hidden-on-load transition-short">
-                    {{ 'products.product.quickview' | t }}
-                  </span>
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    class="spin opacity-0 pointer-none icon-load absolute transition-short"
+                {%- if card_product.variants.size > 1 or qty_rules -%}
+                  <button
+                    type="button"
+                    is="button-quick-view"
+                    class="btn button-quickview w-full btn-white invisible-1025 text-center{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
+                    data-url="{{ shop.url }}/products/{{ card_product.handle }}?section_id=product-quickview"
+                    aria-label="{{ 'products.product.quickview' | t }}"
                   >
-                    <use href="#icon-load"></use>
-                  </svg>
-                </button>
+                    <span class="product-quickview-btn hidden-on-load">
+                      {{ 'products.product.quickview' | t }}
+                    </span>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      class="spin opacity-0 pointer-none icon-load absolute transition-short"
+                    >
+                      <use href="#icon-load"></use>
+                    </svg>
+                  </button>
+                {%- else -%}
+                  <product-form class="quick-add">
+                    {%- form 'product',
+                      card_product,
+                      id: product_form_id,
+                      class: 'form',
+                      novalidate: 'novalidate',
+                      data-type: 'add-to-cart-form'
+                    -%}
+                      <input
+                        type="hidden"
+                        name="id"
+                        value="{{ card_product.selected_or_first_available_variant.id }}"
+                        disabled
+                      >
+                      <button
+                        id="{{ product_form_id }}-submit"
+                        type="submit"
+                        name="add"
+                        class="btn button-quickview w-full btn-white invisible-1025 text-center{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
+
+                        aria-haspopup="dialog"
+                        aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
+                        aria-live="polite"
+                        data-sold-out-message="true"
+                        {% if card_product.selected_or_first_available_variant.available == false %}
+                          disabled
+                        {% endif %}
+                      >
+                        <span class="product-addtocart-btn hidden-on-load">
+                          {%- if card_product.selected_or_first_available_variant.available -%}
+                            {{ 'products.product.add_to_cart' | t }}
+                          {%- else -%}
+                            {{ 'products.product.sold_out' | t }}
+                          {%- endif -%}
+                        </span>
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 14 14"
+                          fill="none"
+                          class="spin opacity-0 pointer-none icon-load absolute"
+                        >
+                          <use href="#icon-load"></use>
+                        </svg>
+                      </button>
+                    {%- endform -%}
+                  </product-form>
+                {%- endif -%}
               </div>
             {%- endif -%}
           </div>
@@ -228,6 +285,7 @@
             </div>
           {% endif %}
           {%- if product_enable_color_swatches and disable_color_swatches != true -%}
+            {%- render 'variant-swatches', scope: 'item', product: card_product -%}
           {% endif %}
         </div>
       </div>
@@ -237,7 +295,6 @@
         [
         {%- for variant in card_product.variants -%}
           {%- assign op = variant.option1 | replace: '"', '\"' -%}
-
           {%- liquid
               assign option = '"option":"' | append: op | append: '"'
               assign quantity = '"qty":' | append: variant.inventory_quantity

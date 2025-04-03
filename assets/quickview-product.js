@@ -34,14 +34,17 @@ class ButtonQuickView extends HTMLButtonElement {
       .then((text) => {
         const html = global.parser.parseFromString(text, "text/html");
         document.querySelector(".quickview-product").innerHTML =
-          html.querySelector(
-            ".quickview-product"
-          ).innerHTML;
+          html.querySelector(".quickview-product").innerHTML;
       })
       .finally(() => {
         this.classList.remove("loading");
         this.removeAttribute("aria-disabled");
-        global.eventModal(document.querySelector("quickview-drawer"), "open");
+        global.eventModal(
+          document.querySelector("quickview-drawer"),
+          "open",
+          false,
+          "delay"
+        );
       })
       .catch((e) => {
         console.error(e);
@@ -49,5 +52,5 @@ class ButtonQuickView extends HTMLButtonElement {
   }
 }
 customElements.define("button-quick-view", ButtonQuickView, {
-  extends: "button"
+  extends: "button",
 });

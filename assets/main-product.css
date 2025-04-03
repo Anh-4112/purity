@@ -1,3 +1,9 @@
+.media-main-swiper
+  .swiper:not([class*="initialized"])
+  .swiper-wrapper
+  .swiper-slide:not(:first-child) {
+  display: none;
+}
 .media-thumb-swiper .swiper-slide::after {
   content: "";
   position: absolute;
@@ -36,4 +42,15 @@
   .thumbnail_left .media-thumb-swiper .swiper-slide {
     height: auto !important;
   }
+  .thumbnail_left .swiper-wrapper-thumbnail .swiper-wrapper {
+    flex-direction: column;
+    gap: 0;
+  }
+  .thumbnail_left .swiper-wrapper-thumbnail .swiper-wrapper .swiper-slide {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+.zoom-in {
+  cursor: zoom-in;
 }

@@ -1,4 +1,4 @@
-import { SlideSection } from "module_slide";
+import { SlideSection } from "module-slide";
 
 document.addEventListener("DOMContentLoaded", function () {
   function addProductEntry(productJson, storedProducts) {
@@ -75,7 +75,6 @@ class StickyAddCart extends HTMLElement {
     super();
     this.init();
   }
-  init() {
-  }
+  init() {}
 }
 customElements.define("sticky-add-cart", StickyAddCart);

@@ -1,6 +1,8 @@
 {% liquid
   assign section_st = section.settings
   assign block_st = block.settings
+  assign image = block_st.image
+  assign mobile_image = block_st.mobile_image | default: image
 %}
 
 {% comment %}
@@ -14,66 +16,44 @@
 <div class="group__block--image-with-text w-full h-full flex align-{{ block_st.vertical_alignment_group }}">
   <div
     class="w-full color-{{ block_st.color_scheme }} gradient flex relative{% if section_st.equal_height_adjustment %} h-full{% else %} h-content{% endif %}{% if block_st.content_position != 'overlay' %} flex column{% endif %}"
-    style="
-      {% if block_st.image != blank and block_st.content_position == 'overlay' %}
-        --aspect-ratio: {{ block_st.image.aspect_ratio }};
-      {% elsif block_st.content_position == 'overlay' and block_st.image == blank %}
-        --aspect-ratio: 3/2;
-      {% endif %}
-    "
+    {% if block_st.content_position == 'overlay' %}
+      style="
+        {% if block_st.image != blank or mobile_image != blank %}
+          --aspect-ratio: {{ block_st.image.aspect_ratio }};
+          --aspect-ratio-mb: {{ mobile_image.aspect_ratio }};
+        {% else %}
+          --aspect-ratio: 3/2;
+        {% endif %}
+      "
+    {% endif %}
   >
-    {%- if block_st.image != blank -%}
-      {%- if block_st.image.alt == blank -%}
-        {%- capture alt -%}{{ block_st.heading }}{%- endcapture -%}
-      {%- else -%}
-        {%- assign alt = block_st.image.alt -%}
-      {%- endif -%}
-      <div
-        class="{% if block_st.content_position == 'overlay' %}banner banner__media rounded media absolute inset-0 {% endif %}{% if block_st.mobile_image != blank %}d-none block-md{% endif %}{% if block_st.image == blank and block_st.content_position == 'overlay'%} placeholder absolute inset-0{% endif %}"
-        style="{% if block_st.content_position == 'overlay' %}--aspect-ratio: {{ block.settings.image.aspect_ratio }};{% endif %}"
-      >
-        {{
-          block_st.image
-          | image_url: width: 3840
-          | image_tag:
-            loading: 'lazy',
-            width: block_st.image.width,
-            data-sizes: 'auto',
-            sizes: '100vw',
-            widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
-            alt: alt
-        }}
-      </div>
+    {%- if block_st.image.alt == blank -%}
+      {%- capture alt -%}{{ block_st.heading }}{%- endcapture -%}
     {%- else -%}
-      <div
-        class="banner banner__media rounded media{% if block_st.content_position == 'overlay' %} absolute inset-0{% endif %}{% if block_st.mobile_image != blank %} d-none block-md{% endif %}{% if block_st.image == blank and block_st.content_position == 'overlay'%} placeholder absolute inset-0{% endif %}"
-        style="--aspect-ratio: 3/2"
-      >
-        {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
-      </div>
+      {%- assign alt = block_st.image.alt -%}
     {%- endif -%}
-    {%- if block_st.mobile_image -%}
-      {%- if block_st.mobile_image.alt == blank -%}
-        {%- capture alt_mobile -%}{{ block_st.heading }} mobile{%- endcapture -%}
+    <div
+      class="banner banner__media rounded media{% if block_st.content_position == 'overlay' %} absolute inset-0 {% endif %}"
+      style="{%- if image != blank -%}--aspect-ratio: {{ image.aspect_ratio }};{%- else -%}--aspect-ratio: 1/1; {% endif %}{%- if mobile_image -%} --aspect-ratio-mb: {{ mobile_image.aspect_ratio }};{% endif %}"
+    >
+      {%- if image != blank or mobile_image != blank -%}
+        {%- liquid
+          assign image_alt = image.alt
+          if image_alt == blank
+            assign image_alt = block_st.heading
+          endif
+        -%}
+        {% render 'responsive-image',
+          type: 'banner',
+          container: section_st.section_width,
+          image: image,
+          image_mobile: mobile_image,
+          image_alt: alt
+        %}
       {%- else -%}
-        {%- assign alt_mobile = block_st.mobile_image.alt -%}
-      {%- endif -%}
-      <div
-        class="banner image_mobile banner__media rounded overflow-hidden{% if block_st.content_position == 'overlay' %} absolute inset-0{% endif %}{% if block_st.mobile_image == blank and block_st.content_position == 'overlay' %} placeholder absolute inset-0 inset-0{% endif %}{% if block_st.mobile_image != blank %} block hidden-md{% endif %}"
-        style="--aspect-ratio-mb: {{ block_st.mobile_image.aspect_ratio }};"
-      >
-        {{
-          block_st.mobile_image
-          | image_url: width: 3840
-          | image_tag:
-            loading: 'lazy',
-            data-sizes: 'auto',
-            sizes: '100vw',
-            widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
-            alt: alt_mobile
-        }}
-      </div>
-    {%- endif -%}
+        {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </div>
     <div class="overlay-bg rounded group__block--content w-full z-3 flex text-{{ block_st.text_alignment }}{% if block_st.content_position == 'overlay' %} {{ block_st.desktop_content_position }}{% endif %}">
       <div
         class="banner__box w-full flex column align-{{ block_st.text_alignment }}"

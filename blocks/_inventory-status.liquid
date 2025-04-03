@@ -17,8 +17,8 @@
       data-threshold="{{ inventory_threshold }}"
       class="{% if product_qty <= inventory_threshold %} notify{% endif %}{% if product_management != "shopify" %} d-none{% else %} block{%- endif -%}"
     >
-      <div class="progress-bar-message">
-        <div class="message">
+      <div class="progress-bar-message heading_weight">
+        <div class="message fs-small">
           {%- if product_qty <= inventory_threshold -%}
             {%- if product_qty > 0 -%}
               {{ 'products.product.inventory_status.low_stock' | t: count: product_qty }}
@@ -35,10 +35,10 @@
         </div>
       </div>
       <div
-        class="progress-bar"
-        style="--height: 4px;"
+        class="progress-bar h-custom rounded-10 mt-10 bg-custom relative"
+        style="--custom-height: 6px; --bg-color-custom: #E5E5E5;"
       >
-        <div class="progress" style="width: 100%;"></div>
+        <div class="bg-primary rounded-10 progress absolute left-0 inset-y-0" style="width: 100%;"></div>
       </div>
     </inventory-progress-bar>
     {%- if product.selected_or_first_available_variant.incoming -%}

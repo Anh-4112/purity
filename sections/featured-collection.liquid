@@ -1,5 +1,4 @@
 {{ 'product.css' | asset_url | stylesheet_tag }}
-{{ 'carousel.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -79,7 +78,7 @@
         <div class="free-scroll">
       {% endif %}
       <slide-section
-        class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+        class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
         data-section-id="{{ section.id }}"
         data-autoplay="false"
         data-effect="slide"
@@ -93,7 +92,7 @@
         style="{{ col_style | strip | strip_newlines }}"
       >
         {% if show_navigation %}
-          {%- render 'swiper-navigation' -%}
+          {%- render 'swiper-navigation', show_on_hover: true -%}
         {% endif %}
         <div class="swiper-wrapper">
           {%- liquid

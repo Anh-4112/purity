@@ -52,15 +52,15 @@
   </pickup-availability-preview>
 
   <pickup-availability-drawer
-    class="pickup-availability-drawer modal active-modal-js"
+    class="pickup-availability-drawer modal pointer-none active-modal-js"
     tabindex="0"
     role="dialog"
     aria-modal="true"
     aria-labelledby="PickupAvailabilityHeading"
     data-focus-item="ShowPickupAvailabilityDrawer"
   >
-    <modal-overlay class="modal-overlay invisible transition"></modal-overlay>
-    <div class="modal-inner invisible drawer drawer-right transition-drawer fixed z-15 inset-y-0 right-0 bg-white">
+    <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
+    <div class="modal-inner visibility-hidden w-full drawer-right fixed z-15 inset-y-0 right-0 bg-white">
       <div class="pickup-availability-header flex align-center space-between gap-15 p-20 border-bottom">
         <div class="pickup-heading">
           <h2 class="h6 heading-color my-0 letter-spacing-0" id="PickupAvailabilityHeading">
@@ -82,7 +82,7 @@
         </div>
         <button
           is="button-close-model"
-          class="modal__close touch-target hover-svg-zoom flex-end btn-reset"
+          class="modal__close pointer touch-target inline-flex align-center hover-svg-zoom flex-end btn-reset"
           aria-label="{{ 'accessibility.close' | t }}"
         >
           <svg width="13" height="14" viewBox="0 0 13 14" fill="none">

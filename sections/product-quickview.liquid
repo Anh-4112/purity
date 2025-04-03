@@ -25,16 +25,15 @@
 {% endif %}
 <quickview-drawer
   id="QuickView-Drawer"
-  class="modal active-modal-js"
-  style="--drawer-width: 82rem;--col-width: clamp(25%, 12vw, 300px);"
+  class="modal pointer-none active-modal-js"
   tabindex="0"
   role="dialog"
 >
-  <modal-overlay class="modal-overlay invisible transition"></modal-overlay>
-  <div class="modal-inner invisible drawer drawer-right fixed right-0 z-15 inset-y-0 bg-white w-full transition-drawer ">
+  <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
+  <div class="modal-inner visibility-hidden w-full drawer-right fixed right-0 z-15 inset-y-0 w-full">
     <button
       is="button-close-model"
-      class="modal__close btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
+      class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
       aria-label="Close"
     >
       <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
@@ -42,9 +41,12 @@
       </svg>
     </button>
     <div class="drawer__body h-full overflow-y-auto custom-scrollbar">
-      <div class="quickview-product h-full p-20 flex wrap gap-20">
+      <div class="quickview-product h-full flex wrap gap-20">
         {% if product.media.size > 0 %}
-          <div class="product-detail__media w-full col-md-w-custom">
+          <div
+            class="product-detail__media model_media bg-white p-20 w-full fixed-md invisible-md w-custom inset-0 z--1"
+            style="--custom-width: 26rem;"
+          >
             {% liquid
               assign option_color_name = 'Color'
               if color_swatch_trigger != blank
@@ -126,7 +128,7 @@
             %}
           </div>
         {% endif %}
-        <div class="product-detail__information w-full p-20{% if product.media.size > 0 %} col-md-remaining{% endif %}">
+        <div class="product-detail__information w-full bg-white p-20">
           <div class="sticky top-20">
             {% content_for 'blocks', closest.product: product %}
             <a
