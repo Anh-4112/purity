@@ -32,6 +32,7 @@
   assign announcement_actions = section_st.announcement_actions
   assign style_between_item = section_st.style_between_item
   assign show_close = section_st.show_close
+  assign show_mobile = section_st.show_mobile
 -%}
 
 {%- capture style -%}--section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.marquee_speed }}s;{%- endcapture -%}
@@ -40,9 +41,9 @@
 {%- endcapture -%}
 
 {%- if section.blocks.size > 0 and is_shown -%}
-  {%- if announcement_actions == 'marquee' -%}{{ 'section-scrolling-text.css' | asset_url | stylesheet_tag: preload: 'high' }}{%- endif -%}
+  {%- if announcement_actions == 'marquee' -%}{{ 'section-scrolling-text.css' | asset_url | stylesheet_tag }}{%- endif -%}
   <announcement-bar 
-    class="section section__announcement-bar block color-{{ color_scheme }} gradient relative"
+    class="section section__announcement-bar {% if show_mobile %}block{% else %}block hidden-mobile{% endif %} color-{{ color_scheme }} gradient relative"
     style="{{ style | strip | strip_newlines }}"
   >
     <div class="{{ section_width }}">
@@ -120,6 +121,30 @@
       </div>
     {% endif %}
   </announcement-bar>
+  <script>
+    (() => {
+      const getCookieValue = () => {
+        const match = document.cookie.match('(^|;)\\s*announcement_closed\\s*=\\s*([^;]+)');
+        return match ? match[2] : null;
+      };
+      if (getCookieValue() === 'true') {
+        const parentSection = document.querySelector('.section-announcement-bar');
+        if (parentSection) {
+          const styles = {
+            transition: 'none',
+            height: '0px',
+            opacity: '0',
+            overflow: 'hidden'
+          };
+          Object.assign(parentSection.style, styles);
+          parentSection.classList.add('announcement-closed');
+          requestAnimationFrame(() => {
+            parentSection.style.removeProperty('transition');
+          });
+        }
+      }
+    })();
+  </script>
 {%- endif -%}
 {% schema %}
 {
@@ -277,7 +302,7 @@
       "step": 1,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
-      "default": 48
+      "default": 10
     },
     {
       "type": "range",
@@ -287,7 +312,7 @@
       "step": 1,
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
-      "default": 48
+      "default": 10
     }
   ],
   "max_blocks": 4,
@@ -310,10 +335,10 @@
       "name": "t:sections.announcement-bar.name",
       "blocks": [
         {
-          "type": "announcement",
-          "settings": {
-            "text": "<p>Welcome to our store</p>"
-          }
+          "type": "announcement"
+        },
+        {
+          "type": "announcement"
         }
       ]
     }

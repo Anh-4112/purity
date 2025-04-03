@@ -236,3 +236,29 @@ export function fetchConfig(type = "json") {
     },
   };
 }
+
+export function getCookie(name) {
+  const nameString = name + "=";
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const cookieArray = decodedCookie.split(';');
+  
+  for (let i = 0; i < cookieArray.length; i++) {
+    let cookie = cookieArray[i].trim();
+    if (cookie.indexOf(nameString) === 0) {
+      return cookie.substring(nameString.length, cookie.length);
+    }
+  }
+  
+  return null;
+}
+
+export function setCookie(name, value, days = 30, path = "/") {
+  const expirationDate = new Date();
+  expirationDate.setTime(expirationDate.getTime() + (days * 24 * 60 * 60 * 1000));
+  
+  const cookieValue = encodeURIComponent(value) + 
+    "; expires=" + expirationDate.toUTCString() +
+    "; path=" + path;
+  
+  document.cookie = name + "=" + cookieValue;
+}

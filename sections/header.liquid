@@ -52,7 +52,7 @@
   data-sticky-type="{{ section_st.sticky_header_type }}"
   data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
   data-menu-trigger="{{ section_st.menu_trigger }}"
-  class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }}"
+  class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }} {% if section_st.enable_rounded_style %}section-rounded{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -1019,6 +1019,13 @@
       "id": "sticky_header_mobile",
       "default": true,
       "label": "t:sections.header.settings.sticky_header_mobile.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_rounded_style",
+      "default": false,
+      "label": "t:sections.all.section_setting.enable_rounded_style.label",
+      "info": "t:sections.all.section_setting.enable_rounded_style.info"
     },
     {
       "type": "header",
