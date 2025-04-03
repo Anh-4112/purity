@@ -2,6 +2,8 @@ import { SlideSection } from "module-slide";
 import * as AddToCart from "module-addToCart";
 import * as global from "global";
 
+const delegate = new global.eventDelegate();
+
 class BackToTop extends HTMLElement {
   constructor() {
     super();
@@ -637,23 +639,17 @@ customElements.define("video-local-play", VideoLocalPlay);
 class VariantInput extends HTMLElement {
   constructor() {
     super(),
-      (this._delegate = new global.eventDelegate()),
       (this.show_more = this.querySelector(".number-showmore")),
       (this.size_chart = this.querySelector(".open-size-chart")),
       (this.swatch = this.querySelector(
         ".product-card-swatch-js .variant-input"
       )),
-      this._delegate.on(
-        "change",
-        '.product-card-swatch-js [type="radio"], .product-card-variant-js [type="radio"]',
-        this.onSwatchChanged.bind(this)
-      ),
-      this._delegate.on(
+      delegate.on(
         "click",
         '.product-card-swatch-js .variant-input [type="radio"]',
         this.onSwatchClick.bind(this)
       ),
-      this._delegate.on(
+      delegate.on(
         "keydown",
         '.product-card-swatch-js .variant-input [type="radio"]',
         function (event) {
@@ -663,6 +659,14 @@ class VariantInput extends HTMLElement {
         }.bind(this)
       );
     this.init();
+  }
+
+  connectedCallback() {
+    this.querySelectorAll('.product-card-swatch-js [type="radio"]').forEach(
+      (input) => {
+        input.addEventListener("change", this.onSwatchChanged.bind(this));
+      }
+    );
   }
 
   init() {
@@ -691,7 +695,44 @@ class VariantInput extends HTMLElement {
       this.querySelectorAll(".product-variants-option").forEach((v) => {
         v.classList.remove("active");
       });
+
+      const newMedia = JSON.parse(target.getAttribute("data-value-media"));
+      const currentImage =
+        this.closest(".product__item-js").querySelector(".featured-image");
+      const newImage = this.createResponsiveImage(
+        newMedia,
+        currentImage.className,
+        currentImage.sizes
+      );
+
+      if (currentImage.src !== newImage.src) {
+        await Motion.animate(
+          currentImage,
+          { opacity: [1, 0] },
+          { duration: 0.15, easing: "ease-in", fill: "forwards" }
+        ).finished;
+        await new Promise((resolve) =>
+          newImage.complete ? resolve() : (newImage.onload = resolve)
+        );
+        currentImage.replaceWith(newImage);
+        Motion.animate(
+          newImage,
+          { opacity: [0, 1] },
+          { duration: 0.15, easing: "ease-in" }
+        );
+      }
     }
+  }
+
+  createResponsiveImage(media, classNames, responsiveSizes) {
+    return global.createMediaImageElement(
+      media,
+      [720, 660, 550, 480, 330, 240, 185],
+      {
+        class: classNames,
+        sizes: responsiveSizes,
+      }
+    );
   }
 
   onSwatchClick(event) {
@@ -752,14 +793,14 @@ class VariantsDropdown extends HTMLElement {
   }
 
   onShowDropdownClicked(event) {
-    this.closest(".product-variants-js")
-      .querySelectorAll(".product-variants-option.active")
-      .forEach((element) => {
-        element.classList.remove("active");
-      });
     if (this.closest(".product-variants-option").classList.contains("active")) {
       this.closest(".product-variants-option").classList.remove("active");
     } else {
+      this.closest(".product-variants-js")
+        .querySelectorAll(".product-variants-option.active")
+        .forEach((element) => {
+          element.classList.remove("active");
+        });
       this.closest(".product-variants-option").classList.add("active");
     }
   }

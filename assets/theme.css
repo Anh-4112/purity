@@ -359,9 +359,6 @@ a.hover-heading-color:hover {
 .pt-22 {
   padding-top: 2.2rem;
 }
-.pt-25 {
-  padding-top: 2.5rem;
-}
 .pt-28 {
   padding-top: 2.8rem;
 }
@@ -408,10 +405,6 @@ a.hover-heading-color:hover {
 .my-5 {
   margin-top: 5px;
   margin-bottom: 5px;
-}
-.my-25 {
-  margin-top: 2.5rem;
-  margin-bottom: 2.5rem;
 }
 .my-30 {
   margin-top: 3rem;
@@ -817,7 +810,7 @@ a.hover-heading-color:hover {
   overflow: hidden;
 }
 .modal {
-  --transition: 0.5s;
+  --transition: 0.35s;
   --timing-function: cubic-bezier(0.5, -0.03, 0.34, 0.83);
 }
 .modal-inner {
@@ -861,15 +854,17 @@ a.hover-heading-color:hover {
   visibility: visible;
   transform: translateX(0);
 }
-.modal-inner * {
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  transition-delay: 0.1s;
+modal-popup :is(.modal-overlay) {
+  z-index: 15;
 }
-.modal.active .modal-inner *:not(.model_media) {
-  opacity: 1;
-  transition: opacity 0.4s ease;
-  transition-delay: 0s;
+.modal-inner .shopify-block,
+.modal-popup-inner .drawer__body > * {
+  opacity: 0;
+  transform: translateY(2rem);
+}
+.modal.active .modal-inner .shopify-block,
+.modal.active .modal-popup-inner .drawer__body > *:not(.model_media, .spin) {
+  animation: slideIn var(--transition) var(--timing-function) forwards;
 }
 .modal-popup-inner {
   transform: scale(0.8);
@@ -885,7 +880,19 @@ a.hover-heading-color:hover {
 .remove-after:not(.active) .modal-popup-inner {
   animation: zoomOut var(--transition) var(--timing-function) forwards;
 }
-
+.remove-after:not(.active) .modal-inner .shopify-block,
+.remove-after:not(.active)
+  .modal-popup-inner
+  .drawer__body
+  > *:not(.model_media, .spin) {
+  animation: slideOut var(--transition) var(--timing-function) forwards;
+}
+.active .active-show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: none;
+}
 @keyframes zoomOut {
   0% {
     transform: scale(1);
@@ -896,6 +903,27 @@ a.hover-heading-color:hover {
     transform: scale(0.8);
     opacity: 0;
     visibility: hidden;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(15px);
+    opacity: 0;
   }
 }
 @media (min-width: 576px) {
@@ -1099,15 +1127,6 @@ a.hover-heading-color:hover {
   :where(.gap-md-30) {
     --col-gap: 3rem;
     gap: var(--col-gap);
-  }
-  :where(.flex-md-start, .justify-content-md-left) {
-    justify-content: flex-start;
-  }
-  :where(.flex-md-end, .justify-content-md-right) {
-    justify-content: flex-end;
-  }
-  :where(.justify-md-center, .justify-content-md-center) {
-    justify-content: center;
   }
   .justify-content-inherit {
     justify-content: inherit;
@@ -1454,38 +1473,16 @@ a.hover-heading-color:hover {
     ):hover {
     --btn-color: var(--btn-primary-hover-color);
     color: var(--btn-color);
-    /* --btn-border-color: var(--btn-primary-hover-bg-color);
-    --btn-bg: var(--btn-primary-hover-bg-color); */
   }
   :where(.btn-outline):hover {
     --btn-color: var(--btn-primary-color);
   }
+  .btn-link:hover::before {
+    background-color: var(--btn-primary-hover-color);
+  }
   .btn-text {
     transition: color 0.5s cubic-bezier(0.3, 1, 0.3, 1);
     transition-delay: 0.1s;
-  }
-  :where(
-      .btn,
-      .btn-hover,
-      body .jdgm-write-rev-link,
-      body .jdgm-write-rev-link.jdgm-write-rev-link,
-      input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
-    )::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 120%;
-    height: 100%;
-    background-color: var(--btn-primary-hover-bg-color);
-    backface-visibility: hidden;
-    will-change: transform;
-    transform: rotate3d(0, 0, 2, 10deg) translate3d(-1.2em, 105%, 0);
-    transform-origin: 0% 100%;
-    transition: transform var(--duration, 0.5s) ease;
-    z-index: -1;
   }
   :where(.btn-outline):after {
     background-color: var(--btn-primary-bg-color);
@@ -1590,16 +1587,6 @@ a.hover-heading-color:hover {
     100% {
       right: 0;
       width: 100%;
-    }
-  }
-  @keyframes slideIn {
-    0% {
-      transform: translateY(2rem);
-      opacity: 0.01;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
     }
   }
   /* Navigation desktop */
@@ -1900,10 +1887,6 @@ details > summary .icon {
 .disclosure__list {
   max-height: 50vh;
 }
-.disclosure__item:not(:last-child) {
-  margin-bottom: 1rem;
-}
-
 .back-to-top {
   transform: scale(0);
 }

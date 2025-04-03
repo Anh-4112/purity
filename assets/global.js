@@ -176,12 +176,22 @@ var getScrollBarWidth = (function () {
   };
 })();
 
-export function eventModal(element, event, removeElementAfter = false) {
+export function eventModal(
+  element,
+  event,
+  removeElementAfter = false,
+  actionModal = null
+) {
   if (event == "open") {
     root.classList.add("open-modal");
     element.classList.add("active");
     if (removeElementAfter) {
       element.classList.add("remove-after");
+    }
+    if (actionModal == "delay") {
+      setTimeout(() => {
+        element.querySelector(".model_media").classList.add("open");
+      }, 350);
     }
     root.style.setProperty("padding-right", getScrollBarWidth.init() + "px");
     trapFocus(element);
@@ -189,11 +199,20 @@ export function eventModal(element, event, removeElementAfter = false) {
     const active_modal = document.querySelectorAll(".active-modal-js.active");
     if (element.classList.contains("active-modal-js")) {
       element.classList.remove("active");
+      element.querySelector(".model_media").classList.remove("open");
       if (element.classList.contains("remove-after")) {
         setTimeout(() => element.remove(), 600);
       }
     } else {
-      element.closest(".active-modal-js").classList.remove("active");
+      if (element.closest(".active-modal-js").classList.contains("delay")) {
+        element.closest(".active-modal-js").classList.remove("active");
+        element
+          .closest(".active-modal-js")
+          .querySelector(".model_media")
+          .classList.remove("open");
+      } else {
+        element.closest(".active-modal-js").classList.remove("active");
+      }
       if (
         element.closest(".active-modal-js").classList.contains("remove-after")
       ) {
@@ -261,4 +280,53 @@ export function setCookie(name, value, days = 30, path = "/") {
     "; path=" + path;
   
   document.cookie = name + "=" + cookieValue;
+}
+
+export function createMediaImageElement(
+  media,
+  availableWidths = [],
+  additionalAttributes = {}
+) {
+  const {
+    width: imageWidth,
+    height: imageHeight,
+    src: imageSrc,
+  } = media.preview_image;
+  const imageElement = new Image(imageWidth, imageHeight);
+  Object.entries(additionalAttributes).forEach(
+    ([attributeName, attributeValue]) => {
+      imageElement.setAttribute(attributeName, attributeValue);
+    }
+  );
+  imageElement.alt = media.alt;
+  imageElement.src = resolveImageUrl(imageSrc, imageWidth);
+  imageElement.srcset = createResponsiveSrcset(
+    media.preview_image,
+    availableWidths
+  );
+
+  return imageElement;
+}
+
+function createResponsiveSrcset(image, availableWidths = []) {
+  const imageUrl = new URL(
+    image.src.startsWith("//") ? `https:${image.src}` : image.src
+  );
+  const maxWidth = image.width;
+
+  return availableWidths
+    .filter((width) => width <= maxWidth)
+    .map((width) => {
+      imageUrl.searchParams.set("width", width.toString());
+      return `${imageUrl.href} ${width}w`;
+    })
+    .join(", ");
+}
+
+function resolveImageUrl(src, width) {
+  return new URL(
+    src.startsWith("//")
+      ? `https:${src}&width=${width}`
+      : `${src}&width=${width}`
+  ).href;
 }

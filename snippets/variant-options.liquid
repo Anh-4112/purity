@@ -85,7 +85,7 @@
     endif
   -%}
   {%- if color_limit == 0 or count < color_limit or scope == 'detail' -%}
-    <li class="variant-input">
+    <li class="variant-input{% if is_dropdown and dropdown %} py-5{% endif %}">
       <input
         type="radio"
         name="swatch-product-{{ product.id }}-{{ option.position }}-{{ section.id }}"
@@ -95,6 +95,7 @@
         class="variant-options"
         {%- if scope == 'item' -%}
           data-href="{{ product.url }}?variant={{ variants.first.id }}"
+          data-value-media="{{ variants.first.featured_media | json | replace: '"', '&quot;'}}"
         {%- endif -%}
         {% if scope == 'detail' and option.selected_value == value %}
           checked
@@ -111,7 +112,7 @@
         </label>
       {%- else -%}
         <label
-          class="text-swatch-label inline-flex content-center min-w-custom btn-rounded border px-20 py-7{% if disable_variant %} disable{% else %} pointer{% endif %}"
+          class="text-swatch-label{% if is_dropdown and dropdown %} overflow-hidden transition btn-hover relative inline-flex content-center min-w-custom btn-rounded border px-20 py-7 pill{% endif %}{% if disable_variant %} disable{% else %} pointer{% endif %}"
           style="--min-width: 6.6rem;"
           for="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
         >
@@ -129,9 +130,14 @@
         value="{%- if scope == 'item' -%}{{ variants.first.id }}{%- else -%}{{ value }}{%- endif -%}"
         data-option-position="1"
         data-option-position="{{ option.position }}"
+        class="variant-options"
         {%- if scope == 'item' -%}
           data-href="{{ product.url }}?variant={{ variants.first.id }}"
+          data-value-media="{{ variants.first.featured_media | json | replace: '"', '&quot;'}}"
         {%- endif -%}
+        {% if scope == 'detail' and option.selected_value == value %}
+          checked
+        {% endif %}
         data-value-id="{{ value.id }}"
       >
       <label
