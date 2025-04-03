@@ -16,13 +16,11 @@
   endif
 %}
 
-{% comment %}
-  {%- style -%}
-    #shopify-block-{{ block.id }} {
-      width: {{ block_st.width }};
-    }
-  {%- endstyle -%}
-{% endcomment %}
+{%- style -%}
+  #shopify-block-{{ block.id }} {
+    width: {{ block_st.width }};
+  }
+{%- endstyle -%}
 
 <div class="multi-content__block w-full h-full flex align-{{ block_st.vertical_alignment }}">
   <video-section
@@ -46,13 +44,17 @@
             class="js-youtube"
             allow="autoplay; encrypted-media"
             allowfullscreen
+            frameborder="0"  
+            aria-label="{{ 'accessibility.video' | t }}"          
           ></iframe>
         {%- else -%}
           <iframe
             src="https://player.vimeo.com/video/{{ video_id }}?autoplay={% if block_st.autoplay -%}1{% else %}0{%- endif -%}&loop={% if block_st.looping -%}1{% else %}0{%- endif -%}&muted={% if block.settings.autoplay -%}1{% else %}0{%- endif -%}&playsinline=1"
-            class="js-vimeo"
+            class="js-vimeo vimeo-video bg-dark"
             allow="autoplay; encrypted-media"
             allowfullscreen
+            frameborder="0"
+            aria-label="{{ 'accessibility.video' | t }}" 
           ></iframe>
         {%- endif -%}
       {%- else -%}
