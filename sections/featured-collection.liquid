@@ -97,7 +97,7 @@
         <div class="swiper-wrapper">
           {%- liquid
             if collection.products.size > 0
-              for product in collection.products limit: section_st.items_to_show
+              for product in collection.products
                 render 'card-product', card_product: product, section_id: section.id, class: ' swiper-slide', show_video: true, container: section_width, column: items_per_row, column_mobile: items_per_row_mobile, padding: column_gap_slide, indexFor: forloop.index
               endfor
             else
@@ -126,7 +126,7 @@
       >
         {%- liquid
           if collection.products.size > 0
-            for product in collection.products limit: section_st.items_to_show
+            for product in collection.products
               render 'card-product', card_product: product, section_id: section.id, class: ' grid-card-item', show_video: true, container: section_width, column: items_per_row, column_mobile: items_per_row_mobile, padding: column_gap_slide, indexFor: forloop.index
             endfor
           else

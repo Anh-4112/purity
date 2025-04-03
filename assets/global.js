@@ -188,28 +188,19 @@ export function eventModal(
     if (removeElementAfter) {
       element.classList.add("remove-after");
     }
-    if (actionModal == "delay") {
-      setTimeout(() => {
-        element.querySelector(".model_media").classList.add("open");
-      }, 350);
-    }
     root.style.setProperty("padding-right", getScrollBarWidth.init() + "px");
     trapFocus(element);
   } else {
     const active_modal = document.querySelectorAll(".active-modal-js.active");
     if (element.classList.contains("active-modal-js")) {
       element.classList.remove("active");
-      element.querySelector(".model_media").classList.remove("open");
       if (element.classList.contains("remove-after")) {
         setTimeout(() => element.remove(), 600);
       }
     } else {
       if (element.closest(".active-modal-js").classList.contains("delay")) {
         element.closest(".active-modal-js").classList.remove("active");
-        element
-          .closest(".active-modal-js")
-          .querySelector(".model_media")
-          .classList.remove("open");
+        element.closest(".active-modal-js").classList.remove("open");
       } else {
         element.closest(".active-modal-js").classList.remove("active");
       }

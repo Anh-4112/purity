@@ -870,12 +870,10 @@ a.hover-heading-color:hover {
 modal-popup :is(.modal-overlay) {
   z-index: 15;
 }
-.modal-inner .shopify-block,
 .modal-popup-inner .drawer__body > * {
   opacity: 0;
   transform: translateY(2rem);
 }
-.modal.active .modal-inner .shopify-block,
 .modal.active .modal-popup-inner .drawer__body > *:not(.model_media, .spin) {
   animation: slideIn var(--transition) var(--timing-function) forwards;
 }
@@ -900,11 +898,14 @@ modal-popup :is(.modal-overlay) {
   > *:not(.model_media, .spin) {
   animation: slideOut var(--transition) var(--timing-function) forwards;
 }
-.active .active-show {
+.active-show {
+  transform: translateY(2rem);
+}
+.active > .active-show {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-  pointer-events: none;
+  pointer-events: auto;
 }
 @keyframes zoomOut {
   0% {
@@ -1739,12 +1740,15 @@ modal-popup :is(.modal-overlay) {
     border-top: 0;
   }
 }
-details > summary .icon {
+.icon-rotate {
   transform-origin: center 3px;
 }
-.detail-open > summary .icon,
-.details-normal[open] > summary .icon,
-.button-localization.opened > .icon {
+:is(
+    .detail-open > summary .icon-rotate,
+    .details-normal[open] > summary .icon-rotate,
+    .button-localization.opened > .icon-rotate,
+    .active > .rotate-animate .icon-rotate
+  ) {
   transform: rotate(180deg);
   -webkit-transform: rotate(180deg);
 }

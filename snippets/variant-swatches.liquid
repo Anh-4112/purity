@@ -20,10 +20,10 @@
 {%- if scope == 'item' -%}
   {% if product.has_only_default_variant == false and has_color == true -%}
     <variant-input
-      class="product-variants-js"
+      class="product-variants-js block mt-10"
       {{ block.shopify_attributes }}
     >
-      <fieldset class="product-card-swatch-js product-variants__input m-0 p-0 border-0">
+      <fieldset class="product-card-swatch-js product-variants__input m-0 p-0 border-0 relative">
         <legend class="{% if scope == 'item' %}visually-hidden{% endif %}">{{ 'products.product.colors' | t }}</legend>
         <ul class="swatch-color list-unstyled flex wrap gap-10">
           {%- for option in product.options_with_values -%}
@@ -63,7 +63,7 @@
           assign op = 'option' | append: option.position
           assign op_value = product.selected_or_first_available_variant[op]
         -%}
-        <fieldset class="product-card-variant-js product-variants__input m-0 p-0 border-0">
+        <fieldset class="product-card-variant-js product-variants__input m-0 p-0 border-0 relative">
           <div class="product-variants-info mb-10{%- if option.name == 'Size' -%}{% if size_guide_page != blank or product.metafields.custom.size_chart != blank or collection_size_chart != '' %} flex wrap gap-5 space-between{% endif %}{% endif %}">
             <legend class="form__label p-0">
               <span class="heading-style">{{ option.name }}:</span> <span class="option_value">{{ op_value }}</span>
@@ -137,7 +137,7 @@
               {%- endif -%}
             {%- endif -%}
           </div>
-          <div class="product-variants-option relative">
+          <div class="product-variants-option">
             {%- liquid
               assign is_color_option = false
               assign dropdown = is_dropdown
@@ -157,18 +157,18 @@
             {%- if is_dropdown and dropdown -%}
               <button
                 type="button"
-                class="button variants__option-dropdown pointer input-style w-full inline-flex align-center"
+                class="rotate-animate variants__option-dropdown pointer input-style w-full inline-flex align-center"
                 aria-expanded="false"
                 aria-controls="dropdown-{{ section.id }}-product-{{ product.id }}-position-{{ forloop.index0 }}"
               >
                 <span class="option_value flex-1 text-start">{{ op_value }}</span>
-                <svg class="icon icon-down transition-short ms-10" width="9" height="6" viewBox="0 0 9 6">
+                <svg class="icon icon-down icon-rotate transition-short ms-10" width="9" height="6" viewBox="0 0 9 6">
                   <use href="#icon-arrow-down"></use>
                 </svg>
               </button>
               <variants-dropdown
                 id="dropdown-{{ section.id }}-product-{{ product.id }}-position-{{ forloop.index0 }}"
-                class="variants-dropdown active-show pointer-none bg-white block shadow invisible px-24 py-20 absolute z-5 inset-x-0 top-100"
+                class="variants-dropdown transition-short active-show pointer-none bg-white block shadow invisible py-20 absolute z-5 inset-x-0 top-100"
               >
                 <ul class="dropdown-options list-unstyled">
                   {% render 'variant-options',
