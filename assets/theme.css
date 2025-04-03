@@ -1141,15 +1141,6 @@ modal-popup :is(.modal-overlay) {
     --col-gap: 3rem;
     gap: var(--col-gap);
   }
-  :where(.flex-md-start, .justify-content-md-left) {
-    justify-content: flex-start;
-  }
-  :where(.flex-md-end, .justify-content-md-right) {
-    justify-content: flex-end;
-  }
-  :where(.justify-md-center, .justify-content-md-center) {
-    justify-content: center;
-  }
   .justify-content-inherit {
     justify-content: inherit;
   }
@@ -1499,11 +1490,13 @@ modal-popup :is(.modal-overlay) {
   :where(.btn-outline):hover {
     --btn-color: var(--btn-primary-color);
   }
+  .btn-link:hover::before {
+    background-color: var(--btn-primary-hover-color);
+  }
   .btn-text {
     transition: color 0.5s cubic-bezier(0.3, 1, 0.3, 1);
     transition-delay: 0.1s;
   }
-
   :where(.btn-outline):after {
     background-color: var(--btn-primary-bg-color);
   }
