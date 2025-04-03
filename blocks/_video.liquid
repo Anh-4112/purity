@@ -24,7 +24,7 @@
 
 <div class="multi-content__block w-full h-full flex align-{{ block_st.vertical_alignment }}">
   <video-section
-    class="w-full video-section relative{% if section_st.equal_height_adjustment %} h-full{% endif %}"
+    class="w-full video-section relative{% if section_st.equal_height_adjustment %} h-full{% endif %} rounded"
   >
     <div
       class="video-has-bg block video-section relative z-3{% if section_st.equal_height_adjustment %} h-full{% endif %}"
@@ -58,7 +58,7 @@
           ></iframe>
         {%- endif -%}
       {%- else -%}
-        {{ video_local | video_tag: autoplay: autoplay, controls: true, muted: muted, poster: poster, loop: loop }}
+        {{ video_local | video_tag: autoplay: autoplay, controls: true, muted: muted, poster: poster, loop: loop, class: rounded }}
       {%- endif -%}
     </div>
   </video-section>
