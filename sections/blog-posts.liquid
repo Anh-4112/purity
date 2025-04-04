@@ -1,4 +1,3 @@
-
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -64,7 +63,7 @@
   {% if column_gap_slide < 20 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
 {%- endcapture -%}
 <div
-  class="section color-{{ section_st.color_scheme }} gradient section__blog-post{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}""
+  class="section color-{{ section_st.color_scheme }} gradient section__blog-post{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">

@@ -1,0 +1,347 @@
+{%- liquid
+  assign section_st = section.settings
+  assign color_scheme = section_st.color_scheme
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width'
+  else
+    assign section_width = 'full-width-gap'
+  endif
+  
+  assign scrolling_size = section_st.scrolling_size
+
+  assign space_between_text = section_st.space_between_text
+  assign space_between_item = 0
+  if space_between_text == 'large'
+    assign space_between_item = 30
+  elsif space_between_text == 'medium'
+    assign space_between_item = 15
+  elsif space_between_text == 'small'
+    assign space_between_item = 10
+  endif
+
+  assign is_shown = false
+  if section_st.homepage_only
+  if request.page_type == 'index'
+    assign is_shown = true
+  endif
+  else
+    assign is_shown = true
+  endif
+  assign announcement_actions = section_st.announcement_actions
+  assign style_between_item = section_st.style_between_item
+  assign show_close = section_st.show_close
+  assign show_mobile = section_st.show_mobile
+-%}
+
+{%- capture style -%}--section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.marquee_speed }}s;{%- endcapture -%}
+{%- capture col_style -%}
+  {% if space_between_item < 15 %}--col-gap: {{ space_between_item }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  space_between_item }}px;{% endif %}
+{%- endcapture -%}
+
+{%- if section.blocks.size > 0 and is_shown -%}
+  {%- if announcement_actions == 'marquee' -%}{{ 'section-scrolling-text.css' | asset_url | stylesheet_tag }}{%- endif -%}
+  <announcement-bar 
+    class="section section__announcement-bar {% if show_mobile %}block{% else %}block hidden-mobile{% endif %} color-{{ color_scheme }} gradient relative"
+    style="{{ style | strip | strip_newlines }}"
+  >
+    <div class="{{ section_width }}">
+      {%- if announcement_actions == 'marquee' -%}
+        <div
+          class="flex gap {% if section_st.uppercase %} uppercase{% endif %} fs-{{ scrolling_size }} marquee overflow-hidden w-full justify-center"
+          style="{{ col_style | strip | strip_newlines }}"
+        >
+          {%- for i in (0..5) -%}
+            <div
+              class="flex animation-marquee whitespace-nowrap gap align-center"
+              style="{{ col_style | strip | strip_newlines }}"
+            >
+              {%- for block in section.blocks -%}
+                {% assign block_st = block.settings %}
+                <div class="announcement-bar__content">
+                  {{ block_st.text }}
+                </div>
+                {%- if style_between_item -%}
+                  {% render 'icon-dot-star' %}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>  
+          {%- endfor -%}
+        </div>  
+      {%- else -%}
+        <slide-section
+          id="swiper-{{ section.id }}"
+          class="swiper "
+          data-section-id="{{ section.id }}"
+          data-loop="true"
+          data-speed="500"
+          data-mobile="1"
+          data-tablet="1"
+          data-desktop="1"
+          data-direction="vertical"
+        >
+          <div class="swiper-wrapper {% if section_st.uppercase %}uppercase {% endif %}fs-{{ scrolling_size }}">
+            {%- for block in section.blocks -%}
+              {% assign block_st = block.settings %}
+              <div class="swiper-slide announcement-bar__content text-center">
+                {{ block_st.text }}
+              </div>
+            {%- endfor -%}
+          </div>
+          <div class="swiper-actions">
+            <div
+              class="swiper-arrow swiper-button-prev overflow-hidden inline-flex content-center"
+              style="--transform-x: 2rem;"
+            >
+              <svg width="6" height="11" fill="none">
+                <use href="#icon-back" />
+              </svg>
+            </div>
+            <div
+              class="swiper-arrow swiper-button-next overflow-hidden inline-flex content-center"
+              style="--transform-x: -2rem;"
+            >
+              <svg width="6" height="11" fill="none">
+                <use href="#icon-next" />
+              </svg>
+            </div>
+          </div>
+        </slide-section>
+      {% endif %}
+    </div>
+    {%- if show_close -%}
+      <div
+        class="announcement-bar__close color-{{ color_scheme }} gradient absolute {% if settings.rtl %}left-0{% else %}right-0{% endif %} top-0 w-30 h-full transition inline-flex content-center hover-svg-zoom pointer lh-normal"
+        tabindex="0"
+      >
+        <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
+          <use href="#icon-close" />
+        </svg>
+      </div>
+    {% endif %}
+  </announcement-bar>
+  <script>
+    (() => {
+      const getCookieValue = () => {
+        const match = document.cookie.match('(^|;)\\s*announcement_closed\\s*=\\s*([^;]+)');
+        return match ? match[2] : null;
+      };
+      if (getCookieValue() === 'true') {
+        const parentSection = document.querySelector('.section-announcement-bar');
+        if (parentSection) {
+          const styles = {
+            transition: 'none',
+            height: '0px',
+            opacity: '0',
+            overflow: 'hidden'
+          };
+          Object.assign(parentSection.style, styles);
+          parentSection.classList.add('announcement-closed');
+          requestAnimationFrame(() => {
+            parentSection.style.removeProperty('transition');
+          });
+        }
+      }
+    })();
+  </script>
+{%- endif -%}
+{% schema %}
+{
+  "name": "t:sections.announcement-bar.name",
+  "class": "section-announcement-bar",
+  "limit": 1,
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.general"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "fix_width",
+          "label": "t:sections.all.layout.fix_width"
+        },
+        {
+          "value": "stretch_width",
+          "label": "t:sections.all.layout.stretch_width"
+        },
+        {
+          "value": "full_width",
+          "label": "t:sections.all.layout.full_width"
+        }
+      ],
+      "default": "fix_width",
+      "label": "t:sections.all.layout.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.info",
+      "default": "default-color-scheme"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_close",
+      "default": false,
+      "label": "t:sections.announcement-bar.settings.show_close_button.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "homepage_only",
+      "default": true,
+      "label": "t:sections.announcement-bar.settings.show_only_homepage.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mobile",
+      "default": true,
+      "label": "t:sections.announcement-bar.settings.enable_on_mobile.label"
+    },
+    {
+      "type": "select",
+      "id": "announcement_actions",
+      "options": [
+        {
+          "value": "slide",
+          "label": "t:sections.announcement-bar.settings.type.options.slide.label"
+        },
+        {
+          "value": "marquee",
+          "label": "t:sections.announcement-bar.settings.type.options.marquee.label"
+        }
+      ],
+      "default": "slide",
+      "label": "t:sections.announcement-bar.settings.type.name"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.announcement-bar.settings.marquee_settings.label"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "default": 20,
+      "label": "t:sections.announcement-bar.settings.marquee_settings.speed.label",
+      "min": 5,
+      "max": 50,
+      "step": 1,
+      "unit": "s"
+    },
+    {
+      "type": "checkbox",
+      "id": "style_between_item",
+      "default": true,
+      "label": "t:sections.announcement-bar.settings.marquee_settings.show_icon.label"
+    },
+    {
+      "type": "select",
+      "id": "space_between_text",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:sections.all.space_between.option__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.all.space_between.option__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.all.space_between.option__3.label"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.all.space_between.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_setting.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "default": false,
+      "label": "t:settings_schema.typography.settings.heading.text_transform.uppercase"
+    },
+    {
+      "type": "select",
+      "id": "scrolling_size",
+      "options": [
+        {
+          "value": "small-1",
+          "label": "t:sections.all.content_header.heading_size.options__1.label"
+        },
+        {
+          "value": "",
+          "label": "t:sections.all.content_header.heading_size.options__2.label"
+        },
+        {
+          "value": "big-2",
+          "label": "t:sections.all.content_header.heading_size.options__3.label"
+        }
+      ],
+      "default": "small-1",
+      "label": "t:sections.all.content_header.heading_size.size"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 10
+    }
+  ],
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "t:sections.announcement-bar.blocks.name",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Welcome to our store</p>",
+          "label": "t:sections.announcement-bar.blocks.setting.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.announcement-bar.name",
+      "blocks": [
+        {
+          "type": "announcement"
+        },
+        {
+          "type": "announcement"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

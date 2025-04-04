@@ -48,7 +48,7 @@
               assign product_show_image_hover = false
             endif
           -%}
-          <div class="product__inner relative overflow-hidden {{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image == blank %} show-hover-img{% endif %} hover-effect">
+          <div class="product__inner relative block rounded overflow-hidden {{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image == blank %} show-hover-img{% endif %} hover-effect">
             <a
               class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
               draggable="false"
@@ -57,7 +57,7 @@
             >
               {%- if p_media -%}
                 <div
-                  class="product__media animation-swatches rounded"
+                  class="product__media animation-swatches"
                   style="--aspect-ratio: {{ ratio }};"
                 >
                   {% if type_video and product_show_video_featured %}
@@ -171,7 +171,6 @@
                   {% render 'placeholder-render' %}
                 </div>
               {%- endif -%}
-
               {%- if disable_badge != true -%}
                 {% render 'product-badges', scope: 'item', card_product: card_product %}
               {%- endif -%}

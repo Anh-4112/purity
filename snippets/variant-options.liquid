@@ -114,7 +114,7 @@
         </label>
       {%- else -%}
         <label
-          class="text-swatch-label inline-flex content-center min-w-custom btn-rounded border px-20 py-7{% if disable_variant %} disable{% else %} pointer{% endif %}"
+          class="text-swatch-label{% if is_dropdown %} w-full transition py-5 px-24 block{% else %} overflow-hidden transition btn-hover relative inline-flex content-center min-w-custom btn-rounded border px-20 py-7 pill{% endif %}{% if disable_variant %} disable{% else %} pointer{% endif %}"
           style="--min-width: 6.6rem;"
           for="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
         >
@@ -159,12 +159,12 @@
   <li>
     <button
       type="button"
-      class="number-showmore"
+      class="number-showmore btn-reset pointer"
       title="{{ 'products.product.more_colors' | t }}"
       aria-label="{{ 'products.product.more_colors' | t }}"
     >
       <span>+</span>
-      <span class="text-number">
+      <span class="text-number heading-style">
         {{- hidden_colors }}
         {{ 'products.product.colors' | t -}}
       </span>

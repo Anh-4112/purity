@@ -74,6 +74,7 @@ summary::-webkit-details-marker {
     .h4,
     .h5,
     .h6,
+    .h7,
     .h0,
     .heading
   ) {
@@ -97,7 +98,29 @@ summary::-webkit-details-marker {
   margin: 0;
 }
 .rte
-  :where(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .h0, .heading) {
+  :where(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .h1,
+    .h2,
+    .h3,
+    .h4,
+    .h5,
+    .h6,
+    .h0,
+    .heading,
+    blockquote,
+    dl,
+    dd,
+    hr,
+    figure,
+    p,
+    pre
+  ) {
   margin-bottom: 1em;
 }
 .rte p:first-child {
@@ -106,8 +129,21 @@ summary::-webkit-details-marker {
 .rte p:last-child {
   margin-block-end: 0;
 }
+.rte
+  :where(
+    .heading-color,
+    .hover-heading-color:hover,
+    [aria-current="true"],
+    strong
+  ) {
+  color: inherit;
+}
+.rte a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 :where(.h0) {
-  --size: clamp(4rem, calc(4rem + (40 - 36) * var(--responsive-rate)), 7rem);
+  --size: clamp(4rem, calc(4rem + (70 - 40) * var(--responsive-rate)), 7rem);
 }
 :where(h1, .h1),
 .h1-size {
@@ -261,6 +297,9 @@ textarea {
 .input-rounded {
   border-radius: var(--input-border-radius);
 }
+.w-30 {
+  width: 30px;
+}
 .wh-40,
 .touch-target {
   width: 4rem;
@@ -288,6 +327,9 @@ textarea {
 @media screen and (max-width: 767.98px) {
   [style*="--aspect-ratio-mb"]::before {
     padding-top: calc(100% / (0 + var(--aspect-ratio-mb, 16 / 9)));
+  }
+  .hidden-mobile{
+    display: none;
   }
 }
 @media screen and (max-width: 1024.98px) {
@@ -325,45 +367,6 @@ textarea {
     --col: var(--col-tablet, var(--col-desktop));
   }
 }
-@media (min-width: 768px) {
-  .flex-md {
-    display: flex;
-  }
-  .row-reverse-md {
-    flex-direction: row-reverse;
-  }
-  .col-md-w-custom {
-    flex: 0 0 auto;
-    width: var(--col-width, 50%);
-  }
-  .col-md-remaining {
-    flex: 0 0 calc(100% - var(--col-width) - var(--gap, 2rem));
-    width: calc(100% - var(--col-width) - var(--gap, 2rem));
-  }
-  .mt-md-0 {
-    margin-top: 0;
-  }
-}
-@media (min-width: 992px) {
-  .h-full_screen {
-    min-height: calc(
-      100vh - var(--height-header, 70px) - var(--height-topbar, 0px) -
-        var(--height-bar, 0px)
-    );
-  }
-  [style*="--aspect-ratio"].h-full_screen::before {
-    padding-top: 0;
-  }
-  .stretch_width .h-full_screen {
-    min-height: calc(
-      100vh - var(--height-header, 70px) - var(--height-topbar, 0px) -
-        var(--height-bar, 0px) - var(--bs-gutter-x)
-    );
-  }
-  .max-w-custom {
-    max-width: var(--max-width);
-  }
-}
 :where(a, a strong) {
   color: inherit;
   transition: var(--transition);
@@ -386,6 +389,7 @@ textarea {
 }
 .bg-dark {
   background-color: var(--color-dark);
+  opacity: var(--opacity, 1);
 }
 .bg-custom {
   background-color: var(--bg-color-custom);
@@ -431,6 +435,9 @@ textarea {
 .inset-x-0 {
   left: 0;
   right: 0;
+}
+.top-0 {
+  top: 0;
 }
 .left-0 {
   inset-inline-start: 0;
@@ -496,6 +503,29 @@ textarea {
   text-decoration: none;
 }
 :where(
+    .btn:not(.btn-link),
+    .btn-hover,
+    body .jdgm-write-rev-link,
+    body .jdgm-write-rev-link.jdgm-write-rev-link,
+    input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
+  )::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 120%;
+  height: 100%;
+  background-color: var(--btn-primary-hover-bg-color);
+  backface-visibility: hidden;
+  will-change: transform;
+  transform: rotate3d(0, 0, 2, 10deg) translate3d(-1.2em, 105%, 0);
+  transform-origin: 0% 100%;
+  transition: transform var(--duration, 0.5s) ease;
+  z-index: -1;
+}
+:where(
     .btn-primary,
     .shopify-payment-button__more-options,
     .shopify-payment-button__button--unbranded,
@@ -527,10 +557,11 @@ button[disabled],
   pointer-events: none;
   opacity: 0.6;
 }
-.btn-active.active {
-  color: var(--btn-primary-color);
-  background-color: var(--btn-primary-bg-color);
-  border-color: var(--btn-primary-bg-color);
+.btn-active.active,
+input[type="radio"]:checked + .text-swatch-label.pill {
+  background: var(--btn-primary-hover-bg-color);
+  color: var(--btn-primary-hover-color);
+  border-color: var(--btn-primary-hover-bg-color);
 }
 .btn-link {
   color: var(--btn-link-color);
@@ -717,6 +748,9 @@ strong {
 .text-center {
   text-align: center;
 }
+.whitespace-nowrap {
+  white-space: nowrap;
+}
 .object-fit-cover {
   object-fit: cover;
   object-position: center center;
@@ -769,6 +803,9 @@ strong {
 .pe-20 {
   padding-inline-end: 2rem;
 }
+.px-20 {
+  padding-inline: 2rem;
+}
 .py-7 {
   padding-block: 0.7rem;
 }
@@ -799,19 +836,21 @@ strong {
 .mt-custom {
   margin-top: var(--space-top);
 }
-
 .mb-25 {
   margin-bottom: 2.5rem;
 }
 .mb-custom {
   margin-bottom: calc(var(--space-bottom) * 1px);
 }
-
 .me-3 {
   margin-inline-end: 3px;
 }
 .me-10 {
   margin-inline-end: 1rem;
+}
+.my-25 {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
 }
 .overflow-hidden {
   overflow: hidden;
@@ -864,6 +903,9 @@ strong {
 .header__inner {
   grid-template: var(--header-grid-template);
   gap: 2.5rem;
+}
+.h-full {
+  height: 100%;
 }
 body:not(.template-index) .transparent-logo {
   display: none;
@@ -956,6 +998,50 @@ body:not(.template-index) .transparent-logo {
     ),
     calc(var(--font-size) * 1px)
   );
+}
+@media (min-width: 768px) {
+  .flex-md {
+    display: flex;
+  }
+  .flex-md-start {
+    justify-content: flex-start;
+  }
+  .flex-md-end {
+    justify-content: flex-end;
+  }
+  .flex-md-center {
+    justify-content: center;
+  }
+  .row-reverse-md {
+    flex-direction: row-reverse;
+  }
+  .col-md-w-custom {
+    flex: 0 0 auto;
+    width: var(--col-width, 50%);
+  }
+  .col-md-remaining {
+    flex: 0 0 calc(100% - var(--col-width) - var(--gap, 2rem));
+    width: calc(100% - var(--col-width) - var(--gap, 2rem));
+  }
+  .mt-md-0 {
+    margin-top: 0;
+  }
+}
+@media (min-width: 992px) {
+  .h-full_screen {
+    min-height: calc(100vh - var(--height-header, 80px) - var(--bar, 40px));
+  }
+  [style*="--aspect-ratio"].h-full_screen::before {
+    padding-top: 0;
+  }
+  .stretch_width .h-full_screen {
+    min-height: calc(
+      100vh - var(--height-header, 70px) - var(--bar, 0px) - var(--bs-gutter-x)
+    );
+  }
+  .max-w-custom {
+    max-width: var(--max-width);
+  }
 }
 .swiper:not([class*="initialized"]) .swiper-wrapper {
   gap: var(--col-gap, 1rem);

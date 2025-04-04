@@ -41,7 +41,7 @@
           {{ localization.country.name }}
           ({{ localization.country.currency.iso_code }}
           {{ localization.country.currency.symbol }})
-          <svg class="icon icon-down transition-short" width="9" height="6" viewBox="0 0 9 6">
+          <svg class="icon icon-down icon-rotate transition-short" width="9" height="6" viewBox="0 0 9 6">
             <use href="#icon-arrow-down" />
           </svg>
         </button>
@@ -56,14 +56,14 @@
             </svg>
           </icon-close>
           <ul
-            class="disclosure__list h-full text-start list-unstyled p-24 overflow-auto custom-scrollbar"
+            class="disclosure__list h-full text-start list-unstyled px-24 py-20 overflow-auto custom-scrollbar"
             role="list"
           >
             {% for country in localization.available_countries %}
               <li class="disclosure__item" tabindex="-1">
                 <a
                   href="{{ routes.root_url }}"
-                  class="disclosure__item-inner inline-flex align-center gap-10"
+                  class="disclosure__item-inner py-5 flex align-center gap-10"
                   {% if country.iso_code == localization.country.iso_code %}
                     aria-current="true"
                   {% endif %}

@@ -30,14 +30,14 @@
       <div class="disclosure flex content-center text-center relative">
         <button
           type="button"
-          class="button button-localization lh-global inline-flex align-center gap-10 btn-reset color-inherit show-overlay fs-small body-weight pointer" 
+          class="button button-localization lh-global inline-flex align-center gap-10 btn-reset color-inherit show-overlay fs-small body-weight pointer"
           style="--show-overlay-bg: #0005;"
           aria-expanded="false"
           aria-controls="{{ localPosition }}List"
           aria-describedby="{{ localPosition }}Label"
         >
           {{ localization.language.endonym_name | capitalize }}
-          <svg class="icon icon-down transition-short" width="9" height="6" viewBox="0 0 9 6">
+          <svg class="icon icon-down icon-rotate transition-short" width="9" height="6" viewBox="0 0 9 6">
             <use href="#icon-arrow-down" />
           </svg>
         </button>
@@ -52,14 +52,14 @@
             </svg>
           </icon-close>
           <ul
-            class="disclosure__list h-full text-start list-unstyled p-24 overflow-auto custom-scrollbar"
+            class="disclosure__list h-full text-start list-unstyled px-24 py-20 overflow-auto custom-scrollbar"
             role="list"
           >
             {% for language in localization.available_languages %}
               <li class="disclosure__item" tabindex="-1">
                 <a
                   href="{{ routes.root_url }}"
-                  class="disclosure__item-inner"
+                  class="disclosure__item-inner block py-5"
                   {% if language.iso_code == localization.language.iso_code %}
                     aria-current="true"
                   {% endif %}

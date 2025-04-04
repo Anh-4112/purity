@@ -50,7 +50,7 @@
 {%- endcapture -%}
 {%- capture col_style -%}
   --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};
-  {% if column_gap_slide < 20 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
+  {% if column_gap_slide < 20 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
 {%- endcapture -%}
 <div
   class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
@@ -97,7 +97,7 @@
         <div class="swiper-wrapper">
           {%- liquid
             if collection.products.size > 0
-              for product in collection.products limit: section_st.items_to_show
+              for product in collection.products
                 render 'card-product', card_product: product, section_id: section.id, class: ' swiper-slide', show_video: true, container: section_width, column: items_per_row, column_mobile: items_per_row_mobile, padding: column_gap_slide, indexFor: forloop.index
               endfor
             else
@@ -126,7 +126,7 @@
       >
         {%- liquid
           if collection.products.size > 0
-            for product in collection.products limit: section_st.items_to_show
+            for product in collection.products
               render 'card-product', card_product: product, section_id: section.id, class: ' grid-card-item', show_video: true, container: section_width, column: items_per_row, column_mobile: items_per_row_mobile, padding: column_gap_slide, indexFor: forloop.index
             endfor
           else

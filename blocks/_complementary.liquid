@@ -13,7 +13,7 @@
   >
     {%- if recommendations.performed and recommendations.products_count > 0 -%}
       {%- if block_heading != blank -%}
-        <h2 class="recommendations-heading">
+        <h2 class="recommendations-heading h6 mb-20">
           {{- block_heading -}}
         </h2>
       {% endif %}
@@ -25,6 +25,7 @@
         data-desktop="{{ products_per_page }}"
         data-mobile="2"
         data-tablet="3"
+        data-spacing="20"
       >
         <div class="swiper-wrapper">
           {%- for product in recommendations.products limit: product_list_limit %}
@@ -65,7 +66,8 @@
     {
       "type": "text",
       "id": "block_heading",
-      "label": "t:sections.all.content_setting.heading.label"
+      "label": "t:sections.all.content_setting.heading.label",
+      "default": "Pairs well with"
     },
     {
       "type": "range",
