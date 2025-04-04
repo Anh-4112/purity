@@ -84,7 +84,7 @@
                     assign collection_img = collection.featured_image
                   -%}
                   <a
-                    class="collection_banner-image{% if section.settings.information_position == 'overlay' %} overlay-image{% endif %} block relative z-2"
+                    class="collection_banner-image{% if section.settings.information_position == 'overlay' %} overlay-image{% endif %} block relative"
                     {% if collection_url == blank %}
                       role="link" aria-disabled="true"
                     {% else %}
@@ -122,9 +122,6 @@
               </div>
               <div
                 class="collection-information text-{{ section.settings.text_alignment }}{% if section.settings.information_position == 'overlay' %} absolute{% endif %}"
-                {% if section.settings.information_position == 'overlay' %}
-                  style="--heading-color: {{ section_st.overlay_image_color }};--text-color: {{ section_st.overlay_image_color }}"
-                {% endif %}
               >
                 {%- if collection != blank -%}
                   {%- liquid
@@ -134,7 +131,7 @@
                     endif
                   -%}
                   <a
-                    class="relative z-3"
+                    class="relative"
                     {% if collection_url == blank %}
                       role="link" aria-disabled="true"
                     {% else %}
@@ -146,9 +143,10 @@
                   </a>
                 {%- else -%}
                   <a
-                    class="relative z-3"
+                    class="relative"
                     role="link"
                     aria-disabled="true"
+                    aria-label=" {{ 'sections.collection_list.sample_name' | t }}"
                   >
                     {{ 'sections.collection_list.sample_name' | t }}
                   </a>
@@ -200,12 +198,12 @@
                   {%- assign collection_img = block.settings.collection_image -%}
                 {%- endif -%}
                 <a
-                  class="collection_banner-image{% if section.settings.information_position == 'overlay' %} overlay-image{% endif %} block remove-underline h6 m-0 relative z-2 hover-effect{% if the_settings.enable_zoom_effect %} zoom-in {% else %} fade-in {% endif %}"
+                  class="collection_banner-image{% if section.settings.information_position == 'overlay' %} overlay-image{% endif %} block relative"
                   {% if collection_url == blank %}
                     role="link" aria-disabled="true"
                   {% else %}
                     href="{{ collection_url }}"
-                    aria-label="{{ block.settings.collection.title | default: "collection" }}"
+                    aria-label="{{ block.settings.collection.title }} | t"
                   {% endif %}
                   style="--aspect-ratio: {% if aspect_ratio == "adapt" %}{% if collection_img %}{{ collection_img.aspect_ratio }}{% else %}1/1{% endif %}{% else %}{{ aspect_ratio }}{% endif %}"
                 >
@@ -238,9 +236,6 @@
             </div>
             <div
               class="collection-information text-{{ section.settings.text_alignment }}{% if section.settings.information_position == 'overlay' %} absolute{% endif %}"
-              {% if section.settings.information_position == 'overlay' %}
-                style="--heading-color: {{ section_st.overlay_image_color }};--text-color: {{ section_st.overlay_image_color }}"
-              {% endif %}
             >
               {%- if block.settings.collection_title == blank -%}
                 {%- if block.settings.collection != blank -%}
@@ -251,7 +246,7 @@
                     endif
                   -%}
                   <a
-                    class="zelative z-3"
+                    class="zelative"
                     {% if collection_url == blank %}
                       role="link" aria-disabled="true"
                     {% else %}
@@ -263,7 +258,7 @@
                   </a>
                 {%- else -%}
                   <a
-                    class="relative z-3"
+                    class="relative"
                     role="link"
                     aria-disabled="true"
                     aria-label="{{ 'sections.collection_list.sample_name' | t }}"
@@ -279,7 +274,7 @@
                   endif
                 -%}
                 <a
-                  class="relative z-3"
+                  class="relative"
                   {% if collection_url == blank %}
                     role="link" aria-disabled="true"
                   {% else %}
