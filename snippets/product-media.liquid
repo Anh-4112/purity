@@ -173,6 +173,7 @@
           type: 'product',
           image: featured_media,
           image_alt: image_alt,
+          motion: motion,
           class: 'rounded-10'
         %}
         {% if thumbnail != true %}
@@ -349,7 +350,13 @@
           style="--aspect-ratio: {{ ratio }}"
         >
           {%- assign image_alt = image.alt | default: 'product' | escape -%}
-          {% render 'responsive-image', type: 'product', image: image, image_alt: image_alt, class: 'rounded-10' %}
+          {% render 'responsive-image',
+            type: 'product',
+            image: image,
+            image_alt: image_alt,
+            motion: motion,
+            class: 'rounded-10'
+          %}
           {% if thumbnail != true %}
             {% if type_section != 'featured' and type_section != 'quickview' %}
               <button

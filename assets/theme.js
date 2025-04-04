@@ -283,7 +283,8 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
       this.summaryElement.addEventListener(
         "click",
         this.onSummaryClicked.bind(this)
-      );
+      ),
+      this.initialize();
   }
 
   get open() {
@@ -302,6 +303,14 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
 
   onSummaryClicked(event) {
     event.preventDefault(), (this.open = !this.open);
+  }
+
+  async initialize() {
+    Motion.animate(
+      this.content,
+      this._open ? { height: "auto" } : { height: 0 },
+      { duration: 0 }
+    );
   }
 
   async transition(value) {
@@ -658,18 +667,21 @@ class VariantInput extends HTMLElement {
           }
         }.bind(this)
       );
-    this.init();
+  }
+
+  get sectionId() {
+    return this.hasAttribute("data-section-id")
+      ? this.getAttribute("data-section-id")
+      : this.getAttribute("data-section-id");
+  }
+
+  get productUrl() {
+    return this.hasAttribute("data-product-url")
+      ? this.getAttribute("data-product-url")
+      : this.getAttribute("data-product-url");
   }
 
   connectedCallback() {
-    this.querySelectorAll('.product-card-swatch-js [type="radio"]').forEach(
-      (input) => {
-        input.addEventListener("change", this.onSwatchChanged.bind(this));
-      }
-    );
-  }
-
-  init() {
     if (this.show_more) {
       this.show_more.addEventListener(
         "click",
@@ -682,6 +694,17 @@ class VariantInput extends HTMLElement {
         this.onShowSizeChartClicked.bind(this)
       );
     }
+    this.querySelectorAll('.product-card-swatch-js [type="radio"]').forEach(
+      (input) => {
+        input.addEventListener("change", this.onSwatchChanged.bind(this));
+      }
+    );
+
+    this.querySelectorAll('.product-card-variant-js [type="radio"]').forEach(
+      (input) => {
+        input.addEventListener("change", this.onVariantChange.bind(this));
+      }
+    );
   }
 
   async onSwatchChanged(event) {
@@ -696,32 +719,95 @@ class VariantInput extends HTMLElement {
         v.classList.remove("active");
       });
 
-      const newMedia = JSON.parse(target.getAttribute("data-value-media"));
-      const currentImage =
-        this.closest(".product__item-js").querySelector(".featured-image");
-      const newImage = this.createResponsiveImage(
-        newMedia,
-        currentImage.className,
-        currentImage.sizes
-      );
+      if (target.hasAttribute("data-value-media")) {
+        const newMedia = JSON.parse(target.getAttribute("data-value-media"));
+        const currentImage =
+          this.closest(".product__item-js").querySelector(".featured-image");
+        const newImage = this.createResponsiveImage(
+          newMedia,
+          currentImage.className,
+          currentImage.sizes
+        );
 
-      if (currentImage.src !== newImage.src) {
-        await Motion.animate(
-          currentImage,
-          { opacity: [1, 0] },
-          { duration: 0.15, easing: "ease-in", fill: "forwards" }
-        ).finished;
-        await new Promise((resolve) =>
-          newImage.complete ? resolve() : (newImage.onload = resolve)
-        );
-        currentImage.replaceWith(newImage);
-        Motion.animate(
-          newImage,
-          { opacity: [0, 1] },
-          { duration: 0.15, easing: "ease-in" }
-        );
+        if (currentImage.src !== newImage.src) {
+          await Motion.animate(
+            currentImage,
+            { opacity: [1, 0] },
+            { duration: 0.15, easing: "ease-in", fill: "forwards" }
+          ).finished;
+          await new Promise((resolve) =>
+            newImage.complete ? resolve() : (newImage.onload = resolve)
+          );
+          currentImage.replaceWith(newImage);
+          Motion.animate(
+            newImage,
+            { opacity: [0, 1] },
+            { duration: 0.15, easing: "ease-in" }
+          );
+        }
       }
     }
+  }
+
+  async onVariantChange(event) {
+    event.preventDefault();
+    const selectedValues = Array.from(
+      this.querySelectorAll('input[type="radio"]:checked')
+    ).map((radio) => radio.value);
+    const requestUrl = this.createRequestUrl(this.productUrl, selectedValues);
+    this.fetchProductInfo({
+      requestUrl,
+      onSuccess: this.updateProductInfo,
+    });
+  }
+
+  createRequestUrl(baseUrl, optionValues) {
+    const queryParams = [`section_id=${this.sectionId}`];
+    if (optionValues.length > 0) {
+      queryParams.push(`option_values=${optionValues.join(",")}`);
+    }
+    return `${baseUrl}?${queryParams.join("&")}`;
+  }
+
+  fetchProductInfo({ requestUrl, onSuccess }) {
+    this.abortController?.abort();
+    this.abortController = new AbortController();
+
+    fetch(requestUrl, { signal: this.abortController.signal })
+      .then((response) => response.text())
+      .then((responseText) => {
+        const parsedHTML = new DOMParser().parseFromString(
+          responseText,
+          "text/html"
+        );
+        onSuccess(parsedHTML, this.sectionId);
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  updateProductInfo(parsedHTML, sectionId) {
+    const updateContent = (blockClass) => {
+      const source = parsedHTML
+        .getElementById(`Product-${sectionId}`)
+        .querySelector(`.${blockClass}`);
+      const destination = document
+        .getElementById(`Product-${sectionId}`)
+        .querySelector(`.${blockClass}`);
+      if (source && destination) {
+        destination.innerHTML = source.innerHTML;
+      }
+    };
+
+    const blocksToUpdate = [
+      "block__media-gallery",
+      "block-product__badges",
+      "block-product__price",
+      "block-product__variant-picker",
+      "block-product__inventory",
+      "block-product__buttons",
+      "block-product__pickup",
+    ];
+    blocksToUpdate.forEach(updateContent);
   }
 
   createResponsiveImage(media, classNames, responsiveSizes) {

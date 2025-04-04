@@ -90,17 +90,19 @@
         type="radio"
         name="swatch-product-{{ product.id }}-{{ option.position }}-{{ section.id }}"
         id="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
-        value="{%- if scope == 'item' -%}{{ variants.first.id }}{%- else -%}{{ value }}{%- endif -%}"
+        value="{%- if scope == 'item' -%}{{ variants.first.id }}{%- else -%}{{ value.id }}{%- endif -%}"
         data-option-position="{{ option.position }}"
         class="variant-options"
         {%- if scope == 'item' -%}
           data-href="{{ product.url }}?variant={{ variants.first.id }}"
-          data-value-media="{{ variants.first.featured_media | json | replace: '"', '&quot;'}}"
+          {%- if variants.first.featured_media -%}
+            data-value-media="{{ variants.first.featured_media | json | replace: '"', '&quot;'}}"
+          {%- endif -%}
+          data-value-id="{{ value.id }}"
         {%- endif -%}
         {% if scope == 'detail' and option.selected_value == value %}
           checked
         {% endif %}
-        data-value-id="{{ value.id }}"
       >
       {%- if is_color -%}
         <label
@@ -127,18 +129,20 @@
         type="radio"
         name="swatch-product-{{ product.id }}-{{ option.position }}-{{ section.id }}"
         id="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
-        value="{%- if scope == 'item' -%}{{ variants.first.id }}{%- else -%}{{ value }}{%- endif -%}"
+        value="{%- if scope == 'item' -%}{{ variants.first.id }}{%- else -%}{{ value.id }}{%- endif -%}"
         data-option-position="1"
         data-option-position="{{ option.position }}"
         class="variant-options"
         {%- if scope == 'item' -%}
           data-href="{{ product.url }}?variant={{ variants.first.id }}"
-          data-value-media="{{ variants.first.featured_media | json | replace: '"', '&quot;'}}"
+          {%- if variants.first.featured_media -%}
+            data-value-media="{{ variants.first.featured_media | json | replace: '"', '&quot;'}}"
+          {%- endif -%}
+          data-value-id="{{ value.id }}"
         {%- endif -%}
         {% if scope == 'detail' and option.selected_value == value %}
           checked
         {% endif %}
-        data-value-id="{{ value.id }}"
       >
       <label
         class="color-swatch-label {{ color_swatch_shape }}{% if disable_variant %} disable{% endif %}{% if is_swatch_image %} swatch-image{% endif %}"

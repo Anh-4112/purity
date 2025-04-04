@@ -57,7 +57,11 @@
       assign size_guide_page = block_st.size_guide_page
       assign size_guide_page = block_st.size_guide_page
     -%}
-    <variant-input class="product-variants-js flex column wrap gap-25 pt-25 border-top">
+    <variant-input
+      class="product-variants-js flex column wrap gap-25 pt-25 border-top"
+      data-section-id="{{ section.id }}"
+      data-product-url="{{ product.url }}"
+    >
       {%- for option in product.options_with_values -%}
         {%- liquid
           assign op = 'option' | append: option.position
@@ -196,6 +200,9 @@
           </div>
         </fieldset>
       {%- endfor -%}
+      <script type="application/json" class="productVariantSelected">
+        {{ product.selected_or_first_available_variant | json }}
+      </script>
     </variant-input>
   {% endunless %}
 {% endif %}
