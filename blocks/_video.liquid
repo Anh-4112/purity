@@ -18,7 +18,7 @@
 
 {%- style -%}
   #shopify-block-{{ block.id }} {
-    width: {{ block_st.width }};
+    --col-width: {{ block_st.width }};
   }
 {%- endstyle -%}
 
@@ -31,9 +31,9 @@
       style="
         {%- if block_st.video_local != null -%}
           {% if block_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ block_st.aspect_ratio }}{% else %}--aspect-ratio: {{ block_st.video_local.aspect_ratio }}{% endif %}
-        {% endif %}
+        {%- endif -%}
         {%- if block_st.video_local == null -%}
-          {% if block_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ block_st.aspect_ratio }}{% else %}--aspect-ratio: 16/9{% endif %}
+          {%- if block_st.aspect_ratio != 'adapt' -%}--aspect-ratio: {{ block_st.aspect_ratio }}{%- else -%}--aspect-ratio: 16/9{%- endif -%}
          {%- endif -%}
       "
     >
@@ -58,7 +58,7 @@
           ></iframe>
         {%- endif -%}
       {%- else -%}
-        {{ video_local | video_tag: autoplay: autoplay, controls: true, muted: muted, poster: poster, loop: loop, class: rounded }}
+        {{ video_local | video_tag: autoplay: autoplay, controls: true, muted: muted, poster: poster, loop: loop }}
       {%- endif -%}
     </div>
   </video-section>
@@ -66,7 +66,7 @@
 {% schema %}
 {
   "name": "t:sections.video.name",
-  "class": "multi-content__block--video",
+  "class": "multi-content__block--video w-full col-md-w-custom col-md-w-custom-50",
   "settings": [
     {
       "type": "header",
