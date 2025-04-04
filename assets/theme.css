@@ -28,7 +28,7 @@ thead th {
 table,
 td,
 th {
-  border: 1px solid var(--border-color-base);
+  border: 1px solid var(--color-border);
   vertical-align: middle;
 }
 td,
@@ -36,13 +36,15 @@ th {
   padding: 11px 12px;
 }
 blockquote {
-  background-color: var(--grey-color);
+  background-color: var(--accent-color-second);
   font-size: clamp(1.6rem, 2.5vw, 2rem);
   font-weight: var(--heading-weight);
   color: var(--color-heading);
   letter-spacing: var(--heading-letter-spacing);
   padding: clamp(2rem, 3vw, 4rem);
   line-height: 1.5;
+  border-radius: var(--img-rounded);
+  overflow: hidden;
 }
 .pointer {
   cursor: pointer;
@@ -279,9 +281,6 @@ a.hover-heading-color:hover {
 }
 .px-15 {
   padding-inline: 1.5rem;
-}
-.px-20 {
-  padding-inline: 2rem;
 }
 .px-25 {
   padding-inline: 2.5rem;
@@ -823,14 +822,14 @@ a.hover-heading-color:hover {
 :where(.drawer-left) {
   --slide-out: -100%;
   border-top-right-radius: 2rem;
-  border-bottom-right-radius: var(--rounded-radius);
+  border-bottom-right-radius: var(--img-rounded);
 }
 .drawer-right {
   --slide-out: 100%;
 }
 .rounded :where(.drawer-left) {
   border-top-right-radius: 2rem;
-  border-bottom-right-radius: var(--rounded-radius);
+  border-bottom-right-radius: var(--img-rounded);
 }
 .rounded .drawer-right {
   border-top-left-radius: 2rem;
@@ -1449,7 +1448,7 @@ modal-popup :is(.modal-overlay) {
   width: 4px;
 }
 :is(.custom-scrollbar, .dlg .dlg-message)::-webkit-scrollbar-track {
-  background: var(--border-color-base);
+  background: var(--color-border);
 }
 :is(.custom-scrollbar, .dlg .dlg-message)::-webkit-scrollbar-thumb {
   background: #c8c8c8;
@@ -1772,9 +1771,6 @@ modal-popup :is(.modal-overlay) {
   }
 }
 /* Product */
-.product__badges-sale {
-  animation: salePulse 2s infinite;
-}
 .product__badges-sale:after {
   position: absolute;
   content: "";
@@ -1798,7 +1794,7 @@ modal-popup :is(.modal-overlay) {
 }
 @keyframes move {
   0% {
-    left: -50%;
+    left: 0;
     opacity: 0;
   }
 
@@ -1815,7 +1811,7 @@ modal-popup :is(.modal-overlay) {
   }
 
   100% {
-    left: 150%;
+    left: 100%;
   }
 }
 
