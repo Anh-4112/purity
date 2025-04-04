@@ -22,7 +22,7 @@
   {% if desktop_layout == 'two_columns' and type_section != 'quickview' %} --col-number: 2;{% else %}--col-number: 1;{% endif %}
 {%- endcapture -%}
 <script type="module" src="{{ 'media-gallery.js' | asset_url }}"></script>
-<div class="sticky top-20">
+<div class="block__media-gallery sticky top-20">
   <media-gallery
     class="media-gallery block"
     data-section-id="{{ section.id }}"
@@ -41,6 +41,7 @@
                   product: product,
                   section_st: section_st,
                   type_section: type_section,
+                  motion: true,
                   class: ' swiper-slide'
                 %}
               </div>
@@ -78,6 +79,7 @@
               product: product,
               section_st: section_st,
               type_section: type_section,
+              motion: true,
               class: ' grid-item'
             %}
           </grid-gallery>
@@ -92,6 +94,7 @@
               product: product,
               section_st: section_st,
               type_section: type_section,
+              motion: true,
               class: ' grid-item'
             %}
           </grid-gallery>

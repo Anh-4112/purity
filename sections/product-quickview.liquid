@@ -57,52 +57,52 @@
                     assign position = opt.position
                   endif
                 endfor
-              endfor
-              assign default_color_option = ''
-              if position == 1
-                assign default_color_option = product.selected_or_first_available_variant.option1
-              elsif position == 2
-                assign default_color_option = product.selected_or_first_available_variant.option2
-              elsif position == 3
-                assign default_color_option = product.selected_or_first_available_variant.option3
-              endif
-              assign media = product.media
-              if product.metafields.custom.use_variants_image_group != blank and product.metafields.custom.use_variants_image_group
-                assign alt_tags = ''
-                assign first = true
-                for image in product.media
-                  if image.alt != blank
-                    assign exclude_image = false
-                    for option in product.options_with_values
-                      for value in option.values
-                        if image.alt == value
-                          assign exclude_image = true
-                        endif
+                assign default_color_option = ''
+                if position == 1
+                  assign default_color_option = product.selected_or_first_available_variant.option1
+                elsif position == 2
+                  assign default_color_option = product.selected_or_first_available_variant.option2
+                elsif position == 3
+                  assign default_color_option = product.selected_or_first_available_variant.option3
+                endif
+                assign media = product.media
+                if product.metafields.custom.use_variants_image_group != blank and product.metafields.custom.use_variants_image_group
+                  assign alt_tags = ''
+                  assign first = true
+                  for image in product.media
+                    if image.alt != blank
+                      assign exclude_image = false
+                      for option in product.options_with_values
+                        for value in option.values
+                          if image.alt == value
+                            assign exclude_image = true
+                          endif
+                        endfor
                       endfor
+                      if exclude_image == false
+                        if first
+                          assign alt_tags = image.alt
+                          assign first = false
+                        else
+                          assign alt_tags = alt_tags | append: ', ' | append: image.alt
+                        endif
+                      endif
+                    endif
+                  endfor
+                  assign variant_media = product.media | where: 'alt', default_color_option
+                  assign alt_tags_list = alt_tags | split: ', '
+                  assign other_media = ''
+                  assign added_alts = ''
+                  for image in product.media
+                    for alt_tag in alt_tags_list
+                      if image.alt == alt_tag
+                        if added_alts contains alt_tag
+                        else
+                          assign other_media = other_media | append: image.alt | append: ','
+                          assign added_alts = added_alts | append: alt_tag | append: ','
+                        endif
+                      endif
                     endfor
-                    if exclude_image == false
-                      if first
-                        assign alt_tags = image.alt
-                        assign first = false
-                      else
-                        assign alt_tags = alt_tags | append: ', ' | append: image.alt
-                      endif
-                    endif
-                  endif
-                endfor
-                assign variant_media = product.media | where: 'alt', default_color_option
-                assign alt_tags_list = alt_tags | split: ', '
-                assign other_media = ''
-                assign added_alts = ''
-                for image in product.media
-                  for alt_tag in alt_tags_list
-                    if image.alt == alt_tag
-                      if added_alts contains alt_tag
-                      else
-                        assign other_media = other_media | append: image.alt | append: ','
-                        assign added_alts = added_alts | append: alt_tag | append: ','
-                      endif
-                    endif
                   endfor
                 endfor
                 assign combined_media = variant_media
@@ -153,32 +153,32 @@
         </div>
       </div>
     </div>
-  </div>
-  {%- unless product.has_only_default_variant -%}
-    <script type="application/json" class="productVariantsQty">
-      [
-      {%- for variant in product.variants -%}
-        {%- assign op = variant.option1 | replace: '"', '\"' -%}
-        {%- liquid
-            assign id = '"id":' | append: variant.id
-            assign option = '"option":"' | append: op | append: '"'
-            assign quantity = '"qty":' | append: variant.inventory_quantity
-            assign available = '"available":' | append: variant.available
-            assign mamagement = '"mamagement":"' | append: variant.inventory_management | append: '"'
-        -%}
-        { {{ id }},{{ option }},{{ quantity }},{{ available }},{{ mamagement }}}
-        {%- unless forloop.last -%},{%- endunless forloop.last -%}
-      {%- endfor -%}
-      ]
-    </script>
-  {%- endunless -%}
-  {%- if first_3d_model -%}
-    <script type="application/json" id="ProductJSON-{{ product.id }}">
-      {{ product.media | where: 'media_type', 'model' | json }}
-    </script>
-    <script src="{{ 'product-model.js' | asset_url }}" defer></script>
-  {% endif %}
-</quickview-drawer>
+    {%- unless product.has_only_default_variant -%}
+      <script type="application/json" class="productVariantsQty">
+        [
+        {%- for variant in product.variants -%}
+          {%- assign op = variant.option1 | replace: '"', '\"' -%}
+          {%- liquid
+              assign id = '"id":' | append: variant.id
+              assign option = '"option":"' | append: op | append: '"'
+              assign quantity = '"qty":' | append: variant.inventory_quantity
+              assign available = '"available":' | append: variant.available
+              assign mamagement = '"mamagement":"' | append: variant.inventory_management | append: '"'
+          -%}
+          { {{ id }},{{ option }},{{ quantity }},{{ available }},{{ mamagement }}}
+          {%- unless forloop.last -%},{%- endunless forloop.last -%}
+        {%- endfor -%}
+        ]
+      </script>
+    {%- endunless -%}
+    {%- if first_3d_model -%}
+      <script type="application/json" id="ProductJSON-{{ product.id }}">
+        {{ product.media | where: 'media_type', 'model' | json }}
+      </script>
+      <script src="{{ 'product-model.js' | asset_url }}" defer></script>
+    {% endif %}
+  </quickview-drawer>
+</section>
 {% schema %}
 {
   "name": "t:sections.quickview.name",
