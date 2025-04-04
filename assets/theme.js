@@ -830,18 +830,18 @@ class AnnouncementBar extends HTMLElement {
   }
 
   init() {
-    this.closeButton = this.querySelector('.announcement-bar__close');
-    this.parentSection = this.closest('.section-announcement-bar');
+    this.closeButton = this.querySelector(".announcement-bar__close");
+    this.parentSection = this.closest(".section-announcement-bar");
     if (!this.closeButton || !this.parentSection) return;
     this._naturalHeight = this.offsetHeight || 0;
     if (this.closeButton) {
-      this.closeButton.addEventListener('click', this.onCloseClick.bind(this));
-      this.closeButton.addEventListener('keydown', this.onKeyDown.bind(this));
+      this.closeButton.addEventListener("click", this.onCloseClick.bind(this));
+      this.closeButton.addEventListener("keydown", this.onKeyDown.bind(this));
     }
   }
-  
+
   onKeyDown(event) {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
       this.onCloseClick(event);
     }
@@ -854,13 +854,13 @@ class AnnouncementBar extends HTMLElement {
     if (!this._naturalHeight || this._naturalHeight <= 0) {
       this._naturalHeight = this.offsetHeight;
     }
-    this.parentSection.classList.add('announcement-closing');
+    this.parentSection.classList.add("announcement-closing");
     const startHeight = this._naturalHeight;
     const startTime = performance.now();
     if (this.animationFrame) {
       cancelAnimationFrame(this.animationFrame);
     }
-    
+
     const animate = (currentTime) => {
       const elapsedTime = currentTime - startTime;
       const progress = Math.min(elapsedTime / this.animationDuration, 1);
@@ -879,25 +879,25 @@ class AnnouncementBar extends HTMLElement {
   }
 
   finishClosingAnimation() {
-    this.parentSection.style.height = '0px';
-    this.parentSection.style.opacity = '0';
-    this.parentSection.classList.remove('announcement-closing');
-    this.parentSection.classList.add('announcement-closed');
-    global.setCookie('announcement_closed', 'true', 1);
+    this.parentSection.style.height = "0px";
+    this.parentSection.style.opacity = "0";
+    this.parentSection.classList.remove("announcement-closing");
+    this.parentSection.classList.add("announcement-closed");
+    global.setCookie("announcement_closed", "true", 1);
     this.isAnimating = false;
   }
-  
+
   easeOutCubic(x) {
     return 1 - Math.pow(1 - x, 3);
   }
-  
+
   disconnectedCallback() {
     if (this.animationFrame) {
       cancelAnimationFrame(this.animationFrame);
     }
     if (this.closeButton) {
-      this.closeButton.removeEventListener('click', this.onCloseClick);
-      this.closeButton.removeEventListener('keydown', this.onKeyDown);
+      this.closeButton.removeEventListener("click", this.onCloseClick);
+      this.closeButton.removeEventListener("keydown", this.onKeyDown);
     }
   }
 }

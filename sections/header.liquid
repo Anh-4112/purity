@@ -46,13 +46,28 @@
        }
     }
   {% endif %}
+    {% if section_st.enable_rounded_style %}
+      announcement-bar:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 100%;
+      top: 100%;
+      height: calc(100% + 30px);
+      background: inherit;
+      z-index: -2;
+    }
+   .section-announcement-bar + .site-header .section-rounded{
+      border-radius: 3rem 3rem 0 0;
+    }
+  {% endif %}
 {% endstyle %}
 
 <header
   data-sticky-type="{{ section_st.sticky_header_type }}"
   data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
   data-menu-trigger="{{ section_st.menu_trigger }}"
-  class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }} {% if section_st.enable_rounded_style %}section-rounded{% endif %}"
+  class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -486,7 +501,7 @@
           {%- if section_st.show_cart -%}
             <a
               href="{{ routes.cart_url }}"
-              class="header__icon wh-40 flex content-center"
+              class="header__icon wh-40 flex content-center relative"
               id="cart-icon-bubble"
             >
               {%- if theme_st.cart_icon == 'shopping_bag' -%}
@@ -959,7 +974,7 @@
 {% schema %}
 {
   "name": "t:sections.header.name",
-  "class": "header",
+  "class": "site-header sticky z-10",
   "settings": [
     {
       "type": "header",
@@ -1167,7 +1182,7 @@
       "type": "range",
       "id": "padding_top",
       "min": 0,
-      "max": 20,
+      "max": 30,
       "step": 1,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
@@ -1177,7 +1192,7 @@
       "type": "range",
       "id": "padding_bottom",
       "min": 0,
-      "max": 20,
+      "max": 30,
       "step": 1,
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",

@@ -129,7 +129,7 @@
         --color-dark: #000;
         --color-grey: rgba(var(--color-text-rgb), 0.65);
         --color-grey-light: rgba(var(--color-text-rgb), 0.2);
-        --responsive-rate: ((100vw - 575px) / (1600 - 575));
+        --responsive-rate: ((100vw - 575px) / (1410 - 575));
 
         --transition: all 0.4s;
         --duration-short: 0.2s;
@@ -210,6 +210,8 @@
     {{ content_for_header }}
     <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="{{ 'theme.css' | asset_url }}"></noscript>
+    <link rel="stylesheet" href="{{ 'accesibility.css' | asset_url }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ 'accesibility.css' | asset_url }}"></noscript>
     {%- unless settings.body_font.system? -%}
       {% comment %}theme-check-disable AssetPreload{% endcomment %}
       <link rel="preload" as="font" href="{{ settings.body_font | font_url }}" type="font/woff2" crossorigin>

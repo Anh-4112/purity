@@ -82,11 +82,11 @@
               </summary>
             </details>
           {% endif %}
-          <ul class="sub-children-menu list-unstyled overflow-hidden-mb{% if menu_mega == blank and menu_mobile == blank %} mb-10 overflow-hidden{% endif %}">
+          <ul class="sub-children-menu list-unstyled overflow-hidden-mb{% if menu_mega == blank and menu_mobile == blank %} pb-10 pt-5 overflow-hidden{% endif %}">
             {% for grandchild_link in child_link.links %}
-              <li class="menu-link{% if menu_mega == blank and menu_mobile == blank %} ps-10{% endif %}">
+              <li class="menu-link{% if menu_mega == blank and menu_mobile == blank %} px-5{% endif %}">
                 <a
-                  class="menu__item level-3 inline-block py-6 inside-out-effect relative"
+                  class="menu__item level-3 inline-block py-6 inside-out-effect relative{% if menu_mega == blank and menu_mobile == blank %} px-5{% endif %}"
                   href="{{ grandchild_link.url }}"
                   aria-label="{{ grandchild_link.title }}"
                 >
