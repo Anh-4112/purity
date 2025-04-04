@@ -74,6 +74,7 @@ summary::-webkit-details-marker {
     .h4,
     .h5,
     .h6,
+    .h7,
     .h0,
     .heading
   ) {
@@ -127,6 +128,19 @@ summary::-webkit-details-marker {
 }
 .rte p:last-child {
   margin-block-end: 0;
+}
+.rte
+  :where(
+    .heading-color,
+    .hover-heading-color:hover,
+    [aria-current="true"],
+    strong
+  ) {
+  color: inherit;
+}
+.rte a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 :where(.h0) {
   --size: clamp(4rem, calc(4rem + (70 - 40) * var(--responsive-rate)), 7rem);
@@ -777,6 +791,9 @@ strong {
 .pe-20 {
   padding-inline-end: 2rem;
 }
+.px-20 {
+  padding-inline: 2rem;
+}
 .py-7 {
   padding-block: 0.7rem;
 }
@@ -997,18 +1014,14 @@ body:not(.template-index) .transparent-logo {
 }
 @media (min-width: 992px) {
   .h-full_screen {
-    min-height: calc(
-      100vh - var(--height-header, 80px) - 
-        var(--bar, 40px)
-    );
+    min-height: calc(100vh - var(--height-header, 80px) - var(--bar, 40px));
   }
   [style*="--aspect-ratio"].h-full_screen::before {
     padding-top: 0;
   }
   .stretch_width .h-full_screen {
     min-height: calc(
-      100vh - var(--height-header, 70px)  -
-        var(--bar, 0px) - var(--bs-gutter-x)
+      100vh - var(--height-header, 70px) - var(--bar, 0px) - var(--bs-gutter-x)
     );
   }
   .max-w-custom {
