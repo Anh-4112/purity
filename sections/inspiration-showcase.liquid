@@ -1,5 +1,6 @@
 {%- liquid
   assign section_st = section.settings
+  assign theme_st = settings
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -32,6 +33,14 @@
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
+{%- capture sizes -%}
+  {% if section_st.full_width -%}
+    100vw
+  {%- else -%}
+    (min-width: {{ theme_st.page_width }}px) {{ theme_st.page_width | minus: 100 }}px, (min-width: 750px)
+    calc(100vw - 10rem), 100vw
+  {%- endif %}
+{%- endcapture -%}
 {% style %}
 .section-case{
   height: 300vh;
@@ -50,6 +59,14 @@
     .inspiration-showcase__block {
         flex: 0 0 auto;
     }
+    .inspiration-showcase__block{
+      width: 10rem;
+      height: 15rem;
+    }
+    .inspiration-showcase__block.active{
+      width: 18rem;
+      height: 27rem;
+    }
 {% endstyle %}
 <div
   class="section section-case color-{{ section_st.color_scheme }} gradient"
@@ -59,11 +76,13 @@
         <inspiration-showcase class="content-center gap-{{ column_gap_slide }}">
           {%- for block in section.blocks -%}
             {%- liquid
-              assign media_type = block.settings.media_type
-              assign media = block.settings.image
+              assign block_st = block.settings
+              assign media_type = block_st.media_type
+              assign media = block_st.image
+              assign video = block_st.video
               assign image_alt = media.alt
               if image_alt == blank
-                assign image_alt = 'Section image'
+                assign image_alt = 'general.image.image_alt_default' | t
               endif
               assign middle_index = section.blocks.size | divided_by: 2 | floor
               assign is_middle = false
@@ -79,7 +98,30 @@
             -%}
             <div class="inspiration-showcase__block flex-1 {{ active_class }}">
                 <div class="inspiration-showcase__media {{ media_type }}">
-                 {%- if media != blank -%}
+                 {%- if video != blank -%}
+                    {%- liquid
+                      assign source = video.sources
+                      assign source_url = ''
+                      for s in source
+                        if s.format == 'mp4'
+                          assign source_url = s.url
+                          break
+                        endif
+                      endfor
+                      assign video_poster = video.preview_image | image_url: width: 1100
+                    -%}
+                    <video-local>
+                      <video
+                        loop="true"
+                        data-src="{{ source_url }}"
+                        poster="{{ video_poster }}"
+                        playsinline="true"
+                        autoplay
+                        muted
+                        size="{{ sizes }}"
+                      ></video>
+                    </video-local>
+                 {%- elsif media != blank -%}
                   {% render 'responsive-image',
                     type: 'banner',
                     container: section_st.section_width,
