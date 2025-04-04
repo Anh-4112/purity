@@ -951,7 +951,7 @@ class InspirationShowcase extends HTMLElement {
     );
     
     Motion.scroll(
-      ({ y }) => {
+      () => {
         const scrollY = window.scrollY;
         const relativeScrollPosition = scrollY - this.scrollStartPosition;
         if (relativeScrollPosition > 0 && scrollY > this.scrollStartPosition) {
@@ -984,12 +984,31 @@ class InspirationShowcase extends HTMLElement {
     let currentMiddleBlock = null;
     let currentMiddleIndex = -1;
     
+    if (!this.transitionsAdded) {
+      const style = document.createElement('style');
+      style.textContent = `
+        .inspiration-showcase__block {
+          transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                      opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+          will-change: transform, opacity, order;
+        }
+      `;
+      document.head.appendChild(style);
+      this.transitionsAdded = true;
+    }
+    
     this.blocks.forEach((block, index) => {
+      if (!block.style.transition) {
+        block.style.transition = "transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)";
+      }
+      
       if (parseInt(block.style.order) === middlePosition) {
         currentMiddleBlock = block;
         currentMiddleIndex = index;
       }
     });
+    
+    // Nếu block active đã ở giữa, chỉ cập nhật hiệu ứng
     if (activeIndex === currentMiddleIndex) {
       this.blocks.forEach((block, index) => {
         const distanceFromActive = Math.abs(index - activeIndex);
@@ -1001,7 +1020,10 @@ class InspirationShowcase extends HTMLElement {
               scale: 1,
               opacity: 1
             },
-            { duration: 0.3 }
+            { 
+              duration: 0.5,
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+            }
           );
         } else {
           block.classList.remove('active');
@@ -1013,43 +1035,82 @@ class InspirationShowcase extends HTMLElement {
               scale: scale,
               opacity: opacity
             },
-            { duration: 0.3 }
+            { 
+              duration: 0.5,
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+            }
           );
         }
       });
       return;
     }
-    const activeBlockOrder = parseInt(activeBlock.style.order);
-    activeBlock.style.order = middlePosition;
-    if (currentMiddleBlock) {
-      currentMiddleBlock.style.order = activeBlockOrder;
-    }
-    this.blocks.forEach((block, index) => {
-      const distanceFromActive = Math.abs(index - activeIndex);
+    
+    // Chuẩn bị trước khi thay đổi order
+    Promise.all([
+      Motion.animate(
+        activeBlock,
+        { 
+          scale: [null, 0.95],
+          opacity: [null, 0.8]
+        },
+        { 
+          duration: 0.2,
+          easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+        }
+      ).finished,
+      currentMiddleBlock ? 
+        Motion.animate(
+          currentMiddleBlock,
+          { 
+            scale: [null, 0.95],
+            opacity: [null, 0.8]
+          },
+          { 
+            duration: 0.2,
+            easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+          }
+        ).finished : Promise.resolve()
+    ]).then(() => {
+      const activeBlockOrder = parseInt(activeBlock.style.order);
+      activeBlock.style.order = middlePosition;
       
-      if (distanceFromActive === 0) {
-        block.classList.add('active');
-        Motion.animate(
-          block,
-          { 
-            scale: 1,
-            opacity: 1
-          },
-          { duration: 0.3 }
-        );
-      } else {
-        block.classList.remove('active');
-        const scale = Math.max(0.9, 1 - (distanceFromActive * 0.05));
-        const opacity = Math.max(0.5, 1 - (distanceFromActive * 0.25));
-        Motion.animate(
-          block,
-          { 
-            scale: scale,
-            opacity: opacity
-          },
-          { duration: 0.3 }
-        );
+      if (currentMiddleBlock) {
+        currentMiddleBlock.style.order = activeBlockOrder;
       }
+      this.blocks.forEach((block, index) => {
+        const distanceFromActive = Math.abs(index - activeIndex);
+        
+        if (distanceFromActive === 0) {
+          block.classList.add('active');
+          Motion.animate(
+            block,
+            { 
+              scale: [0.95, 1.02, 1],
+              opacity: [0.8, 1]
+            },
+            { 
+              duration: 0.5,
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+            }
+          );
+        } else {
+          block.classList.remove('active');
+          const scale = Math.max(0.9, 1 - (distanceFromActive * 0.05));
+          const opacity = Math.max(0.5, 1 - (distanceFromActive * 0.25));
+          
+          Motion.animate(
+            block,
+            { 
+              scale: scale,
+              opacity: opacity
+            },
+            { 
+              duration: 0.5,
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+            }
+          );
+        }
+      });
     });
   }
 
