@@ -104,7 +104,7 @@
           checked
         {% endif %}
       >
-      {%- if is_color -%}
+      {%- if is_color and is_dropdown == false -%}
         <label
           class="color-swatch-label{% if disable_variant %} disable{% else %} pointer{% endif %}{% if is_swatch_image %} swatch-image{% endif %}"
           style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }}{% endif %}"
@@ -118,12 +118,14 @@
           style="--min-width: 6.6rem;"
           for="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
         >
-          <span
-            class="color-variant-input"
-            style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }}{% endif %}"
-          >
-            {{- value -}}
-          </span>
+          {%- if is_color -%}
+            <span
+              class="color-variant-input"
+              style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }}{% endif %}"
+            >
+              {{- value -}}
+            </span>
+          {%- endif -%}
           <span class="option_value flex-1 text-start">{{ value }}</span>
         </label>
       {%- endif -%}
