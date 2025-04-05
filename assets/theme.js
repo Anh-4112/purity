@@ -869,6 +869,7 @@ class AnnouncementBar extends HTMLElement {
       const currentOpacity = 1 - eased;
       this.parentSection.style.height = `${currentHeight}px`;
       this.parentSection.style.opacity = String(currentOpacity);
+      this.classList.add('d-none')
       if (progress < 1) {
         this.animationFrame = requestAnimationFrame(animate);
       } else {
