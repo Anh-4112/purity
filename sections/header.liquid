@@ -544,11 +544,12 @@
     <menu-drawer
       id="Menu-Drawer"
       class="modal pointer-none active-modal-js"
+      style="--modal-width: 100%;"
     >
       <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-      <div class="modal-inner w-full fixed z-15 left-0 inset-y-0 bg-white overflow-hidden">
+      <div class="modal-inner transition top-rounded w-full fixed z-15 left-0 bg-white">
         <button
-          class="modal__close btn-close-menu absolute top-10 right-10 w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
+          class="modal__close transition-short absolute{% if section_st.banner_image != blank %} top-10 right-10{% else %} invisible inset-x-0 mx-auto bg-white btn-close-model{% endif %} w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
           style="--custom-width: 2.4rem;"
           is="button-close-model"
           aria-label="{{ 'accessibility.button.close' | t }}"
@@ -574,12 +575,12 @@
               </a>
             </div>
           {%- endif -%}
-          <div class="drawer__content flex column h-full{% if section_st.banner_image == blank %} pt-30{% endif %}">
+          <div class="drawer__content flex column h-full">
             <nav class="header__menu-mobile overflow-hidden grow-1">
-              <ul class="list-unstyled px-24 pt-12 overflow-y-auto overflow-x-hidden w-full h-full">
+              <ul class="list-unstyled px-gutter-x py-10 overflow-y-auto overflow-x-hidden w-full h-full">
                 {%- for link in menu.links -%}
                   {%- if section.blocks.size > 0 -%}
-                    <li class="py-8">
+                    <li class="py-10">
                       {%- liquid
                         assign last_block = null
                         assign mega_width = 100
@@ -633,14 +634,14 @@
                                 </svg>
                               {% endif %}
                             </summary>
-                            <div class="submenu absolute inset-0 z-2 bg-white flex column transition invisible sub-mb absolute inset-0 drawer drawer-right">
+                            <div class="submenu absolute inset-0 z-2 bg-white flex column transition invisible sub-mb absolute inset-0 drawer drawer-right-mb top-rounded overflow-hidden">
                               <div class="overflow-auto custom-scrollbar">
                                 {%- render 'horizontal-menu', section_st: section_st, menu_mobile: true, link: link -%}
                                 {%- if has_content -%}
                                   {%- case last_block.type -%}
                                     {%- when 'menu_mega' -%}
                                       <div
-                                        class="mega-banner flex column flex-cols gap p-24"
+                                        class="mega-banner flex column flex-cols gap p-gutter-x"
                                         style="--col-number: 1;--gap:24px;"
                                       >
                                         {%- for i in (1..5) -%}
@@ -870,7 +871,7 @@
                       {%- endif -%}
                     </li>
                   {%- else -%}
-                    <li class="py-8">
+                    <li class="py-10">
                       {%- if link.links.size > 0 -%}
                         <details is="details-mega-menu" class="details-header-menu">
                           <summary
@@ -917,7 +918,7 @@
               or section_st.show_language
               or section_st.show_currency
             -%}
-              <div class="disclosure__footer sticky bottom-0 left-0 right-0 flex column gap-15 p-24 border-top">
+              <div class="disclosure__footer bg-white flex column gap-15 p-gutter-x border-top">
                 <div class="align-center justify-content-end d-flex gap-10 space-between">
                   {% if section_st.show_language or section_st.show_currency %}
                     <div class="desktop-localization-wrapper disclosure__footer last-r-0 pr-30 d-flex gap-15 align-center">
@@ -932,7 +933,7 @@
                   {%- if section_st.show_account -%}
                     <a
                       href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                      class="btn btn-primary block text-center mt-20 mb-15"
+                      class="btn btn-primary block text-center mt-20 mb-15 fs-small"
                       aria-label="{% if customer %}{{ 'customer.account.title' | t }}{% else %}{{ 'customer.login_page.title' | t }}{% endif %}"
                     >
                       {% if customer %}
@@ -941,7 +942,7 @@
                         {{ 'customer.login_page.title' | t }}
                       {% endif %}
                     </a>
-                    <div class="text-center">
+                    <div class="text-center fs-small">
                       {%- if customer -%}
                         <a
                           href="{{ routes.account_logout_url }}"
