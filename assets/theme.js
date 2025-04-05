@@ -916,18 +916,18 @@ class AnnouncementBar extends HTMLElement {
   }
 
   init() {
-    this.closeButton = this.querySelector('.announcement-bar__close');
-    this.parentSection = this.closest('.section-announcement-bar');
+    this.closeButton = this.querySelector(".announcement-bar__close");
+    this.parentSection = this.closest(".section-announcement-bar");
     if (!this.closeButton || !this.parentSection) return;
     this._naturalHeight = this.offsetHeight || 0;
     if (this.closeButton) {
-      this.closeButton.addEventListener('click', this.onCloseClick.bind(this));
-      this.closeButton.addEventListener('keydown', this.onKeyDown.bind(this));
+      this.closeButton.addEventListener("click", this.onCloseClick.bind(this));
+      this.closeButton.addEventListener("keydown", this.onKeyDown.bind(this));
     }
   }
-  
+
   onKeyDown(event) {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
       this.onCloseClick(event);
     }
@@ -940,13 +940,13 @@ class AnnouncementBar extends HTMLElement {
     if (!this._naturalHeight || this._naturalHeight <= 0) {
       this._naturalHeight = this.offsetHeight;
     }
-    this.parentSection.classList.add('announcement-closing');
+    this.parentSection.classList.add("announcement-closing");
     const startHeight = this._naturalHeight;
     const startTime = performance.now();
     if (this.animationFrame) {
       cancelAnimationFrame(this.animationFrame);
     }
-    
+
     const animate = (currentTime) => {
       const elapsedTime = currentTime - startTime;
       const progress = Math.min(elapsedTime / this.animationDuration, 1);
@@ -965,25 +965,25 @@ class AnnouncementBar extends HTMLElement {
   }
 
   finishClosingAnimation() {
-    this.parentSection.style.height = '0px';
-    this.parentSection.style.opacity = '0';
-    this.parentSection.classList.remove('announcement-closing');
-    this.parentSection.classList.add('announcement-closed');
-    global.setCookie('announcement_closed', 'true', 1);
+    this.parentSection.style.height = "0px";
+    this.parentSection.style.opacity = "0";
+    this.parentSection.classList.remove("announcement-closing");
+    this.parentSection.classList.add("announcement-closed");
+    global.setCookie("announcement_closed", "true", 1);
     this.isAnimating = false;
   }
-  
+
   easeOutCubic(x) {
     return 1 - Math.pow(1 - x, 3);
   }
-  
+
   disconnectedCallback() {
     if (this.animationFrame) {
       cancelAnimationFrame(this.animationFrame);
     }
     if (this.closeButton) {
-      this.closeButton.removeEventListener('click', this.onCloseClick);
-      this.closeButton.removeEventListener('keydown', this.onKeyDown);
+      this.closeButton.removeEventListener("click", this.onCloseClick);
+      this.closeButton.removeEventListener("keydown", this.onKeyDown);
     }
   }
 }
@@ -1005,9 +1005,11 @@ class InspirationShowcase extends HTMLElement {
   }
 
   init() {
-    this.blocks = Array.from(this.querySelectorAll('.inspiration-showcase__block'));
+    this.blocks = Array.from(
+      this.querySelectorAll(".inspiration-showcase__block")
+    );
     if (!this.blocks.length) return;
-    
+
     this.totalBlocks = this.blocks.length;
     this.middleOrder = Math.ceil(this.totalBlocks / 2);
 
@@ -1015,33 +1017,35 @@ class InspirationShowcase extends HTMLElement {
       block.style.order = index + 1;
     });
 
-    this.containerElement = this.closest('.section');
+    this.containerElement = this.closest(".section");
     if (!this.containerElement) return;
 
     this.setupPinningAnimation();
   }
 
   setupPinningAnimation() {
-    this.scrollStartPosition = this.containerElement.getBoundingClientRect().top + window.scrollY;
-    
-    this.containerElement.style.height = '300vh';
-    
+    this.scrollStartPosition =
+      this.containerElement.getBoundingClientRect().top + window.scrollY;
+
+    this.containerElement.style.height = "300vh";
+
     Motion.scroll(
       Motion.animate(this, {
-        opacity: [1, 1]
-      }), 
+        opacity: [1, 1],
+      }),
       {
         target: this.containerElement,
-        offset: ['start start', 'end end']
+        offset: ["start start", "end end"],
       }
     );
-    
+
     Motion.scroll(
       () => {
         const scrollY = window.scrollY;
         const relativeScrollPosition = scrollY - this.scrollStartPosition;
         if (relativeScrollPosition > 0 && scrollY > this.scrollStartPosition) {
-          const scrollHeight = this.containerElement.offsetHeight - window.innerHeight;
+          const scrollHeight =
+            this.containerElement.offsetHeight - window.innerHeight;
           const blockCount = this.blocks.length;
           const segmentSize = scrollHeight / blockCount;
           const blockIndex = Math.min(
@@ -1052,14 +1056,16 @@ class InspirationShowcase extends HTMLElement {
             this.currentVisibleIndex = blockIndex;
             this.updateActiveBlock(blockIndex);
           }
-        } else if (this.currentVisibleIndex !== Math.floor(this.blocks.length / 2)) {
+        } else if (
+          this.currentVisibleIndex !== Math.floor(this.blocks.length / 2)
+        ) {
           this.currentVisibleIndex = Math.floor(this.blocks.length / 2);
           this.updateActiveBlock(this.currentVisibleIndex);
         }
       },
-      { target: window } 
+      { target: window }
     );
-    
+
     const initialIndex = Math.floor(this.blocks.length / 2);
     this.updateActiveBlock(initialIndex);
   }
@@ -1069,9 +1075,9 @@ class InspirationShowcase extends HTMLElement {
     const activeBlock = this.blocks[activeIndex];
     let currentMiddleBlock = null;
     let currentMiddleIndex = -1;
-    
+
     if (!this.transitionsAdded) {
-      const style = document.createElement('style');
+      const style = document.createElement("style");
       style.textContent = `
         .inspiration-showcase__block {
           transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), 
@@ -1082,117 +1088,119 @@ class InspirationShowcase extends HTMLElement {
       document.head.appendChild(style);
       this.transitionsAdded = true;
     }
-    
+
     this.blocks.forEach((block, index) => {
       if (!block.style.transition) {
-        block.style.transition = "transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)";
+        block.style.transition =
+          "transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)";
       }
-      
+
       if (parseInt(block.style.order) === middlePosition) {
         currentMiddleBlock = block;
         currentMiddleIndex = index;
       }
     });
-    
+
     // Nếu block active đã ở giữa, chỉ cập nhật hiệu ứng
     if (activeIndex === currentMiddleIndex) {
       this.blocks.forEach((block, index) => {
         const distanceFromActive = Math.abs(index - activeIndex);
         if (distanceFromActive === 0) {
-          block.classList.add('active');
+          block.classList.add("active");
           Motion.animate(
             block,
-            { 
+            {
               scale: 1,
-              opacity: 1
+              opacity: 1,
             },
-            { 
+            {
               duration: 0.5,
-              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
             }
           );
         } else {
-          block.classList.remove('active');
-          const scale = Math.max(0.9, 1 - (distanceFromActive * 0.05));
-          const opacity = Math.max(0.5, 1 - (distanceFromActive * 0.25));
+          block.classList.remove("active");
+          const scale = Math.max(0.9, 1 - distanceFromActive * 0.05);
+          const opacity = Math.max(0.5, 1 - distanceFromActive * 0.25);
           Motion.animate(
             block,
-            { 
+            {
               scale: scale,
-              opacity: opacity
+              opacity: opacity,
             },
-            { 
+            {
               duration: 0.5,
-              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
             }
           );
         }
       });
       return;
     }
-    
+
     // Chuẩn bị trước khi thay đổi order
     Promise.all([
       Motion.animate(
         activeBlock,
-        { 
+        {
           scale: [null, 0.95],
-          opacity: [null, 0.8]
+          opacity: [null, 0.8],
         },
-        { 
+        {
           duration: 0.2,
-          easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+          easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
         }
       ).finished,
-      currentMiddleBlock ? 
-        Motion.animate(
-          currentMiddleBlock,
-          { 
-            scale: [null, 0.95],
-            opacity: [null, 0.8]
-          },
-          { 
-            duration: 0.2,
-            easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
-          }
-        ).finished : Promise.resolve()
+      currentMiddleBlock
+        ? Motion.animate(
+            currentMiddleBlock,
+            {
+              scale: [null, 0.95],
+              opacity: [null, 0.8],
+            },
+            {
+              duration: 0.2,
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+            }
+          ).finished
+        : Promise.resolve(),
     ]).then(() => {
       const activeBlockOrder = parseInt(activeBlock.style.order);
       activeBlock.style.order = middlePosition;
-      
+
       if (currentMiddleBlock) {
         currentMiddleBlock.style.order = activeBlockOrder;
       }
       this.blocks.forEach((block, index) => {
         const distanceFromActive = Math.abs(index - activeIndex);
-        
+
         if (distanceFromActive === 0) {
-          block.classList.add('active');
+          block.classList.add("active");
           Motion.animate(
             block,
-            { 
+            {
               scale: [0.95, 1.02, 1],
-              opacity: [0.8, 1]
+              opacity: [0.8, 1],
             },
-            { 
+            {
               duration: 0.5,
-              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
             }
           );
         } else {
-          block.classList.remove('active');
-          const scale = Math.max(0.9, 1 - (distanceFromActive * 0.05));
-          const opacity = Math.max(0.5, 1 - (distanceFromActive * 0.25));
-          
+          block.classList.remove("active");
+          const scale = Math.max(0.9, 1 - distanceFromActive * 0.05);
+          const opacity = Math.max(0.5, 1 - distanceFromActive * 0.25);
+
           Motion.animate(
             block,
-            { 
+            {
               scale: scale,
-              opacity: opacity
+              opacity: opacity,
             },
-            { 
+            {
               duration: 0.5,
-              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
             }
           );
         }
@@ -1200,7 +1208,6 @@ class InspirationShowcase extends HTMLElement {
     });
   }
 
-  disconnectedCallback() {
-  }
+  disconnectedCallback() {}
 }
 customElements.define("inspiration-showcase", InspirationShowcase);
