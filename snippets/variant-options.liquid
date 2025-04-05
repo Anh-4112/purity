@@ -52,8 +52,8 @@
           assign key = key_and_value[0] | strip
           assign v = key_and_value[1] | strip
           if key == value
-            if v contains 'files'
-              assign image_url = v | remove: 'files/' | file_img_url: 'medium'
+            if v contains '.png' or v contains '.jpg' or v contains '.webp'
+              assign image_url = v | file_img_url: 'medium'
               assign swatch_image = 'url(' | append: image_url | append: ')'
               assign is_swatch_image = true
             else
@@ -118,7 +118,13 @@
           style="--min-width: 6.6rem;"
           for="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
         >
-          <span>{{ value }}</span>
+          <span
+            class="color-variant-input"
+            style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }}{% endif %}"
+          >
+            {{- value -}}
+          </span>
+          <span class="option_value flex-1 text-start">{{ value }}</span>
         </label>
       {%- endif -%}
     </li>
