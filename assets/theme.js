@@ -830,10 +830,11 @@ class AnnouncementBar extends HTMLElement {
   }
 
   init() {
+    this._naturalHeight = this.offsetHeight || 0;
+    document.body.style.setProperty('--height-bar', `${this._naturalHeight}px`);
     this.closeButton = this.querySelector(".announcement-bar__close");
     this.parentSection = this.closest(".section-announcement-bar");
     if (!this.closeButton || !this.parentSection) return;
-    this._naturalHeight = this.offsetHeight || 0;
     if (this.closeButton) {
       this.closeButton.addEventListener("click", this.onCloseClick.bind(this));
       this.closeButton.addEventListener("keydown", this.onKeyDown.bind(this));
@@ -870,6 +871,7 @@ class AnnouncementBar extends HTMLElement {
       this.parentSection.style.height = `${currentHeight}px`;
       this.parentSection.style.opacity = String(currentOpacity);
       this.classList.add('d-none')
+      document.body.style.removeProperty('--height-bar');
       if (progress < 1) {
         this.animationFrame = requestAnimationFrame(animate);
       } else {
