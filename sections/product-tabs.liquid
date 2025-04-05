@@ -116,7 +116,6 @@
               assign collection = collections[block_st.collection]
             -%}
             {%- if collection != blank -%}
-
                 <div class="product-tabs__content-item product-tabs__content-item-{{ block.id }}" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
                     <slide-section
                         class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
@@ -157,7 +156,44 @@
                     </slide-section>
                 </div>
             {%- else -%}
-
+              <div class="product-tabs__content-item product-tabs__content-item-{{ block.id }}" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                <slide-section
+                    class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+                    data-section-id="{{ block.id }}"
+                    data-autoplay="false"
+                    data-effect="slide"
+                    data-loop="false"
+                    data-speed="500"
+                    data-spacing="{{ column_gap_slide }}"
+                    data-mobile="{{ items_per_row_mobile }}"
+                    data-desktop="{{ items_per_row }}"
+                    data-tablet="{{ items_per_row_tablet }}"
+                    data-free-scroll="{{ data_free_scroll }}"
+                >
+                    {% if show_navigation %}
+                        {%- render 'swiper-navigation' -%}
+                      {% endif %}
+                    <div class="swiper-wrapper">
+                        {%- for product in (1..5) -%}
+                            {% render 'card-product',
+                                section_id: block.id,
+                                class: ' swiper-slide',
+                                show_video: true,
+                                container: section_width,
+                                column: items_per_row,
+                                column_mobile: items_per_row_mobile,
+                                padding: column_gap_slide,
+                                indexFor: forloop.index
+                            %}
+                        {%- endfor -%}
+                    </div>
+                    {%- if show_pagination -%}
+                        <div
+                          class="swiper-pagination"
+                        ></div>
+                      {% endif %}
+                </slide-section>
+            </div>
             {%- endif -%}
           {%- endfor -%}
         </div>
