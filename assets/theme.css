@@ -794,13 +794,12 @@ blockquote {
 .open-modal {
   overflow: hidden;
 }
-
 .modal-inner {
   transform: translateY(100%);
   -webkit-transform: translateY(100%);
   will-change: transform;
   bottom: 0;
-  max-height: calc(100vh - var(--height-bar, 4rem));
+  height: 73vh;
   top: auto;
   --transition: 0.3s;
 }
@@ -810,18 +809,20 @@ blockquote {
 .drawer-right-mb {
   transform: translateX(100%);
 }
+.drawer {
+  --delay: 0.05s;
+}
 @media (min-width: 1025px) {
-  .modal {
+  .modal-inner {
     --transition: 0.35s;
     --timing-function: cubic-bezier(0.5, -0.03, 0.34, 0.83);
-  }
-  .modal-inner {
-    transition: transform var(--transition) var(--timing-function),
-      visibility var(--transition) var(--timing-function);
+    transition: all var(--transition)
+      var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83));
     max-width: var(--drawer-width, 48rem);
     transform: translateX(var(--slide-out, -100%)) translateY(0);
     -webkit-transform: translateX(var(--slide-out, -100%)) translateY(0);
     top: 0;
+    height: 100vh;
   }
   :where(.drawer-left) {
     --slide-out: -100%;
@@ -874,18 +875,28 @@ blockquote {
 modal-popup :is(.modal-overlay) {
   z-index: 15;
 }
-.modal-popup-inner .drawer__body > * {
+.modal-popup-inner .drawer__body > *,
+.slideIn-animate {
   opacity: 0;
   transform: translateY(2rem);
+  will-change: transform, opacity;
+  --transition: 0.35s;
+  --timing-function: cubic-bezier(0.5, -0.03, 0.34, 0.83);
 }
-.modal.active .modal-popup-inner .drawer__body > *:not(.model_media, .spin) {
-  animation: slideIn var(--transition) var(--timing-function) forwards;
+.modal.active .modal-popup-inner .drawer__body > *:not(.model_media, .spin),
+:is(.detail-open, .modal.active) .slideIn-animate {
+  animation: slideIn var(--transition)
+    var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83)) forwards;
+  animation-delay: var(--delay, 0s);
+}
+.details-header-menu[open]:not(.detail-open) .slideIn-animate {
+  animation: slideOut var(--transition)
+    var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83)) forwards;
 }
 .modal-popup-inner {
   transform: scale(0.8);
   max-height: 80vh;
-  transition: transform var(--transition) var(--timing-function),
-    visibility var(--transition) var(--timing-function);
+  transition: 0.2s;
 }
 .modal.active .modal-popup-inner {
   transform: scale(1);
@@ -893,14 +904,16 @@ modal-popup :is(.modal-overlay) {
   visibility: visible;
 }
 .remove-after:not(.active) .modal-popup-inner {
-  animation: zoomOut var(--transition) var(--timing-function) forwards;
+  animation: zoomOut var(--transition)
+    var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83)) forwards;
 }
 .remove-after:not(.active) .modal-inner .shopify-block,
 .remove-after:not(.active)
   .modal-popup-inner
   .drawer__body
   > *:not(.model_media, .spin) {
-  animation: slideOut var(--transition) var(--timing-function) forwards;
+  animation: slideOut var(--transition)
+    var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83)) forwards;
 }
 .active-show {
   transform: translateY(2rem);
@@ -911,19 +924,6 @@ modal-popup :is(.modal-overlay) {
   transform: translateY(0);
   pointer-events: auto;
 }
-@keyframes zoomOut {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-    visibility: visible;
-  }
-  100% {
-    transform: scale(0.8);
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
 @keyframes slideIn {
   0% {
     opacity: 0;
@@ -942,6 +942,18 @@ modal-popup :is(.modal-overlay) {
   100% {
     transform: translateY(15px);
     opacity: 0;
+  }
+}
+@keyframes zoomOut {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+    visibility: hidden;
   }
 }
 @media (min-width: 576px) {
@@ -1004,12 +1016,8 @@ modal-popup :is(.modal-overlay) {
   }
   .col-sm-remaining {
     flex: 0 0
-      calc(
-        100% - var(--col-width, 50%) - var(--col-gap-desktop, var(--col-gap))
-      );
-    width: calc(
-      100% - var(--col-width, 50%) - var(--col-gap-desktop, var(--col-gap))
-    );
+      calc(100% - var(--col-width, 50%) - var(--gap-desktop, var(--gap)));
+    width: calc(100% - var(--col-width, 50%) - var(--gap-desktop, var(--gap)));
   }
   :where(.border-sm-inline-end) {
     border-inline-end: 1px solid var(--color-border);
@@ -1140,8 +1148,8 @@ modal-popup :is(.modal-overlay) {
     gap: 2rem;
   }
   :where(.gap-md-30) {
-    --col-gap: 3rem;
-    gap: var(--col-gap);
+    --gap: 3rem;
+    gap: var(--gap);
   }
   .justify-content-inherit {
     justify-content: inherit;
@@ -1357,11 +1365,8 @@ modal-popup :is(.modal-overlay) {
     width: var(--col-width, 50%);
   }
   .col-1025-remaining {
-    flex: 0 0
-      calc(100% - var(--col-width) - var(--col-gap-desktop, var(--col-gap)));
-    width: calc(
-      100% - var(--col-width) - var(--col-gap-desktop, var(--col-gap))
-    );
+    flex: 0 0 calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
+    width: calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
   }
   .border-1025 {
     border: 1px solid var(--color-border);
@@ -1605,6 +1610,9 @@ modal-popup :is(.modal-overlay) {
     }
   }
   /* Navigation desktop */
+  .submenu {
+    top: 100%;
+  }
   .down-to-up {
     transform: translateY(1.5rem);
   }

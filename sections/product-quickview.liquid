@@ -44,7 +44,7 @@
     <div class="drawer__body h-full overflow-y-auto custom-scrollbar">
       <div class="quickview-product h-full flex wrap gap-20 px-20">
         {% if product.media.size > 0 %}
-          <div class="product-detail__media w-full col-md-w-custom py-20">
+          <div class="product-detail__media w-full col-md-w-custom py-20 slideIn-animate">
             {% liquid
               assign option_color_name = 'Color'
               if color_swatch_trigger != blank
@@ -136,7 +136,7 @@
                 href="{{ product.url }}"
               {% endif %}
               aria-label="{{ 'products.product.view_full_details' | t }}"
-              class="mt-25 product-singe__view-all-button heading_weight heading-color inline-flex align-center gap-5 no-underline lh-normal"
+              class="slideIn-animate mt-25 product-singe__view-all-button heading_weight heading-color inline-flex align-center gap-5 no-underline lh-normal"
             >
               {{ 'products.product.view_full_details' | t }}
               {% if settings.rtl %}
