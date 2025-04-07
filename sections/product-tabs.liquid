@@ -13,6 +13,7 @@
   assign show_pagination = section_st.show_pagination
   assign show_navigation = section_st.show_navigation
   assign reveal_slide = section_st.reveal_slide
+  assign items_to_show = section_st.items_to_show
 
   assign header_size = ''
   if heading_size == 'small'
@@ -48,21 +49,14 @@
     {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- style -%}
-  .col-left {
-    flex: 0 0 auto;
-    width: 30%;
-  }
-  .col-right {
-    flex: 0 0 auto;
-    width: 70%;
-  }
+
 {%- endstyle -%}
 <div
   class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <product-tabs class="flex">
+    <product-tabs class="">
       <div class="col-left">
         {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
           <div
@@ -125,7 +119,7 @@
               assign block_st = block.settings
               assign collection = collections[block_st.collection]
             -%}
-            {%- if collection != blank -%}
+            {%- if collection.products.size > 0 -%}
               <div
                 class="product-tabs__content-item product-tabs__content-item-{{ block.id }}"
                 data-block-id="{{ block.id }}"
@@ -148,7 +142,7 @@
                     {%- render 'swiper-navigation' -%}
                   {% endif %}
                   <div class="swiper-wrapper">
-                    {%- for product in collection.products -%}
+                    {%- for product in collection.products limit: items_to_show -%}
                       {% render 'card-product',
                         card_product: product,
                         section_id: block.id,
@@ -321,6 +315,15 @@
       ],
       "default": "start",
       "label": "t:sections.all.text_alignment.alignment"
+    },
+    {
+      "type": "range",
+      "id": "items_to_show",
+      "label": "t:sections.all.items_to_show.label",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
     },
     {
       "type": "header",
