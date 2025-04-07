@@ -283,7 +283,8 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
       this.summaryElement.addEventListener(
         "click",
         this.onSummaryClicked.bind(this)
-      );
+      ),
+      this.initialize();
   }
 
   get open() {
@@ -302,6 +303,14 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
 
   onSummaryClicked(event) {
     event.preventDefault(), (this.open = !this.open);
+  }
+
+  async initialize() {
+    Motion.animate(
+      this.content,
+      this._open ? { height: "auto" } : { height: 0 },
+      { duration: 0 }
+    );
   }
 
   async transition(value) {
@@ -658,18 +667,21 @@ class VariantInput extends HTMLElement {
           }
         }.bind(this)
       );
-    this.init();
+  }
+
+  get sectionId() {
+    return this.hasAttribute("data-section-id")
+      ? this.getAttribute("data-section-id")
+      : this.getAttribute("data-section-id");
+  }
+
+  get productUrl() {
+    return this.hasAttribute("data-product-url")
+      ? this.getAttribute("data-product-url")
+      : this.getAttribute("data-product-url");
   }
 
   connectedCallback() {
-    this.querySelectorAll('.product-card-swatch-js [type="radio"]').forEach(
-      (input) => {
-        input.addEventListener("change", this.onSwatchChanged.bind(this));
-      }
-    );
-  }
-
-  init() {
     if (this.show_more) {
       this.show_more.addEventListener(
         "click",
@@ -682,6 +694,17 @@ class VariantInput extends HTMLElement {
         this.onShowSizeChartClicked.bind(this)
       );
     }
+    this.querySelectorAll('.product-card-swatch-js [type="radio"]').forEach(
+      (input) => {
+        input.addEventListener("change", this.onSwatchChanged.bind(this));
+      }
+    );
+
+    this.querySelectorAll('.product-card-variant-js [type="radio"]').forEach(
+      (input) => {
+        input.addEventListener("change", this.onVariantChange.bind(this));
+      }
+    );
   }
 
   async onSwatchChanged(event) {
@@ -696,32 +719,95 @@ class VariantInput extends HTMLElement {
         v.classList.remove("active");
       });
 
-      const newMedia = JSON.parse(target.getAttribute("data-value-media"));
-      const currentImage =
-        this.closest(".product__item-js").querySelector(".featured-image");
-      const newImage = this.createResponsiveImage(
-        newMedia,
-        currentImage.className,
-        currentImage.sizes
-      );
+      if (target.hasAttribute("data-value-media")) {
+        const newMedia = JSON.parse(target.getAttribute("data-value-media"));
+        const currentImage =
+          this.closest(".product__item-js").querySelector(".featured-image");
+        const newImage = this.createResponsiveImage(
+          newMedia,
+          currentImage.className,
+          currentImage.sizes
+        );
 
-      if (currentImage.src !== newImage.src) {
-        await Motion.animate(
-          currentImage,
-          { opacity: [1, 0] },
-          { duration: 0.15, easing: "ease-in", fill: "forwards" }
-        ).finished;
-        await new Promise((resolve) =>
-          newImage.complete ? resolve() : (newImage.onload = resolve)
-        );
-        currentImage.replaceWith(newImage);
-        Motion.animate(
-          newImage,
-          { opacity: [0, 1] },
-          { duration: 0.15, easing: "ease-in" }
-        );
+        if (currentImage.src !== newImage.src) {
+          await Motion.animate(
+            currentImage,
+            { opacity: [1, 0] },
+            { duration: 0.15, easing: "ease-in", fill: "forwards" }
+          ).finished;
+          await new Promise((resolve) =>
+            newImage.complete ? resolve() : (newImage.onload = resolve)
+          );
+          currentImage.replaceWith(newImage);
+          Motion.animate(
+            newImage,
+            { opacity: [0, 1] },
+            { duration: 0.15, easing: "ease-in" }
+          );
+        }
       }
     }
+  }
+
+  async onVariantChange(event) {
+    event.preventDefault();
+    const selectedValues = Array.from(
+      this.querySelectorAll('input[type="radio"]:checked')
+    ).map((radio) => radio.value);
+    const requestUrl = this.createRequestUrl(this.productUrl, selectedValues);
+    this.fetchProductInfo({
+      requestUrl,
+      onSuccess: this.updateProductInfo,
+    });
+  }
+
+  createRequestUrl(baseUrl, optionValues) {
+    const queryParams = [`section_id=${this.sectionId}`];
+    if (optionValues.length > 0) {
+      queryParams.push(`option_values=${optionValues.join(",")}`);
+    }
+    return `${baseUrl}?${queryParams.join("&")}`;
+  }
+
+  fetchProductInfo({ requestUrl, onSuccess }) {
+    this.abortController?.abort();
+    this.abortController = new AbortController();
+
+    fetch(requestUrl, { signal: this.abortController.signal })
+      .then((response) => response.text())
+      .then((responseText) => {
+        const parsedHTML = new DOMParser().parseFromString(
+          responseText,
+          "text/html"
+        );
+        onSuccess(parsedHTML, this.sectionId);
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  updateProductInfo(parsedHTML, sectionId) {
+    const updateContent = (blockClass) => {
+      const source = parsedHTML
+        .getElementById(`Product-${sectionId}`)
+        .querySelector(`.${blockClass}`);
+      const destination = document
+        .getElementById(`Product-${sectionId}`)
+        .querySelector(`.${blockClass}`);
+      if (source && destination) {
+        destination.innerHTML = source.innerHTML;
+      }
+    };
+
+    const blocksToUpdate = [
+      "block__media-gallery",
+      "block-product__badges",
+      "block-product__price",
+      "block-product__variant-picker",
+      "block-product__inventory",
+      "block-product__buttons",
+      "block-product__pickup",
+    ];
+    blocksToUpdate.forEach(updateContent);
   }
 
   createResponsiveImage(media, classNames, responsiveSizes) {
@@ -905,3 +991,464 @@ class AnnouncementBar extends HTMLElement {
   }
 }
 customElements.define("announcement-bar", AnnouncementBar);
+
+class InspirationShowcase extends HTMLElement {
+  constructor() {
+    super();
+    this.blocks = null;
+    this.containerElement = null;
+    this.currentVisibleIndex = 0;
+    this.scrollStartPosition = 0;
+    this.totalBlocks = 0;
+    this.middleOrder = 0;
+  }
+
+  connectedCallback() {
+    requestAnimationFrame(() => this.init());
+  }
+
+  init() {
+    this.blocks = Array.from(this.querySelectorAll('.inspiration-showcase__block'));
+    if (!this.blocks.length) return;
+    
+    this.totalBlocks = this.blocks.length;
+    this.middleOrder = Math.ceil(this.totalBlocks / 2);
+
+    this.blocks.forEach((block, index) => {
+      block.style.order = index + 1;
+    });
+
+    this.containerElement = this.closest('.section');
+    if (!this.containerElement) return;
+
+    this.setupPinningAnimation();
+  }
+
+  setupPinningAnimation() {
+    this.scrollStartPosition = this.containerElement.getBoundingClientRect().top + window.scrollY;
+    
+    this.containerElement.style.height = '300vh';
+    
+    Motion.scroll(
+      Motion.animate(this, {
+        opacity: [1, 1]
+      }), 
+      {
+        target: this.containerElement,
+        offset: ['start start', 'end end']
+      }
+    );
+    
+    Motion.scroll(
+      () => {
+        const scrollY = window.scrollY;
+        const relativeScrollPosition = scrollY - this.scrollStartPosition;
+        if (relativeScrollPosition > 0 && scrollY > this.scrollStartPosition) {
+          const scrollHeight = this.containerElement.offsetHeight - window.innerHeight;
+          const blockCount = this.blocks.length;
+          const segmentSize = scrollHeight / blockCount;
+          const blockIndex = Math.min(
+            Math.floor(relativeScrollPosition / segmentSize),
+            blockCount - 1
+          );
+          if (blockIndex !== this.currentVisibleIndex) {
+            this.currentVisibleIndex = blockIndex;
+            this.updateActiveBlock(blockIndex);
+          }
+        } else if (this.currentVisibleIndex !== Math.floor(this.blocks.length / 2)) {
+          this.currentVisibleIndex = Math.floor(this.blocks.length / 2);
+          this.updateActiveBlock(this.currentVisibleIndex);
+        }
+      },
+      { target: window } 
+    );
+    
+    const initialIndex = Math.floor(this.blocks.length / 2);
+    this.updateActiveBlock(initialIndex);
+  }
+
+  updateActiveBlock(activeIndex) {
+    const middlePosition = Math.ceil(this.totalBlocks / 2);
+    const activeBlock = this.blocks[activeIndex];
+    let currentMiddleBlock = null;
+    let currentMiddleIndex = -1;
+    
+    if (!this.transitionsAdded) {
+      const style = document.createElement('style');
+      style.textContent = `
+        .inspiration-showcase__block {
+          transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                      opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+          will-change: transform, opacity, order;
+        }
+      `;
+      document.head.appendChild(style);
+      this.transitionsAdded = true;
+    }
+    
+    this.blocks.forEach((block, index) => {
+      if (!block.style.transition) {
+        block.style.transition = "transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)";
+      }
+      
+      if (parseInt(block.style.order) === middlePosition) {
+        currentMiddleBlock = block;
+        currentMiddleIndex = index;
+      }
+    });
+    
+    if (activeIndex === currentMiddleIndex) {
+      this.blocks.forEach((block, index) => {
+        const distanceFromActive = Math.abs(index - activeIndex);
+        if (distanceFromActive === 0) {
+          block.classList.add('active');
+          Motion.animate(
+            block,
+            { 
+              scale: 1,
+              opacity: 1
+            },
+            { 
+              duration: 0.5,
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+            }
+          );
+        } else {
+          block.classList.remove('active');
+          const scale = Math.max(0.9, 1 - (distanceFromActive * 0.05));
+          const opacity = Math.max(0.5, 1 - (distanceFromActive * 0.25));
+          Motion.animate(
+            block,
+            { 
+              scale: scale,
+              opacity: opacity
+            },
+            { 
+              duration: 0.5,
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+            }
+          );
+        }
+      });
+      return;
+    }
+    
+    Promise.all([
+      Motion.animate(
+        activeBlock,
+        { 
+          scale: [null, 0.95],
+          opacity: [null, 0.8]
+        },
+        { 
+          duration: 0.2,
+          easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+        }
+      ).finished,
+      currentMiddleBlock ? 
+        Motion.animate(
+          currentMiddleBlock,
+          { 
+            scale: [null, 0.95],
+            opacity: [null, 0.8]
+          },
+          { 
+            duration: 0.2,
+            easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+          }
+        ).finished : Promise.resolve()
+    ]).then(() => {
+      const activeBlockOrder = parseInt(activeBlock.style.order);
+      activeBlock.style.order = middlePosition;
+      
+      if (currentMiddleBlock) {
+        currentMiddleBlock.style.order = activeBlockOrder;
+      }
+      this.blocks.forEach((block, index) => {
+        const distanceFromActive = Math.abs(index - activeIndex);
+        
+        if (distanceFromActive === 0) {
+          block.classList.add('active');
+          Motion.animate(
+            block,
+            { 
+              scale: [0.95, 1.02, 1],
+              opacity: [0.8, 1]
+            },
+            { 
+              duration: 0.5,
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+            }
+          );
+        } else {
+          block.classList.remove('active');
+          const scale = Math.max(0.9, 1 - (distanceFromActive * 0.05));
+          const opacity = Math.max(0.5, 1 - (distanceFromActive * 0.25));
+          
+          Motion.animate(
+            block,
+            { 
+              scale: scale,
+              opacity: opacity
+            },
+            { 
+              duration: 0.5,
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+            }
+          );
+        }
+      });
+    });
+  }
+
+  disconnectedCallback() {
+  }
+}
+customElements.define("inspiration-showcase", InspirationShowcase);
+class ProductTabs extends HTMLElement {
+  constructor() {
+    super();
+    this._selectedTab = null;
+    this._tabs = null;
+    this._tabContents = null;
+    this._openAccordions = new Set();
+
+    if (Shopify && Shopify.designMode) {
+      this.addEventListener('shopify:block:select', event => {
+        const targetBlock = event.target.closest('[data-block-id]');
+        if (targetBlock) {
+          this.setTab(targetBlock.dataset.blockId, true);
+        }
+      });
+    }
+  }
+
+  static get observedAttributes() {
+    return ['selected-tab'];
+  }
+
+  get selectedTab() {
+    return this.getAttribute('selected-tab') || '';
+  }
+
+  set selectedTab(blockId) {
+    if (blockId && this.getAttribute('selected-tab') !== blockId) {
+      this.setAttribute('selected-tab', blockId);
+    }
+  }
+
+  get tabs() {
+    return this._tabs || Array.from(this.querySelectorAll('.product-tabs__header-item'));
+  }
+
+  get tabContents() {
+    return this._tabContents || Array.from(this.querySelectorAll('.product-tabs__content-item'));
+  }
+
+  connectedCallback() {
+    setTimeout(() => this.init(), 10);
+  }
+
+  init() {
+    this._tabs = Array.from(this.querySelectorAll('.product-tabs__header-item'));
+    this._tabContents = Array.from(this.querySelectorAll('.product-tabs__content-item'));
+    if (!this._tabs.length || !this._tabContents.length) return;
+    const initialTab = this._tabs[0];
+    this.selectedTab = initialTab.dataset.blockId;
+    this.setupDescriptions();
+    this.setupEventListeners();
+    this.updateTabDisplay(this.selectedTab, false);
+  }
+
+  setupDescriptions() {
+    this._tabs.forEach(tab => {
+      const description = tab.querySelector('.product-tabs__header-description');
+      if (description) {
+        description.style.height = '0';
+        if (description.textContent.trim().length > 0) {
+          tab.classList.add('has-description');
+        }
+      }
+    });
+  }
+  
+  setupEventListeners() {
+    this._tabs.forEach(tab => {
+      tab.addEventListener('click', (event) => {
+        if (event.target.closest('.product-tabs__header-description')) {
+          return;
+        }
+        const description = tab.querySelector('.product-tabs__header-description');
+        if (tab.classList.contains('active') && description && description.textContent.trim().length > 0) {
+          this.toggleAccordion(tab);
+        } else {
+          const blockId = tab.dataset.blockId;
+          if (blockId !== this.selectedTab) {
+            this.selectedTab = blockId;
+          }
+        }
+      });
+      tab.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+            const description = tab.querySelector('.product-tabs__header-description');
+            if (tab.classList.contains('active') && description && description.textContent.trim().length > 0) {
+              this.toggleAccordion(tab);
+            } else {
+              const blockId = tab.dataset.blockId;
+              if (blockId !== this.selectedTab) {
+                this.selectedTab = blockId;
+              }
+            }
+        }
+      });
+    });
+  }
+
+  closeAllAccordions() {
+    this._tabs.forEach(tab => {
+      const description = tab.querySelector('.product-tabs__header-description');
+      if (description && tab.classList.contains('accordion-open')) {
+        tab.classList.remove('accordion-open');
+        description.classList.remove('is-open');
+        if (typeof Motion !== 'undefined') {
+          Motion.animate(
+            description,
+            { height: 0 },
+            { duration: 0.3, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
+          );
+        } else {
+          description.style.height = '0';
+        }
+      }
+    });
+    this._openAccordions.clear();
+  }
+  
+  toggleAccordion(tab, forceOpen = false) {
+    const description = tab.querySelector('.product-tabs__header-description');
+    if (!description || description.textContent.trim().length === 0) return;
+    const isOpen = tab.classList.contains('accordion-open');
+    if (!isOpen && forceOpen) {
+      tab.classList.add('accordion-open');
+      description.classList.add('is-open');
+      if (typeof Motion !== 'undefined') {
+        Motion.animate(
+          description,
+          { height: "auto" },
+          { duration: 0.3, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
+        );
+    } else {
+        description.style.height = 'auto';
+      }
+      this._openAccordions.add(tab.dataset.blockId);
+    }
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'selected-tab' && oldValue !== newValue && oldValue !== null) {
+      this.updateTabDisplay(newValue, true);
+    }
+  }
+
+  updateTabDisplay(blockId, animate = true) {
+    if (this._isAnimating) return;
+    this._isAnimating = true;
+    if (animate) {
+      this.closeAllAccordions();
+    }
+    this.tabs.forEach(tab => {
+      const isSelected = tab.dataset.blockId === blockId;
+      tab.classList.toggle('selected', isSelected);
+      tab.classList.toggle('active', isSelected);
+      tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+      
+      if (isSelected) {
+        const description = tab.querySelector('.product-tabs__header-description');
+        if (description && description.textContent.trim().length > 0) {
+          this.toggleAccordion(tab, true);
+        }
+      }
+    });
+    
+    const oldContent = this.querySelector('.product-tabs__content-item.active');
+    const newContent = this.querySelector(`.product-tabs__content-item[data-block-id="${blockId}"]`);
+    
+    if (!newContent) {
+      this._isAnimating = false;
+      return;
+    }
+    
+    if (animate && typeof Motion !== 'undefined' && oldContent !== newContent) {
+      this.transition(oldContent, newContent)
+        .finally(() => {
+          this._isAnimating = false;
+        });
+    } else {
+      this.tabContents.forEach(content => {
+        content.classList.remove('active');
+        content.style.display = 'none';
+      });
+      
+      newContent.classList.add('active');
+      newContent.style.display = 'block';
+      this._isAnimating = false;
+    }
+    
+    this.dispatchEvent(
+      new CustomEvent('tabChanged', {
+        detail: { blockId },
+        bubbles: true
+      })
+    );
+  }
+  
+  async transition(fromPanel, toPanel) {
+    if (!fromPanel || !toPanel) return;
+    if (fromPanel) {
+      try {
+        await Motion.animate(
+          fromPanel, 
+          {
+            opacity: [1, 0],
+            y: [0, 15]
+          },
+          {
+            duration: 0.3,
+            easing: "cubic-bezier(0.24, 0.02, 0.13, 1.01)"
+          }
+        ).finished;
+      } catch (e) {
+        console.error("Animation error:", e);
+      }
+      fromPanel.classList.remove('active');
+      fromPanel.style.display = 'none';
+    }
+    toPanel.classList.add('active');
+    toPanel.style.display = 'block';
+    try {
+      Motion.animate(
+        toPanel,
+        { 
+          opacity: [0, 1],
+          y: [15, 0]
+        },
+        { 
+          duration: 0.3,
+          easing: "cubic-bezier(0.24, 0.02, 0.13, 1.01)"
+        }
+      );
+    } catch (e) {
+      console.error("Animation error:", e);
+    }
+  }
+  
+  disconnectedCallback() {
+    if (this._tabs) {
+      this._tabs.forEach(tab => {
+        tab.removeEventListener('click', null);
+      });
+    }
+  }
+}
+customElements.define("product-tabs", ProductTabs);

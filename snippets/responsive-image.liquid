@@ -98,6 +98,9 @@
     , calc( ({{ section_width_mobile }} - {{ padding_mobile }} * {{ column_mobile | minus: 1 }} ) * {{ divide_column_mobile }})
   {%- endcapture -%}
 {% endif %}
+{% if motion %}
+  <motion-animation>
+{% endif %}
 {% if image_lazy_loading != blank %}
   {% if image_mobile != blank %}
     <picture class="image-picture{{ class }}">
@@ -208,4 +211,7 @@
         alt: image_alt
     -}}
   {% endif %}
+{% endif %}
+{% if motion %}
+  </motion-animation>
 {% endif %}
