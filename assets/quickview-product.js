@@ -6,6 +6,16 @@ class ButtonQuickView extends HTMLButtonElement {
     this.init();
   }
 
+  get sectionId() {
+    return document.querySelector("quickview-drawer")
+      ? document
+          .querySelector("quickview-drawer")
+          .getAttribute("data-section-id")
+      : document
+          .querySelector("quickview-drawer")
+          .getAttribute("data-section-id");
+  }
+
   init() {
     this.addEventListener("click", this.onClick.bind(this), false);
     this.addEventListener(
@@ -29,7 +39,7 @@ class ButtonQuickView extends HTMLButtonElement {
   }
 
   fetchUrl() {
-    fetch(this.dataset.url)
+    fetch(`${this.dataset.url}?section_id=${this.sectionId}`)
       .then((response) => response.text())
       .then((text) => {
         const html = global.parser.parseFromString(text, "text/html");

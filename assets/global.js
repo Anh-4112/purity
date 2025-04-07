@@ -1,4 +1,3 @@
-export var Shopify = Shopify || {};
 export var root = document.getElementsByTagName("html")[0];
 export var body = document.getElementsByTagName("body")[0];
 
@@ -24,6 +23,14 @@ export function publish(eventName, data) {
       callback(data);
     });
   }
+}
+
+export function debounce(fn, wait) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), wait);
+  };
 }
 
 export var parser = new DOMParser();
@@ -250,26 +257,29 @@ export function fetchConfig(type = "json") {
 export function getCookie(name) {
   const nameString = name + "=";
   const decodedCookie = decodeURIComponent(document.cookie);
-  const cookieArray = decodedCookie.split(';');
-  
+  const cookieArray = decodedCookie.split(";");
+
   for (let i = 0; i < cookieArray.length; i++) {
     let cookie = cookieArray[i].trim();
     if (cookie.indexOf(nameString) === 0) {
       return cookie.substring(nameString.length, cookie.length);
     }
   }
-  
+
   return null;
 }
 
 export function setCookie(name, value, days = 30, path = "/") {
   const expirationDate = new Date();
-  expirationDate.setTime(expirationDate.getTime() + (days * 24 * 60 * 60 * 1000));
-  
-  const cookieValue = encodeURIComponent(value) + 
-    "; expires=" + expirationDate.toUTCString() +
-    "; path=" + path;
-  
+  expirationDate.setTime(expirationDate.getTime() + days * 24 * 60 * 60 * 1000);
+
+  const cookieValue =
+    encodeURIComponent(value) +
+    "; expires=" +
+    expirationDate.toUTCString() +
+    "; path=" +
+    path;
+
   document.cookie = name + "=" + cookieValue;
 }
 

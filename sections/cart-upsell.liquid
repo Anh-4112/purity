@@ -1,0 +1,25 @@
+{%- if recommendations.products_count > 0 -%}
+  <div class="swiper-wrapper">
+    {%- for product in recommendations.products -%}
+      {% liquid
+        assign hidden = false
+        for item_cart in cart.items
+          if item_cart.product_id == product.id
+            assign hidden = true
+          endif
+        endfor
+      %}
+      {%- if hidden == false -%}
+        {% render 'card-product',
+          card_product: product,
+          section_id: section.id,
+          disable_hover_image: true,
+          disable_badge: true,
+          disable_rate: true,
+          disable_color_swatches: true,
+          class: 'swiper-slide'
+        %}
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}

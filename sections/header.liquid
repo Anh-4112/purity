@@ -518,24 +518,23 @@
                   </svg>
                 {%- endif -%}
                 <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
-                  {{ 'templates.cart.minicart' | t }}
-                </span>
-                <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
-                {%- if cart != empty -%}
-                  <div class="cart-count rounded-50 inline-flex content-center absolute fs-10 bg-primary color-white">
-                    {%- if cart.item_count < 100 -%}
-                      <span>{{ cart.item_count }}</span>
-                    {%- else -%}
-                      <span aria-hidden="true">~</span>
-                    {%- endif -%}
-                    <span class="visually-hidden">{{ 'templates.cart.cart_count' | t: count: cart.item_count }}</span>
-                  </div>
-                {%- else -%}
-                  <div class="cart-count hidden">
-                    <span aria-hidden="true">0</span>
-                  </div>
-                {%- endif -%}
-              </a>
+                {{ 'templates.cart.minicart' | t }}
+              </span>
+              <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+              {%- if cart != empty -%}
+                <div class="cart-count rounded-50 inline-flex content-center absolute">
+                  {%- if cart.item_count < 100 -%}
+                    <span class="count">{{ cart.item_count }}</span>
+                  {%- else -%}
+                    <span aria-hidden="true">~</span>
+                  {%- endif -%}
+                  <span class="visually-hidden">{{ 'templates.cart.cart_count' | t: count: cart.item_count }}</span>
+                </div>
+              {%- else -%}
+                <div class="cart-count hidden">
+                  <span aria-hidden="true">0</span>
+                </div>
+              {%- endif -%}
             {%- endif -%}
             </div>
           {%- endif -%}
