@@ -21,7 +21,7 @@
           {%- liquid
             assign p_media = card_product.featured_media
             assign ratio = '3/4'
-            if product_image_ratio != 'adapt_to_image'
+            if product_image_ratio != 'adapt'
               case product_image_ratio
                 when 'square'
                   assign ratio = '1/1'
@@ -147,7 +147,7 @@
               {%- else -%}
                 {%- liquid
                   assign ratio = '3/4'
-                  if product_image_ratio != 'adapt_to_image'
+                  if product_image_ratio != 'adapt'
                     case product_image_ratio
                       when 'square'
                         assign ratio = '1/1'
