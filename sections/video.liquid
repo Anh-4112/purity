@@ -66,7 +66,7 @@
       </div>
     {%- endif -%}
     {%- if section_st.video_local == null and section_st.video_url != null -%}
-      <video-section class="video-section relative overflow-hidden">
+      <video-section class="video-section block relative overflow-hidden">
         <div
           class="video-has-bg video-section relative{{ rounded }}"
           style="{% if section_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ aspect_ratio }}{% else %}--aspect-ratio: 16/9;{% endif %}"
@@ -95,13 +95,13 @@
     {%- elsif section_st.video_local != null -%}
       {%- if section_st.autoplay -%}
         <video-local
-          class="video-section relative overflow-hidden"
+          class="video-section block relative overflow-hidden"
           style="--aspect-ratio: {{ aspect_ratio }}"
           aria-label="{{ section_st.alt_description | escape }}"
         >
       {%- else -%}
         <video-local-play
-          class="video-section relative overflow-hidden"
+          class="video-section block relative overflow-hidden"
           style="--aspect-ratio: {{ aspect_ratio }}"
           aria-label="{{ section_st.alt_description | escape }}"
         >
@@ -122,16 +122,14 @@
         {%- if section_st.autoplay == blank -%}
           <div class="deferred-media__poster-button absolute z-3 flex content-center wh-55">
             <button
-              class="btn p-0 btn-primary w-full h-full rounded-50 border-0 flex content-center pointer shadow transition button-hover-zoom"
+              class="btn p-0 btn-primary w-full h-full rounded-50 border-0 flex content-center pointer shadow transition hover-effect button-hover-zoom"
               type="button"
               aria-label="{{ 'sections.video.alt_text' | t }}"
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
                 focusable="false"
                 class="icon icon-play"
-                fill="none"
                 viewBox="0 0 10 14"
               >
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M1.48177 0.814643C0.81532 0.448245 0 0.930414 0 1.69094V12.2081C0 12.991 0.858787 13.4702 1.52503 13.0592L10.5398 7.49813C11.1918 7.09588 11.1679 6.13985 10.4965 5.77075L1.48177 0.814643Z" fill="currentColor"></path>

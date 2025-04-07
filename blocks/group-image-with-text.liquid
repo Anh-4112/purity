@@ -53,10 +53,10 @@
       {% endif %}
     </div>
     <div
-      class="group__block--content w-full z-3 flex text-{{ block_st.text_alignment }}{% if block_st.content_position == 'overlay' %} {{ block_st.desktop_content_position }}{% else %} justify-center{% endif %}"
+      class="group__block--content w-full z-3 flex {% if block_st.content_position == 'overlay' %} {{ block_st.desktop_content_position }} p-30 text-{{ block_st.text_alignment }}{% else %} mt-40 justify-content-{{ block_st.text_alignment }}{% endif %}"
     >
       <div
-        class="banner__box flex column align-{{ block_st.text_alignment }}"
+        class="banner__box flex column align-{{ block_st.text_alignment }} max-w-100"
       >
         {% content_for 'blocks' %}
       </div>
@@ -222,7 +222,7 @@
       "step": 1,
       "unit": "%",
       "label": "t:sections.slideshow.settings.blocks.image.image_overlay_opacity.overlay_opacity",
-      "default": 20
+      "default": 0
     },
     {
       "type": "select",
@@ -232,43 +232,52 @@
       "info": "t:sections.all.desktop_content_position.info",
       "options": [
         {
+          "group": "t:sections.all.desktop_content_position.group.top.label",
           "value": "top-left",
           "label": "t:sections.all.desktop_content_position.options__1.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.top.label",
           "value": "top-center",
           "label": "t:sections.all.desktop_content_position.options__2.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.top.label",
           "value": "top-right",
           "label": "t:sections.all.desktop_content_position.options__3.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.middle.label",
           "value": "middle-left",
           "label": "t:sections.all.desktop_content_position.options__4.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.middle.label",
           "value": "middle-center",
           "label": "t:sections.all.desktop_content_position.options__5.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.middle.label",
           "value": "middle-right",
           "label": "t:sections.all.desktop_content_position.options__6.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.bottom.label",
           "value": "bottom-left",
           "label": "t:sections.all.desktop_content_position.options__7.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.bottom.label",
           "value": "bottom-center",
           "label": "t:sections.all.desktop_content_position.options__8.label"
         },
         {
+          "group": "t:sections.all.desktop_content_position.group.bottom.label",
           "value": "bottom-right",
           "label": "t:sections.all.desktop_content_position.options__9.label"
         }
       ]
-    }
+    },
   ],
   "presets": [
     {
