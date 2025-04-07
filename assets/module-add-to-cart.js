@@ -5,6 +5,7 @@ export class ProductForm extends HTMLElement {
     super();
     this.form = this.querySelector("form");
     this.cart = document.querySelector("cart-drawer");
+    this.quickView = document.querySelector("quickview-drawer");
     if (this.form) {
       if (this.form.querySelector("[name=id]")) {
         this.form.querySelector("[name=id]").disabled = false;
@@ -72,11 +73,9 @@ export class ProductForm extends HTMLElement {
         if (!is_cart_page) {
           this.cart.renderContents(response);
           NextSkyTheme.eventModal(this.cart, "open", false);
-          NextSkyTheme.eventModal(
-            document.getElementById("QuickView-Drawer"),
-            "close",
-            false
-          );
+          if (this.quickView) {
+            NextSkyTheme.eventModal(this.quickView, "close", false);
+          }
         }
       })
       .catch((e) => {
