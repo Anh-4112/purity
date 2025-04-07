@@ -52,8 +52,8 @@
           assign key = key_and_value[0] | strip
           assign v = key_and_value[1] | strip
           if key == value
-            if v contains 'files'
-              assign image_url = v | remove: 'files/' | file_img_url: 'medium'
+            if v contains '.png' or v contains '.jpg' or v contains '.webp'
+              assign image_url = v | file_img_url: 'medium'
               assign swatch_image = 'url(' | append: image_url | append: ')'
               assign is_swatch_image = true
             else
@@ -104,7 +104,7 @@
           checked
         {% endif %}
       >
-      {%- if is_color -%}
+      {%- if is_color and is_dropdown == false -%}
         <label
           class="color-swatch-label{% if disable_variant %} disable{% else %} pointer{% endif %}{% if is_swatch_image %} swatch-image{% endif %}"
           style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }}{% endif %}"
@@ -114,11 +114,19 @@
         </label>
       {%- else -%}
         <label
-          class="text-swatch-label{% if is_dropdown %} w-full transition py-5 px-24 block{% else %} overflow-hidden transition btn-hover relative inline-flex content-center min-w-custom btn-rounded border px-20 py-7 pill{% endif %}{% if disable_variant %} disable{% else %} pointer{% endif %}"
+          class="text-swatch-label{% if is_dropdown %} w-full transition py-5 px-gutter-x block{% else %} overflow-hidden transition btn-hover relative inline-flex content-center min-w-custom btn-rounded border px-20 py-7 pill{% endif %}{% if disable_variant %} disable{% else %} pointer{% endif %}"
           style="--min-width: 6.6rem;"
           for="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
         >
-          <span>{{ value }}</span>
+          {%- if is_color -%}
+            <span
+              class="color-variant-input"
+              style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }}{% endif %}"
+            >
+              {{- value -}}
+            </span>
+          {%- endif -%}
+          <span class="option_value flex-1 text-start">{{ value }}</span>
         </label>
       {%- endif -%}
     </li>

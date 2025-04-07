@@ -19,9 +19,9 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
-{%  style %}
+{% style %}
   .faq-container .shopify-block:first-child details {
-    padding-top:0;
+    padding-top: 0;
   }
 {% endstyle %}
 <section
@@ -31,7 +31,7 @@
   <div class="{{ section_width }}">
     <div
       class="section__faqs-content w-full{% if show_faqs_message %} flex wrap gap{% endif %}{% if desktop_content_position == 'right' %} flex-1025-row-reverse{% endif %}"
-      style="--gap: clamp(3rem, 5vw, 10rem);--col-gap: clamp(3rem, 5vw, 10rem);--col-width: 30%;"
+      style="--gap: clamp(3rem, 5vw, 10rem);--gap: clamp(3rem, 5vw, 10rem);--col-width: 30%;"
     >
       {% if show_faqs_message %}
         <div class="faqs__info w-full col-1025-w-custom">

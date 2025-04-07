@@ -1081,10 +1081,11 @@ class AnnouncementBar extends HTMLElement {
   }
 
   init() {
+    this._naturalHeight = this.offsetHeight || 0;
+    document.body.style.setProperty('--height-bar', `${this._naturalHeight}px`);
     this.closeButton = this.querySelector(".announcement-bar__close");
     this.parentSection = this.closest(".section-announcement-bar");
     if (!this.closeButton || !this.parentSection) return;
-    this._naturalHeight = this.offsetHeight || 0;
     if (this.closeButton) {
       this.closeButton.addEventListener("click", this.onCloseClick.bind(this));
       this.closeButton.addEventListener("keydown", this.onKeyDown.bind(this));
@@ -1120,6 +1121,8 @@ class AnnouncementBar extends HTMLElement {
       const currentOpacity = 1 - eased;
       this.parentSection.style.height = `${currentHeight}px`;
       this.parentSection.style.opacity = String(currentOpacity);
+      this.classList.add('d-none')
+      document.body.style.removeProperty('--height-bar');
       if (progress < 1) {
         this.animationFrame = requestAnimationFrame(animate);
       } else {
@@ -1265,8 +1268,6 @@ class InspirationShowcase extends HTMLElement {
         currentMiddleIndex = index;
       }
     });
-
-    // Nếu block active đã ở giữa, chỉ cập nhật hiệu ứng
     if (activeIndex === currentMiddleIndex) {
       this.blocks.forEach((block, index) => {
         const distanceFromActive = Math.abs(index - activeIndex);
@@ -1302,8 +1303,6 @@ class InspirationShowcase extends HTMLElement {
       });
       return;
     }
-
-    // Chuẩn bị trước khi thay đổi order
     Promise.all([
       Motion.animate(
         activeBlock,
@@ -1863,3 +1862,252 @@ class MiniCartUpSell extends HTMLElement {
 }
 
 customElements.define("mini-cart-recommendations", MiniCartUpSell);
+
+customElements.define("inspiration-showcase", InspirationShowcase);
+class ProductTabs extends HTMLElement {
+  constructor() {
+    super();
+    this._selectedTab = null;
+    this._tabs = null;
+    this._tabContents = null;
+    this._openAccordions = new Set();
+
+    if (Shopify && Shopify.designMode) {
+      this.addEventListener('shopify:block:select', event => {
+        const targetBlock = event.target.closest('[data-block-id]');
+        if (targetBlock) {
+          this.setTab(targetBlock.dataset.blockId, true);
+        }
+      });
+    }
+  }
+
+  static get observedAttributes() {
+    return ['selected-tab'];
+  }
+
+  get selectedTab() {
+    return this.getAttribute('selected-tab') || '';
+  }
+
+  set selectedTab(blockId) {
+    if (blockId && this.getAttribute('selected-tab') !== blockId) {
+      this.setAttribute('selected-tab', blockId);
+    }
+  }
+
+  get tabs() {
+    return this._tabs || Array.from(this.querySelectorAll('.product-tabs__header-item'));
+  }
+
+  get tabContents() {
+    return this._tabContents || Array.from(this.querySelectorAll('.product-tabs__content-item'));
+  }
+
+  connectedCallback() {
+    setTimeout(() => this.init(), 10);
+  }
+
+  init() {
+    this._tabs = Array.from(this.querySelectorAll('.product-tabs__header-item'));
+    this._tabContents = Array.from(this.querySelectorAll('.product-tabs__content-item'));
+    if (!this._tabs.length || !this._tabContents.length) return;
+    const initialTab = this._tabs[0];
+    this.selectedTab = initialTab.dataset.blockId;
+    this.setupDescriptions();
+    this.setupEventListeners();
+    this.updateTabDisplay(this.selectedTab, false);
+  }
+
+  setupDescriptions() {
+    this._tabs.forEach(tab => {
+      const description = tab.querySelector('.product-tabs__header-description');
+      if (description) {
+        description.style.height = '0';
+        if (description.textContent.trim().length > 0) {
+          tab.classList.add('has-description');
+        }
+      }
+    });
+  }
+  
+  setupEventListeners() {
+    this._tabs.forEach(tab => {
+      tab.addEventListener('click', (event) => {
+        if (event.target.closest('.product-tabs__header-description')) {
+          return;
+        }
+        const description = tab.querySelector('.product-tabs__header-description');
+        if (tab.classList.contains('active') && description && description.textContent.trim().length > 0) {
+          this.toggleAccordion(tab);
+        } else {
+          const blockId = tab.dataset.blockId;
+          if (blockId !== this.selectedTab) {
+            this.selectedTab = blockId;
+          }
+        }
+      });
+      tab.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+            const description = tab.querySelector('.product-tabs__header-description');
+            if (tab.classList.contains('active') && description && description.textContent.trim().length > 0) {
+              this.toggleAccordion(tab);
+            } else {
+              const blockId = tab.dataset.blockId;
+              if (blockId !== this.selectedTab) {
+                this.selectedTab = blockId;
+              }
+            }
+        }
+      });
+    });
+  }
+
+  closeAllAccordions() {
+    this._tabs.forEach(tab => {
+      const description = tab.querySelector('.product-tabs__header-description');
+      if (description && tab.classList.contains('accordion-open')) {
+        tab.classList.remove('accordion-open');
+        description.classList.remove('is-open');
+        if (typeof Motion !== 'undefined') {
+          Motion.animate(
+            description,
+            { height: 0 },
+            { duration: 0.3, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
+          );
+        } else {
+          description.style.height = '0';
+        }
+      }
+    });
+    this._openAccordions.clear();
+  }
+  
+  toggleAccordion(tab, forceOpen = false) {
+    const description = tab.querySelector('.product-tabs__header-description');
+    if (!description || description.textContent.trim().length === 0) return;
+    const isOpen = tab.classList.contains('accordion-open');
+    if (!isOpen && forceOpen) {
+      tab.classList.add('accordion-open');
+      description.classList.add('is-open');
+      if (typeof Motion !== 'undefined') {
+        Motion.animate(
+          description,
+          { height: "auto" },
+          { duration: 0.3, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
+        );
+    } else {
+        description.style.height = 'auto';
+      }
+      this._openAccordions.add(tab.dataset.blockId);
+    }
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'selected-tab' && oldValue !== newValue && oldValue !== null) {
+      this.updateTabDisplay(newValue, true);
+    }
+  }
+
+  updateTabDisplay(blockId, animate = true) {
+    if (this._isAnimating) return;
+    this._isAnimating = true;
+    if (animate) {
+      this.closeAllAccordions();
+    }
+    this.tabs.forEach(tab => {
+      const isSelected = tab.dataset.blockId === blockId;
+      tab.classList.toggle('selected', isSelected);
+      tab.classList.toggle('active', isSelected);
+      tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+      
+      if (isSelected) {
+        const description = tab.querySelector('.product-tabs__header-description');
+        if (description && description.textContent.trim().length > 0) {
+          this.toggleAccordion(tab, true);
+        }
+      }
+    });
+    
+    const oldContent = this.querySelector('.product-tabs__content-item.active');
+    const newContent = this.querySelector(`.product-tabs__content-item[data-block-id="${blockId}"]`);
+    
+    if (!newContent) {
+      this._isAnimating = false;
+      return;
+    }
+    
+    if (animate && typeof Motion !== 'undefined' && oldContent !== newContent) {
+      this.transition(oldContent, newContent)
+        .finally(() => {
+          this._isAnimating = false;
+        });
+    } else {
+      this.tabContents.forEach(content => {
+        content.classList.remove('active');
+        content.style.display = 'none';
+      });
+      
+      newContent.classList.add('active');
+      newContent.style.display = 'block';
+      this._isAnimating = false;
+    }
+    
+    this.dispatchEvent(
+      new CustomEvent('tabChanged', {
+        detail: { blockId },
+        bubbles: true
+      })
+    );
+  }
+  
+  async transition(fromPanel, toPanel) {
+    if (!fromPanel || !toPanel) return;
+    if (fromPanel) {
+      try {
+        await Motion.animate(
+          fromPanel, 
+          {
+            opacity: [1, 0],
+            y: [0, 15]
+          },
+          {
+            duration: 0.3,
+            easing: "cubic-bezier(0.24, 0.02, 0.13, 1.01)"
+          }
+        ).finished;
+      } catch (e) {
+        console.error("Animation error:", e);
+      }
+      fromPanel.classList.remove('active');
+      fromPanel.style.display = 'none';
+    }
+    toPanel.classList.add('active');
+    toPanel.style.display = 'block';
+    try {
+      Motion.animate(
+        toPanel,
+        { 
+          opacity: [0, 1],
+          y: [15, 0]
+        },
+        { 
+          duration: 0.3,
+          easing: "cubic-bezier(0.24, 0.02, 0.13, 1.01)"
+        }
+      );
+    } catch (e) {
+      console.error("Animation error:", e);
+    }
+  }
+  
+  disconnectedCallback() {
+    if (this._tabs) {
+      this._tabs.forEach(tab => {
+        tab.removeEventListener('click', null);
+      });
+    }
+  }
+}
+customElements.define("product-tabs", ProductTabs);

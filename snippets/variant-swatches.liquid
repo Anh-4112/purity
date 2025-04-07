@@ -2,7 +2,9 @@
   assign theme_st = settings
   assign block_st = block.settings
   assign color_swatch_trigger = theme_st.color_swatch_trigger
-  assign color_variant_style = block_st.color_variant_style
+  assign color_swatch_type = theme_st.color_swatch_type
+  assign color_swatch_custom = theme_st.color_swatch_custom
+  assign size_trigger = block_st.size_trigger
   if color_swatch_trigger != blank
     assign option_name = color_swatch_trigger | split: ','
   else
@@ -55,7 +57,11 @@
       assign show_size_guide = block_st.show_size_guide
       assign size_guide_label = block_st.size_guide_label
       assign size_guide_page = block_st.size_guide_page
-      assign size_guide_page = block_st.size_guide_page
+      if size_trigger != blank
+        assign size_name = size_trigger | split: ','
+      else
+        assign size_name = 'Size'
+      endif
     -%}
     <variant-input
       class="product-variants-js flex column wrap gap-25 pt-25 border-top"
@@ -65,107 +71,158 @@
       {%- for option in product.options_with_values -%}
         {%- liquid
           assign op = 'option' | append: option.position
-          assign op_value = product.selected_or_first_available_variant[op]
+          assign value = product.selected_or_first_available_variant[op]
+          assign has_size = false
+          for size in size_name
+            if option.name == size
+              assign has_size = true
+            endif
+          endfor
         -%}
         <fieldset class="product-card-variant-js product-variants__input m-0 p-0 border-0 relative">
-          <div class="product-variants-info mb-10{%- if option.name == 'Size' -%}{% if size_guide_page != blank or product.metafields.custom.size_chart != blank or collection_size_chart != '' %} flex wrap gap-5 space-between{% endif %}{% endif %}">
+          <div class="product-variants-info mb-10{%- if has_size -%}{% if size_guide_page != blank or product.metafields.custom.size_chart != blank or collection_size_chart != '' %} flex wrap gap-5 space-between{% endif %}{% endif %}">
             <legend class="form__label p-0">
-              <span class="heading-style">{{ option.name }}:</span> <span class="option_value">{{ op_value }}</span>
+              <span class="heading-style">{{ option.name }}:</span> <span class="option_value">{{ value }}</span>
             </legend>
-            {%- if option.name == 'Size' -%}
-              {%- if show_size_guide -%}
-                {%- liquid
-                  assign product_collections = product.collections
-                  assign collection_size_chart = ''
-                  for productCollection in product_collections
-                    if productCollection.metafields.custom.size_chart != blank
-                      assign collection_size_chart = productCollection.metafields.custom.size_chart
-                    endif
-                  endfor
-                -%}
-                {% if size_guide_page != blank
-                  or product.metafields.custom.size_chart != blank
-                  or collection_size_chart != ''
-                %}
-                  <button
-                    type="button"
-                    class="button open-size-chart btn-reset btn-link"
-                    title="{{ size_guide_label }}"
-                    aria-label="{{ size_guide_label }}"
-                  >
-                    {{ size_guide_label }}
-                  </button>
-                  <div class="popup-size-chart d-none">
-                    <template>
-                      <modal-popup
-                        class="modal active-modal-js"
-                        tabindex="0"
-                        role="dialog"
+            {%- if has_size and show_size_guide -%}
+              {%- liquid
+                assign product_collections = product.collections
+                assign collection_size_chart = ''
+                for productCollection in product_collections
+                  if productCollection.metafields.custom.size_chart != blank
+                    assign collection_size_chart = productCollection.metafields.custom.size_chart
+                  endif
+                endfor
+              -%}
+              {% if size_guide_page != blank
+                or product.metafields.custom.size_chart != blank
+                or collection_size_chart != ''
+              %}
+                <button
+                  type="button"
+                  class="button open-size-chart btn-reset btn-link"
+                  title="{{ size_guide_label }}"
+                  aria-label="{{ size_guide_label }}"
+                >
+                  {{ size_guide_label }}
+                </button>
+                <div class="popup-size-chart d-none">
+                  <template>
+                    <modal-popup
+                      class="modal active-modal-js"
+                      tabindex="0"
+                      role="dialog"
+                    >
+                      <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
+                      <div
+                        class="modal-popup-inner rounded max-w-custom m-auto invisible fixed inset-0 z-15 bg-white w-full"
+                        style="--max-width: 80rem;"
                       >
-                        <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-                        <div
-                          class="modal-popup-inner rounded max-w-custom m-auto invisible fixed inset-0 z-15 bg-white w-full"
-                          style="--max-width: 80rem;"
+                        <button
+                          is="button-close-model"
+                          class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
+                          aria-label="Close"
                         >
-                          <button
-                            is="button-close-model"
-                            class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
-                            aria-label="Close"
-                          >
-                            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-                              <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
-                            </svg>
-                          </button>
-                          <div class="drawer__body rte h-full overflow-y-auto custom-scrollbar p-30">
-                            {% if product.metafields.custom.size_chart != blank %}
-                              {% assign size_chart_html = product.metafields.custom.size_chart
-                                | replace: '&lt;', '<'
-                                | replace: '&gt;', '>'
-                              %}
-                              {{ size_chart_html }}
-                            {%- elsif collection_size_chart != '' -%}
-                              {% assign size_chart_html = collection_size_chart
-                                | replace: '&lt;', '<'
-                                | replace: '&gt;', '>'
-                              %}
-                              {{ size_chart_html }}
-                            {%- else -%}
-                              {{ pages[size_guide_page].content }}
-                            {% endif %}
-                          </div>
+                          <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
+                            <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
+                          </svg>
+                        </button>
+                        <div class="drawer__body rte h-full overflow-y-auto custom-scrollbar p-30">
+                          {% if product.metafields.custom.size_chart != blank %}
+                            {% assign size_chart_html = product.metafields.custom.size_chart
+                              | replace: '&lt;', '<'
+                              | replace: '&gt;', '>'
+                            %}
+                            {{ size_chart_html }}
+                          {%- elsif collection_size_chart != '' -%}
+                            {% assign size_chart_html = collection_size_chart
+                              | replace: '&lt;', '<'
+                              | replace: '&gt;', '>'
+                            %}
+                            {{ size_chart_html }}
+                          {%- else -%}
+                            {{ pages[size_guide_page].content }}
+                          {% endif %}
                         </div>
-                      </modal-popup>
-                    </template>
-                  </div>
-                {% endif %}
-              {%- endif -%}
+                      </div>
+                    </modal-popup>
+                  </template>
+                </div>
+              {% endif %}
             {%- endif -%}
           </div>
           <div class="product-variants-option">
             {%- liquid
               assign is_color_option = false
-              assign dropdown = is_dropdown
               for cl in option_name
                 if option.name == cl
                   assign is_color_option = true
                 endif
               endfor
-              if color_variant_style == true
-                if is_color_option == true
-                  assign dropdown = false
+              if is_color_option
+                assign is_swatch_image = false
+                assign swatch_image = ''
+                assign swatch_color = value
+                if color_swatch_type == 'color'
+                  if color_swatch_custom != blank
+                    assign string_value = color_swatch_custom
+                    assign pairs = string_value | split: ','
+                    for pair in pairs
+                      assign key_and_value = pair | split: ':'
+                      assign key = key_and_value[0] | strip
+                      assign v = key_and_value[1] | strip
+                      if key == value
+                        if v contains '.png' or v contains '.jpg' or v contains '.webp'
+                          assign image_url = v | file_img_url: 'medium'
+                          assign swatch_image = 'url(' | append: image_url | append: ')'
+                          assign is_swatch_image = true
+                        else
+                          assign swatch_color = v
+                        endif
+                      endif
+                    endfor
+                  endif
+                  if value.swatch.image
+                    assign image_url = value.swatch.image | image_url: width: 120
+                    assign swatch_image = 'url(' | append: image_url | append: ')'
+                    assign is_swatch_image = true
+                  elsif value.swatch.color
+                    assign swatch_color = value.swatch.color
+                  endif
+                else
+                  assign image_url = false
+                  for variant in variants
+                    if variant.featured_image.src
+                      assign image_url = variant.featured_image.src | image_url: width: 120
+                      break
+                    endif
+                  endfor
+                  if image_url == false
+                    assign image_url = product.featured_image.src | image_url: width: 120
+                  endif
+                  assign swatch_image = 'url(' | append: image_url | append: ')'
+                  assign is_swatch_image = true
                 endif
-              else
-                assign is_color_option = false
               endif
             -%}
-            {%- if is_dropdown and dropdown -%}
+            {%- if is_dropdown -%}
               <button
                 type="button"
                 class="rotate-animate variants__option-dropdown pointer input-style w-full inline-flex align-center"
                 aria-expanded="false"
                 aria-controls="dropdown-{{ section.id }}-product-{{ product.id }}-position-{{ forloop.index0 }}"
               >
-                <span class="option_value flex-1 text-start">{{ op_value }}</span>
+                {%- if is_color_option -%}
+                  <span
+                    class="color-variant-input"
+                    style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }}{% endif %}"
+                  >
+                    {{ value }}
+                  </span>
+                {%- endif -%}
+                <span class="option_value flex-1 text-start">
+                  {{ value }}
+                </span>
                 <svg class="icon icon-down icon-rotate transition-short ms-10" width="9" height="6" viewBox="0 0 9 6">
                   <use href="#icon-arrow-down"></use>
                 </svg>
