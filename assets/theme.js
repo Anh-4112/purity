@@ -1082,7 +1082,7 @@ class AnnouncementBar extends HTMLElement {
 
   init() {
     this._naturalHeight = this.offsetHeight || 0;
-    document.body.style.setProperty('--height-bar', `${this._naturalHeight}px`);
+    document.body.style.setProperty("--height-bar", `${this._naturalHeight}px`);
     this.closeButton = this.querySelector(".announcement-bar__close");
     this.parentSection = this.closest(".section-announcement-bar");
     if (!this.closeButton || !this.parentSection) return;
@@ -1121,8 +1121,8 @@ class AnnouncementBar extends HTMLElement {
       const currentOpacity = 1 - eased;
       this.parentSection.style.height = `${currentHeight}px`;
       this.parentSection.style.opacity = String(currentOpacity);
-      this.classList.add('d-none')
-      document.body.style.removeProperty('--height-bar');
+      this.classList.add("d-none");
+      document.body.style.removeProperty("--height-bar");
       if (progress < 1) {
         this.animationFrame = requestAnimationFrame(animate);
       } else {
@@ -1863,7 +1863,6 @@ class MiniCartUpSell extends HTMLElement {
 
 customElements.define("mini-cart-recommendations", MiniCartUpSell);
 
-customElements.define("inspiration-showcase", InspirationShowcase);
 class ProductTabs extends HTMLElement {
   constructor() {
     super();
@@ -1873,8 +1872,8 @@ class ProductTabs extends HTMLElement {
     this._openAccordions = new Set();
 
     if (Shopify && Shopify.designMode) {
-      this.addEventListener('shopify:block:select', event => {
-        const targetBlock = event.target.closest('[data-block-id]');
+      this.addEventListener("shopify:block:select", (event) => {
+        const targetBlock = event.target.closest("[data-block-id]");
         if (targetBlock) {
           this.setTab(targetBlock.dataset.blockId, true);
         }
@@ -1883,25 +1882,31 @@ class ProductTabs extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['selected-tab'];
+    return ["selected-tab"];
   }
 
   get selectedTab() {
-    return this.getAttribute('selected-tab') || '';
+    return this.getAttribute("selected-tab") || "";
   }
 
   set selectedTab(blockId) {
-    if (blockId && this.getAttribute('selected-tab') !== blockId) {
-      this.setAttribute('selected-tab', blockId);
+    if (blockId && this.getAttribute("selected-tab") !== blockId) {
+      this.setAttribute("selected-tab", blockId);
     }
   }
 
   get tabs() {
-    return this._tabs || Array.from(this.querySelectorAll('.product-tabs__header-item'));
+    return (
+      this._tabs ||
+      Array.from(this.querySelectorAll(".product-tabs__header-item"))
+    );
   }
 
   get tabContents() {
-    return this._tabContents || Array.from(this.querySelectorAll('.product-tabs__content-item'));
+    return (
+      this._tabContents ||
+      Array.from(this.querySelectorAll(".product-tabs__content-item"))
+    );
   }
 
   connectedCallback() {
@@ -1909,8 +1914,12 @@ class ProductTabs extends HTMLElement {
   }
 
   init() {
-    this._tabs = Array.from(this.querySelectorAll('.product-tabs__header-item'));
-    this._tabContents = Array.from(this.querySelectorAll('.product-tabs__content-item'));
+    this._tabs = Array.from(
+      this.querySelectorAll(".product-tabs__header-item")
+    );
+    this._tabContents = Array.from(
+      this.querySelectorAll(".product-tabs__content-item")
+    );
     if (!this._tabs.length || !this._tabContents.length) return;
     const initialTab = this._tabs[0];
     this.selectedTab = initialTab.dataset.blockId;
@@ -1920,25 +1929,33 @@ class ProductTabs extends HTMLElement {
   }
 
   setupDescriptions() {
-    this._tabs.forEach(tab => {
-      const description = tab.querySelector('.product-tabs__header-description');
+    this._tabs.forEach((tab) => {
+      const description = tab.querySelector(
+        ".product-tabs__header-description"
+      );
       if (description) {
-        description.style.height = '0';
+        description.style.height = "0";
         if (description.textContent.trim().length > 0) {
-          tab.classList.add('has-description');
+          tab.classList.add("has-description");
         }
       }
     });
   }
-  
+
   setupEventListeners() {
-    this._tabs.forEach(tab => {
-      tab.addEventListener('click', (event) => {
-        if (event.target.closest('.product-tabs__header-description')) {
+    this._tabs.forEach((tab) => {
+      tab.addEventListener("click", (event) => {
+        if (event.target.closest(".product-tabs__header-description")) {
           return;
         }
-        const description = tab.querySelector('.product-tabs__header-description');
-        if (tab.classList.contains('active') && description && description.textContent.trim().length > 0) {
+        const description = tab.querySelector(
+          ".product-tabs__header-description"
+        );
+        if (
+          tab.classList.contains("active") &&
+          description &&
+          description.textContent.trim().length > 0
+        ) {
           this.toggleAccordion(tab);
         } else {
           const blockId = tab.dataset.blockId;
@@ -1947,65 +1964,73 @@ class ProductTabs extends HTMLElement {
           }
         }
       });
-      tab.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
+      tab.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
           event.preventDefault();
-            const description = tab.querySelector('.product-tabs__header-description');
-            if (tab.classList.contains('active') && description && description.textContent.trim().length > 0) {
-              this.toggleAccordion(tab);
-            } else {
-              const blockId = tab.dataset.blockId;
-              if (blockId !== this.selectedTab) {
-                this.selectedTab = blockId;
-              }
+          const description = tab.querySelector(
+            ".product-tabs__header-description"
+          );
+          if (
+            tab.classList.contains("active") &&
+            description &&
+            description.textContent.trim().length > 0
+          ) {
+            this.toggleAccordion(tab);
+          } else {
+            const blockId = tab.dataset.blockId;
+            if (blockId !== this.selectedTab) {
+              this.selectedTab = blockId;
             }
+          }
         }
       });
     });
   }
 
   closeAllAccordions() {
-    this._tabs.forEach(tab => {
-      const description = tab.querySelector('.product-tabs__header-description');
-      if (description && tab.classList.contains('accordion-open')) {
-        tab.classList.remove('accordion-open');
-        description.classList.remove('is-open');
-        if (typeof Motion !== 'undefined') {
+    this._tabs.forEach((tab) => {
+      const description = tab.querySelector(
+        ".product-tabs__header-description"
+      );
+      if (description && tab.classList.contains("accordion-open")) {
+        tab.classList.remove("accordion-open");
+        description.classList.remove("is-open");
+        if (typeof Motion !== "undefined") {
           Motion.animate(
             description,
             { height: 0 },
             { duration: 0.3, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
           );
         } else {
-          description.style.height = '0';
+          description.style.height = "0";
         }
       }
     });
     this._openAccordions.clear();
   }
-  
+
   toggleAccordion(tab, forceOpen = false) {
-    const description = tab.querySelector('.product-tabs__header-description');
+    const description = tab.querySelector(".product-tabs__header-description");
     if (!description || description.textContent.trim().length === 0) return;
-    const isOpen = tab.classList.contains('accordion-open');
+    const isOpen = tab.classList.contains("accordion-open");
     if (!isOpen && forceOpen) {
-      tab.classList.add('accordion-open');
-      description.classList.add('is-open');
-      if (typeof Motion !== 'undefined') {
+      tab.classList.add("accordion-open");
+      description.classList.add("is-open");
+      if (typeof Motion !== "undefined") {
         Motion.animate(
           description,
           { height: "auto" },
           { duration: 0.3, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
         );
-    } else {
-        description.style.height = 'auto';
+      } else {
+        description.style.height = "auto";
       }
       this._openAccordions.add(tab.dataset.blockId);
     }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'selected-tab' && oldValue !== newValue && oldValue !== null) {
+    if (name === "selected-tab" && oldValue !== newValue && oldValue !== null) {
       this.updateTabDisplay(newValue, true);
     }
   }
@@ -2016,96 +2041,99 @@ class ProductTabs extends HTMLElement {
     if (animate) {
       this.closeAllAccordions();
     }
-    this.tabs.forEach(tab => {
+    this.tabs.forEach((tab) => {
       const isSelected = tab.dataset.blockId === blockId;
-      tab.classList.toggle('selected', isSelected);
-      tab.classList.toggle('active', isSelected);
-      tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
-      
+      tab.classList.toggle("selected", isSelected);
+      tab.classList.toggle("active", isSelected);
+      tab.setAttribute("aria-selected", isSelected ? "true" : "false");
+
       if (isSelected) {
-        const description = tab.querySelector('.product-tabs__header-description');
+        const description = tab.querySelector(
+          ".product-tabs__header-description"
+        );
         if (description && description.textContent.trim().length > 0) {
           this.toggleAccordion(tab, true);
         }
       }
     });
-    
-    const oldContent = this.querySelector('.product-tabs__content-item.active');
-    const newContent = this.querySelector(`.product-tabs__content-item[data-block-id="${blockId}"]`);
-    
+
+    const oldContent = this.querySelector(".product-tabs__content-item.active");
+    const newContent = this.querySelector(
+      `.product-tabs__content-item[data-block-id="${blockId}"]`
+    );
+
     if (!newContent) {
       this._isAnimating = false;
       return;
     }
-    
-    if (animate && typeof Motion !== 'undefined' && oldContent !== newContent) {
-      this.transition(oldContent, newContent)
-        .finally(() => {
-          this._isAnimating = false;
-        });
-    } else {
-      this.tabContents.forEach(content => {
-        content.classList.remove('active');
-        content.style.display = 'none';
+
+    if (animate && typeof Motion !== "undefined" && oldContent !== newContent) {
+      this.transition(oldContent, newContent).finally(() => {
+        this._isAnimating = false;
       });
-      
-      newContent.classList.add('active');
-      newContent.style.display = 'block';
+    } else {
+      this.tabContents.forEach((content) => {
+        content.classList.remove("active");
+        content.style.display = "none";
+      });
+
+      newContent.classList.add("active");
+      newContent.style.display = "block";
       this._isAnimating = false;
     }
-    
+
     this.dispatchEvent(
-      new CustomEvent('tabChanged', {
+      new CustomEvent("tabChanged", {
         detail: { blockId },
-        bubbles: true
+        bubbles: true,
       })
     );
   }
-  
+
   async transition(fromPanel, toPanel) {
     if (!fromPanel || !toPanel) return;
     if (fromPanel) {
       try {
         await Motion.animate(
-          fromPanel, 
+          fromPanel,
           {
             opacity: [1, 0],
-            y: [0, 15]
+            y: [0, 15],
           },
           {
             duration: 0.3,
-            easing: "cubic-bezier(0.24, 0.02, 0.13, 1.01)"
+            easing: "cubic-bezier(0.24, 0.02, 0.13, 1.01)",
           }
         ).finished;
       } catch (e) {
         console.error("Animation error:", e);
       }
-      fromPanel.classList.remove('active');
-      fromPanel.style.display = 'none';
+      fromPanel.classList.remove("active");
+      fromPanel.style.display = "none";
     }
-    toPanel.classList.add('active');
-    toPanel.style.display = 'block';
+    toPanel.classList.add("active");
+    toPanel.style.display = "block";
     try {
       Motion.animate(
         toPanel,
-        { 
+        {
           opacity: [0, 1],
-          y: [15, 0]
+          y: [15, 0],
         },
-        { 
+        {
           duration: 0.3,
-          easing: "cubic-bezier(0.24, 0.02, 0.13, 1.01)"
+          easing: "cubic-bezier(0.24, 0.02, 0.13, 1.01)",
         }
       );
     } catch (e) {
       console.error("Animation error:", e);
     }
   }
-  
+
   disconnectedCallback() {
     if (this._tabs) {
-      this._tabs.forEach(tab => {
-        tab.removeEventListener('click', null);
+      this._tabs.forEach((tab) => {
+        tab.removeEventListener("click", null);
       });
     }
   }
