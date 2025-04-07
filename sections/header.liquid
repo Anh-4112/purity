@@ -20,7 +20,7 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--gap: 1rem; --gap-desktop: 2.5rem;{{- -}}
   {% if transparent %}--transparent-color: {{ section_st.header_text_icon_transparent }};{% endif %}{{- -}}
-    --header-grid-template: 'menu logo icon' / minmax(4rem, 1fr) minmax(auto, 45%)  minmax(8rem,1fr);{{- -}}
+  --header-grid-template: 'menu logo icon' / minmax(4rem, 1fr) minmax(auto, 45%)  minmax(8rem,1fr);{{- -}}
 {%- endcapture -%}
 
 {% style %}
@@ -32,6 +32,7 @@
       .logo-center{
         --header-grid-template: 'menu logo icon' / minmax(0, 1fr) minmax(50px, var(--logo-width))  minmax(0,1fr);
       }
+
     }
   {% endif %}
   {% if request.page_type == 'index' and transparent %}
@@ -466,9 +467,9 @@
               {% endif %}
             </div>
           {% endif %}
-          {%- if section_st.show_search -%}
-            {%- if section_st.show_search or section_st.show_account or section_st.show_cart -%}
-              <div class="flex gap" style="--gap: 7px;">
+          {%- if section_st.show_search or section_st.show_account or section_st.show_cart -%}
+            <div class="flex gap" style="--gap: 7px;">
+              {%- if section_st.show_search -%}
                 {% # theme-check-disable NestedSnippet %}
                 <a
                   href="{{ routes.search_url }}"
@@ -486,56 +487,57 @@
                   <span class="visually-hidden">{{ 'general.search.search' | t }}</span>
                 </a>
                 {% # theme-check-enable NestedSnippet %}
-            {%- endif -%}
-            {%- if section_st.show_account -%}
-              <a
-                href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                class="header__icon wh-40 hidden flex-1025 content-center"
-                aria-label="{{ 'customer.account_fallback' | t }}"
-              >
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                  <path d="M20.7234 20.0751C19.6588 18.2845 18.2153 16.8151 16.5209 15.7975C14.8265 14.7798 12.9335 14.2452 11.0099 14.2412C9.08637 14.2372 7.19164 14.7639 5.49382 15.7744C3.79601 16.785 2.29912 18.2968 1.22855 20.083" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                  <circle cx="10.9992" cy="6.24623" r="4.32143" stroke="currentColor" stroke-width="1.8"/>
-                </svg>
-              </a>
-            {%- endif -%}
-            {%- if section_st.show_cart -%}
-              <a
-                href="{{ routes.cart_url }}"
-                class="header__icon wh-40 flex content-center relative"
-                id="cart-icon-bubble"
-              >
-                {%- if theme_st.cart_icon == 'shopping_bag' -%}
-                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                    <path d="M6.85649 1.9248H15.1362C19.046 1.9248 19.437 3.78663 19.7015 6.0583L20.7365 14.8405C21.0699 17.7211 20.196 20.0747 16.1711 20.0747H5.83303C1.79669 20.0747 0.922718 17.7211 1.2677 14.8405L2.30267 6.0583C2.55567 3.78663 2.94664 1.9248 6.85649 1.9248Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7.69922 6.25864C7.69922 8.45876 9.53828 9.3501 10.9992 9.3501C12.4602 9.3501 14.2992 8.45876 14.2992 6.25864" stroke="currentColor" stroke-width="1.8" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                {%- else -%}
-                  <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
-                    <path d="M0.878906 1.75L5.5448 13.6018C5.69245 13.9758 6.05667 14.2219 6.46026 14.2219H17.6525C18.125 14.2219 18.5384 13.8774 18.6172 13.4049L20.1036 4.75232C20.2119 4.15185 19.7492 3.60061 19.1389 3.60061H6.42089" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-                    <path d="M16.7734 16.75C16.7734 17.5781 16.0263 18.25 15.1055 18.25C14.1846 18.25 13.4375 17.5781 13.4375 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-                    <path d="M10.5625 16.75C10.5625 17.5781 9.81539 18.25 8.89453 18.25C7.97367 18.25 7.22656 17.5781 7.22656 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-                  </svg>
-                {%- endif -%}
-                <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
-                {{ 'templates.cart.minicart' | t }}
-              </span>
-              <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
-              {%- if cart != empty -%}
-                <div class="cart-count rounded-50 inline-flex content-center absolute">
-                  {%- if cart.item_count < 100 -%}
-                    <span class="count">{{ cart.item_count }}</span>
-                  {%- else -%}
-                    <span aria-hidden="true">~</span>
-                  {%- endif -%}
-                  <span class="visually-hidden">{{ 'templates.cart.cart_count' | t: count: cart.item_count }}</span>
-                </div>
-              {%- else -%}
-                <div class="cart-count hidden">
-                  <span aria-hidden="true">0</span>
-                </div>
               {%- endif -%}
-            {%- endif -%}
+              {%- if section_st.show_account -%}
+                <a
+                  href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+                  class="header__icon wh-40 hidden flex-1025 content-center"
+                  aria-label="{{ 'customer.account_fallback' | t }}"
+                >
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <path d="M20.7234 20.0751C19.6588 18.2845 18.2153 16.8151 16.5209 15.7975C14.8265 14.7798 12.9335 14.2452 11.0099 14.2412C9.08637 14.2372 7.19164 14.7639 5.49382 15.7744C3.79601 16.785 2.29912 18.2968 1.22855 20.083" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="10.9992" cy="6.24623" r="4.32143" stroke="currentColor" stroke-width="1.8"/>
+                  </svg>
+                </a>
+              {%- endif -%}
+              {%- if section_st.show_cart -%}
+                <a
+                  href="{{ routes.cart_url }}"
+                  class="header__icon wh-40 flex content-center relative"
+                  id="cart-icon-bubble"
+                >
+                  {%- if theme_st.cart_icon == 'shopping_bag' -%}
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                      <path d="M6.85649 1.9248H15.1362C19.046 1.9248 19.437 3.78663 19.7015 6.0583L20.7365 14.8405C21.0699 17.7211 20.196 20.0747 16.1711 20.0747H5.83303C1.79669 20.0747 0.922718 17.7211 1.2677 14.8405L2.30267 6.0583C2.55567 3.78663 2.94664 1.9248 6.85649 1.9248Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M7.69922 6.25864C7.69922 8.45876 9.53828 9.3501 10.9992 9.3501C12.4602 9.3501 14.2992 8.45876 14.2992 6.25864" stroke="currentColor" stroke-width="1.8" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  {%- else -%}
+                    <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                      <path d="M0.878906 1.75L5.5448 13.6018C5.69245 13.9758 6.05667 14.2219 6.46026 14.2219H17.6525C18.125 14.2219 18.5384 13.8774 18.6172 13.4049L20.1036 4.75232C20.2119 4.15185 19.7492 3.60061 19.1389 3.60061H6.42089" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                      <path d="M16.7734 16.75C16.7734 17.5781 16.0263 18.25 15.1055 18.25C14.1846 18.25 13.4375 17.5781 13.4375 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                      <path d="M10.5625 16.75C10.5625 17.5781 9.81539 18.25 8.89453 18.25C7.97367 18.25 7.22656 17.5781 7.22656 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                    </svg>
+                  {%- endif -%}
+                  <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
+                    {{ 'templates.cart.minicart' | t }}
+                  </span>
+                  <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+                  {%- if cart != empty -%}
+                    <div class="cart-count rounded-50 inline-flex content-center absolute">
+                      {%- if cart.item_count < 100 -%}
+                        <span class="count">{{ cart.item_count }}</span>
+                      {%- else -%}
+                        <span aria-hidden="true">~</span>
+                      {%- endif -%}
+                      <span class="visually-hidden">{{ 'templates.cart.cart_count' | t: count: cart.item_count }}</span>
+                    </div>
+                  {%- else -%}
+                    <div class="cart-count hidden">
+                      <span aria-hidden="true">0</span>
+                    </div>
+                  {%- endif -%}
+                </a>
+              {%- endif -%}
             </div>
           {%- endif -%}
         </div>
