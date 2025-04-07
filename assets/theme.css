@@ -756,12 +756,6 @@ blockquote {
 .fs-base {
   font-size: var(--body-font-size);
 }
-.fs-10 {
-  font-size: 1rem;
-}
-[direction="rtl"] {
-  direction: rtl;
-}
 :is(.active, .open).visible {
   opacity: 1;
   visibility: visible;
@@ -799,7 +793,7 @@ blockquote {
   -webkit-transform: translateY(100%);
   will-change: transform;
   bottom: 0;
-  height: 73vh;
+  max-height: calc(100vh - 60px);
   top: auto;
   --transition: 0.3s;
 }
@@ -822,7 +816,7 @@ blockquote {
     transform: translateX(var(--slide-out, -100%)) translateY(0);
     -webkit-transform: translateX(var(--slide-out, -100%)) translateY(0);
     top: 0;
-    height: 100vh;
+    max-height: 100vh;
   }
   :where(.drawer-left) {
     --slide-out: -100%;
@@ -876,7 +870,7 @@ modal-popup :is(.modal-overlay) {
   z-index: 15;
 }
 .modal-popup-inner .drawer__body > *,
-.slideIn-animate {
+.animate-motion .slideIn-animate {
   opacity: 0;
   transform: translateY(2rem);
   will-change: transform, opacity;
@@ -884,7 +878,7 @@ modal-popup :is(.modal-overlay) {
   --timing-function: cubic-bezier(0.5, -0.03, 0.34, 0.83);
 }
 .modal.active .modal-popup-inner .drawer__body > *:not(.model_media, .spin),
-:is(.detail-open, .modal.active) .slideIn-animate {
+:is(.animate-motion.detail-open, .animate-motion.active) .slideIn-animate {
   animation: slideIn var(--transition)
     var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83)) forwards;
   animation-delay: var(--delay, 0s);
@@ -1305,9 +1299,6 @@ modal-popup :is(.modal-overlay) {
   .flex-1025-row-reverse {
     flex-direction: row-reverse;
   }
-  .flex-1025-nowrap {
-    flex-wrap: nowrap;
-  }
   .space-between-1025 {
     justify-content: space-between;
   }
@@ -1480,6 +1471,9 @@ modal-popup :is(.modal-overlay) {
 
 /* Hover */
 @media (min-width: 1025px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .will-change {
+    will-change: transform;
+  }
   :where(a:hover) {
     color: var(--color-heading);
   }
@@ -1553,9 +1547,6 @@ modal-popup :is(.modal-overlay) {
     width: 100%;
     left: 0;
   }
-  .hover-effect {
-    will-change: transform;
-  }
   .hover-effect :is(img, .placeholder-image, picture) {
     transition: 0.4s;
     will-change: transform;
@@ -1627,6 +1618,10 @@ modal-popup :is(.modal-overlay) {
     opacity: 1;
     visibility: visible;
     transform: translateX(0) scale(1);
+  }
+  .hover-icon-zoom:hover .icon-zoom {
+    transform: scale(1.1);
+    color: var(--color-heading);
   }
   .blur:hover {
     --opacity: 1;
