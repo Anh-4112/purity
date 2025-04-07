@@ -951,6 +951,7 @@ class VariantInput extends HTMLElement {
   }
 
   updateProductInfo(parsedHTML, sectionId) {
+    console.log(sectionId);
     const updateContent = (blockClass) => {
       const source = parsedHTML
         .getElementById(`Product-${sectionId}`)
