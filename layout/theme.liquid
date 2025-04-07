@@ -269,7 +269,6 @@
       {{ content_for_layout }}
     </main>
     {%- liquid
-      section 'product-quickview'
       sections 'overlay-group'
     -%}
     {% sections 'footer-group' %}
@@ -285,6 +284,12 @@
           money_format: {{ shop.money_format | json }},
         }
       }
+      window.cartStrings = {
+        error: `{{ 'sections.cart.cart_error' | t }}`,
+        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
+        no_shipping: `{{ 'sections.cart.no_shipping' | t }}`,
+        shipping_rate: `{{ 'sections.cart.shipping_rate' | t }}`,
+      };
       window.shopUrl = '{{ request.origin }}';
       window.routes = {
         cart_add_url: '{{ routes.cart_add_url }}',
