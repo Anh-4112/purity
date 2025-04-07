@@ -4,6 +4,171 @@ import * as global from "global";
 
 const delegate = new global.eventDelegate();
 
+var Shopify = Shopify || {};
+if (typeof window.Shopify == "undefined") {
+  window.Shopify = {};
+}
+
+Shopify.bind = function (fn, scope) {
+  return function () {
+    return fn.apply(scope, arguments);
+  };
+};
+
+Shopify.setSelectorByValue = function (selector, value) {
+  for (var i = 0, count = selector.options.length; i < count; i++) {
+    var option = selector.options[i];
+    if (value == option.value || value == option.innerHTML) {
+      selector.selectedIndex = i;
+      return i;
+    }
+  }
+};
+
+Shopify.addListener = function (target, eventName, callback) {
+  target.addEventListener
+    ? target.addEventListener(eventName, callback, false)
+    : target.attachEvent("on" + eventName, callback);
+};
+
+Shopify.postLink = function (path, options) {
+  options = options || {};
+  var method = options["method"] || "post";
+  var params = options["parameters"] || {};
+
+  var form = document.createElement("form");
+  form.setAttribute("method", method);
+  form.setAttribute("action", path);
+
+  for (var key in params) {
+    var hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", key);
+    hiddenField.setAttribute("value", params[key]);
+    form.appendChild(hiddenField);
+  }
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+};
+
+Shopify.CountryProvinceSelector = function (
+  country_domid,
+  province_domid,
+  options
+) {
+  this.countryEl = document.getElementById(country_domid);
+  this.provinceEl = document.getElementById(province_domid);
+  this.provinceContainer = document.getElementById(
+    options["hideElement"] || province_domid
+  );
+
+  Shopify.addListener(
+    this.countryEl,
+    "change",
+    Shopify.bind(this.countryHandler, this)
+  );
+
+  this.initCountry();
+  this.initProvince();
+};
+
+Shopify.CountryProvinceSelector.prototype = {
+  initCountry: function () {
+    var value = this.countryEl.getAttribute("data-default");
+    Shopify.setSelectorByValue(this.countryEl, value);
+    this.countryHandler();
+  },
+
+  initProvince: function () {
+    var value = this.provinceEl.getAttribute("data-default");
+    if (value && this.provinceEl.options.length > 0) {
+      Shopify.setSelectorByValue(this.provinceEl, value);
+    }
+  },
+
+  countryHandler: function () {
+    var opt = this.countryEl.options[this.countryEl.selectedIndex];
+    var raw = opt.getAttribute("data-provinces");
+    var provinces = JSON.parse(raw);
+
+    this.clearOptions(this.provinceEl);
+    if (provinces && provinces.length == 0) {
+      this.provinceContainer.style.display = "none";
+    } else {
+      for (var i = 0; i < provinces.length; i++) {
+        var opt = document.createElement("option");
+        opt.value = provinces[i][0];
+        opt.innerHTML = provinces[i][1];
+        this.provinceEl.appendChild(opt);
+      }
+
+      this.provinceContainer.style.display = "";
+    }
+  },
+
+  clearOptions: function (selector) {
+    while (selector.firstChild) {
+      selector.removeChild(selector.firstChild);
+    }
+  },
+
+  setOptions: function (selector, values) {
+    for (var i = 0, count = values.length; i < values.length; i++) {
+      var opt = document.createElement("option");
+      opt.value = values[i];
+      opt.innerHTML = values[i];
+      selector.appendChild(opt);
+    }
+  },
+};
+
+Shopify.formatMoney = function (cents, format) {
+  if (typeof cents == "string") {
+    cents = cents.replace(".", "");
+  }
+  var value = "";
+  var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+  var formatString = format || this.money_format;
+  function defaultOption(opt, def) {
+    return typeof opt == "undefined" ? def : opt;
+  }
+
+  function formatWithDelimiters(number, precision, thousands, decimal) {
+    precision = defaultOption(precision, 2);
+    thousands = defaultOption(thousands, ",");
+    decimal = defaultOption(decimal, ".");
+
+    if (isNaN(number) || number == null) {
+      return 0;
+    }
+
+    number = (number / 100.0).toFixed(precision);
+
+    var parts = number.split("."),
+      dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1" + thousands),
+      cents = parts[1] ? decimal + parts[1] : "";
+
+    return dollars + cents;
+  }
+
+  switch (formatString.match(placeholderRegex)[1]) {
+    case "amount":
+      value = formatWithDelimiters(cents, 2);
+      break;
+    case "amount_no_decimals":
+      value = formatWithDelimiters(cents, 0);
+      break;
+    case "amount_with_comma_separator":
+      value = formatWithDelimiters(cents, 2, ".", ",");
+      break;
+    case "amount_no_decimals_with_comma_separator":
+      value = formatWithDelimiters(cents, 0, ".", ",");
+      break;
+  }
+  return formatString.replace(placeholderRegex, value);
+};
+
 class BackToTop extends HTMLElement {
   constructor() {
     super();
@@ -1211,3 +1376,490 @@ class InspirationShowcase extends HTMLElement {
   disconnectedCallback() {}
 }
 customElements.define("inspiration-showcase", InspirationShowcase);
+
+class CartDrawer extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  get cartActionId() {
+    return document.getElementById("cart-icon-bubble") || null;
+  }
+
+  get sectionId() {
+    return this.hasAttribute("data-section-id")
+      ? this.getAttribute("data-section-id")
+      : this.getAttribute("data-section-id");
+  }
+
+  connectedCallback() {
+    if (this.cartActionId) {
+      this.cartActionId.addEventListener(
+        "click",
+        this.onShowCartDrawer.bind(this)
+      );
+    }
+  }
+
+  getSectionsToRender() {
+    return [
+      {
+        id: this.sectionId,
+        section: this.sectionId,
+        selector: ".drawer__header",
+      },
+      {
+        id: "cart-icon-bubble",
+        section: "cart-icon-bubble",
+      },
+      {
+        id: this.sectionId,
+        section: this.sectionId,
+        selector: ".free-shipping-bar",
+      },
+      {
+        id: this.sectionId,
+        section: this.sectionId,
+        selector: ".cart-drawer__form",
+      },
+    ];
+  }
+
+  renderContents(parsedState) {
+    if (this.querySelector(".drawer__inner-empty")) {
+      const drawerBody = this.getSectionDOM(
+        parsedState.sections[this.sectionId],
+        ".drawer__body"
+      );
+      this.querySelector(".drawer__body").innerHTML = drawerBody.innerHTML;
+      return;
+    }
+
+    this.getSectionsToRender().forEach((section, index) => {
+      const sectionElement = section.selector
+        ? document.querySelector(section.selector)
+        : document.getElementById(section.id);
+      if (!sectionElement) {
+        return;
+      }
+      sectionElement.innerHTML = this.getSectionInnerHTML(
+        parsedState.sections[section.id],
+        section.selector
+      );
+
+      if (index === 1) {
+        const nav_bar_id = document.querySelector("#cart-icon-bubble");
+        if (
+          nav_bar_id &&
+          nav_bar_id.querySelector(".cart-count") &&
+          sectionElement.querySelector(".cart-count")
+        ) {
+          nav_bar_id.querySelector(".cart-count").innerHTML =
+            sectionElement.querySelector(".cart-count").innerHTML;
+        }
+      }
+    });
+  }
+
+  getSectionInnerHTML(html, selector = ".shopify-section") {
+    return new DOMParser()
+      .parseFromString(html, "text/html")
+      .querySelector(selector).innerHTML;
+  }
+
+  getSectionDOM(html, selector = ".shopify-section") {
+    return new DOMParser()
+      .parseFromString(html, "text/html")
+      .querySelector(selector);
+  }
+
+  onShowCartDrawer(event) {
+    event.preventDefault();
+    global.eventModal(this, "open", false);
+  }
+}
+customElements.define("cart-drawer", CartDrawer);
+
+class CartEstimate extends HTMLElement {
+  constructor() {
+    super();
+    this.addonsUpdate();
+  }
+
+  get actionEstimate() {
+    return this.querySelector(".addon-actions .estimate") || null;
+  }
+
+  get cartToggleAddons() {
+    return this.querySelector(".toggle-addons") || null;
+  }
+
+  get cartActionAddons() {
+    return document.querySelector(".drawer__cart-shipping button") || null;
+  }
+
+  connectedCallback() {
+    if (this.actionEstimate) {
+      this.actionEstimate.addEventListener(
+        "click",
+        this.handleEstimateSave.bind(this)
+      );
+    }
+
+    if (this.cartActionAddons) {
+      this.cartActionAddons.addEventListener(
+        "click",
+        this.handleEstimateToggle.bind(this)
+      );
+    }
+
+    if (this.cartToggleAddons) {
+      this.cartToggleAddons.addEventListener(
+        "click",
+        this.handleEstimateToggle.bind(this)
+      );
+    }
+  }
+
+  handleEstimateSave(event) {
+    event.preventDefault();
+    const address = {
+      zip: this.querySelector("#AddressZip").value || "",
+      country: this.querySelector("#address_country").value || "",
+      province: this.querySelector("#address_province").value || "",
+    };
+    this.fetchShippingRates(address);
+  }
+
+  fetchShippingRates(address) {
+    const { zip, country, province } = address;
+    const url = `${window.Shopify.routes.root}cart/shipping_rates.json?shipping_address%5Bzip%5D=${zip}&shipping_address%5Bcountry%5D=${country}&shipping_address%5Bprovince%5D=${province}`;
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => this.updateShippingMessage(data, address))
+      .catch((error) => console.error("Error fetching shipping rates:", error));
+  }
+
+  updateShippingMessage(data, address) {
+    const message = this.querySelector(".addon-message");
+    message.innerHTML = "";
+
+    if (data?.shipping_rates?.length) {
+      this.showShippingSuccess(message, data.shipping_rates, address);
+    } else {
+      this.showShippingWarning(message);
+    }
+  }
+
+  showShippingSuccess(message, rates, address) {
+    message.classList.remove("error", "warning");
+    message.classList.add("success");
+
+    const addressText = window.cartStrings?.shipping_rate.replace(
+      "{{address}}",
+      `${address.zip}, ${address.country} ${address.province}`
+    );
+    message.innerHTML = `<p>${addressText}</p>`;
+
+    rates.forEach((rate) => {
+      message.innerHTML += `<p>${rate.name}: ${Shopify.formatMoney(
+        rate.price,
+        themeGlobalVariables.settings.money_format
+      )}</p>`;
+    });
+  }
+
+  showShippingWarning(message) {
+    message.classList.remove("error", "success");
+    message.classList.add("warning");
+    message.innerHTML = `<p>${window.cartStrings?.no_shipping}</p>`;
+  }
+
+  showShippingError(message, errors) {
+    message.classList.remove("success", "warning");
+    message.classList.add("error");
+    message.innerHTML = Object.values(errors)
+      .map((error) => `<p>${error[0]}</p>`)
+      .join("");
+  }
+
+  addonsUpdate() {
+    const country = this.querySelector("#address_country");
+    const province = this.querySelector("#address_province");
+    if (country && province) {
+      new Shopify.CountryProvinceSelector(
+        "address_country",
+        "address_province",
+        {
+          hideElement: "address_province_container",
+        }
+      );
+    }
+  }
+
+  handleEstimateToggle(event) {
+    event.preventDefault();
+    if (this.classList.contains("open")) {
+      this.classList.remove("open");
+      if (this.cartActionAddons) {
+        this.cartActionAddons
+          .closest(".drawer__cart-shipping")
+          .classList.remove("active");
+      }
+    } else {
+      this.classList.add("open");
+      if (this.cartActionAddons) {
+        this.cartActionAddons
+          .closest(".drawer__cart-shipping")
+          .classList.add("active");
+      }
+    }
+  }
+}
+if (!customElements.get("cart-estimate-element")) {
+  customElements.define("cart-estimate-element", CartEstimate);
+}
+
+class CartNote extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  get cartActionId() {
+    return this.querySelector(".apply-note") || null;
+  }
+
+  get cartToggleAddons() {
+    return this.querySelector(".toggle-addons") || null;
+  }
+
+  get cartActionAddons() {
+    return document.querySelector(".drawer__cart-note button") || null;
+  }
+
+  connectedCallback() {
+    if (this.cartActionId) {
+      this.cartActionId.addEventListener(
+        "click",
+        this.handleNoteSave.bind(this)
+      );
+    }
+
+    if (this.cartActionAddons) {
+      this.cartActionAddons.addEventListener(
+        "click",
+        this.handleNoteToggle.bind(this)
+      );
+    }
+
+    if (this.cartToggleAddons) {
+      this.cartToggleAddons.addEventListener(
+        "click",
+        this.handleNoteToggle.bind(this)
+      );
+    }
+  }
+
+  handleNoteSave() {
+    this.noteUpdate();
+    this.classList.remove("open");
+    if (this.cartActionAddons) {
+      this.cartActionAddons
+        .closest(".drawer__cart-note")
+        .classList.remove("active");
+    }
+  }
+
+  handleNoteToggle(event) {
+    event.preventDefault();
+    if (this.classList.contains("open")) {
+      this.classList.remove("open");
+      if (this.cartActionAddons) {
+        this.cartActionAddons
+          .closest(".drawer__cart-note")
+          .classList.remove("active");
+      }
+    } else {
+      this.classList.add("open");
+      if (this.cartActionAddons) {
+        this.cartActionAddons
+          .closest(".drawer__cart-note")
+          .classList.add("active");
+      }
+    }
+  }
+
+  noteUpdate() {
+    const body = JSON.stringify({
+      note: this.querySelector(".cart-note").value,
+    });
+    fetch(`${routes?.cart_update_url}`, {
+      ...global.fetchConfig(),
+      ...{ body },
+    });
+  }
+}
+
+if (!customElements.get("cart-note-element")) {
+  customElements.define("cart-note-element", CartNote);
+}
+
+class CartGiftWrap extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  get cartActionId() {
+    return this.querySelector(".select-package") || null;
+  }
+
+  get cartActionAddons() {
+    return this.querySelector(".toggle-addons") || null;
+  }
+
+  get cartContentAddons() {
+    return this.querySelector(".cart-addons-content");
+  }
+
+  get cart() {
+    return document.querySelector("cart-drawer");
+  }
+
+  connectedCallback() {
+    if (this.cartActionId) {
+      this.cartActionId.addEventListener(
+        "click",
+        this.addGiftWrapClick.bind(this)
+      );
+    }
+
+    if (this.cartActionAddons) {
+      this.cartActionAddons.addEventListener(
+        "click",
+        this.handleGiftWrapToggle.bind(this)
+      );
+    }
+  }
+
+  addGiftWrapClick(event) {
+    event.preventDefault();
+    const product_checked = this.querySelector('input[type="radio"]:checked');
+    if (product_checked) {
+      const variant_id = this.querySelector(
+        'input[type="radio"]:checked'
+      ).value;
+      const body = JSON.stringify({
+        id: Number(variant_id),
+        quantity: 1,
+        sections: this.cart
+          .getSectionsToRender()
+          .map((section) => section.section),
+        sections_url: window.location.pathname,
+      });
+      this.cartActionId.classList.add("loading");
+      fetch(`${routes.cart_add_url}`, {
+        ...global.fetchConfig(),
+        ...{ body },
+      })
+        .then((response) => {
+          return response.text();
+        })
+        .then((state) => {
+          const parsedState = JSON.parse(state);
+
+          this.cart.getSectionsToRender().forEach((section, index) => {
+            const sectionElement = section.selector
+              ? document.querySelector(section.selector)
+              : document.getElementById(section.id);
+            if (!sectionElement) {
+              return;
+            }
+            sectionElement.innerHTML = this.cart.getSectionInnerHTML(
+              parsedState.sections[section.id],
+              section.selector
+            );
+
+            if (index === 1) {
+              const nav_bar_id = document.querySelector("#cart-icon-bubble");
+              if (
+                nav_bar_id &&
+                nav_bar_id.querySelector(".cart-count") &&
+                sectionElement.querySelector(".cart-count")
+              ) {
+                nav_bar_id.querySelector(".cart-count").innerHTML =
+                  sectionElement.querySelector(".cart-count").innerHTML;
+              }
+            }
+          });
+        })
+        .catch(() => {
+          const errors =
+            document.getElementById("cart-errors") ||
+            document.getElementById("CartDrawer-CartErrors");
+          if (!errors) return;
+          errors.textContent = window.cartStrings.error;
+        })
+        .finally(() => {
+          this.cartActionId.classList.remove("loading");
+        });
+    }
+  }
+
+  handleGiftWrapToggle(event) {
+    event.preventDefault();
+    if (this.classList.contains("open")) {
+      this.classList.remove("open");
+      Motion.animate(this.cartContentAddons, { height: 0 }, { duration: 0.3 });
+    } else {
+      this.classList.add("open");
+      Motion.animate(
+        this.cartContentAddons,
+        { height: "auto" },
+        { duration: 0.3 }
+      );
+    }
+  }
+}
+
+if (!customElements.get("cart-gift-wrap-element")) {
+  customElements.define("cart-gift-wrap-element", CartGiftWrap);
+}
+
+class MiniCartUpSell extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  get type() {
+    return this.getAttribute("data-type");
+  }
+
+  connectedCallback() {
+    if (this.type == "auto") {
+      fetch(this.dataset.url)
+        .then((response) => response.text())
+        .then((text) => {
+          const html = document.createElement("div");
+          html.innerHTML = text;
+          const recommendations = html.querySelector(".swiper-wrapper");
+          if (!recommendations) {
+            this.classList.add("hidden-cart-upsell");
+          }
+          if (recommendations && recommendations.innerHTML.trim().length) {
+            this.querySelector(".swiper-wrapper").innerHTML =
+              recommendations.innerHTML;
+          }
+          if (recommendations && recommendations.childElementCount == 0) {
+            this.classList.add("hidden-cart-upsell");
+          }
+        })
+        .finally(() => {})
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+  }
+}
+
+customElements.define("mini-cart-recommendations", MiniCartUpSell);

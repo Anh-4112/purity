@@ -9,16 +9,10 @@
   assign product_image_ratio = theme_st.product_image_ratio
   assign product_show_video_featured = theme_st.product_show_video_featured
   assign product_show_quick_add_mobile = theme_st.product_show_quick_add_mobile
-  assign show_sale = theme_st.show_sale
-  assign show_pre_order = theme_st.show_pre_order
-  assign show_sold_out = theme_st.show_sold_out
 %}
 {% if card_product and card_product != empty %}
   <div
     class="product-item product__item-js {{ class }}"
-    data-show-badges-sale="{%- if show_sale and disable_badge != true -%}true{%- else -%}false{%- endif -%}"
-    data-show-badges-pre-order="{%- if show_pre_order and disable_badge != true -%}true{%- else -%}false{%- endif -%}"
-    data-show-badges-sold-out="{%- if show_sold_out and disable_badge != true -%}true{%- else -%}false{%- endif -%}"
     data-product-id="{{ card_product.id }}"
   >
     <div class="product-item__wrapper">
