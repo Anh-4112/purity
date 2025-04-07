@@ -106,8 +106,8 @@
       >
       {%- if is_color and is_dropdown == false -%}
         <label
-          class="color-swatch-label{% if disable_variant %} disable{% else %} pointer{% endif %}{% if is_swatch_image %} swatch-image{% endif %}"
-          style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }}{% endif %}"
+          class="color-swatch-label {{ color_swatch_shape }} {% if disable_variant %} disable{% else %} pointer{% endif %}{% if is_swatch_image %} swatch-image{% endif %}"
+          style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }};{% endif %}{% if color_swatch_shape == 'round' %}--radius: 50%;{% else %}--radius: 0;{% endif %}"
           for="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
         >
           <span class="hidden">{{ value }}</span>
@@ -126,7 +126,7 @@
               {{- value -}}
             </span>
           {%- endif -%}
-          <span class="option_value flex-1 text-start">{{ value }}</span>
+          <span class="option_value">{{ value }}</span>
         </label>
       {%- endif -%}
     </li>
@@ -154,7 +154,7 @@
       >
       <label
         class="color-swatch-label {{ color_swatch_shape }}{% if disable_variant %} disable{% endif %}{% if is_swatch_image %} swatch-image{% endif %}"
-        style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }}{% endif %}"
+        style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }};{% endif %}{% if color_swatch_shape == 'round' %}--radius: 50%;{% else %}--radius: 0;{% endif %}"
         for="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
       >
         <span class="hidden">{{ value }}</span>

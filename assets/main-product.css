@@ -1,8 +1,23 @@
+.product-detail__information {
+  --color-swatch-width: 4rem;
+  --color-swatch-height: 4rem;
+}
+.product-detail__information .swatch-image {
+  --color-swatch-width: 5rem;
+  --color-swatch-height: 5rem;
+}
+.shopify-block:has(> *:empty),
+.product-detail__information .shopify-block:empty {
+  display: none;
+}
 .media-main-swiper
   .swiper:not([class*="initialized"])
   .swiper-wrapper
   .swiper-slide:not(:first-child) {
   display: none;
+}
+.product__tax a {
+  font-weight: var(--heading-weight);
 }
 .product-form__buttons:has(.appstle_sub_widget) .button_buy-now {
   width: 100%;
