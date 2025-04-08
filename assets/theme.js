@@ -1,6 +1,9 @@
 import { SlideSection } from "module-slide";
+import { LazyLoad } from "module-lazyLoad";
 import * as AddToCart from "module-addToCart";
 import * as global from "global";
+
+LazyLoad.run();
 
 const delegate = new global.eventDelegate();
 
