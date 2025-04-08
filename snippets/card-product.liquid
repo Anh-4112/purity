@@ -189,7 +189,7 @@
                     data-url="{{ shop.url }}/products/{{ card_product.handle }}"
                     aria-label="{{ 'products.product.quickview' | t }}"
                   >
-                    <span class="product-quickview-btn hidden-on-load">
+                    <span class="product-quickview-btn hidden-on-load d-none block-md">
                       {{ 'products.product.quickview' | t }}
                     </span>
                     <svg
@@ -200,6 +200,9 @@
                       class="spin opacity-0 pointer-none icon-load absolute transition-short"
                     >
                       <use href="#icon-load"></use>
+                    </svg>
+                    <svg width="16" height="16" class="hidden-md" viewBox="0 0 16 16" fill="none">
+                      <use href="#icon-cart" />
                     </svg>
                   </button>
                 {%- else -%}
@@ -231,7 +234,7 @@
                           disabled
                         {% endif %}
                       >
-                        <span class="product-addtocart-btn hidden-on-load">
+                        <span class="product-addtocart-btn hidden-on-load d-none block-md">
                           {%- if card_product.selected_or_first_available_variant.available -%}
                             {{ 'products.product.add_to_cart' | t }}
                           {%- else -%}
@@ -246,6 +249,9 @@
                           class="spin opacity-0 pointer-none icon-load absolute"
                         >
                           <use href="#icon-load"></use>
+                        </svg>
+                        <svg width="16" height="16" class="hidden-md" viewBox="0 0 16 16" fill="none">
+                          <use href="#icon-cart" />
                         </svg>
                       </button>
                     {%- endform -%}
