@@ -187,6 +187,9 @@ blockquote {
 .h-5 {
   height: 5px;
 }
+.h-30 {
+  height: 3rem;
+}
 .h-40 {
   height: 4rem;
 }
@@ -250,14 +253,14 @@ blockquote {
 .ps-5 {
   padding-inline-start: 5px;
 }
-.ps-15 {
-  padding-inline-start: 1.5rem;
+.ps-18 {
+  padding-inline-start: 1.8rem;
 }
 .ps-30 {
   padding-inline-start: 3rem;
 }
-.pe-12 {
-  padding-inline-end: 12px;
+.pe-18 {
+  padding-inline-end: 18px;
 }
 .pe-5 {
   padding-inline-end: 5px;
@@ -554,6 +557,9 @@ blockquote {
 :where(.border-inline-end) {
   border-inline-end: 1px solid var(--color-border);
 }
+.border-bottom-dashed {
+  border: 1px solid dashed;
+}
 .normal-case {
   text-transform: none;
 }
@@ -806,7 +812,13 @@ blockquote {
 .drawer {
   --delay: 0.05s;
 }
+.drawer-spacing {
+  padding: var(--padding-block, 1.2rem) var(--bs-gutter-x);
+}
 @media (min-width: 1025px) {
+  .drawer-spacing {
+    padding: var(--padding-block, 2.2rem) 4rem;
+  }
   .modal-inner {
     --transition: 0.35s;
     --timing-function: cubic-bezier(0.5, -0.03, 0.34, 0.83);

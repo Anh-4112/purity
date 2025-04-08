@@ -32,22 +32,25 @@
       class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
       aria-label="Close"
     >
-      <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-        <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="icon_zoom">
+        <use href="#icon-close" />
       </svg>
     </button>
     <div class="drawer__body h-full overflow-y-auto custom-scrollbar">
-      <div class="drawer__header">
-        <h2 class="drawer__heading">
+      <div class="drawer__header flex gap align-center drawer-spacing border-bottom" style="--gap: 6px">
+        <h2 class="drawer__heading h5">
           {{ 'sections.cart.title' | t }}
-          <span class="cart-count">
-            {%- if cart.item_count < 100 -%}
-              {{- cart.item_count -}}
-            {%- else -%}
-              ~
-            {%- endif -%}
-          </span>
         </h2>
+        <span
+          class="cart-count w-custom h-custom rounded-50 bg-custom fs-12 inline-flex content-center"
+          style="--custom-width: 2.3rem; --custom-height: 2.3rem;--bg-color-custom: var(--btn-primary-bg-color);"
+        >
+          {%- if cart.item_count < 100 -%}
+            {{- cart.item_count -}}
+          {%- else -%}
+            ~
+          {%- endif -%}
+        </span>
       </div>
       {%- if cart == empty -%}
         {% liquid
@@ -121,7 +124,7 @@
         {% liquid
           assign total_price = cart.total_price | times: 1
         %}
-        <div class="cart-drawer-inner">
+        <div class="cart-drawer-inner drawer-spacing">
           {%- if show_free_shipping_message and free_minimum_amount -%}
             <div class="free-shipping-bar">
               {% liquid
@@ -164,9 +167,9 @@
                           id="CartDrawer-Item-{{ item.index | plus: 1 }}"
                           class="cart-item product__item"
                         >
-                          <div class="cart-item_inner">
+                          <div class="cart-item_inner flex gap-20 pb-20 mb-20 border-bottom-dashed">
                             {% if item.image %}
-                              <div class="cart-item__media">
+                              <div class="cart-item__media flex-auto w-custom" style="--custom-width: 10rem;">
                                 {%- liquid
                                   assign ratio = ''
                                   if theme_st.product_image_ratio != 'adapt'
@@ -181,10 +184,15 @@
                                   endif
                                 -%}
                                 <div
-                                  class="banner__media rounded align-self-start"
+                                  class="banner__media rounded-10 align-self-start"
                                   style="--aspect-ratio: {{ ratio }}"
                                 >
-                                  <a href="{{ item.url }}" class="cart-item__link" aria-hidden="true">
+                                  <a
+                                    href="{{ item.url }}"
+                                    class="cart-item__link word-break"
+                                    aria-hidden="true"
+                                    arial-label="{{ item.product.title | escape }}"
+                                  >
                                     <img
                                       class="cart-item__image"
                                       src="{{ item.image | image_url: width: 300 }}"
@@ -197,155 +205,175 @@
                                 </div>
                               </div>
                             {% endif %}
-                            <div class="cart-item__details">
-                              <div class="cart-item__details-info">
-                                <div class="cart-item-info">
-                                  <a href="{{ item.url }}">
+                            <div class="cart-item__details-info flex-1 flex column">
+                              <div
+                                class="cart-item-info heading-style"
+                                arial-label=" {{- item.product.title | escape -}}"
+                              >
+                                <div class="flex gap-10 align-center space-between">
+                                  <a
+                                    href="{{ item.url }}"
+                                    class="block word-break lh-normal"
+                                    arial-label="{{ item.product.title | escape }}"
+                                  >
                                     {{- item.product.title | escape -}}
                                   </a>
-                                  {%- if item.product.has_only_default_variant == false
-                                    or item.properties.size != 0
-                                    or item.selling_plan_allocation != null
-                                  -%}
-                                    <div class="product_option-cart">
-                                      {%- if item.product.has_only_default_variant == false -%}
-                                        {%- for option in item.options_with_values -%}
-                                          <div class="product-option">
-                                            {{ option.name }}: {{ option.value -}}
-                                            {%- unless forloop.last %} / {% endunless %}
-                                          </div>
-                                        {%- endfor -%}
-                                      {%- endif -%}
-
-                                      {%- for property in item.properties -%}
-                                        {%- assign property_first_char = property.first | slice: 0 -%}
-                                        {%- if property.last != blank and property_first_char != '_' -%}
-                                          <div class="product-option">
-                                            {%- if property.last contains '/uploads/' -%}
-                                              <a
-                                                href="{{ property.last }}"
-                                                class="link"
-                                                target="_blank"
-                                                aria-describedby="a11y-new-window-message"
-                                              >
-                                                {{ property.last | split: '/' | last }}
-                                              </a>
-                                            {%- else -%}
-                                              {{ property.last }}
-                                            {%- endif -%}
-                                          </div>
-                                        {%- endif -%}
-                                      {%- endfor -%}
-                                    </div>
-                                    <p class="product-option">
-                                      {{ item.selling_plan_allocation.selling_plan.name }}
-                                    </p>
-                                  {%- endif -%}
-                                  {%- if item.original_price != item.final_price -%}
-                                    <div class="cart-item__discounted-prices">
-                                      <span class="visually-hidden">
-                                        {{ 'products.product.price.regular_price' | t }}
-                                      </span>
-                                      <s class="cart-item__old-price product-option">
-                                        {{- item.original_price | money -}}
-                                      </s>
-                                      <span class="visually-hidden">
-                                        {{ 'products.product.price.sale_price' | t }}
-                                      </span>
-                                      <strong class="cart-item__final-price product-option">
-                                        {{ item.final_price | money }}
-                                      </strong>
-                                    </div>
-                                  {%- else -%}
-                                    <div class="heading-color lh-normal">
-                                      {{ item.original_price | money }}
-                                    </div>
-                                  {%- endif -%}
-                                  <ul
-                                    class="discounts list-unstyled"
-                                    role="list"
-                                    aria-label="{{ 'customer.order.discount' | t }}"
-                                  >
-                                    {%- for discount in item.discounts -%}
-                                      <li class="discounts__discount">
-                                        {{ discount.title }}
-                                      </li>
-                                    {%- endfor -%}
-                                  </ul>
-                                </div>
-                                <div class="cart-item__quantity-wrapper">
-                                  <label class="visually-hidden" for="Drawer-quantity-{{ item.index | plus: 1 }}">
-                                    {{- 'products.product.quantity.label' | t -}}
-                                  </label>
-                                  <quantity-input class="quantity cart-quantity">
-                                    <button
-                                      class="quantity__button"
-                                      name="minus"
-                                      type="button"
-                                    >
-                                      <span class="visually-hidden border-0 p-0 text-center">
-                                        {{-
-                                          'products.product.quantity.decrease'
-                                          | t: product: item.product.title
-                                          | escape
-                                        -}}
-                                      </span>
-                                    </button>
-                                    <input
-                                      class="quantity__input border-0 p-0 text-center w-custom"
-                                      type="number"
-                                      style="--width: 5.4rem;--input-height: 38px;"
-                                      type="number"
-                                      data-quantity-variant-id="{{ item.variant.id }}"
-                                      name="updates[]"
-                                      value="{{ item.quantity }}"
-                                      {% # theme-check-disable %}
-                                      data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
-                                      min="{{ item.variant.quantity_rule.min }}"
-                                      {% if item.variant.quantity_rule.max != null %}
-                                        max="{{ item.variant.quantity_rule.max }}"
-                                      {% endif %}
-                                      step="{{ item.variant.quantity_rule.increment }}"
-                                      {% # theme-check-enable %}
-                                      aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
-                                      id="Drawer-quantity-{{ item.index | plus: 1 }}"
-                                      data-index="{{ item.index | plus: 1 }}"
-                                    >
-                                    <button
-                                      class="quantity__button"
-                                      name="plus"
-                                      type="button"
-                                    >
-                                      <span class="visually-hidden">
-                                        {{-
-                                          'products.product.quantity.increase'
-                                          | t: product: item.product.title
-                                          | escape
-                                        -}}
-                                      </span>
-                                    </button>
-                                  </quantity-input>
                                   <cart-remove-button
                                     id="CartDrawer-Remove-{{ item.index | plus: 1 }}"
+                                    class="inline-flex content-center w-30 h-30 pointer"
                                     data-index="{{ item.index | plus: 1 }}"
                                   >
                                     <button
                                       type="button"
-                                      class="btn-remove-cart-item"
+                                      class="btn-remove-cart-item btn-reset w-full h-full pointer grey-color"
                                       aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
                                     >
-                                      <span class="capitalize currentColor lh-1">
+                                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="icon_zoom">
+                                        <use href="#icon-close" />
+                                      </svg>
+                                      <span class="capitalize currentColor lh-1 visually-hidden">
                                         {{- 'sections.cart.remove_title' | t: title: item.title -}}
                                       </span>
                                     </button>
                                   </cart-remove-button>
-                                  <div
-                                    id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}"
-                                    class="cart-item__error w-full relative"
-                                    role="alert"
-                                  >
-                                    <small class="cart-item__error-text error-messeage"></small>
+                                </div>
+                                {%- if item.product.has_only_default_variant == false
+                                  or item.properties.size != 0
+                                  or item.selling_plan_allocation != null
+                                -%}
+                                  <div class="product_option-cart">
+                                    {%- if item.product.has_only_default_variant == false -%}
+                                      {%- for option in item.options_with_values -%}
+                                        <div class="product-option">
+                                          {{ option.name }}: {{ option.value -}}
+                                          {%- unless forloop.last %} / {% endunless %}
+                                        </div>
+                                      {%- endfor -%}
+                                    {%- endif -%}
+
+                                    {%- for property in item.properties -%}
+                                      {%- assign property_first_char = property.first | slice: 0 -%}
+                                      {%- if property.last != blank and property_first_char != '_' -%}
+                                        <div class="product-option">
+                                          {%- if property.last contains '/uploads/' -%}
+                                            <a
+                                              href="{{ property.last }}"
+                                              class="link"
+                                              target="_blank"
+                                              aria-describedby="a11y-new-window-message"
+                                            >
+                                              {{ property.last | split: '/' | last }}
+                                            </a>
+                                          {%- else -%}
+                                            {{ property.last }}
+                                          {%- endif -%}
+                                        </div>
+                                      {%- endif -%}
+                                    {%- endfor -%}
                                   </div>
+                                  <p class="product-option">
+                                    {{ item.selling_plan_allocation.selling_plan.name }}
+                                  </p>
+                                {%- endif -%}
+                                {%- if item.original_price != item.final_price -%}
+                                  <div class="cart-item__discounted-prices">
+                                    <span class="visually-hidden">
+                                      {{ 'products.product.price.regular_price' | t }}
+                                    </span>
+                                    <s class="cart-item__old-price product-option">
+                                      {{- item.original_price | money -}}
+                                    </s>
+                                    <span class="visually-hidden">
+                                      {{ 'products.product.price.sale_price' | t }}
+                                    </span>
+                                    <strong class="cart-item__final-price product-option">
+                                      {{ item.final_price | money }}
+                                    </strong>
+                                  </div>
+                                {%- else -%}
+                                  <div class="heading-color lh-normal mt-5">
+                                    {{ item.original_price | money }}
+                                  </div>
+                                {%- endif -%}
+                                <ul
+                                  class="discounts list-unstyled"
+                                  role="list"
+                                  aria-label="{{ 'customer.order.discount' | t }}"
+                                >
+                                  {%- for discount in item.discounts -%}
+                                    <li class="discounts__discount">
+                                      {{ discount.title }}
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                              <div class="cart-item__quantity-wrapper flex grow-1 bottom-left w-full fs-small mt-10">
+                                <label class="visually-hidden" for="Drawer-quantity-{{ item.index | plus: 1 }}">
+                                  {{- 'products.product.quantity.label' | t -}}
+                                </label>
+                                <quantity-input
+                                  class="quantity cart-quantity input-rounded flex input-style px-0"
+                                  style="--input-height: 40px;"
+                                >
+                                  <button
+                                    class="quantity__button flex align-center btn-reset ps-18 pe-10 pointer"
+                                    name="minus"
+                                    type="button"
+                                  >
+                                    <span class="visually-hidden border-0 p-0 text-center">
+                                      {{-
+                                        'products.product.quantity.decrease'
+                                        | t: product: item.product.title
+                                        | escape
+                                      -}}
+                                    </span>
+                                    <svg width="10" height="2" viewBox="0 0 10 2" fill="none">
+                                      <use href="#icon-minus"></use>
+                                    </svg>
+                                  </button>
+                                  <input
+                                    class="quantity__input border-0 p-0 text-center w-custom fs-small"
+                                    type="number"
+                                    style="--custom-width: 2.2rem;--input-height: 38px;"
+                                    type="number"
+                                    data-quantity-variant-id="{{ item.variant.id }}"
+                                    name="updates[]"
+                                    value="{{ item.quantity }}"
+                                    {% # theme-check-disable %}
+                                    data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+                                    min="{{ item.variant.quantity_rule.min }}"
+                                    {% if item.variant.quantity_rule.max != null %}
+                                      max="{{ item.variant.quantity_rule.max }}"
+                                    {% endif %}
+                                    step="{{ item.variant.quantity_rule.increment }}"
+                                    {% # theme-check-enable %}
+                                    aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                                    id="Drawer-quantity-{{ item.index | plus: 1 }}"
+                                    data-index="{{ item.index | plus: 1 }}"
+                                  >
+                                  <button
+                                    class="quantity__button flex align-center btn-reset ps-10 pe-18 pointer"
+                                    name="plus"
+                                    type="button"
+                                  >
+                                    <span class="visually-hidden">
+                                      {{-
+                                        'products.product.quantity.increase'
+                                        | t: product: item.product.title
+                                        | escape
+                                      -}}
+                                    </span>
+                                    <svg width="10" height="10" viewBox="0 0 10 12" fill="none">
+                                      <use href="#icon-plus"></use>
+                                    </svg>
+                                  </button>
+                                </quantity-input>
+                                <div
+                                  id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}"
+                                  class="cart-item__error w-full relative"
+                                  role="alert"
+                                >
+                                  <small class="cart-item__error-text error-messeage"></small>
                                 </div>
                               </div>
                             </div>
