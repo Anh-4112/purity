@@ -6,6 +6,14 @@
   --color-swatch-width: 5rem;
   --color-swatch-height: 5rem;
 }
+
+.product-detail__information
+  :is(
+    .color-swatch-label:hover,
+    input[type="radio"]:checked + .color-swatch-label
+  ):before {
+  --shadow-position: 3px;
+}
 .shopify-block:has(> *:empty),
 .product-detail__information .shopify-block:empty {
   display: none;

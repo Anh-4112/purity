@@ -53,9 +53,10 @@
   height: 1px;
   width: 1px;
 }
-.color-swatch-label {
-  width: var(--color-swatch-width, 3rem);
-  height: var(--color-swatch-height, 3rem);
+.color-swatch-label,
+.color-variant-input {
+  width: var(--color-swatch-width, 2.6rem);
+  height: var(--color-swatch-height, 2.6rem);
   min-width: unset;
   min-height: unset;
   padding: 0;
@@ -68,11 +69,9 @@
   background-position: center;
   border-radius: var(--radius, 50%);
 }
-.color-swatch-label.swatch-image {
+.swatch-image {
   background: var(--swatch-background-image, var(--swatch-background))
     center/cover no-repeat;
-  --color-swatch-width: 5rem;
-  --color-swatch-height: 5rem;
 }
 .color-swatch-label::before {
   content: "";
@@ -98,13 +97,13 @@
     .color-swatch-label:hover,
     input[type="radio"]:checked + .color-swatch-label
   ):before {
-  --shadow-position: 3px;
+  --shadow-position: 5px;
 }
-.option-disabled + label:not(.color-swatch-label) {
+variant-input label.disable:not(.color-swatch-label) {
   cursor: not-allowed;
   background-color: #f9f9f9;
 }
-.option-disabled + label:after {
+variant-input label.disable:after {
   content: "";
   position: absolute;
   top: 0;

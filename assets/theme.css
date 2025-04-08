@@ -94,17 +94,11 @@ blockquote {
 .fs-big-1 {
   font-size: calc(var(--body-font-size) + 1px);
 }
-.fs-0 {
-  font-size: 0;
-}
 .fs-11 {
   font-size: 1.1rem;
 }
 .fs-12 {
   font-size: 1.2rem;
-}
-.fs-13 {
-  font-size: 1.3rem;
 }
 .fs-16 {
   font-size: 1.6rem;
@@ -528,9 +522,6 @@ blockquote {
 .ms-5 {
   margin-inline-start: 5px;
 }
-.ms-10 {
-  margin-inline-start: 1rem;
-}
 .ms-15 {
   margin-inline-start: 1.5rem;
 }
@@ -741,9 +732,6 @@ blockquote {
 .rounded-0 {
   border-radius: 0;
 }
-.rounded-3 {
-  border-radius: 3px;
-}
 .top-rounded {
   border-radius: var(--img-rounded) var(--img-rounded) 0 0;
 }
@@ -783,7 +771,7 @@ blockquote {
     var(--color-heading) 0%,
     var(--color-heading) 98%
   );
-  background-size: 0 var(--height, 1px);
+  background-size: var(--bg-size, 0) var(--height, 1px);
   background-repeat: no-repeat;
   background-position: left 100%;
   transition: 0.3s;
@@ -1503,9 +1491,6 @@ modal-popup :is(.modal-overlay) {
   :where(.btn-outline):hover {
     --btn-color: var(--btn-primary-color);
   }
-  .btn-link:hover::before {
-    background-color: var(--btn-primary-hover-color);
-  }
   .btn-text {
     transition: color 0.5s cubic-bezier(0.3, 1, 0.3, 1);
     transition-delay: 0.1s;
@@ -1526,23 +1511,8 @@ modal-popup :is(.modal-overlay) {
   .smooth-padding-hover:hover {
     padding-inline-start: 1rem;
   }
-  :is(.border-animation, .btn-link):hover {
+  :is(.border-animation):hover {
     animation: 1s infinite borderAnimation;
-  }
-  .underline-animation {
-    position: relative;
-    background-image: linear-gradient(
-      to right,
-      var(--color-heading) 0%,
-      var(--color-heading) 98%
-    );
-    background-size: 0 1px;
-    background-repeat: no-repeat;
-    background-position: left 100%;
-    transition: 0.3s;
-  }
-  .underline-animation:hover {
-    background-size: 100% 1px;
   }
   .inside-out-effect:before {
     content: "";
@@ -1563,7 +1533,8 @@ modal-popup :is(.modal-overlay) {
     transition: 0.4s;
     will-change: transform;
   }
-  .hover_zoom .hover-effect:hover :is(img, .placeholder-image, picture), .button-hover-zoom:hover {
+  .hover_zoom .hover-effect:hover :is(img, .placeholder-image, picture),
+  .button-hover-zoom:hover {
     transform: var(--zoom-transform, scale(1.06));
   }
   .hover_fade .hover-effect:hover :is(img, .placeholder-image, picture) {
