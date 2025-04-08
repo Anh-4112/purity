@@ -1,11 +1,18 @@
 {%- liquid
   assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 <div
-  class="customer account section"
+  class="customer account section {{ section_width }}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div>
@@ -151,6 +158,30 @@
     {
       "type": "header",
       "content": "t:sections.all.general"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "fix_width",
+          "label": "t:sections.all.layout.fix_width"
+        },
+        {
+          "value": "stretch_width",
+          "label": "t:sections.all.layout.stretch_width"
+        },
+        {
+          "value": "full_width",
+          "label": "t:sections.all.layout.full_width"
+        }
+      ],
+      "default": "fix_width",
+      "label": "t:sections.all.layout.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
     },
     {
       "type": "range",
