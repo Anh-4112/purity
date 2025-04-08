@@ -1,3 +1,4 @@
+{{ 'banner.css' | asset_url | stylesheet_tag }}
 {% liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -6,15 +7,6 @@
     assign section_width = 'full-width px-20'
   else
     assign section_width = 'fluid_container'
-  endif
-
-  assign column_gap_slide = 0
-  if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-  elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-  elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
   endif
 
   assign heading_size = section_st.heading_size
@@ -30,12 +22,8 @@
   {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 
-{%- capture col_style -%}
-    {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
-{%- endcapture -%}
-
 <div
-  class="section__multi-content overflow-hidden"
+  class="section__multi-content overflow-hidden section"
   style="{{ style | strip | strip_newlines }}"
 >
   <div
@@ -57,7 +45,9 @@
         {%- endif -%}
       </div>
     {%- endif -%}
-    <div class="promotion-banner__blocks relative flex flex-col-custom wrap">
+    <div
+      class="promotion-banner__blocks relative"
+    >
       {% comment %}
         {%- if section_st.enable_carousel_mobile -%}
           <multi-content
@@ -70,8 +60,7 @@
         {%- endif -%}
       {% endcomment %}
       <div
-        class="promotion-banner__blocks flex wrap w-full"
-        style="{{ col_style | strip | strip_newlines }}"
+        class="promotion-banner__blocks flex column flex-md-row wrap cols row-gap gap-{{ section_st.column_gap }}"
       >
         {% content_for 'blocks' %}
       </div>
@@ -88,7 +77,7 @@
 {
   "name": "t:sections.multi_content.name",
   "tag": "section",
-  "class": "section",
+  "class": "multi-content",
   "disabled_on": {
     "groups": ["header", "footer", "custom.overlay"]
   },

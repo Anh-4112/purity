@@ -1551,7 +1551,7 @@ modal-popup :is(.modal-overlay) {
     transition: 0.4s;
     will-change: transform;
   }
-  .hover_zoom .hover-effect:hover :is(img, .placeholder-image, picture) {
+  .hover_zoom .hover-effect:hover :is(img, .placeholder-image, picture), .button-hover-zoom:hover {
     transform: var(--zoom-transform, scale(1.06));
   }
   .hover_fade .hover-effect:hover :is(img, .placeholder-image, picture) {
@@ -1628,7 +1628,7 @@ modal-popup :is(.modal-overlay) {
   }
   .tooltip-content {
     background: var(--color-dark);
-    color: var(--color-white);
+    color: rgb(var(--color-white));
     line-height: 1;
     max-width: 360px;
     z-index: 2;

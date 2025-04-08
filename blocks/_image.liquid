@@ -4,13 +4,11 @@
   assign image = block_st.image
 %}
 
-{% comment %}
-  {%- style -%}
-    #shopify-block-{{ block.id }} {
-      width: {{ block_st.width }};
-    }
-  {%- endstyle -%}
-{% endcomment %}
+{%- style -%}
+  #shopify-block-{{ block.id }} {
+    --col-width: {{ block_st.width }};
+  }
+{%- endstyle -%}
 
 <div class="multi-conten__block--image w-full h-full flex align-{{ block_st.vertical_alignment }}">
   <div
@@ -47,7 +45,7 @@
 {% schema %}
 {
   "name": "t:sections.all.image.label",
-  "class": "section__block",
+  "class": "section__block col-md-w-custom w-full col-md-w-custom-50",
   "settings": [
     {
       "type": "header",

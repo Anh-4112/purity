@@ -17,7 +17,11 @@
   endif
   assign radius_image_class = ''
   assign radius_content_class = ''
-  if column_gap_slide == 0 and section_st.background_color != 'rgba(0,0,0,0)' and section_st.background_color != 'transparent' and section_st.background_color != blank and section_st.background_color != '#fff' and section_st.background_color != '#ffffff'
+  assign has_custom_background = false
+  if section_st.background_color != "rgba(0,0,0,0)" and section_st.background_color != "transparent" and section_st.background_color != blank and section_st.background_color != "#fff" and section_st.background_color != "#ffffff"
+    assign has_custom_background = true
+  endif
+  if column_gap_slide == 0 and has_custom_background
     if section_st.image_desktop_position == 'left'
       assign radius_image_class = 'rounded-1025-left rounded-top-mb'
       assign radius_content_class = 'rounded-1025-right rounded-bottom-mb'
@@ -29,8 +33,8 @@
     assign radius_image_class = 'rounded'
     assign radius_content_class = 'rounded'
   endif
-  if section_st.background_color != 'rgba(0,0,0,0)' and section_st.background_color != 'transparent' and section_st.background_color != blank and section_st.background_color != '#fff' and section_st.background_color != '#ffffff'
-    assign padding_content_class = 'p-30'
+  if has_custom_background
+    assign padding_content_class = "p-30"
   else
     if column_gap_slide != 0
       assign padding_content_class = ''
@@ -77,28 +81,13 @@
         </div>
       </div>
       <div class="w-full col-1025-remaining flex text-{{ section_st.text_alignment }}">
-        {% if section_st.background_color != 'rgba(0,0,0,0)'
-          and section_st.background_color != 'transparent'
-          and section_st.background_color != blank
-          and section_st.background_color != '#fff'
-          and section_st.background_color != '#ffffff'
-        %}
-          <div
-            class="image-with-text__wrapper w-full flex bg-custom {{ radius_content_class }}"
-            style="--bg-color-custom: {{ section_st.background_color }};"
-          >
+        {% if has_custom_background %}
+          <div class="image-with-text__wrapper w-full flex bg-custom {{ radius_content_class }}" style="--bg-color-custom: {{ section_st.background_color }};">
         {% endif %}
         <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }}">
           {% content_for 'blocks' %}
         </div>
-        {% if section_st.background_color != 'rgba(0,0,0,0)'
-          and section_st.background_color != 'transparent'
-          and section_st.background_color != blank
-          and section_st.background_color != '#fff'
-          and section_st.background_color != '#ffffff'
-        %}
-          </div>
-        {% endif %}
+        {% if has_custom_background %}</div>{% endif %}
       </div>
     </div>
   </div>
