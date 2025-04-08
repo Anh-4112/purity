@@ -33,7 +33,7 @@ function initSlide(_this) {
       itemTablet = 3;
     }
   }
-  if (direction == "vertical" && autoHeight == false) {
+  if (direction == "vertical") {
     _this.style.maxHeight = _this.offsetHeight + "px";
   }
   new Swiper(_this, {
@@ -46,7 +46,6 @@ function initSlide(_this) {
     speed: speed,
     watchSlidesProgress: true,
     watchSlidesVisibility: true,
-    autoHeight: autoHeight,
     grid: {
       rows: row,
       fill: "row",
@@ -91,6 +90,23 @@ function initSlide(_this) {
           }
         }
       },
+      slideChange: function (swiper) {
+        const isAnnouncementBar = _this.closest('.section__announcement-bar') !== null;
+        if (isAnnouncementBar && autoHeight) {
+          const activeSlide = swiper.slides[swiper.activeIndex];
+          if (activeSlide) {
+            const contentElement = activeSlide.querySelector('.announcement-bar__content > div');
+            if (contentElement) {
+              const oldHeight = _this.style.maxHeight ? parseInt(_this.style.maxHeight) : 0;
+              const contentHeight = contentElement.offsetHeight;
+              if (oldHeight !== contentHeight) {
+                _this.style.transition = 'max-height 0.3s ease';
+                _this.style.maxHeight = `${contentHeight}px`;
+              }
+            }
+          }
+        }
+      }
     },
   });
 }

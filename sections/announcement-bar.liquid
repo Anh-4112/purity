@@ -94,8 +94,8 @@
           <div class="swiper-wrapper {% if section_st.uppercase %}uppercase {% endif %}fs-{{ scrolling_size }}">
             {%- for block in section.blocks -%}
               {% assign block_st = block.settings %}
-              <div class="swiper-slide announcement-bar__content flex wrap content-center mx-auto text-center">
-                {{ block_st.text }}
+              <div class="swiper-slide announcement-bar__content flex wrap content-center mx-auto text-center overflow-hidden">
+                <div class="announcement-bar__content-inner">{{ block_st.text }}</div>
               </div>
             {%- endfor -%}
           </div>
