@@ -83,3 +83,24 @@ class CustomerAddresses {
     }
   };
 }
+
+class ShowPassWord extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    this.addEventListener('click', this.onClick.bind(this));
+  }
+  onClick() {
+    var input = this.closest('.field').querySelector('input');
+    if (input.type === 'password') {
+      input.type = 'text';
+      this.classList.add('text');
+    } else {
+      input.type = 'password';
+      this.classList.remove('text');
+    }
+  }
+}
+customElements.define('show-pass-word', ShowPassWord);
