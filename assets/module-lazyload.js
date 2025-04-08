@@ -1,4 +1,4 @@
-export class LazyLoad {
+export class LazyLoadEventHover {
   constructor(e) {
     (this.triggerEventsJs = e),
       (this.eventOptionsJs = { passive: !0 }),
@@ -101,7 +101,7 @@ export class LazyLoad {
     return new Promise((e) => requestAnimationFrame(e));
   }
   static run() {
-    const e = new LazyLoad([
+    const e = new LazyLoadEventHover([
       "keydown",
       "mousemove",
       "touchmove",
@@ -110,5 +110,64 @@ export class LazyLoad {
       "wheel",
     ]);
     e._addUserInteractionListenerJs(e);
+  }
+}
+
+export class LazyLoader {
+  constructor(selector, rootMargin = "200px") {
+    this.lazyImages = document.querySelectorAll(selector);
+    this.rootMargin = rootMargin;
+    this.observer = null;
+
+    this.init();
+  }
+
+  init() {
+    this.createObserver();
+    this.observeImages();
+    this.addScrollListener();
+  }
+
+  createObserver() {
+    this.observer = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const imgElement = entry.target;
+            const imgSrcset = imgElement.dataset.srcset;
+
+            if (imgSrcset) {
+              imgElement.setAttribute("srcset", imgSrcset);
+              imgElement.removeAttribute("data-srcset");
+              imgElement.classList.add("image-lazy-loaded");
+              observer.unobserve(imgElement);
+            }
+          }
+        });
+      },
+      {
+        rootMargin: this.rootMargin,
+      }
+    );
+  }
+
+  observeImages() {
+    this.lazyImages.forEach((imgElement) => {
+      this.observer.observe(imgElement);
+    });
+  }
+
+  addScrollListener() {
+    window.addEventListener("scroll", () => {
+      this.lazyImages.forEach((imgElement) => {
+        const imgSrcset = imgElement.dataset.srcset;
+
+        if (imgSrcset) {
+          imgElement.setAttribute("srcset", imgSrcset);
+          imgElement.removeAttribute("data-srcset");
+          imgElement.classList.add("image-lazy-loaded");
+        }
+      });
+    });
   }
 }
