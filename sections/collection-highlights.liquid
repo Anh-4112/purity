@@ -24,13 +24,15 @@
   elsif heading_size == 'large'
     assign header_size = 'fs-medium'
   endif
+
+  assign highlight_collection_width = section_st.highlight_collection_width
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
   {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- capture col_style -%}
-  {% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
+  --col-width-custom: {{ highlight_collection_width }}%;{% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
 {%- endcapture -%}
 <div
   class="section__collection-highlight overflow-hidden"
@@ -38,7 +40,23 @@
 >
   <div class="{{ section_width }}">
     {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
-      <div class="section-header text-{{ section_st.alignment }}"></div>
+      <div class="section-header section-header__in-section hidden-md d-block text-{{ section_st.alignment }}">
+        {%- if section_st.subheading != blank -%}
+          <div class="section-subheading">
+            {{ section_st.subheading }}
+          </div>
+        {%- endif -%}
+        {%- if section_st.title != blank -%}
+          <h2 class="block section-heading {{ header_size }}">
+            {{ section_st.title }}
+          </h2>
+        {%- endif -%}
+        {%- if section_st.description != blank -%}
+          <div class="section-description">
+            {{ section_st.description }}
+          </div>
+        {%- endif -%}
+      </div>
     {%- endif -%}
     <div class="collection-highlight__blocks relative">
       <div
