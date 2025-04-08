@@ -4,7 +4,7 @@
     | where: 'pick_up_enabled', true
   -%}
   <pickup-availability
-    class="product__pickup-availabilities rounded border p-20 block"
+    class="product__pickup-availabilities"
     {% if product.selected_or_first_available_variant.available and pick_up_availabilities.size > 0 %}
       available
     {% endif %}
@@ -29,7 +29,7 @@
 {% schema %}
 {
   "name": "t:sections.all.product_setting.pickup_avaiability.name",
-  "class": "block-product__pickup mb-25",
+  "class": "block-product__pickup mb-25 slideIn-animate",
   "presets": [{ "name": "t:sections.all.product_setting.pickup_avaiability.name" }]
 }
 {% endschema %}

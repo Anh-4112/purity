@@ -1,4 +1,5 @@
 import { SlideSection } from "module-slide";
+import { LazyLoader } from "module-lazyLoad";
 
 document.addEventListener("DOMContentLoaded", function () {
   function addProductEntry(productJson, storedProducts) {
@@ -56,6 +57,7 @@ class ProductRecommendations extends HTMLElement {
           if (recommendations && recommendations.innerHTML.trim().length) {
             this.innerHTML = recommendations.innerHTML;
           }
+          new LazyLoader(".image-lazy-load");
         })
         .finally(() => {})
         .catch((e) => {

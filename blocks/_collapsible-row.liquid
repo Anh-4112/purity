@@ -4,18 +4,20 @@
   assign collapsible_page = block.settings.page
 -%}
 <details class="collapsible-row" is="collapsible-row">
-  <summary class="collapsible-row__summary">
-    <div class="collapsible-heading">{{- heading | default: page.title -}}</div>
-    <svg class="icon icon-down transition-short" width="10" height="6">
-      <use href="#icon-arrow-down"></use>
-    </svg>
+  <summary class="collapsible-row__summary py-24 border-bottom">
+    <div class="collapsible-heading h6">{{- heading | default: page.title -}}</div>
+    <span class="open-children-toggle transition">
+      <span class="icon_plus-animation"> </span>
+    </span>
   </summary>
-  <div class="collapsible-row__content">
-    {% if collapsible_page != null and pages[collapsible_page].content %}
-      {{ pages[collapsible_page].content }}
-    {% else %}
-      {{ content }}
-    {% endif %}
+  <div class="collapsible-row__content overflow-hidden">
+    <div class="faq_content-inner mt-15">
+      {% if collapsible_page != null and pages[collapsible_page].content %}
+        {{ pages[collapsible_page].content }}
+      {% else %}
+        {{ content }}
+      {% endif %}
+    </div>
   </div>
 </details>
 {% schema %}
@@ -33,7 +35,8 @@
     {
       "type": "richtext",
       "id": "content",
-      "label": "t:sections.all.product_setting.collapsible_row.settings.content"
+      "label": "t:sections.all.product_setting.collapsible_row.settings.content",
+      "default": "<p>Collapsible content</p>"
     },
     {
       "type": "page",

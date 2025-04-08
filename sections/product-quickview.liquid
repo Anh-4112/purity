@@ -24,13 +24,15 @@
   >
 {% endif %}
 <quickview-drawer
-  id="QuickView-Drawer"
+  id="Product-{{ section.id }}"
+  data-section-id="{{ section.id }}"
   class="modal pointer-none active-modal-js"
+  style="--drawer-width: 82rem;--col-width: clamp(25%, 12vw, 300px);"
   tabindex="0"
   role="dialog"
 >
   <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-  <div class="modal-inner visibility-hidden w-full drawer-right fixed right-0 z-15 inset-y-0 w-full">
+  <div class="modal-inner invisible drawer drawer-right fixed right-0 z-15 inset-y-0 bg-white w-full">
     <button
       is="button-close-model"
       class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
@@ -41,12 +43,9 @@
       </svg>
     </button>
     <div class="drawer__body h-full overflow-y-auto custom-scrollbar">
-      <div class="quickview-product h-full flex wrap gap-20">
+      <div class="quickview-product h-full flex wrap gap-20 px-20">
         {% if product.media.size > 0 %}
-          <div
-            class="product-detail__media model_media bg-white p-20 w-full fixed-md invisible-md w-custom inset-0 z--1"
-            style="--custom-width: 26rem;"
-          >
+          <div class="product-detail__media w-full col-md-w-custom py-20">
             {% liquid
               assign option_color_name = 'Color'
               if color_swatch_trigger != blank
@@ -128,7 +127,7 @@
             %}
           </div>
         {% endif %}
-        <div class="product-detail__information w-full bg-white p-20">
+        <div class="product-detail__information w-full p-20{% if product.media.size > 0 %} col-md-remaining{% endif %}">
           <div class="sticky top-20">
             {% content_for 'blocks', closest.product: product %}
             <a
@@ -138,7 +137,7 @@
                 href="{{ product.url }}"
               {% endif %}
               aria-label="{{ 'products.product.view_full_details' | t }}"
-              class="mt-25 product-singe__view-all-button heading_weight heading-color inline-flex align-center gap-5 no-underline lh-normal"
+              class="slideIn-animate mt-25 product-singe__view-all-button heading_weight heading-color inline-flex align-center gap-5 no-underline lh-normal"
             >
               {{ 'products.product.view_full_details' | t }}
               {% if settings.rtl %}
@@ -155,31 +154,31 @@
         </div>
       </div>
     </div>
+    {%- unless product.has_only_default_variant -%}
+      <script type="application/json" class="productVariantsQty">
+        [
+        {%- for variant in product.variants -%}
+          {%- assign op = variant.option1 | replace: '"', '\"' -%}
+          {%- liquid
+              assign id = '"id":' | append: variant.id
+              assign option = '"option":"' | append: op | append: '"'
+              assign quantity = '"qty":' | append: variant.inventory_quantity
+              assign available = '"available":' | append: variant.available
+              assign mamagement = '"mamagement":"' | append: variant.inventory_management | append: '"'
+          -%}
+          { {{ id }},{{ option }},{{ quantity }},{{ available }},{{ mamagement }}}
+          {%- unless forloop.last -%},{%- endunless forloop.last -%}
+        {%- endfor -%}
+        ]
+      </script>
+    {%- endunless -%}
+    {%- if first_3d_model -%}
+      <script type="application/json" id="ProductJSON-{{ product.id }}">
+        {{ product.media | where: 'media_type', 'model' | json }}
+      </script>
+      <script src="{{ 'product-model.js' | asset_url }}" defer></script>
+    {% endif %}
   </div>
-  {%- unless product.has_only_default_variant -%}
-    <script type="application/json" class="productVariantsQty">
-      [
-      {%- for variant in product.variants -%}
-        {%- assign op = variant.option1 | replace: '"', '\"' -%}
-        {%- liquid
-            assign id = '"id":' | append: variant.id
-            assign option = '"option":"' | append: op | append: '"'
-            assign quantity = '"qty":' | append: variant.inventory_quantity
-            assign available = '"available":' | append: variant.available
-            assign mamagement = '"mamagement":"' | append: variant.inventory_management | append: '"'
-        -%}
-        { {{ id }},{{ option }},{{ quantity }},{{ available }},{{ mamagement }}}
-        {%- unless forloop.last -%},{%- endunless forloop.last -%}
-      {%- endfor -%}
-      ]
-    </script>
-  {%- endunless -%}
-  {%- if first_3d_model -%}
-    <script type="application/json" id="ProductJSON-{{ product.id }}">
-      {{ product.media | where: 'media_type', 'model' | json }}
-    </script>
-    <script src="{{ 'product-model.js' | asset_url }}" defer></script>
-  {% endif %}
 </quickview-drawer>
 {% schema %}
 {

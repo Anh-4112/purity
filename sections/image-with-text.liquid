@@ -23,23 +23,23 @@
   endif
   if column_gap_slide == 0 and has_custom_background
     if section_st.image_desktop_position == 'left'
-      assign radius_image_class = "rounded-1025-left rounded-top-mb"
-      assign radius_content_class = "rounded-1025-right rounded-bottom-mb"
+      assign radius_image_class = 'rounded-1025-left rounded-top-mb'
+      assign radius_content_class = 'rounded-1025-right rounded-bottom-mb'
     else
-      assign radius_image_class = "rounded-1025-right rounded-top-mb"
-      assign radius_content_class = "rounded-1025-left rounded-bottom-mb"
+      assign radius_image_class = 'rounded-1025-right rounded-top-mb'
+      assign radius_content_class = 'rounded-1025-left rounded-bottom-mb'
     endif
   else
-    assign radius_image_class = "rounded"
-    assign radius_content_class = "rounded"
+    assign radius_image_class = 'rounded'
+    assign radius_content_class = 'rounded'
   endif
   if has_custom_background
     assign padding_content_class = "p-30"
   else
     if column_gap_slide != 0
-      assign padding_content_class = ""
+      assign padding_content_class = ''
     else
-      assign padding_content_class = "image-with-text__container"
+      assign padding_content_class = 'image-with-text__container'
     endif
   endif
 -%}
@@ -48,7 +48,7 @@
   {%- endcapture -%}
 
 {%- capture col_style -%}
-    {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--gap: {{  column_gap_slide }}px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
+    {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap: {{  column_gap_slide }}px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
 {%- endcapture -%}
 
 <div

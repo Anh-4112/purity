@@ -162,7 +162,7 @@
                             {{- block_st.heading | default: block_st.menu.title | escape -}}
                           </span>
                           {%- if block_st.menu != blank -%}
-                            <svg class="icon icon-down transition-short hidden-md" width="10" height="6">
+                            <svg class="icon icon-down icon-rotate transition-short hidden-md" width="10" height="6">
                               <use href="#icon-arrow-down"></use>
                             </svg>
                           {%- endif -%}
@@ -193,7 +193,7 @@
                           <span>
                             {{ block_st.store_heading | escape }}
                           </span>
-                          <svg class="icon icon-down transition-short hidden-md" width="10" height="6">
+                          <svg class="icon icon-down icon-rotate transition-short hidden-md" width="10" height="6">
                             <use href="#icon-arrow-down"></use>
                           </svg>
                         </h6>
@@ -291,7 +291,7 @@
             {%- if payment_enable -%}
               <div class="footer__payment mb-15">
                 <ul
-                  class="list-payment h-custom list-unstyled flex justify-center justify-end-1025 gap-5"
+                  class="list-payment h-custom list-unstyled flex wrap justify-center justify-end-1025 gap-5"
                   style="--custom-height: 22px;"
                 >
                   {%- for type in shop.enabled_payment_types -%}

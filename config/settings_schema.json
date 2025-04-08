@@ -507,6 +507,15 @@
         "default": true
       },
       {
+        "type": "range",
+        "id": "color_limit",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "t:settings_schema.color_swatches.settings.color_limit.label",
+        "default": 4
+      },
+      {
         "type": "checkbox",
         "id": "product_show_vendor",
         "label": "t:settings_schema.product.settings.show_vendor",
@@ -739,15 +748,6 @@
         ]
       },
       {
-        "type": "range",
-        "id": "color_limit",
-        "min": 1,
-        "max": 6,
-        "step": 1,
-        "label": "t:settings_schema.color_swatches.settings.color_limit.label",
-        "default": 4
-      },
-      {
         "type": "select",
         "id": "color_swatch_shape",
         "label": "t:settings_schema.color_swatches.settings.color_swatch_shape.label",
@@ -814,10 +814,116 @@
         "default": "shopping_bag"
       },
       {
+        "type": "header",
+        "content": "t:settings_schema.cart.settings.free_shipping.label"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:settings_schema.cart.settings.free_shipping.paragraph"
+      },
+      {
+        "type": "textarea",
+        "id": "free_shipping_message",
+        "label": "t:settings_schema.cart.settings.free_shipping.message.label",
+        "default": "Spend {{ amount }} more and get free shipping!",
+        "info": "t:settings_schema.cart.settings.free_shipping.message.info"
+      },
+      {
+        "type": "number",
+        "id": "free_minimum_amount",
+        "label": "t:settings_schema.cart.settings.free_shipping.minimum_amount.label",
+        "info": "t:settings_schema.cart.settings.free_shipping.minimum_amount.info",
+        "default": 100
+      },
+      {
+        "type": "header",
+        "content": "t:settings_schema.cart.settings.product_recommendations.label"
+      },
+      {
         "type": "checkbox",
-        "id": "show_cart_note",
-        "label": "t:settings_schema.cart.settings.show_cart_note.label",
+        "id": "enable_product_recommendations",
+        "label": "t:settings_schema.cart.settings.product_recommendations.enable_product_recommendations",
+        "info": "t:settings_schema.cart.settings.product_recommendations.enable_product_recommendations_info",
         "default": true
+      },
+      {
+        "type": "text",
+        "id": "product_recommendations_heading",
+        "default": "You may also like",
+        "label": "t:settings_schema.cart.settings.product_recommendations.heading"
+      },
+      {
+        "type": "select",
+        "id": "recommendation_product_type",
+        "label": "t:settings_schema.cart.settings.product_recommendations.recommendation_product_type.label",
+        "options": [
+          {
+            "value": "auto",
+            "label": "t:settings_schema.cart.settings.product_recommendations.recommendation_product_type.auto"
+          },
+          {
+            "value": "selected",
+            "label": "t:settings_schema.cart.settings.product_recommendations.recommendation_product_type.selected"
+          }
+        ],
+        "default": "auto"
+      },
+      {
+        "type": "product_list",
+        "id": "select_product_recommendation",
+        "label": "t:settings_schema.cart.settings.product_recommendations.select_product_recommendation",
+        "limit": 12
+      },
+      {
+        "type": "header",
+        "content": "t:settings_schema.cart.settings.gift_wrap.label"
+      },
+      {
+        "type": "product_list",
+        "id": "select_product_gift_wrap",
+        "label": "t:settings_schema.cart.settings.gift_wrap.select_product_gift_wrap",
+        "limit": 4
+      },
+      {
+        "type": "header",
+        "content": "t:settings_schema.cart.settings.empty.label"
+      },
+      {
+        "type": "text",
+        "id": "cart_empty_heading",
+        "default": "Your cart is empty.",
+        "label": "t:settings_schema.cart.settings.empty.heading"
+      },
+      {
+        "type": "textarea",
+        "id": "cart_empty_description",
+        "default": "Find trending collection, products right below!",
+        "label": "t:settings_schema.cart.settings.empty.description"
+      },
+      {
+        "type": "collection_list",
+        "id": "cart_empty_collection",
+        "limit": 4,
+        "label": "t:settings_schema.cart.settings.empty.collection.label",
+        "info": "t:settings_schema.cart.settings.empty.collection.info",
+      },
+      {
+        "type": "text",
+        "id": "cart_empty_button_label",
+        "default": "Show All Collections",
+        "label": "t:settings_schema.cart.settings.empty.button_text"
+      },
+      {
+        "type": "url",
+        "id": "cart_empty_button_link",
+        "label": "t:settings_schema.cart.settings.empty.button_link.label",
+        "info": "t:settings_schema.cart.settings.empty.button_link.info"
+      },
+      {
+        "type": "textarea",
+        "id": "cart_empty_free_shipping_message",
+        "label": "t:settings_schema.cart.settings.empty.free_shipping.label",
+        "default": "🔥 Free delivery on orders over [amount]"
       }
     ]
   },

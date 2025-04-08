@@ -62,7 +62,7 @@
   endif
 
   if disable_lazy_loading == true
-    assign image_lazy_loading = false
+    assign image_lazy_loading = blank
   endif
   if image_lazy_loading != blank
     assign widths = widths | split: ', '
@@ -97,6 +97,9 @@
     , (min-width: 768px) calc( ({{ section_width_mobile }} - {{ padding }} * {{ column_tablet | minus: 1 }} ) * {{ divide_column_tablet }}){{- -}}
     , calc( ({{ section_width_mobile }} - {{ padding_mobile }} * {{ column_mobile | minus: 1 }} ) * {{ divide_column_mobile }})
   {%- endcapture -%}
+{% endif %}
+{% if motion %}
+  <motion-animation>
 {% endif %}
 {% if image_lazy_loading != blank %}
   {% if image_mobile != blank %}
@@ -159,7 +162,7 @@
       sizes="{{ sizes }}"
       src="{{ image | image_url: width: image_size }}"
       alt="{{ image_alt }}"
-      class="image-lazy-load{{ class }}"
+      class="image-lazy-load {{ class }}"
       loading="lazy"
       {% if load_first_screen == true %}
         fetchpriority="high"
@@ -208,4 +211,7 @@
         alt: image_alt
     -}}
   {% endif %}
+{% endif %}
+{% if motion %}
+  </motion-animation>
 {% endif %}

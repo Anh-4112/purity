@@ -9,16 +9,10 @@
   assign product_image_ratio = theme_st.product_image_ratio
   assign product_show_video_featured = theme_st.product_show_video_featured
   assign product_show_quick_add_mobile = theme_st.product_show_quick_add_mobile
-  assign show_sale = theme_st.show_sale
-  assign show_pre_order = theme_st.show_pre_order
-  assign show_sold_out = theme_st.show_sold_out
 %}
 {% if card_product and card_product != empty %}
   <div
     class="product-item product__item-js {{ class }}"
-    data-show-badges-sale="{%- if show_sale and disable_badge != true -%}true{%- else -%}false{%- endif -%}"
-    data-show-badges-pre-order="{%- if show_pre_order and disable_badge != true -%}true{%- else -%}false{%- endif -%}"
-    data-show-badges-sold-out="{%- if show_sold_out and disable_badge != true -%}true{%- else -%}false{%- endif -%}"
     data-product-id="{{ card_product.id }}"
   >
     <div class="product-item__wrapper">
@@ -27,7 +21,7 @@
           {%- liquid
             assign p_media = card_product.featured_media
             assign ratio = '3/4'
-            if product_image_ratio != 'adapt_to_image'
+            if product_image_ratio != 'adapt'
               case product_image_ratio
                 when 'square'
                   assign ratio = '1/1'
@@ -48,7 +42,7 @@
               assign product_show_image_hover = false
             endif
           -%}
-          <div class="product__inner relative overflow-hidden {{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image == blank %} show-hover-img{% endif %} hover-effect">
+          <div class="product__inner relative block rounded overflow-hidden {{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image == blank %} show-hover-img{% endif %} hover-effect">
             <a
               class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
               draggable="false"
@@ -57,7 +51,7 @@
             >
               {%- if p_media -%}
                 <div
-                  class="product__media animation-swatches rounded"
+                  class="product__media animation-swatches"
                   style="--aspect-ratio: {{ ratio }};"
                 >
                   {% if type_video and product_show_video_featured %}
@@ -139,7 +133,8 @@
                       container: container,
                       column: column,
                       column_mobile: column_mobile,
-                      padding: padding
+                      padding: padding,
+                      motion: true
                     %}
                     {%- liquid
                       if card_product.media[1] != blank and product_show_image_hover and disable_hover_image == blank
@@ -152,7 +147,7 @@
               {%- else -%}
                 {%- liquid
                   assign ratio = '3/4'
-                  if product_image_ratio != 'adapt_to_image'
+                  if product_image_ratio != 'adapt'
                     case product_image_ratio
                       when 'square'
                         assign ratio = '1/1'
@@ -170,7 +165,6 @@
                   {% render 'placeholder-render' %}
                 </div>
               {%- endif -%}
-
               {%- if disable_badge != true -%}
                 {% render 'product-badges', scope: 'item', card_product: card_product %}
               {%- endif -%}
@@ -192,7 +186,7 @@
                     type="button"
                     is="button-quick-view"
                     class="btn button-quickview w-full btn-white invisible-1025 text-center{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
-                    data-url="{{ shop.url }}/products/{{ card_product.handle }}?section_id=product-quickview"
+                    data-url="{{ shop.url }}/products/{{ card_product.handle }}"
                     aria-label="{{ 'products.product.quickview' | t }}"
                   >
                     <span class="product-quickview-btn hidden-on-load">

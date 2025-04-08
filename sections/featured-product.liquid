@@ -22,7 +22,7 @@
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{{- -}}
-  {% if column_gap_slide < 20 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}{{- -}}
+  {% if column_gap_slide < 20 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}{{- -}}
 {%- endcapture -%}
 {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
 {%- if first_3d_model -%}
@@ -43,7 +43,7 @@
   >
 {% endif %}
 <section
-  id="FeaturedProduct-{{ section.id }}"
+  id="Product-{{ section.id }}"
   class="section sec__featured-product"
   style="{{ style | strip | strip_newlines }}"
 >
