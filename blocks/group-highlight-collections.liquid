@@ -1,0 +1,81 @@
+{% liquid
+  assign section_st = section.settings
+
+  assign items_per_row = section_st.items_per_row
+  assign show_pagination = section_st.show_pagination
+  assign show_navigation = section_st.show_navigation
+
+  assign column_gap_slide = 0
+  if section_st.column_gap_block == 'large'
+    assign column_gap_slide = 30
+  elsif section_st.column_gap_block == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap_block == 'small'
+    assign column_gap_slide = 10
+  endif
+
+  assign items_per_row_mobile = section_st.items_per_row_mobile
+  assign data_free_scroll = 'false'
+  if items_per_row_mobile > 1 and items_per_row_mobile < 2
+    assign data_free_scroll = 'true'
+  elsif items_per_row_mobile > 2 and items_per_row_mobile < 3
+    assign data_free_scroll = 'true'
+  endif
+
+  assign items_per_row_tablet = items_per_row
+  if items_per_row > 3
+    assign items_per_row_tablet = items_per_row | minus: 1
+  endif
+%}
+
+{%- capture col_style -%}
+  --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};{{- -}}
+  {% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
+{%- endcapture -%}
+
+{% if section.blocks.size > 0 %}
+  <slide-section
+    class="swiper {% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+    data-section-id="{{ block.id }}"
+    data-autoplay="false"
+    data-effect="slide"
+    data-loop="false"
+    data-speed="500"
+    data-spacing="{{ column_gap_slide }}"
+    data-mobile="{{ items_per_row_mobile }}"
+    data-desktop="{{ items_per_row }}"
+    data-tablet="{{ items_per_row_tablet }}"
+    data-free-scroll="{{ data_free_scroll }}"
+    style="{{ col_style | strip | strip_newlines }}"
+  >
+    {% if show_navigation %}
+      {%- render 'swiper-navigation' -%}
+    {% endif %}
+    <div class="swiper-wrapper">
+      {% content_for 'blocks' %}
+    </div>
+    {%- if show_pagination -%}
+      <div
+        class="swiper-pagination"
+      ></div>
+    {% endif %}
+  </slide-section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.collection-highlights.blocks.type.type_highlight.name",
+  "class": "group--collection-highlights",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "_collection-item"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.collection-highlights.blocks.type.type_highlight.name"
+    }
+  ]
+}
+{% endschema %}
