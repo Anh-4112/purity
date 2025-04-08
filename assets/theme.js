@@ -1,8 +1,12 @@
 import { SlideSection } from "module-slide";
+import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
 import * as AddToCart from "module-addToCart";
-import * as global from "global";
+import * as NextSkyTheme from "global";
 
-const delegate = new global.eventDelegate();
+LazyLoadEventHover.run();
+new LazyLoader(".image-lazy-load");
+
+const delegate = new NextSkyTheme.eventDelegate();
 
 var Shopify = Shopify || {};
 if (typeof window.Shopify == "undefined") {
@@ -228,11 +232,15 @@ class ToggleMenu extends HTMLElement {
       content.appendChild(
         menu_drawer.content.firstElementChild.cloneNode(true)
       );
-      global.body.appendChild(content.querySelector("menu-drawer"));
+      NextSkyTheme.body.appendChild(content.querySelector("menu-drawer"));
     }
     setTimeout(
       () =>
-        global.eventModal(document.querySelector("menu-drawer"), "open", true),
+        NextSkyTheme.eventModal(
+          document.querySelector("menu-drawer"),
+          "open",
+          true
+        ),
       100
     );
   }
@@ -252,7 +260,7 @@ class ModalOverlay extends HTMLElement {
     this.addEventListener("click", this.onClick.bind(this), false);
   }
   onClick(e) {
-    global.eventModal(this, "close");
+    NextSkyTheme.eventModal(this, "close");
   }
 }
 customElements.define("modal-overlay", ModalOverlay);
@@ -266,7 +274,7 @@ class ButtonCloseModel extends HTMLButtonElement {
     this.addEventListener("click", this.onClick.bind(this), false);
   }
   onClick(e) {
-    global.eventModal(this, "close");
+    NextSkyTheme.eventModal(this, "close");
     const details = this.closest(".details-header-menu");
     if (details) {
       details.classList.remove("detail-open"),
@@ -662,8 +670,8 @@ class QuantityInput extends HTMLElement {
 
   connectedCallback() {
     this.validateQtyRules();
-    this.quantityUpdateUnsubscriber = global.subscribe(
-      global.PUB_SUB_EVENTS.quantityUpdate,
+    this.quantityUpdateUnsubscriber = NextSkyTheme.subscribe(
+      NextSkyTheme.PUB_SUB_EVENTS.quantityUpdate,
       this.validateQtyRules.bind(this)
     );
   }
@@ -951,7 +959,6 @@ class VariantInput extends HTMLElement {
   }
 
   updateProductInfo(parsedHTML, sectionId) {
-    console.log(sectionId);
     const updateContent = (blockClass) => {
       const source = parsedHTML
         .getElementById(`Product-${sectionId}`)
@@ -974,10 +981,11 @@ class VariantInput extends HTMLElement {
       "block-product__pickup",
     ];
     blocksToUpdate.forEach(updateContent);
+    new LazyLoader(".image-lazy-load");
   }
 
   createResponsiveImage(media, classNames, responsiveSizes) {
-    return global.createMediaImageElement(
+    return NextSkyTheme.createMediaImageElement(
       media,
       [720, 660, 550, 480, 330, 240, 185],
       {
@@ -1017,11 +1025,15 @@ class VariantInput extends HTMLElement {
     if (size_chart) {
       const content = document.createElement("div");
       content.appendChild(size_chart.content.firstElementChild.cloneNode(true));
-      global.body.appendChild(content.querySelector("modal-popup"));
+      NextSkyTheme.body.appendChild(content.querySelector("modal-popup"));
     }
     setTimeout(
       () =>
-        global.eventModal(document.querySelector("modal-popup"), "open", true),
+        NextSkyTheme.eventModal(
+          document.querySelector("modal-popup"),
+          "open",
+          true
+        ),
       100
     );
   }
@@ -1138,7 +1150,7 @@ class AnnouncementBar extends HTMLElement {
     this.parentSection.style.opacity = "0";
     this.parentSection.classList.remove("announcement-closing");
     this.parentSection.classList.add("announcement-closed");
-    global.setCookie("announcement_closed", "true", 1);
+    NextSkyTheme.setCookie("announcement_closed", "true", 1);
     this.isAnimating = false;
   }
 
@@ -1475,7 +1487,7 @@ class CartDrawer extends HTMLElement {
 
   onShowCartDrawer(event) {
     event.preventDefault();
-    global.eventModal(this, "open", false);
+    NextSkyTheme.eventModal(this, "open", false);
   }
 }
 customElements.define("cart-drawer", CartDrawer);
@@ -1695,7 +1707,7 @@ class CartNote extends HTMLElement {
       note: this.querySelector(".cart-note").value,
     });
     fetch(`${routes?.cart_update_url}`, {
-      ...global.fetchConfig(),
+      ...NextSkyTheme.fetchConfig(),
       ...{ body },
     });
   }
@@ -1759,7 +1771,7 @@ class CartGiftWrap extends HTMLElement {
       });
       this.cartActionId.classList.add("loading");
       fetch(`${routes.cart_add_url}`, {
-        ...global.fetchConfig(),
+        ...NextSkyTheme.fetchConfig(),
         ...{ body },
       })
         .then((response) => {

@@ -1,4 +1,5 @@
-import * as global from "global";
+import * as NextSkyTheme from "global";
+import { LazyLoader } from "module-lazyLoad";
 
 class ButtonQuickView extends HTMLButtonElement {
   constructor() {
@@ -42,19 +43,20 @@ class ButtonQuickView extends HTMLButtonElement {
     fetch(`${this.dataset.url}?section_id=${this.sectionId}`)
       .then((response) => response.text())
       .then((text) => {
-        const html = global.parser.parseFromString(text, "text/html");
+        const html = NextSkyTheme.parser.parseFromString(text, "text/html");
         document.querySelector(".quickview-product").innerHTML =
           html.querySelector(".quickview-product").innerHTML;
       })
       .finally(() => {
         this.classList.remove("loading");
         this.removeAttribute("aria-disabled");
-        global.eventModal(
+        NextSkyTheme.eventModal(
           document.querySelector("quickview-drawer"),
           "open",
           false,
           "delay"
         );
+        new LazyLoader(".image-lazy-load");
       })
       .catch((e) => {
         console.error(e);
