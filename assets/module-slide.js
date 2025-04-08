@@ -89,21 +89,43 @@ function initSlide(_this) {
             }
           }
         }
-      },
-      slideChange: function (swiper) {
         const isAnnouncementBar = _this.closest('.section__announcement-bar') !== null;
         if (isAnnouncementBar && autoHeight) {
-          const activeSlide = swiper.slides[swiper.activeIndex];
-          if (activeSlide) {
-            const contentElement = activeSlide.querySelector('.announcement-bar__content > div');
-            if (contentElement) {
-              const oldHeight = _this.style.maxHeight ? parseInt(_this.style.maxHeight) : 0;
-              const contentHeight = contentElement.offsetHeight;
-              if (oldHeight !== contentHeight) {
-                _this.style.transition = 'max-height 0.3s ease';
-                _this.style.maxHeight = `${contentHeight}px`;
+          try {
+            const contentElements = _this.querySelectorAll('.announcement-bar__content > div');
+            if (contentElements && contentElements.length > 0) {
+              const heights = [];
+              contentElements.forEach(element => {
+                heights.push(element.offsetHeight);
+              });
+              const maxContentHeight = Math.max(...heights);
+              const heightWithPadding = maxContentHeight + 5;
+              const oldHeight = _this.style.maxHeight ? parseInt(_this.style.maxHeight.replace('px', '')) : 0;
+              if (Math.abs(oldHeight - heightWithPadding) > 2) {
+                if (typeof Motion !== 'undefined') {
+                  try {
+                    Motion.animate(
+                      _this,
+                      { 
+                        maxHeight: [`${oldHeight}px`, `${heightWithPadding}px`]
+                      },
+                      { 
+                        duration: 0.3, 
+                        easing: "cubic-bezier(0.25, 0.1, 0.25, 1)"
+                      }
+                    );
+                  } catch (motionError) {
+                    _this.style.transition = 'max-height 0.3s ease';
+                    _this.style.maxHeight = `${heightWithPadding}px`;
+                  }
+                } else {
+                  _this.style.transition = 'max-height 0.3s ease';
+                  _this.style.maxHeight = `${heightWithPadding}px`;
+                }
               }
             }
+          } catch (error) {
+            console.error('Error in announcement bar height calculation:', error);
           }
         }
       }
