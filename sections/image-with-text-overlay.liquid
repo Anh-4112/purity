@@ -57,7 +57,7 @@
             image_alt: alt
           %}
         {%- else -%}
-          {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- render 'placeholder-render', type: 'lifestyle-2', class: "img-placeholder h-full w-full" -%}
         {% endif %}
       </div>
       <div
@@ -159,7 +159,7 @@
       "step": 1,
       "unit": "%",
       "label": "t:sections.slideshow.settings.blocks.image.image_overlay_opacity.label",
-      "default": 10
+      "default": 0
     },
     {
       "type": "select",
