@@ -43,7 +43,8 @@
                 option: option,
                 option_name: option_name,
                 scope: scope,
-                is_color: true
+                is_color: true,
+                is_dropdown: false
               %}
             {%- endif -%}
           {%- endfor -%}
@@ -115,7 +116,7 @@
                     >
                       <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
                       <div
-                        class="modal-popup-inner rounded max-w-custom m-auto invisible fixed inset-0 z-15 bg-white w-full"
+                        class="modal-popup-inner transition rounded max-w-custom m-auto invisible fixed inset-0 z-15 bg-white w-full"
                         style="--max-width: 80rem;"
                       >
                         <button
@@ -220,7 +221,7 @@
                     {{ value }}
                   </span>
                 {%- endif -%}
-                <span class="option_value flex-1 text-start">
+                <span class="option_value">
                   {{ value }}
                 </span>
                 <svg class="icon icon-down icon-rotate transition-short ms-10" width="9" height="6" viewBox="0 0 9 6">

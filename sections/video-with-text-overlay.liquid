@@ -9,7 +9,7 @@
   else
     assign section_width = 'fluid_container'
   endif
-  assign video_height = section_st.video_height 
+  assign video_height = section_st.video_height
   assign show_text_bellow_mobile = section_st.show_text_bellow_mobile
 %}
 {%- capture style -%}
@@ -75,7 +75,8 @@
                   data-src="https://player.vimeo.com/video/{{ video_id }}?controls=0background=1&autoplay=1&muted=1&loop=1"
                   class="js-vimeo vimeo-video"
                   title="{{ section_st.video_alt_text | escape }}"
-                  width="100%" height="100%"
+                  width="100%"
+                  height="100%"
                   allowfullscreen
                   frameborder="0"
                 ></iframe>
@@ -125,13 +126,16 @@
       {%- endif -%}
       <div class="section__video-content media__content relative z-3 w-full{% if show_text_bellow_mobile %} flex-md{% else %} flex{% endif %} flex-md {{ section_st.desktop_content_position }} text-{{ section_st.text_alignment_mobile }} text-md-{{ section_st.text_alignment }}">
         <div
-          class="banner__box max-w-custom px-custom py-custom{% if section_st.padding_content_inline < 15 %} x-min-value{% endif %}{% if show_text_bellow_mobile and section_width == "full-width" %} padding-inline-gutter{% endif %}{% if show_text_bellow_mobile %} mt-40 mt-md-0{% endif %}"
+          class="banner__box max-w-100 px-custom py-custom{% if section_st.padding_content_inline < 15 %} x-min-value{% endif %}{% if show_text_bellow_mobile and section_width == "full-width" %} padding-inline-gutter{% endif %}{% if show_text_bellow_mobile %} mt-40 mt-md-0{% endif %}"
           style="--max-width: {{ section_st.max_width }}%;--padding-inline: {{ section_st.padding_content_inline }};--padding-block: {{ section_st.padding_content_block }};"
         >
           {% content_for 'blocks' %}
         </div>
       </div>
-      <div class="overlay absolute inset-0 bg-dark{% if section_width != "full-width" %} rounded{% endif %}{% if show_text_bellow_mobile %} d-none block-md{% endif %}" style="--opacity: {{ section_st.overlay_opacity | times: 0.01 }}"></div>
+      <div
+        class="overlay absolute inset-0 bg-dark{% if section_width != "full-width" %} rounded{% endif %}{% if show_text_bellow_mobile %} d-none block-md{% endif %}"
+        style="--opacity: {{ section_st.overlay_opacity | times: 0.01 }}"
+      ></div>
     </div>
   </div>
 </div>
@@ -377,7 +381,7 @@
       "label": "t:sections.all.padding.padding_block.label",
       "info": "t:sections.all.padding.padding_block.info",
       "default": 30
-    }, 
+    },
     {
       "type": "header",
       "content": "t:sections.all.mobile_options.mobile_layout.label"
@@ -386,7 +390,7 @@
       "type": "checkbox",
       "id": "show_text_bellow_mobile",
       "label": "t:sections.video.settings.show_text_bellow.label",
-      "info": "t:sections.video.settings.show_text_bellow.info",
+      "info": "t:sections.video.settings.show_text_bellow.info"
     },
     {
       "type": "select",
@@ -420,7 +424,7 @@
       "step": 1,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
-      "default": 0
+      "default": 48
     },
     {
       "type": "range",
@@ -430,7 +434,7 @@
       "step": 1,
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
-      "default": 0
+      "default": 48
     }
   ],
   "presets": [

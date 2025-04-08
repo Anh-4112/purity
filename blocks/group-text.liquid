@@ -3,17 +3,15 @@
   assign block_st = block.settings
 %}
 
-{% comment %}
-  {%- style -%}
-    #shopify-block-{{ block.id }} {
-      width: {{ block_st.width }};
-    }
-  {%- endstyle -%}
-{% endcomment %}
+{%- style -%}
+  #shopify-block-{{ block.id }} {
+    --col-width: {{ block_st.width }};
+  }
+{%- endstyle -%}
 
 <div class="group__text w-full h-full flex align-{{ block_st.vertical_alignment }}">
   <div
-    class="color-{{ block.settings.color_scheme }} gradient flex column w-full{% if section_st.equal_height_adjustment %} h-full{% endif %} text-{{ block_st.text_alignment }} align-{{ block_st.text_alignment }}"
+    class="color-{{ block.settings.color_scheme }} gradient flex column w-full{% if section_st.equal_height_adjustment %} h-full justify-content-{{ block_st.vertical_alignment }}{% endif %} text-{{ block_st.text_alignment }} align-{{ block_st.text_alignment }} rounded"
   >
     {% content_for 'blocks' %}
   </div>
@@ -22,7 +20,7 @@
 {% schema %}
 {
   "name": "t:sections.all.text.label",
-  "class": "multi-content__group--text",
+  "class": "multi-content__group--text w-full col-md-w-custom col-md-w-custom-50",
   "blocks": [
     {
       "type": "@app"
@@ -32,6 +30,9 @@
     },
     {
       "type": "subheading"
+    },
+    {
+      "type": "highlight-text"
     },
     {
       "type": "description"

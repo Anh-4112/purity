@@ -23,9 +23,9 @@
           href="{{ first_button_link | default: "#" }}"
         {% endif %}
         aria-label="{{ first_button_label }}"
-        class="btn btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center{% else %} min-w-custom{% endif %}"
+        class="btn btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center{% else %} w-custom max-w-100{% endif %}"
         {% if first_button_type != "link" %}
-        style="--min-width: 20rem;"
+        style="--custom-width: 20rem;"
         {% endif %}
       >
         {{ first_button_label }}
@@ -39,9 +39,9 @@
           href="{{ second_button_link | default: "#" }}"
         {% endif %}
         aria-label="{{ second_button_label }}"
-        class="btn btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center{% else %} min-w-custom{% endif %}"
+        class="btn btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center{% else %} w-custom max-w-100{% endif %}"
         {% if second_button_type != "link" %}
-          style="--min-width: 20rem;"
+          style="--custom-width: 20rem;"
         {% endif %}
       >
         {{ second_button_label }}
@@ -53,7 +53,7 @@
 {% schema %}
 {
   "name": "t:sections.all.content_setting.button_label-block.label",
-  "class": "block__buttons",
+  "class": "block__buttons max-w-100",
   "settings": [
     {
       "type": "header",

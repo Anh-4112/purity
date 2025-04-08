@@ -21,9 +21,9 @@
 
   assign space_between_item = 0
   if section_st.space_between == 'large'
-    assign space_between_item = 30
+    assign space_between_item = 60
   elsif section_st.space_between == 'medium'
-    assign space_between_item = 15
+    assign space_between_item = 30
   elsif section_st.space_between == 'small'
     assign space_between_item = 10
   endif
@@ -35,21 +35,17 @@
     --speed: {{ section_st.speed }}s;
 {%- endcapture -%}
 
-{%- capture col_style -%}
-  {% if space_between_item < 15 %}--col-gap: {{ space_between_item }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  space_between_item }}px;{% endif %}
-{%- endcapture -%}
 <div
   class="section__scrolling-text color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     <div
-      class="flex{% if section_st.uppercase %} uppercase{% endif %} {{ header_size }} marquee overflow-hidden w-full justify-center"
+      class="flex{% if section_st.uppercase %} uppercase{% endif %} {{ header_size }} marquee overflow-hidden gap-{{ space_between_item }} w-full justify-center"
     >
       {%- for i in (0..5) -%}
         <div
-          class="flex animation-marquee animation__marquee-{{ section_st.direction }} whitespace-nowrap gap align-center"
-          style="{{ col_style | strip | strip_newlines }}"
+          class="flex animation-marquee animation__marquee-{{ section_st.direction }} whitespace-nowrap gap-{{ space_between_item }} align-center"
         >
           {%- for block in section.blocks -%}
             {% assign block_st = block.settings %}
@@ -59,6 +55,7 @@
                 {%- liquid
                   assign link_text = block_st.link_text
                   assign content = block_st.content
+                  assign image = block_st.image_block
                 -%}
                 {% if content != blank %}
                   <a
@@ -68,7 +65,7 @@
                       href="{{ link_text | default: "#" }}"
                     {% endif %}
                     aria-label="{{ content }}"
-                    class="no-underline"
+                    class="no-underline{% if image == blank %} text_scroll{% endif %}"
                   >
                     {{ content }}
                   </a>
@@ -80,11 +77,11 @@
                   assign image_alt_default = 'sections.scrolling_text.alt' | t
                   assign image_alt = image.alt | default: image_alt_default | escape
                 -%}
-                <div
-                  class="scrolling-image image_scroll{% if block_st.rounded_image %} rounded{% endif %}"
-                  style="--image-height: {{ block_st.image_height }}px;"
-                >
-                  {%- if image != blank -%}
+                {%- if image != blank -%}
+                  <div
+                    class="scrolling-image image_scroll{% if block_st.rounded_image %} rounded{% endif %}"
+                    style="--image-height: {{ block_st.image_height }}px;"
+                  >
                     <a
                       {% if link_image == blank %}
                         role="link" aria-disabled="true"
@@ -95,8 +92,8 @@
                     >
                       {% render 'responsive-image', image: image, type: 'other', image_alt: image_alt %}
                     </a>
-                  {%- endif -%}
-                </div>
+                  </div>
+                {%- endif -%}
             {%- endcase -%}
           {%- endfor -%}
         </div>
@@ -275,7 +272,7 @@
         {
           "type": "range",
           "id": "image_height",
-          "min": 5,
+          "min": 50,
           "max": 100,
           "step": 1,
           "unit": "px",

@@ -42,7 +42,7 @@
     padding-block: 0;
   }
   .padding-inline-gutter {
-    padding-inline: calc(var(--bs-gutter-x) / 2)!important;
+    padding-inline: var(--bs-gutter-x)!important;
   }
 }
 .banner__media img {
@@ -66,16 +66,19 @@
   width: 100%;
   border: none;
 }
-.video-section iframe.vimeo-video{
+.video-section iframe.vimeo-video {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-dark);
+}
+.section__video-with-text-overlay .video-section iframe.vimeo-video {
   box-sizing: border-box;
   width: 177.77777778vh;
   height: 56.25vw;
   min-width: 100%;
   min-height: 100%;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 :where(.px-custom:not(.x-min-value)) {
   padding-inline: clamp(

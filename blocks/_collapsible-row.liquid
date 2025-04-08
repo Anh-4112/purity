@@ -4,8 +4,8 @@
   assign collapsible_page = block.settings.page
 -%}
 <details class="collapsible-row" is="collapsible-row">
-  <summary class="collapsible-row__summary py-15 border-bottom">
-    <div class="collapsible-heading h7">{{- heading | default: page.title -}}</div>
+  <summary class="collapsible-row__summary py-24 border-bottom">
+    <div class="collapsible-heading h6">{{- heading | default: page.title -}}</div>
     <span class="open-children-toggle transition">
       <span class="icon_plus-animation"> </span>
     </span>
@@ -35,7 +35,8 @@
     {
       "type": "richtext",
       "id": "content",
-      "label": "t:sections.all.product_setting.collapsible_row.settings.content"
+      "label": "t:sections.all.product_setting.collapsible_row.settings.content",
+      "default": "<p>Collapsible content</p>"
     },
     {
       "type": "page",
