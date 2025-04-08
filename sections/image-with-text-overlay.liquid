@@ -41,10 +41,8 @@
       {%- endif -%}
     >
       <div
-        class="banner__media absolute{% if section_width != "full-width" %} rounded{% endif %}{% if image == blank %} placeholder inset-0{% endif %}{% if image_height != 'adapt' %} inset-0{% endif %}"
-        {%- if image_height == 'adapt' and section_st.image != blank -%}
-          style="--aspect-ratio: {{ image.aspect_ratio }}"
-        {%- endif -%}
+        class="banner__media absolute{% if section_width != "full-width" %} rounded{% endif %}{% if image == blank %} placeholder inset-0{% endif %}{% if image_height != 'adapt' %} inset-0{% endif %}{% if show_text_bellow_mobile %} h-{{ image_height }}{% endif %}"
+        style="--aspect-ratio: {{ image.aspect_ratio }}"
       >
         {%- if image != blank or mobile_image != blank -%}
           {%- liquid
