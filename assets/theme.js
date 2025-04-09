@@ -2373,10 +2373,11 @@ class CarouselMobile extends HTMLElement {
   constructor() {
     super();
     this.enable = this.dataset.enableCarouselMobile == 'true';
+    this.isMulticontent = this.dataset.multicontent == 'true';
     this.swiperSlideInnerHtml = this.innerHTML;
     this.initCarousel();
   }
-  
+
   initCarousel() {
     if (this.enable) {
       let width = window.innerWidth;
@@ -2397,24 +2398,31 @@ class CarouselMobile extends HTMLElement {
       }
     }
   }
-  
+
   actionOnMobile() {
     this.classList.add('swiper');
-    this.classList.remove('grid-cols', 'grid');
+    this.classList.remove('grid-cols', 'grid', 'flex', 'column', 'flex-md-row', 'wrap', 'cols');
     const html = this.swiperSlideInnerHtml.replaceAll(
       'switch-slide__mobile',
       'swiper-slide'
     );
-    const wrapper = `<div class='swiper-wrapper'>${html}</div> <div
-    class="swiper-pagination"></div> `;
+    const wrapper = `<div class='swiper-wrapper'>${html}</div><div class="swiper-pagination"></div>`;
     this.innerHTML = wrapper;
     initSlide(this);
   }
-  
+
   actionOutMobile() {
     this.classList.remove('swiper');
-    this.classList.add('grid', 'grid-cols');
     this.innerHTML = this.swiperSlideInnerHtml;
+
+    if (this.isMulticontent) {
+      this.classList.add('flex', 'column', 'flex-md-row', 'wrap', 'cols');
+      this.classList.remove('grid', 'grid-cols');
+    } else {
+      this.classList.add('grid', 'grid-cols');
+      this.classList.remove('flex', 'column', 'flex-md-row', 'wrap', 'cols');
+    }
   }
 }
+
 customElements.define('carousel-mobile', CarouselMobile);
