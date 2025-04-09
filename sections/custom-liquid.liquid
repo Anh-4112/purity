@@ -9,11 +9,11 @@
   endif
 -%}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}px; --section-pb: {{ section_st.padding_bottom }}px;
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 {%- unless section_st.custom_liquid == blank -%}
   <div
-    class="section color-{{ section_st.color_scheme }} gradient section__custom-liquid"
+    class="section color-{{ section_st.color_scheme }} section gradient section__custom-liquid"
     style="{{ style | strip | strip_newlines }}"
   >
     <div class="{{ section_width }}">

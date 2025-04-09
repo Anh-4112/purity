@@ -5,7 +5,9 @@
   assign logo_width = the_settings.logo_width
 -%}
 {%- if request.page_type == 'index' -%}
-  <h1 class="header__logo inline-flex align-center color-inherit{% if section_st.logo_position =='center' %} text-center{% endif %}">
+  <h1
+    class="header__logo inline-flex align-center color-inherit{% if section_st.logo_position =='center' %} text-center{% endif %}"
+  >
 {%- else -%}
   <div class="header__logo{% if section_st.logo_position =='center' %} text-center{% endif %}">
 {%- endif -%}

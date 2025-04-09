@@ -1,0 +1,49 @@
+{%- liquid
+  assign section_st = section.settings
+  assign heading_size = section_st.heading_size
+  assign header_size = ''
+  if heading_size == 'small'
+    assign header_size = 'h3'
+  elsif heading_size == 'large'
+    assign header_size = 'fs-medium'
+  endif  
+-%}
+{%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
+  <div
+    class="section-header section-header__in-blocks d-none block-md text-{{ section_st.text_alignment }}"
+  >
+    {%- if section_st.subheading != blank -%}
+      <div class="section-subheading">
+        {{ section_st.subheading }}
+      </div>
+    {%- endif -%}
+    {%- if section_st.title != blank -%}
+      <h2 class="block section-heading {{ header_size }}">
+        {{ section_st.title }}
+      </h2>
+    {%- endif -%}
+    {%- if section_st.description != blank -%}
+      <div class="section-description">
+        {{ section_st.description }}
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+{% content_for 'blocks' %}
+
+{% schema %}
+{
+  "name": "t:sections.collection-list.name",
+  "class": "group--collection-list",
+  "blocks": [
+    {
+      "type": "_collection-list"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.collection-list.name"
+    }
+  ]
+}
+{% endschema %}

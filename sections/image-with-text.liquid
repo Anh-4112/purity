@@ -18,7 +18,7 @@
   assign radius_image_class = ''
   assign radius_content_class = ''
   assign has_custom_background = false
-  if section_st.background_color != "rgba(0,0,0,0)" and section_st.background_color != "transparent" and section_st.background_color != blank and section_st.background_color != "#fff" and section_st.background_color != "#ffffff"
+  if section_st.background_color != 'rgba(0,0,0,0)' and section_st.background_color != 'transparent' and section_st.background_color != blank and section_st.background_color != '#fff' and section_st.background_color != '#ffffff'
     assign has_custom_background = true
   endif
   if column_gap_slide == 0 and has_custom_background
@@ -34,7 +34,7 @@
     assign radius_content_class = 'rounded'
   endif
   if has_custom_background
-    assign padding_content_class = "p-30"
+    assign padding_content_class = 'p-30'
   else
     if column_gap_slide != 0
       assign padding_content_class = ''
@@ -69,20 +69,31 @@
             style="--aspect-ratio: 16/9";
           {% endif %}
         >
+          {%- liquid
+            assign alt = 'general.image.image_alt_default' | t
+            if section_st.image.alt
+              assign alt = section_st.image.alt | escape
+            endif
+          -%}
           {%- if section_st.image != blank -%}
-            {{
-              section_st.image
-              | image_url: width: 1500
-              | image_tag: loading: 'lazy', sizes: '100vw', widths: '165, 360, 535, 750, 1070, 1500'
-            }}
-          {%- else -%}
-            {%- render 'placeholder-render', type: 'collection-6', class: "img-placeholder h-full w-full" -%}
-          {%- endif -%}
+            {% render 'responsive-image',
+              type: 'other',
+              container: section_width,
+              image: section_st.image,
+              image_alt: alt,
+              class: 'rounded'
+            %}
+          {% else %}
+            {% render 'placeholder-render',type: 'collection-6', class: "img-placeholder h-full w-full" %}
+          {% endif %}
         </div>
       </div>
       <div class="w-full col-1025-remaining flex text-{{ section_st.text_alignment }}">
         {% if has_custom_background %}
-          <div class="image-with-text__wrapper w-full flex bg-custom {{ radius_content_class }}" style="--bg-color-custom: {{ section_st.background_color }};">
+          <div
+            class="image-with-text__wrapper w-full flex bg-custom {{ radius_content_class }}"
+            style="--bg-color-custom: {{ section_st.background_color }};"
+          >
         {% endif %}
         <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }}">
           {% content_for 'blocks' %}
