@@ -39,14 +39,14 @@
     announcement-bar .swiper-arrow:hover {
       --swiper-navigation-color: var(--color-text);
     }
-    .announcement-bar__content {
+    [class*='initialized'] .announcement-bar__content {
       max-width: 80%;
     }
     .swiper:not([class*='initialized'])[data-direction='vertical'] .swiper-wrapper {
-      flex-direction: column;
+      align-items: center;
     }
     .swiper:not([class*='initialized'])[data-direction='vertical'] .swiper-wrapper .swiper-slide:not(:first-child) {
-      display: none;
+      opacity: 0;
     }
   {%- endstyle -%}
 {%- endif -%}
@@ -89,13 +89,12 @@
           data-spacing="0"
           data-autoplay="{{ section_st.slide_auto_change }}"
           data-autoplay-speed="{{ section_st.change_slide_every | times: 1000 }}"
-          data-auto-height="true"
         >
           <div class="swiper-wrapper {% if section_st.uppercase %}uppercase {% endif %}fs-{{ scrolling_size }}">
             {%- for block in section.blocks -%}
               {% assign block_st = block.settings %}
               <div class="swiper-slide announcement-bar__content flex wrap content-center mx-auto text-center">
-                {{ block_st.text }}
+                <div class="announcement-bar__content-inner">{{ block_st.text }}</div>
               </div>
             {%- endfor -%}
           </div>

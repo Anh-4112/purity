@@ -17,7 +17,6 @@ function initSlide(_this) {
   const progressbar = _this?.dataset.paginationProgressbar === "true";
   const autoItem = _this?.dataset.itemMobile === "true";
   let arrowCenterImage = _this?.dataset.itemMobile === "true";
-  const autoHeight = _this?.dataset.autoHeight === "true";
   spacing = Number(spacing);
   autoPlaySpeed = Number(autoPlaySpeed);
   speed = Number(speed);
@@ -33,7 +32,7 @@ function initSlide(_this) {
       itemTablet = 3;
     }
   }
-  if (direction == "vertical" && autoHeight == false) {
+  if (direction == "vertical") {
     _this.style.maxHeight = _this.offsetHeight + "px";
   }
   new Swiper(_this, {
@@ -46,7 +45,6 @@ function initSlide(_this) {
     speed: speed,
     watchSlidesProgress: true,
     watchSlidesVisibility: true,
-    autoHeight: autoHeight,
     grid: {
       rows: row,
       fill: "row",
@@ -90,7 +88,7 @@ function initSlide(_this) {
             }
           }
         }
-      },
+      }
     },
   });
 }
