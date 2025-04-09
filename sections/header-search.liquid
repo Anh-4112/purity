@@ -125,9 +125,9 @@
                     {%- assign sizes = '(min-width: 1200px) calc((1200px -  30px * 3) * 0.2), (min-width: 768px) calc( (100vw - 30px - 30px * 2 ) * 0.33), 80px' -%}
                     <template class="template-recommended-default">
                       <div class="search-product">
-                        <p class="heading-color">
+                        <h3 class="heading-color">
                           {{ 'general.search.popular_products' | t }}
-                        </p>
+                        </h3>
                         <div class="grid-cols">
                           {%- for product in search_product_recommended -%}
                             {% render 'card-product',
@@ -149,9 +149,9 @@
                     {% if search_type == 'popup' %}
                       <template class="template-recommended-popup">
                         <div class="search-product">
-                          <p class="heading-color">
+                          <h3 class="heading-color">
                             {{ 'general.search.popular_products' | t }}
-                          </p>
+                          </h3>
                           <slide-section
                             class="swiper hover-action"
                             data-section-id="{{ section.id }}"
