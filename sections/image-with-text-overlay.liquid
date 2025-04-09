@@ -41,10 +41,8 @@
       {%- endif -%}
     >
       <div
-        class="banner__media absolute{% if section_width != "full-width" %} rounded{% endif %}{% if image == blank %} placeholder inset-0{% endif %}{% if image_height != 'adapt' %} inset-0{% endif %}"
-        {%- if image_height == 'adapt' and section_st.image != blank -%}
-          style="--aspect-ratio: {{ image.aspect_ratio }}"
-        {%- endif -%}
+        class="banner__media absolute{% if section_width != "full-width" %} rounded{% endif %}{% if image == blank %} placeholder inset-0{% endif %}{% if image_height != 'adapt' %} inset-0{% endif %}{% if show_text_bellow_mobile %} h-{{ image_height }}{% endif %}"
+        style="--aspect-ratio: {{ image.aspect_ratio }}"
       >
         {%- if image != blank or mobile_image != blank -%}
           {%- liquid
@@ -59,7 +57,7 @@
             image_alt: alt
           %}
         {%- else -%}
-          {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- render 'placeholder-render', type: 'lifestyle-2', class: "img-placeholder h-full w-full" -%}
         {% endif %}
       </div>
       <div
@@ -161,7 +159,7 @@
       "step": 1,
       "unit": "%",
       "label": "t:sections.slideshow.settings.blocks.image.image_overlay_opacity.label",
-      "default": 10
+      "default": 0
     },
     {
       "type": "select",
