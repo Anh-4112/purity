@@ -79,10 +79,12 @@
                 -%}
                 {%- if image != blank -%}
                   <div
-                    class="scrolling-image image_scroll{% if block_st.rounded_image %} rounded{% endif %}"
+                    class="scrolling-image image_scroll"
                     style="--image-height: {{ block_st.image_height }}px;"
                   >
                     <a
+                      class="scrolling-image-item overflow-hidden block{% if block_st.rounded_image %} radius-50{% endif %}"
+                      style="--image-height: {{ block_st.image_height }}px;"
                       {% if link_image == blank %}
                         role="link" aria-disabled="true"
                       {% else %}
@@ -277,7 +279,7 @@
           "step": 1,
           "unit": "px",
           "label": "t:sections.scrolling_text.settings.blocks.image.image_height.label",
-          "default": 70
+          "default": 80
         },
         {
           "type": "checkbox",
