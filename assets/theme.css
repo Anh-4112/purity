@@ -154,9 +154,6 @@ blockquote {
     calc(var(--space-bottom) * 1px)
   );
 }
-.word-break {
-  word-break: break-word;
-}
 .w-50-percent {
   width: 50%;
 }
@@ -174,6 +171,9 @@ blockquote {
 }
 .h-auto {
   height: auto;
+}
+.h-0 {
+  height: 0;
 }
 .h-2 {
   height: 2px;
@@ -244,6 +244,9 @@ blockquote {
 .px-gutter-x {
   padding-inline: var(--bs-gutter-x);
 }
+.ps-0 {
+  padding-inline-start: 0;
+}
 .ps-5 {
   padding-inline-start: 5px;
 }
@@ -252,6 +255,9 @@ blockquote {
 }
 .ps-30 {
   padding-inline-start: 3rem;
+}
+.ps-35 {
+  padding-inline-start: 3.5rem;
 }
 .pe-18 {
   padding-inline-end: 18px;
@@ -387,6 +393,9 @@ blockquote {
 }
 .m-auto {
   margin: auto;
+}
+.my-auto {
+  margin-block: auto;
 }
 .my-5 {
   margin-top: 5px;
@@ -549,7 +558,7 @@ blockquote {
   border-inline-end: 1px solid var(--color-border);
 }
 .border-bottom-dashed {
-  border: 1px solid dashed;
+  border-bottom: 1px dashed var(--color-border);
 }
 .normal-case {
   text-transform: none;
@@ -1201,6 +1210,9 @@ modal-popup :is(.modal-overlay) {
   .static-1025 {
     position: static;
   }
+  .fixed-1025 {
+    position: fixed;
+  }
   .sticky-1025 {
     position: sticky;
   }
@@ -1292,11 +1304,6 @@ modal-popup :is(.modal-overlay) {
   .justify-end-1025 {
     justify-content: end;
   }
-  .invisible-1025 {
-    opacity: 0;
-    visibility: hidden;
-  }
-
   .pointer-none-1025 {
     pointer-events: none;
   }
@@ -1955,7 +1962,7 @@ modal-popup :is(.modal-overlay) {
   height: var(--icon-width, 13px);
 }
 
-.detail-open .icon_plus-animation:before {
+:is(.detail-open, cart-gift-wrap-element.open) .icon_plus-animation:before {
   opacity: 0;
   -webkit-transform: translate(-50%, -50%) rotate(90deg);
   transform: translate(-50%, -50%) rotate(90deg);
