@@ -75,7 +75,7 @@
               assign lazy_load = false
               assign ratio_dk = ''
               assign ratio_mb = ''
-              if slide_height == 'adapt'
+              if slide_height == 'adapt' or slide_height == 'full_screen'
                 if section.blocks.first.settings.image != blank and section.blocks.first.settings.image_mobile != blank
                   assign ratio_dk = section.blocks.first.settings.image.aspect_ratio
                   assign ratio_mb = section.blocks.first.settings.image_mobile.aspect_ratio | default: ratio_dk
@@ -103,7 +103,7 @@
             <div {{ block.shopify_attributes }} class="swiper-slide">
               <div
                 class="sec__inner flex{% if slide_height == 'adapt' and image_mobile != blank %} ratio-mobile{% endif %}{% if slide_height == 'adapt' %} h-full{% endif %} h-{{ slide_height }}{% if show_text_bellow_image %} column flex-md-row text-bellow-mb{% endif %}"
-                style="{% if slide_height == 'adapt' %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
+                style="{% if slide_height == 'adapt' or slide_height == "full_screen" %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
               >
                 <div
                   class="banner__media w-full h-full {{ rounded }} absolute inset-0 overlay-bg{% if show_text_bellow_image %} h-{{ slide_height }}{% endif %}"
