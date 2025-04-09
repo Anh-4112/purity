@@ -19,7 +19,7 @@
     assign special_class = ' special-price heading-style primary-color'
   endif
 -%}
-<div class="card-product-price relative flex wrap gap-5 align-center{% if theme_st.product_alignment == 'center' %} justify-center{% endif %}{% if scope == 'detail' %} h5{% endif %}">
+<div class="card-product-price relative flex wrap gap-5 align-center{% if settings.product_alignment == 'center' %} justify-center{% endif %}{% if scope == 'detail' %} h5{% endif %}">
   {%- if compare_at_price > price -%}
     <div class="heading-color price-regular">
       <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.sale_price' | t }}</span>

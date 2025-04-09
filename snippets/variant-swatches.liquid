@@ -1,5 +1,6 @@
 {% liquid
   assign theme_st = settings
+  assign color_swatch_shape = theme_st.color_swatch_shape
   assign block_st = block.settings
   assign color_swatch_trigger = theme_st.color_swatch_trigger
   assign color_swatch_type = theme_st.color_swatch_type
@@ -27,7 +28,7 @@
     >
       <fieldset class="product-card-swatch-js product-variants__input m-0 p-0 border-0 relative">
         <legend class="{% if scope == 'item' %}visually-hidden{% endif %}">{{ 'products.product.colors' | t }}</legend>
-        <ul class="swatch-color list-unstyled flex wrap gap-10">
+        <ul class="swatch-color list-unstyled flex align-center wrap gap-10{% if settings.product_alignment == 'center' %} justify-center{% endif %}">
           {%- for option in product.options_with_values -%}
             {%- liquid
               assign is_color_option = false
@@ -101,7 +102,7 @@
               %}
                 <button
                   type="button"
-                  class="button open-size-chart btn-reset btn-link"
+                  class="button open-size-chart btn-reset btn-link border-animation fs-small"
                   title="{{ size_guide_label }}"
                   aria-label="{{ size_guide_label }}"
                 >
@@ -209,20 +210,22 @@
             {%- if is_dropdown -%}
               <button
                 type="button"
-                class="rotate-animate variants__option-dropdown pointer input-style w-full inline-flex align-center"
+                class="rotate-animate variants__option-dropdown pointer input-style w-full inline-flex gap-10 align-center"
                 aria-expanded="false"
                 aria-controls="dropdown-{{ section.id }}-product-{{ product.id }}-position-{{ forloop.index0 }}"
               >
-                {%- if is_color_option -%}
-                  <span
-                    class="color-variant-input"
-                    style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }}{% endif %}"
-                  >
+                <span class="flex-1 flex align-center gap-10">
+                  {%- if is_color_option -%}
+                    <span
+                      class="color-variant-input fs-0{% if is_swatch_image %} swatch-image{% endif %}"
+                      style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }};{% endif %}--color-swatch-width: 2rem;--color-swatch-height: 2rem;{% if color_swatch_shape == 'round' %}--radius: 50%;{% else %}--radius: 3px;{% endif %}"
+                    >
+                      {{ value }}
+                    </span>
+                  {%- endif -%}
+                  <span class="option_value">
                     {{ value }}
                   </span>
-                {%- endif -%}
-                <span class="option_value">
-                  {{ value }}
                 </span>
                 <svg class="icon icon-down icon-rotate transition-short ms-10" width="9" height="6" viewBox="0 0 9 6">
                   <use href="#icon-arrow-down"></use>
@@ -230,7 +233,7 @@
               </button>
               <variants-dropdown
                 id="dropdown-{{ section.id }}-product-{{ product.id }}-position-{{ forloop.index0 }}"
-                class="variants-dropdown transition-short active-show pointer-none bg-white block shadow invisible py-20 absolute z-5 inset-x-0 top-100"
+                class="variants-dropdown transition-short active-show pointer-none bg-white block shadow invisible py-10 absolute z-5 inset-x-0 top-100"
               >
                 <ul class="dropdown-options list-unstyled">
                   {% render 'variant-options',

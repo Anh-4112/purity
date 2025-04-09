@@ -17,11 +17,13 @@
   assign product_recommendations_heading = theme_st.product_recommendations_heading
   assign recommendation_product_type = theme_st.recommendation_product_type
   assign select_product_recommendation = theme_st.select_product_recommendation
+  assign add_cart_type = theme_st.cart_type
 %}
 <cart-drawer
   id="{{ section.id }}"
   class="modal pointer-none active-modal-js"
   data-section-id="{{ section.id }}"
+  data-cart-type="{{ add_cart_type }}"
   tabindex="0"
   role="dialog"
 >
@@ -74,6 +76,11 @@
                     {% liquid
                       assign collection_media = collection.featured_image
                       assign collection_alt = collection.featured_image.alt | default: collection.title
+                      assign disable_lazy_loading = false
+                      if collection.metafields.custom.collection_empty.value.collection_image
+                        assign collection_media = collection.metafields.custom.collection_empty.value.collection_image
+                        assign disable_lazy_loading = true
+                      endif
                     %}
                     <a
                       class="block collection-item__media--ratio rounded"
@@ -86,11 +93,17 @@
                           {% render 'responsive-image',
                             type: 'other',
                             image: collection_media,
-                            image_alt: collection_alt
+                            image_alt: collection_alt,
+                            disable_lazy_loading: disable_lazy_loading
                           %}
                         </div>
                       {%- endif -%}
                       <span class="collection-item__name">{{- collection.title -}}</span>
+                      {% if collection.metafields.custom.collection_empty.value.collection_description != blank %}
+                        <span class="collection-item__description">
+                          {{- collection.metafields.custom.collection_empty.value.collection_description -}}
+                        </span>
+                      {%- endif -%}
                       <span class="collection-item__icon"></span>
                     </a>
                   </li>
@@ -391,60 +404,62 @@
               <div id="CartDrawer-CartErrors" role="alert"></div>
             </form>
           </cart-items>
-          <div class="drawer__cart-recommendations">
-            <mini-cart-recommendations
-              data-type="{{ recommendation_product_type }}"
-              data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=cart-upsell"
-            >
-              {%- if product_recommendations_heading -%}
-                <div class="cart-recommendations-title">
-                  {{ product_recommendations_heading }}
-                </div>
-              {%- endif -%}
-              <div class="cart-upsell-product">
-                <slide-section
-                  class="swiper"
-                  data-section-id="{{ section.id }}"
-                  data-autoplay="false"
-                  data-effect="slide"
-                  data-loop="false"
-                  data-speed="500"
-                  data-spacing="0"
-                  data-mobile="1"
-                  data-desktop="1"
-                  data-tablet="1"
-                >
-                  {%- render 'swiper-navigation', show_on_hover: true -%}
-                  <div class="swiper-wrapper">
-                    {%- if recommendation_product_type != 'auto' -%}
-                      {%- for item in select_product_recommendation -%}
-                        {% liquid
-                          assign hidden = false
-                          for item_cart in cart.items
-                            if item_cart.product_id == product.id
-                              assign hidden = true
-                            endif
-                          endfor
-                        %}
-                        {%- if hidden == false -%}
-                          {% render 'card-product',
-                            card_product: item,
-                            section_id: section.id,
-                            disable_hover_image: true,
-                            disable_badge: true,
-                            disable_rate: true,
-                            disable_color_swatches: true,
-                            class: 'swiper-slide mini-cart'
-                          %}
-                        {%- endif -%}
-                      {%- endfor -%}
-                    {%- endif -%}
+          {%- if enable_product_recommendations -%}
+            <div class="drawer__cart-recommendations">
+              <mini-cart-recommendations
+                data-type="{{ recommendation_product_type }}"
+                data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=cart-upsell"
+              >
+                {%- if product_recommendations_heading -%}
+                  <div class="cart-recommendations-title">
+                    {{ product_recommendations_heading }}
                   </div>
-                  <div class="swiper-pagination"></div>
-                </slide-section>
-              </div>
-            </mini-cart-recommendations>
-          </div>
+                {%- endif -%}
+                <div class="cart-upsell-product">
+                  <slide-section
+                    class="swiper"
+                    data-section-id="{{ section.id }}"
+                    data-autoplay="false"
+                    data-effect="slide"
+                    data-loop="false"
+                    data-speed="500"
+                    data-spacing="0"
+                    data-mobile="1"
+                    data-desktop="1"
+                    data-tablet="1"
+                  >
+                    {%- render 'swiper-navigation', show_on_hover: true -%}
+                    <div class="swiper-wrapper">
+                      {%- if recommendation_product_type != 'auto' -%}
+                        {%- for item in select_product_recommendation -%}
+                          {% liquid
+                            assign hidden = false
+                            for item_cart in cart.items
+                              if item_cart.product_id == product.id
+                                assign hidden = true
+                              endif
+                            endfor
+                          %}
+                          {%- if hidden == false -%}
+                            {% render 'card-product',
+                              card_product: item,
+                              section_id: section.id,
+                              disable_hover_image: true,
+                              disable_badge: true,
+                              disable_rate: true,
+                              disable_color_swatches: true,
+                              class: 'swiper-slide mini-cart'
+                            %}
+                          {%- endif -%}
+                        {%- endfor -%}
+                      {%- endif -%}
+                    </div>
+                    <div class="swiper-pagination"></div>
+                  </slide-section>
+                </div>
+              </mini-cart-recommendations>
+            </div>
+          {%- endif -%}
           <div class="drawer__footer relative">
             {%- if show_cart_note or show_estimate_shipping -%}
               <div class="cart-addons">

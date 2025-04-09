@@ -1,3 +1,4 @@
+{{ 'banner.css' | asset_url | stylesheet_tag }}
 {% liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -20,11 +21,11 @@
   endif
 %}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}px; --section-pb: {{ section_st.padding_bottom }}px;
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 <div
   id="{{ section.id }}"
-  class="section gradient color-{{ color_scheme }} section__slideshow{% if show_text_bellow_image %} text-below-mb{% endif %}"
+  class="gradient color-{{ color_scheme }} section__slideshow section"
   style="{{ style | strip | strip_newlines }}"
   data-id="{{ section.id }}"
 >
@@ -52,7 +53,6 @@
               assign image_mobile = block_st.image_mobile | default: image
               assign local_video = block_st.local_video
               assign overlay_opacity = block_st.overlay_opacity
-              assign circular_text = block_st.circular_text
               assign heading = block_st.heading
               assign heading_size = block_st.heading_size
               assign subheading = block_st.subheading
@@ -102,12 +102,12 @@
             %}
             <div {{ block.shopify_attributes }} class="swiper-slide">
               <div
-                class="sec__inner flex {% if slide_height == 'adapt' and image_mobile != blank %} ratio-mobile{% endif %} h-{{ slide_height }}"
-                style="--overlay-opacity: {{ overlay_opacity }}%;{% if slide_height == 'adapt' or  slide_height == 'full_screen' %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
+                class="sec__inner flex{% if slide_height == 'adapt' and image_mobile != blank %} ratio-mobile{% endif %}{% if slide_height == 'adapt' %} h-full{% endif %} h-{{ slide_height }}{% if show_text_bellow_image %} column flex-md-row text-bellow-mb{% endif %}"
+                style="{% if slide_height == 'adapt' or slide_height == "full_screen" %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
               >
                 <div
-                  class="banner__media w-full {{ rounded }} absolute inset-0"
-                  style="--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};--point:{{ image.presentation.focal_point }};"
+                  class="banner__media w-full h-full {{ rounded }} absolute inset-0 overlay-bg{% if show_text_bellow_image %} h-{{ slide_height }}{% endif %}"
+                  style="{% if show_text_bellow_image %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};--point:{{ image.presentation.focal_point }};{% endif %}--overlay-opacity: {{ overlay_opacity }}%"
                 >
                   {%- if image != blank or image_mobile != blank or local_video != blank -%}
                     {% if local_video != blank %}
@@ -133,7 +133,7 @@
                         assign poster_mobile = image_mobile | default: desktop_url
                       -%}
                       <video
-                        class="slideshow {{ rounded }}"
+                        class="slideshow w-full h-full object-fit-cover {{ rounded }}"
                         loop="true"
                         {% if poster_mobile != blank %}
                           data-posterMobile="{{ poster_mobile | image_url: width: 1100 }}"
@@ -156,7 +156,7 @@
                       -%}
                       {% render 'responsive-image',
                         type: 'banner',
-                        class: rounded,
+                        class: '',
                         container: section_st.section_width,
                         image: image,
                         image_mobile: image_mobile,
@@ -165,26 +165,16 @@
                       %}
                     {% endif %}
                   {%- else -%}
-                    {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    {%- render 'placeholder-render', type: 'lifestyle-2', index: forloop.index, class: "img-placeholder h-full w-full" -%}
                   {% endif %}
                 </div>
                 {% if heading != blank
                   or subheading != blank
                   or description != blank
                   or first_button_label != blank
-                  or circular_text != blank
                 %}
-                  <div class="sec__content {{ desktop_content_position }} container flex relative">
-                    <div class="sec__content-inner prose text-{{ text_alignment }}">
-                      {% if circular_text != blank %}
-                        <motion-effect
-                          data-animate="fade-up"
-                          data-animate-delay="{{ animate_delay }}"
-                          class="block"
-                        >
-                          {{ circular_text | escape }}
-                        </motion-effect>
-                      {% endif %}
+                  <div class="sec__content w-full{% if show_text_bellow_image == false %} flex{% else %} flex-md{% endif %} {{ desktop_content_position }} text-{{ block_st.text_alignment_mobile }} text-md-{{ text_alignment }} container relative{% if show_text_bellow_image %} mt-40 mt-md-0{% endif %} py-30 z-2">
+                    <div class="sec__content-inner prose max-w-100">
                       {% if subheading != blank %}
                         <div class="sec__content-subheading">
                           {% assign animate_delay = 30 %}
@@ -253,11 +243,12 @@
           {% endfor %}
         </div>
         {% if show_navigation %}
-          {%- render 'swiper-navigation' -%}
+          {%- render 'swiper-navigation' | class-hidden-on-mobile: "hidden block-1025" -%}
         {% endif %}
         {%- if show_pagination -%}
           <div
-            class="swiper-pagination"
+            class="swiper-pagination{% if show_text_bellow_image %} swiper-pagination-bellow{% endif %}"
+            style="{% if show_text_bellow_image %}--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% endif %}"
           ></div>
         {% endif %}
       </slide-section>
@@ -268,7 +259,7 @@
 {
   "name": "t:sections.slideshow.name",
   "tag": "section",
-  "class": "section section-slideshow",
+  "class": "section-slideshow",
   "disabled_on": {
     "groups": ["header", "footer", "custom.overlay"]
   },
@@ -372,7 +363,8 @@
       "type": "checkbox",
       "id": "show_text_bellow_image",
       "default": false,
-      "label": "t:sections.slideshow.settings.show_text_bellow_image.label"
+      "label": "t:sections.all.mobile_options.mobile_layout.show_text_bellow.label",
+      "info": "t:sections.all.mobile_options.mobile_layout.show_text_bellow.info"
     },
     {
       "type": "header",
@@ -386,7 +378,7 @@
       "step": 1,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
-      "default": 48
+      "default": 0
     },
     {
       "type": "range",
@@ -426,17 +418,11 @@
           "step": 1,
           "unit": "%",
           "label": "t:sections.slideshow.settings.blocks.image.image_overlay_opacity.label",
-          "default": 30
+          "default": 0
         },
         {
           "type": "header",
           "content": "t:sections.all.content.label"
-        },
-        {
-          "type": "text",
-          "id": "circular_text",
-          "default": "Rotating circular text",
-          "label": "t:sections.slideshow.settings.blocks.circular_text.label"
         },
         {
           "type": "text",
@@ -445,7 +431,7 @@
           "label": "t:sections.all.content_setting.subheading.label"
         },
         {
-          "type": "text",
+          "type": "textarea",
           "id": "heading",
           "default": "Image slide",
           "label": "t:sections.all.content_setting.heading.label"
@@ -589,6 +575,30 @@
           ],
           "default": "start",
           "label": "t:sections.all.text_alignment.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.all.mobile_options.mobile_layout.label"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment_mobile",
+          "options": [
+            {
+              "value": "start",
+              "label": "t:sections.all.text_alignment.options__1.label"
+            },
+            {
+              "value": "center",
+              "label": "t:sections.all.text_alignment.options__2.label"
+            },
+            {
+              "value": "end",
+              "label": "t:sections.all.text_alignment.options__3.label"
+            }
+          ],
+          "default": "start",
+          "label": "t:sections.all.text_alignment.label"
         }
       ]
     },
@@ -613,17 +623,11 @@
           "step": 1,
           "unit": "%",
           "label": "t:sections.slideshow.settings.blocks.video.video_overlay_opacity.label",
-          "default": 30
+          "default": 0
         },
         {
           "type": "header",
           "content": "t:sections.all.content.label"
-        },
-        {
-          "type": "text",
-          "id": "circular_text",
-          "default": "Rotating circular text",
-          "label": "t:sections.slideshow.settings.blocks.circular_text.label"
         },
         {
           "type": "text",
@@ -766,6 +770,30 @@
             }
           ],
           "default": "left",
+          "label": "t:sections.all.text_alignment.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.all.mobile_options.mobile_layout.label"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment_mobile",
+          "options": [
+            {
+              "value": "start",
+              "label": "t:sections.all.text_alignment.options__1.label"
+            },
+            {
+              "value": "center",
+              "label": "t:sections.all.text_alignment.options__2.label"
+            },
+            {
+              "value": "end",
+              "label": "t:sections.all.text_alignment.options__3.label"
+            }
+          ],
+          "default": "start",
           "label": "t:sections.all.text_alignment.label"
         }
       ]
