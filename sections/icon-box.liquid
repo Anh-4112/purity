@@ -59,20 +59,27 @@
       </div>
     {%- endif -%}
     {%- if section.blocks.size > 0 -%}
-      <div
+      <carousel-mobile
         class="grid-cols gap grid"
         style="{{ col_style | strip | strip_newlines }}"
+        data-enable-carousel-mobile="{{ section_st.enable_carousel_mobile }}"
+        data-mobile="{{ section_st.items_per_row }}"
+        data-spacing="{{ column_gap_slide }}"
       >
         {%- for block in section.blocks -%}
-          {%- assign icon_image = block.settings.icon_image -%}
-          {%- assign icon_svg = block.settings.icon_svg -%}
-          {%- assign custom_svg = block.settings.custom_svg -%}
-          {%- assign heading = block.settings.heading -%}
-          {%- assign description = block.settings.description -%}
+          {%- liquid
+            assign block_st = block.settings
+            assign icon_image = block_st.icon_image
+            assign icon_svg = block_st.icon_svg
+            assign custom_svg = block_st.custom_svg
+            assign heading = block_st.heading
+            assign description = block_st.description
+            assign icon_position = section_st.icon_position
+          -%}
 
           <div
-            class="icon-box__item flex column align-center text-{{ section_st.content_alignment }}"
-            style="--icon-size: {{ section_st.icon_size }}px;"
+            class="{% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex column align-center text-{{ section_st.content_icon_alignment }} icon-size__{{ section_st.content_icon_size }}"
+            style="--custom-width: {{ section_st.icon_size }}px"
           >
             <div class="icon-box__icon">
               {% if icon_image != blank %}
@@ -90,7 +97,7 @@
             </div>
           </div>
         {%- endfor -%}
-      </div>
+      </carousel-mobile>
     {%- endif -%}
   </div>
 </div>
@@ -248,7 +255,7 @@
     },
     {
       "type": "select",
-      "id": "content_alignment",
+      "id": "content_icon_alignment",
       "options": [
         {
           "value": "start",
@@ -264,11 +271,11 @@
         }
       ],
       "default": "start",
-      "label": "t:sections.all.text_alignment.label"
+      "label": "t:sections.all.text_alignment.alignment"
     },
     {
       "type": "select",
-      "id": "content_size",
+      "id": "content_icon_size",
       "options": [
         {
           "value": "small",
