@@ -43,13 +43,6 @@ export var PUB_SUB_EVENTS = {
   variantChange: "variant-change",
 };
 
-export function onKeyUpEscape(event) {
-  if (event.code.toUpperCase() !== "ESCAPE") return;
-  const element = event.target;
-  console.log(element);
-  eventModal(element, "close");
-}
-
 function getFocusableElements(container) {
   return Array.from(
     container.querySelectorAll(

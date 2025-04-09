@@ -74,6 +74,11 @@
                     {% liquid
                       assign collection_media = collection.featured_image
                       assign collection_alt = collection.featured_image.alt | default: collection.title
+                      assign disable_lazy_loading = false
+                      if collection.metafields.custom.collection_empty.value.collection_image
+                        assign collection_media = collection.metafields.custom.collection_empty.value.collection_image
+                        assign disable_lazy_loading = true
+                      endif
                     %}
                     <a
                       class="block collection-item__media--ratio rounded"
@@ -86,11 +91,17 @@
                           {% render 'responsive-image',
                             type: 'other',
                             image: collection_media,
-                            image_alt: collection_alt
+                            image_alt: collection_alt,
+                            disable_lazy_loading: disable_lazy_loading
                           %}
                         </div>
                       {%- endif -%}
                       <span class="collection-item__name">{{- collection.title -}}</span>
+                      {% if collection.metafields.custom.collection_empty.value.collection_description != blank %}
+                        <span class="collection-item__description">
+                          {{- collection.metafields.custom.collection_empty.value.collection_description -}}
+                        </span>
+                      {%- endif -%}
                       <span class="collection-item__icon"></span>
                     </a>
                   </li>

@@ -13,7 +13,6 @@
 {% if card_product and card_product != empty %}
   <div
     class="product-item product__item-js {{ class }}"
-    data-product-id="{{ card_product.id }}"
   >
     <div class="product-item__wrapper">
       <div class="product-item__inner relative">
@@ -42,7 +41,7 @@
               assign product_show_image_hover = false
             endif
           -%}
-          <div class="product__inner relative block rounded overflow-hidden {{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image == blank %} show-hover-img{% endif %} hover-effect">
+          <div class="product__inner relative block rounded overflow-hidden {{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect">
             <a
               class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
               draggable="false"
@@ -54,7 +53,7 @@
                   class="product__media animation-swatches"
                   style="--aspect-ratio: {{ ratio }};"
                 >
-                  {% if type_video and product_show_video_featured %}
+                  {% if type_video and product_show_video_featured and disable_show_video != true %}
                     {% if p_media.media_type == 'video' %}
                       <video-product class="product__img product__img_video lazy-video-item">
                         {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
@@ -66,7 +65,8 @@
                           container: container,
                           column: column,
                           column_mobile: column_mobile,
-                          padding: padding
+                          padding: padding,
+                          sizes: sizes
                         %}
                         <template class="video-template max-w-100">
                           {{
@@ -94,7 +94,8 @@
                           container: container,
                           column: column,
                           column_mobile: column_mobile,
-                          padding: padding
+                          padding: padding,
+                          sizes: sizes
                         %}
                         <template class="video-template">
                           {%- if p_media.host == 'youtube' -%}
@@ -121,7 +122,9 @@
                       container: container,
                       column: column,
                       column_mobile: column_mobile,
-                      padding: padding
+                      padding: padding,
+                      disable_lazy_loading: disable_lazy_loading,
+                      sizes: sizes
                     %}
                   {% else %}
                     {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
@@ -134,12 +137,14 @@
                       column: column,
                       column_mobile: column_mobile,
                       padding: padding,
+                      sizes: sizes,
+                      disable_lazy_loading: disable_lazy_loading,
                       motion: true
                     %}
                     {%- liquid
-                      if card_product.media[1] != blank and product_show_image_hover and disable_hover_image == blank
+                      if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true
                         assign alt_features = card_product.media[1].alt | default: card_product.title | escape
-                        render 'responsive-image', type: 'product', class: 'product__hover-img transition invisible absolute inset-0', image: card_product.media[1], image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding
+                        render 'responsive-image', type: 'product', class: 'product__hover-img transition invisible absolute inset-0', image: card_product.media[1], image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding, sizes: sizes, disable_lazy_loading: disable_lazy_loading
                       endif
                     -%}
                   {% endif %}

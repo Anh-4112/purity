@@ -6,6 +6,10 @@ import * as NextSkyTheme from "global";
 LazyLoadEventHover.run();
 new LazyLoader(".image-lazy-load");
 
+document.addEventListener("shopify:section:load", function () {
+  new LazyLoader(".image-lazy-load");
+});
+
 const delegate = new NextSkyTheme.eventDelegate();
 
 var Shopify = Shopify || {};
