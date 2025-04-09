@@ -187,7 +187,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
   return swiperSlide;
 }
 
-export class SlideSection extends HTMLElement {
+class SlideSection extends HTMLElement {
   constructor() {
     super();
     this.init();
@@ -232,3 +232,5 @@ export class SlideSection extends HTMLElement {
 if (!customElements.get("slide-section")) {
   customElements.define("slide-section", SlideSection);
 }
+
+export { initSlide, initSlideMedia, SlideSection };
