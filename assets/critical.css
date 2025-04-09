@@ -60,6 +60,11 @@ summary {
 summary::-webkit-details-marker {
   display: none;
 }
+:where(a, a strong) {
+  color: inherit;
+  transition: var(--transition);
+  text-decoration: inherit;
+}
 :where(
     .h0,
     h1,
@@ -85,7 +90,6 @@ summary::-webkit-details-marker {
   color: var(--color-heading);
   word-break: break-word;
   font-size: calc(var(--heading-font-scale) * var(--size));
-
   margin: 0;
 }
 :where(.h0, h1, h2, h3, .h1, .h2, .h3, ) {
@@ -141,9 +145,10 @@ summary::-webkit-details-marker {
   ) {
   color: inherit;
 }
-:is(.rte, announcement-bar) a {
+:is(.rte, announcement-bar, .tax-note) a {
   text-decoration: underline;
   text-underline-offset: 2px;
+  font-weight: var(--heading-weight);
 }
 :where(.h0) {
   --size: clamp(4rem, calc(4rem + (70 - 40) * var(--responsive-rate)), 7rem);
@@ -300,7 +305,24 @@ textarea {
   resize: none;
   --input-padding: 2rem;
 }
-
+.ratio-dot:after {
+  content: "";
+  position: absolute;
+  transform: scale(0);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--btn-primary-bg-color);
+  margin: auto;
+  transition: var(--short-duration, 0.3s) ease;
+}
+.custom-ratio:checked ~ .ratio-dot:after {
+  transform: scale(1);
+}
 .input-rounded {
   border-radius: var(--input-border-radius);
 }
@@ -370,11 +392,6 @@ textarea {
 [style*="--point"] :is(img, picture) {
   object-position: var(--point);
 }
-:where(a, a strong) {
-  color: inherit;
-  transition: var(--transition);
-  text-decoration: inherit;
-}
 .text-size {
   font-size: var(--body-font-size);
 }
@@ -405,6 +422,9 @@ textarea {
 }
 .bg-primary {
   background-color: var(--color-primary);
+}
+.bg-secondary {
+  background-color: var(--color-background-2);
 }
 .underline {
   text-decoration-line: underline;
@@ -614,7 +634,6 @@ input[type="radio"]:checked + .text-swatch-label.pill {
 .heading_weight {
   font-weight: var(--heading-weight, 600);
 }
-
 :where(.heading-color, .hover-heading-color:hover, [aria-current="true"]),
 a.hover-heading-color:hover {
   color: var(--color-heading);
