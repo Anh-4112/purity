@@ -1,10 +1,14 @@
-import { SlideSection } from "module-slide";
+import { initSlide } from "module-slide";
 import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
 import * as AddToCart from "module-addToCart";
 import * as NextSkyTheme from "global";
 
 LazyLoadEventHover.run();
 new LazyLoader(".image-lazy-load");
+
+document.addEventListener("shopify:section:load", function () {
+  new LazyLoader(".image-lazy-load");
+});
 
 const delegate = new NextSkyTheme.eventDelegate();
 
@@ -2364,3 +2368,53 @@ class CollectionHover extends HTMLElement {
 }
 
 customElements.define("collection-hover", CollectionHover);
+
+class CarouselMobile extends HTMLElement {
+  constructor() {
+    super();
+    this.enable = this.dataset.enableCarouselMobile == 'true';
+    this.swiperSlideInnerHtml = this.innerHTML;
+    this.initCarousel();
+  }
+  
+  initCarousel() {
+    if (this.enable) {
+      let width = window.innerWidth;
+      window.addEventListener('resize', () => {
+        const newWidth = window.innerWidth;
+        if (newWidth <= 767 && width > 767) {
+          this.actionOnMobile();
+        }
+        if (newWidth > 767 && width <= 767) {
+          this.actionOutMobile();
+        }
+        width = newWidth;
+      });
+      if (width <= 767) {
+        this.actionOnMobile();
+      } else {
+        this.actionOutMobile();
+      }
+    }
+  }
+  
+  actionOnMobile() {
+    this.classList.add('swiper');
+    this.classList.remove('grid-cols', 'grid');
+    const html = this.swiperSlideInnerHtml.replaceAll(
+      'switch-slide__mobile',
+      'swiper-slide'
+    );
+    const wrapper = `<div class='swiper-wrapper'>${html}</div> <div
+    class="swiper-pagination"></div> `;
+    this.innerHTML = wrapper;
+    initSlide(this);
+  }
+  
+  actionOutMobile() {
+    this.classList.remove('swiper');
+    this.classList.add('grid', 'grid-cols');
+    this.innerHTML = this.swiperSlideInnerHtml;
+  }
+}
+customElements.define('carousel-mobile', CarouselMobile);
