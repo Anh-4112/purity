@@ -188,32 +188,41 @@ export function eventModal(
     if (removeElementAfter) {
       element.classList.add("remove-after");
     }
+    if (actionModal == "delay") {
+      element.classList.add("delay");
+      setTimeout(() => {
+        element.querySelector(".model_media").classList.add("open");
+      }, 350);
+    }
     root.style.setProperty("padding-right", getScrollBarWidth.init() + "px");
     trapFocus(element);
   } else {
     const active_modal = document.querySelectorAll(".active-modal-js.active");
-    if (element.classList.contains("active-modal-js")) {
-      element.classList.remove("active");
-      if (element.classList.contains("remove-after")) {
-        setTimeout(() => element.remove(), 600);
-      }
+    const modal_element = element.classList.contains("active-modal-js")
+      ? element
+      : element.closest(".active-modal-js");
+    if (modal_element.classList.contains("delay")) {
+      setTimeout(() => {
+        modal_element.classList.remove("active", "delay");
+        if (active_modal.length == 1) {
+          root.classList.remove("open-modal");
+          root.style.removeProperty("padding-right");
+          removeTrapFocus(element);
+        }
+      }, 350);
+      modal_element.querySelector(".model_media").classList.remove("open");
     } else {
-      if (element.closest(".active-modal-js").classList.contains("delay")) {
-        element.closest(".active-modal-js").classList.remove("active");
-        element.closest(".active-modal-js").classList.remove("open");
-      } else {
-        element.closest(".active-modal-js").classList.remove("active");
-      }
-      if (
-        element.closest(".active-modal-js").classList.contains("remove-after")
-      ) {
-        setTimeout(() => element.closest(".active-modal-js").remove(), 600);
-      }
+      modal_element.classList.remove("active");
     }
-    if (active_modal.length == 1) {
-      root.classList.remove("open-modal");
-      root.style.removeProperty("padding-right");
-      removeTrapFocus(element);
+    if (modal_element.classList.contains("remove-after")) {
+      setTimeout(() => modal_element.remove(), 600);
+    }
+    if (!modal_element.classList.contains("delay")) {
+      if (active_modal.length == 1) {
+        root.classList.remove("open-modal");
+        root.style.removeProperty("padding-right");
+        removeTrapFocus(element);
+      }
     }
   }
 }
