@@ -19,15 +19,10 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 
-{%- if image_height == 'adapt' -%}
-  {%- capture style_ratio -%}
-    {%- if image_height == 'adapt' -%}
-      {% if image != blank %}
-      --aspect-ratio: {{ image.aspect_ratio }}; {% else %} --aspect-ratio: 5/2;{% endif %}
-      {%- if mobile_image != blank -%} --aspect-ratio-mb: {{ mobile_image.aspect_ratio }};{%- endif -%}{% if mobile_image == blank and section_st.image != blank %}--aspect-ratio-mb: {{ section_st.image.aspect_ratio }};{% endif %}
-    {%- endif -%}
+{%- capture style_ratio -%}
+  {% if image != blank %}--aspect-ratio: {{ image.aspect_ratio }};{% else %}--aspect-ratio: 5/2;{% endif %}
+  {%- if mobile_image != blank -%} --aspect-ratio-mb: {{ mobile_image.aspect_ratio }};{%- endif -%}{% if mobile_image == blank and section_st.image != blank %}--aspect-ratio-mb: {{ section_st.image.aspect_ratio }};{% endif %}
 {%- endcapture -%}
-{% endif %}
 
 <div
   class="section section__image-with-text-overlay color-{{ section_st.color_scheme }} gradient"
@@ -36,13 +31,17 @@
   <div class="{{ section_width }}">
     <div
       class="w-full flex relative h-{{ image_height }} overflow-hidden{% if show_text_bellow_mobile %} column flex-md-row text-bellow-mb{% endif %}"
-      {%- if section_st.image_height == 'adapt' -%}
+      {%- if image_height == 'adapt' or image_height == 'full_screen' -%}
         style="{{ style_ratio | strip | strip_newlines }}"
       {%- endif -%}
     >
       <div
         class="banner__media absolute{% if section_width != "full-width" %} rounded{% endif %}{% if image == blank %} placeholder inset-0{% endif %}{% if image_height != 'adapt' %} inset-0{% endif %}{% if show_text_bellow_mobile %} h-{{ image_height }}{% endif %}"
-        style="--aspect-ratio: {{ image.aspect_ratio }}"
+        {%- if image_height == 'adapt' or image_height == 'full_screen' or image_height == 'base_on_content' -%}
+          style="{{ style_ratio | strip | strip_newlines }}"
+        {% else %}
+          style="--aspect-ratio: {{ image_height }}; --aspect-ratio-mb: {{ image_height }};"
+        {%- endif -%}
       >
         {%- if image != blank or mobile_image != blank -%}
           {%- liquid
@@ -57,7 +56,7 @@
             image_alt: alt
           %}
         {%- else -%}
-          {%- render 'placeholder-render', type: 'lifestyle-2', class: "img-placeholder h-full w-full" -%}
+          {%- render 'placeholder-render', type: 'lifestyle-2', class: 'img-placeholder h-full w-full' -%}
         {% endif %}
       </div>
       <div
@@ -345,7 +344,7 @@
       "step": 1,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
-      "default": 0
+      "default": 48
     },
     {
       "type": "range",
@@ -355,7 +354,7 @@
       "step": 1,
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
-      "default": 0
+      "default": 48
     }
   ],
   "presets": [
