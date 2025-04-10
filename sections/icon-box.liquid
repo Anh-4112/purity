@@ -15,7 +15,14 @@
   elsif heading_size == 'large'
     assign header_size = 'fs-medium'
   endif
-
+  assign content_icon_size = section_st.content_icon_size
+  if content_icon_size == 'small'
+    assign content_icon_size = 'fs-small'
+  elsif content_icon_size == 'medium'
+    assign content_icon_size = ''
+  elsif content_icon_size == 'large'
+    assign content_icon_size = 'fs-big-2'
+  endif
   assign column_gap_slide = 0
   if section_st.column_gap == 'large'
     assign column_gap_slide = 30
@@ -32,7 +39,6 @@
 
 {%- capture col_style -%}
   --col-number: {{ section_st.items_per_row }};--col-tablet: 2;--col-desktop: 3;
-  {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
 {%- endcapture -%}
 
 <div
@@ -61,7 +67,7 @@
     {%- if section.blocks.size > 0 -%}
       <carousel-mobile
         data-items="1"
-        class="grid-cols gap grid"
+        class="grid-cols gap gap-{{ column_gap_slide }} grid"
         style="{{ col_style | strip | strip_newlines }}"
         data-enable-carousel-mobile="{{ section_st.enable_carousel_mobile }}"
         data-mobile="{{ section_st.items_per_row }}"
@@ -77,13 +83,24 @@
             assign description = block_st.description
             assign icon_position = section_st.icon_position
           -%}
-
           <div
-            class="{% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex column align-center text-{{ section_st.content_icon_alignment }} icon-size__{{ section_st.content_icon_size }}"
+            class="{% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
             style="--custom-width: {{ section_st.icon_size }}px"
           >
-            <div class="icon-box__icon">
+            <div class="icon-box__icon flex">
               {% if icon_image != blank %}
+                {%- liquid
+                  assign alt_default = 'accessibility.promotion_banner' | t
+                  assign alt = section_st.banner_image.alt | default: alt_default | escape
+                -%}
+                {% render 'responsive-image',
+                  type: 'other',
+                  width: section_st.icon_size,
+                  height: section_st.icon_size,
+                  image: icon_image,
+                  image_alt: alt,
+                  class: 'rounded'
+                %}
               {% elsif icon_svg == 'none' and custom_svg != blank %}
                 {{ custom_svg }}
               {% elsif icon_svg != 'none' %}
@@ -92,13 +109,25 @@
                   custom_width: section_st.icon_size,
                   custom_height: section_st.icon_size
                 %}
+              {% else %}
+                <div class="w-custom h-custom rounded" style="--custom-width: {{ section_st.icon_size }}px; --custom-height: {{ section_st.icon_size }}px;--aspect-ratio:1/1;">
+                  {%- render 'placeholder-render', type: 'product', class: 'img-placeholder' -%}
+                </div>
               {% endif %}
             </div>
-            <h5 class="icon-box__heading">
-              {{ heading }}
-            </h5>
-            <div class="icon-box__description">
-              {{ description }}
+            <div class="icon-box__content">
+              {%- if heading != blank -%}
+                <h6 class="icon-box__heading {{ content_icon_size }} mb-15"
+                  style="--body-font-size:20px;"
+                >
+                  {{ heading }}
+                </h6>
+              {%- endif -%}
+              {%- if description != blank -%}
+                <div class="icon-box__description">
+                  {{ description }}
+                </div>
+              {%- endif -%}
             </div>
           </div>
         {%- endfor -%}
@@ -275,7 +304,7 @@
           "label": "t:sections.all.text_alignment.options__3.label"
         }
       ],
-      "default": "start",
+      "default": "center",
       "label": "t:sections.all.text_alignment.alignment"
     },
     {
@@ -295,7 +324,7 @@
           "label": "t:sections.all.content_header.heading_size.options__3.label"
         }
       ],
-      "default": "small",
+      "default": "medium",
       "label": "t:sections.all.content_header.heading_size.size"
     },
     {
@@ -351,7 +380,8 @@
         {
           "type": "image_picker",
           "id": "icon_image",
-          "label": "t:sections.all.image.label"
+          "label": "t:sections.all.image.label",
+          "info": "t:sections.all.image.image_icon_box.info"
         },
         {
           "type": "select",
