@@ -2486,3 +2486,29 @@ class CarouselMobile extends HTMLElement {
 }
 
 customElements.define('carousel-mobile', CarouselMobile);
+
+class NavBar extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    document.body.classList.add("mobile-sticky-bar-enabled");
+  }
+  connectedCallback() {
+    window.addEventListener(
+      "scroll",
+      this.updateScrollNavigationbar.bind(this)
+    );
+  }
+  updateScrollNavigationbar() {
+    const scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollTop > 200) {
+      this.classList.add("show");
+    } else {
+      this.classList.remove("show");
+    }
+  }
+}
+customElements.define("mobile-navigation-bar", NavBar);
