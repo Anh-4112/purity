@@ -76,7 +76,11 @@
     transform: translateY(-50%);
     left: var(--progress-width);
   }
-  .product-tabs__header-image{
+  .product-tabs__header-item.swiper-slide{
+
+  }
+  .product-tabs__header-image,
+  .product-tabs__header-item.swiper-slide{
     max-width: 100%;
     width: var(--image-collection-width);
   }
@@ -89,10 +93,6 @@
     }
     .overflow-hidden-mobile{
       overflow: hidden;
-    }
-    .product-tabs__header-image{
-      width: 100%;
-      max-width: 100%;
     }
   }
 {% endstyle %}
@@ -127,11 +127,11 @@
     >
       <div class="product-tabs__header flex column align-center type-{{ section_st.media_type }}">
         <slide-section 
-          class="product-tabs__header-image-mobile swiper w-full hidden-md reveal_on_scroll"
+          class="product-tabs__header-image-mobile swiper hidden-md reveal_on_scroll"
           data-spacing="30"
-          data-mobile="2"
           data-center-slide="true"
           data-loop="true"
+          data-effect="slide"
         >
           <div class="swiper-wrapper">
             {%- for block in section.blocks -%}
@@ -155,7 +155,7 @@
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
               >
-                <div class="product-tabs__header-image" style="--aspect-ratio: 1;">
+                <div class="product-tabs__header-image">
                   {%- if image != blank -%}
                     {% render 'responsive-image',
                       type: 'other',

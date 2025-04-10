@@ -37,7 +37,7 @@ function initSlide(_this) {
     _this.style.maxHeight = _this.offsetHeight + "px";
   }
   new Swiper(_this, {
-    slidesPerView: autoItem ? "auto" : itemMobile,
+    slidesPerView:  centerSlide ? 'auto' : autoItem ? "auto" : itemMobile,
     spaceBetween: centerSlide ? spacing : spacing >= 15 ? 15 : spacing,
     autoplay: autoplay,
     direction: direction,
@@ -47,6 +47,8 @@ function initSlide(_this) {
     watchSlidesProgress: true,
     watchSlidesVisibility: true,
     centeredSlides: centerSlide,
+    grabCursor: true,
+    allowTouchMove: true,
     grid: {
       rows: row,
       fill: "row",

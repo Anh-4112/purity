@@ -1993,7 +1993,7 @@ class ProductTabs extends HTMLElement {
     } else {
       this._dot.style.transition = 'none';
       this._dot.style.left = `${adjustedPosition}px`;
-      void this._dot.offsetWidth; // Kích hoạt reflow
+      void this._dot.offsetWidth;
       this._dot.style.transition = 'left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)';
     }
   }
@@ -2069,7 +2069,7 @@ class ProductTabs extends HTMLElement {
           Motion.animate(
             description,
             { height: 0 },
-            { duration: 0.3, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
+            { duration: 0.3}
           );
         } else {
           description.style.height = "0";
@@ -2090,7 +2090,7 @@ class ProductTabs extends HTMLElement {
         Motion.animate(
           description,
           { height: "auto" },
-          { duration: 0.3, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
+          { duration: 0.3}
         );
       } else {
         description.style.height = "auto";
@@ -2177,8 +2177,7 @@ class ProductTabs extends HTMLElement {
             y: [0, 15],
           },
           {
-            duration: 0.3,
-            easing: "cubic-bezier(0.24, 0.02, 0.13, 1.01)",
+            duration: 0.3
           }
         ).finished;
       } catch (e) {
@@ -2197,8 +2196,7 @@ class ProductTabs extends HTMLElement {
           y: [15, 0],
         },
         {
-          duration: 0.3,
-          easing: "cubic-bezier(0.24, 0.02, 0.13, 1.01)",
+          duration: 0.3
         }
       );
     } catch (e) {
