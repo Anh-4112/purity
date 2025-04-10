@@ -2406,7 +2406,7 @@ class CarouselMobile extends HTMLElement {
       'switch-slide__mobile',
       'swiper-slide'
     );
-    const wrapper = `<div class='swiper-wrapper custom-padding-carousel'>${html}</div><div class="swiper-pagination" style="--swiper-pagination-bottom: 0"></div>`;
+    const wrapper = `<div class='swiper-wrapper custom-padding-carousel-mobile'>${html}</div><div class="swiper-pagination" style="--swiper-pagination-bottom: 0"></div>`;
     this.innerHTML = wrapper;
     initSlide(this);
   }
