@@ -49,6 +49,7 @@
   endif
 
   assign text_alignment = section_st.text_alignment
+  assign enable_quick_add = section_st.enable_quick_add
 %}
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -102,13 +103,13 @@
             style="--position-top: {{ position_top }}%; --position-left: {{ position_left }}%;"
             data-product-position="{{ forloop.index }}"
             {{ block.shopify_attributes }}
-            target="_blank"
           >
             <div class="bundle-products-hotspot pointer relative">
               <a
                 aria-label="{{ product.title }}"
                 class="product__name heading-style block"
                 href="{{ product.url }}"
+                target="_blank"
               >
                 <span class="icon-dot flex content-center dot pointer-none">
                   {{ forloop.index }}
@@ -175,7 +176,8 @@
                 disable_vendor: true,
                 disable_hover_image: true,
                 show_quick_add: true,
-                type: 'list'
+                type: 'list',
+                enable_quick_add: enable_quick_add,
               %}
             </bundle-item>
 

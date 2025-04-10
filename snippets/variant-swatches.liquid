@@ -68,10 +68,8 @@
     %}
     {%- if quantity_variant > 1 -%}
       <variant-radios-bundle
-        data-section="{{ section.id }}"
-        {% if update_url == false %}
-          data-update-url="false"
-        {% endif %}
+        data-section-id="{{ section.id }}"
+        data-product-url="{{ product.url }}"
       >
         <label class="field__label visually-hidden" for="VariantRadiosBundle-{{ section.id }}-{{ product.id }}">
           {{ 'templates.bundle.form.name' | t -}}
