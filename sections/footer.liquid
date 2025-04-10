@@ -155,7 +155,11 @@
                   </div>
                 {%- when 'menu_block' -%}
                   {%- if block_st.menu != blank or block_st.heading != blank -%}
-                    <details class="collapsible-row border-bottom border-bottom-md-0" is="collapsible-row" open>
+                    <details
+                      class="collapsible-row border-bottom border-bottom-md-0 detail-open"
+                      is="collapsible-row"
+                      open
+                    >
                       <summary class="collapsible-row__summary pointer-md-none py-20 mb-md-5">
                         <h6 class="footer__block-heading flex space-between align-center collapsible-heading">
                           <span>
@@ -186,7 +190,11 @@
                     </details>
                   {%- endif -%}
                 {%- when 'contact_bar_block' -%}
-                  <details class="collapsible-row border-bottom border-bottom-md-0" is="collapsible-row" open>
+                  <details
+                    class="collapsible-row border-bottom border-bottom-md-0 detail-open"
+                    is="collapsible-row"
+                    open
+                  >
                     {%- if block_st.store_heading != blank -%}
                       <summary class="collapsible-row__summary pointer-md-none py-20 mb-md-5">
                         <h6 class="footer__block-heading flex space-between align-center collapsible-heading relative">
@@ -268,7 +276,7 @@
       <div
         class="footer_bottom-inner flex column flex-1025-row gap-20 space-between border-top pt-30"
       >
-        <div class="footer__bottom--left disclosure__footer">
+        <div class="footer__bottom--left disclosure__footer flex column flex-1025-row gap-20">
           {%- if section_st.enable_country_selector or section_st.enable_language_selector -%}
             {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
               <div class="footer__column flex wrap justify-center justify-start-1025 footer__localization gap-20">
@@ -281,27 +289,13 @@
               </div>
             {%- endif -%}
           {%- endif -%}
-          <div class="footer__copyright fs-small text-center text-1025-start mt-15">
+          <div class="footer__copyright fs-small text-center text-1025-start">
             &copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
             . {{ powered_by_link }}
           </div>
         </div>
         {%- if payment_enable or menu_store_policies != blank -%}
-          <div class="footer__bottom--right">
-            {%- if payment_enable -%}
-              <div class="footer__payment mb-15">
-                <ul
-                  class="list-payment h-custom list-unstyled flex wrap justify-center justify-end-1025 gap-5"
-                  style="--custom-height: 22px;"
-                >
-                  {%- for type in shop.enabled_payment_types -%}
-                    <li class="list-payment__item">
-                      {{ type | payment_type_svg_tag: class: 'payment__icon' }}
-                    </li>
-                  {%- endfor -%}
-                </ul>
-              </div>
-            {%- endif -%}
+          <div class="footer__bottom--right flex column flex-1025-row gap-20">
             {%- if menu_store_policies != blank -%}
               <div class="menu__policies">
                 <ul class="menu__policies-list flex wrap justify-center justify-end-1025 gap-20 list-unstyled fs-small">
@@ -314,6 +308,20 @@
                       >
                         {{ link.title }}
                       </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+            {%- if payment_enable -%}
+              <div class="footer__payment">
+                <ul
+                  class="list-payment h-custom list-unstyled flex wrap justify-center justify-end-1025 gap-5"
+                  style="--custom-height: 22px;"
+                >
+                  {%- for type in shop.enabled_payment_types -%}
+                    <li class="list-payment__item">
+                      {{ type | payment_type_svg_tag: class: 'payment__icon' }}
                     </li>
                   {%- endfor -%}
                 </ul>
