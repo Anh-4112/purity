@@ -188,32 +188,41 @@ export function eventModal(
     if (removeElementAfter) {
       element.classList.add("remove-after");
     }
+    if (actionModal == "delay") {
+      element.classList.add("delay");
+      setTimeout(() => {
+        element.querySelector(".model_media").classList.add("open");
+      }, 350);
+    }
     root.style.setProperty("padding-right", getScrollBarWidth.init() + "px");
     trapFocus(element);
   } else {
     const active_modal = document.querySelectorAll(".active-modal-js.active");
-    if (element.classList.contains("active-modal-js")) {
-      element.classList.remove("active");
-      if (element.classList.contains("remove-after")) {
-        setTimeout(() => element.remove(), 600);
-      }
+    const modal_element = element.classList.contains("active-modal-js")
+      ? element
+      : element.closest(".active-modal-js");
+    if (modal_element.classList.contains("delay")) {
+      setTimeout(() => {
+        modal_element.classList.remove("active", "delay");
+        if (active_modal.length == 1) {
+          root.classList.remove("open-modal");
+          root.style.removeProperty("padding-right");
+          removeTrapFocus(element);
+        }
+      }, 350);
+      modal_element.querySelector(".model_media").classList.remove("open");
     } else {
-      if (element.closest(".active-modal-js").classList.contains("delay")) {
-        element.closest(".active-modal-js").classList.remove("active");
-        element.closest(".active-modal-js").classList.remove("open");
-      } else {
-        element.closest(".active-modal-js").classList.remove("active");
-      }
-      if (
-        element.closest(".active-modal-js").classList.contains("remove-after")
-      ) {
-        setTimeout(() => element.closest(".active-modal-js").remove(), 600);
-      }
+      modal_element.classList.remove("active");
     }
-    if (active_modal.length == 1) {
-      root.classList.remove("open-modal");
-      root.style.removeProperty("padding-right");
-      removeTrapFocus(element);
+    if (modal_element.classList.contains("remove-after")) {
+      setTimeout(() => modal_element.remove(), 600);
+    }
+    if (!modal_element.classList.contains("delay")) {
+      if (active_modal.length == 1) {
+        root.classList.remove("open-modal");
+        root.style.removeProperty("padding-right");
+        removeTrapFocus(element);
+      }
     }
   }
 }
@@ -324,3 +333,65 @@ function resolveImageUrl(src, width) {
       : `${src}&width=${width}`
   ).href;
 }
+
+class AlertNotify {
+  constructor() {
+    this.container = document.getElementById("notification-container");
+    if (!this.container) {
+      this.container = document.createElement("div");
+      this.container.id = "notification-container";
+      document.body.appendChild(this.container);
+    }
+  }
+
+  show(message, type = "info", duration = 3000) {
+    const notification = document.createElement("div");
+    notification.classList.add("notification", type);
+    const icon = this.createIcon(type);
+    const text = document.createElement("span");
+    text.classList.add("error-message", "ms-5");
+    text.innerHTML = message;
+    notification.appendChild(icon.firstElementChild);
+    notification.appendChild(text);
+    this.container.appendChild(notification);
+
+    setTimeout(() => {
+      notification.classList.add("show");
+    }, 10);
+
+    setTimeout(() => {
+      this.hide(notification);
+    }, duration);
+  }
+
+  hide(notification) {
+    notification.classList.remove("show");
+    setTimeout(() => {
+      this.container.removeChild(notification);
+    }, 300);
+  }
+
+  createIcon(type) {
+    const icon = document.createElement("span");
+    switch (type) {
+      case "success":
+        icon.innerHTML =
+          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
+        break;
+      case "error":
+        icon.innerHTML =
+          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-error"></use></svg>';
+        break;
+      case "info":
+        icon.innerHTML =
+          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-info"></use></svg>';
+        break;
+      default:
+        icon.innerHTML =
+          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
+    }
+    return icon;
+  }
+}
+
+export const notifier = new AlertNotify();

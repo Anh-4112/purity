@@ -9,6 +9,15 @@
     assign section_width = 'fluid_container'
   endif
 
+  assign column_gap_slide = 0
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 30
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 10
+  endif
+
   assign heading_size = section_st.heading_size
   assign header_size = ''
   if heading_size == 'small'
@@ -22,6 +31,19 @@
   {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 
+{%- capture col_style -%}
+  --col-number: {{ section_st.items_per_row }};
+  {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
+{%- endcapture -%}
+
+<style>
+  {% comment %} @media (min-width: 769px) {
+    .promotion-banner__carousel {
+      display: flex !important;
+      flex-wrap: wrap !important;
+    }
+  } {% endcomment %}
+</style>
 <div
   class="section__multi-content overflow-hidden section"
   style="{{ style | strip | strip_newlines }}"
@@ -48,27 +70,23 @@
     <div
       class="promotion-banner__blocks relative"
     >
-      {% comment %}
-        {%- if section_st.enable_carousel_mobile -%}
-          <multi-content
-            data-enable="{{ section_st.enable_carousel_mobile }}"
-            data-mobile="{{ section_st.items_per_row }}"
-            data-spacing="{{ section_st.column_gap }}"
-            class="{% if section_st.items_per_row > 1 and section_st.items_per_row < 2 %} grid_scroll {% endif %}multi-content-js relative flex flex-col-custom flex-wrap"
-            style="--col-number: {{ section_st.items_per_row }};--swiper-pagination-mt: 3rem;"
-          >
-        {%- endif -%}
-      {% endcomment %}
-      <div
-        class="promotion-banner__blocks flex column flex-md-row wrap cols row-gap gap-{{ section_st.column_gap }}"
+      <carousel-mobile
+        class="promotion-banner__blocks row-gap gap-{{ section_st.column_gap }}{% if section_st.enable_carousel_mobile %} grid-cols grid promotion-banner__carousel{% else %} flex column flex-md-row wrap cols{% endif %}"
+        data-multicontent="true"
+        data-flex="true"
+        data-enable-carousel-mobile="{{ section_st.enable_carousel_mobile }}"
+        data-mobile="{{ section_st.items_per_row }}"
+        data-spacing="{{ column_gap_slide }}"
+        style="{{ col_style | strip | strip_newlines }}"
       >
+        {% comment %}
+          <div
+            class="promotion-banner__blocks flex column flex-md-row wrap cols row-gap gap-{{ section_st.column_gap }}"
+          >
+        {% endcomment %}
         {% content_for 'blocks' %}
-      </div>
-      {% comment %}
-        {%- if section_st.enable_carousel_mobile -%}
-          </multi-content>
-        {%- endif -%}
-      {% endcomment %}
+        {% comment %} </div> {% endcomment %}
+      </carousel-mobile>
     </div>
   </div>
 </div>

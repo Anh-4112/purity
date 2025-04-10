@@ -19,6 +19,12 @@ export class ProductForm extends HTMLElement {
     }
   }
 
+  get addCartType() {
+    return this.cart && this.cart.hasAttribute("data-cart-type")
+      ? this.cart.getAttribute("data-cart-type")
+      : "page";
+  }
+
   onSubmitHandler(event) {
     event.preventDefault();
     if (this.submitButton.getAttribute("aria-disabled") === "true") return;
@@ -47,7 +53,11 @@ export class ProductForm extends HTMLElement {
             errors: response.errors || response.description,
             message: response.message,
           });
-          this.handleErrorMessage(response.description);
+          if (this.querySelector(".product-form__error-message-wrapper")) {
+            this.handleErrorMessage(response.description);
+          } else {
+            NextSkyTheme.notifier.show(response.description, "error", 4000);
+          }
 
           const soldOutMessage =
             this.submitButton.querySelector(".sold-out-message");
@@ -57,7 +67,7 @@ export class ProductForm extends HTMLElement {
           soldOutMessage.classList.remove("hidden");
           this.error = true;
           return;
-        } else if (!this.cart) {
+        } else if (!this.cart || this.addCartType == "page") {
           window.location = window.routes.cart_url;
           return;
         }

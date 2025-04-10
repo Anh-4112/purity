@@ -1,14 +1,16 @@
 {% liquid
-  assign the_settings = settings
-  assign search_type = the_settings.search_type
-  assign search_popular_keywords = the_settings.search_popular_keywords
-  assign predictive_search_enabled = the_settings.predictive_search_enabled
-  assign search_product_recommended = the_settings.search_product_recommended
-  assign show_search_vendor = the_settings.show_search_vendor
+  assign theme_st = settings
+  assign search_type = theme_st.search_type
+  assign search_popular_keywords = theme_st.search_popular_keywords
+  assign predictive_search_enabled = theme_st.predictive_search_enabled
+  assign search_product_recommended = theme_st.search_product_recommended
+  assign show_search_vendor = theme_st.show_search_vendor
+  assign logo_img = theme_st.logo
+  assign logo_width = theme_st.logo_width
   if show_search_vendor
     assign show_search_vendor = false
   endif
-  assign show_search_price = the_settings.show_search_price
+  assign show_search_price = theme_st.show_search_price
   if show_search_price
     assign show_search_price = false
   endif
@@ -34,6 +36,34 @@
       </svg>
     </button>
     <div class="drawer__body h-full overflow-y-auto custom-scrollbar">
+      <div class="search__header">
+        {% if search_type == 'popup' %}
+          {%- if logo_img != blank -%}
+            <a
+              href="{{ routes.root_url }}"
+              class="header__heading-link"
+              aria-label="{{ shop.name }}"
+            >
+              {%- assign img_alt = logo_img.alt | default: shop.name | escape -%}
+              {%- assign logo_height = logo_width | divided_by: logo_img.aspect_ratio -%}
+              {{
+                logo_img
+                | image_url: width: logo_width
+                | image_tag:
+                  class: 'logo',
+                  widths: '50, 100, 150, 200, 250, 300, 400, 500, 600',
+                  height: logo_height,
+                  width: logo_width,
+                  alt: img_alt,
+                  sizes: '100vw'
+              }}
+            </a>
+          {%- endif -%}
+        {% endif %}
+        <h3 class="heading-color">
+          {{ 'general.search.name' | t }}
+        </h3>
+      </div>
       <div
         id="search-form"
         class="search-form"

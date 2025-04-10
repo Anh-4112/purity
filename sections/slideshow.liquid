@@ -89,11 +89,11 @@
                   assign ratio_dk = section.blocks.first.settings.local_video.aspect_ratio
                   assign ratio_mb = section.blocks.first.settings.local_video.aspect_ratio
                 else
-                  assign ratio_dk = '3/2'
+                  assign ratio_dk = '5/2'
                   assign ratio_mb = '2/3'
                 endif
               else
-                assign ratio_dk = '3/2'
+                assign ratio_dk = '5/2'
                 assign ratio_mb = '2/3'
               endif
               if forloop.first
@@ -106,7 +106,7 @@
                 style="{% if slide_height == 'adapt' or slide_height == "full_screen" %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
               >
                 <div
-                  class="banner__media w-full h-full {{ rounded }} absolute inset-0 overlay-bg{% if show_text_bellow_image %} h-{{ slide_height }}{% endif %}"
+                  class="banner__media w-full{% if slide_height == 'adapt' and show_text_bellow_image %} h-auto{% else %} h-full{% endif %} {{ rounded }} absolute inset-0 overlay-bg{% if show_text_bellow_image %} h-{{ slide_height }}{% endif %}"
                   style="{% if show_text_bellow_image %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};--point:{{ image.presentation.focal_point }};{% endif %}--overlay-opacity: {{ overlay_opacity }}%"
                 >
                   {%- if image != blank or image_mobile != blank or local_video != blank -%}
@@ -165,15 +165,17 @@
                       %}
                     {% endif %}
                   {%- else -%}
-                    {%- render 'placeholder-render', type: 'lifestyle-2', index: forloop.index, class: "img-placeholder h-full w-full" -%}
+                    {%- render 'placeholder-render',
+                      type: 'lifestyle-2',
+                      index: forloop.index,
+                      class: 'img-placeholder h-full w-full'
+                    -%}
                   {% endif %}
                 </div>
-                {% if heading != blank
-                  or subheading != blank
-                  or description != blank
-                  or first_button_label != blank
-                %}
-                  <div class="sec__content w-full{% if show_text_bellow_image == false %} flex{% else %} flex-md{% endif %} {{ desktop_content_position }} text-{{ block_st.text_alignment_mobile }} text-md-{{ text_alignment }} container relative{% if show_text_bellow_image %} mt-40 mt-md-0{% endif %} py-30 z-2">
+                {% if heading != blank or subheading != blank or description != blank or first_button_label != blank %}
+                  <div class="sec__content w-full{% if show_text_bellow_image == false %} flex py-custom{% else %} flex-md{% endif %} {{ desktop_content_position }} text-{{ block_st.text_alignment_mobile }} text-md-{{ text_alignment }} container relative{% if show_text_bellow_image %} mt-40 mt-md-0{% endif %} z-2"
+                    style="--padding-block: 100;"
+                  >
                     <div class="sec__content-inner prose max-w-100">
                       {% if subheading != blank %}
                         <div class="sec__content-subheading">
@@ -243,12 +245,12 @@
           {% endfor %}
         </div>
         {% if show_navigation %}
-          {%- render 'swiper-navigation' | class-hidden-on-mobile: "hidden block-1025" -%}
+          {%- render 'swiper-navigation' | class-slideshow: "hidden block-1025 cursor-custom-slide", type: "slideshow"  -%}
         {% endif %}
         {%- if show_pagination -%}
           <div
-            class="swiper-pagination{% if show_text_bellow_image %} swiper-pagination-bellow{% endif %}"
-            style="{% if show_text_bellow_image %}--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% endif %}"
+            class="swiper-pagination swiper-pagination-slideshow{% if show_text_bellow_image %} swiper-pagination-bellow{% endif %}"
+            style="{% if show_text_bellow_image %}--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% endif %}--swiper-pagination-bottom:3rem;--swiper-pagination-bullet-active-width: 8rem;"
           ></div>
         {% endif %}
       </slide-section>

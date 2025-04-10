@@ -648,7 +648,7 @@
                                   {%- case last_block.type -%}
                                     {%- when 'menu_mega' -%}
                                       <div
-                                        class="mega-banner flex column flex-cols gap px-gutter-x py-12"
+                                        class="mega-banner flex column flex-cols gap p-gutter-x"
                                         style="--col-number: 1;--gap:24px;"
                                       >
                                         {%- for i in (1..5) -%}
@@ -942,7 +942,7 @@
                   {%- if section_st.show_account -%}
                     <a
                       href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                      class="btn btn-primary block text-center mt-20 mb-15 fs-small"
+                      class="btn btn-primary block text-center mt-20 mb-15 text-size"
                       aria-label="{% if customer %}{{ 'customer.account.title' | t }}{% else %}{{ 'customer.login_page.title' | t }}{% endif %}"
                     >
                       {% if customer %}
@@ -951,11 +951,11 @@
                         {{ 'customer.login_page.title' | t }}
                       {% endif %}
                     </a>
-                    <div class="text-center fs-small">
+                    <div class="text-center">
                       {%- if customer -%}
                         <a
                           href="{{ routes.account_logout_url }}"
-                          class="btn btn-outline block text-center"
+                          class="btn btn-outline block text-center text-size"
                           aria-label="{{ 'customer.account_fallback' | t }}"
                         >
                           {{- 'customer.log_out' | t -}}

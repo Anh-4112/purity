@@ -32,9 +32,9 @@
     assign column_gap_slide = 10
   endif
 -%}
-<collection-hover>
+<collection-hover {{ block.shopify_attributes }}>
 <a
-  class="heading-style collection-list__content"
+  class="heading-style collection-list__content block"
   {% if collection_url != blank %}
     href="{{ collection_url }}"
   {% else %}
@@ -56,8 +56,8 @@
       </span>
   </div>
     <div class="collection-list__image-hover hidden-mobile" style="opacity: 0;">
-  {%- if image != blank -%}
-        {% render 'responsive-image',
+        {%- if image != blank -%}
+          {% render 'responsive-image',
             type: 'other',
             image: image,
             image_alt: alt_text,
@@ -68,7 +68,7 @@
           %}
         {%- else -%}
           {% render 'placeholder-render', type: 'collection' %}
-            {%- endif -%}
+        {%- endif -%}
     </div>
 </a>
 </collection-hover>

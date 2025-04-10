@@ -326,6 +326,9 @@
   transition: 0.3s opacity;
   transform: translate3d(0, 0, 0);
   z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .swiper-pagination-custom {
   min-height: 2.8rem;
@@ -380,16 +383,26 @@
 .swiper-pagination-bullet {
   width: var(
     --swiper-pagination-bullet-width,
-    var(--swiper-pagination-bullet-size, 8px)
+    var(--swiper-pagination-bullet-size, 6px)
   );
   height: var(
     --swiper-pagination-bullet-height,
-    var(--swiper-pagination-bullet-size, 8px)
+    var(--swiper-pagination-bullet-size, 6px)
   );
   display: inline-block;
-  border-radius: var(--swiper-pagination-bullet-border-radius, 50%);
+  border-radius: var(--swiper-pagination-bullet-border-radius, 10px);
   background: var(--swiper-pagination-bullet-inactive-color, #000);
-  opacity: var(--swiper-pagination-bullet-inactive-opacity, 0.2);
+  opacity: var(--swiper-pagination-bullet-inactive-opacity, 0.3);
+  position: relative;
+  transition: opacity .5s cubic-bezier(.37,.4,.72,.71), width .5s cubic-bezier(.37,.4,.72,.71);
+}
+.swiper-pagination-bullet:before {
+  content: "";
+  position: absolute;
+  top: -.5rem;
+  left: -.5rem;
+  right: -.5rem;
+  bottom: -.5rem;
 }
 button.swiper-pagination-bullet {
   border: none;
@@ -408,6 +421,8 @@ button.swiper-pagination-bullet {
 .swiper-pagination-bullet-active {
   opacity: var(--swiper-pagination-bullet-opacity, 1);
   background: var(--swiper-pagination-color, var(--swiper-theme-color));
+  width: var(--swiper-pagination-bullet-active-width, 4rem);
+  overflow: hidden;
 }
 .swiper-pagination-vertical.swiper-pagination-bullets,
 .swiper-vertical > .swiper-pagination-bullets {
@@ -439,7 +454,7 @@ button.swiper-pagination-bullet {
 .swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
 .swiper-pagination-horizontal.swiper-pagination-bullets
   .swiper-pagination-bullet {
-  margin: 0 var(--swiper-pagination-bullet-horizontal-gap, 4px);
+  margin: 0 var(--swiper-pagination-bullet-horizontal-gap, 5px);
 }
 .swiper-horizontal
   > .swiper-pagination-bullets.swiper-pagination-bullets-dynamic,
