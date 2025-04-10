@@ -290,7 +290,11 @@
             </div>
           {% endif %}
           {%- if product_enable_color_swatches and disable_color_swatches != true -%}
-            {%- render 'variant-swatches', scope: 'item', product: card_product -%}
+            {%- if bundle_swatch -%}
+              {%- render 'variant-swatches', scope: 'bundle', product: card_product -%}
+            {%- else -%}
+              {%- render 'variant-swatches', scope: 'item', product: card_product -%}
+            {%- endif -%}
           {% endif %}
         </div>
       </div>

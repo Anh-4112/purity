@@ -1,0 +1,572 @@
+{{ 'section-bundle-products.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'section-bundle-products.js' | asset_url }}" defer="defer"></script>
+
+{% liquid
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+
+  assign column_gap_slide = 0
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 30
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 10
+  endif
+
+  assign heading_size = section_st.heading_size
+  assign header_size = ''
+  if heading_size == 'small'
+    assign header_size = 'h3'
+  elsif heading_size == 'large'
+    assign header_size = 'fs-medium'
+  endif
+
+  assign image_width = section_st.image_width
+  assign image_position = section_st.image_position
+  assign image_ratio = section_st.image_ratio
+  assign image = section_st.image
+  assign ratio = '3/4'
+  if image_ratio != 'adapt'
+    case image_ratio
+      when 'square'
+        assign ratio = '1/1'
+      when 'landscape'
+        assign ratio = '4/3'
+      when 'portrait'
+        assign ratio = '3/4'
+    endcase
+  else
+    if image != blank
+      assign ratio = image.aspect_ratio
+    endif
+  endif
+
+  assign text_alignment = section_st.text_alignment
+%}
+{%- capture style -%}
+    --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+    {% if heading_size == 'large' %}--font-size: 40;{% endif %}
+{%- endcapture -%}
+
+<div
+  class="section__bundle-product overflow-hidden section"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div
+    class="{{ section_width }}"
+  >
+    <bundle-products class="bundle-products flex wrap row-gap-20 {% if image_position == "right" %}row-reverse-md{% endif %} space-between gap-{{ column_gap_slide }}" style="--row-gap: 2rem;--col-width: {{ image_width }}%">
+      <div class="bundle-products__image relative w-full col-1025-w-custom">
+        <div
+          class="rounded h-full"
+          {% if image != blank %}
+            style="--aspect-ratio: {{ ratio }}";
+          {% else %}
+            style="--aspect-ratio: 16/9";
+          {% endif %}
+        >
+          {%- liquid
+            assign alt = 'general.image.image_alt_default' | t
+            if image.alt
+              assign alt = image.alt | escape
+            endif
+          -%}
+          {%- if image != blank -%}
+            {% render 'responsive-image',
+              type: 'other',
+              container: section_width,
+              image: image,
+              image_alt: alt,
+              class: 'rounded'
+            %}
+          {% else %}
+            {% render 'placeholder-render',type: 'collection-6', class: "img-placeholder h-full w-full" %}
+          {% endif %}
+        </div>
+        {%- for block in section.blocks -%}
+          {% liquid
+            assign block_st = block.settings
+            assign position_top = block_st.position_top
+            assign position_left = block_st.position_left
+            assign product = block_st.product
+          %}
+          <div
+            class="absolute bundle-products-link"
+            style="--position-top: {{ position_top }}%; --position-left: {{ position_left }}%;"
+            data-product-position="{{ forloop.index }}"
+            {{ block.shopify_attributes }}
+            target="_blank"
+          >
+            <div class="bundle-products-hotspot pointer relative">
+              <a
+                aria-label="{{ product.title }}"
+                class="product__name heading-style block"
+                href="{{ product.url }}"
+              >
+                <span class="icon-dot flex content-center dot pointer-none">
+                  {{ forloop.index }}
+                </span>
+              </a>
+            </div>
+            {%- liquid
+              assign position_x = ''
+              if position_left > 80
+                assign position_x = ' right'
+              elsif position_left < 20
+                assign position_x = ' left'
+              endif
+              assign position_y = ''
+              if position_top > 65
+                assign position_y = ' bottom'
+              elsif position_top < 35
+                assign position_y = ' top'
+              endif
+            -%}
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="bundle-products__body w-full col-1025-remaining align-self-center">
+        {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
+          <div
+            class="section-header text-{{ text_alignment }}"
+          >
+            {%- if section_st.subheading != blank -%}
+              <div class="section-subheading">
+                {{ section_st.subheading }}
+              </div>
+            {%- endif -%}
+            {%- if section_st.title != blank -%}
+              <h2 class="block section-heading {{ header_size }}">
+                {{ section_st.title }}
+              </h2>
+            {%- endif -%}
+            {%- if section_st.description != blank -%}
+              <div class="section-description">
+                {{ section_st.description }}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        <div class="bundle-products__list">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign block_st = block.settings
+              assign product = block_st.product
+            -%}
+            <bundle-item
+              data-product-position="{{ forloop.index }}"
+            
+            >
+              {% render 'card-product',
+                card_product: product,
+                section_id: section.id,
+                show_video: true,
+                disable_quickview: true,
+                disable_badge: true,
+                disable_rate: true,
+                bundle_swatch: true,
+                disable_vendor: true,
+                disable_hover_image: true,
+                show_quick_add: true,
+                type: 'list'
+              %}
+            </bundle-item>
+
+          {%- endfor -%}
+          <product-form class="bundle-products-form">
+            <form
+              method="post"
+              action="/cart/add"
+              accept-charset="UTF-8"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              data-type="add-to-cart-form"
+            >
+              <input type="hidden" name="form_type" value="product">
+              <input type="hidden" name="utf8" value="✓">
+              <div class="product-bundle-products-list">
+                {%- for block in section.blocks -%}
+                  {%- liquid
+                    assign blo_settings = block.settings
+                    assign product = blo_settings.product
+                    assign product_available = product.variants | where: 'available'
+                    assign loop_index = forloop.index
+                  -%}
+                  {% if product != blank %}
+                    <div class="variant-select">
+                      {%- if product.variants.size > 1 -%}
+                        {% for variant in product_available %}
+                          {%- liquid
+                            assign selected = false
+                            assign quantity = variant.inventory_quantity
+                          -%}
+                          {% if quantity < 1 and variant.available == false %}
+                            {% continue %}
+                          {% else %}
+                            {% assign selected = true %}
+                            {% assign show_button_add_all = true %}
+                          {% endif %}
+                          <input
+                            type="hidden"
+                            name="items[][id]"
+                            data-index="{{ loop_index }}"
+                            value="{{ variant.id }}"
+                          >
+                          <input type="hidden" name="items[][quantity]" class="quantity" value="1">
+                          {% if selected %}
+                            {% break %}
+                          {% endif %}
+                        {% endfor %}
+                      {%- else -%}
+                        {%- if product.selected_or_first_available_variant.inventory_quantity > 0
+                          or product.selected_or_first_available_variant.available == true
+                        -%}
+                          {% assign show_button_add_all = true %}
+                          <input
+                            type="hidden"
+                            name="items[][id]"
+                            data-index="{{ loop_index }}"
+                            value="{{ product.selected_or_first_available_variant.id }}"
+                          >
+                          <input type="hidden" name="items[][quantity]" class="quantity" value="1">
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                {%- endfor -%}
+              </div>
+              {%- if show_button_add_all -%}
+                <button
+                  type="submit"
+                  class="btn btn-primary w-full relative product_submit_button product-form__submit word-wrap relative"
+                  aria-label="{{ 'products.product.add_all_to_cart' | t }}"
+                >
+                  <span class="hidden-on-load">{{ 'products.product.add_all_to_cart' | t }}</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    class="spin opacity-0 pointer-none icon-load absolute"
+                  >
+                    <use href="#icon-load"></use>
+                  </svg>
+                </button>
+              {%- endif -%}
+            </form>
+          </product-form>
+          {%- if section_st.button_label != blank %}
+            <a
+              {% if section_st.button_link == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ section_st.button_link | default: "#" }}"
+              {% endif %}
+              aria-label="{{ section_st.button_label }}"
+              class="btn btn-link align-self-center"
+            >
+              {{ section_st.button_label }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </bundle-products>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.bundle-products.name",
+  "tag": "section",
+  "class": "section bundle-products",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.general"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "fix_width",
+          "label": "t:sections.all.layout.fix_width"
+        },
+        {
+          "value": "stretch_width",
+          "label": "t:sections.all.layout.stretch_width"
+        },
+        {
+          "value": "full_width",
+          "label": "t:sections.all.layout.full_width"
+        }
+      ],
+      "default": "fix_width",
+      "label": "t:sections.all.layout.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.info",
+      "default": "default-color-scheme"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_header.label"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Tailored for You",
+      "label": "t:sections.all.content_setting.heading.label"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.all.content_setting.subheading.label",
+      "default": "Check These Out"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.all.content_setting.description.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:sections.all.content_header.heading_size.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.all.content_header.heading_size.options__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.all.content_header.heading_size.options__3.label"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.all.content_header.heading_size.label"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "center",
+      "label": "t:sections.all.text_alignment.alignment"
+    },
+    {
+      "type": "select",
+      "id": "column_gap",
+      "options": [
+        {
+          "value": "no_gap",
+          "label": "t:sections.all.padding.column_gap.no_gap"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.all.padding.column_gap.small"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.all.padding.column_gap.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.all.padding.column_gap.large"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.all.padding.column_gap.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_setting.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.bundle-products.settings.image.label"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 40,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "label": "t:sections.all.image.desktop_image_width.label"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:sections.all.image.desktop_position.label",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.all.image.desktop_position.left"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.all.image.desktop_position.right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.all.image.aspect_ratio.adapt"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.all.image.aspect_ratio.options__1"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.all.image.aspect_ratio.options__2"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.all.image.aspect_ratio.options__3"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.all.image.aspect_ratio.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_add",
+      "label": "t:sections.bundle-products.settings.enable_quick_add_for_items.label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "View Usage Guide",
+      "label": "t:sections.all.content_setting.first_button_label.label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.all.content_setting.first_button_label.link"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "t:sections.bundle-products.blocks.settings.name",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.bundle-products.blocks.settings.select_product"
+        },
+        {
+          "type": "range",
+          "id": "position_top",
+          "label": "t:sections.bundle-products.blocks.settings.position_top",
+          "min": 0,
+          "max": 100,
+          "unit": "%",
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "position_left",
+          "label": "t:sections.bundle-products.blocks.settings.position_left",
+          "min": 0,
+          "max": 100,
+          "unit": "%",
+          "step": 1,
+          "default": 50
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.bundle-products.presets.name",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "position_top": 45,
+            "position_left": 32
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "position_top": 47,
+            "position_left": 56
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "position_top": 62,
+            "position_left": 76
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
