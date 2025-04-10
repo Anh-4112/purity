@@ -12,10 +12,10 @@
 %}
 {% if card_product and card_product != empty %}
   <div
-    class="product-item product__item-js {{ class }}"
+    class="product-item product__item-js{{ class }}"
   >
     <div class="product-item__wrapper">
-      <div class="product-item__inner relative">
+      <div class="product-item__inner relative{{ style_layout }}">
         {%- if disable_image != true -%}
           {%- liquid
             assign p_media = card_product.featured_media
@@ -41,7 +41,7 @@
               assign product_show_image_hover = false
             endif
           -%}
-          <div class="product__inner relative block rounded overflow-hidden {{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect">
+          <div class="product__inner relative block rounded overflow-hidden{{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect">
             <a
               class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
               draggable="false"
@@ -50,7 +50,7 @@
             >
               {%- if p_media -%}
                 <div
-                  class="product__media animation-swatches"
+                  class="product__media animation-swatches{{ image_rounded }}"
                   style="--aspect-ratio: {{ ratio }};"
                 >
                   {% if type_video and product_show_video_featured and disable_show_video != true %}
@@ -185,16 +185,16 @@
                   assign qty_rules = true
                 endif
               -%}
-              <div class="absolute inset-x-15 bottom-15 z-2 overflow-hidden">
+              <div class="quick__shop-action absolute inset-x-15 bottom-15 z-2 overflow-hidden">
                 {%- if card_product.variants.size > 1 or qty_rules -%}
                   <button
                     type="button"
                     is="button-quick-view"
-                    class="btn button-quickview w-full btn-white invisible-1025 text-center{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
+                    class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 text-center{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
                     data-url="{{ shop.url }}/products/{{ card_product.handle }}"
                     aria-label="{{ 'products.product.quickview' | t }}"
                   >
-                    <span class="product-quickview-btn hidden-on-load d-none block-md">
+                    <span class="product-quickview-btn hidden-on-load d-none block-1025">
                       {{ 'products.product.quickview' | t }}
                     </span>
                     <svg
@@ -206,7 +206,7 @@
                     >
                       <use href="#icon-load"></use>
                     </svg>
-                    <svg width="16" height="16" class="hidden-md" viewBox="0 0 16 16" fill="none">
+                    <svg width="16" height="16" class="hidden-1025 hidden-on-load" viewBox="0 0 16 16" fill="none">
                       <use href="#icon-cart" />
                     </svg>
                   </button>
@@ -229,8 +229,7 @@
                         id="{{ product_form_id }}-submit"
                         type="submit"
                         name="add"
-                        class="btn button-quickview w-full btn-white invisible-1025 text-center{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
-
+                        class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 text-center{% if product_show_quick_add_mobile == blank %} hidden block-1025{% endif %}"
                         aria-haspopup="dialog"
                         aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
                         aria-live="polite"
@@ -239,7 +238,7 @@
                           disabled
                         {% endif %}
                       >
-                        <span class="product-addtocart-btn hidden-on-load d-none block-md">
+                        <span class="product-addtocart-btn hidden-on-load d-none block-1025">
                           {%- if card_product.selected_or_first_available_variant.available -%}
                             {{ 'products.product.add_to_cart' | t }}
                           {%- else -%}
@@ -255,7 +254,7 @@
                         >
                           <use href="#icon-load"></use>
                         </svg>
-                        <svg width="16" height="16" class="hidden-md" viewBox="0 0 16 16" fill="none">
+                        <svg width="16" height="16" class="hidden-1025 hidden-on-load" viewBox="0 0 16 16" fill="none">
                           <use href="#icon-cart" />
                         </svg>
                       </button>
@@ -266,7 +265,7 @@
             {%- endif -%}
           </div>
         {%- endif -%}
-        <div class="product__information mt-15 text-{{ product_alignment }}">
+        <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}">
           {% if product_show_vendor and disable_vendor != true and card_product.vendor != blank %}
             <div class="product__vendor grey-color fs-small">
               {{- card_product.vendor | link_to_vendor -}}
