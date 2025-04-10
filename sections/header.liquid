@@ -560,7 +560,7 @@
           </button>
         {%- endif -%}
         <div class="drawer__body h-full">
-          <div class="drawer__content flex column h-full">
+          <div class="drawer__content flex column h-full max-height-mb-menu">
             <nav class="header__menu-mobile overflow-y-auto overflow-x-hidden w-full h-full grow-1">
               {%- if section_st.banner_image != blank -%}
                 <div class="banner top-rounded overflow-hidden relative">
@@ -588,7 +588,7 @@
                   </a>
                 </div>
               {%- endif -%}
-              <ul class="list-unstyled px-gutter-x py-10">
+              <ul class="list-unstyled px-gutter-x py-10 overflow-y-auto">
                 {%- for link in menu.links -%}
                   {%- if section.blocks.size > 0 -%}
                     <li class="py-10">

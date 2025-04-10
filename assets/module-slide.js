@@ -1,6 +1,7 @@
 function initSlide(_this) {
   let autoplay = _this?.dataset.autoplay === "true";
   const loop = _this?.dataset.loop === "true";
+  const centerSlide = _this?.dataset.centerSlide === "true";
   const itemDesktop = _this?.dataset.desktop ? _this?.dataset.desktop : 4;
   let itemTablet = _this?.dataset.tablet ? _this?.dataset.tablet : "";
   const itemMobile = _this?.dataset.mobile ? _this?.dataset.mobile : 1;
@@ -36,8 +37,8 @@ function initSlide(_this) {
     _this.style.maxHeight = _this.offsetHeight + "px";
   }
   new Swiper(_this, {
-    slidesPerView: autoItem ? "auto" : itemMobile,
-    spaceBetween: spacing >= 15 ? 15 : spacing,
+    slidesPerView:  centerSlide ? 'auto' : autoItem ? "auto" : itemMobile,
+    spaceBetween: centerSlide ? spacing : spacing >= 15 ? 15 : spacing,
     autoplay: autoplay,
     direction: direction,
     loop: loop,
@@ -45,6 +46,9 @@ function initSlide(_this) {
     speed: speed,
     watchSlidesProgress: true,
     watchSlidesVisibility: true,
+    centeredSlides: centerSlide,
+    grabCursor: true,
+    allowTouchMove: true,
     grid: {
       rows: row,
       fill: "row",
