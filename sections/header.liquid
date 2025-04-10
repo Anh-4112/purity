@@ -267,7 +267,7 @@
                                                 {% if button_label != blank %}
                                                   <button
                                                     class="btn btn-primary mt-20 text-center w-custom"
-                                                    style="--custom-width: 70%;--btn-padding-x: 2rem;"
+                                                    style="--width: 70%;--btn-padding-x: 2rem;"
                                                     aria-label="{{ button_label }}"
                                                   >
                                                     <span class="btn-text relative z-1">{{ button_label }}</span>
@@ -542,11 +542,11 @@
       style="--modal-width: 100%;"
     >
       <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-      <div class="modal-inner transition top-rounded w-full fixed z-15 left-0 bg-white">
+      <div class="modal-inner color-default transition top-rounded w-full fixed z-15 left-0 bg-white">
         {%- if section_st.banner_image == blank -%}
           <button
             class="modal__close transition-short absolute{% if section_st.banner_image != blank %} top-10 right-10 bg-white blur rounded-50 shadow{% else %} invisible inset-x-0 mx-auto bg-white btn-close-model{% endif %} w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
-            style="--custom-width: 2.4rem;"
+            style="--width: 2.4rem;"
             is="button-close-model"
             aria-label="{{ 'accessibility.button.close' | t }}"
           >
@@ -562,7 +562,7 @@
                 <div class="banner top-rounded overflow-hidden relative">
                   <button
                     class="modal__close transition-short absolute{% if section_st.banner_image != blank %} top-10 right-10 bg-white blur rounded-50 shadow{% else %} invisible inset-x-0 mx-auto bg-white btn-close-model{% endif %} w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
-                    style="--custom-width: 2.4rem;"
+                    style="--width: 2.4rem;"
                     is="button-close-model"
                     aria-label="{{ 'accessibility.button.close' | t }}"
                   >

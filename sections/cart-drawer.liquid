@@ -28,31 +28,33 @@
   role="dialog"
 >
   <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-  <div class="modal-inner color-default invisible drawer drawer-right fixed right-0 z-15 inset-y-0 bg-white w-full">
-    <button
-      is="button-close-model"
-      class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
-      aria-label="Close"
-    >
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="icon_zoom">
-        <use href="#icon-close" />
-      </svg>
-    </button>
-    <div class="drawer__body h-full flex column">
-      <div class="drawer__header flex gap align-center drawer-spacing border-bottom" style="--gap: 6px">
-        <h2 class="drawer__heading h5">
+  <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer invisible drawer drawer-right fixed right-0 z-15 inset-y-0 bg-white w-full">
+    <div class="drawer__body h-full flex column bg-white">
+      <div
+        class="drawer__header flex gap-10 space-between align-center drawer-spacing border-bottom"
+      >
+        <h2 class="drawer__heading h5 flex gap align-center" style="--gap: 6px">
           {{ 'sections.cart.title' | t }}
+          <span
+            class="cart-count w-custom h-custom rounded-50 bg-custom fs-12 inline-flex content-center"
+            style="--width: 2.3rem; --height: 2.3rem;--bg-color-custom: var(--btn-primary-bg-color);"
+          >
+            {%- if cart.item_count < 100 -%}
+              {{- cart.item_count -}}
+            {%- else -%}
+              ~
+            {%- endif -%}
+          </span>
         </h2>
-        <span
-          class="cart-count w-custom h-custom rounded-50 bg-custom fs-12 inline-flex content-center"
-          style="--custom-width: 2.3rem; --custom-height: 2.3rem;--bg-color-custom: var(--btn-primary-bg-color);"
+        <button
+          is="button-close-model"
+          class="modal__close pointer btn-reset w-30 h-full inline-flex align-center flex-end"
+          aria-label="Close"
         >
-          {%- if cart.item_count < 100 -%}
-            {{- cart.item_count -}}
-          {%- else -%}
-            ~
-          {%- endif -%}
-        </span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class=" icon-zoom transition-short will-change">
+            <use href="#icon-close" />
+          </svg>
+        </button>
       </div>
       {%- if cart == empty -%}
         {% liquid
@@ -145,26 +147,36 @@
                 assign free_shipping_amount = free_minimum_amount | minus: total_price | money_with_currency
               endif
               assign progress = total_price | times: 100 | divided_by: free_minimum_amount | round: 2
+              if progress > 100
+                assign progress = 100
+              endif
             %}
             {%- if free_shipping_message -%}
-              <div class="progress-bar-message">
+              <div class="progress-bar-message text-center heading-style">
                 {%- if progress < 100 -%}
                   {%- capture free_amount -%}
                   <span>{{ free_shipping_amount }}</span>
                   {%- endcapture -%}
                   {{ free_shipping_message | replace: '[amount]', free_amount }}
                 {%- else -%}
+                  {% assign progress = 100 %}
                   {{ 'sections.cart.free_shipping_avaiable' | t }}
                 {%- endif -%}
               </div>
             {%- endif -%}
-            <div class="progress-bar" style="--progress: {{ progress }}%;">
-              <div class="progress"></div>
+            <div
+              class="progress-bar rounded-10 h-custom bg-grey mt-10 relative"
+              style="--height: 6px;"
+            >
+              <div
+                class="progress rounded-10 h-custom absolute left-0 inset-y-0 transition"
+                style="width: {{ progress }}%"
+              ></div>
             </div>
           </div>
         {%- endif -%}
-        <div class="cart-drawer-inner overflow-y-auto custom-scrollbar">
-          <cart-items class="block mb-20 drawer-spacing">
+        <div class="cart-drawer-inner overflow-y-auto custom-scrollbar grow-1 flex column">
+          <cart-items class="block mb-20 drawer-spacing grow-1">
             <form
               action="{{ routes.cart_url }}"
               id="CartDrawer-Form"
@@ -182,7 +194,7 @@
                         >
                           <div class="cart-item_inner flex gap-20">
                             {% if item.image %}
-                              <div class="cart-item__media flex-auto w-custom" style="--custom-width: 10rem;">
+                              <div class="cart-item__media flex-auto w-custom" style="--width: 10rem;">
                                 {%- liquid
                                   assign ratio = ''
                                   if theme_st.product_image_ratio != 'adapt'
@@ -220,7 +232,7 @@
                             {% endif %}
                             <div
                               class="cart-item__details-info flex column{% if item.image %} flex-auto w-custom{% else %} flex-1{% endif %}"
-                              style="--custom-width: calc(100% - 12rem);"
+                              style="--width: calc(100% - 12rem);"
                             >
                               <div
                                 class="cart-item-info"
@@ -244,7 +256,7 @@
                                       height="12"
                                       viewBox="0 0 12 12"
                                       fill="none"
-                                      class=" icon-zoom transition-short will-change"
+                                      class="icon-zoom transition-short will-change text-color"
                                     >
                                       <use href="#icon-close" />
                                     </svg>
@@ -350,7 +362,7 @@
                                   <input
                                     class="quantity__input border-0 p-0 text-center w-custom fs-small"
                                     type="number"
-                                    style="--custom-width: 2.2rem;--input-height: 38px;"
+                                    style="--width: 2.2rem;--input-height: 38px;"
                                     type="number"
                                     data-quantity-variant-id="{{ item.variant.id }}"
                                     name="updates[]"
@@ -408,13 +420,16 @@
             </form>
           </cart-items>
           {%- if enable_product_recommendations -%}
-     <div class="drawer__cart-recommendations model_media fixed-1025 inset-y-0 z-2 beside invisible-1025 pointer-none-1025">
+            <div
+              class="drawer__cart-recommendations model_media bg-secondary-1025 drawer-left drawer-spacing p-1025-40 fixed-1025 inset-y-0 z--1-1025 beside invisible-1025 pointer-none-1025 max-w-1025"
+              style="--width: 26rem;"
+            >
               <mini-cart-recommendations
                 data-type="{{ recommendation_product_type }}"
                 data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=cart-upsell"
               >
                 {%- if product_recommendations_heading -%}
-                  <div class="cart-recommendations-title">
+                  <div class="cart-recommendations-title h6 mb-20">
                     {{ product_recommendations_heading }}
                   </div>
                 {%- endif -%}
@@ -451,7 +466,10 @@
                               disable_badge: true,
                               disable_rate: true,
                               disable_color_swatches: true,
-                              class: 'swiper-slide mini-cart'
+                              class: 'swiper-slide mini-cart',
+                              style_layout: 'flex gap-10 block-1025',
+                              image_class: 'flex-auto w-custom',
+                              info_class: 'flex-1'
                             %}
                           {%- endif -%}
                         {%- endfor -%}
@@ -465,42 +483,41 @@
           {%- endif -%}
           <div class="drawer__footer relative">
             {%- if show_cart_note or show_estimate_shipping -%}
-              <div class="cart-addons flex align-center border-top drawer-spacing" style="--padding-block: 0;">
+              <div
+                class="cart-addons flex align-center border-top drawer-spacing"
+                style="--padding-block: 0;--show-overlay-bg: #0000002b;"
+              >
                 {%- if show_cart_note -%}
-                  <div class="drawer__cart-note">
-                    <button
-                      type="button"
-                      data-open="note"
-                      aria-label="{{- 'sections.cart.note.note_title' | t }}"
-                      class="btn-reset pointer inline-flex align-center gap-5 fs-small p-20 ps-0"
-                    >
-                      <svg width="15" height="16" viewBox="0 0 15 16" fill="none">
-                        <path d="M10.8642 1.18519V0.691358C10.8642 0.296296 10.5679 0 10.1728 0C9.77778 0 9.48148 0.395062 9.48148 0.691358V1.08642H5.03704V0.691358C5.03704 0.395062 4.74074 0 4.34568 0C3.95062 0 3.65432 0.395062 3.65432 0.691358V1.18519C1.28395 1.38272 0 2.96296 0 5.4321V11.6543C0 14.4198 1.58025 16 4.34568 16H10.1728C12.9383 16 14.5185 14.4198 14.5185 11.6543V5.4321C14.5185 2.96296 13.2346 1.38272 10.8642 1.18519ZM4.34568 3.55556C4.64198 3.55556 5.03704 3.25926 5.03704 2.8642V2.46914H9.48148V2.8642C9.48148 3.25926 9.87654 3.55556 10.1728 3.55556C10.4691 3.55556 10.8642 3.25926 10.8642 2.8642V2.46914C12.4444 2.66667 13.1358 3.65432 13.1358 5.4321V11.6543C13.1358 13.7284 12.1481 14.6173 10.1728 14.6173H4.34568C2.27161 14.6173 1.38272 13.6296 1.38272 11.6543V5.33333C1.38272 3.55556 2.07407 2.5679 3.65432 2.37037V2.76543C3.65432 3.25926 3.95062 3.55556 4.34568 3.55556Z" fill="#111111"></path>
-                        <path d="M4.34565 8.00019H10.1728C10.4691 8.00019 10.8642 7.7039 10.8642 7.30884C10.8642 6.91377 10.4691 6.61748 10.1728 6.61748H4.34565C3.95059 6.61748 3.6543 6.91377 3.6543 7.30884C3.6543 7.7039 4.04936 8.00019 4.34565 8.00019Z" fill="#111111"></path>
-                        <path d="M7.30862 10.2715H4.34565C3.95059 10.2715 3.6543 10.5678 3.6543 10.9629C3.6543 11.3579 4.04936 11.6542 4.34565 11.6542H7.30862C7.60491 11.6542 7.99998 11.3579 7.99998 10.9629C7.99998 10.5678 7.60491 10.2715 7.30862 10.2715Z" fill="#111111"></path>
-                      </svg>
-                      <span>
-                        {{- 'sections.cart.note.note_title' | t -}}
-                      </span>
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    data-open="note"
+                    aria-label="{{- 'sections.cart.note.note_title' | t }}"
+                    class="drawer__cart-note show-overlay btn-reset pointer inline-flex align-center gap-5 fs-small p-20 ps-0"
+                  >
+                    <svg width="15" height="16" viewBox="0 0 15 16" fill="none">
+                      <path d="M10.8642 1.18519V0.691358C10.8642 0.296296 10.5679 0 10.1728 0C9.77778 0 9.48148 0.395062 9.48148 0.691358V1.08642H5.03704V0.691358C5.03704 0.395062 4.74074 0 4.34568 0C3.95062 0 3.65432 0.395062 3.65432 0.691358V1.18519C1.28395 1.38272 0 2.96296 0 5.4321V11.6543C0 14.4198 1.58025 16 4.34568 16H10.1728C12.9383 16 14.5185 14.4198 14.5185 11.6543V5.4321C14.5185 2.96296 13.2346 1.38272 10.8642 1.18519ZM4.34568 3.55556C4.64198 3.55556 5.03704 3.25926 5.03704 2.8642V2.46914H9.48148V2.8642C9.48148 3.25926 9.87654 3.55556 10.1728 3.55556C10.4691 3.55556 10.8642 3.25926 10.8642 2.8642V2.46914C12.4444 2.66667 13.1358 3.65432 13.1358 5.4321V11.6543C13.1358 13.7284 12.1481 14.6173 10.1728 14.6173H4.34568C2.27161 14.6173 1.38272 13.6296 1.38272 11.6543V5.33333C1.38272 3.55556 2.07407 2.5679 3.65432 2.37037V2.76543C3.65432 3.25926 3.95062 3.55556 4.34568 3.55556Z" fill="#111111"></path>
+                      <path d="M4.34565 8.00019H10.1728C10.4691 8.00019 10.8642 7.7039 10.8642 7.30884C10.8642 6.91377 10.4691 6.61748 10.1728 6.61748H4.34565C3.95059 6.61748 3.6543 6.91377 3.6543 7.30884C3.6543 7.7039 4.04936 8.00019 4.34565 8.00019Z" fill="#111111"></path>
+                      <path d="M7.30862 10.2715H4.34565C3.95059 10.2715 3.6543 10.5678 3.6543 10.9629C3.6543 11.3579 4.04936 11.6542 4.34565 11.6542H7.30862C7.60491 11.6542 7.99998 11.3579 7.99998 10.9629C7.99998 10.5678 7.60491 10.2715 7.30862 10.2715Z" fill="#111111"></path>
+                    </svg>
+                    <span>
+                      {{- 'sections.cart.note.note_title' | t -}}
+                    </span>
+                  </button>
                 {%- endif -%}
                 {%- if show_estimate_shipping -%}
-                  <div class="drawer__cart-shipping">
-                    <button
-                      type="button"
-                      data-open="shipping"
-                      aria-label="{{- 'sections.cart.shipping.title' | t -}}"
-                      class="btn-reset pointer inline-flex align-center gap-5 fs-small p-20"
-                    >
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M13.7633 2.65861L9.8962 0.435045C8.83275 -0.145015 7.28593 -0.145015 6.31916 0.435045L2.45209 2.65861C1.38865 3.23867 0.518555 4.68882 0.518555 5.94562V10.1027C0.518555 11.3595 1.38865 12.713 2.45209 13.3897L6.31916 15.6133C6.80254 15.9033 7.47928 16 8.15602 16C8.83275 16 9.41282 15.9033 9.99288 15.6133L13.8599 13.3897C14.9234 12.8097 15.7935 11.3595 15.7935 10.1027V5.84894C15.6968 4.68882 14.8267 3.23867 13.7633 2.65861ZM6.80254 1.49849C7.09257 1.30514 7.57596 1.20846 8.05934 1.20846C8.54272 1.20846 8.92943 1.30514 9.31614 1.49849L13.1832 3.72205C13.4732 3.81873 13.6666 4.10876 13.8599 4.39879L11.7331 5.65559L5.7391 2.07855L6.80254 1.49849ZM2.93547 3.62538L4.57898 2.65861L10.5729 6.13897L8.05934 7.6858L2.16206 4.30212C2.35541 4.01208 2.64544 3.81873 2.93547 3.62538ZM2.93547 12.2296C2.25874 11.8429 1.582 10.7795 1.582 10.006V5.84894C1.582 5.65559 1.582 5.46224 1.67868 5.26888L7.47928 8.65257V14.6465C7.18925 14.6465 6.9959 14.5498 6.80254 14.4532L2.93547 12.2296ZM14.5367 10.006C14.5367 10.7795 13.9566 11.8429 13.1832 12.2296L9.31614 14.3565C9.12279 14.4532 8.92943 14.5498 8.6394 14.5498V8.65257L11.153 7.20242V8.84592C11.153 9.13595 11.443 9.42598 11.7331 9.42598C12.0231 9.42598 12.3131 9.13595 12.3131 8.84592V6.52568L14.44 5.26888C14.44 5.55891 14.5367 5.75227 14.5367 5.84894V10.006Z" fill="#111111"></path>
-                      </svg>
-                      <span>
-                        {{- 'sections.cart.shipping.title' | t -}}
-                      </span>
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    data-open="shipping"
+                    aria-label="{{- 'sections.cart.shipping.title' | t -}}"
+                    class="btn-reset drawer__cart-shipping show-overlay pointer inline-flex align-center gap-5 fs-small p-20"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M13.7633 2.65861L9.8962 0.435045C8.83275 -0.145015 7.28593 -0.145015 6.31916 0.435045L2.45209 2.65861C1.38865 3.23867 0.518555 4.68882 0.518555 5.94562V10.1027C0.518555 11.3595 1.38865 12.713 2.45209 13.3897L6.31916 15.6133C6.80254 15.9033 7.47928 16 8.15602 16C8.83275 16 9.41282 15.9033 9.99288 15.6133L13.8599 13.3897C14.9234 12.8097 15.7935 11.3595 15.7935 10.1027V5.84894C15.6968 4.68882 14.8267 3.23867 13.7633 2.65861ZM6.80254 1.49849C7.09257 1.30514 7.57596 1.20846 8.05934 1.20846C8.54272 1.20846 8.92943 1.30514 9.31614 1.49849L13.1832 3.72205C13.4732 3.81873 13.6666 4.10876 13.8599 4.39879L11.7331 5.65559L5.7391 2.07855L6.80254 1.49849ZM2.93547 3.62538L4.57898 2.65861L10.5729 6.13897L8.05934 7.6858L2.16206 4.30212C2.35541 4.01208 2.64544 3.81873 2.93547 3.62538ZM2.93547 12.2296C2.25874 11.8429 1.582 10.7795 1.582 10.006V5.84894C1.582 5.65559 1.582 5.46224 1.67868 5.26888L7.47928 8.65257V14.6465C7.18925 14.6465 6.9959 14.5498 6.80254 14.4532L2.93547 12.2296ZM14.5367 10.006C14.5367 10.7795 13.9566 11.8429 13.1832 12.2296L9.31614 14.3565C9.12279 14.4532 8.92943 14.5498 8.6394 14.5498V8.65257L11.153 7.20242V8.84592C11.153 9.13595 11.443 9.42598 11.7331 9.42598C12.0231 9.42598 12.3131 9.13595 12.3131 8.84592V6.52568L14.44 5.26888C14.44 5.55891 14.5367 5.75227 14.5367 5.84894V10.006Z" fill="#111111"></path>
+                    </svg>
+                    <span>
+                      {{- 'sections.cart.shipping.title' | t -}}
+                    </span>
+                  </button>
                 {%- endif -%}
               </div>
             {%- endif -%}
@@ -546,15 +563,18 @@
                                   id="gift-wrap-{{ product.id }}"
                                   value="{{ product.selected_or_first_available_variant.id }}"
                                   class="absolute opacity-0 pointer custom-ratio"
+                                  {% if forloop.first %}
+                                    checked
+                                  {% endif %}
                                 >
                                 <div
                                   class="dot ratio-dot absolute inset-y-0 left-0 my-auto w-custom h-custom rounded-50 border overflow-hidden bg-white"
-                                  style="--custom-width: 2rem; --custom-height: 2rem;--color-border: var(--btn-primary-bg-color);"
+                                  style="--width: 2rem; --height: 2rem;--color-border: var(--btn-primary-bg-color);"
                                 ></div>
                                 {% if p_media %}
                                   <div
                                     class="image rounded-50 flex-auto w-custom h-custom overflow-hidden"
-                                    style="--custom-width: 6rem; --custom-height: 6rem;--aspect-ratio: 1.0"
+                                    style="--width: 6rem; --height: 6rem;--aspect-ratio: 1.0"
                                   >
                                     {% render 'responsive-image',
                                       type: 'product',
@@ -566,7 +586,7 @@
                                 {% endif %}
                                 <div
                                   class="info-product flex-auto w-custom"
-                                  style="{% if p_media %}--custom-width: calc(100% - 7.5rem);{% else %}--custom-width: calc(100% - 1.5rem);{% endif %}"
+                                  style="{% if p_media %}--width: calc(100% - 7.5rem);{% else %}--width: calc(100% - 1.5rem);{% endif %}"
                                 >
                                   <div class="word-break gap-3">
                                     <span class="heading-style lh-normal">{{- product.title -}}</span>
@@ -599,16 +619,22 @@
               </cart-gift-wrap-element>
             {%- endif -%}
             {%- if show_cart_note -%}
-              <cart-note-element class="block fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-2">
+              <cart-note-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-2">
                 <div class="cart-addons-element">
-                  <div class="cart-addons-title">
-                    <span class="title">{{ 'sections.cart.note.title' | t }}</span>
+                  <div class="cart-addons-title flex space-between gap-10 mb-10 py-12">
+                    <span class="title h7">{{ 'sections.cart.note.title' | t }}</span>
                     <button
                       type="button"
-                      class="toggle-addons btn-reset"
+                      class="toggle-addons btn-reset hover-icon-zoom pointer"
                       aria-label="{{- 'general.button.close' | t }}"
                     >
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="icon_zoom">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        class=" icon-zoom transition-short will-change text-color"
+                      >
                         <use href="#icon-close" />
                       </svg>
                     </button>
@@ -620,7 +646,7 @@
                       </label>
                       <textarea
                         id="CartDrawer-Note"
-                        class="text-area cart-note"
+                        class="text-area cart-note w-full"
                         name="note"
                         placeholder="{{ 'sections.cart.note.title' | t }}"
                       >{{ cart.note }}</textarea>
@@ -628,7 +654,7 @@
                     <div class="addon-actions">
                       <button
                         type="button"
-                        class="apply-note btn btn-primary mt-20"
+                        class="apply-note btn btn-primary mt-20 w-full"
                         aria-label="{{- 'general.button.save' | t }}"
                       >
                         {{ 'general.button.save' | t }}
@@ -639,16 +665,22 @@
               </cart-note-element>
             {%- endif -%}
             {%- if show_estimate_shipping -%}
-              <cart-estimate-element class="block fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-2">
+              <cart-estimate-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-2">
                 <form>
-                  <div class="cart-addons-title">
-                    <span class="title">{{ 'sections.cart.shipping.estimate_shipping_title' | t }}</span>
+                  <div class="cart-addons-title flex space-between gap-10 mb-10 py-12">
+                    <span class="title h7">{{ 'sections.cart.shipping.estimate_shipping_title' | t }}</span>
                     <button
                       type="button"
-                      class="toggle-addons btn-reset"
+                      class="toggle-addons btn-reset hover-icon-zoom pointer"
                       aria-label="{{- 'general.button.close' | t }}"
                     >
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="icon_zoom">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        class=" icon-zoom transition-short will-change text-color"
+                      >
                         <use href="#icon-close" />
                       </svg>
                     </button>
@@ -656,8 +688,10 @@
                   <div class="cart-addons-content">
                     <div class="field">
                       <div data-address="root">
-                        <div class="form-group">
-                          <label for="address_country" class="mb-5">{{ 'customer.addresses.country' | t }}</label>
+                        <div class="form-group mb-20">
+                          <label for="address_country" class="block mb-5">
+                            {{- 'customer.addresses.country' | t -}}
+                          </label>
                           <div class="select relative">
                             <select
                               id="address_country"
@@ -671,9 +705,11 @@
                         </div>
                         <div
                           id="address_province_container"
-                          class="address_province_container form-group"
+                          class="address_province_container form-group mb-20"
                         >
-                          <label for="address_province">{{ 'customer.addresses.province' | t }}</label>
+                          <label for="address_province" class="block mb-5">
+                            {{- 'customer.addresses.province' | t -}}
+                          </label>
                           <div class="select relative">
                             <select
                               id="address_province"
@@ -683,11 +719,11 @@
                             ></select>
                           </div>
                         </div>
-                        <div class="form-group mb-20 flex flex-column">
-                          <label for="AddressZip">{{ 'customer.addresses.zip' | t }}</label>
+                        <div class="form-group">
+                          <label for="AddressZip" class="block mb-5">{{ 'customer.addresses.zip' | t }}</label>
                           <input
                             type="text"
-                            class="form-control"
+                            class="form-control w-full"
                             id="AddressZip"
                             name="address[zip]"
                             value=""
@@ -699,13 +735,13 @@
                     </div>
                     <div class="addon-actions">
                       <button
-                        class="estimate btn btn-primary mt-20"
+                        class="estimate btn btn-primary mt-20 w-full"
                         data-action="shipping"
                       >
                         {{ 'sections.cart.shipping.estimate_shipping_button' | t }}
                       </button>
                     </div>
-                    <div class="addon-message"></div>
+                    <div class="addon-message mt-10 empty-hidden"></div>
                   </div>
                 </form>
               </cart-estimate-element>

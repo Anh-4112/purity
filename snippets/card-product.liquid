@@ -15,7 +15,7 @@
     class="product-item product__item-js {{ class }}"
   >
     <div class="product-item__wrapper">
-      <div class="product-item__inner relative">
+      <div class="product-item__inner relative{{ style_layout }}">
         {%- if disable_image != true -%}
           {%- liquid
             assign p_media = card_product.featured_media
@@ -266,7 +266,7 @@
             {%- endif -%}
           </div>
         {%- endif -%}
-        <div class="product__information mt-15 text-{{ product_alignment }}">
+        <div class="product__information mt-15 text-{{ product_alignment }} {{ info_class }}">
           {% if product_show_vendor and disable_vendor != true and card_product.vendor != blank %}
             <div class="product__vendor grey-color fs-small">
               {{- card_product.vendor | link_to_vendor -}}
