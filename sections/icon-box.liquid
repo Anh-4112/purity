@@ -60,6 +60,7 @@
     {%- endif -%}
     {%- if section.blocks.size > 0 -%}
       <carousel-mobile
+        data-items="1"
         class="grid-cols gap grid"
         style="{{ col_style | strip | strip_newlines }}"
         data-enable-carousel-mobile="{{ section_st.enable_carousel_mobile }}"
@@ -86,7 +87,11 @@
               {% elsif icon_svg == 'none' and custom_svg != blank %}
                 {{ custom_svg }}
               {% elsif icon_svg != 'none' %}
-                {% render 'icon_svg_list', icon: icon_svg, custom_width: section_st.icon_size, custom_height: section_st.icon_size %}
+                {% render 'icon_svg_list',
+                  icon: icon_svg,
+                  custom_width: section_st.icon_size,
+                  custom_height: section_st.icon_size
+                %}
               {% endif %}
             </div>
             <h5 class="icon-box__heading">
