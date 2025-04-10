@@ -1887,6 +1887,9 @@ class ProductTabs extends HTMLElement {
     this._tabs = null;
     this._tabContents = null;
     this._openAccordions = new Set();
+    this._dot = this.querySelector(".product-tabs__dot");
+    this._rangeSlider = this.querySelector('range-slider');
+    this._sizeDot = this.dataset.sizeDot;
 
     if (Shopify && Shopify.designMode) {
       this.addEventListener("shopify:block:select", (event) => {
@@ -1959,6 +1962,50 @@ class ProductTabs extends HTMLElement {
     });
   }
 
+  updateDotPosition(activeTab, animate = true) {
+    if (!this._dot || !activeTab || !this._rangeSlider) return;
+    
+    let targetTab = activeTab;
+    if (!activeTab.classList.contains('product-tabs__header-item-js')) {
+      const jsTab = activeTab.querySelector('.product-tabs__header-item-js.active') || this.querySelector('.product-tabs__header-item-js.active');
+      if (jsTab) {
+        targetTab = jsTab;
+      }
+    }
+    
+    const dotWidth = parseInt(this._sizeDot || 26, 10);
+    const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
+    const tabRect = targetTab.getBoundingClientRect();
+    const tabCenter = tabRect.left + (tabRect.width / 2);
+    const relativeCenterX = tabCenter - rangeSliderRect.left;
+    const adjustedPosition = relativeCenterX - (dotWidth / 2);
+    
+    if (animate) {
+      if (typeof Motion !== 'undefined') {
+        Motion.animate(
+          this._dot,
+          { left: `${adjustedPosition}px` },
+          { duration: 0.2, easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)' }
+        );
+      } else {
+        this._dot.style.left = `${adjustedPosition}px`;
+      }
+    } else {
+      this._dot.style.transition = 'none';
+      this._dot.style.left = `${adjustedPosition}px`;
+      void this._dot.offsetWidth; // Kích hoạt reflow
+      this._dot.style.transition = 'left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)';
+    }
+  }
+
+  handleResize() {
+    if (!this._rangeSlider) return;
+    const activeTab = this.querySelector('.product-tabs__header-item.active');
+    if (activeTab) {
+      this.updateDotPosition(activeTab, false);
+    }
+  }
+
   setupEventListeners() {
     this._tabs.forEach((tab) => {
       tab.addEventListener("click", (event) => {
@@ -1978,6 +2025,9 @@ class ProductTabs extends HTMLElement {
           const blockId = tab.dataset.blockId;
           if (blockId !== this.selectedTab) {
             this.selectedTab = blockId;
+            if (this._rangeSlider) {
+              this.updateDotPosition(tab);
+            }
           }
         }
       });
@@ -1997,6 +2047,9 @@ class ProductTabs extends HTMLElement {
             const blockId = tab.dataset.blockId;
             if (blockId !== this.selectedTab) {
               this.selectedTab = blockId;
+              if (this._rangeSlider) {
+                this.updateDotPosition(tab);
+              }
             }
           }
         }
@@ -2058,6 +2111,7 @@ class ProductTabs extends HTMLElement {
     if (animate) {
       this.closeAllAccordions();
     }
+    let activeTab = null;
     this.tabs.forEach((tab) => {
       const isSelected = tab.dataset.blockId === blockId;
       tab.classList.toggle("selected", isSelected);
@@ -2065,6 +2119,7 @@ class ProductTabs extends HTMLElement {
       tab.setAttribute("aria-selected", isSelected ? "true" : "false");
 
       if (isSelected) {
+        activeTab = tab;
         const description = tab.querySelector(
           ".product-tabs__header-description"
         );
@@ -2073,6 +2128,10 @@ class ProductTabs extends HTMLElement {
         }
       }
     });
+
+    if (this._rangeSlider && activeTab) {
+      this.updateDotPosition(activeTab, animate);
+    }
 
     const oldContent = this.querySelector(".product-tabs__content-item.active");
     const newContent = this.querySelector(
@@ -2152,6 +2211,9 @@ class ProductTabs extends HTMLElement {
       this._tabs.forEach((tab) => {
         tab.removeEventListener("click", null);
       });
+    }
+    if (this._rangeSlider) {
+      window.removeEventListener('resize', this.handleResize);
     }
   }
 }
