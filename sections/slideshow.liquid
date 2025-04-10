@@ -106,7 +106,7 @@
                 style="{% if slide_height == 'adapt' or slide_height == "full_screen" %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
               >
                 <div
-                  class="banner__media w-full h-full {{ rounded }} absolute inset-0 overlay-bg{% if show_text_bellow_image %} h-{{ slide_height }}{% endif %}"
+                  class="banner__media w-full{% if slide_height == 'adapt' and show_text_bellow_image %} h-auto{% else %} h-full{% endif %} {{ rounded }} absolute inset-0 overlay-bg{% if show_text_bellow_image %} h-{{ slide_height }}{% endif %}"
                   style="{% if show_text_bellow_image %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};--point:{{ image.presentation.focal_point }};{% endif %}--overlay-opacity: {{ overlay_opacity }}%"
                 >
                   {%- if image != blank or image_mobile != blank or local_video != blank -%}
@@ -173,7 +173,9 @@
                   {% endif %}
                 </div>
                 {% if heading != blank or subheading != blank or description != blank or first_button_label != blank %}
-                  <div class="sec__content w-full{% if show_text_bellow_image == false %} flex{% else %} flex-md{% endif %} {{ desktop_content_position }} text-{{ block_st.text_alignment_mobile }} text-md-{{ text_alignment }} container relative{% if show_text_bellow_image %} mt-40 mt-md-0{% endif %} py-30 z-2">
+                  <div class="sec__content w-full{% if show_text_bellow_image == false %} flex py-custom{% else %} flex-md{% endif %} {{ desktop_content_position }} text-{{ block_st.text_alignment_mobile }} text-md-{{ text_alignment }} container relative{% if show_text_bellow_image %} mt-40 mt-md-0{% endif %} z-2"
+                    style="--padding-block: 100;"
+                  >
                     <div class="sec__content-inner prose max-w-100">
                       {% if subheading != blank %}
                         <div class="sec__content-subheading">
