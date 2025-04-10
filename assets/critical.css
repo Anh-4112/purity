@@ -104,6 +104,9 @@ summary::-webkit-details-marker {
 :where(blockquote, dl, dd, hr, figure, p, pre) {
   margin: 0;
 }
+.word-break {
+  word-break: break-word;
+}
 .rte
   :where(
     h1,
@@ -328,6 +331,15 @@ textarea {
 }
 .w-30 {
   width: 30px;
+}
+.cart-count {
+  width: 1.8rem;
+  height: 1.8rem;
+  box-shadow: 0 0 0 1px var(--color-background);
+  right: 0;
+  top: 5px;
+  line-height: 1;
+  color: var(--btn-primary-color);
 }
 .wh-40,
 .touch-target {
@@ -998,15 +1010,6 @@ body:not(.template-index) .transparent-logo {
 .grey-color {
   color: var(--color-grey);
 }
-.cart-count {
-  width: 1.8rem;
-  height: 1.8rem;
-  box-shadow: 0 0 0 1px var(--color-background);
-  right: 0;
-  top: 5px;
-  line-height: 1;
-  color: var(--btn-primary-color);
-}
 .menu_weight {
   font-weight: var(--menu-weight);
 }
@@ -1082,6 +1085,10 @@ body:not(.template-index) .transparent-logo {
     calc(var(--font-size) * 1px)
   );
 }
+.col-w-custom {
+  flex: 0 0 auto;
+  width: var(--col-width, 50%);
+}
 @media (min-width: 768px) {
   .hidden-md {
     display: none;
@@ -1126,6 +1133,11 @@ body:not(.template-index) .transparent-logo {
   .gap-large {
     --gap: 30px;
     --row-gap: 5rem;
+  }
+}
+@media (min-width: 768px) and (max-width: 1024.99px) {
+  .col-md-w-custom-50 {
+    --col-width: 50% !important;
   }
 }
 @media (min-width: 992px) {
