@@ -26,7 +26,7 @@
 
 {%- capture style -%}--section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.marquee_speed }}s;--swiper-navigation-color:rgba(var(--color-text-rgb), 0.5);--swiper-navigation-size: 3rem;--swiper-navigation-sides-offset: 1rem;{%- endcapture -%}
 {%- capture col_style -%}
-  {% if space_between_item < 15 %}--gap: {{ section_st.space_between_text}}px;{% else %}--gap: clamp(3rem, calc({{ section_st.space_between_text}} * var(--responsive-rate)), calc({{ section_st.space_between_text}}*1px));{% endif %}
+  {% if section_st.space_between_text < 15 %}--gap: {{ section_st.space_between_text}}px;{% else %}--gap: clamp(3rem, calc({{ section_st.space_between_text}} * var(--responsive-rate)), calc({{ section_st.space_between_text}}*1px));{% endif %}
 {%- endcapture -%}
 {%- if section.blocks.size > 0 and is_shown and section_st.announcement_actions == 'slide' -%}
   {%- style -%}

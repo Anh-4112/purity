@@ -4,7 +4,7 @@
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
-    assign section_width = 'full-width px-20'
+    assign section_width = 'full-width'
   else
     assign section_width = 'fluid_container'
   endif
@@ -19,20 +19,13 @@
     assign header_size = 'h3'
   endif
 
-  if section_st.space_between == 'large'
-    assign space_between_item_dt = 80
-    assign space_between_item_mb = 50
-  elsif section_st.space_between == 'medium'
-    assign space_between_item_dt = 60
-    assign space_between_item_mb = 40
-  elsif section_st.space_between == 'small'
-    assign space_between_item_dt = 30
-    assign space_between_item_mb = 20
-  endif
 -%}
 
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.speed }}s;
+{%- endcapture -%}
+{%- capture col_style -%}
+  {% if section_st.space_between < 15 %}--gap: {{ section_st.space_between }}px;{% else %}--gap: clamp(3rem, calc({{ section_st.space_between }} * var(--responsive-rate)), calc({{ section_st.space_between }}*1px));{% endif %}
 {%- endcapture -%}
 
 <div
@@ -42,12 +35,12 @@
   <div class="{{ section_width }}">
     <div
       class="flex{% if section_st.uppercase %} uppercase{% endif %} marquee overflow-hidden gap w-full justify-center"
-      style="--gap: {{ space_between_item_mb }}px;--gap-desktop: {{ space_between_item_dt }}px;"
+      style="{{ col_style | strip | strip_newlines }}"
     >
       {%- for i in (0..5) -%}
         <div
-          class="flex animation-marquee animation__marquee-{{ section_st.direction }} whitespace-nowrap gap align-center"
-          style="--gap: {{ space_between_item_mb }}px;--gap-desktop: {{ space_between_item_dt }}px;"
+          class="flex animation-marquee animation__marquee-{{ section_st.direction }} marquee whitespace-nowrap gap align-center"
+          style="{{ col_style | strip | strip_newlines }}"
         >
           {%- for block in section.blocks -%}
             {% assign block_st = block.settings %}
@@ -67,7 +60,7 @@
                       href="{{ link_text | default: "#" }}"
                     {% endif %}
                     aria-label="{{ content }}"
-                    class="no-underline{% if image == blank %} text_scroll{% endif %} {{ header_size }}"
+                    class="{% if image == blank %} text_scroll{% endif %} {{ header_size }}{% if link_text != blank %} underline{% else %} no-underline{% endif %}"
                   >
                     {{ content }}
                   </a>
@@ -80,31 +73,43 @@
                   assign image_alt_default = 'sections.scrolling_text.alt' | t
                   assign image_alt = image.alt | default: image_alt_default | escape
                 -%}
-                {% if icon_svg != 'none' %}
-                  {% render 'icon_svg_list',
-                    icon: icon_svg,
-                    custom_width: block_st.image_width,
-                    custom_height: block_st.image_width
-                  %}
-                {%- elsif image != blank -%}
-                  <div
-                    class="scrolling-image image_scroll"
-                    style="--image-width: {{ block_st.image_width }}px;"
-                  >
-                    <a
-                      class="scrolling-image-item overflow-hidden flex rounded w-custom h-full"
-                      style="--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
-                      {% if link_image == blank %}
-                        role="link" aria-disabled="true"
-                      {% else %}
-                        href="{{ link_image | default: "#" }}"
-                      {% endif %}
-                      aria-label="{{ 'sections.scrolling_text.alt' | t }}"
+                <a
+                  class="scrolling-image-item overflow-hidden flex align-center rounded w-custom-mb w-custom h-full"
+                  style="--width-mb:{{ block_st.image_width_mb }}px;--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
+                  {% if link_image == blank %}
+                    role="link" aria-disabled="true"
+                  {% else %}
+                    href="{{ link_image | default: "#" }}"
+                  {% endif %}
+                  aria-label="{{ 'sections.scrolling_text.alt' | t }}"
+                >
+                  {% if icon_svg != 'none' %}
+                    {% render 'icon_svg_list',
+                      icon: icon_svg,
+                      custom_width: block_st.image_width,
+                      custom_height: block_st.image_width
+                    %}
+                  {%- elsif image != blank and icon_svg == 'none' -%}
+                    <div
+                      class="scrolling-image image_scroll rounded flex"
+                      style="--image-width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
                     >
-                      {% render 'responsive-image', image: image, type: 'other', image_alt: image_alt, class: 'h-full w-full object-fit-cover' %}
-                    </a>
-                  </div>
-                {%- endif -%}
+                      {% render 'responsive-image',
+                        image: image,
+                        type: 'other',
+                        image_alt: image_alt,
+                        class: 'h-full w-full object-fit-cover'
+                      %}
+                    </div>
+                  {% elsif image == blank and icon_svg == 'none' %}
+                    <div
+                      class="w-custom h-full rounded flex content-center"
+                      style="--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
+                    >
+                      {% render 'placeholder-render', type: 'collection' %}
+                    </div>
+                  {%- endif -%}
+                </a>
             {%- endcase -%}
           {%- endfor -%}
         </div>
@@ -153,6 +158,10 @@
       "default": "default-color-scheme"
     },
     {
+      "type": "header",
+      "content": "t:sections.announcement-bar.settings.marquee_settings.label"
+    },
+    {
       "type": "select",
       "id": "direction",
       "label": "t:sections.scrolling_text.settings.direction.label",
@@ -179,24 +188,14 @@
       "unit": "s"
     },
     {
-      "type": "select",
+      "type": "range",
       "id": "space_between",
-      "options": [
-        {
-          "value": "small",
-          "label": "t:sections.all.padding.column_gap.small"
-        },
-        {
-          "value": "medium",
-          "label": "t:sections.all.padding.column_gap.medium"
-        },
-        {
-          "value": "large",
-          "label": "t:sections.all.padding.column_gap.large"
-        }
-      ],
-      "default": "medium",
-      "label": "t:sections.scrolling_text.settings.space_between.label"
+      "label": "t:sections.all.space_between.label",
+      "min": 10,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 50
     },
     {
       "type": "header",
@@ -268,7 +267,7 @@
       "name": "t:sections.all.text.label",
       "settings": [
         {
-          "type": "inline_richtext",
+          "type": "text",
           "id": "content",
           "label": "t:sections.all.content.label",
           "default": "Scrolling text"
@@ -289,7 +288,6 @@
           "id": "image_block",
           "label": "t:sections.all.image.label"
         },
-
         {
           "type": "range",
           "id": "image_width",
@@ -304,7 +302,7 @@
           "type": "select",
           "id": "icon_svg",
           "label": "t:sections.all.svg.label",
-          "info": "t:sections.all.svg.custom_svg.info", 
+          "info": "t:sections.all.svg.custom_svg.info",
           "default": "none",
           "options": [
             {
@@ -345,7 +343,21 @@
           "type": "url",
           "id": "link_image",
           "label": "t:sections.all.content_setting.link.label"
-        }
+        },
+        {
+          "type": "header",
+          "content": "t:sections.all.mobile_options.mobile_layout.label"
+        },
+        {
+          "type": "range",
+          "id": "image_width_mb",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "label": "t:sections.scrolling_text.settings.blocks.image.image_width.label",
+          "default": 80
+        },
       ]
     }
   ],
