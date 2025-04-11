@@ -92,8 +92,8 @@
                     style="--image-width: {{ block_st.image_width }}px;"
                   >
                     <a
-                      class="scrolling-image-item overflow-hidden flex w-full h-full{% if block_st.rounded_image %} radius-50{% endif %}"
-                      style="--image-width: {{ block_st.image_width }}px;"
+                      class="scrolling-image-item overflow-hidden flex rounded w-custom h-full"
+                      style="--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
                       {% if link_image == blank %}
                         role="link" aria-disabled="true"
                       {% else %}
@@ -228,6 +228,16 @@
       "label": "t:settings_schema.typography.settings.heading.text_transform.uppercase"
     },
     {
+      "type": "range",
+      "id": "rounded_image",
+      "label": "t:sections.scrolling_text.settings.blocks.image.rounded_image.label",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
       "type": "header",
       "content": "t:sections.all.padding.section_padding_heading"
     },
@@ -284,16 +294,11 @@
           "type": "range",
           "id": "image_width",
           "min": 20,
-          "max": 400,
+          "max": 200,
           "step": 5,
           "unit": "px",
           "label": "t:sections.scrolling_text.settings.blocks.image.image_width.label",
           "default": 80
-        },
-        {
-          "type": "checkbox",
-          "id": "rounded_image",
-          "label": "t:sections.scrolling_text.settings.blocks.image.rounded_image.label"
         },
         {
           "type": "select",
