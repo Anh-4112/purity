@@ -23,22 +23,6 @@
   .fluid_container {
     width: 95%;
   }
-  .hidden-1025 {
-    display: none;
-  }
-  .block-1025 {
-    display: block;
-  }
-  .absolute-1025 {
-    position: absolute;
-  }
-  .invisible-1025 {
-    opacity: 0;
-    visibility: hidden;
-  }
-  :where(.gap) {
-    gap: var(--row-gap, var(--gap)) var(--gap-desktop, var(--gap));
-  }
 }
 @media (min-width: 1200px) {
   .container {
@@ -171,7 +155,11 @@ summary::-webkit-details-marker {
   );
 }
 :where(h4, .h4) {
-  --size: 2.4rem;
+  --size: clamp(
+    2rem,
+    calc(2rem + (24 - 20) * var(--responsive-rate)),
+    2.4rem
+  );
   line-height: 1.6;
 }
 :where(h5, .h5) {
@@ -592,7 +580,7 @@ textarea {
 .btn-white {
   --btn-bg: rgb(var(--color-white));
   --btn-color: var(--btn-outline-color);
-  --btn-border-color: rgb(var(--color-white));
+  --btn-border-color: transparent;
 }
 :where(.btn-reset) {
   background: transparent;
@@ -1236,6 +1224,26 @@ body:not(.template-index) .transparent-logo {
   :is(.grid-cols, .flex-cols) {
     --col: var(--col-desktop, var(--col-number));
   }
+  .hidden-1025 {
+    display: none;
+  }
+  .block-1025 {
+    display: block;
+  }
+  .absolute-1025 {
+    position: absolute;
+  }
+  .invisible-1025 {
+    opacity: 0;
+    visibility: hidden;
+  }
+  :where(.gap) {
+    gap: var(--row-gap, var(--gap)) var(--gap-desktop, var(--gap));
+  }
+  .wh-1025-50{
+    width: 5rem;
+    height: 5rem;
+  }
 }
 .reveal_on_scroll {
   scrollbar-width: none;
@@ -1284,4 +1292,7 @@ body:not(.template-index) .transparent-logo {
 }
 .rounded-style.overlay-bg:after {
   border-radius: var(--rounded-radius, 0);
+}
+.max-w-custom-all {
+  max-width: var(--max-width);
 }

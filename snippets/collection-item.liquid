@@ -57,10 +57,15 @@
       <a
         class="block collection-item__media--ratio rounded"
         draggable="false"
-        href="{{ card_collection.url }}"
+        {% if card_collection.url != blank %}
+          href="{{ card_collection.url }}"
+        {% else %}
+          role="link"
+        {% endif %}
         aria-label="{{- card_collection.title -}}"
         style="--aspect-ratio: {{ ratio }};"
       >
+        <div class="overlay-linear inset-0 absolute z-2 rounded"></div>
         {% assign collection_media = card_collection.featured_image %}
         {%- if collection_media or collection_image != blank -%}
           {% if collection_image != blank %}
@@ -91,7 +96,7 @@
       </a>
     </div>
     <div
-      class="collection-information text-{{ content_alignment }}{% if content_position == 'overlay' %} absolute px-15 bottom-30 z-2{% if content_alignment == 'center' %} inset-x-0{% else %}{% if settings.rtl %} right-0{% else %} left-0{% endif %}{% endif %}{% else %} mt-15{% endif %}"
+      class="collection-information flex gap-10 max-w-100 justify-{{ content_alignment }} text-{{ content_alignment }}{% if content_position == 'overlay' %} absolute px-15 bottom-15 bottom-md-30 z-2{% if content_alignment == 'center' %} inset-x-0{% else %}{% if settings.rtl %} right-0{% else %} left-0{% endif %}{% endif %}{% else %} mt-15{% endif %}"
       {% if content_position == 'overlay' %}
         style="--color-heading: {{ section_st.overlay_image_color }};--color-text: {{ section_st.overlay_image_color }}"
       {% endif %}
@@ -105,7 +110,7 @@
             endif
           -%}
           <a
-            class="heading-style"
+            class="heading-style h4"
             {% if p_url == blank %}
               role="link" aria-disabled="true"
             {% else %}
@@ -117,7 +122,7 @@
           </a>
         {%- else -%}
           <a
-            class="heading-style"
+            class="heading-style h4"
             role="link"
             aria-disabled="true"
             aria-label="{{ 'sections.collection_list.sample_name' | t }}"
@@ -133,7 +138,7 @@
           endif
         -%}
         <a
-          class="heading-style"
+          class="heading-style h4"
           {% if p_url == blank %}
             role="link" aria-disabled="true"
           {% else %}
@@ -145,14 +150,9 @@
         </a>
       {%- endif -%}
       {%- if show_product_count -%}
-        <div class="product-count text-color">
+        <div class="product-count text-color fs-13 body-weight">
           {%- assign pc = block_st.collection.products_count | default: 0 -%}
           {{ pc }}
-          {%- if pc < 2 -%}
-            {{ 'sections.collection_list.item' | t }}
-          {%- else -%}
-            {{ 'sections.collection_list.items' | t }}
-          {%- endif -%}
         </div>
       {%- endif -%}
     </div>

@@ -2161,13 +2161,14 @@ class CollectionHover extends HTMLElement {
     this.imageHover.style.top = "-9999px";
 
     this.imageHover.style.transition = "none";
+    this.imageHover.style.display = "flex";
   }
 
   updateImageSize() {
     const maxWidth = Math.min(300, window.innerWidth * 0.5);
     const maxHeight = Math.min(300, window.innerHeight * 0.5);
 
-    this.imageHover.style.width = `${maxWidth}px`;
+    this.imageHover.style.width = `120px`;
     this.imageHover.style.height = "auto";
     this.imageHover.style.maxHeight = `${maxHeight}px`;
   }

@@ -1,12 +1,12 @@
 {%- liquid
-  assign theme_st = settings
   assign section_st = section.settings
-  assign rounded = " rounded"
+  assign rounded = ' rounded'
+  assign section_width = section_st.section_width
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
     assign section_width = 'full-width'
-    assign rounded = ""
+    assign rounded = ''
   else
     assign section_width = 'fluid_container'
   endif
@@ -33,14 +33,6 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
   {% if heading_size == 'large' %}--font-size: 40;{% endif %}
   {%- endcapture -%}
-{%- capture sizes -%}
-  {% if section_st.full_width -%}
-    100vw
-  {%- else -%}
-    (min-width: {{ theme_st.page_width }}px) {{ theme_st.page_width | minus: 100 }}px, (min-width: 750px)
-    calc(100vw - 10rem), 100vw
-  {%- endif %}
-{%- endcapture -%}
 
 <div
   class="color-{{ section_st.color_scheme }} section gradient section__video"
@@ -71,25 +63,27 @@
           class="video-has-bg video-section relative{{ rounded }}"
           style="{% if section_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ aspect_ratio }}{% else %}--aspect-ratio: 16/9;{% endif %}"
         >
-          {%- if section_st.video_url.type == 'youtube' -%}
-            <iframe
-              src="https://www.youtube.com/embed/{{ video_id }}?autoplay={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&mute={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&playsinline=1"
-              class="js-youtube no-js-hidden"
-              allow="autoplay; encrypted-media"
-              title="{{ section_st.alt_description | escape }}"
-              allowfullscreen
-              frameborder="0"
-            ></iframe>
-          {%- else -%}
-            <iframe
-              src="https://player.vimeo.com/video/{{ video_id }}?autoplay={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&muted={% if section_st.autoplay -%}1{% else %}0{%- endif -%}"
-              class="vimeo-video js-vimeo no-js-hidden bg-dark"
-              allow="autoplay; encrypted-media"
-              title="{{ section_st.alt_description | escape }}"
-              allowfullscreen
-              frameborder="0"
-            ></iframe>
-          {%- endif -%}
+          {% liquid
+            assign autoplay_val = section_st.autoplay | default: false | plus: 0
+            assign mute_val = autoplay_val
+
+            if section_st.video_url.type == 'youtube'
+              assign src_url = 'https://www.youtube.com/embed/' | append: video_id | append: '?autoplay=' | append: autoplay_val | append: '&mute=' | append: mute_val | append: '&playsinline=1'
+              assign iframe_class = 'js-youtube no-js-hidden'
+            else
+              assign src_url = 'https://player.vimeo.com/video/' | append: video_id | append: '?autoplay=' | append: autoplay_val | append: '&muted=' | append: mute_val
+              assign iframe_class = 'vimeo-video js-vimeo no-js-hidden bg-dark'
+            endif
+          %}
+
+          <iframe
+            src="{{ src_url }}"
+            class="{{ iframe_class }}"
+            allow="autoplay; encrypted-media"
+            title="{{ section_st.alt_description | escape }}"
+            allowfullscreen
+            frameborder="0"
+          ></iframe>
         </div>
       </video-section>
     {%- elsif section_st.video_local != null -%}
@@ -111,13 +105,13 @@
       %}
       <div class="video-thumbnail absolute banner__media overflow-hidden{{rounded}}">
         {%- if poster != null -%}
-          {{
-            poster
-            | image_url: width: 3840
-            | image_tag: loading: 'lazy', sizes: sizes, widths: '375, 750, 1100, 1500, 1780, 2000, 3000, 3840', alt: alt
-          }}
+          {%- liquid
+            assign image_alt_default = 'general.image.image_alt_default' | t
+            assign image_alt = poster.alt | default: image_alt_default | escape
+          -%}
+          {% render 'responsive-image', type: 'other', container: section_width, image: poster, image_alt: image_alt %}
         {%- else -%}
-          {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- render 'placeholder-render', type: 'lifestyle-1' -%}
         {%- endif -%}
         {%- if section_st.autoplay == blank -%}
           <div class="deferred-media__poster-button absolute z-3 flex content-center wh-55">
