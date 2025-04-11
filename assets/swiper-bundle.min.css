@@ -320,7 +320,7 @@
 .swiper-rtl .swiper-button-prev:after {
   content: "next";
 }
-.swiper-pagination {
+:where(.swiper-pagination) {
   position: var(--position);
   text-align: center;
   transition: 0.3s opacity;
@@ -329,6 +329,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 3rem;
 }
 .swiper-pagination-custom {
   min-height: 2.8rem;
@@ -345,11 +346,6 @@
 .swiper-pagination-disabled > .swiper-pagination,
 .swiper-pagination.swiper-pagination-disabled {
   display: none !important;
-}
-:where(.swiper-pagination){
-  margin-top: 3rem;
-  display: flex;
-  justify-content: center;
 }
 .swiper-horizontal > .swiper-pagination-bullets,
 .swiper-pagination-bullets.swiper-pagination-horizontal,
