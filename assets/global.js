@@ -347,7 +347,7 @@ class AlertNotify {
     }
   }
 
-  show(message, type = "info", duration = 3000) {
+  show(message, type = "warning", duration = 3000) {
     const notification = document.createElement("div");
     notification.classList.add("notification", type);
     const icon = this.createIcon(type);
@@ -379,19 +379,19 @@ class AlertNotify {
     switch (type) {
       case "success":
         icon.innerHTML =
-          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
         break;
       case "error":
         icon.innerHTML =
-          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-error"></use></svg>';
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-error"></use></svg>';
         break;
-      case "info":
+      case "warning":
         icon.innerHTML =
-          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-info"></use></svg>';
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-info"></use></svg>';
         break;
       default:
         icon.innerHTML =
-          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
     }
     return icon;
   }

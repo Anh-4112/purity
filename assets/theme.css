@@ -819,10 +819,10 @@ blockquote {
   .draw-mb {
     max-width: var(--drawer-width, 48rem);
   }
+  .rounded-start,
   .draw-mb {
     border-top-left-radius: var(--img-rounded);
     border-bottom-left-radius: var(--img-rounded);
-    overflow: hidden;
   }
 }
 @media (min-width: 1025px) {
@@ -944,6 +944,16 @@ modal-popup :is(.modal-overlay) {
   }
   100% {
     transform: translateY(15px);
+    opacity: 0;
+  }
+}
+@keyframes slideOutRight {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
     opacity: 0;
   }
 }
@@ -1970,6 +1980,17 @@ modal-popup :is(.modal-overlay) {
   --background: #fff2de;
   --color-link: var(--color-warning);
 }
+.notification {
+  position: fixed;
+  inset-inline-end: 3rem;
+  inset-block-start: 3rem;
+  z-index: 25;
+  display: inline-flex;
+  align-items: center;
+}
+.notification:not(.show) {
+  animation: slideOutRight 0.3s forwards;
+}
 .icon_plus-animation::before,
 .icon_plus-animation::after {
   position: absolute;
@@ -2030,7 +2051,7 @@ modal-popup :is(.modal-overlay) {
     padding-inline: 3rem;
   }
 }
-@media (max-width: 1025px) {
+@media (max-width: 1024.98px) {
   .image-with-text__container {
     padding-top: 2rem;
   }
@@ -2056,8 +2077,25 @@ modal-popup :is(.modal-overlay) {
     rgba(0, 0, 0, 0.3) 100%
   );
 }
-=======
 /* Process in cart */
+mini-cart-recommendations .quick__shop-action {
+  left: auto;
+}
+mini-cart-recommendations .btn__quick-shop {
+  --btn-padding-y: 0;
+  --btn-padding-x: 0;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+mini-cart-recommendations .product-quickview-btn {
+  display: none;
+}
+mini-cart-recommendations .hidden-1025 {
+  display: block;
+}
 .progress {
   background-color: #14854e;
   animation: 2s linear infinite progress;
@@ -2077,6 +2115,7 @@ modal-popup :is(.modal-overlay) {
   );
   background-size: 40px 40px;
 }
+
 @keyframes progress {
   0% {
     background-position: 0 0;
@@ -2097,6 +2136,9 @@ modal-popup :is(.modal-overlay) {
     background-color: var(--color-background-2);
     border-radius: var(--img-rounded);
   }
+  .mini-cart .product__information {
+    margin-top: 0;
+  }
   .mini-cart .quick__shop-action {
     left: auto;
     top: 0;
@@ -2113,7 +2155,18 @@ modal-popup :is(.modal-overlay) {
     font-size: 1.8rem;
   }
 }
-html:not(.open-nav, .open-canvas)
-  :is(.button-localization, mobile-navigation-bar) {
+@media (min-width: 1025px) {
+  mini-cart-recommendations .product__information {
+    text-align: center;
+  }
+  mini-cart-recommendations .card-product-price {
+    justify-content: center;
+    line-height: normal;
+  }
+  cart-drawer .modal-inner {
+    border-radius: 0;
+  }
+}
+html:not(.open-nav, .open-canvas) mobile-navigation-bar {
   z-index: 12;
 }
