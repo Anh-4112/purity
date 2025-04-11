@@ -325,7 +325,7 @@ blockquote {
   padding-block: 4rem;
 }
 .py-50 {
-  padding-block: clamp(3rem, 6vh, 5rem);
+  padding-block: clamp(3rem, 3vw, 5rem);
 }
 .pt-5 {
   padding-top: 5px;
@@ -793,7 +793,7 @@ blockquote {
 .open-modal {
   overflow: hidden;
 }
-.modal-inner:not(.draw-mb) {
+:where(.modal-inner:not(.draw-mb)) {
   transform: translateY(100%);
   -webkit-transform: translateY(100%);
   will-change: transform;
@@ -1272,11 +1272,14 @@ modal-popup :is(.modal-overlay) {
   .mt-1025-0 {
     margin-top: 0;
   }
+  .mt-1025-20 {
+    margin-top: 2rem;
+  }
   .mt-1025-30 {
     margin-top: 3rem;
   }
-  .mt-1025-60 {
-    margin-top: clamp(4rem, 4.5vw, 6rem);
+  .mt-1025-40 {
+    margin-top: 4rem;
   }
   .my-1025-0 {
     margin-top: 0;
@@ -1729,6 +1732,7 @@ modal-popup :is(.modal-overlay) {
 :where(.btn-primary, .btn-outline, .btn, button-quickview, .cart-item).loading
   .hidden-on-load {
   opacity: 0;
+  transition: unset;
 }
 :where(
     .btn-primary,
@@ -1740,9 +1744,6 @@ modal-popup :is(.modal-overlay) {
   > .icon-load,
 .cart-item.loading .icon-rotator {
   opacity: 1;
-}
-.cart-item.loading .hidden-on-load {
-  display: none;
 }
 @keyframes spin {
   100% {
@@ -1763,7 +1764,7 @@ modal-popup :is(.modal-overlay) {
   .footer_bottom-inner {
     border-top: 0;
   }
-  .custom-padding-carousel-mobile{
+  .custom-padding-carousel-mobile {
     padding-bottom: 3.6rem;
   }
 }
@@ -1810,6 +1811,9 @@ modal-popup :is(.modal-overlay) {
     opacity: 1;
     visibility: visible;
   }
+}
+.fadeIn {
+  animation: fadeIn var(--duration, 0.6s) forwards;
 }
 /* Product */
 .product__badges-sale:after {
@@ -1929,7 +1933,7 @@ modal-popup :is(.modal-overlay) {
 .success,
 .warning,
 .error {
-  padding: 1.2rem 2rem;
+  padding: var(--mes-padding-block, 1.2rem) 2rem;
   position: relative;
   font-size: 1.4rem;
   color: var(--color);
@@ -2098,6 +2102,7 @@ modal-popup :is(.modal-overlay) {
 html:not(.open-nav, .open-canvas)
   :is(.button-localization, mobile-navigation-bar) {
   z-index: 12;
-.max-height-mb-menu{
+}
+.max-height-mb-menu {
   max-height: calc(100vh - 60px);
 }

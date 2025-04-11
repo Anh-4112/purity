@@ -26,19 +26,6 @@
   .hidden-1025 {
     display: none;
   }
-  .block-1025 {
-    display: block;
-  }
-  .absolute-1025 {
-    position: absolute;
-  }
-  .invisible-1025 {
-    opacity: 0;
-    visibility: hidden;
-  }
-  :where(.gap) {
-    gap: var(--row-gap, var(--gap)) var(--gap-desktop, var(--gap));
-  }
 }
 @media (min-width: 1200px) {
   .container {
@@ -592,7 +579,7 @@ textarea {
 .btn-white {
   --btn-bg: rgb(var(--color-white));
   --btn-color: var(--btn-outline-color);
-  --btn-border-color: rgb(var(--color-white));
+  --btn-border-color: transparent;
 }
 :where(.btn-reset) {
   background: transparent;
@@ -1235,6 +1222,19 @@ body:not(.template-index) .transparent-logo {
   }
   :is(.grid-cols, .flex-cols) {
     --col: var(--col-desktop, var(--col-number));
+  }
+  .block-1025 {
+    display: block;
+  }
+  .absolute-1025 {
+    position: absolute;
+  }
+  .invisible-1025 {
+    opacity: 0;
+    visibility: hidden;
+  }
+  :where(.gap) {
+    gap: var(--row-gap, var(--gap)) var(--gap-desktop, var(--gap));
   }
 }
 .reveal_on_scroll {
