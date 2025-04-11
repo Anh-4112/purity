@@ -1408,6 +1408,14 @@ class CartDrawer extends HTMLElement {
       : this.getAttribute("data-section-id");
   }
 
+  get formAction() {
+    return Array.from(this.querySelectorAll("form .btn"));
+  }
+
+  get cartViewId() {
+    return document.getElementById("cart-icon-bubble") || null;
+  }
+
   connectedCallback() {
     if (this.cartActionId) {
       this.cartActionId.addEventListener(
@@ -1415,6 +1423,11 @@ class CartDrawer extends HTMLElement {
         this.onShowCartDrawer.bind(this)
       );
     }
+    this.formAction.forEach((action) => {
+      action.addEventListener("click", (event) => {
+        action.classList.add("loading");
+      });
+    });
   }
 
   getSectionsToRender() {
@@ -1437,6 +1450,11 @@ class CartDrawer extends HTMLElement {
         id: this.sectionId,
         section: this.sectionId,
         selector: ".cart-drawer__form",
+      },
+      {
+        id: this.sectionId,
+        section: this.sectionId,
+        selector: ".drawer__footer-bottom",
       },
     ];
   }
@@ -1462,7 +1480,6 @@ class CartDrawer extends HTMLElement {
         parsedState.sections[section.id],
         section.selector
       );
-
       if (index === 1) {
         const nav_bar_id = document.querySelector("#cart-icon-bubble");
         if (
@@ -1550,7 +1567,7 @@ class CartEstimate extends HTMLElement {
   fetchShippingRates(address) {
     const { zip, country, province } = address;
     const url = `${window.Shopify.routes.root}cart/shipping_rates.json?shipping_address%5Bzip%5D=${zip}&shipping_address%5Bcountry%5D=${country}&shipping_address%5Bprovince%5D=${province}`;
-
+    this.actionEstimate.classList.add("loading");
     fetch(url)
       .then((response) => response.json())
       .then((data) => this.updateShippingMessage(data, address))
@@ -1561,11 +1578,16 @@ class CartEstimate extends HTMLElement {
     const message = this.querySelector(".addon-message");
     message.innerHTML = "";
 
-    if (data?.shipping_rates?.length) {
-      this.showShippingSuccess(message, data.shipping_rates, address);
+    if (data && data.shipping_rates) {
+      if (data?.shipping_rates?.length) {
+        this.showShippingSuccess(message, data.shipping_rates, address);
+      } else {
+        this.showShippingWarning(message);
+      }
     } else {
-      this.showShippingWarning(message);
+      this.showShippingError(message, data);
     }
+    this.actionEstimate.classList.remove("loading");
   }
 
   showShippingSuccess(message, rates, address) {
@@ -1678,13 +1700,8 @@ class CartNote extends HTMLElement {
   }
 
   handleNoteSave() {
+    this.cartActionId.classList.add("loading");
     this.noteUpdate();
-    this.classList.remove("open");
-    if (this.cartActionAddons) {
-      this.cartActionAddons
-        .closest(".drawer__cart-note")
-        .classList.remove("active");
-    }
   }
 
   handleNoteToggle(event) {
@@ -1713,133 +1730,20 @@ class CartNote extends HTMLElement {
     fetch(`${routes?.cart_update_url}`, {
       ...NextSkyTheme.fetchConfig(),
       ...{ body },
+    }).finally(() => {
+      this.cartActionId.classList.remove("loading");
+      this.classList.remove("open");
+      if (this.cartActionAddons) {
+        this.cartActionAddons
+          .closest(".drawer__cart-note")
+          .classList.remove("active");
+      }
     });
   }
 }
 
 if (!customElements.get("cart-note-element")) {
   customElements.define("cart-note-element", CartNote);
-}
-
-class CartGiftWrap extends HTMLElement {
-  constructor() {
-    super();
-  }
-
-  get cartActionId() {
-    return this.querySelector(".select-package") || null;
-  }
-
-  get cartActionAddons() {
-    return this.querySelector(".toggle-addons") || null;
-  }
-
-  get cartContentAddons() {
-    return this.querySelector(".cart-addons-content");
-  }
-
-  get cart() {
-    return document.querySelector("cart-drawer");
-  }
-
-  connectedCallback() {
-    if (this.cartActionId) {
-      this.cartActionId.addEventListener(
-        "click",
-        this.addGiftWrapClick.bind(this)
-      );
-    }
-
-    if (this.cartActionAddons) {
-      this.cartActionAddons.addEventListener(
-        "click",
-        this.handleGiftWrapToggle.bind(this)
-      );
-    }
-  }
-
-  addGiftWrapClick(event) {
-    event.preventDefault();
-    const product_checked = this.querySelector('input[type="radio"]:checked');
-    if (product_checked) {
-      const variant_id = this.querySelector(
-        'input[type="radio"]:checked'
-      ).value;
-      const body = JSON.stringify({
-        id: Number(variant_id),
-        quantity: 1,
-        sections: this.cart
-          .getSectionsToRender()
-          .map((section) => section.section),
-        sections_url: window.location.pathname,
-      });
-      this.cartActionId.classList.add("loading");
-      fetch(`${routes.cart_add_url}`, {
-        ...NextSkyTheme.fetchConfig(),
-        ...{ body },
-      })
-        .then((response) => {
-          return response.text();
-        })
-        .then((state) => {
-          const parsedState = JSON.parse(state);
-
-          this.cart.getSectionsToRender().forEach((section, index) => {
-            const sectionElement = section.selector
-              ? document.querySelector(section.selector)
-              : document.getElementById(section.id);
-            if (!sectionElement) {
-              return;
-            }
-            sectionElement.innerHTML = this.cart.getSectionInnerHTML(
-              parsedState.sections[section.id],
-              section.selector
-            );
-
-            if (index === 1) {
-              const nav_bar_id = document.querySelector("#cart-icon-bubble");
-              if (
-                nav_bar_id &&
-                nav_bar_id.querySelector(".cart-count") &&
-                sectionElement.querySelector(".cart-count")
-              ) {
-                nav_bar_id.querySelector(".cart-count").innerHTML =
-                  sectionElement.querySelector(".cart-count").innerHTML;
-              }
-            }
-          });
-        })
-        .catch(() => {
-          const errors =
-            document.getElementById("cart-errors") ||
-            document.getElementById("CartDrawer-CartErrors");
-          if (!errors) return;
-          errors.textContent = window.cartStrings.error;
-        })
-        .finally(() => {
-          this.cartActionId.classList.remove("loading");
-        });
-    }
-  }
-
-  handleGiftWrapToggle(event) {
-    event.preventDefault();
-    if (this.classList.contains("open")) {
-      this.classList.remove("open");
-      Motion.animate(this.cartContentAddons, { height: 0 }, { duration: 0.3 });
-    } else {
-      this.classList.add("open");
-      Motion.animate(
-        this.cartContentAddons,
-        { height: "auto" },
-        { duration: 0.3 }
-      );
-    }
-  }
-}
-
-if (!customElements.get("cart-gift-wrap-element")) {
-  customElements.define("cart-gift-wrap-element", CartGiftWrap);
 }
 
 class MiniCartUpSell extends HTMLElement {
@@ -1888,7 +1792,7 @@ class ProductTabs extends HTMLElement {
     this._tabContents = null;
     this._openAccordions = new Set();
     this._dot = this.querySelector(".product-tabs__dot");
-    this._rangeSlider = this.querySelector('range-slider');
+    this._rangeSlider = this.querySelector("range-slider");
     this._sizeDot = this.dataset.sizeDot;
 
     if (Shopify && Shopify.designMode) {
@@ -1964,43 +1868,45 @@ class ProductTabs extends HTMLElement {
 
   updateDotPosition(activeTab, animate = true) {
     if (!this._dot || !activeTab || !this._rangeSlider) return;
-    
+
     let targetTab = activeTab;
-    if (!activeTab.classList.contains('product-tabs__header-item-js')) {
-      const jsTab = activeTab.querySelector('.product-tabs__header-item-js.active') || this.querySelector('.product-tabs__header-item-js.active');
+    if (!activeTab.classList.contains("product-tabs__header-item-js")) {
+      const jsTab =
+        activeTab.querySelector(".product-tabs__header-item-js.active") ||
+        this.querySelector(".product-tabs__header-item-js.active");
       if (jsTab) {
         targetTab = jsTab;
       }
     }
-    
+
     const dotWidth = parseInt(this._sizeDot || 26, 10);
     const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
     const tabRect = targetTab.getBoundingClientRect();
-    const tabCenter = tabRect.left + (tabRect.width / 2);
+    const tabCenter = tabRect.left + tabRect.width / 2;
     const relativeCenterX = tabCenter - rangeSliderRect.left;
-    const adjustedPosition = relativeCenterX - (dotWidth / 2);
-    
+    const adjustedPosition = relativeCenterX - dotWidth / 2;
+
     if (animate) {
-      if (typeof Motion !== 'undefined') {
+      if (typeof Motion !== "undefined") {
         Motion.animate(
           this._dot,
           { left: `${adjustedPosition}px` },
-          { duration: 0.2, easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)' }
+          { duration: 0.2, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
         );
       } else {
         this._dot.style.left = `${adjustedPosition}px`;
       }
     } else {
-      this._dot.style.transition = 'none';
+      this._dot.style.transition = "none";
       this._dot.style.left = `${adjustedPosition}px`;
       void this._dot.offsetWidth;
-      this._dot.style.transition = 'left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)';
+      this._dot.style.transition = "left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)";
     }
   }
 
   handleResize() {
     if (!this._rangeSlider) return;
-    const activeTab = this.querySelector('.product-tabs__header-item.active');
+    const activeTab = this.querySelector(".product-tabs__header-item.active");
     if (activeTab) {
       this.updateDotPosition(activeTab, false);
     }
@@ -2066,11 +1972,7 @@ class ProductTabs extends HTMLElement {
         tab.classList.remove("accordion-open");
         description.classList.remove("is-open");
         if (typeof Motion !== "undefined") {
-          Motion.animate(
-            description,
-            { height: 0 },
-            { duration: 0.3}
-          );
+          Motion.animate(description, { height: 0 }, { duration: 0.3 });
         } else {
           description.style.height = "0";
         }
@@ -2087,11 +1989,7 @@ class ProductTabs extends HTMLElement {
       tab.classList.add("accordion-open");
       description.classList.add("is-open");
       if (typeof Motion !== "undefined") {
-        Motion.animate(
-          description,
-          { height: "auto" },
-          { duration: 0.3}
-        );
+        Motion.animate(description, { height: "auto" }, { duration: 0.3 });
       } else {
         description.style.height = "auto";
       }
@@ -2177,7 +2075,7 @@ class ProductTabs extends HTMLElement {
             y: [0, 15],
           },
           {
-            duration: 0.3
+            duration: 0.3,
           }
         ).finished;
       } catch (e) {
@@ -2196,7 +2094,7 @@ class ProductTabs extends HTMLElement {
           y: [15, 0],
         },
         {
-          duration: 0.3
+          duration: 0.3,
         }
       );
     } catch (e) {
@@ -2211,7 +2109,7 @@ class ProductTabs extends HTMLElement {
       });
     }
     if (this._rangeSlider) {
-      window.removeEventListener('resize', this.handleResize);
+      window.removeEventListener("resize", this.handleResize);
     }
   }
 }
@@ -2493,6 +2391,7 @@ class CarouselMobile extends HTMLElement {
     }
   }
 }
+customElements.define("carousel-mobile", CarouselMobile);
 
 class NavBar extends HTMLElement {
   constructor() {
