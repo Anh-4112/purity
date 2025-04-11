@@ -74,7 +74,7 @@
           class="drawer__inner-empty flex column flex-1 overflow-auto"
           style="--padding-block: 2rem; --padding-block-desktop: 3rem"
         >
-          <div class="cart-drawer__warnings word-break flex column align-center py-50 grow-1 drawer-spacing custom-scrollbar overflow-auto">
+          <div class="cart-drawer__warnings word-break flex column align-center py-50 grow-1 drawer-spacing custom-scrollbar overflow-auto fadeIn">
             <div class="drawer__empty-heading h5 mb-10">
               {{ cart_empty_heading }}
             </div>
@@ -82,7 +82,7 @@
               {{ cart_empty_description }}
             </div>
             {%- if cart_empty_collection != blank -%}
-              <ul class="drawer__empty-collections list-unstyled flex column gap-10 w-full mt-30 mt-1025-40">
+              <ul class="drawer__empty-collections list-unstyled flex column gap-15 w-full mt-30 mt-1025-40">
                 {% for collection in cart_empty_collection %}
                   <li class="w-full">
                     {% liquid
@@ -111,7 +111,7 @@
                         </div>
                       {%- endif -%}
                       <div class="collection_info flex gap-10 align-center{% if collection_media %} absolute bottom-0 inset-x-0 p-gutter-x{% endif %}">
-                        <div class="collection-item__info h6">
+                        <div class="collection-item__info">
                           <p class="h6">{{- collection.title -}}</p>
                           {% if collection.metafields.custom.collection_empty.value.collection_description != blank %}
                             <span class="collection-item__description">
@@ -119,7 +119,9 @@
                             </span>
                           {%- endif -%}
                         </div>
-                        <span class="collection-item__icon"></span>
+                        {%- if collection_media -%}
+                          <span class="collection-item__icon"></span>
+                        {%- endif -%}
                       </div>
                     </a>
                   </li>
@@ -359,7 +361,7 @@
                                   {%- endfor -%}
                                 </ul>
                               </div>
-                              <div class="cart-item__quantity-wrapper flex grow-1 bottom-left w-full fs-small mt-10">
+                              <div class="cart-item__quantity-wrapper flex wrap grow-1 bottom-left w-full fs-small mt-10">
                                 <label class="visually-hidden" for="Drawer-quantity-{{ item.index | plus: 1 }}">
                                   {{- 'products.product.quantity.label' | t -}}
                                 </label>
@@ -425,7 +427,10 @@
                                   class="cart-item__error w-full relative"
                                   role="alert"
                                 >
-                                  <small class="cart-item__error-text error-messeage"></small>
+                                  <p
+                                    class="cart-item__error-text error error-messeage mt-5 empty-hidden"
+                                    style="--mes-padding-block: 0.8rem;"
+                                  ></p>
                                 </div>
                               </div>
                             </div>
