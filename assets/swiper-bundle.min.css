@@ -321,7 +321,7 @@
   content: "next";
 }
 .swiper-pagination {
-  position: absolute;
+  position: var(--position);
   text-align: center;
   transition: 0.3s opacity;
   transform: translate3d(0, 0, 0);
@@ -394,15 +394,16 @@
   background: var(--swiper-pagination-bullet-inactive-color, #000);
   opacity: var(--swiper-pagination-bullet-inactive-opacity, 0.3);
   position: relative;
-  transition: opacity .5s cubic-bezier(.37,.4,.72,.71), width .5s cubic-bezier(.37,.4,.72,.71);
+  transition: opacity 0.5s cubic-bezier(0.37, 0.4, 0.72, 0.71),
+    width 0.5s cubic-bezier(0.37, 0.4, 0.72, 0.71);
 }
 .swiper-pagination-bullet:before {
   content: "";
   position: absolute;
-  top: -.5rem;
-  left: -.5rem;
-  right: -.5rem;
-  bottom: -.5rem;
+  top: -0.5rem;
+  left: -0.5rem;
+  right: -0.5rem;
+  bottom: -0.5rem;
 }
 button.swiper-pagination-bullet {
   border: none;

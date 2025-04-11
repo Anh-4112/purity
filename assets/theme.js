@@ -1491,7 +1491,7 @@ class CartDrawer extends HTMLElement {
 
   onShowCartDrawer(event) {
     event.preventDefault();
-    NextSkyTheme.eventModal(this, "open", false);
+    NextSkyTheme.eventModal(this, "open", false, "delay");
   }
 }
 customElements.define("cart-drawer", CartDrawer);
@@ -1511,7 +1511,7 @@ class CartEstimate extends HTMLElement {
   }
 
   get cartActionAddons() {
-    return document.querySelector(".drawer__cart-shipping button") || null;
+    return document.querySelector(".drawer__cart-shipping") || null;
   }
 
   connectedCallback() {
@@ -1651,7 +1651,7 @@ class CartNote extends HTMLElement {
   }
 
   get cartActionAddons() {
-    return document.querySelector(".drawer__cart-note button") || null;
+    return document.querySelector(".drawer__cart-note") || null;
   }
 
   connectedCallback() {
@@ -2433,8 +2433,8 @@ customElements.define("collection-hover", CollectionHover);
 class CarouselMobile extends HTMLElement {
   constructor() {
     super();
-    this.enable = this.dataset.enableCarouselMobile == 'true';
-    this.isMulticontent = this.dataset.multicontent == 'true';
+    this.enable = this.dataset.enableCarouselMobile == "true";
+    this.isMulticontent = this.dataset.multicontent == "true";
     this.swiperSlideInnerHtml = this.innerHTML;
     this.initCarousel();
   }
@@ -2442,7 +2442,7 @@ class CarouselMobile extends HTMLElement {
   initCarousel() {
     if (this.enable) {
       let width = window.innerWidth;
-      window.addEventListener('resize', () => {
+      window.addEventListener("resize", () => {
         const newWidth = window.innerWidth;
         if (newWidth <= 767 && width > 767) {
           this.actionOnMobile();
@@ -2461,11 +2461,19 @@ class CarouselMobile extends HTMLElement {
   }
 
   actionOnMobile() {
-    this.classList.add('swiper');
-    this.classList.remove('grid-cols', 'grid', 'flex', 'column', 'flex-md-row', 'wrap', 'cols');
+    this.classList.add("swiper");
+    this.classList.remove(
+      "grid-cols",
+      "grid",
+      "flex",
+      "column",
+      "flex-md-row",
+      "wrap",
+      "cols"
+    );
     const html = this.swiperSlideInnerHtml.replaceAll(
-      'switch-slide__mobile',
-      'swiper-slide'
+      "switch-slide__mobile",
+      "swiper-slide"
     );
     const wrapper = `<div class='swiper-wrapper custom-padding-carousel-mobile'>${html}</div><div class="swiper-pagination" style="--swiper-pagination-bottom: 0"></div>`;
     this.innerHTML = wrapper;
@@ -2473,17 +2481,41 @@ class CarouselMobile extends HTMLElement {
   }
 
   actionOutMobile() {
-    this.classList.remove('swiper');
+    this.classList.remove("swiper");
     this.innerHTML = this.swiperSlideInnerHtml;
 
     if (this.isMulticontent) {
-      this.classList.add('flex', 'column', 'flex-md-row', 'wrap', 'cols');
-      this.classList.remove('grid', 'grid-cols');
+      this.classList.add("flex", "column", "flex-md-row", "wrap", "cols");
+      this.classList.remove("grid", "grid-cols");
     } else {
-      this.classList.add('grid', 'grid-cols');
-      this.classList.remove('flex', 'column', 'flex-md-row', 'wrap', 'cols');
+      this.classList.add("grid", "grid-cols");
+      this.classList.remove("flex", "column", "flex-md-row", "wrap", "cols");
     }
   }
 }
 
-customElements.define('carousel-mobile', CarouselMobile);
+class NavBar extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    document.body.classList.add("mobile-sticky-bar-enabled");
+  }
+  connectedCallback() {
+    window.addEventListener(
+      "scroll",
+      this.updateScrollNavigationbar.bind(this)
+    );
+  }
+  updateScrollNavigationbar() {
+    const scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollTop > 200) {
+      this.classList.add("show");
+    } else {
+      this.classList.remove("show");
+    }
+  }
+}
+customElements.define("mobile-navigation-bar", NavBar);

@@ -188,7 +188,7 @@ export function eventModal(
     if (removeElementAfter) {
       element.classList.add("remove-after");
     }
-    if (actionModal == "delay") {
+    if (actionModal == "delay" && element.querySelector(".model_media")) {
       element.classList.add("delay");
       setTimeout(() => {
         element.querySelector(".model_media").classList.add("open");
@@ -201,7 +201,10 @@ export function eventModal(
     const modal_element = element.classList.contains("active-modal-js")
       ? element
       : element.closest(".active-modal-js");
-    if (modal_element.classList.contains("delay")) {
+    if (
+      modal_element.classList.contains("delay") &&
+      modal_element.querySelector(".model_media")
+    ) {
       setTimeout(() => {
         modal_element.classList.remove("active", "delay");
         if (active_modal.length == 1) {

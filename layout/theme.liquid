@@ -135,7 +135,7 @@
         --transition: all 0.4s;
         --duration-short: 0.2s;
         --duration-long: 0.5s;
-        --transition-drawer: all 0.3s;
+        --transition-drawer: all var(--timming, 0.35s) var(--timing-function, cubic-bezier(.5, -.03, .34, .83));
         --overlay-bg: rgba(0, 0, 0, 0.60);
         --responsive-ratio: 0.7;
         --gap: 2rem;
@@ -194,7 +194,7 @@
       @media (min-width: 1025px) {
         :root{
           --btn-padding-y: 1.7rem;
-          --btn-padding-x: 4rem;
+          --btn-padding-x: 3.6rem;
           --input-height: 5.6rem;
         }
       }
@@ -275,6 +275,7 @@
     -%}
     {% sections 'footer-group' %}
     {%- render 'scripts-tag' -%}
+    {% section 'mobile-navigation-bar' %}
     {%- render 'sprite-svg' -%}
     <ul hidden>
       <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
