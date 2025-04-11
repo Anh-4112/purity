@@ -188,7 +188,7 @@ export function eventModal(
     if (removeElementAfter) {
       element.classList.add("remove-after");
     }
-    if (actionModal == "delay") {
+    if (actionModal == "delay" && element.querySelector(".model_media")) {
       element.classList.add("delay");
       setTimeout(() => {
         element.querySelector(".model_media").classList.add("open");

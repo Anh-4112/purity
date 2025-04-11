@@ -71,10 +71,10 @@
           assign cart_empty_description = theme_st.cart_empty_description | default: cart_empty_description | escape
         %}
         <div
-          class="drawer__inner-empty flex column h-full"
-          style="--padding-block: 3rem; --padding-block-desktop: 3rem"
+          class="drawer__inner-empty flex column flex-1 overflow-auto"
+          style="--padding-block: 2rem; --padding-block-desktop: 3rem"
         >
-          <div class="cart-drawer__warnings word-break flex column content-center grow-1 drawer-spacing custom-scrollbar overflow-auto">
+          <div class="cart-drawer__warnings word-break flex column align-center py-50 grow-1 drawer-spacing custom-scrollbar overflow-auto">
             <div class="drawer__empty-heading h5 mb-10">
               {{ cart_empty_heading }}
             </div>
@@ -82,9 +82,9 @@
               {{ cart_empty_description }}
             </div>
             {%- if cart_empty_collection != blank -%}
-              <ul class="drawer__empty-collections list-unstyled">
+              <ul class="drawer__empty-collections list-unstyled flex column gap-10 w-full mt-30 mt-1025-40">
                 {% for collection in cart_empty_collection %}
-                  <li>
+                  <li class="w-full">
                     {% liquid
                       assign collection_media = collection.featured_image
                       assign collection_alt = collection.featured_image.alt | default: collection.title
@@ -95,13 +95,13 @@
                       endif
                     %}
                     <a
-                      class="block collection-item__media--ratio rounded"
+                      class="block collection-item__media--ratio rounded relative"
                       draggable="false"
                       href="{{ collection.url }}"
                       aria-label="{{- collection.title -}}"
                     >
                       {%- if collection_media -%}
-                        <div style="--aspect-ratio: '4/3';">
+                        <div class="rounded" style="--aspect-ratio: 20/7;">
                           {% render 'responsive-image',
                             type: 'other',
                             image: collection_media,
@@ -110,13 +110,17 @@
                           %}
                         </div>
                       {%- endif -%}
-                      <span class="collection-item__name">{{- collection.title -}}</span>
-                      {% if collection.metafields.custom.collection_empty.value.collection_description != blank %}
-                        <span class="collection-item__description">
-                          {{- collection.metafields.custom.collection_empty.value.collection_description -}}
-                        </span>
-                      {%- endif -%}
-                      <span class="collection-item__icon"></span>
+                      <div class="collection_info flex gap-10 align-center{% if collection_media %} absolute bottom-0 inset-x-0 p-gutter-x{% endif %}">
+                        <div class="collection-item__info h6">
+                          <p class="h6">{{- collection.title -}}</p>
+                          {% if collection.metafields.custom.collection_empty.value.collection_description != blank %}
+                            <span class="collection-item__description">
+                              {{- collection.metafields.custom.collection_empty.value.collection_description -}}
+                            </span>
+                          {%- endif -%}
+                        </div>
+                        <span class="collection-item__icon"></span>
+                      </div>
                     </a>
                   </li>
                 {% endfor %}
@@ -142,7 +146,7 @@
                   assign free_shipping_amount = free_minimum_amount | money_with_currency
                 endif
               %}
-              <div class="cart-drawer__empty-message text-center mt-20 heading-color">
+              <div class="cart-drawer__empty-message text-center mt-10 mt-1025-20 heading-color">
                 {%- capture free_amount -%}
                   <span>{{ free_shipping_amount }}</span>
                 {%- endcapture -%}
@@ -157,16 +161,6 @@
         %}
         {%- if show_free_shipping_message and free_minimum_amount -%}
           <div class="free-shipping-bar drawer-spacing" style="--padding-block: 20px;">
-            {%- if total_price < free_minimum_amount -%}
-              <div class="free-shipping-bar-title">
-                {{ 'sections.cart.free_shipping_title' | t }}
-              </div>
-            {%- else -%}
-              <div class="free-shipping-bar-title">
-                {{ 'sections.cart.free_shipping_avaiable' | t }}
-              </div>
-            {%- endif -%}
-            {%- assign free_shipping_message = theme_st.free_shipping_message | default: '' -%}
             {% liquid
               assign free_shipping_amount = free_minimum_amount | minus: total_price | money
               if currency_code_enabled
