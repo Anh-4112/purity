@@ -1,5 +1,6 @@
 import { initSlide } from "module-slide";
 import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
+import { CustomElement } from "module-safariElementPatch";
 import * as AddToCart from "module-addToCart";
 import * as NextSkyTheme from "global";
 
@@ -217,6 +218,99 @@ class BackToTop extends HTMLElement {
 }
 customElements.define("back-to-top", BackToTop);
 
+class SiteHeader extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  get dataStickyType() {
+    return this.hasAttribute("data-sticky-type")
+      ? this.getAttribute("data-sticky-type")
+      : "none";
+  }
+
+  get dataStickyMobile() {
+    return this.hasAttribute("data-sticky-mobile")
+      ? this.getAttribute("data-sticky-mobile")
+      : "false";
+  }
+
+  get heightAnnouncementBar() {
+    return document.querySelector(".section-announcement-bar")
+      ? Math.round(
+          document.querySelector(".section-announcement-bar").clientHeight
+        )
+      : 0;
+  }
+
+  init() {
+    this.check = 0;
+    requestAnimationFrame(() => {
+      NextSkyTheme.body.style.setProperty(
+        "--header-height",
+        Math.round(this.clientHeight) + "px"
+      );
+    });
+    this.onStickyHeader();
+  }
+
+  onStickyHeader() {
+    if (this.dataStickyType != "none") {
+      if (this.dataStickyMobile == "false" && window.innerWidth < 1025) {
+        return;
+      }
+      if (this.dataStickyType === "on-scroll-up") {
+        this.classList.add("scroll-up");
+      }
+      window.addEventListener("scroll", () => {
+        this.stickyFunction();
+      });
+    }
+  }
+
+  stickyFunction() {
+    let headerHeight =
+      this.heightAnnouncementBar + Math.round(this.clientHeight);
+    let header = this.closest(".site-header");
+    let positionScrollY = window.scrollY;
+    if (header) {
+      if (this.dataStickyType === "always") {
+        if (positionScrollY > headerHeight) {
+          header.classList.add("section-header-sticky");
+        } else {
+          header.classList.remove("section-header-sticky");
+        }
+      } else {
+        if (positionScrollY > 0) {
+          if (positionScrollY > headerHeight) {
+            header.classList.add("scr-pass-header");
+            if (positionScrollY > this.check) {
+              header.classList.add("header-sticky-hidden");
+            } else {
+              header.classList.remove("header-sticky-hidden");
+            }
+            header.classList.add("section-header-sticky");
+            this.check = positionScrollY;
+          } else {
+            header.classList.remove("scr-pass-header");
+            this.check = 0;
+          }
+        } else {
+          header.classList.remove(
+            "header-sticky-hidden",
+            "section-header-sticky"
+          );
+        }
+      }
+    }
+  }
+}
+customElements.define("site-header", SiteHeader, {
+  extends: "header",
+});
+CustomElement.patchCustomElement("header", "site-header", SiteHeader);
+
 class ToggleMenu extends HTMLElement {
   constructor() {
     super();
@@ -247,6 +341,20 @@ class ToggleMenu extends HTMLElement {
         ),
       100
     );
+    CustomElement.patchAllCustomElements({
+      "button-close-model": {
+        tagElement: "button",
+        classElement: ButtonCloseModel,
+      },
+      "details-mega-menu": {
+        tagElement: "details",
+        classElement: DetailsMegaMenu,
+      },
+      "submenu-details": {
+        tagElement: "details",
+        classElement: SubMenuDetails,
+      },
+    });
   }
 }
 customElements.define("toggle-menu", ToggleMenu);
@@ -291,12 +399,52 @@ class ButtonCloseModel extends HTMLButtonElement {
 customElements.define("button-close-model", ButtonCloseModel, {
   extends: "button",
 });
+CustomElement.patchCustomElement(
+  "button",
+  "button-close-model",
+  ButtonCloseModel
+);
 
 const megaMenuCount = new WeakMap();
 class DetailsMegaMenu extends HTMLDetailsElement {
   constructor() {
     super(),
-      (this.summaryElement = this.firstElementChild),
+      (this.summaryElement = false),
+      (this.contentElement = false),
+      (this._open = false),
+      (this.header = false),
+      this.init();
+  }
+
+  set open(value) {
+    value !== this._open &&
+      ((this._open = value),
+      this.isConnected
+        ? this.transition(value)
+        : value
+        ? this.setAttribute("open", "")
+        : this.removeAttribute("open"));
+  }
+
+  get open() {
+    return this._open;
+  }
+
+  get dropdownsAnimation() {
+    return this.header.hasAttribute("data-dropdowns-animation")
+      ? this.header.getAttribute("data-dropdowns-animation")
+      : "fade-in";
+  }
+
+  get menuTrigger() {
+    return this.header.hasAttribute("data-menu-trigger") &&
+      window.innerWidth >= 1025
+      ? this.header.getAttribute("data-menu-trigger")
+      : "click";
+  }
+
+  init() {
+    (this.summaryElement = this.firstElementChild),
       (this.contentElement = this.lastElementChild),
       (this._open = this.hasAttribute("open")),
       (this.header = document.querySelector("header")),
@@ -317,23 +465,7 @@ class DetailsMegaMenu extends HTMLDetailsElement {
       );
     }
   }
-  set open(value) {
-    value !== this._open &&
-      ((this._open = value),
-      this.isConnected
-        ? this.transition(value)
-        : value
-        ? this.setAttribute("open", "")
-        : this.removeAttribute("open"));
-  }
-  get open() {
-    return this._open;
-  }
-  get menuTrigger() {
-    return this.header.hasAttribute("data-menu-trigger")
-      ? this.header.getAttribute("data-menu-trigger")
-      : "click";
-  }
+
   onSummaryClicked(event) {
     event.preventDefault(),
       this.menuTrigger === "hover" &&
@@ -350,11 +482,14 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         ),
         this.setAttribute("open", ""),
         this.summaryElement.setAttribute("open", ""),
-        setTimeout(() => this.contentElement.setAttribute("open", ""), 100),
         document.addEventListener("click", this.detectClickOutsideListener),
         document.addEventListener("keydown", this.detectEscKeyboardListener),
         document.addEventListener("focusout", this.detectFocusOutListener),
-        this.classList.add("detail-open"))
+        this.classList.add("detail-open"),
+        this.dropdownsAnimation == "fade-in-down" && window.innerWidth >= 1025
+          ? (this.contentElement.setAttribute("open", ""),
+            await this.fadeInDown())
+          : setTimeout(() => this.contentElement.setAttribute("open", ""), 100))
       : (megaMenuCount.set(
           DetailsMegaMenu,
           megaMenuCount.get(DetailsMegaMenu) - 1
@@ -365,7 +500,9 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         document.removeEventListener("keydown", this.detectEscKeyboardListener),
         document.removeEventListener("focusout", this.detectFocusOutListener),
         this.classList.remove("detail-open"),
-        this.open || setTimeout(() => this.removeAttribute("open"), 400));
+        this.dropdownsAnimation == "fade-in-down" && window.innerWidth >= 1025
+          ? (await this.fadeInUp(), this.open || this.removeAttribute("open"))
+          : setTimeout(() => this.open || this.removeAttribute("open"), 300));
   }
   detectClickOutside(event) {
     !this.contains(event.target) &&
@@ -387,24 +524,74 @@ class DetailsMegaMenu extends HTMLDetailsElement {
     this.menuTrigger !== "hover" ||
       (event.type === "mouseenter" ? (this.open = !0) : (this.open = !1));
   }
+  fadeInDown() {
+    Motion.animate(
+      this.contentElement,
+      {
+        opacity: [0, 1],
+        visibility: "visible",
+      },
+      {
+        duration: 0.4,
+        easing: [0.7, 0, 0.2, 1],
+        delay: 0.1,
+      }
+    );
+    const translateY = "-105%";
+    return Motion.animate(
+      this.contentElement,
+      {
+        transform: [`translateY(${translateY})`, "translateY(0)"],
+      },
+      {
+        duration: 0.4,
+        easing: [0.7, 0, 0.2, 1],
+      }
+    ).finished;
+  }
+  fadeInUp() {
+    Motion.animate(
+      this.contentElement,
+      {
+        opacity: 0,
+        visibility: "hidden",
+      },
+      {
+        duration: 0.3,
+        easing: [0.7, 0, 0.2, 1],
+      }
+    );
+    const translateY = "-105%";
+    return Motion.animate(
+      this.contentElement,
+      {
+        transform: `translateY(${translateY})`,
+      },
+      {
+        duration: 0.4,
+        easing: [0.7, 0, 0.2, 1],
+      }
+    ).finished;
+  }
 }
 customElements.define("details-mega-menu", DetailsMegaMenu, {
   extends: "details",
 }),
   megaMenuCount.set(DetailsMegaMenu, 0);
+CustomElement.patchCustomElement(
+  "details",
+  "details-mega-menu",
+  DetailsMegaMenu
+);
 
 class SubMenuDetails extends HTMLDetailsElement {
   constructor() {
     super(),
-      (this.summaryElement = this.firstElementChild),
-      (this.contentElement = this.lastElementChild),
-      (this._open = this.hasAttribute("open")),
-      (this.content =
-        this.closest(".menu-link").querySelector(".sub-children-menu")),
-      this.summaryElement.addEventListener(
-        "click",
-        this.onSummaryClicked.bind(this)
-      );
+      (this.summaryElement = false),
+      (this.contentElement = false),
+      (this._open = false),
+      (this.content = false),
+      this.init();
   }
 
   get open() {
@@ -421,13 +608,21 @@ class SubMenuDetails extends HTMLDetailsElement {
         : this.removeAttribute("open"));
   }
 
+  init() {
+    (this.summaryElement = this.firstElementChild),
+      (this.contentElement = this.lastElementChild),
+      (this._open = this.hasAttribute("open")),
+      (this.content =
+        this.closest(".menu-link").querySelector(".sub-children-menu")),
+      this.summaryElement.addEventListener(
+        "click",
+        this.onSummaryClicked.bind(this)
+      );
+  }
+
   onSummaryClicked(event) {
-    event.preventDefault(),
-      !event.target.closest(".toggle-menu") &&
-      this.summaryElement.hasAttribute("data-href") &&
-      this.summaryElement.getAttribute("data-href").length > 0
-        ? (window.location.href = this.summaryElement.getAttribute("data-href"))
-        : (this.open = !this.open);
+    event.preventDefault();
+    this.open = !this.open;
   }
 
   async transition(value) {
@@ -449,19 +644,16 @@ class SubMenuDetails extends HTMLDetailsElement {
 customElements.define("submenu-details", SubMenuDetails, {
   extends: "details",
 });
+CustomElement.patchCustomElement("details", "submenu-details", SubMenuDetails);
 
 class CollapsibleRowDetails extends HTMLDetailsElement {
   constructor() {
     super(),
-      (this.summaryElement = this.firstElementChild),
-      (this.contentElement = this.lastElementChild),
-      (this._open = this.hasAttribute("open")),
-      (this.content = this.querySelector(".collapsible-row__content")),
-      this.summaryElement.addEventListener(
-        "click",
-        this.onSummaryClicked.bind(this)
-      ),
-      this.initialize();
+      (this.summaryElement = null),
+      (this.contentElement = null),
+      (this._open = false),
+      (this.content = null),
+      this.init();
   }
 
   get open() {
@@ -476,6 +668,18 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
         : value
         ? this.setAttribute("open", "")
         : this.removeAttribute("open"));
+  }
+
+  init() {
+    this.summaryElement = this.firstElementChild;
+    this.contentElement = this.lastElementChild;
+    this._open = this.hasAttribute("open");
+    this.content = this.querySelector(".collapsible-row__content");
+    this.summaryElement.addEventListener(
+      "click",
+      this.onSummaryClicked.bind(this)
+    );
+    this.initialize();
   }
 
   onSummaryClicked(event) {
@@ -511,6 +715,11 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
 customElements.define("collapsible-row", CollapsibleRowDetails, {
   extends: "details",
 });
+CustomElement.patchCustomElement(
+  "details",
+  "collapsible-row",
+  CollapsibleRowDetails
+);
 
 class RecentlyViewedProducts extends HTMLElement {
   constructor() {
