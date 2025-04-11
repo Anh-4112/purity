@@ -84,11 +84,11 @@
           -%}
           <div
             class="{% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
-            style="--custom-width: {{ section_st.icon_size }}px;"
+            style="---width: {{ section_st.icon_size }}px;"
           >
             <div
               class="icon-box__icon w-custom h-auto flex"
-              style="--custom-width: {{ section_st.icon_size }}px; "
+              style="---width: {{ section_st.icon_size }}px; "
             >
               {% if icon_svg != 'none' %}
                 {% render 'icon_svg_list',
@@ -110,7 +110,7 @@
               {% else %}
                 <div
                   class="w-custom h-custom rounded-10"
-                  style="--custom-width: {{ section_st.icon_size }}px; --custom-height: {{ section_st.icon_size }}px;--aspect-ratio:1/1;"
+                  style="--width: {{ section_st.icon_size }}px;--height: {{ section_st.icon_size }}px;--aspect-ratio:1/1;"
                 >
                   {%- render 'placeholder-render', type: 'product', class: 'img-placeholder' -%}
                 </div>

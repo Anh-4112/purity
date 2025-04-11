@@ -31,18 +31,15 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
   {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
-{%- capture col_style -%}
-  --col-width-custom: {{ highlight_collection_width }}%;{% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
-{%- endcapture -%}
 <div
-  class="section__collection-highlight overflow-hidden"
+  class="section__collection-highlight overflow-hidden section color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
-      <div class="section-header section-header__in-section hidden-md d-block text-{{ section_st.alignment }}">
+      <div class="section-header section-header__in-section hidden-md d-block text-{{ section_st.text_alignment }}{% if section.blocks.size > 0 %} mb-40{% endif %}">
         {%- if section_st.subheading != blank -%}
-          <div class="section-subheading">
+          <div class="section-subheading fs-big-2">
             {{ section_st.subheading }}
           </div>
         {%- endif -%}
@@ -52,19 +49,17 @@
           </h2>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description">
+          <div class="section-description mt-15">
             {{ section_st.description }}
           </div>
         {%- endif -%}
       </div>
     {%- endif -%}
-    <div class="collection-highlight__blocks relative">
-      <div
-        class="collection-highlight__blocks-item"
-        style="{{ col_style | strip | strip_newlines }}"
-      >
-        {% content_for 'blocks' %}
-      </div>
+    <div
+      class="collection-highlight__blocks relative flex wrap gap"
+      style="--gap: {{ column_gap_slide }}px;--col-width: {{ highlight_collection_width }}%;"
+    >
+      {% content_for 'blocks' %}
     </div>
   </div>
 </div>
@@ -207,7 +202,7 @@
     },
     {
       "type": "header",
-      "content": "t:sections.collection-highlights.blocks.type.type_highlight.header" 
+      "content": "t:sections.collection-highlights.blocks.type.type_highlight.header"
     },
     {
       "type": "range",
@@ -397,12 +392,6 @@
         {
           "type": "group-collections-list",
           "blocks": [
-            {
-              "type": "_collection-list"
-            },
-            {
-              "type": "_collection-list"
-            },
             {
               "type": "_collection-list"
             },
