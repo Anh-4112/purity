@@ -2493,7 +2493,7 @@ class CarouselMobile extends HTMLElement {
     }
   }
 }
-
+customElements.define('carousel-mobile', CarouselMobile);
 class NavBar extends HTMLElement {
   constructor() {
     super();
