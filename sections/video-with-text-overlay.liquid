@@ -63,24 +63,26 @@
           %}
           <div class="video-foreground iframe-video video-has-bg">
             {%- if section_st.video_url != null -%}
-              {%- if section_st.video_url.type == 'youtube' -%}
-                <iframe
-                  data-src="https://www.youtube.com/embed/{{ video_id }}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&playlist={{ video_id }}&rel=0"
-                  class="js-youtube"
-                  title="{{ section_st.video_alt_text | escape }}"
-                  allowfullscreen
-                ></iframe>
-              {%- else -%}
-                <iframe
-                  data-src="https://player.vimeo.com/video/{{ video_id }}?controls=0background=1&autoplay=1&muted=1&loop=1"
-                  class="js-vimeo vimeo-video"
-                  title="{{ section_st.video_alt_text | escape }}"
-                  width="100%"
-                  height="100%"
-                  allowfullscreen
-                  frameborder="0"
-                ></iframe>
-              {%- endif -%}
+              {% liquid
+                if section_st.video_url.type == 'youtube'
+                  assign video_base_url = 'https://www.youtube.com/embed/'
+                  assign video_params = 'controls=0&autoplay=1&mute=1&playsinline=1&loop=1&playlist=' | append: video_id | append: '&rel=0'
+                  assign video_class = 'js-youtube'
+                else
+                  assign video_base_url = 'https://player.vimeo.com/video/'
+                  assign video_params = 'controls=0&background=1&autoplay=1&muted=1&loop=1'
+                  assign video_class = 'js-vimeo vimeo-video'
+                endif
+              %}
+              <iframe
+                data-src="{{ video_base_url }}{{ video_id }}?{{ video_params }}"
+                class="{{ video_class }}"
+                title="{{ section_st.video_alt_text | escape }}"
+                width="100%"
+                height="100%"
+                allowfullscreen
+                frameborder="0"
+              ></iframe>
             {%- endif -%}
           </div>
         </video-section>
