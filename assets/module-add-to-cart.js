@@ -82,7 +82,7 @@ export class ProductForm extends HTMLElement {
         const is_cart_page = document.body.classList.contains("template-cart");
         if (!is_cart_page) {
           this.cart.renderContents(response);
-          NextSkyTheme.eventModal(this.cart, "open", false);
+          NextSkyTheme.eventModal(this.cart, "open", false, "delay");
           if (this.quickView) {
             NextSkyTheme.eventModal(this.quickView, "close", false);
           }
@@ -178,11 +178,30 @@ export class ProductForm extends HTMLElement {
             if (!sectionElement) {
               return;
             }
-            sectionElement.innerHTML = this.cart.getSectionInnerHTML(
-              parsedState.sections[section.id],
-              section.selector
-            );
-
+            if (index === 2) {
+              const progress_message = this.getSectionDOM(
+                parsedState.sections[section.id],
+                ".progress-bar-message"
+              );
+              const progress = this.getSectionDOM(
+                parsedState.sections[section.id],
+                ".progress"
+              );
+              if (sectionElement.querySelector(".progress-bar-message")) {
+                sectionElement.querySelector(
+                  ".progress-bar-message"
+                ).innerHTML = progress_message.innerHTML;
+              }
+              if (sectionElement.querySelector(".progress")) {
+                sectionElement.querySelector(".progress").style.width =
+                  progress.style.width;
+              }
+            } else {
+              sectionElement.innerHTML = this.cart.getSectionInnerHTML(
+                parsedState.sections[section.id],
+                section.selector
+              );
+            }
             if (index === 1) {
               const nav_bar_id = document.querySelector("#cart-icon-bubble");
               if (
@@ -282,6 +301,30 @@ class CartItems extends ProductForm {
     this.addEventListener("change", debouncedOnChange.bind(this));
   }
 
+  getSectionsToRender() {
+    return [
+      {
+        id: this.cart.sectionId,
+        section: this.cart.sectionId,
+        selector: ".drawer__header",
+      },
+      {
+        id: "cart-icon-bubble",
+        section: "cart-icon-bubble",
+      },
+      {
+        id: this.cart.sectionId,
+        section: this.cart.sectionId,
+        selector: ".free-shipping-bar",
+      },
+      {
+        id: this.cart.sectionId,
+        section: this.cart.sectionId,
+        selector: ".drawer__footer-bottom",
+      },
+    ];
+  }
+
   onChange(event) {
     this.updateQuantity(
       event.target.dataset.index,
@@ -292,4 +335,151 @@ class CartItems extends ProductForm {
 }
 if (!customElements.get("cart-items")) {
   customElements.define("cart-items", CartItems);
+}
+
+class CartGiftWrap extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  get cartActionId() {
+    return this.querySelector(".select-package") || null;
+  }
+
+  get cartActionAddons() {
+    return this.querySelector(".toggle-addons") || null;
+  }
+
+  get cartContentAddons() {
+    return this.querySelector(".cart-addons-content");
+  }
+
+  get cart() {
+    return document.querySelector("cart-drawer");
+  }
+
+  connectedCallback() {
+    if (this.cartActionId) {
+      this.cartActionId.addEventListener(
+        "click",
+        this.addGiftWrapClick.bind(this)
+      );
+    }
+
+    if (this.cartActionAddons) {
+      this.cartActionAddons.addEventListener(
+        "click",
+        this.handleGiftWrapToggle.bind(this)
+      );
+    }
+  }
+
+  addGiftWrapClick(event) {
+    event.preventDefault();
+    const product_checked = this.querySelector('input[type="radio"]:checked');
+    if (product_checked) {
+      const variant_id = this.querySelector(
+        'input[type="radio"]:checked'
+      ).value;
+      const body = JSON.stringify({
+        id: Number(variant_id),
+        quantity: 1,
+        sections: this.cart
+          .getSectionsToRender()
+          .map((section) => section.section),
+        sections_url: window.location.pathname,
+      });
+      this.cartActionId.classList.add("loading");
+      fetch(`${routes.cart_add_url}`, {
+        ...NextSkyTheme.fetchConfig(),
+        ...{ body },
+      })
+        .then((response) => {
+          return response.text();
+        })
+        .then((state) => {
+          const parsedState = JSON.parse(state);
+
+          this.cart.getSectionsToRender().forEach((section, index) => {
+            const sectionElement = section.selector
+              ? document.querySelector(section.selector)
+              : document.getElementById(section.id);
+            if (!sectionElement) {
+              return;
+            }
+            if (index === 2) {
+              const progress_message = this.getSectionDOM(
+                parsedState.sections[section.id],
+                ".progress-bar-message"
+              );
+              const progress = this.getSectionDOM(
+                parsedState.sections[section.id],
+                ".progress"
+              );
+              if (sectionElement.querySelector(".progress-bar-message")) {
+                sectionElement.querySelector(
+                  ".progress-bar-message"
+                ).innerHTML = progress_message.innerHTML;
+              }
+              if (sectionElement.querySelector(".progress")) {
+                sectionElement.querySelector(".progress").style.width =
+                  progress.style.width;
+              }
+            } else {
+              sectionElement.innerHTML = this.cart.getSectionInnerHTML(
+                parsedState.sections[section.id],
+                section.selector
+              );
+            }
+
+            if (index === 1) {
+              const nav_bar_id = document.querySelector("#cart-icon-bubble");
+              if (
+                nav_bar_id &&
+                nav_bar_id.querySelector(".cart-count") &&
+                sectionElement.querySelector(".cart-count")
+              ) {
+                nav_bar_id.querySelector(".cart-count").innerHTML =
+                  sectionElement.querySelector(".cart-count").innerHTML;
+              }
+            }
+          });
+        })
+        .catch(() => {
+          const errors =
+            document.getElementById("cart-errors") ||
+            document.getElementById("CartDrawer-CartErrors");
+          if (!errors) return;
+          errors.textContent = window.cartStrings.error;
+        })
+        .finally(() => {
+          this.cartActionId.classList.remove("loading");
+          this.handleGiftWrapToggle();
+        });
+    }
+  }
+
+  handleGiftWrapToggle() {
+    if (this.classList.contains("open")) {
+      this.classList.remove("open");
+      Motion.animate(this.cartContentAddons, { height: 0 }, { duration: 0.3 });
+    } else {
+      this.classList.add("open");
+      Motion.animate(
+        this.cartContentAddons,
+        { height: "auto" },
+        { duration: 0.3 }
+      );
+    }
+  }
+
+  getSectionDOM(html, selector = ".shopify-section") {
+    return new DOMParser()
+      .parseFromString(html, "text/html")
+      .querySelector(selector);
+  }
+}
+
+if (!customElements.get("cart-gift-wrap-element")) {
+  customElements.define("cart-gift-wrap-element", CartGiftWrap);
 }
