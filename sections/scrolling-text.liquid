@@ -12,40 +12,42 @@
 
   assign header_size = ''
   if heading_size == 'small'
-    assign header_size = 'h3'
+    assign header_size = 'h4'
   elsif heading_size == 'large'
-    assign header_size = 'h1'
-  else
     assign header_size = 'h2'
+  else
+    assign header_size = 'h3'
   endif
 
-  assign space_between_item = 0
   if section_st.space_between == 'large'
-    assign space_between_item = 60
+    assign space_between_item_dt = 80
+    assign space_between_item_mb = 50
   elsif section_st.space_between == 'medium'
-    assign space_between_item = 30
+    assign space_between_item_dt = 60
+    assign space_between_item_mb = 40
   elsif section_st.space_between == 'small'
-    assign space_between_item = 10
+    assign space_between_item_dt = 30
+    assign space_between_item_mb = 20
   endif
 -%}
 
 {%- capture style -%}
-    --section-pt: {{ section_st.padding_top }}px; 
-    --section-pb: {{ section_st.padding_bottom }}px;
-    --speed: {{ section_st.speed }}s;
+    --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.speed }}s;
 {%- endcapture -%}
 
 <div
-  class="section__scrolling-text color-{{ section_st.color_scheme }} gradient"
+  class="section__scrolling-text color-{{ section_st.color_scheme }} gradient section"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     <div
-      class="flex{% if section_st.uppercase %} uppercase{% endif %} {{ header_size }} marquee overflow-hidden gap-{{ space_between_item }} w-full justify-center"
+      class="flex{% if section_st.uppercase %} uppercase{% endif %} marquee overflow-hidden gap w-full justify-center"
+      style="--gap: {{ space_between_item_mb }}px;--gap-desktop: {{ space_between_item_dt }}px;"
     >
       {%- for i in (0..5) -%}
         <div
-          class="flex animation-marquee animation__marquee-{{ section_st.direction }} whitespace-nowrap gap-{{ space_between_item }} align-center"
+          class="flex animation-marquee animation__marquee-{{ section_st.direction }} whitespace-nowrap gap align-center"
+          style="--gap: {{ space_between_item_mb }}px;--gap-desktop: {{ space_between_item_dt }}px;"
         >
           {%- for block in section.blocks -%}
             {% assign block_st = block.settings %}
@@ -65,7 +67,7 @@
                       href="{{ link_text | default: "#" }}"
                     {% endif %}
                     aria-label="{{ content }}"
-                    class="no-underline{% if image == blank %} text_scroll{% endif %}"
+                    class="no-underline{% if image == blank %} text_scroll{% endif %} {{ header_size }}"
                   >
                     {{ content }}
                   </a>
@@ -80,11 +82,11 @@
                 {%- if image != blank -%}
                   <div
                     class="scrolling-image image_scroll"
-                    style="--image-height: {{ block_st.image_height }}px;"
+                    style="--image-width: {{ block_st.image_width }}px;"
                   >
                     <a
-                      class="scrolling-image-item overflow-hidden block{% if block_st.rounded_image %} radius-50{% endif %}"
-                      style="--image-height: {{ block_st.image_height }}px;"
+                      class="scrolling-image-item overflow-hidden flex w-full h-full{% if block_st.rounded_image %} radius-50{% endif %}"
+                      style="--image-width: {{ block_st.image_width }}px;"
                       {% if link_image == blank %}
                         role="link" aria-disabled="true"
                       {% else %}
@@ -92,7 +94,7 @@
                       {% endif %}
                       aria-label="{{ 'sections.scrolling_text.alt' | t }}"
                     >
-                      {% render 'responsive-image', image: image, type: 'other', image_alt: image_alt %}
+                      {% render 'responsive-image', image: image, type: 'other', image_alt: image_alt, class: 'h-full w-full object-fit-cover' %}
                     </a>
                   </div>
                 {%- endif -%}
@@ -273,12 +275,12 @@
 
         {
           "type": "range",
-          "id": "image_height",
-          "min": 50,
-          "max": 100,
-          "step": 1,
+          "id": "image_width",
+          "min": 20,
+          "max": 400,
+          "step": 5,
           "unit": "px",
-          "label": "t:sections.scrolling_text.settings.blocks.image.image_height.label",
+          "label": "t:sections.scrolling_text.settings.blocks.image.image_width.label",
           "default": 80
         },
         {
