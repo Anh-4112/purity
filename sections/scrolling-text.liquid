@@ -76,10 +76,17 @@
                 {%- liquid
                   assign image = block_st.image_block
                   assign link_image = block_st.link_image
+                  assign icon_svg = block_st.icon_svg
                   assign image_alt_default = 'sections.scrolling_text.alt' | t
                   assign image_alt = image.alt | default: image_alt_default | escape
                 -%}
-                {%- if image != blank -%}
+                {% if icon_svg != 'none' %}
+                  {% render 'icon_svg_list',
+                    icon: icon_svg,
+                    custom_width: block_st.image_width,
+                    custom_height: block_st.image_width
+                  %}
+                {%- elsif image != blank -%}
                   <div
                     class="scrolling-image image_scroll"
                     style="--image-width: {{ block_st.image_width }}px;"
@@ -287,6 +294,47 @@
           "type": "checkbox",
           "id": "rounded_image",
           "label": "t:sections.scrolling_text.settings.blocks.image.rounded_image.label"
+        },
+        {
+          "type": "select",
+          "id": "icon_svg",
+          "label": "t:sections.all.svg.label",
+          "info": "t:sections.all.svg.custom_svg.info", 
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:sections.all.icon.none.label"
+            },
+            {
+              "value": "beauty",
+              "label": "t:sections.all.icon.beauty.label"
+            },
+            {
+              "value": "leaf",
+              "label": "t:sections.all.icon.leaf.label"
+            },
+            {
+              "value": "cruelty",
+              "label": "t:sections.all.icon.cruelty.label"
+            },
+            {
+              "value": "paraben",
+              "label": "t:sections.all.icon.paraben.label"
+            },
+            {
+              "value": "check_badge",
+              "label": "t:sections.all.icon.check_badge.label"
+            },
+            {
+              "value": "free_shipping",
+              "label": "t:sections.all.icon.free_shipping.label"
+            },
+            {
+              "value": "message_communications",
+              "label": "t:sections.all.icon.message_communications.label"
+            }
+          ]
         },
         {
           "type": "url",
