@@ -38,7 +38,7 @@ function initSlide(_this) {
   }
   new Swiper(_this, {
     slidesPerView:  centerSlide ? 'auto' : autoItem ? "auto" : itemMobile,
-    spaceBetween: centerSlide ? spacing : spacing >= 15 ? 15 : spacing,
+    spaceBetween: centerSlide ? spacing : spacing >= 10 ? 10 : spacing,
     autoplay: autoplay,
     direction: direction,
     loop: loop,
