@@ -155,11 +155,6 @@
                   <div class="product-count relative z-3">
                     {%- assign products_count = collection.products_count | default: 0 -%}
                     {{ products_count }}
-                    {%- if products_count < 2 -%}
-                      {{ 'sections.collection_list.item' | t }}
-                    {%- else -%}
-                      {{ 'sections.collection_list.items' | t }}
-                    {%- endif -%}
                   </div>
                 {%- endif -%}
               </div>
