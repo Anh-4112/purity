@@ -5,7 +5,7 @@ export class ProductForm extends HTMLElement {
     super();
     this.form = this.querySelector("form");
     this.cart = document.querySelector("cart-drawer");
-    this.quickView = document.querySelector("quickview-drawer");
+    this.quickView = document.querySelector("quickview-drawer.active");
     if (this.form) {
       if (this.form.querySelector("[name=id]")) {
         this.form.querySelector("[name=id]").disabled = false;
