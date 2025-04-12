@@ -348,9 +348,6 @@ textarea {
 .w-content {
   width: fit-content;
 }
-.max-w-custom-all {
-  max-width: var(--max-width);
-}
 @media screen and (max-width: 767.98px) {
   [style*="--aspect-ratio-mb"]::before {
     padding-top: calc(100% / (0 + var(--aspect-ratio-mb, 16 / 9)));
@@ -489,6 +486,9 @@ textarea {
 }
 .left-15 {
   left: 1.5rem;
+}
+.bottom-15 {
+  bottom: 1.5rem;
 }
 .inset-x-15 {
   inset-inline: 1.5rem;
@@ -645,6 +645,9 @@ input[type="radio"]:checked + .text-swatch-label.pill {
 a.hover-heading-color:hover {
   color: var(--color-heading);
 }
+:where(.text-color) {
+  color: var(--color-text);
+}
 .visually-hidden {
   clip: rect(0 0 0 0);
   border: 0;
@@ -673,6 +676,15 @@ a.hover-heading-color:hover {
 }
 :where(.flex-end, .justify-content-right, .justify-content-end) {
   justify-content: flex-end;
+}
+:where(.align-start) {
+  align-items: flex-start;
+}
+:where(.align-right, .align-end) {
+  align-items: flex-end;
+}
+:where(.flex-start, .justify-content-left) {
+  justify-content: flex-start;
 }
 .flex-auto {
   flex: 0 0 auto;
@@ -821,6 +833,9 @@ a.hover-heading-color:hover {
 .text-center {
   text-align: center;
 }
+.text-end {
+  text-align: end;
+}
 .whitespace-nowrap {
   white-space: nowrap;
 }
@@ -877,11 +892,18 @@ a.hover-heading-color:hover {
 .pe-20 {
   padding-inline-end: 2rem;
 }
+.px-15 {
+  padding-inline: 1.5rem;
+}
 .px-20 {
   padding-inline: 2rem;
 }
 .py-7 {
   padding-block: 0.7rem;
+}
+.py-15 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 .py-20 {
   padding-block: 2rem;
@@ -931,6 +953,9 @@ a.hover-heading-color:hover {
 }
 .mb-25 {
   margin-bottom: 2.5rem;
+}
+.mb-40 {
+  margin-bottom: 4rem;
 }
 .mb-custom {
   margin-bottom: calc(var(--space-bottom) * 1px);
@@ -1218,6 +1243,16 @@ body:not(.template-index) .transparent-logo {
   }
   .mb-md-10 {
     margin-bottom: 1rem;
+  }
+  .px-md-35 {
+    padding-inline: 3.5rem;
+  }
+  .py-md-20 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  .bottom-md-30 {
+    bottom: 3rem;
   }
   .gap-small {
     --gap: 10px;

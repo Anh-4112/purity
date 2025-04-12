@@ -52,12 +52,6 @@ blockquote {
 .pointer-none {
   pointer-events: none;
 }
-.body-weight {
-  font-weight: var(--body-font-weight);
-}
-.heading-weight {
-  font-weight: var(--heading-weight);
-}
 .medium-weight {
   font-weight: 500;
 }
@@ -66,12 +60,6 @@ blockquote {
 }
 .bold {
   font-weight: bold;
-}
-.text-end {
-  text-align: end;
-}
-:where(.text-color) {
-  color: var(--color-text);
 }
 .color-white {
   color: rgb(var(--color-white));
@@ -278,9 +266,7 @@ blockquote {
 .px-10 {
   padding-inline: 1rem;
 }
-.px-15 {
-  padding-inline: 1.5rem;
-}
+
 .px-25 {
   padding-inline: 2.5rem;
 }
@@ -301,10 +287,6 @@ blockquote {
 }
 .py-12 {
   padding-block: 1.2rem;
-}
-.py-15 {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
 }
 .py-17 {
   padding-block: 1.7rem;
@@ -510,9 +492,6 @@ blockquote {
 .mb-33 {
   margin-bottom: 3.3rem;
 }
-.mb-40 {
-  margin-bottom: 4rem;
-}
 .mb-50 {
   margin-bottom: 5rem;
 }
@@ -588,9 +567,6 @@ blockquote {
 .bottom-10 {
   bottom: 1rem;
 }
-.bottom-15 {
-  bottom: 1.5rem;
-}
 .bottom-20 {
   bottom: 2rem;
 }
@@ -662,15 +638,6 @@ blockquote {
 }
 .z-auto {
   z-index: auto;
-}
-:where(.align-start) {
-  align-items: flex-start;
-}
-:where(.align-right, .align-end) {
-  align-items: flex-end;
-}
-:where(.flex-start, .justify-content-left) {
-  justify-content: flex-start;
 }
 .align-self-baseline {
   align-self: baseline;
@@ -1103,10 +1070,6 @@ modal-popup :is(.modal-overlay) {
     padding-top: 0;
     padding-bottom: 0;
   }
-  .py-md-20 {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-  }
   .px-md-0 {
     padding-left: 0;
     padding-right: 0;
@@ -1147,9 +1110,6 @@ modal-popup :is(.modal-overlay) {
   .inset-x-md-30 {
     left: 3rem;
     right: 3rem;
-  }
-  .bottom-md-30 {
-    bottom: 3rem;
   }
   .left-md-15 {
     left: 1.5rem;
@@ -1481,7 +1441,8 @@ modal-popup :is(.modal-overlay) {
       body .jdgm-write-rev-link,
       body .jdgm-write-rev-link.jdgm-write-rev-link,
       input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
-    ):hover {
+    ):hover,
+  .collection-list__content-inner:hover .btn-hover {
     --btn-color: var(--btn-primary-hover-color);
     color: var(--btn-color);
   }
@@ -1502,7 +1463,8 @@ modal-popup :is(.modal-overlay) {
       body .jdgm-write-rev-link,
       body .jdgm-write-rev-link.jdgm-write-rev-link,
       input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
-    ):hover::after {
+    ):hover::after,
+  .collection-list__content-inner:hover .btn-hover:after {
     transform: rotate3d(0, 0, 1, 0) translateZ(0);
   }
   .smooth-padding-hover:hover {
@@ -1679,6 +1641,9 @@ modal-popup :is(.modal-overlay) {
     border-bottom-color: var(--color-dark);
     border-top-color: transparent;
   }
+  .collection-list__content-inner:hover .collection-list__icon {
+    transform: rotate(45deg);
+  }
 }
 /* Open detail */
 
@@ -1737,7 +1702,7 @@ modal-popup :is(.modal-overlay) {
   .footer_bottom-inner {
     border-top: 0;
   }
-  .w-custom-mb{
+  .w-custom-mb {
     width: var(--width-mb);
   }
 }
