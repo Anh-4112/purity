@@ -16,7 +16,7 @@
     assign column_gap_desktop = 50
     assign column_gap_slide = 20
   elsif section_st.column_gap == 'small'
-  assign column_gap_desktop = 30
+    assign column_gap_desktop = 30
     assign column_gap_slide = 10
   endif
 
@@ -25,7 +25,7 @@
   if heading_size == 'small'
     assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = 'fs-medium'
+    assign header_size = 'h1'
   endif
 
   assign highlight_collection_width = section_st.highlight_collection_width
@@ -43,7 +43,7 @@
     {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div class="section-header section-header__in-section hidden-1025 d-block text-{{ section_st.text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}">
         {%- if section_st.subheading != blank -%}
-          <div class="section-subheading fs-big-2">
+          <div class="section-subheading h7 mb-5 mb-md-10 body_weight fs-big-2">
             {{ section_st.subheading }}
           </div>
         {%- endif -%}
