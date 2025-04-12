@@ -1,3 +1,4 @@
+{{ 'product.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -8,7 +9,6 @@
     assign section_width = 'fluid_container'
   endif
   assign heading_size = section_st.heading_size
-  assign text_alignment = section_st.text_alignment
   assign items_per_row = section_st.items_per_row
   assign show_pagination = section_st.show_pagination
   assign show_navigation = section_st.show_navigation
@@ -49,18 +49,40 @@
     {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- style -%}
-
+  .product-tabs__content-item:not(.first-tab) {
+    display: none;
+  }
+  @media (min-width: 1025px) {
+    .product-tabs__header-title {
+      color: var(--color-text);
+      transition: color 0.3s ease;
+      white-space: nowrap;
+    }
+    .product-tabs__header-item.active .product-tabs__header-title {
+      color: var(--color-heading);
+    }
+    .col-left:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: calc(-1 * var(--gap));
+      background: var(--color-background, #fff);
+      width: 100vw;
+      z-index: 2;
+    }
+  }
 {%- endstyle -%}
 <div
   class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <product-tabs class="">
-      <div class="col-left">
+    <product-tabs class="flex wrap gap" style="--col-width: 32.8rem;--gap: 3rem;">
+      <div class="col-left col-1025-w-custom w-full relative-1025">
         {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
           <div
-            class="section-header text-{{ text_alignment }}"
+            class="section-header relative-1025 z-2"
           >
             {%- if section_st.subheading != blank -%}
               <div class="section-subheading">
@@ -80,7 +102,10 @@
           </div>
         {%- endif -%}
         {%- if section.blocks.size > 0 -%}
-          <div class="product-tabs__header">
+          <div
+            class="product-tabs__header flex column-1025 gap free-scroll overflow-x-scroll-mb relative-1025 z-2"
+            style="--gap-desktop: 0; --gap: 30px;"
+          >
             {%- for block in section.blocks -%}
               {%- liquid
                 assign block_st = block.settings
@@ -92,17 +117,20 @@
               -%}
               {%- if collection_title != blank -%}
                 <div
-                  class="product-tabs__header-item pointer"
+                  class="product-tabs__header-item pointer py-1025-20 border-bottom-1025{% if forloop.first %} pt-0{% endif %}"
                   data-block-id="{{ block.id }}"
-                  role="tab" 
+                  role="tab"
                   tabindex="0"
                   {{ block.shopify_attributes }}
                 >
-                  <div class="product-tabs__header-title">
+                  <div class="product-tabs__header-title h5 mb-10">
                     {{ collection_title }}
                   </div>
                   {%- if collection_description != blank -%}
-                    <div class="product-tabs__header-description overflow-hidden" id="tab-desc-{{ block.id }}">
+                    <div
+                      class="product-tabs__header-description overflow-hidden{% if section_st.hidden_des_mobile %} hidden block-1025{% endif %}"
+                      id="tab-desc-{{ block.id }}"
+                    >
                       {{ collection_description }}
                     </div>
                   {%- endif -%}
@@ -113,7 +141,7 @@
         {%- endif -%}
       </div>
       {%- if section.blocks.size > 0 -%}
-        <div class="col-right product-tabs__content">
+        <div class="col-right product-tabs__content w-full col-1025-remaining">
           {%- for block in section.blocks -%}
             {%- liquid
               assign block_st = block.settings
@@ -121,7 +149,7 @@
             -%}
             {%- if collection.products.size > 0 -%}
               <div
-                class="product-tabs__content-item product-tabs__content-item-{{ block.id }}"
+                class="product-tabs__content-item product-tabs__content-item-{{ block.id }}{% if forloop.first %} first-tab{% endif %}"
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
               >
@@ -297,24 +325,8 @@
       "label": "t:sections.all.content_header.heading_size.label"
     },
     {
-      "type": "select",
-      "id": "text_alignment",
-      "options": [
-        {
-          "value": "start",
-          "label": "t:sections.all.text_alignment.options__1.label"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.all.text_alignment.options__2.label"
-        },
-        {
-          "value": "end",
-          "label": "t:sections.all.text_alignment.options__3.label"
-        }
-      ],
-      "default": "start",
-      "label": "t:sections.all.text_alignment.alignment"
+      "type": "header",
+      "content": "t:sections.all.carousel.header"
     },
     {
       "type": "range",
@@ -326,17 +338,13 @@
       "default": 8
     },
     {
-      "type": "header",
-      "content": "t:sections.all.carousel.header"
-    },
-    {
       "type": "range",
       "id": "items_per_row",
       "label": "t:sections.all.columns_desktop.label",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "step": 1,
-      "default": 4
+      "default": 3
     },
     {
       "type": "select",
@@ -401,7 +409,7 @@
       "type": "checkbox",
       "id": "hidden_des_mobile",
       "label": "t:sections.product-tabs.blocks.settings.hidden_des_mobile.label",
-      "default": false
+      "default": true
     },
     {
       "type": "header",
@@ -443,13 +451,13 @@
           "id": "collection_title",
           "label": "t:sections.collection-list.blocks.featured_collection.settings.title.label",
           "info": "t:sections.collection-list.blocks.featured_collection.settings.title.info",
-          "default": "Tab collection"
+          "default": "Tab title"
         },
         {
           "type": "richtext",
           "id": "collection_description",
           "label": "t:sections.product-tabs.blocks.settings.collection.description",
-          "default": "<p>Collection description</p>"
+          "default": "<p>Tab description</p>"
         }
       ]
     }

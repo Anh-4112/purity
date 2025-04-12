@@ -348,6 +348,9 @@ textarea {
 .w-content {
   width: fit-content;
 }
+.max-w-custom-all {
+  max-width: var(--max-width);
+}
 @media screen and (max-width: 767.98px) {
   [style*="--aspect-ratio-mb"]::before {
     padding-top: calc(100% / (0 + var(--aspect-ratio-mb, 16 / 9)));
@@ -362,6 +365,9 @@ textarea {
   }
   .overflow-hidden-mb {
     overflow: hidden;
+  }
+  .overflow-x-scroll-mb {
+    overflow-x: scroll;
   }
 }
 :where(
@@ -723,6 +729,9 @@ a.hover-heading-color:hover {
 :where(.border-top) {
   border-top: 1px solid var(--color-border);
 }
+:where(.border-bottom) {
+  border-bottom: 1px solid var(--color-border);
+}
 .flex-cols {
   --col: var(--col-number);
   gap: var(--gap);
@@ -871,8 +880,14 @@ a.hover-heading-color:hover {
 .py-7 {
   padding-block: 0.7rem;
 }
+.py-20 {
+  padding-block: 2rem;
+}
 .py-24 {
   padding-block: 2.4rem;
+}
+.pt-0 {
+  padding-top: 0;
 }
 .m-0 {
   margin: 0;
@@ -1228,6 +1243,9 @@ body:not(.template-index) .transparent-logo {
   .absolute-1025 {
     position: absolute;
   }
+  .relative-1025 {
+    position: relative;
+  }
   .invisible-1025 {
     opacity: 0;
     visibility: hidden;
@@ -1235,9 +1253,26 @@ body:not(.template-index) .transparent-logo {
   :where(.gap) {
     gap: var(--row-gap, var(--gap)) var(--gap-desktop, var(--gap));
   }
+  .py-1025-20 {
+    padding-block: 2rem;
+  }
   .wh-1025-50 {
     width: 5rem;
     height: 5rem;
+  }
+  .col-1025-w-custom {
+    flex: 0 0 auto;
+    width: var(--col-width, 50%);
+  }
+  .col-1025-remaining {
+    flex: 0 0 calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
+    width: calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
+  }
+  :where(.border-bottom-1025) {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .column-1025 {
+    flex-direction: column;
   }
 }
 .reveal_on_scroll {
@@ -1246,7 +1281,6 @@ body:not(.template-index) .transparent-logo {
   overscroll-behavior-x: contain;
   overflow: visible;
 }
-
 .free-scroll .swiper-wrapper::-webkit-scrollbar,
 .grid_scroll::-webkit-scrollbar {
   display: none;
@@ -1287,7 +1321,4 @@ body:not(.template-index) .transparent-logo {
 }
 .rounded-style.overlay-bg:after {
   border-radius: var(--rounded-radius, 0);
-}
-.max-w-custom-all {
-  max-width: var(--max-width);
 }
