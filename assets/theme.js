@@ -2064,18 +2064,16 @@ class ProductTabs extends HTMLElement {
           if (mobileDescription) {
             Motion.animate(
               mobileDescription,
-              { 
-                opacity: [1, 0],
-                height: 0 
+              {
+                opacity: [1, 0]
               },
-              { duration: 0.2 }
+              {
+                duration: 0.2
+              }
             );
           }
         } else {
           description.style.height = "0";
-          if (mobileDescription) {
-            mobileDescription.style.height = "0";
-          }
         }
       }
     });
@@ -2107,19 +2105,16 @@ class ProductTabs extends HTMLElement {
         if (mobileDescription) {
           Motion.animate(
             mobileDescription,
-            { 
-              opacity: [0, 1],
-              height: "auto" 
+            {
+              opacity: [0, 1]
             },
-            { duration: 0.2 }
+            {
+              duration: 0.2
+            }
           );
         }
       } else {
         description.style.height = "auto";
-        if (mobileDescription) {
-          mobileDescription.style.height = "auto";
-          mobileDescription.style.opacity = "1";
-        }
       }
       this._openAccordions.add(tab.dataset.blockId);
     }
