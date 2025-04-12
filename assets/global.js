@@ -396,5 +396,4 @@ class AlertNotify {
     return icon;
   }
 }
-
 export const notifier = new AlertNotify();
