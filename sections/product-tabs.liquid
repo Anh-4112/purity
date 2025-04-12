@@ -49,9 +49,6 @@
     {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- style -%}
-  .product-tabs__content-item:not(.first-tab) {
-    display: none;
-  }
   @media (min-width: 1025px) {
     .product-tabs__header-title {
       color: var(--color-text);
@@ -128,8 +125,13 @@
                   </div>
                   {%- if collection_description != blank -%}
                     <div
-                      class="product-tabs__header-description overflow-hidden{% if section_st.hidden_des_mobile %} hidden block-1025{% endif %}"
+                      class="product-tabs__header-description overflow-hidden hidden block-1025"
                       id="tab-desc-{{ block.id }}"
+                      {% if forloop.first %}
+                        style="height: auto;opacity: 1;"
+                      {% else %}
+                        style="height: 0;opacity: 0;"
+                      {% endif %}
                     >
                       {{ collection_description }}
                     </div>
@@ -138,6 +140,14 @@
               {%- endif -%}
             {%- endfor -%}
           </div>
+          {%- if section_st.hidden_des_mobile == false -%}
+            <div class="product-tabs__header-description-mobile overflow-hidden hidden-1025 block">
+              {{ section.blocks[0].settings.collection_description }}
+            </div>
+          {%- endif -%}
+          {% if show_navigation %}
+            {%- render 'swiper-navigation' -%}
+          {% endif %}
         {%- endif -%}
       </div>
       {%- if section.blocks.size > 0 -%}
@@ -149,7 +159,7 @@
             -%}
             {%- if collection.products.size > 0 -%}
               <div
-                class="product-tabs__content-item product-tabs__content-item-{{ block.id }}{% if forloop.first %} first-tab{% endif %}"
+                class="product-tabs__content-item product-tabs__content-item-{{ block.id }}{% if forloop.first %} active{% else %} hidden{% endif %}"
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
               >
@@ -165,10 +175,8 @@
                   data-desktop="{{ items_per_row }}"
                   data-tablet="{{ items_per_row_tablet }}"
                   data-free-scroll="{{ data_free_scroll }}"
+                  data-slide-tab="true"
                 >
-                  {% if show_navigation %}
-                    {%- render 'swiper-navigation' -%}
-                  {% endif %}
                   <div class="swiper-wrapper">
                     {%- for product in collection.products limit: items_to_show -%}
                       {% render 'card-product',
@@ -209,10 +217,8 @@
                   data-desktop="{{ items_per_row }}"
                   data-tablet="{{ items_per_row_tablet }}"
                   data-free-scroll="{{ data_free_scroll }}"
+                  data-slide-tab="true"
                 >
-                  {% if show_navigation %}
-                    {%- render 'swiper-navigation' -%}
-                  {% endif %}
                   <div class="swiper-wrapper">
                     {%- for product in (1..5) -%}
                       {% render 'card-product',
