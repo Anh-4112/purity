@@ -25,7 +25,7 @@
   if heading_size == 'small'
     assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = 'fs-medium'
+    assign header_size = 'h1'
   endif
 
   assign image_width = section_st.image_width
@@ -63,7 +63,10 @@
   <div
     class="{{ section_width }}"
   >
-    <bundle-products class="bundle-products flex wrap row-gap-20 {% if image_position == "right" %}row-reverse-md{% endif %} space-between gap-{{ column_gap_slide }}" style="--row-gap: 2rem;--col-width: {{ image_width }}%">
+    <bundle-products
+      class="bundle-products flex wrap row-gap-20 {% if image_position == "right" %}row-reverse-md{% endif %} space-between gap-{{ column_gap_slide }}"
+      style="--row-gap: 2rem;--col-width: {{ image_width }}%"
+    >
       <div class="bundle-products__image relative w-full col-1025-w-custom">
         <div
           class="rounded h-full"
@@ -88,7 +91,7 @@
               class: 'rounded'
             %}
           {% else %}
-            {% render 'placeholder-render',type: 'collection-6', class: "img-placeholder h-full w-full" %}
+            {% render 'placeholder-render', type: 'collection-6', class: 'img-placeholder h-full w-full' %}
           {% endif %}
         </div>
         {%- for block in section.blocks -%}
@@ -163,7 +166,6 @@
             -%}
             <bundle-item
               data-product-position="{{ forloop.index }}"
-            
             >
               {% render 'card-product',
                 card_product: product,
@@ -177,10 +179,9 @@
                 disable_hover_image: true,
                 show_quick_add: true,
                 type: 'list',
-                enable_quick_add: enable_quick_add,
+                enable_quick_add: enable_quick_add
               %}
             </bundle-item>
-
           {%- endfor -%}
           <product-form class="bundle-products-form">
             <form

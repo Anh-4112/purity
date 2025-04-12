@@ -13,7 +13,7 @@
   if heading_size == 'small'
     assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = 'fs-medium'
+    assign header_size = 'h1'
   endif
   assign content_icon_size = section_st.content_icon_size
   if content_icon_size == 'small'
@@ -101,12 +101,7 @@
                   assign alt_default = 'accessibility.promotion_banner' | t
                   assign alt = section_st.banner_image.alt | default: alt_default | escape
                 -%}
-                {% render 'responsive-image',
-                  type: 'other',
-                  image: icon_image,
-                  image_alt: alt,
-                  class: 'rounded-10'
-                %}
+                {% render 'responsive-image', type: 'other', image: icon_image, image_alt: alt, class: 'rounded-10' %}
               {% else %}
                 <div
                   class="w-custom h-custom rounded-10"
@@ -389,13 +384,13 @@
         {
           "type": "image_picker",
           "id": "icon_image",
-          "label": "t:sections.all.image.label",
+          "label": "t:sections.all.image.label"
         },
         {
           "type": "select",
           "id": "icon_svg",
           "label": "t:sections.all.svg.label",
-          "info": "t:sections.all.svg.custom_svg.info", 
+          "info": "t:sections.all.svg.custom_svg.info",
           "default": "none",
           "options": [
             {

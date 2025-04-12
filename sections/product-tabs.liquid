@@ -19,7 +19,7 @@
   if heading_size == 'small'
     assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = 'fs-medium'
+    assign header_size = 'h1'
   endif
 
   assign items_per_row_mobile = section_st.items_per_row_mobile
@@ -49,7 +49,7 @@
     {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- style -%}
-  @media (min-width: 1025px) {
+  @media (max-width: 1024.98px) {
     .product-tabs__header-title {
       color: var(--color-text);
       transition: color 0.3s ease;
@@ -58,15 +58,31 @@
     .product-tabs__header-item.active .product-tabs__header-title {
       color: var(--color-heading);
     }
+    .product-tabs__header {
+      margin-inline: calc(-1 * var(--bs-gutter-x));
+      padding-inline: var(--bs-gutter-x);
+    }
+  }
+  @media (min-width: 1025px) {
     .col-left:before {
       content: '';
       position: absolute;
       top: 0;
-      bottom: 0;
+      bottom: -15px;
       right: calc(-1 * var(--gap));
       background: var(--color-background, #fff);
       width: 100vw;
       z-index: 2;
+    }
+    .product-tabs__header-item {
+      background-image: linear-gradient(to right, #000 100%, transparent 0%);
+      background-position: 0 100%;
+      background-repeat: no-repeat;
+      background-size: 0% 1px;
+      transition: background-size 0.4s ease;
+    }
+    .product-tabs__header-item.active {
+      background-size: 100% 1px;
     }
   }
 {%- endstyle -%}
@@ -100,8 +116,8 @@
         {%- endif -%}
         {%- if section.blocks.size > 0 -%}
           <div
-            class="product-tabs__header flex column-1025 gap free-scroll overflow-x-scroll-mb relative-1025 z-2"
-            style="--gap-desktop: 0; --gap: 30px;"
+            class="product-tabs__header free-scroll flex column-1025 gap free-scroll overflow-x-scroll-mb relative-1025 z-2"
+            style="--row-gap: 0;--gap-desktop: 0; --gap: 30px;"
           >
             {%- for block in section.blocks -%}
               {%- liquid
@@ -120,7 +136,7 @@
                   tabindex="0"
                   {{ block.shopify_attributes }}
                 >
-                  <div class="product-tabs__header-title h5 mb-10">
+                  <div class="product-tabs__header-title h5">
                     {{ collection_title }}
                   </div>
                   {%- if collection_description != blank -%}
@@ -133,7 +149,9 @@
                         style="height: 0;opacity: 0;"
                       {% endif %}
                     >
-                      {{ collection_description }}
+                      <div class="mt-10">
+                        {{ collection_description }}
+                      </div>
                     </div>
                   {%- endif -%}
                 </div>
