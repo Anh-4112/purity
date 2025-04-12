@@ -51,7 +51,7 @@
 {%- style -%}
   @media (max-width: 1024.98px) {
     .product-tabs__header-title {
-      color: var(--color-text);
+      color: var(--color-grey);
       transition: color 0.3s ease;
       white-space: nowrap;
     }
@@ -98,7 +98,7 @@
             class="section-header relative-1025 z-2"
           >
             {%- if section_st.subheading != blank -%}
-              <div class="section-subheading">
+              <div class="section-subheading h7 mb-5 mb-md-10 body_weight">
                 {{ section_st.subheading }}
               </div>
             {%- endif -%}
@@ -112,11 +112,14 @@
                 {{ section_st.description }}
               </div>
             {%- endif -%}
+            {% if show_navigation %}
+              {%- render 'swiper-navigation', show_action: true -%}
+            {% endif %}
           </div>
         {%- endif -%}
         {%- if section.blocks.size > 0 -%}
           <div
-            class="product-tabs__header free-scroll flex column-1025 gap free-scroll overflow-x-scroll-mb relative-1025 z-2"
+            class="product-tabs__header hidden-scrollbar flex column-1025 gap overflow-x-scroll-mb relative-1025 z-2"
             style="--row-gap: 0;--gap-desktop: 0; --gap: 30px;"
           >
             {%- for block in section.blocks -%}
@@ -163,9 +166,6 @@
               {{ section.blocks[0].settings.collection_description }}
             </div>
           {%- endif -%}
-          {% if show_navigation %}
-            {%- render 'swiper-navigation' -%}
-          {% endif %}
         {%- endif -%}
       </div>
       {%- if section.blocks.size > 0 -%}
