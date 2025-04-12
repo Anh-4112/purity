@@ -25,9 +25,17 @@
     --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.speed }}s;
 {%- endcapture -%}
 {%- capture col_style -%}
-  {% if section_st.space_between < 15 %}--gap: {{ section_st.space_between }}px;{% else %}--gap: clamp(3rem, calc({{ section_st.space_between }} * var(--responsive-rate)), calc({{ section_st.space_between }}*1px));{% endif %}
+  {% if section_st.space_between < 15 %}--gap: {{ section_st.space_between }}px;{% else %}--gap: clamp(4rem, calc({{ section_st.space_between }} * var(--responsive-rate)), calc({{ section_st.space_between }}*1px));{% endif %}
 {%- endcapture -%}
 
+{% style %}
+ @media screen and (max-width: 767.98px) {
+  .section__scrolling-text .scrolling-image-item svg{
+    width: var(--width-mb);
+    height: var(--width-mb);
+  }
+  }
+{% endstyle %}
 <div
   class="section__scrolling-text color-{{ section_st.color_scheme }} gradient section"
   style="{{ style | strip | strip_newlines }}"
@@ -294,9 +302,9 @@
           "min": 20,
           "max": 200,
           "step": 5,
-          "unit": "px",
           "label": "t:sections.scrolling_text.settings.blocks.image.image_width.label",
-          "default": 80
+          "default": 80,
+          "unit": "px"
         },
         {
           "type": "select",
@@ -354,9 +362,9 @@
           "min": 20,
           "max": 200,
           "step": 5,
-          "unit": "px",
           "label": "t:sections.scrolling_text.settings.blocks.image.image_width.label",
-          "default": 80
+          "default": 80,
+          "unit": "px"
         },
       ]
     }
@@ -369,16 +377,19 @@
           "type": "text"
         },
         {
-          "type": "text"
+          "type": "image"
         },
         {
           "type": "text"
         },
         {
-          "type": "text"
+          "type": "image"
         },
         {
           "type": "text"
+        },
+        {
+          "type": "image"
         }
       ]
     }
