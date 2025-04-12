@@ -49,6 +49,9 @@
     {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- style -%}
+  .product-tabs__content-item:not(.active) {
+    display: none;
+  }
   @media (max-width: 1024.98px) {
     .product-tabs__header-title {
       color: var(--color-grey);
