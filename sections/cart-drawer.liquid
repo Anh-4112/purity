@@ -72,7 +72,6 @@
         %}
         <div
           class="drawer__inner-empty flex column flex-1 overflow-auto"
-          style="--padding-block: 2rem; --padding-block-desktop: 3rem"
         >
           <div class="cart-drawer__warnings word-break flex column align-center py-50 grow-1 drawer-spacing custom-scrollbar overflow-auto fadeIn">
             <div class="drawer__empty-heading h5 mb-10">
@@ -162,7 +161,7 @@
           assign total_price = cart.total_price | times: 1
         %}
         {%- if show_free_shipping_message and free_minimum_amount -%}
-          <div class="free-shipping-bar drawer-spacing" style="--padding-block: 20px;">
+          <div class="free-shipping-bar drawer-spacing">
             {% liquid
               assign free_shipping_amount = free_minimum_amount | minus: total_price | money
               if currency_code_enabled
@@ -213,7 +212,7 @@
                       {%- for item in cart.items -%}
                         <div
                           id="CartDrawer-Item-{{ item.index | plus: 1 }}"
-                          class="cart-item product__item pb-20 mb-20 border-bottom-dashed last-0"
+                          class="cart-item loading_snippet product__item pb-20 mb-20 border-bottom-dashed last-0"
                         >
                           <div class="cart-item_inner flex gap-20 transition">
                             {% if item.image %}
@@ -783,7 +782,6 @@
         </div>
         <div
           class="drawer__footer-bottom js-contents border-top drawer-spacing"
-          style="--padding-block: 2rem;--padding-block-desktop: 3rem;"
         >
           <div class="total h5 flex space-between gap-10">
             <span class="text">{{ 'sections.cart.total' | t }}:</span>
