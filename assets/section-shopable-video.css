@@ -27,3 +27,17 @@
 .mute-button.active .mute-open {
     display: block;
 }
+
+shopable-sticky{
+  width: 15rem;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  --transition-popup: transform .4s cubic-bezier(.7,0,.2,1);
+  transform: translateX(100%);
+  transition: var(--transition-popup);
+}
+
+shopable-sticky.active{
+  transform: translateX(-3rem);
+}
