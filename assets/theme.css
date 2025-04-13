@@ -2,10 +2,6 @@ table {
   border-spacing: 0;
   border-collapse: collapse;
 }
-input[type="search"] {
-  appearance: none;
-  -webkit-appearance: none;
-}
 /* Firefox */
 input[type="number"] {
   appearance: textfield;
@@ -20,6 +16,20 @@ input[type="number"] {
 :where(input, textarea)::placeholder {
   color: var(--input-placeholder-color);
   font-size: calc(var(--body-font-size) - 1px);
+} /* Chrome, Safari, Edge */
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  position: relative;
+  height: 15px; /* Size of your custom icon */
+  width: 15px;
+  background: url("icon-close.png") no-repeat center center;
+  background-size: 10px;
+  cursor: pointer;
+  transition: var(--duration-short);
+}
+.loading_snippet.loading input[type="search"]::-webkit-search-cancel-button {
+  opacity: 0;
+  visibility: hidden;
 }
 thead th {
   border-width: 0 1px 0 0;
@@ -191,11 +201,17 @@ blockquote {
   height: 100vh;
 }
 .drawer-spacing {
-  padding: var(--padding-block, 1.65rem) var(--bs-gutter-x);
+  padding: var(--padding-block, 2rem) var(--bs-gutter-x);
+}
+.drawer__header {
+  --padding-block: 1.65rem;
 }
 @media (min-width: 1025px) {
+  .drawer__header {
+    --padding-block-desktop: 1.9rem;
+  }
   .drawer-spacing {
-    padding: var(--padding-block-desktop, 1.9rem) 4rem;
+    padding: var(--padding-block-desktop, 3rem) 4rem;
   }
 }
 .p-5 {
@@ -248,6 +264,9 @@ blockquote {
 .ps-30 {
   padding-inline-start: 3rem;
 }
+.ps-50 {
+  padding-inline-start: 5rem;
+}
 .ps-35 {
   padding-inline-start: 3.5rem;
 }
@@ -256,6 +275,9 @@ blockquote {
 }
 .pe-5 {
   padding-inline-end: 5px;
+}
+.pe-50 {
+  padding-inline-end: 5rem;
 }
 .pe-30 {
   padding-inline-end: 3rem;
@@ -311,9 +333,6 @@ blockquote {
 }
 .pt-17 {
   padding-top: 1.7rem;
-}
-.pt-20 {
-  padding-top: 2rem;
 }
 .pt-30 {
   padding-top: 3rem;
@@ -558,6 +577,9 @@ blockquote {
 .top-100 {
   top: 100%;
 }
+.right-28 {
+  right: 2.8rem;
+}
 .right-30 {
   right: 3rem;
 }
@@ -714,8 +736,10 @@ blockquote {
 .overflow-y-auto {
   overflow-y: auto;
 }
-.border-animation:is(:hover, .active) {
+.border-animation:is(:hover, .active),
+.hover-effect:hover .border-animation {
   background-size: 100% var(--height, 1px);
+  background-position: left bottom;
 }
 .show-overlay:after {
   content: "";
@@ -786,6 +810,12 @@ blockquote {
     --slide-out: 100%;
     border-top-left-radius: var(--img-rounded);
     border-bottom-left-radius: var(--img-rounded);
+  }
+  .drawer-top {
+    transform: translateX(0) translateY(-100%);
+    -webkit-transform: translateX(0) translateY(-100%);
+    max-width: unset;
+    border-radius: 0;
   }
 }
 @media (max-width: 1024.89px) {
@@ -1175,9 +1205,6 @@ modal-popup :is(.modal-overlay) {
   .z-1025-16 {
     z-index: 16;
   }
-  .pt-1025-35 {
-    padding-top: 3.5rem;
-  }
   .p-1025-40 {
     padding: 4rem;
   }
@@ -1207,14 +1234,20 @@ modal-popup :is(.modal-overlay) {
     padding-top: 4rem;
     padding-bottom: 4rem;
   }
+  .pt-1025-60 {
+    padding-top: 6rem;
+  }
+  .py-1025-60 {
+    padding-block: 6rem;
+  }
+  .pt-1025-0 {
+    padding-top: 0;
+  }
   .mt-1025-0 {
     margin-top: 0;
   }
   .mt-1025-20 {
     margin-top: 2rem;
-  }
-  .mt-1025-30 {
-    margin-top: 3rem;
   }
   .mt-1025-40 {
     margin-top: 4rem;
@@ -1235,6 +1268,9 @@ modal-popup :is(.modal-overlay) {
   .mb-1025-25 {
     margin-bottom: 2.5rem;
   }
+  .mb-1025-30 {
+    margin-bottom: 3rem;
+  }
   .flex-1025 {
     display: flex;
   }
@@ -1252,6 +1288,9 @@ modal-popup :is(.modal-overlay) {
   }
   .justify-end-1025 {
     justify-content: end;
+  }
+  .justify-center-1025 {
+    justify-content: center;
   }
   .pointer-none-1025 {
     pointer-events: none;
@@ -1470,9 +1509,6 @@ modal-popup :is(.modal-overlay) {
   .smooth-padding-hover:hover {
     padding-inline-start: 1rem;
   }
-  :is(.border-animation):hover {
-    animation: 1s infinite borderAnimation;
-  }
   .inside-out-effect:before {
     content: "";
     position: absolute;
@@ -1488,59 +1524,19 @@ modal-popup :is(.modal-overlay) {
     width: 100%;
     left: 0;
   }
-  .hover-effect :is(img, .placeholder-image, picture) {
-    transition: 0.4s;
+  .hover-effect :is(img, .img-placeholder, picture) {
+    transition: 0.5s cubic-bezier(0.2, 0.75, 0.5, 1);
     will-change: transform;
   }
-  .hover_zoom .hover-effect:hover :is(img, .placeholder-image, picture),
+  .hover_zoom .hover-effect:hover :is(img, .img-placeholder, picture),
   .button-hover-zoom:hover {
     transform: var(--zoom-transform, scale(1.06));
   }
-  .hover_fade .hover-effect:hover :is(img, .placeholder-image, picture) {
+  .hover_fade .hover-effect:hover :is(img, .img-placeholder, picture) {
     opacity: 0.8;
   }
   .hover_fade .hover-effect:hover .secondary-image {
     opacity: 1;
-  }
-  @keyframes borderAnimation {
-    0% {
-      background-size: 100% 1px;
-      background-position: right 100%;
-    }
-    33% {
-      background-size: 0% 1px;
-      background-position: right 100%;
-    }
-
-    66% {
-      background-size: 0% 1px;
-      background-position: left 100%;
-    }
-    100% {
-      background-size: 100% 1px;
-      background-position: left 100%;
-    }
-  }
-  @keyframes btnLinkAnimation {
-    0% {
-      left: 0;
-      width: 100%;
-    }
-
-    33% {
-      left: 100%;
-      width: 0;
-    }
-
-    66% {
-      left: 0;
-      width: 0;
-    }
-
-    100% {
-      right: 0;
-      width: 100%;
-    }
   }
   /* Navigation desktop */
   .submenu {
@@ -1667,7 +1663,14 @@ modal-popup :is(.modal-overlay) {
     transform: rotate(360deg);
   }
 }
-:where(.btn-primary, .btn-outline, .btn, button-quickview, .cart-item).loading
+:where(
+    .btn-primary,
+    .btn-outline,
+    .btn,
+    button-quickview,
+    .cart-item,
+    .search-modal__form
+  ).loading
   .hidden-on-load {
   opacity: 0;
   transition: unset;
@@ -1680,7 +1683,7 @@ modal-popup :is(.modal-overlay) {
     .search-modal__form
   ).loading
   > .icon-load,
-.cart-item.loading .icon-rotator {
+.loading_snippet.loading .icon-rotator {
   opacity: 1;
 }
 @keyframes spin {
@@ -1992,13 +1995,6 @@ modal-popup :is(.modal-overlay) {
 .cursor-custom-slide .swiper-arrow.swiper-button-next {
   cursor: url(btn-next.svg) 16 16, pointer;
 }
-.overlay-linear {
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 65.96%,
-    rgba(0, 0, 0, 0.3) 100%
-  );
-}
 /* Process in cart */
 mini-cart-recommendations .quick__shop-action {
   left: auto;
@@ -2091,4 +2087,10 @@ mini-cart-recommendations .hidden-1025 {
 }
 html:not(.open-nav, .open-canvas) mobile-navigation-bar {
   z-index: 12;
+}
+.results .recommend-search {
+  display: none;
+}
+.search-modal__form:not(.results) .predictive-search {
+  display: none;
 }

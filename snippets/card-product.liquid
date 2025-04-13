@@ -10,6 +10,13 @@
   assign product_show_video_featured = theme_st.product_show_video_featured
   assign product_show_quick_add_mobile = theme_st.product_show_quick_add_mobile
   assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id
+
+  if type == 'list'
+    assign style_layout = ' flex gap-20'
+    assign image_class = ' flex-auto w-custom'
+    assign image_rounded = ' rounded-10'
+    assign info_class = ' flex-1 mt-0'
+  endif
 %}
 {% if card_product and card_product != empty %}
   <div
@@ -42,7 +49,12 @@
               assign product_show_image_hover = false
             endif
           -%}
-          <div class="product__inner relative block rounded overflow-hidden{{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect">
+          <div
+            class="product__inner relative block rounded overflow-hidden{{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect"
+            {% if type == 'list' %}
+              style="--width: 8rem;"
+            {% endif %}
+          >
             <a
               class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
               draggable="false"

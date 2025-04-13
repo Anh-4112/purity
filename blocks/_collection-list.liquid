@@ -32,12 +32,6 @@
     assign column_gap_slide = 10
   endif
 -%}
-{% style %}
-  .collection-list__content-inner .collection-list__icon {
-    transition: transform 0.3s ease;
-    transform: rotate(0deg);
-  }
-{% endstyle %}
 <collection-hover {{ block.shopify_attributes }}>
   <a
     class="heading-style collection-list__content block"
@@ -61,7 +55,7 @@
         {%- endif -%}
       </div>
       <span
-        class="collection-list__icon wh-1025-50 w-custom h-custom flex content-center border rounded-50 text-color btn-hover overflow-hidden"
+        class="collection-list__icon wh-1025-50 w-custom h-custom flex content-center border rounded-50 text-color btn-hover overflow-hidden transition-short"
         style="--width:4.6rem;--height:4.6rem;"
       >
         {%- render 'icon-arrow-top' -%}
