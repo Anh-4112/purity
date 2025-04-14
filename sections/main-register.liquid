@@ -172,16 +172,8 @@
           <span class="required-field">{{ 'customer.account.required' | t }}</span>
         </div>
         <button class="btn btn-primary w-full relative product_submit_button product-form__submit word-wrap relative">
-          <span class="hidden-on-load"> {{ 'customer.register.submit' | t }}</span>
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            class="spin opacity-0 pointer-none icon-load absolute"
-          >
-            <use href="#icon-load"></use>
-          </svg>
+          <span class="hidden-on-load transition-short"> {{ 'customer.register.submit' | t }}</span>
+          {%- render 'loader' -%}
         </button>
         <div class="creat_new-account flex">
           <span class="me-5">{{ 'customer.login_page.have_account' | t }}</span>
