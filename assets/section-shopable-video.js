@@ -68,6 +68,33 @@ class ShopableItem extends HTMLElement {
     }
   }
 
+  setupMobileActionButton(modalPopup) {
+    modalPopup.addEventListener("click", (event) => {
+      const actionButton = event.target.closest(".btn-shopable__action-mobile");
+      if (actionButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        const currentId = modalPopup.getAttribute("data-current");
+        if (!currentId) return;
+        const currentItem = modalPopup.querySelector(`#${currentId}`);
+        if (!currentItem) return;
+        const popupInfo = currentItem.querySelector(".popup-information");
+        if (!popupInfo) return;
+        if (popupInfo.classList.contains("hidden")) {
+          popupInfo.classList.remove("hidden");
+          popupInfo.classList.add("active");
+        } else {
+          this.hidePopupInformation(popupInfo);
+        }
+      }
+    });
+  }
+  
+  hidePopupInformation(popupInfo) {
+    popupInfo.classList.remove("active");
+    popupInfo.classList.add("hidden");
+  }
+
   setupCloseButton() {
     const closeButton = this.querySelector(".shopable-sticky__close");
     if (closeButton) {
@@ -267,6 +294,7 @@ class ShopableItem extends HTMLElement {
         NextSkyTheme.body.appendChild(content.querySelector("modal-popup"));
         modalPopup = document.querySelector("modal-popup");
         this.setupModalNavigation(modalPopup);
+        this.setupMobileActionButton(modalPopup);
       }
     }
 
