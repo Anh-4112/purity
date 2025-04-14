@@ -56,10 +56,13 @@
 {% if card_collection %}
   <div
     class="collection-item__wrapper hover-effect {{ class }}{% if content_position == 'overlay' %} position-{{ content_position }} relative{% endif %}"
+    {% if content_position == 'overlay' %}
+      style="--aspect-ratio: {{ ratio }};"
+    {% endif %}
   >
-    <div class="collection-item__media">
+    <div class="collection-item__media{% if content_position == 'overlay' %} inset-0{% endif %}">
       <a
-        class="block collection-item__media--ratio rounded"
+        class="block collection-item__media--ratio rounded{% if content_position == 'overlay' %} w-full h-full{% endif %}"
         draggable="false"
         {% if card_collection.url != blank %}
           href="{{ card_collection.url }}"
@@ -100,7 +103,7 @@
       </a>
     </div>
     <div
-      class="collection-information flex gap-10 max-w-100 justify-{{ content_alignment }} text-{{ content_alignment }}{% if content_position == 'overlay' %} absolute px-20 px-md-35 bottom-15 bottom-md-30 z-2{% if content_alignment == 'center' %} inset-x-0{% else %}{% if settings.rtl %} right-0{% else %} left-0{% endif %}{% endif %}{% else %} mt-15{% endif %}"
+      class="collection-information flex gap-10 max-w-100 justify-{{ content_alignment }} text-{{ content_alignment }}{% if content_position == 'overlay' %} px-20 px-1025-35 pb-15 pb-1025-30 z-2{% else %} mt-15{% endif %}"
       {% if content_position == 'overlay' %}
         style="--color-heading: {{ section_st.overlay_image_color }};--color-text: {{ section_st.overlay_image_color }}"
       {% endif %}

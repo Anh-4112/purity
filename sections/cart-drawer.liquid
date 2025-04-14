@@ -109,7 +109,7 @@
                           %}
                         </div>
                       {%- endif -%}
-                      <div class="collection_info flex gap-10 align-center{% if collection_media %} absolute bottom-0 inset-x-0 p-gutter-x{% endif %}">
+                      <div class="collection_info flex gap-10 space-between align-center{% if collection_media %} absolute bottom-0 inset-x-0 p-gutter-x{% endif %}">
                         <div class="collection-item__info">
                           <p class="h6">{{- collection.title -}}</p>
                           {% if collection.metafields.custom.collection_empty.value.collection_description != blank %}
@@ -119,7 +119,12 @@
                           {%- endif -%}
                         </div>
                         {%- if collection_media -%}
-                          <span class="collection-item__icon"></span>
+                          <span
+                            class="collection-list__icon wh-1025-50 w-custom h-custom flex content-center bg-white blur rounded-50 text-color btn-hover overflow-hidden transition-short flex-auto"
+                            style="--width:4.6rem;--height:4.6rem;"
+                          >
+                            {%- render 'icon-arrow-top' -%}
+                          </span>
                         {%- endif -%}
                       </div>
                     </a>
