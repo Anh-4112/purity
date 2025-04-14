@@ -64,7 +64,7 @@
             {%- endif -%}
           </div>
         {%- endif -%}
-        {%- form 'contact', id: contact_id, class: 'isolate field' -%}
+        {%- form 'contact', id: contact_id, class: 'isolate field', novalidate: 'novalidate' -%}
           {%- if form.posted_successfully? -%}
             <div class="form-status form-status form__message success" tabindex="-1" autofocus>
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -80,7 +80,7 @@
                 tabindex="-1"
                 autofocus
               >
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <use href="#icon-error"></use>
                 </svg>
                 {{ 'templates.contact.form.error_heading' | t }}
@@ -102,55 +102,78 @@
           <div
             class="contact__fields field grid-cols"
           >
-            <div
-              class="field relative w-full flex wrap transition"
-            >
-              <input
-                class="field__input w-full"
-                autocomplete="name"
-                type="text"
-                id="ContactFormName-{{ section.id }}"
-                name="contact[{{ 'templates.contact.form.name' | t }}]"
-                value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
-                placeholder="{{ section_st.name }}*"
+            <div class="flex">
+              <div
+                class="field relative w-full flex wrap transition"
               >
-              <label class="field__label visually-hidden" for="ContactFormName-{{ section.id }}">
-                {{ 'templates.contact.form.name' | t -}}
-              </label>
+                <input
+                  class="field__input w-full"
+                  autocomplete="name"
+                  type="text"
+                  id="ContactFormName-{{ section.id }}"
+                  name="contact[name]"
+                  value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+                  placeholder="{{ section_st.name }}*"
+                >
+                <label class="field__label visually-hidden" for="ContactFormName-{{ section.id }}">
+                  {{ 'templates.contact.form.name' | t -}}
+                </label>
+                <svg class="transition absolute" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <use href="#icon-account"></use>
+                </svg>
+              </div>
+              <div class="field relative w-full flex wrap transition field--with-error">
+                <input
+                  autocomplete="email"
+                  type="email"
+                  id="ContactFormEmail-{{ section.id }}"
+                  class="field__input w-full"
+                  name="contact[email]"
+                  spellcheck="false"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                  aria-required="true"
+                  {% if form.errors contains 'email' %}
+                    aria-invalid="true"
+                    aria-describedby="ContactForm-email-error"
+                  {% endif %}
+                  placeholder="{{ section_st.email_placeholder }}*"
+                  required
+                >
+                <label class="field__label visually-hidden" for="ContactFormEmail-{{ section.id }}">
+                  {{ 'templates.contact.form.email' | t }}
+                  <span class="required">*</span></label
+                >
+                <svg class="transition absolute" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <use href="#icon-mail"></use>
+                </svg>
+                {%- if form.errors contains 'email' -%}
+                  <small class="contact__field-error" id="ContactForm-email-error">
+                    <span class="visually-hidden">{{ 'accessibility.error' | t }}</span>
+                    <span class="form__message error">
+                      {%- render 'icon-error' -%}
+                      {{- form.errors.translated_fields.email | capitalize }}
+                      {{ form.errors.messages.email -}}
+                    </span>
+                  </small>
+                {%- endif -%}
+              </div>
             </div>
-            <div class="field relative w-full flex wrap transition field--with-error">
-              <input
-                autocomplete="email"
-                type="email"
-                id="ContactFormEmail-{{ section.id }}"
+            <div class="field relative w-full flex wrap transition">
+              <select
+                id="ContactFormSubject-{{ section.id }}"
                 class="field__input w-full"
-                name="contact[email]"
-                spellcheck="false"
-                autocapitalize="off"
-                autocorrect="off"
-                value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
-                aria-required="true"
-                {% if form.errors contains 'email' %}
-                  aria-invalid="true"
-                  aria-describedby="ContactForm-email-error"
-                {% endif %}
-                placeholder="{{ section_st.email_placeholder }}*"
+                name="contact[subject]"
                 required
               >
-              <label class="field__label visually-hidden" for="ContactFormEmail-{{ section.id }}">
-                {{ 'templates.contact.form.email' | t }}
-                <span class="required">*</span></label
-              >
-              {%- if form.errors contains 'email' -%}
-                <small class="contact__field-error" id="ContactForm-email-error">
-                  <span class="visually-hidden">{{ 'accessibility.error' | t }}</span>
-                  <span class="form__message error">
-                    {%- render 'icon-error' -%}
-                    {{- form.errors.translated_fields.email | capitalize }}
-                    {{ form.errors.messages.email -}}
-                  </span>
-                </small>
-              {%- endif -%}
+                <option value="" disabled selected>{{ 'templates.contact.subject.name' | t }}</option>
+                <option value="product">{{ 'templates.contact.subject.product' | t }}</option>
+                <option value="order">{{ 'templates.contact.subject.order' | t }}</option>
+              </select>
+              <label for="ContactFormSubject-{{ section.id }}" class="visually-hidden">
+                {{ 'templates.contact.subject.name' | t }}
+              </label>
             </div>
           </div>
           <div
@@ -163,7 +186,7 @@
               aria-required="true"
               aria-invalid="true"
               required
-              name="contact[{{ 'templates.contact.form.comment' | t }}]"
+              name="contact[body]"
               placeholder="{{ section_st.message }}*"
               required
             >
@@ -177,9 +200,17 @@
           <div
             class="contact__button"
           >
-            <span class="required-field">{{ 'customer.account.required' | t }}</span>
-            <button type="submit">
-              {{ section_st.button_label }}
+            <button type="submit" class="btn btn-primary w-full relative">
+              <span class="hidden-on-load">{{ section_st.button_label }}</span>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                class="spin opacity-0 pointer-none icon-load absolute"
+              >
+                <use href="#icon-load"></use>
+              </svg>
             </button>
           </div>
         {%- endform -%}
@@ -187,6 +218,27 @@
     </div>
   </div>
 </div>
+<script type="module">
+  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setupFormValidation({
+      formSelector: 'form[id^="ContactForm-"]',
+      fields: {
+        'contact[name]': (value) => (!value ? '{{ "customer.validate.name" | t }}' : ''),
+        'contact[email]': (value) =>
+          !value
+            ? '{{ "customer.validate.email" | t }}'
+            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            ? '{{ "customer.validate.email_invalid" | t }}'
+            : '',
+        'contact[subject]': (value) => (!value ? '{{ "customer.validate.subject" | t }}' : ''),
+        'contact[body]': (value) => (!value ? '{{ "customer.validate.message" | t }}' : ''),
+      },
+    });
+  });
+</script>
+
 {% schema %}
 {
   "name": "t:sections.contact-form.name",

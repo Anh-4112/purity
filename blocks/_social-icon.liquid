@@ -1,0 +1,29 @@
+{% assign block_st = block.settings %}
+<div
+  class="block__heading mb-custom"
+  style="--space-bottom: {{ block_st.spacing_bottom }};"
+  {{ block.shopify_attributes }}
+>
+  <social-icon class="social-icon">
+    {% render 'social-icons' %}
+  </social-icon>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.multi_content.blocks.social_icon",
+  "settings": [
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.spacing_bottom",
+      "default": 15
+    }
+  ],
+  "presets": [{ "name": "t:sections.multi_content.blocks.social_icon" }]
+}
+{% endschema %}

@@ -23,9 +23,9 @@
 {%- if predictive_search.performed -%}
   <div
     id="predictive-search-results"
-    class="search-results__popup"
+    class="search-results__popup flex gap container"
     {% if search_page_articles %}
-      style="--col-width: 27rem; --gap: 30";
+      style="--col-width: 27rem; --gap: 0px";
     {% endif %}
     role="listbox"
   >
@@ -35,22 +35,95 @@
       or predictive_search.resources.pages.size > 0
       or predictive_search.resources.articles.size > 0
     -%}
-      <div class="search-results__item">
+      {%- if search_page_articles -%}
+        <div class="search-pages-articles col-1025-w-custom w-full pt-50 pe-50 border-inline-end">
+      {%- endif -%}
+      {%- if predictive_search.resources.collections.size > 0 -%}
+        <div class="search-collection mt-50">
+          <div class="heading-color mb-20 h6">
+            {{ 'general.search.collections' | t }}
+          </div>
+          <ul class="list-unstyled flex column gap-10">
+            {%- for collection in predictive_search.resources.collections -%}
+              <li>
+                <a
+                  class="inline-block quick-url border-animation"
+                  href="{{ collection.url }}"
+                  aria-label="{{ collection.title }}"
+                  aria-selected="false"
+                  role="option"
+                >
+                  {{ collection.title }}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+      {%- if predictive_search.resources.pages.size > 0 -%}
+        <div class="search-page mt-50">
+          <div class="heading-color mb-20 h6">
+            {{ 'general.search.pages' | t }}
+          </div>
+          <ul class="list-unstyled flex column gap-10">
+            {%- for page in predictive_search.resources.pages -%}
+              <li>
+                <a
+                  class="inline-block quick-url border-animation"
+                  href="{{ page.url }}"
+                  aria-label="{{ page.title }}"
+                  aria-selected="false"
+                  role="option"
+                >
+                  {{ page.title }}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+      {%- if predictive_search.resources.articles.size > 0 -%}
+        <div class="search-articles mt-50">
+          <div class="heading-color mb-20 h6">
+            {{ 'general.search.article' | t }}
+          </div>
+          <ul class="list-unstyled flex column gap-10">
+            {%- for articles in predictive_search.resources.articles -%}
+              <li>
+                <a
+                  class="inline-block quick-url border-animation"
+                  href="{{ articles.url }}"
+                  aria-label="{{ articles.title }}"
+                  aria-selected="false"
+                  role="option"
+                >
+                  {{ articles.title }}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+      {%- if search_page_articles -%}
+        </div>
+      {%- endif -%}
+      <div class="search-results__item col-1025-remaining w-full pt-50 ps-50">
         {%- if predictive_search.resources.queries.size > 0 -%}
           <div class="search-keyword">
-            <h3 class="search-keyword-title">
+            <div class="search-keyword-title heading-color mb-20 h6">
               {{ 'general.search.suggestions' | t }}
-            </h3>
+            </div>
             <ul
               role="group"
               aria-labelledby="predictive-search-queries"
-              class="search-keyword-lis"
+              class="search-keyword-list list-unstyled flex wrap gap"
+              style="--row-gap: 10px;--gap-desktop: 2rem;--gap: 2rem;"
             >
               {%- for query in predictive_search.resources.queries -%}
                 <li role="option" aria-selected="false">
                   <a
                     href="{{ query.url }}"
-                    class="quick-url"
+                    class="inline-block quick-url border-animation"
                     aria-label="{{ query.text }}"
                   >
                     {{ query.styled_text }}
@@ -61,18 +134,18 @@
           </div>
         {%- endif -%}
         {%- if predictive_search.resources.products.size > 0 -%}
-          <div class="search-product">
+          <div class="search-product mt-50">
             <div class="search-result-heading">
-              <h3>
+              <div class="heading-color mb-20 h6">
                 {{ 'general.search.products' | t }}
-              </h3>
+              </div>
               {%- if predictive_search.resources.products.size > limit_item -%}
                 <div class="search-more-result">
                   <a
                     role="option"
                     aria-selected="false"
                     aria-label="{{ 'general.search.more_result' | t }}"
-                    class="more-result-link"
+                    class="block text-center more-result-link btn btn-primary mt-20"
                   >
                     {{ 'general.search.more_result' | t }} ({{ predictive_search.resources.products.size }})
                   </a>
@@ -116,78 +189,6 @@
           </div>
         {%- endif -%}
       </div>
-      {%- if search_page_articles -%}
-        <div class="search-pages-articles">
-      {%- endif -%}
-      {%- if predictive_search.resources.collections.size > 0 -%}
-        <div class="search-collection">
-          <h3>
-            {{ 'general.search.collections' | t }}
-          </h3>
-          <ul>
-            {%- for collection in predictive_search.resources.collections -%}
-              <li>
-                <a
-                  class="quick-url"
-                  href="{{ collection.url }}"
-                  aria-label="{{ collection.title }}"
-                  aria-selected="false"
-                  role="option"
-                >
-                  {{ collection.title }}
-                </a>
-              </li>
-            {%- endfor -%}
-          </ul>
-        </div>
-      {%- endif -%}
-      {%- if predictive_search.resources.pages.size > 0 -%}
-        <div class="search-page">
-          <h3>
-            {{ 'general.search.pages' | t }}
-          </h3>
-          <ul>
-            {%- for page in predictive_search.resources.pages -%}
-              <li>
-                <a
-                  class="quick-url"
-                  href="{{ page.url }}"
-                  aria-label="{{ page.title }}"
-                  aria-selected="false"
-                  role="option"
-                >
-                  {{ page.title }}
-                </a>
-              </li>
-            {%- endfor -%}
-          </ul>
-        </div>
-      {%- endif -%}
-      {%- if predictive_search.resources.articles.size > 0 -%}
-        <div class="search-articles">
-          <h3>
-            {{ 'general.search.article' | t }}
-          </h3>
-          <ul>
-            {%- for articles in predictive_search.resources.articles -%}
-              <li>
-                <a
-                  class="quick-url"
-                  href="{{ articles.url }}"
-                  aria-label="{{ articles.title }}"
-                  aria-selected="false"
-                  role="option"
-                >
-                  {{ articles.title }}
-                </a>
-              </li>
-            {%- endfor -%}
-          </ul>
-        </div>
-      {%- endif -%}
-      {%- if search_page_articles -%}
-        </div>
-      {%- endif -%}
     {%- else -%}
       <div class="no-results w-full text-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="70" height="66" viewBox="0 0 70 66" fill="none">
