@@ -1,4 +1,4 @@
-import { initSlide } from "module-slide";
+import { initSlide, SlideSection } from "module-slide";
 import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
 import { CustomElement } from "module-safariElementPatch";
 import { ProductForm } from "module-addToCart";
@@ -2010,8 +2010,44 @@ class MiniCartUpSell extends HTMLElement {
     }
   }
 }
-
 customElements.define("mini-cart-recommendations", MiniCartUpSell);
+
+class CartUpSellProduct extends SlideSection {
+  constructor() {
+    super();
+  }
+
+  init() {
+    let width = window.innerWidth;
+    window.addEventListener("resize", () => {
+      const newWidth = window.innerWidth;
+      if (newWidth <= 767 && width > 767) {
+        this.actionOnMobile();
+      }
+      if (newWidth > 767 && width <= 767) {
+        this.actionOutMobile();
+      }
+      width = newWidth;
+    });
+    if (width <= 767) {
+      this.actionOnMobile();
+    } else {
+      this.actionOutMobile();
+    }
+  }
+
+  actionOnMobile() {
+    this.initSlideMediaGallery("CartUpSell");
+    this.style.maxHeight = "auto";
+  }
+
+  actionOutMobile() {
+    this.initSlideMediaGallery("CartUpSell");
+    this.style.maxHeight =
+      this.closest(".drawer__body").offsetHeight - 140 + "px";
+  }
+}
+customElements.define("cart-upsell-product", CartUpSellProduct);
 
 class ProductTabs extends HTMLElement {
   constructor() {

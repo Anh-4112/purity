@@ -55,8 +55,16 @@ function initSlide(_this) {
       fill: "row",
     },
     navigation: {
-      nextEl: slideTab ? _this.closest('.section-product-tabs').querySelector(".swiper-button-next") : _this.querySelector(".swiper-button-next"),
-      prevEl: slideTab ? _this.closest('.section-product-tabs').querySelector(".swiper-button-prev") : _this.querySelector(".swiper-button-prev"),
+      nextEl: slideTab
+        ? _this
+            .closest(".section-product-tabs")
+            .querySelector(".swiper-button-next")
+        : _this.querySelector(".swiper-button-next"),
+      prevEl: slideTab
+        ? _this
+            .closest(".section-product-tabs")
+            .querySelector(".swiper-button-prev")
+        : _this.querySelector(".swiper-button-prev"),
     },
     pagination: {
       clickable: true,
@@ -128,9 +136,11 @@ function initSlideMedia(_this, gallery, thumbnail) {
     watchOverflow = false;
   } else if (gallery == "gird") {
     swiperElement = _this;
-  } else if (gallery == "quick_view") {
+  } else if (gallery == "QuickView" || gallery == "CartUpSell") {
     swiperElement = _this;
-    itemMobile = 1.3;
+    if (gallery == "QuickView") {
+      itemMobile = 1.3;
+    }
     direction = "horizontal";
     if (window.innerWidth >= 768) {
       itemMobile = "auto";
@@ -165,7 +175,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
     pagination: {
       clickable: true,
       el: swiperElement.querySelector(".swiper-pagination"),
-      type: "custom",
+      type: gallery !== "CartUpSell" ? "custom" : "bullets",
       renderCustom: function (swiper, current, total) {
         return current + "/" + total;
       },
