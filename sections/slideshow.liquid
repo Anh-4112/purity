@@ -100,9 +100,9 @@
                 assign lazy_load = true
               endif
             %}
-            <div {{ block.shopify_attributes }} class="swiper-slide">
+            <div {{ block.shopify_attributes }} class="swiper-slide{% if slide_height == 'adapt' or slide_height == 'full_screen' %} h-auto{% endif %}">
               <div
-                class="sec__inner flex{% if slide_height == 'adapt' and image_mobile != blank %} ratio-mobile{% endif %}{% if slide_height == 'adapt' %} h-full{% endif %} h-{{ slide_height }}{% if show_text_bellow_image %} column flex-md-row text-bellow-mb{% endif %}"
+                class="sec__inner flex{% if slide_height == 'adapt' and image_mobile != blank %} ratio-mobile{% endif %}{% if slide_height == 'adapt' or slide_height == 'full_screen' %} h-full{% endif %} h-{{ slide_height }}{% if show_text_bellow_image %} column flex-md-row text-bellow-mb{% endif %}"
                 style="{% if slide_height == 'adapt' or slide_height == "full_screen" %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
               >
                 <div
@@ -250,7 +250,7 @@
         {%- if show_pagination -%}
           <div
             class="swiper-pagination swiper-pagination-slideshow{% if show_text_bellow_image %} swiper-pagination-bellow{% endif %}"
-            style="{% if show_text_bellow_image %}--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% else %}--position: absolute;{% endif %}--swiper-pagination-bottom:3rem;--swiper-pagination-bullet-active-width: 8rem;"
+            style="{% if show_text_bellow_image %}--position: absolute;--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% else %}--position: absolute;{% endif %}--swiper-pagination-bottom:3rem;--swiper-pagination-bullet-active-width: 8rem;"
           ></div>
         {% endif %}
       </slide-section>
