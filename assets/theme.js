@@ -1,7 +1,7 @@
 import { initSlide } from "module-slide";
 import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
 import { CustomElement } from "module-safariElementPatch";
-import * as AddToCart from "module-addToCart";
+import { ProductForm } from "module-addToCart";
 import * as NextSkyTheme from "global";
 
 LazyLoadEventHover.run();

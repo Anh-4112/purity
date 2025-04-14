@@ -13,13 +13,12 @@
     assign layout = 'thumbnail'
     assign desktop_layout = 'thumbnail_left'
   endif
-  if type_section == 'quickview'
-    assign layout = 'grid'
-    assign desktop_layout = 'two_columns'
+  if type_section == 'quick_view'
+    assign layout = 'quick_view'
   endif
 %}
 {%- capture col -%}
-  {% if desktop_layout == 'two_columns' and type_section != 'quickview' %} --col-number: 2;{% else %}--col-number: 1;{% endif %}
+  {% if desktop_layout == 'two_columns' %} --col-number: 2;{% else %}--col-number: 1;{% endif %}
 {%- endcapture -%}
 <script type="module" src="{{ 'media-gallery.js' | asset_url }}"></script>
 <div class="block__media-gallery sticky top-20">
@@ -83,6 +82,23 @@
               class: ' grid-item'
             %}
           </grid-gallery>
+        {% when 'quick_view' %}
+          <quick-view-gallery id="GalleryViewer-{{ section.id }}" class="swiper">
+            {%- render 'swiper-navigation', show_on_hover: true -%}
+            <div class="swiper-wrapper">
+              {% render 'product-media',
+                images: images,
+                product: product,
+                section_st: section_st,
+                type_section: type_section,
+                motion: true,
+                class: ' swiper-slide'
+              %}
+            </div>
+            <div
+              class="swiper-pagination"
+            ></div>
+          </quick-view-gallery>
         {% else %}
           <grid-gallery
             id="GalleryViewer-{{ section.id }}"

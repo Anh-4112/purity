@@ -4,6 +4,7 @@
   assign product_enable_quickview = theme_st.product_enable_quickview
   assign product_enable_color_swatches = theme_st.product_enable_color_swatches
   assign product_show_vendor = theme_st.product_show_vendor
+  assign product_show_tag = theme_st.product_show_tag
   assign product_show_rate = theme_st.product_show_rate
   assign product_show_image_hover = theme_st.product_show_image_hover
   assign product_image_ratio = theme_st.product_image_ratio
@@ -266,6 +267,22 @@
           </div>
         {%- endif -%}
         <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}">
+          {% if product_show_tag and disable_tag != true and card_product.tags != blank %}
+            <div class="product__tag grey-color fs-small">
+              <ul>
+                {% for tags in card_product.tags %}
+                  <li>
+                    <a href="/collections/all/{{ tags | handleize }}">{{ tags }}</a>
+                  </li>
+                  {% liquid
+                    if forloop.index == 2
+                      break
+                    endif
+                  %}
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
           {% if product_show_vendor and disable_vendor != true and card_product.vendor != blank %}
             <div class="product__vendor grey-color fs-small">
               {{- card_product.vendor | link_to_vendor -}}
