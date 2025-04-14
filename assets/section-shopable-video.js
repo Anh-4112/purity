@@ -369,6 +369,18 @@ class ShopableItem extends HTMLElement {
       modalPopup.querySelectorAll(".drawer__body-item")
     );
 
+    const allPopupMobile = Array.from(
+      modalPopup.querySelectorAll(".popup-information")
+    );
+
+    allPopupMobile.forEach((popup) => {
+        if (popup.classList.contains("active")) { 
+          popup.classList.remove("active");
+          popup.classList.add("hidden");
+        }
+      }
+    );
+
     if (allItems.length <= 1) {
       if (prevButton) prevButton.style.display = "none";
       if (nextButton) nextButton.style.display = "none";
