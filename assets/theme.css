@@ -211,7 +211,8 @@ blockquote {
     --padding-block-desktop: 1.9rem;
   }
   .drawer-spacing {
-    padding: var(--padding-block-desktop, 3rem) 4rem;
+    padding: var(--padding-block-desktop, 3rem)
+      var(--padding-inline-desktop, 4rem);
   }
 }
 .p-5 {
@@ -355,7 +356,7 @@ blockquote {
 .pt-28 {
   padding-top: 2.8rem;
 }
-.pt-50 {
+.py-50 {
   padding-top: clamp(3.5rem, 4vw, 5rem);
 }
 .pt-55 {
@@ -1205,6 +1206,9 @@ modal-popup :is(.modal-overlay) {
   .z-1025-16 {
     z-index: 16;
   }
+  .p-1025-0 {
+    padding: 0;
+  }
   .p-1025-40 {
     padding: 4rem;
   }
@@ -1251,6 +1255,9 @@ modal-popup :is(.modal-overlay) {
   }
   .mt-1025-40 {
     margin-top: 4rem;
+  }
+  .mt-1025-50 {
+    margin-top: 5rem;
   }
   .my-1025-0 {
     margin-top: 0;
@@ -1812,6 +1819,8 @@ modal-popup :is(.modal-overlay) {
   }
   header .disclosure__list-wrapper {
     top: calc(100% + 4rem);
+    left: auto;
+    right: 0;
   }
   header .button-localization.opened + .disclosure__list-wrapper {
     top: calc(100% + 1rem);
