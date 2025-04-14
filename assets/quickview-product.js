@@ -1,5 +1,6 @@
 import * as NextSkyTheme from "global";
 import { LazyLoader } from "module-lazyLoad";
+import { CustomElement } from "module-safariElementPatch";
 
 class ButtonQuickView extends HTMLButtonElement {
   constructor() {
@@ -66,3 +67,8 @@ class ButtonQuickView extends HTMLButtonElement {
 customElements.define("button-quick-view", ButtonQuickView, {
   extends: "button",
 });
+CustomElement.patchCustomElement(
+  "button",
+  "button-quick-view",
+  ButtonQuickView
+);

@@ -16,10 +16,13 @@
   class="header__heading-link no-underline h3 inline-flex align-center"
   aria-label="{{ shop.name }}"
 >
-  {%- if section_st.transparent_on_desktop and logo_transparent != blank and request.page_type == 'index' -%}
+  {%- if section_st.transparent and logo_transparent != blank and request.page_type == 'index' -%}
     {%- liquid
       assign img_transparent_alt = logo_transparent.alt | default: shop.name | escape
       assign logo_height = logo_width | divided_by: logo_transparent.aspect_ratio
+      if logo_img != blank
+        assign logo_height = logo_width | divided_by: logo_img.aspect_ratio
+      endif
     -%}
     {{
       logo_transparent
@@ -38,7 +41,7 @@
     {%- assign logo_height = logo_width | divided_by: logo_img.aspect_ratio -%}
     {%- liquid
       assign logo_class = 'header__heading-logo logo-normal'
-      if request.page_type == 'index' and section_st.transparent_on_desktop and logo_transparent != blank
+      if request.page_type == 'index' and section_st.transparent and logo_transparent != blank
         assign logo_class = logo_class | append: ' hidden'
       endif
     -%}

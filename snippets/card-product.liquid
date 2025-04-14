@@ -4,11 +4,20 @@
   assign product_enable_quickview = theme_st.product_enable_quickview
   assign product_enable_color_swatches = theme_st.product_enable_color_swatches
   assign product_show_vendor = theme_st.product_show_vendor
+  assign product_show_tag = theme_st.product_show_tag
   assign product_show_rate = theme_st.product_show_rate
   assign product_show_image_hover = theme_st.product_show_image_hover
   assign product_image_ratio = theme_st.product_image_ratio
   assign product_show_video_featured = theme_st.product_show_video_featured
   assign product_show_quick_add_mobile = theme_st.product_show_quick_add_mobile
+  assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id
+
+  if type == 'list'
+    assign style_layout = ' flex gap-20'
+    assign image_class = ' flex-auto w-custom'
+    assign image_rounded = ' rounded-10'
+    assign info_class = ' flex-1 mt-0'
+  endif
 %}
 {% if card_product and card_product != empty %}
   <div
@@ -41,7 +50,12 @@
               assign product_show_image_hover = false
             endif
           -%}
-          <div class="product__inner relative block rounded overflow-hidden{{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect">
+          <div
+            class="product__inner relative block rounded overflow-hidden{{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect"
+            {% if type == 'list' %}
+              style="--width: 8rem;"
+            {% endif %}
+          >
             <a
               class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
               draggable="false"
@@ -179,7 +193,6 @@
               and card_product.metafields.custom.external_affiliate == blank
             -%}
               {%- liquid
-                assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id
                 assign qty_rules = false
                 if card_product.selected_or_first_available_variant.quantity_rule.template > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1
                   assign qty_rules = true
@@ -266,6 +279,22 @@
           </div>
         {%- endif -%}
         <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}">
+          {% if product_show_tag and disable_tag != true and card_product.tags != blank %}
+            <div class="product__tag grey-color fs-small">
+              <ul>
+                {% for tags in card_product.tags %}
+                  <li>
+                    <a href="/collections/all/{{ tags | handleize }}">{{ tags }}</a>
+                  </li>
+                  {% liquid
+                    if forloop.index == 2
+                      break
+                    endif
+                  %}
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
           {% if product_show_vendor and disable_vendor != true and card_product.vendor != blank %}
             <div class="product__vendor grey-color fs-small">
               {{- card_product.vendor | link_to_vendor -}}
@@ -289,8 +318,63 @@
             </div>
           {% endif %}
           {%- if product_enable_color_swatches and disable_color_swatches != true -%}
-            {%- render 'variant-swatches', scope: 'item', product: card_product -%}
+            {%- if bundle_swatch -%}
+              {%- render 'variant-swatches', scope: 'bundle', product: card_product -%}
+            {%- else -%}
+              {%- render 'variant-swatches', scope: 'item', product: card_product -%}
+            {%- endif -%}
           {% endif %}
+          {%- if bundle_swatch and enable_quick_add -%}
+            <product-form class="quick-add">
+              {%- form 'product',
+                card_product,
+                id: product_form_id,
+                class: 'form',
+                novalidate: 'novalidate',
+                data-type: 'add-to-cart-form'
+              -%}
+                <input
+                  type="hidden"
+                  name="id"
+                  value="{{ card_product.selected_or_first_available_variant.id }}"
+                  disabled
+                >
+                <button
+                  id="{{ product_form_id }}-submit"
+                  type="submit"
+                  name="add"
+                  class="btn button-link w-full btn-link text-center"
+                  aria-haspopup="dialog"
+                  aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
+                  aria-live="polite"
+                  data-sold-out-message="true"
+                  {% if card_product.selected_or_first_available_variant.available == false %}
+                    disabled
+                  {% endif %}
+                >
+                  <span class="product-addtocart-btn hidden-on-load d-none block-md">
+                    {%- if card_product.selected_or_first_available_variant.available -%}
+                      {{ 'products.product.add_to_cart' | t }}
+                    {%- else -%}
+                      {{ 'products.product.sold_out' | t }}
+                    {%- endif -%}
+                  </span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    class="spin opacity-0 pointer-none icon-load absolute"
+                  >
+                    <use href="#icon-load"></use>
+                  </svg>
+                  <svg width="16" height="16" class="hidden-md" viewBox="0 0 16 16" fill="none">
+                    <use href="#icon-cart" />
+                  </svg>
+                </button>
+              {%- endform -%}
+            </product-form>
+          {%- endif -%}
         </div>
       </div>
     </div>

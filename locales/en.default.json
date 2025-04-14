@@ -43,7 +43,7 @@
       "collections": "Trending Collections",
       "more_result": "View All Products",
       "clear": "Clear",
-      "no_results_html": "No results for  <span class=\"heading-color subheading-weight\">“{{ terms }}”</span>. Check spelling or try different keywords.",
+      "no_results_html": "No results for  <span class=\"heading-color heading_weight\">“{{ terms }}”</span>. Check spelling or try different keywords.",
     },
     "social": {
       "alt_text": {
@@ -73,7 +73,7 @@
     },
     "password_page": {
       "login_form_heading": "Enter store using password:",
-      "login_password_button": "Enter using password",
+      "login_password_button": "Enter store using password:",
       "login_form_password_label": "Password",
       "login_form_password_placeholder": "Your password",
       "login_form_error": "Wrong password!",
@@ -115,6 +115,7 @@
       "vendor": "Vendor",
       "quickview": "Quick view",
       "add_to_cart": "Add to cart",
+      "add_all_to_cart": "Add all to cart",
       "sku": "SKU",
       "available": "Availability",
       "type": "Type",
@@ -173,8 +174,8 @@
         "view_store_info": "View store information",
         "check_other_stores": "Check availability at other stores",
         "pick_up_available": "Pickup available",
-        "pick_up_available_at_html": "Pickup available at <span class=\"subheading-weight heading-color\">{{ location_name }}.</span>",
-        "pick_up_unavailable_at_html": "Pickup currently unavailable at <span class=\"subheading-weight heading-color\">{{ location_name }}.</span>",
+        "pick_up_available_at_html": "Pickup available at <span class=\"subheading_weight heading-color\">{{ location_name }}.</span>",
+        "pick_up_unavailable_at_html": "Pickup currently unavailable at <span class=\"subheading_weight heading-color\">{{ location_name }}.</span>",
         "unavailable": "Couldn't load pickup availability",
         "refresh": "Refresh"
       },
@@ -263,7 +264,18 @@
       "return": "Return to Account details",
       "welcome": "Welcome",
       "no": "Not?",
-      "required": "* is required field"
+      "required": "*Your information is securely encrypted and protected."
+    },
+    "validate": {
+      "email": "Email address is required.",
+      "email_invalid": "Please enter a valid email address.",
+      "password": "Password is required.",
+      "min_password": "Password must be at least 6 characters.",
+      "first_name": "First name is required.",
+      "name": "Your name is required.",
+      "subject": "Please select a subject.",
+      "message": "Message is required.",
+      "last_name": "Last name is required.",
     },
     "account_fallback": "Account",
     "activate_account": {
@@ -304,12 +316,13 @@
     "log_out": "Log Out",
     "login_menu_mobile": "Login \/ Register",
     "login_page": {
-      "login_detail": "If you have an account with us, please log in.",
+      "login_detail": "Login to your account to access your order history and other personalized features.",
       "cancel": "Cancel",
+      "back_login": "Back to Login",
       "create_account": "Create account",
       "have_account": "Already has an account?",
       "create_account_info": "Please register below to create an account.",
-      "email": "Email",
+      "email": "Your email",
       "forgot_password": "Forgot your password?",
       "forgot_password_info": "Please provide your email address in the space below to receive a link for resetting your password.",
       "guest_continue": "Continue",
@@ -317,7 +330,7 @@
       "password": "Password",
       "title": "Login",
       "sign_in": "Sign In",
-      "new_customer": "New customer?",
+      "new_customer": "Don't have an account?",
       "sign_in_info": "Please enter your details below to sign in.",
       "submit": "Submit",
       "placeholder_email": "Your email*",
@@ -364,18 +377,18 @@
       "title": "Forgot Password",
       "email": "Email",
       "submit": "Reset password",
-      "subtext": "Lost your password? Please enter your email address. You will receive a link to create a new password via email.",
+      "subtext": "Enter your e-mail below to receive instructions to reset your password.",
       "success": "We've sent you an email with a link to update your password."
     },
     "register": {
       "title": "Create Account",
       "first_name": "First name",
       "last_name": "Last name",
-      "email": "Email",
+      "email": "Your email",
       "password": "Password",
       "submit": "Create Account",
       "title_content": "New Customer",
-      "create_account_details": "Enter your information below to proceed. If you already have an account, please log in instead.",
+      "create_account_details": "Create a new account to join our community and get access to exclusive offers, rewards and content.",
       "content": "Sign up for early Sale access plus tailored new arrivals, trends and promotions. To opt out, click unsubscribe in our emails.",
       "content_form_html": "Your personal data will be used to support your experience throughout this website, to manage access to your account and for other purposes described in our <a href=\"{{ link }}\">privacy policy.<\/a>",
       "Do_not_have_an_account": "Don't have an account?",
@@ -412,6 +425,11 @@
         "other": "{{ count }} items"
       }
     },
+    "bundle": {
+      "form" : {
+        "name": "Select option"
+      }
+    },
     "contact": {
       "form": {
         "title": "Contact form",
@@ -423,6 +441,11 @@
         "send_contact": "Send your message",
         "post_success": "Thanks for contacting us. We'll get back to you as soon as possible.",
         "error_heading": "Please adjust the following:"
+      },
+      "subject": {
+        "name": "Subject",
+        "product": "Product",
+        "order": "Order",
       }
     },
     "404": {
@@ -507,11 +530,10 @@
       "description": "Feel free to explore all the products available and pick up something you like in the shop.",
       "cart_error": "There was an error while updating your cart. Please try again.",
       "cart_quantity_error_html": "You can only add {{ quantity }} of this item to your cart.",
-      "taxes_and_shipping_policy_at_checkout_html": "Taxes and <a class=\"heading-color subheading-weight\" href=\"{{ link }}\">shipping<\/a> and discounts calculated at checkout",
+      "taxes_and_shipping_policy_at_checkout_html": "Taxes and <a class=\"heading-color subheading_weight\" href=\"{{ link }}\">shipping<\/a> and discounts calculated at checkout",
       "taxes_included_but_shipping_at_checkout": "Tax included and shipping calculated at checkout",
-      "taxes_included_and_shipping_policy_html": "Tax included. <a class=\"heading-color subheading-weight\" href=\"{{ link }}\">Shipping<\/a> and discounts calculated at checkout.",
+      "taxes_included_and_shipping_policy_html": "Tax included. <a class=\"heading-color heading_weight\" href=\"{{ link }}\">Shipping<\/a> and discounts calculated at checkout.",
       "taxes_and_shipping_at_checkout": "Shipping & taxes calculated at checkout",
-      "free_shipping_html": "Spend {{ amount }} more and get <span class=\"heading-color subheading-weight\">free shipping!<\/span>",
       "free_shipping_avaiable": "Your order qualifies for free shipping!",
       "no_shipping": "We do not ship to this address.",
       "shipping_rate": "Shipping rate for {{address}}",
@@ -551,6 +573,15 @@
       "banner_alt": "Google map banner",
       "no_iframe": "Provide the iframe map code to use this section."
     },
+    "countdown": {
+      "format": {
+        "days": "Days",
+          "hours": "Hours",
+          "mins": "Mins",
+          "secs": "Secs"
+      },
+      "alt": "Countdown images"
+    },
   },
   "newsletter": {
     "label": "Email",
@@ -565,4 +596,21 @@
     "first_name": "First name",
     "last_name": "Last name"
   },
+  "recipient": {
+    "form": {
+      "checkbox": "I want to send this as a gift",
+      "expanded": "Gift card recipient form expanded",
+      "collapsed": "Gift card recipient form collapsed",
+      "email_label": "Recipient email",
+      "email_label_optional_for_no_js_behavior": "Recipient email (optional)",
+      "email": "Email",
+      "name_label": "Recipient name (optional)",
+      "name": "Name",
+      "message_label": "Message (optional)",
+      "message": "Message",
+      "max_characters": "{{ max_chars }} characters max",
+      "send_on": "YYYY-MM-DD",
+      "send_on_label": "Send on (optional)"
+    }
+  }
 }

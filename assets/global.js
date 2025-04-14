@@ -188,7 +188,7 @@ export function eventModal(
     if (removeElementAfter) {
       element.classList.add("remove-after");
     }
-    if (actionModal == "delay") {
+    if (actionModal == "delay" && element.querySelector(".model_media")) {
       element.classList.add("delay");
       setTimeout(() => {
         element.querySelector(".model_media").classList.add("open");
@@ -201,7 +201,10 @@ export function eventModal(
     const modal_element = element.classList.contains("active-modal-js")
       ? element
       : element.closest(".active-modal-js");
-    if (modal_element.classList.contains("delay")) {
+    if (
+      modal_element.classList.contains("delay") &&
+      modal_element.querySelector(".model_media")
+    ) {
       setTimeout(() => {
         modal_element.classList.remove("active", "delay");
         if (active_modal.length == 1) {
@@ -344,7 +347,7 @@ class AlertNotify {
     }
   }
 
-  show(message, type = "info", duration = 3000) {
+  show(message, type = "warning", duration = 3000) {
     const notification = document.createElement("div");
     notification.classList.add("notification", type);
     const icon = this.createIcon(type);
@@ -376,22 +379,21 @@ class AlertNotify {
     switch (type) {
       case "success":
         icon.innerHTML =
-          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
         break;
       case "error":
         icon.innerHTML =
-          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-error"></use></svg>';
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-error"></use></svg>';
         break;
-      case "info":
+      case "warning":
         icon.innerHTML =
-          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-info"></use></svg>';
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-info"></use></svg>';
         break;
       default:
         icon.innerHTML =
-          '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
     }
     return icon;
   }
 }
-
 export const notifier = new AlertNotify();

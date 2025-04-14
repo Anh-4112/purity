@@ -48,19 +48,28 @@
   else
     assign alt_text = 'sections.collection_list.sample_name' | t
   endif
+  assign collection_title_size = 'h6'
+  if section_st.items_per_row < 4
+    assign collection_title_size = 'h4'
+  endif
 %}
 {% if card_collection %}
   <div
-    class="collection-item__wrapper {{ class }}{% if content_position == 'overlay' %} position-{{ content_position }} relative{% endif %}"
+    class="collection-item__wrapper hover-effect {{ class }}{% if content_position == 'overlay' %} position-{{ content_position }} relative{% endif %}"
   >
     <div class="collection-item__media">
       <a
         class="block collection-item__media--ratio rounded"
         draggable="false"
-        href="{{ card_collection.url }}"
+        {% if card_collection.url != blank %}
+          href="{{ card_collection.url }}"
+        {% else %}
+          role="link"
+        {% endif %}
         aria-label="{{- card_collection.title -}}"
         style="--aspect-ratio: {{ ratio }};"
       >
+        <div class="{% if content_position == 'overlay' %}overlay-linear {% endif %}inset-0 absolute z-2 rounded"></div>
         {% assign collection_media = card_collection.featured_image %}
         {%- if collection_media or collection_image != blank -%}
           {% if collection_image != blank %}
@@ -91,7 +100,7 @@
       </a>
     </div>
     <div
-      class="collection-information text-{{ content_alignment }}{% if content_position == 'overlay' %} absolute px-15 bottom-30 z-2{% if content_alignment == 'center' %} inset-x-0{% else %}{% if settings.rtl %} right-0{% else %} left-0{% endif %}{% endif %}{% else %} mt-15{% endif %}"
+      class="collection-information flex gap-10 max-w-100 justify-{{ content_alignment }} text-{{ content_alignment }}{% if content_position == 'overlay' %} absolute px-20 px-md-35 bottom-15 bottom-md-30 z-2{% if content_alignment == 'center' %} inset-x-0{% else %}{% if settings.rtl %} right-0{% else %} left-0{% endif %}{% endif %}{% else %} mt-15{% endif %}"
       {% if content_position == 'overlay' %}
         style="--color-heading: {{ section_st.overlay_image_color }};--color-text: {{ section_st.overlay_image_color }}"
       {% endif %}
@@ -105,7 +114,7 @@
             endif
           -%}
           <a
-            class="heading-style"
+            class="heading-style border-animation {{ collection_title_size }}"
             {% if p_url == blank %}
               role="link" aria-disabled="true"
             {% else %}
@@ -117,7 +126,7 @@
           </a>
         {%- else -%}
           <a
-            class="heading-style"
+            class="heading-style border-animation {{ collection_title_size }}"
             role="link"
             aria-disabled="true"
             aria-label="{{ 'sections.collection_list.sample_name' | t }}"
@@ -133,7 +142,7 @@
           endif
         -%}
         <a
-          class="heading-style"
+          class="heading-style border-animation {{ collection_title_size }}"
           {% if p_url == blank %}
             role="link" aria-disabled="true"
           {% else %}
@@ -145,14 +154,9 @@
         </a>
       {%- endif -%}
       {%- if show_product_count -%}
-        <div class="product-count text-color">
+        <div class="product-count text-color fs-13 body_weight">
           {%- assign pc = block_st.collection.products_count | default: 0 -%}
           {{ pc }}
-          {%- if pc < 2 -%}
-            {{ 'sections.collection_list.item' | t }}
-          {%- else -%}
-            {{ 'sections.collection_list.items' | t }}
-          {%- endif -%}
         </div>
       {%- endif -%}
     </div>

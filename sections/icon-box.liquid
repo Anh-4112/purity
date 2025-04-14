@@ -13,7 +13,7 @@
   if heading_size == 'small'
     assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = 'fs-medium'
+    assign header_size = 'h1'
   endif
   assign content_icon_size = section_st.content_icon_size
   if content_icon_size == 'small'
@@ -84,11 +84,11 @@
           -%}
           <div
             class="{% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
-            style="--custom-width: {{ section_st.icon_size }}px;"
+            style="---width: {{ section_st.icon_size }}px;"
           >
             <div
               class="icon-box__icon w-custom h-auto flex"
-              style="--custom-width: {{ section_st.icon_size }}px; "
+              style="---width: {{ section_st.icon_size }}px; "
             >
               {% if icon_svg != 'none' %}
                 {% render 'icon_svg_list',
@@ -101,16 +101,11 @@
                   assign alt_default = 'accessibility.promotion_banner' | t
                   assign alt = section_st.banner_image.alt | default: alt_default | escape
                 -%}
-                {% render 'responsive-image',
-                  type: 'other',
-                  image: icon_image,
-                  image_alt: alt,
-                  class: 'rounded-10'
-                %}
+                {% render 'responsive-image', type: 'other', image: icon_image, image_alt: alt, class: 'rounded-10' %}
               {% else %}
                 <div
                   class="w-custom h-custom rounded-10"
-                  style="--custom-width: {{ section_st.icon_size }}px; --custom-height: {{ section_st.icon_size }}px;--aspect-ratio:1/1;"
+                  style="--width: {{ section_st.icon_size }}px;--height: {{ section_st.icon_size }}px;--aspect-ratio:1/1;"
                 >
                   {%- render 'placeholder-render', type: 'product', class: 'img-placeholder' -%}
                 </div>
@@ -389,13 +384,13 @@
         {
           "type": "image_picker",
           "id": "icon_image",
-          "label": "t:sections.all.image.label",
+          "label": "t:sections.all.image.label"
         },
         {
           "type": "select",
           "id": "icon_svg",
           "label": "t:sections.all.svg.label",
-          "info": "t:sections.all.svg.custom_svg.info", 
+          "info": "t:sections.all.svg.custom_svg.info",
           "default": "none",
           "options": [
             {

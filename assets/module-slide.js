@@ -17,6 +17,7 @@ function initSlide(_this) {
   let spacing = _this?.dataset.spacing ? _this?.dataset.spacing : 30;
   const progressbar = _this?.dataset.paginationProgressbar === "true";
   const autoItem = _this?.dataset.itemMobile === "true";
+  const slideTab = _this?.dataset.slideTab === "true";
   let arrowCenterImage = _this?.dataset.itemMobile === "true";
   spacing = Number(spacing);
   autoPlaySpeed = Number(autoPlaySpeed);
@@ -37,8 +38,8 @@ function initSlide(_this) {
     _this.style.maxHeight = _this.offsetHeight + "px";
   }
   new Swiper(_this, {
-    slidesPerView:  centerSlide ? 'auto' : autoItem ? "auto" : itemMobile,
-    spaceBetween: centerSlide ? spacing : spacing >= 15 ? 15 : spacing,
+    slidesPerView: centerSlide ? "auto" : autoItem ? "auto" : itemMobile,
+    spaceBetween: centerSlide ? spacing : spacing >= 10 ? 10 : spacing,
     autoplay: autoplay,
     direction: direction,
     loop: loop,
@@ -54,8 +55,8 @@ function initSlide(_this) {
       fill: "row",
     },
     navigation: {
-      nextEl: _this.querySelector(".swiper-button-next"),
-      prevEl: _this.querySelector(".swiper-button-prev"),
+      nextEl: slideTab ? _this.closest('.section-product-tabs').querySelector(".swiper-button-next") : _this.querySelector(".swiper-button-next"),
+      prevEl: slideTab ? _this.closest('.section-product-tabs').querySelector(".swiper-button-prev") : _this.querySelector(".swiper-button-prev"),
     },
     pagination: {
       clickable: true,
@@ -92,7 +93,7 @@ function initSlide(_this) {
             }
           }
         }
-      }
+      },
     },
   });
 }
@@ -103,6 +104,8 @@ function initSlideMedia(_this, gallery, thumbnail) {
   let watchSlidesVisibility = true;
   let watchOverflow = true;
   let loop = true;
+  let speed = 300;
+  let invert = false;
   let itemMobile = gallery == "thumbnail" ? 5 : 1;
   let direction = _this.dataset.thumbDirection
     ? _this.dataset.thumbDirection
@@ -125,14 +128,26 @@ function initSlideMedia(_this, gallery, thumbnail) {
     watchOverflow = false;
   } else if (gallery == "gird") {
     swiperElement = _this;
-    if (_this.closest(".quickview-product")) {
-      itemMobile = 1.3;
+  } else if (gallery == "quick_view") {
+    swiperElement = _this;
+    itemMobile = 1.3;
+    direction = "horizontal";
+    if (window.innerWidth >= 768) {
+      itemMobile = "auto";
+      direction = "vertical";
+      invert = true;
+      loop = false;
+      speed = 150;
     }
   }
   const swiperSlide = new Swiper(swiperElement, {
     slidesPerView: itemMobile,
     spaceBetween: 10,
     autoplay: false,
+    mousewheel: {
+      invert: invert,
+    },
+    speed: speed,
     direction: "horizontal",
     loop: loop,
     watchSlidesProgress: watchSlidesProgress,

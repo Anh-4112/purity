@@ -20,7 +20,7 @@
   if heading_size == 'small'
     assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = 'fs-medium'
+    assign header_size = 'h1'
   endif
 
   assign items_per_row_mobile = section_st.items_per_row_mobile
@@ -34,15 +34,6 @@
   assign items_per_row_tablet = items_per_row
   if items_per_row > 3
     assign items_per_row_tablet = items_per_row | minus: 1
-  endif
-
-  assign column_gap_slide = 0
-  if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-  elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-  elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
   endif
 -%}
 {%- capture style -%}

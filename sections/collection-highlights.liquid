@@ -10,10 +10,13 @@
 
   assign column_gap_slide = 0
   if section_st.column_gap == 'large'
+    assign column_gap_desktop = 80
     assign column_gap_slide = 30
   elsif section_st.column_gap == 'medium'
+    assign column_gap_desktop = 50
     assign column_gap_slide = 20
   elsif section_st.column_gap == 'small'
+    assign column_gap_desktop = 30
     assign column_gap_slide = 10
   endif
 
@@ -22,7 +25,7 @@
   if heading_size == 'small'
     assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = 'fs-medium'
+    assign header_size = 'h1'
   endif
 
   assign highlight_collection_width = section_st.highlight_collection_width
@@ -30,19 +33,17 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
   {% if heading_size == 'large' %}--font-size: 40;{% endif %}
-{%- endcapture -%}
-{%- capture col_style -%}
-  --col-width-custom: {{ highlight_collection_width }}%;{% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}
+
 {%- endcapture -%}
 <div
-  class="section__collection-highlight overflow-hidden"
+  class="section__collection-highlight overflow-hidden section color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
-      <div class="section-header section-header__in-section hidden-md d-block text-{{ section_st.alignment }}">
+      <div class="section-header section-header__in-section hidden-1025 d-block text-{{ section_st.text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}">
         {%- if section_st.subheading != blank -%}
-          <div class="section-subheading">
+          <div class="section-subheading h7 mb-5 mb-md-10 body_weight fs-big-2">
             {{ section_st.subheading }}
           </div>
         {%- endif -%}
@@ -52,19 +53,17 @@
           </h2>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description">
+          <div class="section-description mt-15">
             {{ section_st.description }}
           </div>
         {%- endif -%}
       </div>
     {%- endif -%}
-    <div class="collection-highlight__blocks relative">
-      <div
-        class="collection-highlight__blocks-item"
-        style="{{ col_style | strip | strip_newlines }}"
-      >
-        {% content_for 'blocks' %}
-      </div>
+    <div
+      class="collection-highlight__blocks relative flex wrap gap"
+      style="--gap: {{ column_gap_slide }}px;--gap-desktop: {{ column_gap_desktop }}px;--col-width: {{ highlight_collection_width }}%;"
+    >
+      {% content_for 'blocks' %}
     </div>
   </div>
 </div>
@@ -116,15 +115,15 @@
     },
     {
       "type": "text",
-      "id": "title",
-      "default": "Explore Collections",
-      "label": "t:sections.all.content_setting.heading.label"
+      "id": "subheading",
+      "label": "t:sections.all.content_setting.subheading.label",
+      "default": "Subheading"
     },
     {
       "type": "text",
-      "id": "subheading",
-      "label": "t:sections.all.content_setting.subheading.label",
-      "default": "Self Care Product"
+      "id": "title",
+      "default": "Heading",
+      "label": "t:sections.all.content_setting.heading.label"
     },
     {
       "type": "richtext",
@@ -207,7 +206,7 @@
     },
     {
       "type": "header",
-      "content": "t:sections.collection-highlights.blocks.type.type_highlight.header" 
+      "content": "t:sections.collection-highlights.blocks.type.type_highlight.header"
     },
     {
       "type": "range",
@@ -316,7 +315,7 @@
       "type": "color",
       "id": "overlay_image_color",
       "label": "t:sections.collection-list.settings.overlay_image_color",
-      "default": "#111"
+      "default": "#fff"
     },
     {
       "type": "header",
@@ -341,7 +340,7 @@
       "min": 1,
       "max": 2,
       "step": 0.5,
-      "default": 1
+      "default": 2
     },
     {
       "type": "header",
@@ -397,12 +396,6 @@
         {
           "type": "group-collections-list",
           "blocks": [
-            {
-              "type": "_collection-list"
-            },
-            {
-              "type": "_collection-list"
-            },
             {
               "type": "_collection-list"
             },

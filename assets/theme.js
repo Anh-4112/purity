@@ -1,6 +1,7 @@
 import { initSlide } from "module-slide";
 import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
-import * as AddToCart from "module-addToCart";
+import { CustomElement } from "module-safariElementPatch";
+import { ProductForm } from "module-addToCart";
 import * as NextSkyTheme from "global";
 
 LazyLoadEventHover.run();
@@ -217,6 +218,99 @@ class BackToTop extends HTMLElement {
 }
 customElements.define("back-to-top", BackToTop);
 
+class SiteHeader extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  get dataStickyType() {
+    return this.hasAttribute("data-sticky-type")
+      ? this.getAttribute("data-sticky-type")
+      : "none";
+  }
+
+  get dataStickyMobile() {
+    return this.hasAttribute("data-sticky-mobile")
+      ? this.getAttribute("data-sticky-mobile")
+      : "false";
+  }
+
+  get heightAnnouncementBar() {
+    return document.querySelector(".section-announcement-bar")
+      ? Math.round(
+          document.querySelector(".section-announcement-bar").clientHeight
+        )
+      : 0;
+  }
+
+  init() {
+    this.check = 0;
+    requestAnimationFrame(() => {
+      NextSkyTheme.body.style.setProperty(
+        "--header-height",
+        Math.round(this.clientHeight) + "px"
+      );
+    });
+    this.onStickyHeader();
+  }
+
+  onStickyHeader() {
+    if (this.dataStickyType != "none") {
+      if (this.dataStickyMobile == "false" && window.innerWidth < 1025) {
+        return;
+      }
+      if (this.dataStickyType === "on-scroll-up") {
+        this.classList.add("scroll-up");
+      }
+      window.addEventListener("scroll", () => {
+        this.stickyFunction();
+      });
+    }
+  }
+
+  stickyFunction() {
+    let headerHeight =
+      this.heightAnnouncementBar + Math.round(this.clientHeight);
+    let header = this.closest(".site-header");
+    let positionScrollY = window.scrollY;
+    if (header) {
+      if (this.dataStickyType === "always") {
+        if (positionScrollY > headerHeight) {
+          header.classList.add("section-header-sticky");
+        } else {
+          header.classList.remove("section-header-sticky");
+        }
+      } else {
+        if (positionScrollY > 0) {
+          if (positionScrollY > headerHeight) {
+            header.classList.add("scr-pass-header");
+            if (positionScrollY > this.check) {
+              header.classList.add("header-sticky-hidden");
+            } else {
+              header.classList.remove("header-sticky-hidden");
+            }
+            header.classList.add("section-header-sticky");
+            this.check = positionScrollY;
+          } else {
+            header.classList.remove("scr-pass-header");
+            this.check = 0;
+          }
+        } else {
+          header.classList.remove(
+            "header-sticky-hidden",
+            "section-header-sticky"
+          );
+        }
+      }
+    }
+  }
+}
+customElements.define("site-header", SiteHeader, {
+  extends: "header",
+});
+CustomElement.patchCustomElement("header", "site-header", SiteHeader);
+
 class ToggleMenu extends HTMLElement {
   constructor() {
     super();
@@ -247,6 +341,20 @@ class ToggleMenu extends HTMLElement {
         ),
       100
     );
+    CustomElement.patchAllCustomElements({
+      "button-close-model": {
+        tagElement: "button",
+        classElement: ButtonCloseModel,
+      },
+      "details-mega-menu": {
+        tagElement: "details",
+        classElement: DetailsMegaMenu,
+      },
+      "submenu-details": {
+        tagElement: "details",
+        classElement: SubMenuDetails,
+      },
+    });
   }
 }
 customElements.define("toggle-menu", ToggleMenu);
@@ -291,12 +399,52 @@ class ButtonCloseModel extends HTMLButtonElement {
 customElements.define("button-close-model", ButtonCloseModel, {
   extends: "button",
 });
+CustomElement.patchCustomElement(
+  "button",
+  "button-close-model",
+  ButtonCloseModel
+);
 
 const megaMenuCount = new WeakMap();
 class DetailsMegaMenu extends HTMLDetailsElement {
   constructor() {
     super(),
-      (this.summaryElement = this.firstElementChild),
+      (this.summaryElement = false),
+      (this.contentElement = false),
+      (this._open = false),
+      (this.header = false),
+      this.init();
+  }
+
+  set open(value) {
+    value !== this._open &&
+      ((this._open = value),
+      this.isConnected
+        ? this.transition(value)
+        : value
+        ? this.setAttribute("open", "")
+        : this.removeAttribute("open"));
+  }
+
+  get open() {
+    return this._open;
+  }
+
+  get dropdownsAnimation() {
+    return this.header.hasAttribute("data-dropdowns-animation")
+      ? this.header.getAttribute("data-dropdowns-animation")
+      : "fade-in";
+  }
+
+  get menuTrigger() {
+    return this.header.hasAttribute("data-menu-trigger") &&
+      window.innerWidth >= 1025
+      ? this.header.getAttribute("data-menu-trigger")
+      : "click";
+  }
+
+  init() {
+    (this.summaryElement = this.firstElementChild),
       (this.contentElement = this.lastElementChild),
       (this._open = this.hasAttribute("open")),
       (this.header = document.querySelector("header")),
@@ -317,23 +465,7 @@ class DetailsMegaMenu extends HTMLDetailsElement {
       );
     }
   }
-  set open(value) {
-    value !== this._open &&
-      ((this._open = value),
-      this.isConnected
-        ? this.transition(value)
-        : value
-        ? this.setAttribute("open", "")
-        : this.removeAttribute("open"));
-  }
-  get open() {
-    return this._open;
-  }
-  get menuTrigger() {
-    return this.header.hasAttribute("data-menu-trigger")
-      ? this.header.getAttribute("data-menu-trigger")
-      : "click";
-  }
+
   onSummaryClicked(event) {
     event.preventDefault(),
       this.menuTrigger === "hover" &&
@@ -350,11 +482,14 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         ),
         this.setAttribute("open", ""),
         this.summaryElement.setAttribute("open", ""),
-        setTimeout(() => this.contentElement.setAttribute("open", ""), 100),
         document.addEventListener("click", this.detectClickOutsideListener),
         document.addEventListener("keydown", this.detectEscKeyboardListener),
         document.addEventListener("focusout", this.detectFocusOutListener),
-        this.classList.add("detail-open"))
+        this.classList.add("detail-open"),
+        this.dropdownsAnimation == "fade-in-down" && window.innerWidth >= 1025
+          ? (this.contentElement.setAttribute("open", ""),
+            await this.fadeInDown())
+          : setTimeout(() => this.contentElement.setAttribute("open", ""), 100))
       : (megaMenuCount.set(
           DetailsMegaMenu,
           megaMenuCount.get(DetailsMegaMenu) - 1
@@ -365,7 +500,9 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         document.removeEventListener("keydown", this.detectEscKeyboardListener),
         document.removeEventListener("focusout", this.detectFocusOutListener),
         this.classList.remove("detail-open"),
-        this.open || setTimeout(() => this.removeAttribute("open"), 400));
+        this.dropdownsAnimation == "fade-in-down" && window.innerWidth >= 1025
+          ? (await this.fadeInUp(), this.open || this.removeAttribute("open"))
+          : setTimeout(() => this.open || this.removeAttribute("open"), 300));
   }
   detectClickOutside(event) {
     !this.contains(event.target) &&
@@ -387,24 +524,74 @@ class DetailsMegaMenu extends HTMLDetailsElement {
     this.menuTrigger !== "hover" ||
       (event.type === "mouseenter" ? (this.open = !0) : (this.open = !1));
   }
+  fadeInDown() {
+    Motion.animate(
+      this.contentElement,
+      {
+        opacity: [0, 1],
+        visibility: "visible",
+      },
+      {
+        duration: 0.4,
+        easing: [0.7, 0, 0.2, 1],
+        delay: 0.1,
+      }
+    );
+    const translateY = "-105%";
+    return Motion.animate(
+      this.contentElement,
+      {
+        transform: [`translateY(${translateY})`, "translateY(0)"],
+      },
+      {
+        duration: 0.4,
+        easing: [0.7, 0, 0.2, 1],
+      }
+    ).finished;
+  }
+  fadeInUp() {
+    Motion.animate(
+      this.contentElement,
+      {
+        opacity: 0,
+        visibility: "hidden",
+      },
+      {
+        duration: 0.3,
+        easing: [0.7, 0, 0.2, 1],
+      }
+    );
+    const translateY = "-105%";
+    return Motion.animate(
+      this.contentElement,
+      {
+        transform: `translateY(${translateY})`,
+      },
+      {
+        duration: 0.4,
+        easing: [0.7, 0, 0.2, 1],
+      }
+    ).finished;
+  }
 }
 customElements.define("details-mega-menu", DetailsMegaMenu, {
   extends: "details",
 }),
   megaMenuCount.set(DetailsMegaMenu, 0);
+CustomElement.patchCustomElement(
+  "details",
+  "details-mega-menu",
+  DetailsMegaMenu
+);
 
 class SubMenuDetails extends HTMLDetailsElement {
   constructor() {
     super(),
-      (this.summaryElement = this.firstElementChild),
-      (this.contentElement = this.lastElementChild),
-      (this._open = this.hasAttribute("open")),
-      (this.content =
-        this.closest(".menu-link").querySelector(".sub-children-menu")),
-      this.summaryElement.addEventListener(
-        "click",
-        this.onSummaryClicked.bind(this)
-      );
+      (this.summaryElement = false),
+      (this.contentElement = false),
+      (this._open = false),
+      (this.content = false),
+      this.init();
   }
 
   get open() {
@@ -421,13 +608,21 @@ class SubMenuDetails extends HTMLDetailsElement {
         : this.removeAttribute("open"));
   }
 
+  init() {
+    (this.summaryElement = this.firstElementChild),
+      (this.contentElement = this.lastElementChild),
+      (this._open = this.hasAttribute("open")),
+      (this.content =
+        this.closest(".menu-link").querySelector(".sub-children-menu")),
+      this.summaryElement.addEventListener(
+        "click",
+        this.onSummaryClicked.bind(this)
+      );
+  }
+
   onSummaryClicked(event) {
-    event.preventDefault(),
-      !event.target.closest(".toggle-menu") &&
-      this.summaryElement.hasAttribute("data-href") &&
-      this.summaryElement.getAttribute("data-href").length > 0
-        ? (window.location.href = this.summaryElement.getAttribute("data-href"))
-        : (this.open = !this.open);
+    event.preventDefault();
+    this.open = !this.open;
   }
 
   async transition(value) {
@@ -449,19 +644,16 @@ class SubMenuDetails extends HTMLDetailsElement {
 customElements.define("submenu-details", SubMenuDetails, {
   extends: "details",
 });
+CustomElement.patchCustomElement("details", "submenu-details", SubMenuDetails);
 
 class CollapsibleRowDetails extends HTMLDetailsElement {
   constructor() {
     super(),
-      (this.summaryElement = this.firstElementChild),
-      (this.contentElement = this.lastElementChild),
-      (this._open = this.hasAttribute("open")),
-      (this.content = this.querySelector(".collapsible-row__content")),
-      this.summaryElement.addEventListener(
-        "click",
-        this.onSummaryClicked.bind(this)
-      ),
-      this.initialize();
+      (this.summaryElement = null),
+      (this.contentElement = null),
+      (this._open = false),
+      (this.content = null),
+      this.init();
   }
 
   get open() {
@@ -476,6 +668,18 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
         : value
         ? this.setAttribute("open", "")
         : this.removeAttribute("open"));
+  }
+
+  init() {
+    this.summaryElement = this.firstElementChild;
+    this.contentElement = this.lastElementChild;
+    this._open = this.hasAttribute("open");
+    this.content = this.querySelector(".collapsible-row__content");
+    this.summaryElement.addEventListener(
+      "click",
+      this.onSummaryClicked.bind(this)
+    );
+    this.initialize();
   }
 
   onSummaryClicked(event) {
@@ -511,6 +715,11 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
 customElements.define("collapsible-row", CollapsibleRowDetails, {
   extends: "details",
 });
+CustomElement.patchCustomElement(
+  "details",
+  "collapsible-row",
+  CollapsibleRowDetails
+);
 
 class RecentlyViewedProducts extends HTMLElement {
   constructor() {
@@ -1408,6 +1617,14 @@ class CartDrawer extends HTMLElement {
       : this.getAttribute("data-section-id");
   }
 
+  get formAction() {
+    return Array.from(this.querySelectorAll("form .btn"));
+  }
+
+  get cartViewId() {
+    return document.getElementById("cart-icon-bubble") || null;
+  }
+
   connectedCallback() {
     if (this.cartActionId) {
       this.cartActionId.addEventListener(
@@ -1415,6 +1632,11 @@ class CartDrawer extends HTMLElement {
         this.onShowCartDrawer.bind(this)
       );
     }
+    this.formAction.forEach((action) => {
+      action.addEventListener("click", (event) => {
+        action.classList.add("loading");
+      });
+    });
   }
 
   getSectionsToRender() {
@@ -1437,6 +1659,11 @@ class CartDrawer extends HTMLElement {
         id: this.sectionId,
         section: this.sectionId,
         selector: ".cart-drawer__form",
+      },
+      {
+        id: this.sectionId,
+        section: this.sectionId,
+        selector: ".drawer__footer-bottom",
       },
     ];
   }
@@ -1462,7 +1689,6 @@ class CartDrawer extends HTMLElement {
         parsedState.sections[section.id],
         section.selector
       );
-
       if (index === 1) {
         const nav_bar_id = document.querySelector("#cart-icon-bubble");
         if (
@@ -1550,7 +1776,7 @@ class CartEstimate extends HTMLElement {
   fetchShippingRates(address) {
     const { zip, country, province } = address;
     const url = `${window.Shopify.routes.root}cart/shipping_rates.json?shipping_address%5Bzip%5D=${zip}&shipping_address%5Bcountry%5D=${country}&shipping_address%5Bprovince%5D=${province}`;
-
+    this.actionEstimate.classList.add("loading");
     fetch(url)
       .then((response) => response.json())
       .then((data) => this.updateShippingMessage(data, address))
@@ -1561,11 +1787,16 @@ class CartEstimate extends HTMLElement {
     const message = this.querySelector(".addon-message");
     message.innerHTML = "";
 
-    if (data?.shipping_rates?.length) {
-      this.showShippingSuccess(message, data.shipping_rates, address);
+    if (data && data.shipping_rates) {
+      if (data?.shipping_rates?.length) {
+        this.showShippingSuccess(message, data.shipping_rates, address);
+      } else {
+        this.showShippingWarning(message);
+      }
     } else {
-      this.showShippingWarning(message);
+      this.showShippingError(message, data);
     }
+    this.actionEstimate.classList.remove("loading");
   }
 
   showShippingSuccess(message, rates, address) {
@@ -1678,13 +1909,8 @@ class CartNote extends HTMLElement {
   }
 
   handleNoteSave() {
+    this.cartActionId.classList.add("loading");
     this.noteUpdate();
-    this.classList.remove("open");
-    if (this.cartActionAddons) {
-      this.cartActionAddons
-        .closest(".drawer__cart-note")
-        .classList.remove("active");
-    }
   }
 
   handleNoteToggle(event) {
@@ -1713,133 +1939,20 @@ class CartNote extends HTMLElement {
     fetch(`${routes?.cart_update_url}`, {
       ...NextSkyTheme.fetchConfig(),
       ...{ body },
+    }).finally(() => {
+      this.cartActionId.classList.remove("loading");
+      this.classList.remove("open");
+      if (this.cartActionAddons) {
+        this.cartActionAddons
+          .closest(".drawer__cart-note")
+          .classList.remove("active");
+      }
     });
   }
 }
 
 if (!customElements.get("cart-note-element")) {
   customElements.define("cart-note-element", CartNote);
-}
-
-class CartGiftWrap extends HTMLElement {
-  constructor() {
-    super();
-  }
-
-  get cartActionId() {
-    return this.querySelector(".select-package") || null;
-  }
-
-  get cartActionAddons() {
-    return this.querySelector(".toggle-addons") || null;
-  }
-
-  get cartContentAddons() {
-    return this.querySelector(".cart-addons-content");
-  }
-
-  get cart() {
-    return document.querySelector("cart-drawer");
-  }
-
-  connectedCallback() {
-    if (this.cartActionId) {
-      this.cartActionId.addEventListener(
-        "click",
-        this.addGiftWrapClick.bind(this)
-      );
-    }
-
-    if (this.cartActionAddons) {
-      this.cartActionAddons.addEventListener(
-        "click",
-        this.handleGiftWrapToggle.bind(this)
-      );
-    }
-  }
-
-  addGiftWrapClick(event) {
-    event.preventDefault();
-    const product_checked = this.querySelector('input[type="radio"]:checked');
-    if (product_checked) {
-      const variant_id = this.querySelector(
-        'input[type="radio"]:checked'
-      ).value;
-      const body = JSON.stringify({
-        id: Number(variant_id),
-        quantity: 1,
-        sections: this.cart
-          .getSectionsToRender()
-          .map((section) => section.section),
-        sections_url: window.location.pathname,
-      });
-      this.cartActionId.classList.add("loading");
-      fetch(`${routes.cart_add_url}`, {
-        ...NextSkyTheme.fetchConfig(),
-        ...{ body },
-      })
-        .then((response) => {
-          return response.text();
-        })
-        .then((state) => {
-          const parsedState = JSON.parse(state);
-
-          this.cart.getSectionsToRender().forEach((section, index) => {
-            const sectionElement = section.selector
-              ? document.querySelector(section.selector)
-              : document.getElementById(section.id);
-            if (!sectionElement) {
-              return;
-            }
-            sectionElement.innerHTML = this.cart.getSectionInnerHTML(
-              parsedState.sections[section.id],
-              section.selector
-            );
-
-            if (index === 1) {
-              const nav_bar_id = document.querySelector("#cart-icon-bubble");
-              if (
-                nav_bar_id &&
-                nav_bar_id.querySelector(".cart-count") &&
-                sectionElement.querySelector(".cart-count")
-              ) {
-                nav_bar_id.querySelector(".cart-count").innerHTML =
-                  sectionElement.querySelector(".cart-count").innerHTML;
-              }
-            }
-          });
-        })
-        .catch(() => {
-          const errors =
-            document.getElementById("cart-errors") ||
-            document.getElementById("CartDrawer-CartErrors");
-          if (!errors) return;
-          errors.textContent = window.cartStrings.error;
-        })
-        .finally(() => {
-          this.cartActionId.classList.remove("loading");
-        });
-    }
-  }
-
-  handleGiftWrapToggle(event) {
-    event.preventDefault();
-    if (this.classList.contains("open")) {
-      this.classList.remove("open");
-      Motion.animate(this.cartContentAddons, { height: 0 }, { duration: 0.3 });
-    } else {
-      this.classList.add("open");
-      Motion.animate(
-        this.cartContentAddons,
-        { height: "auto" },
-        { duration: 0.3 }
-      );
-    }
-  }
-}
-
-if (!customElements.get("cart-gift-wrap-element")) {
-  customElements.define("cart-gift-wrap-element", CartGiftWrap);
 }
 
 class MiniCartUpSell extends HTMLElement {
@@ -1888,7 +2001,7 @@ class ProductTabs extends HTMLElement {
     this._tabContents = null;
     this._openAccordions = new Set();
     this._dot = this.querySelector(".product-tabs__dot");
-    this._rangeSlider = this.querySelector('range-slider');
+    this._rangeSlider = this.querySelector("range-slider");
     this._sizeDot = this.dataset.sizeDot;
 
     if (Shopify && Shopify.designMode) {
@@ -1943,64 +2056,51 @@ class ProductTabs extends HTMLElement {
     if (!this._tabs.length || !this._tabContents.length) return;
     const initialTab = this._tabs[0];
     this.selectedTab = initialTab.dataset.blockId;
-    this.setupDescriptions();
     this.setupEventListeners();
     this.updateTabDisplay(this.selectedTab, false);
   }
 
-  setupDescriptions() {
-    this._tabs.forEach((tab) => {
-      const description = tab.querySelector(
-        ".product-tabs__header-description"
-      );
-      if (description) {
-        description.style.height = "0";
-        if (description.textContent.trim().length > 0) {
-          tab.classList.add("has-description");
-        }
-      }
-    });
-  }
-
   updateDotPosition(activeTab, animate = true) {
     if (!this._dot || !activeTab || !this._rangeSlider) return;
-    
+
     let targetTab = activeTab;
-    if (!activeTab.classList.contains('product-tabs__header-item-js')) {
-      const jsTab = activeTab.querySelector('.product-tabs__header-item-js.active') || this.querySelector('.product-tabs__header-item-js.active');
+    if (!activeTab.classList.contains("product-tabs__header-item-js")) {
+      const jsTab =
+        activeTab.querySelector(".product-tabs__header-item-js.active") ||
+        this.querySelector(".product-tabs__header-item-js.active");
       if (jsTab) {
         targetTab = jsTab;
       }
     }
-    
+
     const dotWidth = parseInt(this._sizeDot || 26, 10);
     const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
     const tabRect = targetTab.getBoundingClientRect();
-    const tabCenter = tabRect.left + (tabRect.width / 2);
+    const tabCenter = tabRect.left + tabRect.width / 2;
     const relativeCenterX = tabCenter - rangeSliderRect.left;
-    const adjustedPosition = relativeCenterX - (dotWidth / 2);
-    
+    const adjustedPosition = relativeCenterX - dotWidth / 2;
+
     if (animate) {
-      if (typeof Motion !== 'undefined') {
+      if (typeof Motion !== "undefined") {
         Motion.animate(
           this._dot,
           { left: `${adjustedPosition}px` },
-          { duration: 0.2, easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)' }
+          { duration: 0.2, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
         );
       } else {
         this._dot.style.left = `${adjustedPosition}px`;
       }
     } else {
-      this._dot.style.transition = 'none';
+      this._dot.style.transition = "none";
       this._dot.style.left = `${adjustedPosition}px`;
       void this._dot.offsetWidth;
-      this._dot.style.transition = 'left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)';
+      this._dot.style.transition = "left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)";
     }
   }
 
   handleResize() {
     if (!this._rangeSlider) return;
-    const activeTab = this.querySelector('.product-tabs__header-item.active');
+    const activeTab = this.querySelector(".product-tabs__header-item.active");
     if (activeTab) {
       this.updateDotPosition(activeTab, false);
     }
@@ -2062,15 +2162,31 @@ class ProductTabs extends HTMLElement {
       const description = tab.querySelector(
         ".product-tabs__header-description"
       );
+      const mobileDescription = this.querySelector(".product-tabs__header-description-mobile");
       if (description && tab.classList.contains("accordion-open")) {
         tab.classList.remove("accordion-open");
         description.classList.remove("is-open");
         if (typeof Motion !== "undefined") {
           Motion.animate(
             description,
-            { height: 0 },
-            { duration: 0.3}
+            { 
+              opacity: [1, 0],
+              height: 0
+            },
+            { duration: 0.2 }
           );
+          
+          if (mobileDescription) {
+            Motion.animate(
+              mobileDescription,
+              {
+                opacity: [1, 0]
+              },
+              {
+                duration: 0.2
+              }
+            );
+          }
         } else {
           description.style.height = "0";
         }
@@ -2078,20 +2194,40 @@ class ProductTabs extends HTMLElement {
     });
     this._openAccordions.clear();
   }
-
+  
   toggleAccordion(tab, forceOpen = false) {
     const description = tab.querySelector(".product-tabs__header-description");
     if (!description || description.textContent.trim().length === 0) return;
+    
     const isOpen = tab.classList.contains("accordion-open");
-    if (!isOpen && forceOpen) {
+    const mobileDescription = this.querySelector(".product-tabs__header-description-mobile");
+    
+    if (!isOpen || forceOpen) {
       tab.classList.add("accordion-open");
       description.classList.add("is-open");
+      if (mobileDescription) {
+        mobileDescription.innerHTML = description.innerHTML;
+      }
       if (typeof Motion !== "undefined") {
         Motion.animate(
           description,
-          { height: "auto" },
-          { duration: 0.3}
+          { 
+            opacity: [0, 1],
+            height: "auto" 
+          },
+          { duration: 0.2 }
         );
+        if (mobileDescription) {
+          Motion.animate(
+            mobileDescription,
+            {
+              opacity: [0, 1]
+            },
+            {
+              duration: 0.2
+            }
+          );
+        }
       } else {
         description.style.height = "auto";
       }
@@ -2150,11 +2286,11 @@ class ProductTabs extends HTMLElement {
     } else {
       this.tabContents.forEach((content) => {
         content.classList.remove("active");
-        content.style.display = "none";
+        content.classList.add("hidden");
       });
 
       newContent.classList.add("active");
-      newContent.style.display = "block";
+      newContent.classList.remove("hidden");
       this._isAnimating = false;
     }
 
@@ -2177,17 +2313,17 @@ class ProductTabs extends HTMLElement {
             y: [0, 15],
           },
           {
-            duration: 0.3
+            duration: 0.2
           }
         ).finished;
       } catch (e) {
         console.error("Animation error:", e);
       }
       fromPanel.classList.remove("active");
-      fromPanel.style.display = "none";
+      fromPanel.classList.add("hidden");
     }
     toPanel.classList.add("active");
-    toPanel.style.display = "block";
+    toPanel.classList.remove("hidden");
     try {
       Motion.animate(
         toPanel,
@@ -2196,7 +2332,7 @@ class ProductTabs extends HTMLElement {
           y: [15, 0],
         },
         {
-          duration: 0.3
+          duration: 0.2
         }
       );
     } catch (e) {
@@ -2211,7 +2347,7 @@ class ProductTabs extends HTMLElement {
       });
     }
     if (this._rangeSlider) {
-      window.removeEventListener('resize', this.handleResize);
+      window.removeEventListener("resize", this.handleResize);
     }
   }
 }
@@ -2263,13 +2399,14 @@ class CollectionHover extends HTMLElement {
     this.imageHover.style.top = "-9999px";
 
     this.imageHover.style.transition = "none";
+    this.imageHover.style.display = "flex";
   }
 
   updateImageSize() {
     const maxWidth = Math.min(300, window.innerWidth * 0.5);
     const maxHeight = Math.min(300, window.innerHeight * 0.5);
 
-    this.imageHover.style.width = `${maxWidth}px`;
+    this.imageHover.style.width = `120px`;
     this.imageHover.style.height = "auto";
     this.imageHover.style.maxHeight = `${maxHeight}px`;
   }
@@ -2492,7 +2629,7 @@ class CarouselMobile extends HTMLElement {
     }
   }
 }
-customElements.define('carousel-mobile', CarouselMobile);
+customElements.define("carousel-mobile", CarouselMobile);
 
 class NavBar extends HTMLElement {
   constructor() {
