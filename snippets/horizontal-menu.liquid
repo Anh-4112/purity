@@ -48,11 +48,11 @@
   {%- endif -%}
   <ul class="menu list-unstyled{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% elsif menu_mobile != blank%} px-gutter-x py-12{% endif %}">
     {% for child_link in link.links %}
-      <li class="menu-link slideIn-animate{% if type != 'classic' and menu_mobile != blank %} py-6{% endif %}{% if child_link.links.size > 0 %} have-child{% if menu_mega == blank %} relative{% endif %}{% endif %}{% if menu_mega == blank and menu_mobile == blank %} px-20{% endif %}">
+      <li class="menu-link{% if child_link.links.size > 0 %} have-child{% if menu_mega == blank %} relative{% endif %}{% else %} py-6{% endif %}{% if menu_mega == blank and menu_mobile == blank %} px-20{% endif %}">
         {%- if child_link.links.size > 0 -%}
           {% if menu_mega != blank %}
             <a
-              class="menu__item level-2 inline-block heading-style h6 mb-20 inside-out-effect relative"
+              class="menu__item level-2 inline-block heading-style h6 mb-20 border-animation relative"
               href="{{ link.url }}"
               aria-label="{{ grandchild_link.title }}"
             >
@@ -65,10 +65,10 @@
               open
             >
               <summary
-                class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %} flex align-center gap-5 space-between inside-out-hover"
+                class="menu__item level-2 py-6{% if type != 'classic' %} fs-18 heading-style{% endif %} flex align-center gap-5 space-between inside-out-hover"
                 aria-label="{{ child_link.title }}"
               >
-                <span class="menu__title inside-out-effect py-6 relative">
+                <span class="menu__title border-animation relative">
                   {{- child_link.title -}}
                 </span>
                 <span
@@ -84,9 +84,9 @@
           {% endif %}
           <ul class="sub-children-menu list-unstyled overflow-hidden-mb{% if menu_mega == blank and menu_mobile == blank %} overflow-hidden{% endif %}{% if menu_mobile != blank %} {% endif %}">
             {% for grandchild_link in child_link.links %}
-              <li class="menu-link{% if menu_mega == blank and menu_mobile == blank %} px-5{% endif %}">
+              <li class="menu-link py-6{% if menu_mega == blank and menu_mobile == blank %} px-10{% endif %}">
                 <a
-                  class="menu__item level-3 inline-block py-6 inside-out-effect relative{% if menu_mega == blank and menu_mobile == blank %} px-5{% endif %}"
+                  class="menu__item level-3 inline-block border-animation relative"
                   href="{{ grandchild_link.url }}"
                   aria-label="{{ grandchild_link.title }}"
                 >
@@ -97,7 +97,7 @@
           </ul>
         {%- else -%}
           <a
-            class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %} inline-block py-6 inside-out-effect relative{% if menu_mega != blank %} heading-style h6{% endif %}"
+            class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %} inline-block border-animation relative{% if menu_mega != blank %} heading-style h6{% endif %}"
             aria-label="{{ child_link.title }}"
             href="{{ child_link.url }}"
           >

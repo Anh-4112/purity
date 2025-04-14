@@ -15,17 +15,32 @@
     assign show_search_price = false
   endif
 %}
+{% style %}
+  {% if search_type != 'popup' %}
+    .search-results__item > *:first-child{
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+    {% else %}
+    :is(.search-pages-articles, .search-results__item) > *:first-child{
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+  {% endif %}
+{% endstyle %}
 <script type="module" src="{{ 'search.js' | asset_url }}"></script>
 <action-search
   id="{{ section.id }}"
-  class="modal pointer-none active-modal-js {% if search_type == 'drawer' %}search-type-drawer{% else %}search-type-popup{% endif %}"
+  class="modal pointer-none active-modal-js{% if search_type == 'drawer' %} search-type-drawer{% else %}search-type-popup{% endif %}"
   data-section-id="{{ section.id }}"
   data-type="{{ search_type }}"
   tabindex="0"
   role="dialog"
 >
   <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-  <div class="modal-inner color-default transition-drawer invisible drawer drawer-right fixed right-0 z-15 inset-y-0 bg-white w-full">
+  <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer invisible drawer{% if search_type != 'popup' %} drawer-right{% else %} drawer-top pt-1025-60{% endif %} fixed right-0 z-15 inset-y-0 bg-white w-full">
     <button
       is="button-close-model"
       class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
@@ -35,13 +50,13 @@
         <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
       </svg>
     </button>
-    <div class="drawer__body h-full overflow-y-auto custom-scrollbar">
-      <div class="search__header">
+    <div class="drawer__body h-full flex column">
+      <div class="search__header{% if search_type != 'popup' %} drawer__header drawer-spacing border-bottom{% endif %}">
         {% if search_type == 'popup' %}
           {%- if logo_img != blank -%}
             <a
               href="{{ routes.root_url }}"
-              class="header__heading-link"
+              class="header__heading-link hidden block-1025 text-center fs-0 mb-20"
               aria-label="{{ shop.name }}"
             >
               {%- assign img_alt = logo_img.alt | default: shop.name | escape -%}
@@ -50,7 +65,7 @@
                 logo_img
                 | image_url: width: logo_width
                 | image_tag:
-                  class: 'logo',
+                  class: 'logo mx-auto',
                   widths: '50, 100, 150, 200, 250, 300, 400, 500, 600',
                   height: logo_height,
                   width: logo_width,
@@ -60,35 +75,40 @@
             </a>
           {%- endif -%}
         {% endif %}
-        <h3 class="heading-color">
+        <h3 class="drawer__heading h5 hidden-1025">
           {{ 'general.search.name' | t }}
         </h3>
       </div>
       <div
         id="search-form"
-        class="search-form"
+        class="search-form{% if search_type != 'popup' %} overflow-y-auto drawer-spacing custom-scrollbar grow-1{% else %} flex-1{% endif %}"
+        style="--padding-block: 2.4rem;"
       >
         <form
           action="{{ routes.search_url }}"
           id="search_mini_form"
           method="get"
           role="search"
-          class="search search-modal__form"
+          class="search search-modal__form loading_snippet{% if search_type == 'popup' %} h-full{% endif %}"
+          {% if search_type == 'popup' %}
+            style="--max-width: 60rem;"
+          {% endif %}
         >
           <input type="hidden" name="options[prefix]" value="last">
-          <div class="field">
+          <div class="field bg-secondary px-25 btn-rounded flex align-center gap-10 mb-20 relative{% if search_type == 'popup' %} max-w-custom mx-auto{% endif %}">
             <button
               type="submit"
-              class="button btn-reset search__button"
+              class="button btn-reset search__button relative fs-0"
               tabindex="0"
               aria-label="{{ 'general.search.search' | t }}"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="22px">
-                <path d="M 19 3 C 13.488281 3 9 7.488281 9 13 C 9 15.394531 9.839844 17.589844 11.25 19.3125 L 3.28125 27.28125 L 4.71875 28.71875 L 12.6875 20.75 C 14.410156 22.160156 16.605469 23 19 23 C 24.511719 23 29 18.511719 29 13 C 29 7.488281 24.511719 3 19 3 Z M 19 5 C 23.429688 5 27 8.570313 27 13 C 27 17.429688 23.429688 21 19 21 C 14.570313 21 11 17.429688 11 13 C 11 8.570313 14.570313 5 19 5 Z"></path>
+              <svg width="20" height="20" fill="none" class="heading-color">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.587 17.424a7.837 7.837 0 1 0 0-15.674 7.837 7.837 0 0 0 0 15.674ZM18.25 18.25 16.6 16.6"/>
               </svg>
             </button>
             <input
-              class="search__input field__input"
+              class="search__input field__input flex-1"
+              style="--input-bg:transparent;--inputs-border-width: 0;--input-padding: 0;--input-height: 6rem;--input-placeholder-color: var(--color-heading);"
               type="search"
               name="q"
               placeholder="{{ 'general.search.search' | t }}"
@@ -102,12 +122,18 @@
               {% endif %}
             >
             <label class="visually-hidden" for="Search-In-Modal"> {{ 'general.search.search' | t }}</label>
-            <div class="search__action-right">
-              <button type="reset" class="search__reset" aria-label="{{ 'general.search.clear' | t }}">
-                <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-                  <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
-                </svg>
-                <div class="loading__search"></div>
+            <div
+              class="search__action-right inline-flex align-center inset-y-0 right-28 absolute"
+            >
+              <button
+                type="reset"
+                class="search__reset btn-reset fs-0 relative"
+                aria-label="{{ 'general.search.clear' | t }}"
+              >
+                <span
+                  class="icon-rotator opacity-0 w-custom h-custom inline-flex rounded-50 transition-short"
+                  style="--width: 1.5rem;--height: 1.5rem;"
+                ></span>
               </button>
             </div>
           </div>
@@ -115,8 +141,11 @@
             {%- capture link_search_keyword -%}
               {{ routes.search_url }}?type=product&options%5Bprefix%5D=last&q=
             {%- endcapture -%}
-            <div id="search-keyword" class="search-keyword">
-              <ul class="search-keyword-list">
+            <div
+              id="search-keyword"
+              class="search-keyword{% if search_type == 'popup' %} max-w-custom mx-auto{% endif %}"
+            >
+              <ul class="search-keyword-list list-unstyled flex wrap gap-20{% if search_type == 'popup' %} justify-center-1025{% endif %}">
                 {%- assign search_popular_keywords = search_popular_keywords
                   | replace: ' ,', ','
                   | replace: ', ', ','
@@ -143,34 +172,39 @@
           {%- endif -%}
           {%- if search_product_recommended != blank or predictive_search_enabled != false -%}
             <div
-              class="search-content"
+              class="search-content pt-20 mt-20 border-top{% if search_type != 'popup' %} pt-1025-30 mt-1025-30 border-top {% else %} mt-50 pt-1025-0 border-1025-0{% endif %}"
               role="listbox"
             >
               {%- if predictive_search_enabled != false -%}
-                <div class="predictive-search"></div>
+                <div class="predictive-search{% if search_type == 'popup' %} border-top{% endif %}"></div>
               {%- endif -%}
               {%- if search_product_recommended != blank -%}
-                <div class="recommend-search" data-predictive-search>
+                <div
+                  class="recommend-search{% if search_type == 'popup' %} container{% endif %}"
+                  data-predictive-search
+                >
                   {%- if search_product_recommended -%}
                     {%- assign sizes = '(min-width: 1200px) calc((1200px -  30px * 3) * 0.2), (min-width: 768px) calc( (100vw - 30px - 30px * 2 ) * 0.33), 80px' -%}
                     <template class="template-recommended-default">
                       <div class="search-product">
-                        <h3 class="heading-color">
+                        <div class="heading-color mb-20 h5">
                           {{ 'general.search.popular_products' | t }}
-                        </h3>
-                        <div class="grid-cols">
+                        </div>
+                        <div class="flex gap-20 column">
                           {%- for product in search_product_recommended -%}
                             {% render 'card-product',
                               card_product: product,
                               disable_hover_image: true,
                               disable_badge: true,
                               disable_rate: true,
+                              disable_tag: true,
                               disable_price: show_search_price,
                               disable_vendor: show_search_vendor,
                               disable_color_swatches: true,
                               disable_quickview: true,
                               disable_show_video: true,
-                              sizes: sizes
+                              sizes: sizes,
+                              type: 'list'
                             %}
                           {%- endfor -%}
                         </div>
@@ -179,9 +213,9 @@
                     {% if search_type == 'popup' %}
                       <template class="template-recommended-popup">
                         <div class="search-product">
-                          <h3 class="heading-color">
+                          <div class="heading-color h5 mb-20">
                             {{ 'general.search.popular_products' | t }}
-                          </h3>
+                          </div>
                           <slide-section
                             class="swiper hover-action"
                             data-section-id="{{ section.id }}"
@@ -192,7 +226,7 @@
                             data-spacing="15"
                             data-mobile="5"
                             data-desktop="5"
-                            data-tablet="5"
+                            data-tablet="3"
                           >
                             {%- render 'swiper-navigation', show_on_hover: true -%}
                             <div class="swiper-wrapper">
@@ -202,6 +236,7 @@
                                   disable_hover_image: true,
                                   disable_badge: true,
                                   disable_rate: true,
+                                  disable_tag: true,
                                   disable_price: show_search_price,
                                   disable_vendor: show_search_vendor,
                                   disable_color_swatches: true,

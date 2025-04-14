@@ -1,7 +1,7 @@
 import { initSlide } from "module-slide";
 import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
 import { CustomElement } from "module-safariElementPatch";
-import * as AddToCart from "module-addToCart";
+import { ProductForm } from "module-addToCart";
 import * as NextSkyTheme from "global";
 
 LazyLoadEventHover.run();
@@ -2056,23 +2056,8 @@ class ProductTabs extends HTMLElement {
     if (!this._tabs.length || !this._tabContents.length) return;
     const initialTab = this._tabs[0];
     this.selectedTab = initialTab.dataset.blockId;
-    this.setupDescriptions();
     this.setupEventListeners();
     this.updateTabDisplay(this.selectedTab, false);
-  }
-
-  setupDescriptions() {
-    this._tabs.forEach((tab) => {
-      const description = tab.querySelector(
-        ".product-tabs__header-description"
-      );
-      if (description) {
-        description.style.height = "0";
-        if (description.textContent.trim().length > 0) {
-          tab.classList.add("has-description");
-        }
-      }
-    });
   }
 
   updateDotPosition(activeTab, animate = true) {
@@ -2177,11 +2162,31 @@ class ProductTabs extends HTMLElement {
       const description = tab.querySelector(
         ".product-tabs__header-description"
       );
+      const mobileDescription = this.querySelector(".product-tabs__header-description-mobile");
       if (description && tab.classList.contains("accordion-open")) {
         tab.classList.remove("accordion-open");
         description.classList.remove("is-open");
         if (typeof Motion !== "undefined") {
-          Motion.animate(description, { height: 0 }, { duration: 0.3 });
+          Motion.animate(
+            description,
+            { 
+              opacity: [1, 0],
+              height: 0
+            },
+            { duration: 0.2 }
+          );
+          
+          if (mobileDescription) {
+            Motion.animate(
+              mobileDescription,
+              {
+                opacity: [1, 0]
+              },
+              {
+                duration: 0.2
+              }
+            );
+          }
         } else {
           description.style.height = "0";
         }
@@ -2189,16 +2194,40 @@ class ProductTabs extends HTMLElement {
     });
     this._openAccordions.clear();
   }
-
+  
   toggleAccordion(tab, forceOpen = false) {
     const description = tab.querySelector(".product-tabs__header-description");
     if (!description || description.textContent.trim().length === 0) return;
+    
     const isOpen = tab.classList.contains("accordion-open");
-    if (!isOpen && forceOpen) {
+    const mobileDescription = this.querySelector(".product-tabs__header-description-mobile");
+    
+    if (!isOpen || forceOpen) {
       tab.classList.add("accordion-open");
       description.classList.add("is-open");
+      if (mobileDescription) {
+        mobileDescription.innerHTML = description.innerHTML;
+      }
       if (typeof Motion !== "undefined") {
-        Motion.animate(description, { height: "auto" }, { duration: 0.3 });
+        Motion.animate(
+          description,
+          { 
+            opacity: [0, 1],
+            height: "auto" 
+          },
+          { duration: 0.2 }
+        );
+        if (mobileDescription) {
+          Motion.animate(
+            mobileDescription,
+            {
+              opacity: [0, 1]
+            },
+            {
+              duration: 0.2
+            }
+          );
+        }
       } else {
         description.style.height = "auto";
       }
@@ -2257,11 +2286,11 @@ class ProductTabs extends HTMLElement {
     } else {
       this.tabContents.forEach((content) => {
         content.classList.remove("active");
-        content.style.display = "none";
+        content.classList.add("hidden");
       });
 
       newContent.classList.add("active");
-      newContent.style.display = "block";
+      newContent.classList.remove("hidden");
       this._isAnimating = false;
     }
 
@@ -2284,17 +2313,17 @@ class ProductTabs extends HTMLElement {
             y: [0, 15],
           },
           {
-            duration: 0.3,
+            duration: 0.2
           }
         ).finished;
       } catch (e) {
         console.error("Animation error:", e);
       }
       fromPanel.classList.remove("active");
-      fromPanel.style.display = "none";
+      fromPanel.classList.add("hidden");
     }
     toPanel.classList.add("active");
-    toPanel.style.display = "block";
+    toPanel.classList.remove("hidden");
     try {
       Motion.animate(
         toPanel,
@@ -2303,7 +2332,7 @@ class ProductTabs extends HTMLElement {
           y: [15, 0],
         },
         {
-          duration: 0.3,
+          duration: 0.2
         }
       );
     } catch (e) {

@@ -80,7 +80,7 @@
     <div class="header__inner grid gap logo-{{ section_st.logo_position }} align-center">
       <toggle-menu class="mobile-menu-toggle hidden-1025">
         <button
-          class="btn-reset btn-toggle text-start pointer"
+          class="btn-reset btn-toggle text-start pointer header-color"
           aria-controls="Menu-Drawer"
           aria-label="{{ 'accessibility.toggle_menu' | t }}"
         >
@@ -520,7 +520,7 @@
                   </span>
                   <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
                   {%- if cart != empty -%}
-                    <div class="cart-count rounded-50 inline-flex content-center absolute">
+                    <div class="cart-count rounded-50 inline-flex content-center absolute bg-primary fs-10">
                       {%- if cart.item_count < 100 -%}
                         <span class="count">{{ cart.item_count }}</span>
                       {%- else -%}
