@@ -1,6 +1,6 @@
 {% assign block_st = block.settings %}
 <div
-  class="block__description mb-custom fs-{{ block_st.description_size }}"
+  class="block__description mb-custom fs-{{ block_st.description_size }} {% if section.settings.show_description_on_mobile %}hidden-mobile{% endif %}"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >

@@ -23,6 +23,7 @@
     onload="this.media='all'"
   >
 {% endif %}
+<script type="module" src="{{ 'media-gallery.js' | asset_url }}"></script>
 <quickview-drawer
   id="Product-{{ section.id }}"
   data-section-id="{{ section.id }}"
@@ -123,7 +124,7 @@
               section_st: section_st,
               product: product,
               section: section,
-              type_section: 'quickview'
+              type_section: 'quick_view'
             %}
           </div>
         {% endif %}

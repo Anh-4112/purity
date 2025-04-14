@@ -1,7 +1,7 @@
 import { initSlide } from "module-slide";
 import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
 import { CustomElement } from "module-safariElementPatch";
-import * as AddToCart from "module-addToCart";
+import { ProductForm } from "module-addToCart";
 import * as NextSkyTheme from "global";
 
 LazyLoadEventHover.run();
@@ -309,7 +309,12 @@ class SiteHeader extends HTMLElement {
 customElements.define("site-header", SiteHeader, {
   extends: "header",
 });
-CustomElement.patchCustomElement("header", "site-header", SiteHeader);
+CustomElement.observeAndPatchCustomElements({
+  "site-header": {
+    tagElement: "header",
+    classElement: SiteHeader,
+  },
+});
 
 class ToggleMenu extends HTMLElement {
   constructor() {
@@ -341,7 +346,7 @@ class ToggleMenu extends HTMLElement {
         ),
       100
     );
-    CustomElement.patchAllCustomElements({
+    CustomElement.observeAndPatchCustomElements({
       "button-close-model": {
         tagElement: "button",
         classElement: ButtonCloseModel,
@@ -399,11 +404,12 @@ class ButtonCloseModel extends HTMLButtonElement {
 customElements.define("button-close-model", ButtonCloseModel, {
   extends: "button",
 });
-CustomElement.patchCustomElement(
-  "button",
-  "button-close-model",
-  ButtonCloseModel
-);
+CustomElement.observeAndPatchCustomElements({
+  "button-close-model": {
+    tagElement: "button",
+    classElement: ButtonCloseModel,
+  },
+});
 
 const megaMenuCount = new WeakMap();
 class DetailsMegaMenu extends HTMLDetailsElement {
@@ -578,11 +584,12 @@ customElements.define("details-mega-menu", DetailsMegaMenu, {
   extends: "details",
 }),
   megaMenuCount.set(DetailsMegaMenu, 0);
-CustomElement.patchCustomElement(
-  "details",
-  "details-mega-menu",
-  DetailsMegaMenu
-);
+CustomElement.observeAndPatchCustomElements({
+  "details-mega-menu": {
+    tagElement: "details",
+    classElement: DetailsMegaMenu,
+  },
+});
 
 class SubMenuDetails extends HTMLDetailsElement {
   constructor() {
@@ -644,7 +651,12 @@ class SubMenuDetails extends HTMLDetailsElement {
 customElements.define("submenu-details", SubMenuDetails, {
   extends: "details",
 });
-CustomElement.patchCustomElement("details", "submenu-details", SubMenuDetails);
+CustomElement.observeAndPatchCustomElements({
+  "submenu-details": {
+    tagElement: "details",
+    classElement: SubMenuDetails,
+  },
+});
 
 class CollapsibleRowDetails extends HTMLDetailsElement {
   constructor() {
@@ -715,11 +727,12 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
 customElements.define("collapsible-row", CollapsibleRowDetails, {
   extends: "details",
 });
-CustomElement.patchCustomElement(
-  "details",
-  "collapsible-row",
-  CollapsibleRowDetails
-);
+CustomElement.observeAndPatchCustomElements({
+  "collapsible-row": {
+    tagElement: "details",
+    classElement: CollapsibleRowDetails,
+  },
+});
 
 class RecentlyViewedProducts extends HTMLElement {
   constructor() {
@@ -1036,6 +1049,7 @@ class VariantInput extends HTMLElement {
     super(),
       (this.show_more = this.querySelector(".number-showmore")),
       (this.size_chart = this.querySelector(".open-size-chart")),
+      (this.event_target = null),
       (this.swatch = this.querySelector(
         ".product-card-swatch-js .variant-input"
       )),
@@ -1137,6 +1151,7 @@ class VariantInput extends HTMLElement {
 
   async onVariantChange(event) {
     event.preventDefault();
+    this.event_target = event.target;
     const selectedValues = Array.from(
       this.querySelectorAll('input[type="radio"]:checked')
     ).map((radio) => radio.value);
@@ -1166,12 +1181,12 @@ class VariantInput extends HTMLElement {
           responseText,
           "text/html"
         );
-        onSuccess(parsedHTML, this.sectionId);
+        onSuccess(parsedHTML, this.sectionId, this.event_target);
       })
       .catch((error) => console.error("Error:", error));
   }
 
-  updateProductInfo(parsedHTML, sectionId) {
+  updateProductInfo(parsedHTML, sectionId, eventTarget) {
     const updateContent = (blockClass) => {
       const source = parsedHTML
         .getElementById(`Product-${sectionId}`)
@@ -1181,6 +1196,11 @@ class VariantInput extends HTMLElement {
         .querySelector(`.${blockClass}`);
       if (source && destination) {
         destination.innerHTML = source.innerHTML;
+        if (blockClass == "block-product__variant-picker") {
+          destination
+            .querySelector(`input[value="${eventTarget.value}"]:checked`)
+            .focus({ focusVisible: true });
+        }
       }
     };
 
@@ -2162,28 +2182,30 @@ class ProductTabs extends HTMLElement {
       const description = tab.querySelector(
         ".product-tabs__header-description"
       );
-      const mobileDescription = this.querySelector(".product-tabs__header-description-mobile");
+      const mobileDescription = this.querySelector(
+        ".product-tabs__header-description-mobile"
+      );
       if (description && tab.classList.contains("accordion-open")) {
         tab.classList.remove("accordion-open");
         description.classList.remove("is-open");
         if (typeof Motion !== "undefined") {
           Motion.animate(
             description,
-            { 
+            {
               opacity: [1, 0],
-              height: 0
+              height: 0,
             },
             { duration: 0.2 }
           );
-          
+
           if (mobileDescription) {
             Motion.animate(
               mobileDescription,
               {
-                opacity: [1, 0]
+                opacity: [1, 0],
               },
               {
-                duration: 0.2
+                duration: 0.2,
               }
             );
           }
@@ -2194,14 +2216,16 @@ class ProductTabs extends HTMLElement {
     });
     this._openAccordions.clear();
   }
-  
+
   toggleAccordion(tab, forceOpen = false) {
     const description = tab.querySelector(".product-tabs__header-description");
     if (!description || description.textContent.trim().length === 0) return;
-    
+
     const isOpen = tab.classList.contains("accordion-open");
-    const mobileDescription = this.querySelector(".product-tabs__header-description-mobile");
-    
+    const mobileDescription = this.querySelector(
+      ".product-tabs__header-description-mobile"
+    );
+
     if (!isOpen || forceOpen) {
       tab.classList.add("accordion-open");
       description.classList.add("is-open");
@@ -2211,9 +2235,9 @@ class ProductTabs extends HTMLElement {
       if (typeof Motion !== "undefined") {
         Motion.animate(
           description,
-          { 
+          {
             opacity: [0, 1],
-            height: "auto" 
+            height: "auto",
           },
           { duration: 0.2 }
         );
@@ -2221,10 +2245,10 @@ class ProductTabs extends HTMLElement {
           Motion.animate(
             mobileDescription,
             {
-              opacity: [0, 1]
+              opacity: [0, 1],
             },
             {
-              duration: 0.2
+              duration: 0.2,
             }
           );
         }
@@ -2313,7 +2337,7 @@ class ProductTabs extends HTMLElement {
             y: [0, 15],
           },
           {
-            duration: 0.2
+            duration: 0.2,
           }
         ).finished;
       } catch (e) {
@@ -2332,7 +2356,7 @@ class ProductTabs extends HTMLElement {
           y: [15, 0],
         },
         {
-          duration: 0.2
+          duration: 0.2,
         }
       );
     } catch (e) {
