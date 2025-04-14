@@ -48,7 +48,7 @@
     <div
       class="newsletter__form-container flex column text-{{ text_alignment }} justify-content-{{ text_alignment }}"
     >
-      {%- form 'customer', class: 'newsletter__form flex' -%}
+      {%- form 'customer', class: 'newsletter__form flex', id: 'NewsletterForm--{{ section.id }}' -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
         <div class="flex gap-10 wrap w-full justify-content-{{ text_alignment }}">
           <input
@@ -80,11 +80,22 @@
             class="btn btn-primary newsletter__button"
             aria-label="{%- if button_label != blank -%}{{ button_label }} {%- else -%} {{ 'subscribe.button_label' | t }} {% endif %}"
           >
-            {%- if button_label != blank -%}
-              {{ button_label }}
-            {%- else -%}
-              {{ 'newsletter.button_label' | t }}
-            {% endif %}
+            <span class="hidden-on-load">
+              {%- if button_label != blank -%}
+                {{ button_label }}
+              {%- else -%}
+                {{ 'newsletter.button_label' | t }}
+              {% endif -%}
+            </span>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              class="spin opacity-0 pointer-none icon-load absolute"
+            >
+              <use href="#icon-load"></use>
+            </svg>
           </button>
         </div>
         {%- if form.errors -%}
@@ -106,7 +117,23 @@
     </div>
   </div>
 </div>
+<script type="module">
+  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
 
+  document.addEventListener('DOMContentLoaded', () => {
+    setupFormValidation({
+      formSelector: 'form.newsletter__form',
+      fields: {
+        email: (value) =>
+          !value
+            ? '{{ "customer.validate.email" | t }}'
+            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            ? '{{ "customer.validate.email_invalid" | t }}'
+            : '',
+      },
+    });
+  });
+</script>
 {% schema %}
 {
   "name": "t:sections.newsletter.name",

@@ -371,7 +371,7 @@
               </div>
             {%- endif -%}
             <div class="comment-content">
-              {% form 'new_comment', article %}
+              {% form 'new_comment', article, id: 'commentArticle', novalidate: 'novalidate' %}
                 {%- liquid
                   assign post_message = 'blogs.article.success'
                   if blog.moderated? and comment.status == 'unapproved'
@@ -538,7 +538,26 @@
                 {%- endif -%}
 
                 <div class="comment-action">
-                  <input type="submit" class="btn" value="{{ 'blogs.article.post' | t }}">
+                  <button
+                    type="submit"
+                    class="comment-form__button btn btn-primary"
+                    name="commit"
+                    id="Subscribe-{{ section.id }}"
+                    aria-label="{{ 'subscribe.button_label' | t }}"
+                  >
+                    <span class="hidden-on-load">
+                      {{ 'blogs.article.post' | t }}
+                    </span>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      class="spin opacity-0 pointer-none icon-load absolute"
+                    >
+                      <use href="#icon-load"></use>
+                    </svg>
+                  </button>
                 </div>
               {% endform %}
             </div>
@@ -578,6 +597,25 @@
       "name": {{ shop.name | json }}
     }
   }
+</script>
+
+<script type="module">
+  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
+  document.addEventListener('DOMContentLoaded', () => {
+    setupFormValidation({
+      formSelector: 'form#commentArticle',
+      fields: {
+        'comment[email]': (value) =>
+          !value
+            ? '{{ "customer.validate.email" | t }}'
+            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            ? '{{ "customer.validate.email_invalid" | t }}'
+            : '',
+        'comment[author]': (value) => (!value ? '{{ 'customer.validate.name' | t }}' : ''),
+        'comment[body]': (value) => (!value ? '{{ 'customer.validate.comment' | t }}' : ''),
+      },
+    });
+  });
 </script>
 
 {% schema %}

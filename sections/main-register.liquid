@@ -64,9 +64,6 @@
                 placeholder="{{ 'customer.register.first_name' | t }}*"
                 class="w-full"
               >
-              <svg class="transition absolute" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <use href="#icon-account"></use>
-              </svg>
               <label for="RegisterForm-FirstName" class="visually-hidden">
                 {{ 'customer.register.first_name' | t }}
               </label>
@@ -83,9 +80,6 @@
                 placeholder="{{ 'customer.register.last_name' | t }}*"
                 class="w-full"
               >
-              <svg class="transition absolute" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <use href="#icon-lastname"></use>
-              </svg>
               <label for="RegisterForm-LastName" class="visually-hidden">
                 {{ 'customer.register.last_name' | t }}
               </label>
@@ -112,9 +106,6 @@
             class="w-full"
             required
           >
-          <svg class="transition absolute" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <use href="#icon-mail"></use>
-          </svg>
           <label for="RegisterForm-email" class="visually-hidden">
             {{ 'customer.register.email' | t }}
             <span class="required">*</span>
@@ -143,10 +134,13 @@
             required
             class="w-full"
           >
-          <svg class="transition absolute" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <use href="#icon-password"></use>
-          </svg>
-          <show-pass-word class="show-pass-word transition absolute inline-flex right-0">
+          <show-pass-word
+            class="show-pass-word transition absolute inline-flex right-0"
+            role="button"
+            tabindex="0"
+            aria-label="{{ 'customer.register.password' | t }}"
+            aria-pressed="false"
+          >
             <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">
               <use href="#icon-hide-password"></use>
             </svg>
