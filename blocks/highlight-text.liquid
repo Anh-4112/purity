@@ -4,6 +4,11 @@
   style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
   {{ block.shopify_attributes }}
 >
+  {%- if block_st.highlight_text_icon == 'star' -%}
+    {%- render 'icon-star' -%}
+  {%- elsif block_st.highlight_text_icon == 'dot' -%}
+    {%- render 'icon-dot' -%}
+  {%- endif -%}
   {{ block_st.highlight_text | escape }}
 </div>
 {% schema %}
@@ -35,6 +40,26 @@
       ],
       "default": "",
       "label": "t:sections.all.content_header.heading_size.size"
+    },
+    {
+      "type": "select",
+      "id": "highlight_text_icon",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__1.label"
+        },
+        {
+          "value": "star",
+          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__2.label"
+        },
+        {
+          "value": "dot",
+          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__3.label"
+        }
+      ],
+      "default": "none",
+      "label": "t:sections.all.content_setting.highlight_text.settings.icons.label"
     },
     {
       "type": "color",
