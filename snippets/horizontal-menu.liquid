@@ -62,7 +62,11 @@
             <details
               class="details-normal"
               is="submenu-details"
-              open
+              {% if type != 'classic' and menu_mobile == blank %}
+                open
+              {%- elsif menu_mobile != blank -%}
+                open
+              {% endif %}
             >
               <summary
                 class="menu__item level-2 py-6{% if type != 'classic' %} fs-18 heading-style{% endif %} flex align-center gap-5 space-between inside-out-hover"

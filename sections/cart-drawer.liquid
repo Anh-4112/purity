@@ -270,25 +270,30 @@
                                   </a>
                                   <cart-remove-button
                                     id="CartDrawer-Remove-{{ item.index | plus: 1 }}"
-                                    class="inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
                                     data-index="{{ item.index | plus: 1 }}"
                                   >
-                                    <svg
-                                      width="12"
-                                      height="12"
-                                      viewBox="0 0 12 12"
-                                      fill="none"
-                                      class="icon-zoom transition-short will-change text-color hidden-on-load"
+                                    <button
+                                      type="button"
+                                      class="inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
+                                      aria-label="{{- 'sections.cart.remove_title' | t: title: item.title -}}"
                                     >
-                                      <use href="#icon-close" />
-                                    </svg>
-                                    <span class="capitalize currentColor lh-1 visually-hidden">
-                                      {{- 'sections.cart.remove_title' | t: title: item.title -}}
-                                    </span>
-                                    <span
-                                      class="icon-rotator absolute top-0 right-0 rounded-50 opacity-0 w-custom h-custom"
-                                      style="--width: 1.5rem;--height: 1.5rem;"
-                                    ></span>
+                                      <svg
+                                        width="12"
+                                        height="12"
+                                        viewBox="0 0 12 12"
+                                        fill="none"
+                                        class="icon-zoom transition-short will-change text-color hidden-on-load"
+                                      >
+                                        <use href="#icon-close" />
+                                      </svg>
+                                      <span class="capitalize currentColor lh-1 visually-hidden">
+                                        {{- 'sections.cart.remove_title' | t: title: item.title -}}
+                                      </span>
+                                      <span
+                                        class="icon-rotator absolute top-0 right-0 rounded-50 opacity-0 w-custom h-custom"
+                                        style="--width: 1.5rem;--height: 1.5rem;"
+                                      ></span>
+                                    </button>
                                   </cart-remove-button>
                                 </div>
                                 {%- if item.product.has_only_default_variant == false

@@ -586,7 +586,12 @@
                     {% endif %}
                     class="header-banner flex align-center"
                   >
-                    {% render 'responsive-image', image: section_st.banner_image, type: 'other', image_alt: image_alt %}
+                    {% render 'responsive-image',
+                      image: section_st.banner_image,
+                      type: 'other',
+                      image_alt: image_alt,
+                      disable_lazy_loading: true
+                    %}
                   </a>
                 </div>
               {%- endif -%}
