@@ -83,24 +83,32 @@
             {%- if cart_empty_collection != blank -%}
               <ul class="drawer__empty-collections list-unstyled flex column gap-15 w-full mt-30 mt-1025-40">
                 {% for collection in cart_empty_collection %}
-                  <li class="w-full">
-                    {% liquid
-                      assign collection_media = collection.featured_image
-                      assign collection_alt = collection.featured_image.alt | default: collection.title
-                      assign disable_lazy_loading = false
-                      if collection.metafields.custom.collection_empty.value.collection_image
-                        assign collection_media = collection.metafields.custom.collection_empty.value.collection_image
-                        assign disable_lazy_loading = true
-                      endif
-                    %}
+                  {% liquid
+                    assign collection_media = collection.featured_image
+                    assign collection_alt = collection.featured_image.alt | default: collection.title
+                    assign disable_lazy_loading = false
+                    if collection.metafields.custom.collection_empty.value.collection_image
+                      assign collection_media = collection.metafields.custom.collection_empty.value.collection_image
+                      assign disable_lazy_loading = true
+                    endif
+                  %}
+                  <li
+                    class="w-full"
+                    {% if collection_media %}
+                      style="--color-heading: {{ theme_st.overlay_image_color }};--color-text: {{ theme_st.overlay_image_color }};"
+                    {% endif %}
+                  >
                     <a
-                      class="block collection-item__media--ratio rounded relative"
+                      class="collection-item__media--ratio rounded relative hover-effect{% if collection_media %} w-full flex align-end{% endif %}"
+                      {% if collection_media %}
+                        style="--aspect-ratio: 20/7;"
+                      {% endif %}
                       draggable="false"
                       href="{{ collection.url }}"
                       aria-label="{{- collection.title -}}"
                     >
                       {%- if collection_media -%}
-                        <div class="rounded" style="--aspect-ratio: 20/7;">
+                        <div class="rounded inset-0 absolute" style="--aspect-ratio: 20/7;">
                           {% render 'responsive-image',
                             type: 'other',
                             image: collection_media,
@@ -109,17 +117,22 @@
                           %}
                         </div>
                       {%- endif -%}
-                      <div class="collection_info flex gap-10 align-center{% if collection_media %} absolute bottom-0 inset-x-0 p-gutter-x{% endif %}">
+                      <div class="collection_info relative z-1 w-full flex gap-10 space-between align-center{% if collection_media %} p-gutter-x{% endif %}">
                         <div class="collection-item__info">
                           <p class="h6">{{- collection.title -}}</p>
                           {% if collection.metafields.custom.collection_empty.value.collection_description != blank %}
-                            <span class="collection-item__description">
+                            <span class="collection-item__description text-color">
                               {{- collection.metafields.custom.collection_empty.value.collection_description -}}
                             </span>
                           {%- endif -%}
                         </div>
                         {%- if collection_media -%}
-                          <span class="collection-item__icon"></span>
+                          <span
+                            class="collection-list__icon wh-1025-50 w-custom h-custom flex content-center bg-white blur rounded-50 text-color btn-hover overflow-hidden transition-short flex-auto"
+                            style="--width:4.6rem;--height:4.6rem;"
+                          >
+                            {%- render 'icon-arrow-top' -%}
+                          </span>
                         {%- endif -%}
                       </div>
                     </a>
@@ -282,7 +295,7 @@
                                         height="12"
                                         viewBox="0 0 12 12"
                                         fill="none"
-                                        class="icon-zoom transition-short will-change text-color hidden-on-load"
+                                        class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
                                       >
                                         <use href="#icon-close" />
                                       </svg>
@@ -569,76 +582,79 @@
                     </button>
                   </div>
                   <div class="cart-addons-content overflow-hidden h-0 fs-small">
-                    <p class="heading-color">{{ 'sections.cart.gift.info' | t }}</p>
-                    {%- if select_product_gift_wrap != blank -%}
-                      <ul class="drawer__gift-wrap-product list-unstyled flex column gap-15 mt-20 p-20 drawer__gift-wrap-product list-unstyled flex column gap-15 p-20 bg-secondary rounded overflow-hidde">
-                        {% for product in select_product_gift_wrap %}
-                          {%- if product.variants.size == 1 -%}
-                            {%- liquid
-                              assign p_media = product.featured_media
-                              assign alt_features = p_media.alt | default: product.title | escape
-                            -%}
-                            <li class="product-item flex gap-20">
-                              <label
-                                for="gift-wrap-{{ product.id }}"
-                                class="flex gap-15 align-center ps-35 relative w-full"
-                              >
-                                <input
-                                  type="radio"
-                                  name="gift-wrap"
-                                  id="gift-wrap-{{ product.id }}"
-                                  value="{{ product.selected_or_first_available_variant.id }}"
-                                  class="absolute opacity-0 pointer custom-ratio"
-                                  {% if forloop.first %}
-                                    checked
-                                  {% endif %}
+                    <div class="cart-addons-content-inner">
+                      <p class="heading-color">{{ 'sections.cart.gift.info' | t }}</p>
+                      {%- if select_product_gift_wrap != blank -%}
+                        <ul class="drawer__gift-wrap-product list-unstyled flex column gap-15 mt-20 p-20 drawer__gift-wrap-product list-unstyled flex column gap-15 p-20 bg-secondary rounded overflow-hidde">
+                          {% for product in select_product_gift_wrap %}
+                            {%- if product.variants.size == 1 -%}
+                              {%- liquid
+                                assign p_media = product.featured_media
+                                assign alt_features = p_media.alt | default: product.title | escape
+                              -%}
+                              <li class="product-item flex gap-20">
+                                <label
+                                  for="gift-wrap-{{ product.id }}"
+                                  class="flex gap-15 align-center ps-35 relative w-full"
                                 >
-                                <div
-                                  class="dot ratio-dot absolute inset-y-0 left-0 my-auto w-custom h-custom rounded-50 border overflow-hidden bg-white"
-                                  style="--width: 2rem; --height: 2rem;--color-border: var(--btn-primary-bg-color);"
-                                ></div>
-                                {% if p_media %}
-                                  <div
-                                    class="image rounded-50 flex-auto w-custom h-custom overflow-hidden"
-                                    style="--width: 6rem; --height: 6rem;--aspect-ratio: 1.0"
+                                  <input
+                                    type="radio"
+                                    name="gift-wrap"
+                                    id="gift-wrap-{{ product.id }}"
+                                    value="{{ product.selected_or_first_available_variant.id }}"
+                                    class="absolute opacity-0 pointer custom-ratio"
+                                    {% if forloop.first %}
+                                      checked
+                                    {% endif %}
                                   >
-                                    {% render 'responsive-image',
-                                      type: 'product',
-                                      class: 'product__img',
-                                      image: p_media,
-                                      image_alt: alt_features
-                                    %}
+                                  <div
+                                    class="dot ratio-dot absolute inset-y-0 left-0 my-auto w-custom h-custom rounded-50 border overflow-hidden bg-white"
+                                    style="--width: 2rem; --height: 2rem;--color-border: var(--btn-primary-bg-color);"
+                                  ></div>
+                                  {% if p_media %}
+                                    <div
+                                      class="image rounded-50 flex-auto w-custom h-custom overflow-hidden"
+                                      style="--width: 6rem; --height: 6rem;--aspect-ratio: 1.0"
+                                    >
+                                      {% render 'responsive-image',
+                                        type: 'product',
+                                        class: 'product__img',
+                                        image: p_media,
+                                        image_alt: alt_features
+                                      %}
+                                    </div>
+                                  {% endif %}
+                                  <div
+                                    class="info-product flex-auto w-custom"
+                                    style="{% if p_media %}--width: calc(100% - 7.5rem);{% else %}--width: calc(100% - 1.5rem);{% endif %}"
+                                  >
+                                    <div class="word-break gap-3">
+                                      <span class="heading-style lh-normal">{{- product.title -}}</span>
+                                      /
+                                      {%- render 'price',
+                                        scope: 'item',
+                                        product: product,
+                                        class: 'lh-normal inline-block'
+                                      -%}
+                                    </div>
+                                    {{ product.description }}
                                   </div>
-                                {% endif %}
-                                <div
-                                  class="info-product flex-auto w-custom"
-                                  style="{% if p_media %}--width: calc(100% - 7.5rem);{% else %}--width: calc(100% - 1.5rem);{% endif %}"
-                                >
-                                  <div class="word-break gap-3">
-                                    <span class="heading-style lh-normal">{{- product.title -}}</span>
-                                    /
-                                    {%- render 'price',
-                                      scope: 'item',
-                                      product: product,
-                                      class: 'lh-normal inline-block'
-                                    -%}
-                                  </div>
-                                  {{ product.description }}
-                                </div>
-                              </label>
-                            </li>
-                          {%- endif -%}
-                        {% endfor %}
-                      </ul>
-                    {%- endif -%}
-                    <div class="addon-actions mt-20 mb-40">
-                      <button
-                        type="button"
-                        class="select-package btn btn-primary w-full text-center"
-                        aria-label="{{- 'sections.cart.gift.select' | t }}"
-                      >
-                        {{ 'sections.cart.gift.select' | t }}
-                      </button>
+                                </label>
+                              </li>
+                            {%- endif -%}
+                          {% endfor %}
+                        </ul>
+                      {%- endif -%}
+                      <div class="addon-actions mt-20 mb-40">
+                        <button
+                          type="button"
+                          class="select-package btn btn-primary w-full text-center"
+                          aria-label="{{- 'sections.cart.gift.select' | t }}"
+                        >
+                          <span class="hidden-on-load transition-short"> {{ 'sections.cart.gift.select' | t }}</span>
+                          {%- render 'loader' -%}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -764,7 +780,10 @@
                         class="estimate btn btn-primary mt-20 w-full"
                         data-action="shipping"
                       >
-                        {{ 'sections.cart.shipping.estimate_shipping_button' | t }}
+                        <span class="hidden-on-load transition-short">
+                          {{ 'sections.cart.shipping.estimate_shipping_button' | t -}}
+                        </span>
+                        {%- render 'loader' -%}
                       </button>
                     </div>
                     <div class="addon-message mt-10 empty-hidden"></div>
@@ -800,14 +819,16 @@
               aria-label="{{ 'sections.cart.view_cart' | t }}"
               class="btn btn-outline"
             >
-              <span>{{ 'sections.cart.view_cart' | t }}</span>
+              <span class="hidden-on-load transition-short">{{ 'sections.cart.view_cart' | t }}</span>
+              {%- render 'loader' -%}
             </a>
             <button
               type="submit"
               name="checkout"
               class="grow-1 btn btn-primary"
             >
-              {{ 'sections.cart.checkout' | t }}
+              <span class="hidden-on-load transition-short"> {{ 'sections.cart.checkout' | t }}</span>
+              {%- render 'loader' -%}
             </button>
           </form>
         </div>

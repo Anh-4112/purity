@@ -93,16 +93,8 @@
             class="relative actions-load-more btn btn-outline inline-flex content-center remove-underline pointer transition btn-text-transform load-more{% if pagination == 'infinity' %} infinit-scrolling{% endif %}"
             aria-label="{{ 'general.pagination.next' | t }}"
           >
-            <span class="hidden-on-load">{{ 'general.pagination.load_more' | t }}</span>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              class="spin opacity-0 pointer-none icon-load absolute"
-            >
-              <use href="#icon-load"></use>
-            </svg>
+            <span class="hidden-on-load transition-short">{{ 'general.pagination.load_more' | t }}</span>
+            {%- render 'loader' -%}
           </a>
         {%- endif -%}
       </div>

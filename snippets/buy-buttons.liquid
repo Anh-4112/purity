@@ -98,7 +98,7 @@
                   disabled
                 {% endif %}
               >
-                <span class="btn-label hidden-on-load">
+                <span class="btn-label hidden-on-load transition-short">
                   {%- if product.selected_or_first_available_variant.inventory_management == null -%}
                     {{ 'products.product.add_to_cart' | t }}
                   {%- else -%}
@@ -113,15 +113,7 @@
                     {%- endif -%}
                   {%- endif -%}
                 </span>
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 14 14"
-                  fill="none"
-                  class="spin opacity-0 pointer-none icon-load absolute transition-short"
-                >
-                  <use href="#icon-load"></use>
-                </svg>
+                {%- render 'loader' -%}
               </button>
             </div>
           </div>
