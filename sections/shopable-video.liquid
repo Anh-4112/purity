@@ -1,8 +1,14 @@
 {{ 'section-shopable-video.css' | asset_url | stylesheet_tag }}
+{{ 'main-product.css' | asset_url | stylesheet_tag }}
+{{ 'product.css' | asset_url | stylesheet_tag }}
 <script type="module" src="{{ 'section-shopable-video.js' | asset_url }}" defer="defer"></script>
 
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
+
+  assign product_image_ratio = theme_st.product_image_ratio
+
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -143,7 +149,7 @@
               endif
             %}
             <div class="swiper-slide" {{ block.shopify_attributes }}>
-              <shopable-item>
+              <shopable-item class="rounded" data-product="Product-{{ block.id }}">
                 <div class="relative">
                   {% if poster_image != blank or local_video != blank %}
                     <video-local
@@ -172,7 +178,7 @@
                           playsinline
                           poster="{{ poster }}"
                           data-src="{{ source_url }}"
-                          title="{{ video_alt }}"
+                          class="rounded"
                         ></video>
                       {% else %}
                         {% if poster_image != blank %}
@@ -234,7 +240,7 @@
       </shopable-video>
     {% endif %}
     {% if sticky and section.blocks[0].settings.local_video != blank %}
-      <shopable-sticky class="sticky-video block right-0 rounded pointer transition-drawer">
+      <shopable-item class="sticky-video block right-0 rounded pointer transition-drawer" data-product="Product-{{ section.blocks[0].id }}">
         {% liquid
           assign block_st = section.blocks[0].settings
           assign local_video = block_st.local_video
@@ -326,8 +332,248 @@
             </svg>
           </icon-close>
         </div>
-      </shopable-sticky>
+      </shopable-item>
     {% endif %}
+    <template>
+      <modal-popup
+        class="modal active-modal-js modal-shopable-video"
+        tabindex="0"
+        role="dialog"
+      >
+        <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
+        <div
+          class="modal-popup-inner transition rounded max-w-custom m-auto invisible fixed inset-0 z-15 bg-white w-full"
+          style="--max-width: 80rem;"
+        >
+          <button
+            is="button-close-model"
+            class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
+            aria-label="Close"
+          >
+            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
+              <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
+            </svg>
+          </button>
+          <div class="modal-nav">
+            <button
+              class="modal-nav__prev"
+              aria-label="Previous item"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"></path>
+              </svg>
+            </button>
+            <button
+              class="modal-nav__next"
+              aria-label="Next item"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"></path>
+              </svg>
+            </button>
+          </div>
+          {% for block in section.blocks %}
+            <div class="drawer__body drawer__body-item rte h-full overflow-y-auto custom-scrollbar" id="Product-{{ block.id }}">
+              <div
+                class="flex flex-cols wrap"
+                style="--gap: 0px; --col-desktop: 2;--col-tablet: 1; --col-number: 1;"
+              >
+                {% liquid
+                  assign block_st = block.settings
+                  assign card_product = block_st.product
+                  assign local_video = block_st.local_video
+                  assign poster_image = block_st.poster_image
+                  assign video_ratio = '3/4'
+                  if section_st.video_ratio != 'adapt'
+                    case section_st.video_ratio
+                      when 'square'
+                        assign video_ratio = '1/1'
+                      when 'landscape'
+                        assign video_ratio = '4/3'
+                      when 'portrait'
+                        assign video_ratio = '3/4'
+                    endcase
+                  else
+                    if poster_image != blank
+                      assign video_ratio = poster_image.aspect_ratio
+                    elsif local_video != blank
+                      assign video_ratio = local_video.aspect_ratio
+                    endif
+                  endif
+  
+                  assign image_alt = poster_image.alt
+                  if image_alt == blank
+                    assign image_alt = 'general.image.image_alt_default' | t
+                  endif
+  
+                  assign video_alt = local_video.alt
+                  if video_alt == blank
+                    assign video_alt = 'accessibility.video' | t
+                  endif
+  
+                  assign product_form_id = 'product-form-' | append: block.id
+                %}
+                {% if poster_image != blank or local_video != blank %}
+                  <video-local
+                    class="video-item--ratio"
+                    style="--aspect-ratio: {{ video_ratio }};"
+                  >
+                    {% if local_video != blank %}
+                      {%- liquid
+                        assign source = local_video.sources
+                        assign source_url = ''
+                        for s in source
+                          if s.format == 'mp4'
+                            assign source_url = s.url
+                            break
+                          endif
+                        endfor
+                        assign poster = local_video.preview_image | image_url: width: 500
+                        if poster_image != blank
+                          assign poster = poster_image | image_url: width: 500
+                        endif
+                      -%}
+                      <video
+                        preload="auto"
+                        loop
+                        muted
+                        playsinline
+                        autoplay
+                        poster="{{ poster }}"
+                        data-src="{{ source_url }}"
+                      ></video>
+                    {% else %}
+                      {% if poster_image != blank %}
+                        {% render 'responsive-image',
+                          type: 'banner',
+                          container: section_st.section_width,
+                          image: poster_image,
+                          image_alt: image_alt,
+                          padding: column_gap_slide,
+                          column: items_per_row
+                        %}
+                      {% else %}
+                        {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {% endif %}
+                    {% endif %}
+                  </video-local>
+                {% else %}
+                  <div
+                    class="video-item--ratio"
+                    style="--aspect-ratio: {{ video_ratio }};"
+                  >
+                    {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {% endif %}
+                <div class="popup-information">
+                  <slide-section
+                    class="swiper"
+                    data-section-id="{{ block.id }}"
+                    data-autoplay="false"
+                    data-effect="slide"
+                    data-loop="false"
+                    data-speed="500"
+                    data-spacing="10"
+                    data-mobile="2"
+                    data-desktop="2"
+                    data-tablet="2"
+                  >
+                    {%- render 'swiper-navigation' -%}
+                    <div class="swiper-wrapper">
+                      {% for media in block_st.product.media %}
+                        {%- liquid
+                          assign ratio = '3/4'
+                          if product_image_ratio != 'adapt'
+                            case product_image_ratio
+                              when 'square'
+                                assign ratio = '1/1'
+                              when 'landscape'
+                                assign ratio = '4/3'
+                              when 'portrait'
+                                assign ratio = '3/4'
+                            endcase
+                          else
+                            assign ratio = media.aspect_ratio
+                          endif
+                        -%}
+                        <div class="swiper-slide">
+                          <div
+                            class="product__media"
+                            style="--aspect-ratio: {{ ratio }};"
+                          >
+                            {%- assign alt_features = media.alt | default: card_product.title | escape -%}
+                            {% render 'responsive-image', type: 'product', image: media, image_alt: alt_features %}
+                          </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </slide-section>
+                  <div class="block-product__badges">
+                    {% render 'product-badges', card_product: card_product, type: 'price_badges' %}
+                  </div>
+                  <a
+                    aria-label="{{ card_product.title }}"
+                    class="product__name heading-style block"
+                    href="{{ card_product.url }}"
+                  >
+                    {{- card_product.title -}}
+                  </a>
+                  {% render 'review', review_star: true, product: card_product %}
+                  <div class="block-product__price">
+                    <div class="price">
+                      {%- render 'price', scope: 'detail', product: card_product, price_class: 'price--large' -%}
+                      {%- if cart.tax_included or shop.shipping_policy.body != blank -%}
+                        <div class="product__tax caption rte mt-5 fs-small">
+                          {%- if cart.tax_included -%}
+                            {{ 'products.product.include_taxes' | t }}
+                          {%- endif -%}
+                          {%- if shop.shipping_policy.body != blank -%}
+                            {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                          {%- endif -%}
+                        </div>
+                      {%- endif -%}
+                      {%- if card_product != blank -%}
+                        <div>
+                          {%- assign product_form_installment_id = 'product-form-installment-' | append: section.blocks[0].id -%}
+                          {%- form 'product', card_product, id: product_form_installment_id, class: 'installment caption-large' -%}
+                            <input type="hidden" name="id" value="{{ card_product.selected_or_first_available_variant.id }}">
+                            {{ form | payment_terms }}
+                          {%- endform -%}
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                  <div class="block-product__variant-picker">
+                    {%- render 'variant-swatches', product: card_product, scope: 'detail' , type: 'shopable', block_id: block.id -%}
+                  </div>
+                  <div class="block-product__buttons">                
+                  {%- if card_product.metafields.custom.external_affiliate == blank -%}
+                    <div class="product-detail__buy-buttons">
+                      {%- render 'buy-buttons',
+                        product: card_product,
+                        section_id: block.id,
+                        product_form_id: product_form_id
+                      -%}
+                    </div>
+                  {%- else -%}
+                    <a
+                      href="{{ card_product.metafields.custom.external_affiliate.value.external_link }}"
+                      rel="nofollow"
+                      target="_blank"
+                      class="btn product-form__submit relative text-center w-full whitespace-nowrap animation flash-move block btn-primary no-underline"
+                    >
+                      {{- card_product.metafields.custom.external_affiliate.value.button_text -}}
+                    </a>
+                  {%- endif -%}
+  
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </modal-popup>
+    </template>
   </div>
 </div>
 

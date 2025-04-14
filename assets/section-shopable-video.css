@@ -28,7 +28,7 @@
     display: block;
 }
 
-shopable-sticky{
+.sticky-video{
   width: 15rem;
   position: fixed;
   top: 50%;
@@ -38,6 +38,56 @@ shopable-sticky{
   transition: var(--transition-popup);
 }
 
-shopable-sticky.active{
+.sticky-video.active{
   transform: translateX(-3rem);
+}
+
+.modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
+  pointer-events: none;
+  padding: 0 20px;
+}
+
+.modal-nav__prev,
+.modal-nav__next {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: background-color 0.3s ease;
+  pointer-events: auto;
+  color: #000;
+}
+
+.modal-nav__prev:hover,
+.modal-nav__next:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.modal-nav__prev {
+  margin-right: auto;
+}
+
+.modal-nav__next {
+  margin-left: auto;
+}
+
+@media (max-width: 767px) {
+  .modal-nav__prev,
+  .modal-nav__next {
+    width: 30px;
+    height: 30px;
+  }
 }

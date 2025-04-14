@@ -154,6 +154,9 @@
     <variant-input
       class="product-variants-js flex column wrap gap-25 pt-25 border-top"
       data-section-id="{{ section.id }}"
+      {% if type == 'shopable' %}
+        data-block-id="{{ block_id }}"
+      {% endif %}
       data-product-url="{{ product.url }}"
     >
       {%- for option in product.options_with_values -%}
