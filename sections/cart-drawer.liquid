@@ -462,18 +462,7 @@
                   </div>
                 {%- endif -%}
                 <div class="cart-upsell-product">
-                  <slide-section
-                    class="swiper"
-                    data-section-id="{{ section.id }}"
-                    data-autoplay="false"
-                    data-effect="slide"
-                    data-loop="false"
-                    data-speed="500"
-                    data-spacing="0"
-                    data-mobile="1"
-                    data-desktop="1"
-                    data-tablet="1"
-                  >
+                  <cart-upsell-product class="swiper">
                     {%- render 'swiper-navigation', show_on_hover: true -%}
                     <div class="swiper-wrapper">
                       {%- if recommendation_product_type != 'auto' -%}
@@ -505,7 +494,7 @@
                       {%- endif -%}
                     </div>
                     <div class="swiper-pagination mt-20"></div>
-                  </slide-section>
+                  </cart-upsell-product>
                 </div>
               </mini-cart-recommendations>
             </div>
