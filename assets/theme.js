@@ -476,7 +476,8 @@ class DetailsMegaMenu extends HTMLDetailsElement {
     event.preventDefault(),
       this.menuTrigger === "hover" &&
       this.summaryElement.hasAttribute("data-href") &&
-      this.summaryElement.getAttribute("data-href").length > 0
+      this.summaryElement.getAttribute("data-href").length > 0 &&
+      (event.pointerType || this._open === true)
         ? (window.location.href = this.summaryElement.getAttribute("data-href"))
         : (this.open = !this.open);
   }
@@ -518,7 +519,9 @@ class DetailsMegaMenu extends HTMLDetailsElement {
   detectEscKeyboard(event) {
     if (event.code === "Escape") {
       const targetMenu = event.target.closest("details[open]");
-      targetMenu && (targetMenu.open = !1);
+      targetMenu &&
+        ((targetMenu.open = !1),
+        targetMenu.firstElementChild.focus({ focusVisible: true }));
     }
   }
   detectFocusOut(event) {
@@ -625,11 +628,22 @@ class SubMenuDetails extends HTMLDetailsElement {
         "click",
         this.onSummaryClicked.bind(this)
       );
+    this.initialize();
   }
 
   onSummaryClicked(event) {
     event.preventDefault();
     this.open = !this.open;
+  }
+
+  async initialize() {
+    if (this.content) {
+      Motion.animate(
+        this.content,
+        this._open ? { height: "auto" } : { height: 0 },
+        { duration: 0 }
+      );
+    }
   }
 
   async transition(value) {
@@ -699,14 +713,19 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
   }
 
   async initialize() {
-    Motion.animate(
-      this.content,
-      this._open ? { height: "auto" } : { height: 0 },
-      { duration: 0 }
-    );
+    if (this.content) {
+      Motion.animate(
+        this.content,
+        this._open ? { height: "auto" } : { height: 0 },
+        { duration: 0 }
+      );
+    }
   }
 
   async transition(value) {
+    if (!this.content) {
+      return;
+    }
     return value
       ? (Motion.animate(
           this.content,
