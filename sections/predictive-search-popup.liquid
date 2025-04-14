@@ -108,7 +108,7 @@
         {%- if search_page_articles -%}
           </div>
         {%- endif -%}
-        <div class="search-results__item col-1025-remaining w-full py-50 ps-50">
+        <div class="search-results__item{% if search_page_articles %} col-1025-remaining{% endif %} w-full py-50 ps-50">
           {%- if predictive_search.resources.queries.size > 0 -%}
             <div class="search-keyword">
               <div class="search-keyword-title heading-color mb-20 h6">

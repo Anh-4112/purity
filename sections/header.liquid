@@ -175,10 +175,10 @@
                           endif
                         -%}
                         <div
-                          class="mega-menu py-40 submenu transition invisible submenu-desktop custom-scrollbar overflow-auto {{ section_st.dropdowns_animation }} border-top overflow-y-auto absolute inset-x-0 z-2 bg-white shadow"
+                          class="mega-menu submenu transition invisible submenu-desktop {{ section_st.dropdowns_animation }} border-top absolute inset-x-0 z-2 bg-white shadow"
                           style="--col-mega-width: {{ mega_width }}%; --gap: 20px; --delay: 0.05s;"
                         >
-                          <div class="container flex wrap gap">
+                          <div class="container flex wrap gap py-40 custom-scrollbar overflow-auto">
                             {%- if link.links.size > 0 -%}
                               <div
                                 class="menu-list flex-1"
@@ -287,12 +287,6 @@
                                     {%- endfor -%}
                                   </div>
                                 {%- when 'menu_product' -%}
-                                  <link
-                                    rel="stylesheet"
-                                    href="{{ 'product.css' | asset_url }}"
-                                    media="print"
-                                    onload="this.media='all'"
-                                  >
                                   <div class="col-mega mega-product">
                                     {%- liquid
                                       assign heading = last_block.settings.heading
@@ -754,12 +748,6 @@
                                         {%- endfor -%}
                                       </div>
                                     {%- when 'menu_product' -%}
-                                      <link
-                                        rel="stylesheet"
-                                        href="{{ 'product.css' | asset_url }}"
-                                        media="print"
-                                        onload="this.media='all'"
-                                      >
                                       <div class="col-mega mega-product px-gutter-x py-12">
                                         {%- liquid
                                           assign heading = last_block.settings.heading
