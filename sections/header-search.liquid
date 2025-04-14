@@ -28,6 +28,27 @@
       padding-top: 0;
       border-top: 0;
     }
+    @media (max-width: 1024.98px) {
+      .recommend-search {
+        padding: 0;
+      }
+    }
+    @media (min-width: 1025px) {
+      .drawer__body{
+        overflow: auto;
+      }
+      .predictive-search:has(.no-results){
+        border: 0;
+      }
+      .modal__close{
+        right: 3rem;
+        top: 3rem;
+        border: 1px solid var(--color-border);
+        border-radius: 50%;
+        width: 5.6rem;
+        height: 5.6rem;
+      }
+    }
   {% endif %}
 {% endstyle %}
 <script type="module" src="{{ 'search.js' | asset_url }}"></script>
@@ -40,9 +61,9 @@
   role="dialog"
 >
   <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-  <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer invisible drawer{% if search_type != 'popup' %} drawer-right{% else %} drawer-top pt-1025-60{% endif %} fixed right-0 z-15 inset-y-0 bg-white w-full">
-    <div class="drawer__body h-full flex column">
-      <div class="search__header{% if search_type != 'popup' %} drawer__header drawer-spacing border-bottom{% endif %}">
+  <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer invisible drawer{% if search_type != 'popup' %} drawer-right{% else %} drawer-top{% endif %} fixed right-0 z-15 inset-y-0 bg-white w-full">
+    <div class="drawer__body h-full flex column{% if search_type == 'popup' %} pt-1025-60 custom-scrollbar{% endif %}">
+      <div class="search__header drawer__header drawer-spacing border-bottom flex gap-10 justify-center-1025 space-between{% if search_type == 'popup' %} p-1025-0 border-1025-0{% endif %}">
         {% if search_type == 'popup' %}
           {%- if logo_img != blank -%}
             <a
@@ -66,12 +87,12 @@
             </a>
           {%- endif -%}
         {% endif %}
-        <h3 class="drawer__heading h5 hidden-1025">
+        <div class="drawer__heading h5{% if search_type == 'popup' %} hidden-1025{% endif %}">
           {{ 'general.search.name' | t }}
-        </h3>
+        </div>
         <button
           is="button-close-model"
-          class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
+          class="modal__close pointer btn-reset w-30 h-full inline-flex align-center flex-end{% if search_type == 'popup' %} btn-hover overflow-hidden justify-center-1025 absolute-1025{% endif %}"
           aria-label="Close"
         >
           <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
@@ -81,21 +102,21 @@
       </div>
       <div
         id="search-form"
-        class="search-form{% if search_type != 'popup' %} overflow-y-auto drawer-spacing custom-scrollbar grow-1{% else %} flex-1{% endif %}"
-        style="--padding-block: 2.4rem;"
+        class="search-form drawer-spacing{% if search_type != 'popup' %} overflow-y-auto custom-scrollbar grow-1{% else %} flex-1 overflow-x-scroll-mb{% endif %}"
+        style="--padding-block: 2.4rem;{% if search_type == 'popup' %}--padding-block-desktop: 0;--padding-inline-desktop: 0;{% endif %}"
       >
         <form
           action="{{ routes.search_url }}"
           id="search_mini_form"
           method="get"
           role="search"
-          class="search search-modal__form loading_snippet{% if search_type == 'popup' %} h-full{% endif %}"
+          class="search search-modal__form loading_snippet{% if search_type == 'popup' %} flex column h-full{% endif %}"
           {% if search_type == 'popup' %}
             style="--max-width: 60rem;"
           {% endif %}
         >
           <input type="hidden" name="options[prefix]" value="last">
-          <div class="field bg-secondary px-25 btn-rounded flex align-center gap-10 mb-20 relative{% if search_type == 'popup' %} max-w-custom mx-auto{% endif %}">
+          <div class="field bg-secondary px-25 btn-rounded flex align-center gap-10 mb-20 relative{% if search_type == 'popup' %} w-full max-w-custom mx-auto{% endif %}">
             <button
               type="submit"
               class="button btn-reset search__button relative fs-0"
@@ -143,7 +164,7 @@
             {%- endcapture -%}
             <div
               id="search-keyword"
-              class="search-keyword{% if search_type == 'popup' %} max-w-custom mx-auto{% endif %}"
+              class="search-keyword{% if search_type == 'popup' %} w-full max-w-custom mx-auto{% endif %}"
             >
               <ul class="search-keyword-list list-unstyled flex wrap gap-20{% if search_type == 'popup' %} justify-center-1025{% endif %}">
                 {%- assign search_popular_keywords = search_popular_keywords
@@ -172,15 +193,17 @@
           {%- endif -%}
           {%- if search_product_recommended != blank or predictive_search_enabled != false -%}
             <div
-              class="search-content pt-20 mt-20 border-top{% if search_type != 'popup' %} pt-1025-30 mt-1025-30 border-top {% else %} mt-50 pt-1025-0 border-1025-0{% endif %}"
+              class="search-content pt-20 mt-20 border-top{% if search_type != 'popup' %} pt-1025-30 mt-1025-30{% else %} mt-1025-50 pt-1025-0 border-1025-0 grow-1{% endif %}"
               role="listbox"
             >
               {%- if predictive_search_enabled != false -%}
-                <div class="predictive-search{% if search_type == 'popup' %} border-top{% endif %}"></div>
+                <div
+                  class="predictive-search{% if search_type == 'popup' %} border-top-1025 h-full{% endif %}"
+                ></div>
               {%- endif -%}
               {%- if search_product_recommended != blank -%}
                 <div
-                  class="recommend-search{% if search_type == 'popup' %} container{% endif %}"
+                  class="recommend-search{% if search_type == 'popup' %} container h-full{% endif %}"
                   data-predictive-search
                 >
                   {%- if search_product_recommended -%}
