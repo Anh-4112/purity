@@ -141,6 +141,9 @@ export function eventModal(
     }
     if (actionModal == "delay" && element.querySelector(".model_media")) {
       element.classList.add("delay");
+      setTimeout(() => {
+        element.querySelector(".model_media").classList.add("open");
+      }, 350);
     }
     root.style.setProperty("padding-right", getScrollBarWidth.init() + "px");
     trapFocus(element);
