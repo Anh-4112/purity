@@ -99,7 +99,7 @@
               </summary>
             </details>
           {% endif %}
-          <ul class="sub-children-menu mt-20 list-unstyled overflow-hidden-mb{% if menu_mega == blank and menu_mobile == blank %} overflow-hidden{% endif %}{% if menu_mobile != blank %} {% endif %}">
+          <ul class="sub-children-menu list-unstyled overflow-hidden-mb{% if menu_mega == blank and menu_mobile == blank %} overflow-hidden{% else %} mt-20{% endif %}{% if menu_mobile != blank %} {% endif %}">
             {% for grandchild_link in child_link.links %}
               <li class="menu-link py-6{% if menu_mega == blank and menu_mobile == blank %} px-10{% endif %}">
                 <a
