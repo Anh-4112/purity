@@ -56,10 +56,10 @@
     assign items_per_row_tablet = items_per_row | minus: 1
   endif
 
-  assign center_slide = 'false'
+  assign center_slide = false
   assign remainder = items_per_row | modulo: 2
   if remainder == 1
-    assign center_slide = 'true'
+    assign center_slide = true
   endif
 -%}
 {%- capture style -%}
@@ -148,7 +148,7 @@
               endif
             %}
             <div class="swiper-slide" {{ block.shopify_attributes }}>
-              <shopable-item class="rounded block" data-product="Product-{{ block.id }}" data-position="{{ forloop.index | minus: 1 }}">
+              <shopable-item class="pointer rounded block" data-product="Product-{{ block.id }}" data-position="{{ forloop.index | minus: 1 }}">
                 <div class="relative">
                   {% if poster_image != blank or local_video != blank %}
                     <video-local
@@ -202,15 +202,29 @@
                       {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
                     </div>
                   {% endif %}
-                  {% if local_video != blank %}
-                    <button
-                      aria-label="{{ 'accessibility.mute_button.video' | t }}"
-                      class="mute-button pointer absolute z-1 bottom-15 right-15 border-0 inline-flex align-center justify-content-center"
-                    >
-                      {% render 'icon-mute-open' %}
-                      {% render 'icon-mute-close' %}
-                    </button>
+                  {% if autoplay_video == false or local_video != blank %}
+                    <div class="flex column align-center absolute z-1 bottom-15 right-15 gap-10">
+                      {% if autoplay_video == false %}
+                        <button
+                          aria-label="{{ 'accessibility.play_button.video' | t }}"
+                          class="play-button pointer border-0 inline-flex align-center justify-content-center"
+                        >
+                          {% render 'icon-play' %}
+                          {% render 'icon-pause' %}
+                        </button>
+                      {% endif %}
+                      {% if local_video != blank %}
+                        <button
+                          aria-label="{{ 'accessibility.mute_button.video' | t }}"
+                          class="mute-button pointer  border-0 inline-flex align-center justify-content-center"
+                        >
+                          {% render 'icon-mute-open' %}
+                          {% render 'icon-mute-close' %}
+                        </button>
+                      {% endif %}
+                    </div>
                   {% endif %}
+
                 </div>
                 <div class="shopable-video__product">
                   {% render 'card-product',

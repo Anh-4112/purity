@@ -10,21 +10,32 @@
   flex: 0 0 5rem;
 }
 
-.mute-button{
+.mute-button svg,
+.play-button svg
+{
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.mute-button svg path,
+.play-button svg path{
+  fill: #ffffff;
+}
+.mute-button,
+.play-button{
     width: 4.2rem;
     height: 4.2rem;
     border-radius: 50%;
-    background-color: #000000;
-    opacity: 0.3;
-    backdrop-filter: blur(5px);
+    background-color: #0000004D;
 }
 
 .mute-button.active .mute-close,
-.mute-open {
+.mute-open,.play-button.active .icon-play,
+.play-button .icon-pause {
     display: none;
 }
 
-.mute-button.active .mute-open {
+.mute-button.active .mute-open ,
+.play-button.active .icon-pause {
     display: block;
 }
 

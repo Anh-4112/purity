@@ -7,6 +7,52 @@ class ShopableVideo extends SlideSection {
     this.initShopableVideo();
   }
 
+  connectedCallback() {
+    if (
+      this.classList.contains("swiper-slide-center")
+    ) {
+      this.handleCenterSlides();
+    }
+  }
+
+  handleCenterSlides() {
+    if (!this) return;
+    const checkSwiper = setInterval(() => {
+      if (this.swiper) {
+        clearInterval(checkSwiper);
+        this.updateCenterSlideClass();
+        this.swiper.on("slideChange", () => {
+          this.updateCenterSlideClass();
+        });
+        this.swiper.on("breakpoint", () => {
+          this.updateCenterSlideClass();
+        });
+      }
+    }, 100);
+  }
+
+  updateCenterSlideClass() {
+    if (!this || !this.swiper) return;
+    const allSlides = Array.from(this.querySelectorAll(".swiper-slide"));
+    const previousCenterSlide = this.querySelector(".swiper-slide.center-slide");
+    allSlides.forEach((slide) => {
+      slide.classList.remove("center-slide");
+    });
+    const slidesPerView = parseInt(this.swiper.params.slidesPerView);
+    if (typeof slidesPerView === "number" && slidesPerView % 2 !== 0) {
+      const centerIndex = Math.floor(slidesPerView / 2) + this.swiper.activeIndex;
+      if (centerIndex >= 0 && centerIndex < allSlides.length) {
+        allSlides[centerIndex].classList.add("center-slide");
+        const newCenterSlide = allSlides[centerIndex];
+        if (newCenterSlide !== previousCenterSlide) {
+          this.dispatchEvent(new CustomEvent("center-slide-updated", {
+            detail: { centerSlide: newCenterSlide }
+          }));
+        }
+      }
+    }
+  }
+
   initShopableVideo() {
     this.setupVideoAutoplay();
   }
@@ -14,10 +60,34 @@ class ShopableVideo extends SlideSection {
   setupVideoAutoplay() {
     const autoplayVideo = this.dataset.autoplayVideo === "true";
     if (!autoplayVideo || !this.swiper) return;
-    this.playActiveSlideVideo(this.swiper.activeIndex);
-    this.swiper.on("slideChangeTransitionEnd", () => {
+    const useCenterSlideMode = this.classList.contains("swiper-slide-center");
+    if (useCenterSlideMode) {
+      this.playCenterSlideVideo();
+    } else {
       this.playActiveSlideVideo(this.swiper.activeIndex);
+    }
+    this.swiper.on("slideChangeTransitionEnd", () => {
+      if (useCenterSlideMode) {
+        this.playCenterSlideVideo();
+      } else {
+        this.playActiveSlideVideo(this.swiper.activeIndex);
+      }
     });
+    this.addEventListener("center-slide-updated", () => {
+      if (useCenterSlideMode) {
+        this.playCenterSlideVideo();
+      }
+    });
+  }
+  
+  playCenterSlideVideo() {
+    this.pauseAllVideos();
+    const centerSlide = this.querySelector(".swiper-slide.center-slide");
+    if (!centerSlide) return;
+    const videoElement = centerSlide.querySelector("video-local video");
+    if (videoElement) {
+      videoElement.play();
+    }
   }
 
   playActiveSlideVideo(activeIndex) {
@@ -44,11 +114,17 @@ customElements.define("shopable-video", ShopableVideo);
 class ShopableItem extends HTMLElement {
   constructor() {
     super();
-    this.addEventListener("mouseover", this.openVideo.bind(this), false);
     if (this.querySelector(".mute-button")) {
       this.querySelector(".mute-button").addEventListener(
         "click",
         this.clickMuteVideo.bind(this),
+        false
+      );
+    }
+    if (this.querySelector(".play-button")) {
+      this.querySelector(".play-button").addEventListener(
+        "click",
+        this.clickPlayVideo.bind(this),
         false
       );
     }
@@ -274,6 +350,18 @@ class ShopableItem extends HTMLElement {
     } else {
       this.querySelector("video").muted = false;
       this.querySelector(".mute-button").classList.add("active");
+    }
+  }
+
+  clickPlayVideo(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.querySelector("video").paused) {
+      this.querySelector("video").play();
+      this.querySelector(".play-button").classList.add("active");
+    } else {
+      this.querySelector("video").pause();
+      this.querySelector(".play-button").classList.remove("active");
     }
   }
 
