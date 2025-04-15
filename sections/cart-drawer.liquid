@@ -287,7 +287,7 @@
                                   >
                                     <button
                                       type="button"
-                                      class="inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
+                                      class="btn-reset inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
                                       aria-label="{{- 'sections.cart.remove_title' | t: title: item.title -}}"
                                     >
                                       <svg
@@ -471,6 +471,7 @@
               style="--max-width: 26rem; --width: 6rem;"
             >
               <mini-cart-recommendations
+                class="flex column h-full"
                 data-type="{{ recommendation_product_type }}"
                 data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=cart-upsell"
               >
@@ -479,9 +480,12 @@
                     {{ product_recommendations_heading }}
                   </div>
                 {%- endif -%}
-                <div class="cart-upsell-product">
-                  <cart-upsell-product class="swiper">
-                    {%- render 'swiper-navigation', show_on_hover: true -%}
+                <div class="cart-upsell-product grow-1">
+                  <cart-upsell-product class="swiper hover-action">
+                    {%- render 'swiper-navigation',
+                      class-slideshow: 'hidden block-1025 vertical-arrow',
+                      show_on_hover: true
+                    -%}
                     <div class="swiper-wrapper">
                       {%- if recommendation_product_type != 'auto' -%}
                         {%- for item in select_product_recommendation -%}
@@ -514,7 +518,7 @@
                         {%- endfor -%}
                       {%- endif -%}
                     </div>
-                    <div class="swiper-pagination mt-20"></div>
+                    <div class="swiper-pagination mt-20 hidden-1025"></div>
                   </cart-upsell-product>
                 </div>
               </mini-cart-recommendations>

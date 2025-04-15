@@ -549,9 +549,6 @@ blockquote {
 .static-impo {
   position: static !important;
 }
-.fixed {
-  position: fixed;
-}
 .sticky {
   position: sticky;
 }
@@ -783,10 +780,16 @@ blockquote {
   .draw-mb {
     max-width: var(--drawer-width, 48rem);
   }
-  .rounded-start,
-  .draw-mb {
+  :where(.rounded-start, .draw-mb:not(.drawer-left)) {
     border-top-left-radius: var(--img-rounded);
     border-bottom-left-radius: var(--img-rounded);
+  }
+  .drawer-left {
+    border-top-right-radius: var(--img-rounded);
+    border-bottom-right-radius: var(--img-rounded);
+  }
+  menu-drawer .modal-inner {
+    overflow-x: hidden;
   }
 }
 @media (min-width: 1025px) {
@@ -1538,7 +1541,24 @@ modal-popup :is(.modal-overlay) {
   }
   /* Navigation desktop */
   .submenu {
-    top: 100%;
+    top: auto;
+    margin-top: calc((var(--section-pb, 20) * 1px));
+  }
+  .submenu:not(.expanding)[open] {
+    overflow: unset;
+  }
+  .expanding {
+    overflow: hidden;
+  }
+  .submenu:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: calc((var(--section-pb, 20) * 1px));
+    transform: translateY(-100%);
+    z-index: 3;
   }
   .down-to-up {
     transform: translateY(1.5rem);
@@ -1856,6 +1876,9 @@ modal-popup :is(.modal-overlay) {
   .disclosure__footer .button-localization.opened + .disclosure__list-wrapper {
     bottom: 0;
   }
+  [open] ~ .sub-children-menu {
+    margin-bottom: 1.5rem;
+  }
 }
 .button-localization.opened + .disclosure__list-wrapper {
   opacity: 1;
@@ -2028,7 +2051,7 @@ mini-cart-recommendations .btn__quick-shop .icon-loader {
 mini-cart-recommendations .product-quickview-btn {
   display: none;
 }
-mini-cart-recommendations .hidden-1025 {
+mini-cart-recommendations .quick__shop-action .hidden-1025 {
   display: block;
 }
 .progress {
@@ -2092,8 +2115,6 @@ mini-cart-recommendations .hidden-1025 {
   .cart-recommendations-title {
     font-size: 1.8rem;
   }
-}
-html:not(.open-nav, .open-canvas) :is(mobile-navigation-bar) {
 }
 @media (min-width: 1025px) {
   mini-cart-recommendations .product__information {

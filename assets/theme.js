@@ -544,7 +544,9 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         this.classList.add("detail-open"),
         this.dropdownsAnimation == "fade-in-down" && window.innerWidth >= 1025
           ? (this.contentElement.setAttribute("open", ""),
-            await this.fadeInDown())
+            this.contentElement.classList.add("expanding"),
+            await this.fadeInDown(),
+            this.contentElement.classList.remove("expanding"))
           : setTimeout(() => this.contentElement.setAttribute("open", ""), 100))
       : (megaMenuCount.set(
           DetailsMegaMenu,
@@ -557,7 +559,10 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         document.removeEventListener("focusout", this.detectFocusOutListener),
         this.classList.remove("detail-open"),
         this.dropdownsAnimation == "fade-in-down" && window.innerWidth >= 1025
-          ? (await this.fadeInUp(), this.open || this.removeAttribute("open"))
+          ? (this.contentElement.classList.add("expanding"),
+            await this.fadeInUp(),
+            this.contentElement.classList.remove("expanding"),
+            this.open || this.removeAttribute("open"))
           : setTimeout(() => this.open || this.removeAttribute("open"), 300));
   }
   detectClickOutside(event) {
