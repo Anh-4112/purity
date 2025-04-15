@@ -4,7 +4,7 @@
 {% if link.links.size > 0 %}
   {%- if type == 'classic' -%}
     <div class="submenu classic transition invisible z-5{% if menu_mobile == blank %} {{ dropdowns_animation }}{%- if dropdowns_animation != 'fade-in-down' %} py-30 bg-white shadow{% endif %} absolute submenu-desktop custom-scrollbar overflow-auto{% else %} bg-white sub-mb absolute inset-0 drawer drawer-right-mb top-rounded overflow-hidden{% endif %}">
-      {%- if dropdowns_animation == 'fade-in-down' -%}
+      {%- if dropdowns_animation == 'fade-in-down' and menu_mobile == blank -%}
         <div class="menu-container py-30 bg-white shadow">
       {%- endif -%}
       {%- if menu_mobile != blank -%}
@@ -125,7 +125,7 @@
     {% endfor %}
   </ul>
   {%- if type == 'classic' -%}
-    {%- if dropdowns_animation == 'fade-in-down' -%}
+    {%- if dropdowns_animation == 'fade-in-down' and menu_mobile == blank -%}
       </div>
     {%- endif -%}
     </div>
