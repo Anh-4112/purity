@@ -89,7 +89,7 @@ class ShopableItem extends HTMLElement {
       }
     });
   }
-  
+
   hidePopupInformation(popupInfo) {
     popupInfo.classList.remove("active");
     popupInfo.classList.add("hidden");
@@ -265,7 +265,9 @@ class ShopableItem extends HTMLElement {
     }
   }
 
-  clickMuteVideo() {
+  clickMuteVideo(event) {
+    event.preventDefault();
+    event.stopPropagation();
     if (this.querySelector("video").muted == false) {
       this.querySelector("video").muted = true;
       this.querySelector(".mute-button").classList.remove("active");
@@ -280,7 +282,6 @@ class ShopableItem extends HTMLElement {
     const clickedItem = this;
     const productId = clickedItem.getAttribute("data-product");
     if (!productId) return;
-
     let modalPopup = document.querySelector("modal-popup");
     if (!modalPopup) {
       const shopable_video = event.target
@@ -293,101 +294,81 @@ class ShopableItem extends HTMLElement {
         );
         NextSkyTheme.body.appendChild(content.querySelector("modal-popup"));
         modalPopup = document.querySelector("modal-popup");
-        this.setupModalNavigation(modalPopup);
         this.setupMobileActionButton(modalPopup);
       }
     }
 
     if (modalPopup) {
+      modalPopup.setAttribute("data-loading", "true");
       modalPopup.setAttribute("data-current", productId);
-      const allItems = modalPopup.querySelectorAll(".drawer__body-item");
-      if (allItems.length) {
-        allItems.forEach((item) => {
-          item.style.display = "none";
-        });
-      }
-      const targetItem = modalPopup.querySelector(`#${productId}`);
-      if (targetItem) {
-        targetItem.style.display = "block";
-      }
-      this.updateNavigationState(modalPopup, productId);
-      setTimeout(() => NextSkyTheme.eventModal(modalPopup, "open", true), 100);
-    }
-  }
-
-  setupModalNavigation(modalPopup) {
-    const prevButton = modalPopup.querySelector(".modal-nav__prev");
-    const nextButton = modalPopup.querySelector(".modal-nav__next");
-
-    if (prevButton) {
-      prevButton.addEventListener("click", () => {
-        this.navigateModal(modalPopup, "prev");
-      });
-    }
-
-    if (nextButton) {
-      nextButton.addEventListener("click", () => {
-        this.navigateModal(modalPopup, "next");
-      });
-    }
-
-    modalPopup.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowLeft") {
-        this.navigateModal(modalPopup, "prev");
-      } else if (e.key === "ArrowRight") {
-        this.navigateModal(modalPopup, "next");
-      }
-    });
-  }
-
-  navigateModal(modalPopup, direction) {
-    const currentId = modalPopup.getAttribute("data-current");
-    const allItems = Array.from(
-      modalPopup.querySelectorAll(".drawer__body-item")
-    );
-    const currentIndex = allItems.findIndex((item) => item.id === currentId);
-    if (currentIndex === -1) return;
-    let nextIndex;
-    if (direction === "next") {
-      nextIndex = (currentIndex + 1) % allItems.length;
-    } else {
-      nextIndex = (currentIndex - 1 + allItems.length) % allItems.length;
-    }
-    const nextId = allItems[nextIndex].id;
-    allItems.forEach((item) => {
-      item.style.display = "none";
-    });
-    allItems[nextIndex].style.display = "block";
-    modalPopup.setAttribute("data-current", nextId);
-    this.updateNavigationState(modalPopup, nextId);
-  }
-
-  updateNavigationState(modalPopup, currentId) {
-    const prevButton = modalPopup.querySelector(".modal-nav__prev");
-    const nextButton = modalPopup.querySelector(".modal-nav__next");
-    const allItems = Array.from(
-      modalPopup.querySelectorAll(".drawer__body-item")
-    );
-
-    const allPopupMobile = Array.from(
-      modalPopup.querySelectorAll(".popup-information")
-    );
-
-    allPopupMobile.forEach((popup) => {
-        if (popup.classList.contains("active")) { 
-          popup.classList.remove("active");
-          popup.classList.add("hidden");
+      NextSkyTheme.eventModal(modalPopup, "open", true);
+      const swiperContainer = modalPopup.querySelector("slide-section");
+      if (swiperContainer) {
+        if (!swiperContainer.swiper) {
+          setTimeout(() => {
+            this.findAndActivateSlide(modalPopup, productId);
+          }, 100);
+        } else {
+          this.findAndActivateSlide(modalPopup, productId);
         }
+      } else {
+        modalPopup.removeAttribute("data-loading");
       }
-    );
+    }
+  }
 
-    if (allItems.length <= 1) {
-      if (prevButton) prevButton.style.display = "none";
-      if (nextButton) nextButton.style.display = "none";
+  findAndActivateSlide(modalPopup, productId) {
+    const swiperContainer = modalPopup.querySelector("slide-section");
+    if (!swiperContainer || !swiperContainer.swiper) {
+      modalPopup.removeAttribute("data-loading");
       return;
     }
-    if (prevButton) prevButton.style.display = "block";
-    if (nextButton) nextButton.style.display = "block";
+    const clickedItem = document.querySelector(`[data-product="${productId}"]`);
+    if (!clickedItem) {
+      modalPopup.removeAttribute("data-loading");
+      return;
+    }
+    const position = clickedItem.getAttribute("data-position");
+    if (position !== null && !isNaN(parseInt(position))) {
+      const slideIndex = parseInt(position);
+      swiperContainer.swiper.slideTo(slideIndex, 0, false);
+    } else {
+      swiperContainer.swiper.slideTo(0, 0, false);
+    }
+    const nextButton = modalPopup.querySelector(
+      ".modal-nav .swiper-button-next"
+    );
+    const prevButton = modalPopup.querySelector(
+      ".modal-nav .swiper-button-prev"
+    );
+
+    if (nextButton && prevButton && swiperContainer.swiper.navigation) {
+      swiperContainer.swiper.navigation.nextEl = nextButton;
+      swiperContainer.swiper.navigation.prevEl = prevButton;
+      nextButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        swiperContainer.swiper.slideNext();
+      });
+      prevButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        swiperContainer.swiper.slidePrev();
+      });
+      setTimeout(() => {
+        this.updateNavigationState(
+          swiperContainer.swiper,
+          nextButton,
+          prevButton
+        );
+        swiperContainer.swiper.on("slideChange", () => {
+          this.updateNavigationState(
+            swiperContainer.swiper,
+            nextButton,
+            prevButton
+          );
+        });
+      }, 50);
+    }
+    modalPopup.removeAttribute("data-loading");
   }
 }
 customElements.define("shopable-item", ShopableItem);

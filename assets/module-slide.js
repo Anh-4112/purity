@@ -48,8 +48,6 @@ function initSlide(_this) {
     watchSlidesProgress: true,
     watchSlidesVisibility: true,
     centeredSlides: centerSlide,
-    grabCursor: true,
-    allowTouchMove: true,
     grid: {
       rows: row,
       fill: "row",
