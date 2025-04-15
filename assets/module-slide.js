@@ -101,9 +101,43 @@ function initSlide(_this) {
             }
           }
         }
+        if (_this.querySelector(".slide-video-1")) {
+          loadSlideVideo(_this.querySelector(".slide-video-1"));
+        }
+      },
+      slideChangeTransitionEnd: function () {
+        _this.querySelectorAll("video-local-slide").forEach((video) => {
+          loadSlideVideo(video);
+        });
       },
     },
   });
+}
+
+function loadSlideVideo(_this) {
+  if (!_this.getAttribute("loaded") && _this.querySelector("template")) {
+    const content = document.createElement("div");
+    content.appendChild(
+      _this.querySelector("template").content.firstElementChild.cloneNode(true)
+    );
+    _this.setAttribute("loaded", true);
+    const deferredElement = _this.appendChild(content.querySelector("video"));
+    const alt = deferredElement.getAttribute("alt");
+    const img = deferredElement.querySelector("img");
+    if (alt && img) {
+      img.setAttribute("alt", alt);
+    }
+    _this.thumb = _this.querySelector(".video-thumbnail");
+    if (_this.thumb) {
+      _this.thumb.remove();
+    }
+    if (
+      deferredElement.nodeName == "VIDEO" &&
+      deferredElement.getAttribute("autoplay")
+    ) {
+      deferredElement.play();
+    }
+  }
 }
 
 function initSlideMedia(_this, gallery, thumbnail) {
