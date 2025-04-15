@@ -476,12 +476,10 @@
           {%- if section_st.show_search or section_st.show_account or section_st.show_cart -%}
             <div class="flex gap" style="--gap: 7px;">
               {%- if section_st.show_search -%}
-                {% # theme-check-disable NestedSnippet %}
                 <a
                   href="{{ routes.search_url }}"
                   class="header__icon wh-40 flex content-center"
                   id="search-icon-bubble"
-                  data-custom-class="{{ section_width }}"
                 >
                   <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
                     {{ 'general.search.search' | t }}
@@ -492,7 +490,6 @@
                   </svg>
                   <span class="visually-hidden">{{ 'general.search.search' | t }}</span>
                 </a>
-                {% # theme-check-enable NestedSnippet %}
               {%- endif -%}
               {%- if section_st.show_account -%}
                 <a
