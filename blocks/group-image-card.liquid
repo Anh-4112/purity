@@ -8,14 +8,6 @@
   else
     assign section_width = 'fluid_container'
   endif
-  assign column_gap_slide = 0
-  if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-  elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-  elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
-  endif
   assign radius_image_class = ''
   assign radius_content_class = ''
   assign has_custom_background = false
@@ -60,8 +52,9 @@
 
 <div
     class="flex wrap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
+    id="{{ forloop.index }}"
   >
-    <div class="image-with-text__media-item w-50-percent">
+    <div class="image-with-text__media-item w-full w-1025-50-percent">
       <div
         class="image-with-text__media banner__media {{ radius_image_class }} h-full"
         style="--aspect-ratio: {{ ratio }}";
@@ -85,14 +78,14 @@
         {% endif %}
       </div>
     </div>
-    <div class="w-50-percent flex text-{{ section_st.content_alignment }}">
+    <div class="w-full w-1025-50-percent flex text-{{ section_st.content_alignment }}">
       {% if has_custom_background %}
         <div
           class="image-with-text__wrapper w-full flex bg-custom {{ radius_content_class }}"
           style="--bg-color-custom: {{ section_st.background_color }};"
         >
       {% endif %}
-      <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }}">
+      <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }} text-{{ section_st.text_alignment_mobile }} text-md-{{ section_st.text_alignment }}">
         {% content_for 'blocks' %}
       </div>
       {% if has_custom_background %}</div>{% endif %}
