@@ -136,7 +136,7 @@ export class ProductForm extends HTMLElement {
       {
         id: this.cart.sectionId,
         section: this.cart.sectionId,
-        selector: ".drawer__footer-bottom",
+        selector: ".drawer__footer-bottom-total",
       },
     ];
   }
@@ -170,6 +170,7 @@ export class ProductForm extends HTMLElement {
           );
           this.cart.querySelector(".drawer__body").innerHTML =
             drawerBody.innerHTML;
+          NextSkyTheme.trapFocus(this.cart);
         } else {
           this.getSectionsToRender().forEach((section, index) => {
             const sectionElement = section.selector
@@ -320,7 +321,7 @@ class CartItems extends ProductForm {
       {
         id: this.cart.sectionId,
         section: this.cart.sectionId,
-        selector: ".drawer__footer-bottom",
+        selector: ".drawer__footer-bottom-total",
       },
     ];
   }

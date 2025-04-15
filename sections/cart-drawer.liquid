@@ -24,8 +24,7 @@
   class="modal pointer-none active-modal-js"
   data-section-id="{{ section.id }}"
   data-cart-type="{{ add_cart_type }}"
-  tabindex="0"
-  role="dialog"
+  data-focus-item="cart-icon-bubble"
 >
   <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
   <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer invisible drawer drawer-right fixed right-0 z-15 inset-y-0 bg-secondary-1025 w-full">
@@ -48,6 +47,7 @@
           </span>
         </div>
         <button
+          type="button"
           is="button-close-model"
           class="modal__close pointer btn-reset w-30 h-full inline-flex align-center flex-end"
           aria-label="Close"
@@ -794,25 +794,29 @@
           </div>
         </div>
         <div
-          class="drawer__footer-bottom js-contents border-top drawer-spacing"
+          class="drawer__footer-bottom border-top drawer-spacing"
         >
-          <div class="total h5 flex space-between gap-10">
-            <span class="text">{{ 'sections.cart.total' | t }}:</span>
-            <span class="total-price">
-              {{ cart.total_price | money_with_currency }}
-            </span>
+          <div
+            class="drawer__footer-bottom-total"
+          >
+            <div class="total h5 flex space-between gap-10">
+              <span class="text">{{ 'sections.cart.total' | t }}:</span>
+              <span class="total-price">
+                {{ cart.total_price | money_with_currency }}
+              </span>
+            </div>
+            <small class="tax-note caption-large word-break text-center">
+              {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+                {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+              {%- elsif cart.taxes_included -%}
+                {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
+              {%- elsif shop.shipping_policy.body != blank -%}
+                {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+              {%- else -%}
+                {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+              {%- endif -%}
+            </small>
           </div>
-          <small class="tax-note caption-large word-break text-center">
-            {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-              {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
-            {%- elsif cart.taxes_included -%}
-              {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
-            {%- elsif shop.shipping_policy.body != blank -%}
-              {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
-            {%- else -%}
-              {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
-            {%- endif -%}
-          </small>
           <form action="{{ routes.cart_url }}" method="POST" class="flex wrap gap-10 mt-20 mt-1025-30 mb-1025-10">
             <a
               href="{{ routes.cart_url }}"

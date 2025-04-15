@@ -57,8 +57,7 @@
   class="modal pointer-none active-modal-js{% if search_type == 'drawer' %} search-type-drawer{% else %} search-type-popup{% endif %}"
   data-section-id="{{ section.id }}"
   data-type="{{ search_type }}"
-  tabindex="0"
-  role="dialog"
+  data-focus-item="search-icon-bubble"
 >
   <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
   <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer invisible drawer{% if search_type != 'popup' %} drawer-right{% else %} drawer-top{% endif %} fixed right-0 z-15 inset-y-0 bg-white w-full">
@@ -91,6 +90,7 @@
           {{ 'general.search.name' | t }}
         </div>
         <button
+          type="button"
           is="button-close-model"
           class="modal__close pointer hover-icon-zoom heading-color btn-reset w-30 h-full inline-flex align-center flex-end{% if search_type == 'popup' %} btn-hover overflow-hidden justify-center-1025 absolute-1025{% endif %}"
           aria-label="Close"
