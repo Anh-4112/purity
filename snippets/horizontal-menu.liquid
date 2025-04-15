@@ -3,7 +3,10 @@
 -%}
 {% if link.links.size > 0 %}
   {%- if type == 'classic' -%}
-    <div class="submenu classic transition invisible bg-white z-5{% if menu_mobile == blank %} py-30 absolute submenu-desktop custom-scrollbar overflow-auto {{ section_st.dropdowns_animation }} shadow{% else %} sub-mb absolute inset-0 drawer drawer-right-mb top-rounded overflow-hidden{% endif %}">
+    <div class="submenu classic transition invisible z-5{% if menu_mobile == blank %} {{ dropdowns_animation }}{%- if dropdowns_animation != 'fade-in-down' %} py-30 bg-white shadow{% endif %} absolute submenu-desktop custom-scrollbar overflow-auto{% else %} bg-white sub-mb absolute inset-0 drawer drawer-right-mb top-rounded overflow-hidden{% endif %}">
+      {%- if dropdowns_animation == 'fade-in-down' and menu_mobile == blank -%}
+        <div class="menu-container py-30 bg-white shadow">
+      {%- endif -%}
       {%- if menu_mobile != blank -%}
         <div class="submenu-header flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3">
           <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
@@ -122,6 +125,9 @@
     {% endfor %}
   </ul>
   {%- if type == 'classic' -%}
+    {%- if dropdowns_animation == 'fade-in-down' and menu_mobile == blank -%}
+      </div>
+    {%- endif -%}
     </div>
   {%- endif -%}
 {%- else -%}

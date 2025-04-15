@@ -4,6 +4,7 @@
   assign color_scheme = section_st.color_scheme
   assign menu = section_st.menu
   assign transparent = section_st.transparent
+  assign dropdowns_animation = section_st.dropdowns_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -72,7 +73,7 @@
   data-sticky-type="{{ section_st.sticky_header_type }}"
   data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
   data-menu-trigger="{{ section_st.menu_trigger }}"
-  data-dropdowns-animation="{{ section_st.dropdowns_animation }}"
+  data-dropdowns-animation="{{ dropdowns_animation }}"
   class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
@@ -175,9 +176,12 @@
                           endif
                         -%}
                         <div
-                          class="mega-menu submenu transition invisible submenu-desktop {{ section_st.dropdowns_animation }} border-top absolute inset-x-0 z-2 bg-white shadow"
+                          class="mega-menu submenu transition invisible submenu-desktop {{ dropdowns_animation }} border-top inset-x-0 absolute{% if dropdowns_animation != 'fade-in-down' %} z-2 bg-white shadow{% endif %}"
                           style="--col-mega-width: {{ mega_width }}%; --gap: 20px; --delay: 0.05s;"
                         >
+                          {%- if dropdowns_animation == 'fade-in-down' -%}
+                            <div class="menu-container z-2 bg-white shadow">
+                          {%- endif -%}
                           <div class="container flex wrap gap py-40 custom-scrollbar overflow-auto">
                             {%- if link.links.size > 0 -%}
                               <div
@@ -362,6 +366,9 @@
                               {%- endcase -%}
                             {%- endif -%}
                           </div>
+                          {%- if dropdowns_animation == 'fade-in-down' -%}
+                            </div>
+                          {%- endif -%}
                         </div>
                       </details>
                     {%- else -%}
