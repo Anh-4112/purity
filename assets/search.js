@@ -108,7 +108,6 @@ class ActionSearch extends HTMLElement {
     ) {
       this.updateProductRecommended();
     }
-    NextSkyTheme.eventModal(this, "close", false);
   }
 
   actionSearchDesktop() {
@@ -123,7 +122,6 @@ class ActionSearch extends HTMLElement {
     ) {
       this.updateProductRecommended();
     }
-    NextSkyTheme.eventModal(this, "close", false);
   }
 
   clearSearch() {

@@ -147,7 +147,9 @@ export function eventModal(
     }
     root.style.setProperty("padding-right", getScrollBarWidth.init() + "px");
     trapFocus(element);
+    console.log("yyyyyy");
   } else {
+    console.log("xxxx");
     const active_modal = document.querySelectorAll(".active-modal-js.active");
     const modal_element = element.classList.contains("active-modal-js")
       ? element
@@ -180,6 +182,9 @@ export function eventModal(
       }
     }
     removeTrapFocus(modal_element);
+    if (focus_item && document.getElementById(focus_item)) {
+      trapFocus(document.getElementById(focus_item));
+    }
   }
 }
 
