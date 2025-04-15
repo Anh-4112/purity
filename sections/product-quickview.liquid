@@ -23,6 +23,7 @@
     onload="this.media='all'"
   >
 {% endif %}
+<script type="module" src="{{ 'media-gallery.js' | asset_url }}"></script>
 <quickview-drawer
   id="Product-{{ section.id }}"
   data-section-id="{{ section.id }}"
@@ -31,7 +32,7 @@
   tabindex="0"
   role="dialog"
 >
-  <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
+  <modal-overlay class="modal-overlay pointer invisible transition z-15"></modal-overlay>
   <div class="modal-inner color-default transition-drawer invisible drawer drawer-right fixed right-0 z-20 inset-y-0 bg-white w-full">
     <button
       is="button-close-model"
@@ -123,7 +124,7 @@
               section_st: section_st,
               product: product,
               section: section,
-              type_section: 'quickview'
+              type_section: 'quick_view'
             %}
           </div>
         {% endif %}

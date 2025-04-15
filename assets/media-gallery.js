@@ -74,3 +74,26 @@ class GridGallery extends MediaGallery {
 if (!customElements.get("grid-gallery")) {
   customElements.define("grid-gallery", GridGallery);
 }
+
+class QuickViewGallery extends GridGallery {
+  constructor() {
+    super();
+    this.MediaGalleryHtml = this.innerHTML;
+    this.init();
+  }
+
+  actionOnMobile() {
+    this.initSlideMediaGallery("QuickView");
+    this.style.maxHeight = "auto";
+  }
+
+  actionOutMobile() {
+    this.initSlideMediaGallery("QuickView");
+    this.style.maxHeight =
+      this.closest(".drawer__body").offsetHeight - 40 + "px";
+  }
+}
+
+if (!customElements.get("quick-view-gallery")) {
+  customElements.define("quick-view-gallery", QuickViewGallery);
+}

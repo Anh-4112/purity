@@ -3,7 +3,7 @@ export class FormValidator {
     this.form = formElement;
     this.rules = rules;
     this.options = {
-      errorClass: options.errorClass || 'input-error',
+      errorClass: options.errorClass || "input-error",
       ...options,
     };
 
@@ -11,7 +11,7 @@ export class FormValidator {
   }
 
   bindEvents() {
-    this.form.addEventListener('submit', (e) => {
+    this.form.addEventListener("submit", (e) => {
       if (!this.validate()) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -34,7 +34,7 @@ export class FormValidator {
         input.classList.add(this.options.errorClass);
         isValid = false;
       } else {
-        errorElement.textContent = '';
+        errorElement.textContent = "";
         input.classList.remove(this.options.errorClass);
       }
     }
@@ -44,37 +44,43 @@ export class FormValidator {
 
   getOrCreateErrorEl(input) {
     let errorEl = input.nextElementSibling;
-    if (!errorEl || !errorEl.classList.contains('form-error-message')) {
-      errorEl = document.createElement('div');
-      errorEl.className = 'form-error-message text-sm text-red-500 mt-1';
+    if (!errorEl || !errorEl.classList.contains("form-error-message")) {
+      errorEl = document.createElement("div");
+      errorEl.className = "form-error-message text-sm text-red-500 mt-1";
       input.parentNode.insertBefore(errorEl, input.nextSibling);
     }
     return errorEl;
   }
 }
 
-export function setupFormValidation({ formSelector, fields, buttonSelector = 'button[type="submit"]' }) {
+export function setupFormValidation({
+  formSelector,
+  fields,
+  buttonSelector = 'button[type="submit"]',
+}) {
   const form = document.querySelector(formSelector);
   if (!form) return;
 
   const validator = new FormValidator(form, fields, {
-    errorClass: 'input-error',
+    errorClass: "input-error",
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener("submit", (e) => {
     const isValid = validator.validate();
     if (!isValid) {
       e.preventDefault();
       e.stopImmediatePropagation();
       return false;
     }
-  
+
     const submitButton = e.submitter || form.querySelector(buttonSelector);
-    const spinner = submitButton?.querySelector('.icon-load');
-    const text = submitButton?.querySelector('.hidden-on-load');
-  
-    submitButton?.classList.add('loading');
-    spinner?.classList.remove('opacity-0', 'pointer-none');
-    text?.classList.add('opacity-0');
+    const spinner = submitButton?.querySelector(".icon-load");
+    const text = submitButton?.querySelector(
+      ".hidden-on-load transition-short"
+    );
+
+    submitButton?.classList.add("loading");
+    spinner?.classList.remove("opacity-0", "pointer-none");
+    text?.classList.add("opacity-0");
   });
 }

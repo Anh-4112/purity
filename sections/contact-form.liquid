@@ -195,16 +195,8 @@
             class="contact__button"
           >
             <button type="submit" class="btn btn-primary w-full relative">
-              <span class="hidden-on-load">{{ section_st.button_label }}</span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                class="spin opacity-0 pointer-none icon-load absolute"
-              >
-                <use href="#icon-load"></use>
-              </svg>
+              <span class="hidden-on-load transition-short">{{ section_st.button_label }}</span>
+              {%- render 'loader' -%}
             </button>
           </div>
         {%- endform -%}

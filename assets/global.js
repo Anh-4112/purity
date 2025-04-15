@@ -52,7 +52,7 @@ function getFocusableElements(container) {
 }
 var trapFocusHandlers = {};
 
-function trapFocus(container, elementToFocus = container) {
+export function trapFocus(container, elementToFocus = container) {
   var elements = getFocusableElements(container);
   var first = elements[0];
   var last = elements[elements.length - 1];
@@ -103,56 +103,7 @@ function trapFocus(container, elementToFocus = container) {
   }
 }
 
-try {
-  document.querySelector(":focus-visible");
-} catch (e) {
-  focusVisiblePolyfill();
-}
-
-function focusVisiblePolyfill() {
-  const navKeys = [
-    "ARROWUP",
-    "ARROWDOWN",
-    "ARROWLEFT",
-    "ARROWRIGHT",
-    "TAB",
-    "ENTER",
-    "SPACE",
-    "ESCAPE",
-    "HOME",
-    "END",
-    "PAGEUP",
-    "PAGEDOWN",
-  ];
-  let currentFocusedElement = null;
-  let mouseClick = null;
-
-  window.addEventListener("keydown", (event) => {
-    if (navKeys.includes(event.code.toUpperCase())) {
-      mouseClick = false;
-    }
-  });
-
-  window.addEventListener("mousedown", () => {
-    mouseClick = true;
-  });
-
-  window.addEventListener(
-    "focus",
-    () => {
-      if (currentFocusedElement)
-        currentFocusedElement.classList.remove("focused");
-
-      if (mouseClick) return;
-
-      currentFocusedElement = document.activeElement;
-      currentFocusedElement.classList.add("focused");
-    },
-    true
-  );
-}
-
-function removeTrapFocus(elementToFocus = null) {
+export function removeTrapFocus(elementToFocus = null) {
   document.removeEventListener("focusin", trapFocusHandlers.focusin);
   document.removeEventListener("focusout", trapFocusHandlers.focusout);
   document.removeEventListener("keydown", trapFocusHandlers.keydown);
@@ -201,6 +152,9 @@ export function eventModal(
     const modal_element = element.classList.contains("active-modal-js")
       ? element
       : element.closest(".active-modal-js");
+    const focus_item = modal_element.hasAttribute("data-focus-item")
+      ? modal_element.getAttribute("data-focus-item")
+      : "";
     if (
       modal_element.classList.contains("delay") &&
       modal_element.querySelector(".model_media")
@@ -210,7 +164,6 @@ export function eventModal(
         if (active_modal.length == 1) {
           root.classList.remove("open-modal");
           root.style.removeProperty("padding-right");
-          removeTrapFocus(element);
         }
       }, 350);
       modal_element.querySelector(".model_media").classList.remove("open");
@@ -224,8 +177,11 @@ export function eventModal(
       if (active_modal.length == 1) {
         root.classList.remove("open-modal");
         root.style.removeProperty("padding-right");
-        removeTrapFocus(element);
       }
+    }
+    removeTrapFocus(modal_element);
+    if (focus_item && document.getElementById(focus_item)) {
+      trapFocus(document.getElementById(focus_item));
     }
   }
 }

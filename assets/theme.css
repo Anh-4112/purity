@@ -211,7 +211,8 @@ blockquote {
     --padding-block-desktop: 1.9rem;
   }
   .drawer-spacing {
-    padding: var(--padding-block-desktop, 3rem) 4rem;
+    padding: var(--padding-block-desktop, 3rem)
+      var(--padding-inline-desktop, 4rem);
   }
 }
 .p-5 {
@@ -238,9 +239,6 @@ blockquote {
 
 .pb-10 {
   padding-bottom: 1rem;
-}
-.pb-15 {
-  padding-bottom: 1.5rem;
 }
 .pb-25 {
   padding-bottom: 2.5rem;
@@ -346,16 +344,13 @@ blockquote {
 .pt-6 {
   padding-top: 0.6rem;
 }
-.pt-15 {
-  padding-top: 1.5rem;
-}
 .pt-22 {
   padding-top: 2.2rem;
 }
 .pt-28 {
   padding-top: 2.8rem;
 }
-.pt-50 {
+.py-50 {
   padding-top: clamp(3.5rem, 4vw, 5rem);
 }
 .pt-55 {
@@ -1205,6 +1200,9 @@ modal-popup :is(.modal-overlay) {
   .z-1025-16 {
     z-index: 16;
   }
+  .p-1025-0 {
+    padding: 0;
+  }
   .p-1025-40 {
     padding: 4rem;
   }
@@ -1252,6 +1250,9 @@ modal-popup :is(.modal-overlay) {
   .mt-1025-40 {
     margin-top: 4rem;
   }
+  .mt-1025-50 {
+    margin-top: 5rem;
+  }
   .my-1025-0 {
     margin-top: 0;
     margin-bottom: 0;
@@ -1270,9 +1271,6 @@ modal-popup :is(.modal-overlay) {
   }
   .mb-1025-30 {
     margin-bottom: 3rem;
-  }
-  .flex-1025 {
-    display: flex;
   }
   .flex-1025-row {
     flex-direction: row;
@@ -1642,12 +1640,34 @@ modal-popup :is(.modal-overlay) {
   }
 }
 /* Open detail */
+.icon-loader {
+  --gap: 6;
+  --width: 5px;
+  --height: 5px;
+}
+.icon-loader span {
+  background: currentColor;
+  transform: scale(1);
+  animation: dot-bounce 0.8s infinite ease-in-out;
+}
+.icon-loader span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.icon-loader span:nth-child(3) {
+  animation-delay: 0.3s;
+}
 
-:where(.icon-load) {
-  top: 50%;
-  left: 50%;
-  margin-top: calc(var(--loader-width, 1.4rem) / 2 * -1);
-  margin-inline-start: calc(var(--loader-width, 1.4rem) / 2 * -1);
+@keyframes dot-bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
 }
 .icon-rotator {
   border: 2px solid var(--color-dark);
@@ -1673,7 +1693,6 @@ modal-popup :is(.modal-overlay) {
   ).loading
   .hidden-on-load {
   opacity: 0;
-  transition: unset;
 }
 :where(
     .btn-primary,
@@ -1682,18 +1701,9 @@ modal-popup :is(.modal-overlay) {
     button-quickview,
     .search-modal__form
   ).loading
-  > .icon-load,
+  > .icon-loader,
 .loading_snippet.loading .icon-rotator {
   opacity: 1;
-}
-@keyframes spin {
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
-.spin {
-  -webkit-animation: 0.8s linear infinite spin;
-  animation: 0.8s linear infinite spin;
 }
 @media screen and (max-width: 767.98px) {
   .collapsible-row__content:not(.filter-content) {
@@ -1812,6 +1822,8 @@ modal-popup :is(.modal-overlay) {
   }
   header .disclosure__list-wrapper {
     top: calc(100% + 4rem);
+    left: auto;
+    right: 0;
   }
   header .button-localization.opened + .disclosure__list-wrapper {
     top: calc(100% + 1rem);
@@ -1869,6 +1881,7 @@ modal-popup :is(.modal-overlay) {
 .footer__block-note a,
 .footer__block-info a {
   font-weight: var(--heading-weight);
+  color: var(--color-heading);
   text-decoration: underline;
 }
 .success,
@@ -2004,9 +2017,13 @@ mini-cart-recommendations .btn__quick-shop {
   --btn-padding-x: 0;
   width: 44px;
   height: 44px;
-  display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+mini-cart-recommendations .btn__quick-shop .icon-loader {
+  --gap: 3px;
+  --width: 3px;
+  --height: 3px;
 }
 mini-cart-recommendations .product-quickview-btn {
   display: none;
@@ -2050,9 +2067,12 @@ mini-cart-recommendations .hidden-1025 {
     position: static;
   }
   .mini-cart .product-item__inner {
-    padding: 1.5rem 6.5rem 1.5rem 1.5rem;
+    padding: 1.5rem;
     background-color: var(--color-background-2);
     border-radius: var(--img-rounded);
+  }
+  .mini-cart .show_quick_add-mb {
+    padding-right: 6.5rem;
   }
   .mini-cart .product__information {
     margin-top: 0;
@@ -2073,8 +2093,7 @@ mini-cart-recommendations .hidden-1025 {
     font-size: 1.8rem;
   }
 }
-html:not(.open-nav, .open-canvas)
-  :is(mobile-navigation-bar) {
+html:not(.open-nav, .open-canvas) :is(mobile-navigation-bar) {
 }
 @media (min-width: 1025px) {
   mini-cart-recommendations .product__information {

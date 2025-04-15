@@ -58,16 +58,8 @@
             </small>
           {%- endif -%}
           <button class="btn btn-primary w-full relative word-wrap relative">
-            <span class="hidden-on-load">{{ 'customer.login_page.submit' | t }}</span>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              class="spin opacity-0 pointer-none icon-load absolute"
-            >
-              <use href="#icon-load"></use>
-            </svg>
+            <span class="hidden-on-load transition-short">{{ 'customer.login_page.submit' | t }}</span>
+            {%- render 'loader' -%}
           </button>
           <a href="#login" aria-label="{{ 'customer.login_page.cancel' | t }}">
             {{ 'customer.login_page.back_login' | t }}
@@ -176,16 +168,8 @@
           <span class="required-field">{{ 'customer.account.required' | t }}</span>
         </div>
         <button class="btn btn-primary w-full relative word-wrap relative">
-          <span class="hidden-on-load">{{ 'customer.login_page.sign_in' | t }}</span>
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            class="spin opacity-0 pointer-none icon-load absolute"
-          >
-            <use href="#icon-load"></use>
-          </svg>
+          <span class="hidden-on-load transition-short">{{ 'customer.login_page.sign_in' | t }}</span>
+          {%- render 'loader' -%}
         </button>
         <div class="creat_new-account flex">
           {{ 'customer.login_page.new_customer' | t }}

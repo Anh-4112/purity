@@ -194,7 +194,7 @@
             >
               <input type="hidden" name="form_type" value="product">
               <input type="hidden" name="utf8" value="✓">
-              <div class="product-bundle-products-list">
+              <div class="product-bundle-products-list ">
                 {%- for block in section.blocks -%}
                   {%- liquid
                     assign blo_settings = block.settings
@@ -251,16 +251,8 @@
                   class="btn btn-primary w-full relative product_submit_button product-form__submit word-wrap relative"
                   aria-label="{{ 'products.product.add_all_to_cart' | t }}"
                 >
-                  <span class="hidden-on-load">{{ 'products.product.add_all_to_cart' | t }}</span>
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    class="spin opacity-0 pointer-none icon-load absolute"
-                  >
-                    <use href="#icon-load"></use>
-                  </svg>
+                  <span class="hidden-on-load transition-short">{{ 'products.product.add_all_to_cart' | t }}</span>
+                  {%- render 'loader' -%}
                 </button>
               {%- endif -%}
             </form>
@@ -329,15 +321,15 @@
     },
     {
       "type": "text",
-      "id": "title",
-      "default": "Tailored for You",
-      "label": "t:sections.all.content_setting.heading.label"
+      "id": "subheading",
+      "label": "t:sections.all.content_setting.subheading.label",
+      "default": "The subheading"
     },
     {
       "type": "text",
-      "id": "subheading",
-      "label": "t:sections.all.content_setting.subheading.label",
-      "default": "Check These Out"
+      "id": "title",
+      "default": "The heading",
+      "label": "t:sections.all.content_setting.heading.label"
     },
     {
       "type": "richtext",

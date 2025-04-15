@@ -48,10 +48,15 @@
   <div
     class="{{ section_width }}"
   >
-    {%- if section_st.heading != blank or section_st.description != blank -%}
+    {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div
         class="section-header text-{{ section_st.alignment }}"
       >
+        {%- if section_st.subheading != blank -%}
+          <div class="section-subheading h7 mb-5 mb-md-10 body_weight">
+            {{ section_st.subheading }}
+          </div>
+        {%- endif -%}
         {%- if section_st.heading != blank -%}
           <h2 class="block section-heading {{ header_size }}">
             {{ section_st.heading }}
@@ -87,7 +92,7 @@
             style="---width: {{ section_st.icon_size }}px;"
           >
             <div
-              class="icon-box__icon w-custom h-auto flex"
+              class="icon-box__icon w-custom h-auto flex heading-color"
               style="---width: {{ section_st.icon_size }}px; "
             >
               {% if icon_svg != 'none' %}
@@ -175,6 +180,11 @@
     {
       "type": "header",
       "content": "t:sections.all.content_header.label"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.all.content_setting.subheading.label"
     },
     {
       "type": "text",
