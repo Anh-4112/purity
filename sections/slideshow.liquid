@@ -72,7 +72,6 @@
               else
                 assign btn_margin_start = 'mt-20'
               endif
-              assign lazy_load = false
               assign ratio_dk = ''
               assign ratio_mb = ''
               if slide_height == 'adapt' or slide_height == 'full_screen'
@@ -96,8 +95,11 @@
                 assign ratio_dk = '5/2'
                 assign ratio_mb = '2/3'
               endif
-              if forloop.first
-                assign lazy_load = true
+              if section.index == 1
+                assign fetchpriority = 'low'
+                if forloop.first
+                  assign fetchpriority = 'high'
+                endif
               endif
             %}
             <div {{ block.shopify_attributes }} class="swiper-slide">
@@ -132,21 +134,34 @@
                         assign poster_desktop = image | default: mobile_url
                         assign poster_mobile = image_mobile | default: desktop_url
                       -%}
-                      <video
-                        class="slideshow w-full h-full object-fit-cover {{ rounded }}"
-                        loop="true"
-                        {% if poster_mobile != blank %}
-                          data-posterMobile="{{ poster_mobile | image_url: width: 1100 }}"
-                        {% endif %}
-                        {% if poster_desktop != blank %}
-                          data-posterDesktop="{{ poster_desktop | image_url: width: 1100 }}"
-                        {% endif %}
-                        src="{{ source_url }}"
-                        poster="{{ poster }}"
-                        playsinline="true"
-                        muted
-                        autoplay
-                      ></video>
+                      <video-local-slide class="slide-video-{{ forloop.index }}">
+                        {% render 'responsive-image',
+                          type: 'banner',
+                          class: ' video-thumbnail',
+                          container: section_st.section_width,
+                          image: local_video.preview_image,
+                          image_mobile: local_video.preview_image,
+                          image_alt: image_alt,
+                          fetchpriority: fetchpriority
+                        %}
+                        <template>
+                          <video
+                            class="slideshow w-full h-full object-fit-cover {{ rounded }}"
+                            loop="true"
+                            {% if poster_mobile != blank %}
+                              data-posterMobile="{{ poster_mobile | image_url: width: 1100 }}"
+                            {% endif %}
+                            {% if poster_desktop != blank %}
+                              data-posterDesktop="{{ poster_desktop | image_url: width: 1100 }}"
+                            {% endif %}
+                            src="{{ source_url }}"
+                            poster="{{ poster }}"
+                            playsinline="true"
+                            muted
+                            autoplay
+                          ></video>
+                        </template>
+                      </video-local-slide>
                     {% else %}
                       {%- liquid
                         assign image_alt = image.alt
@@ -161,7 +176,7 @@
                         image: image,
                         image_mobile: image_mobile,
                         image_alt: image_alt,
-                        lazy_load: lazy_load
+                        fetchpriority: fetchpriority
                       %}
                     {% endif %}
                   {%- else -%}
@@ -173,7 +188,8 @@
                   {% endif %}
                 </div>
                 {% if heading != blank or subheading != blank or description != blank or first_button_label != blank %}
-                  <div class="sec__content w-full{% if show_text_bellow_image == false %} flex py-custom{% else %} flex-md{% endif %} {{ desktop_content_position }} text-{{ block_st.text_alignment_mobile }} text-md-{{ text_alignment }} container relative{% if show_text_bellow_image %} mt-40 mt-md-0{% endif %} z-2"
+                  <div
+                    class="sec__content w-full{% if show_text_bellow_image == false %} flex py-custom{% else %} flex-md{% endif %} {{ desktop_content_position }} text-{{ block_st.text_alignment_mobile }} text-md-{{ text_alignment }} container relative{% if show_text_bellow_image %} mt-40 mt-md-0{% endif %} z-2"
                     style="--padding-block: 100;"
                   >
                     <div class="sec__content-inner prose max-w-100">
@@ -245,7 +261,7 @@
           {% endfor %}
         </div>
         {% if show_navigation %}
-          {%- render 'swiper-navigation' | class-slideshow: "hidden block-1025 cursor-custom-slide", type: "slideshow"  -%}
+          {%- render 'swiper-navigation' | class-slideshow: "hidden block-1025 cursor-custom-slide", type: "slideshow" -%}
         {% endif %}
         {%- if show_pagination -%}
           <div

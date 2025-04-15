@@ -597,7 +597,7 @@ class DetailsMegaMenu extends HTMLDetailsElement {
     );
     const translateY = "-105%";
     return Motion.animate(
-      this.contentElement,
+      this.contentElement.firstElementChild,
       {
         transform: [`translateY(${translateY})`, "translateY(0)"],
       },
@@ -621,7 +621,7 @@ class DetailsMegaMenu extends HTMLDetailsElement {
     );
     const translateY = "-105%";
     return Motion.animate(
-      this.contentElement,
+      this.contentElement.firstElementChild,
       {
         transform: `translateY(${translateY})`,
       },
