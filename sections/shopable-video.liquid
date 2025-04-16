@@ -148,7 +148,12 @@
               endif
             %}
             <div class="swiper-slide" {{ block.shopify_attributes }}>
-              <shopable-item tabindex="0" class="pointer rounded block" data-product="Product-{{ block.id }}" data-position="{{ forloop.index | minus: 1 }}">
+              <shopable-item
+                tabindex="0"
+                class="pointer rounded block"
+                data-product="Product-{{ block.id }}"
+                data-position="{{ forloop.index | minus: 1 }}"
+              >
                 <div class="relative">
                   {% if poster_image != blank or local_video != blank %}
                     <video-local
@@ -224,7 +229,6 @@
                       {% endif %}
                     </div>
                   {% endif %}
-
                 </div>
                 <div class="shopable-video__product">
                   {% render 'card-product',
@@ -253,7 +257,10 @@
       </shopable-video>
     {% endif %}
     {% if sticky and section.blocks[0].settings.local_video != blank %}
-      <shopable-item class="sticky-video block right-0 rounded pointer transition-drawer" data-product="Product-{{ section.blocks[0].id }}">
+      <shopable-item
+        class="sticky-video block right-0 rounded pointer transition-drawer"
+        data-product="Product-{{ section.blocks[0].id }}"
+      >
         {% liquid
           assign block_st = section.blocks[0].settings
           assign local_video = block_st.local_video
@@ -384,7 +391,10 @@
             <div class="swiper-wrapper">
               {% for block in section.blocks %}
                 <div class="swiper-slide">
-                  <div class="drawer__body drawer__body-item rte h-full overflow-y-auto custom-scrollbar bg-white" id="Product-{{ block.id }}">
+                  <div
+                    class="drawer__body drawer__body-item rte h-full overflow-y-auto custom-scrollbar bg-white"
+                    id="Product-{{ block.id }}"
+                  >
                     <div
                       class="flex flex-cols wrap relative modal-shopable_content"
                       style="--gap: 0px; --col-desktop: 2;--col-tablet: 1; --col-number: 1;"
@@ -411,17 +421,17 @@
                             assign video_ratio = local_video.aspect_ratio
                           endif
                         endif
-        
+
                         assign image_alt = poster_image.alt
                         if image_alt == blank
                           assign image_alt = 'general.image.image_alt_default' | t
                         endif
-        
+
                         assign video_alt = local_video.alt
                         if video_alt == blank
                           assign video_alt = 'accessibility.video' | t
                         endif
-        
+
                         assign product_form_id = 'product-form-' | append: block.id
                       %}
                       {% if poster_image != blank or local_video != blank %}
@@ -534,7 +544,11 @@
                                   style="--aspect-ratio: {{ ratio }};"
                                 >
                                   {%- assign alt_features = media.alt | default: card_product.title | escape -%}
-                                  {% render 'responsive-image', type: 'product', image: media, image_alt: alt_features %}
+                                  {% render 'responsive-image',
+                                    type: 'product',
+                                    image: media,
+                                    image_alt: alt_features
+                                  %}
                                 </div>
                               </div>
                             {% endfor %}
@@ -566,9 +580,19 @@
                             {%- endif -%}
                             {%- if card_product != blank -%}
                               <div>
-                                {%- assign product_form_installment_id = 'product-form-installment-' | append: section.blocks[0].id -%}
-                                {%- form 'product', card_product, id: product_form_installment_id, class: 'installment caption-large' -%}
-                                  <input type="hidden" name="id" value="{{ card_product.selected_or_first_available_variant.id }}">
+                                {%- assign product_form_installment_id = 'product-form-installment-'
+                                  | append: section.blocks[0].id
+                                -%}
+                                {%- form 'product',
+                                  card_product,
+                                  id: product_form_installment_id,
+                                  class: 'installment caption-large'
+                                -%}
+                                  <input
+                                    type="hidden"
+                                    name="id"
+                                    value="{{ card_product.selected_or_first_available_variant.id }}"
+                                  >
                                   {{ form | payment_terms }}
                                 {%- endform -%}
                               </div>
@@ -576,7 +600,12 @@
                           </div>
                         </div>
                         <div class="block-product__variant-picker">
-                          {%- render 'variant-swatches', product: card_product, scope: 'detail' , type: 'shopable', block_id: block.id -%}
+                          {%- render 'variant-swatches',
+                            product: card_product,
+                            scope: 'detail',
+                            type: 'shopable',
+                            block_id: block.id
+                          -%}
                         </div>
                         <a
                           {% if card_product == blank %}
@@ -598,26 +627,25 @@
                             </svg>
                           {% endif %}
                         </a>
-                        <div class="block-product__buttons">                
-                        {%- if card_product.metafields.custom.external_affiliate == blank -%}
-                          <div class="product-detail__buy-buttons">
-                            {%- render 'buy-buttons',
-                              product: card_product,
-                              section_id: block.id,
-                              product_form_id: product_form_id
-                            -%}
-                          </div>
-                        {%- else -%}
-                          <a
-                            href="{{ card_product.metafields.custom.external_affiliate.value.external_link }}"
-                            rel="nofollow"
-                            target="_blank"
-                            class="btn product-form__submit relative text-center w-full whitespace-nowrap animation flash-move block btn-primary no-underline"
-                          >
-                            {{- card_product.metafields.custom.external_affiliate.value.button_text -}}
-                          </a>
-                        {%- endif -%}
-        
+                        <div class="block-product__buttons">
+                          {%- if card_product.metafields.custom.external_affiliate == blank -%}
+                            <div class="product-detail__buy-buttons">
+                              {%- render 'buy-buttons',
+                                product: card_product,
+                                section_id: block.id,
+                                product_form_id: product_form_id
+                              -%}
+                            </div>
+                          {%- else -%}
+                            <a
+                              href="{{ card_product.metafields.custom.external_affiliate.value.external_link }}"
+                              rel="nofollow"
+                              target="_blank"
+                              class="btn product-form__submit relative text-center w-full whitespace-nowrap animation flash-move block btn-primary no-underline"
+                            >
+                              {{- card_product.metafields.custom.external_affiliate.value.button_text -}}
+                            </a>
+                          {%- endif -%}
                         </div>
                       </div>
                     </div>
@@ -680,13 +708,13 @@
     },
     {
       "type": "text",
-      "id": "title",
-      "label": "t:sections.all.content_setting.heading.label"
+      "id": "subheading",
+      "label": "t:sections.all.content_setting.subheading.label"
     },
     {
       "type": "text",
-      "id": "subheading",
-      "label": "t:sections.all.content_setting.subheading.label"
+      "id": "title",
+      "label": "t:sections.all.content_setting.heading.label"
     },
     {
       "type": "richtext",
@@ -889,7 +917,27 @@
   ],
   "presets": [
     {
-      "name": "t:sections.shopable_video.name"
+      "name": "t:sections.shopable_video.name",
+      "blocks": [
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        }
+      ]
     }
   ]
 }
