@@ -6,8 +6,8 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 <div
-  class="stretch_width section flex column content-center max-w-custom-all mx-auto"
-  style="{{ style | strip | strip_newlines }}--max-width: 50rem;"
+  class="stretch_width section flex column content-center w-full max-w-custom-all mx-auto"
+  style="{{ style | strip | strip_newlines }}--max-width: 56rem;--bs-gutter-x: 3rem;"
 >
   <h1 id="recover" tabindex="-1" class="heading-title text-center mb-15">
     {{ 'customer.recover_password.submit' | t }}
@@ -29,7 +29,6 @@
               <use href="#icon-error"></use>
             </svg>
             {{ form.errors.messages.form }}
-            Incorrect email or password!
           </div>
         {%- endif -%}
         <div class="field relative w-full flex wrap transition mb-30">
@@ -92,26 +91,29 @@
     {%- endif -%}
     {%- form 'customer_login', novalidate: 'novalidate' -%}
       {%- if form.errors -%}
-        <div class="form__message error w-full mb-20 fs-small inline-flex align-center gap-10" tabindex="-1" autofocus>
-          <span class="visually-hidden">{{ 'accessibility.error' | t }} </span>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto">
-            <use href="#icon-error"></use>
-          </svg>
-          {%- for field in form.errors -%}
-            <ul class="list-unstyled">
-              <li>
-                {%- if field == 'form' -%}
-                  {{ form.errors.messages[field] }}
-                {%- else -%}
-                  <a href="#RegisterForm-{{ field }}" class="color-inherit">
-                    {{ form.errors.translated_fields[field] | capitalize }}
+        {%- if form.errors -%}
+          <div class="form__message error flex align-center gap-10 mb-10" tabindex="-1" autofocus>
+            <div class="flex content-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <use href="#icon-error"></use>
+              </svg>
+            </div>
+            {%- for field in form.errors -%}
+              <ul class="list-unstyled w-custom" style="--width: calc(100% - 24px)">
+                <li>
+                  {%- if field == 'form' -%}
                     {{ form.errors.messages[field] }}
-                  </a>
-                {%- endif -%}
-              </li>
-            </ul>
-          {%- endfor -%}
-        </div>
+                  {%- else -%}
+                    <a href="#RegisterForm-{{ field }}" class="color-inherit">
+                      {{ form.errors.translated_fields[field] | capitalize }}
+                      {{ form.errors.messages[field] }}
+                    </a>
+                  {%- endif -%}
+                </li>
+              </ul>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
       {%- endif -%}
 
       <div class="field relative w-full flex wrap transition mb-20">

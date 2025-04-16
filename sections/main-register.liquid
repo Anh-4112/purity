@@ -6,10 +6,10 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 <div
-  class="stretch_width customer register section flex column content-center max-w-custom-all mx-auto"
-  style="{{ style | strip | strip_newlines }}--max-width: 50rem;"
+  class="stretch_width customer register section flex column content-center w-full max-w-custom-all mx-auto"
+  style="{{ style | strip | strip_newlines }}--max-width: 56rem;--bs-gutter-x: 3rem;"
 >
-  <div class="">
+  <div class="w-full">
     <div class="section-header">
       <h1 class="heading-title text-center">
         {{ 'customer.register.title' | t }}
@@ -22,11 +22,13 @@
       {%- form 'create_customer', novalidate: 'novalidate' -%}
         {%- if form.errors -%}
           <div class="form__message error flex align-center gap-10 mb-10" tabindex="-1" autofocus>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <use href="#icon-error"></use>
-            </svg>
+            <div class="flex content-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <use href="#icon-error"></use>
+              </svg>
+            </div>
             {%- for field in form.errors -%}
-              <ul class="list-unstyled">
+              <ul class="list-unstyled w-custom" style="--width: calc(100% - 24px)">
                 <li>
                   {%- if field == 'form' -%}
                     {{ form.errors.messages[field] }}
@@ -104,7 +106,7 @@
             <span class="required">*</span>
           </label>
         </div>
-        {%- if form.errors contains 'email' -%} 
+        {%- if form.errors contains 'email' -%}
           <span id="RegisterForm-email-error" class="form__message error flex align-center gap-10 mb-10">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto">
               <use href="#icon-error"></use>
@@ -140,8 +142,10 @@
             <span class="required">*</span>
           </label>
         </div>
-        {% if form.errors contains 'password' %} 
-          <div id="RegisterForm-password-error" class="error form__message fs-small inline-flex align-center gap-10 mb-10 w-full h-custom"
+        {% if form.errors contains 'password' %}
+          <div
+            id="RegisterForm-password-error"
+            class="error form__message fs-small inline-flex align-center gap-10 mb-10 w-full h-custom"
             style="--height: 5.6rem;"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
