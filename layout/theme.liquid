@@ -2,7 +2,7 @@
   assign theme_st = settings
 %}
 <!doctype html>
-<html class="js{% if theme_st.rtl %} rtl{% endif %}" lang="{{ request.locale.iso_code }}">
+<html class="no-js{% if theme_st.rtl %} rtl{% endif %}" lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -111,7 +111,7 @@
         --btn-font-size: {% if theme_st.button_text_transform == 'uppercase' %}calc(var(--body-font-size, 1.4rem) - 2px){% else %}var(--body-font-size, 1.4rem){% endif %};
         --shopify-accelerated-checkout-button-border-radius: var(--btn-radius);
         --input-padding: 0 1.5rem;
-        --inputs-border-width: 1px;
+        --input-border-width: 1px;
         --input-border-color: var(--border-color);
         --input-bg: rgb(var(--color-white));
         --input-color: rgb(var(--color-heading-hsl));
@@ -308,6 +308,12 @@
         login_successful: ` {{ 'customer.login_page.login_successful' | t }}`,
         login_invalid: ` {{ 'customer.login_page.login_invalid' | t }}`,
       };
+    </script>
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
     </script>
   </body>
 </html>

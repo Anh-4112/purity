@@ -143,11 +143,6 @@ html.no-js .no-js-scroll {
   outline: none;
   box-shadow: none;
 }
-:is(input, select, textarea, .input-style).border-0:focus,
-:is(input, select, textarea, .input-style).border-0:focus-visible {
-  box-shadow: 0 0 0 1px var(--color-heading),
-    inset 0 0 0 calc(var(--shadow-position, -3px) * -1) rgb(var(--color-white));
-}
 /* Fallback - for browsers that don't support :focus-visible, a fallback is set for :focus */
 .focused,
 .no-js *:focus {
@@ -500,4 +495,12 @@ html.no-js details[open].type-canvas .has-overlay:after {
 
 .no-js quantity-input input.quantity__input:focus {
   border-color: var(--heading-color) !important;
+}
+@media (min-width: 1025px) {
+  :is(input, select, textarea, .input-style).border-0:focus,
+  :is(input, select, textarea, .input-style).border-0:focus-visible {
+    box-shadow: 0 0 0 1px var(--color-heading),
+      inset 0 0 0 calc(var(--shadow-position, -3px) * -1)
+        rgb(var(--color-white));
+  }
 }
