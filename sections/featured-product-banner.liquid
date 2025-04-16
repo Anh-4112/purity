@@ -199,6 +199,24 @@
           {% endfor %}
         </div>
       </div>
+      {% if section_st.button_label != blank %}
+        <div class="button-block">
+          <a
+            {% if section_st.button_link == blank %}
+              role="link" aria-disabled="true"
+            {% else %}
+              href="{{ section_st.button_link | default: "#" }}"
+            {% endif %}
+            aria-label="{{ section_st.button_label }}"
+            class="btn btn-{{ section_st.button_type }}{% if section_st.button_type == "link" %} align-self-center{% else %} w-custom max-w-100{% endif %}"
+            {% if section_st.button_type != 'link' %}
+              style="--width: 20rem;"
+            {% endif %}
+          >
+            {{ section_st.button_label }}
+          </a>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>
@@ -347,6 +365,26 @@
       "type": "url",
       "id": "button_link",
       "label": "t:sections.all.content_setting.first_button_label.link"
+    },
+    {
+      "type": "select",
+      "id": "button_type",
+      "label": "t:sections.all.content_setting.button_type.label",
+      "default": "primary",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:sections.all.content_setting.button_type.primary.label"
+        },
+        {
+          "value": "outline",
+          "label": "t:sections.all.content_setting.button_type.outline.label"
+        },
+        {
+          "value": "link",
+          "label": "t:sections.all.content_setting.button_type.link.label"
+        }
+      ]
     },
     {
       "type": "header",
