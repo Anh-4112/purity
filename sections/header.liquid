@@ -179,196 +179,192 @@
                           class="mega-menu submenu pointer-none transition invisible submenu-desktop overflow-auto {{ dropdowns_animation }} border-top inset-x-0 absolute{% if dropdowns_animation != 'fade-in-down' %} z-2 bg-white shadow{% endif %}"
                           style="--col-mega-width: {{ mega_width }}%; --gap: 20px; --delay: 0.05s;"
                         >
-                          {%- if dropdowns_animation == 'fade-in-down' -%}
-                            <div class="menu-container z-2 bg-white shadow">
-                          {%- endif -%}
-                          <div class="container flex wrap gap py-40 custom-scrollbar overflow-auto">
-                            {%- if link.links.size > 0 -%}
-                              <div
-                                class="menu-list flex-1"
-                                style="--col-desktop: {{ last_block.settings.menu_column }}"
-                              >
-                                {%- render 'horizontal-menu', section_st: section_st, menu_mega: true, link: link -%}
-                              </div>
-                            {%- endif -%}
-                            {%- if has_content -%}
-                              {%- case last_block.type -%}
-                                {%- when 'menu_mega' -%}
-                                  <div
-                                    class="col-mega mega-banner flex wrap flex-cols"
-                                    style="{% if last_block.settings.banner_column > 1 %}--col-number: 2{% else %}--col-number: 1;{% endif %};--col-desktop: {{ last_block.settings.banner_column }};"
-                                  >
-                                    {%- for i in (1..5) -%}
-                                      {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}
-                                      {%- capture promotion_subheading -%}promotion_subheading_{{ i }}{%- endcapture -%}
-                                      {%- capture promotion_heading -%}promotion_heading_{{ i }}{%- endcapture -%}
-                                      {%- capture promotion_description -%}promotion_description_{{ i }}{%- endcapture -%}
-                                      {%- capture promotion_button_label -%}promotion_button_label_{{ i }}{%- endcapture -%}
-                                      {%- capture promotion_button_link -%}promotion_button_link_{{ i }}{%- endcapture -%}
-                                      {%- if last_block.settings[promotion] != blank -%}
-                                        {% case i %}
-                                          {% when 1 %}
-                                            {% assign color_scheme_banner = last_block.settings.color_scheme_banner_1 %}
-                                          {% when 2 %}
-                                            {% assign color_scheme_banner = last_block.settings.color_scheme_banner_2 %}
-                                          {% when 3 %}
-                                            {% assign color_scheme_banner = last_block.settings.color_scheme_banner_3 %}
-                                          {% when 4 %}
-                                            {% assign color_scheme_banner = last_block.settings.color_scheme_banner_4 %}
-                                          {% when 5 %}
-                                            {% assign color_scheme_banner = last_block.settings.color_scheme_banner_5 %}
-                                          {% else %}
-                                            {% assign color_scheme_banner = 'default' %}
-                                        {% endcase %}
-                                        {%- liquid
-                                          assign image = last_block.settings[promotion]
-                                          assign subheading = last_block.settings[promotion_subheading]
-                                          assign heading = last_block.settings[promotion_heading]
-                                          assign description = last_block.settings[promotion_description]
-                                          assign button_label = last_block.settings[promotion_button_label]
-                                          assign banner_link = last_block.settings[promotion_button_link]
-                                          assign banner_default = 'accessibility.promotion_banner'
-                                          assign image_alt = image.alt | default: banner_default | escape
-                                        -%}
-                                        <div class="banner__item slideIn-animate rounded">
-                                          <a
-                                            {% if banner_link != blank %}
-                                              href="{{ banner_link }}"
+                          <div class="menu-container z-2 bg-white shadow">
+                            <div class="container flex wrap gap py-40 custom-scrollbar overflow-auto">
+                              {%- if link.links.size > 0 -%}
+                                <div
+                                  class="menu-list flex-1"
+                                  style="--col-desktop: {{ last_block.settings.menu_column }}"
+                                >
+                                  {%- render 'horizontal-menu', section_st: section_st, menu_mega: true, link: link -%}
+                                </div>
+                              {%- endif -%}
+                              {%- if has_content -%}
+                                {%- case last_block.type -%}
+                                  {%- when 'menu_mega' -%}
+                                    <div
+                                      class="col-mega mega-banner flex wrap flex-cols"
+                                      style="{% if last_block.settings.banner_column > 1 %}--col-number: 2{% else %}--col-number: 1;{% endif %};--col-desktop: {{ last_block.settings.banner_column }};"
+                                    >
+                                      {%- for i in (1..5) -%}
+                                        {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}
+                                        {%- capture promotion_subheading -%}promotion_subheading_{{ i }}{%- endcapture -%}
+                                        {%- capture promotion_heading -%}promotion_heading_{{ i }}{%- endcapture -%}
+                                        {%- capture promotion_description -%}promotion_description_{{ i }}{%- endcapture -%}
+                                        {%- capture promotion_button_label -%}promotion_button_label_{{ i }}{%- endcapture -%}
+                                        {%- capture promotion_button_link -%}promotion_button_link_{{ i }}{%- endcapture -%}
+                                        {%- if last_block.settings[promotion] != blank -%}
+                                          {% case i %}
+                                            {% when 1 %}
+                                              {% assign color_scheme_banner = last_block.settings.color_scheme_banner_1 %}
+                                            {% when 2 %}
+                                              {% assign color_scheme_banner = last_block.settings.color_scheme_banner_2 %}
+                                            {% when 3 %}
+                                              {% assign color_scheme_banner = last_block.settings.color_scheme_banner_3 %}
+                                            {% when 4 %}
+                                              {% assign color_scheme_banner = last_block.settings.color_scheme_banner_4 %}
+                                            {% when 5 %}
+                                              {% assign color_scheme_banner = last_block.settings.color_scheme_banner_5 %}
                                             {% else %}
-                                              role="link" aria-disabled="true"
-                                            {% endif %}
-                                            arial-label="{{ image_alt }}"
-                                            class="banner__inner hover-effect{% if last_block.settings.content_position != 'bellow' %} flex relative align-{{ last_block.settings.content_position }}{% endif %}"
-                                            {% if last_block.settings.content_position != 'bellow' %}
-                                              style="--aspect-ratio: {{ image.aspect_ratio }};"
-                                            {% endif %}
-                                          >
-                                            <div
-                                              class="banner__item-media block rounded hover-effect{% if last_block.settings.content_position != 'bellow' %} absolute inset-0{% endif %}"
-                                              style="--aspect-ratio: {{ image.aspect_ratio }};--point:{{ image.presentation.focal_point }};"
+                                              {% assign color_scheme_banner = 'default' %}
+                                          {% endcase %}
+                                          {%- liquid
+                                            assign image = last_block.settings[promotion]
+                                            assign subheading = last_block.settings[promotion_subheading]
+                                            assign heading = last_block.settings[promotion_heading]
+                                            assign description = last_block.settings[promotion_description]
+                                            assign button_label = last_block.settings[promotion_button_label]
+                                            assign banner_link = last_block.settings[promotion_button_link]
+                                            assign banner_default = 'accessibility.promotion_banner'
+                                            assign image_alt = image.alt | default: banner_default | escape
+                                          -%}
+                                          <div class="banner__item slideIn-animate rounded">
+                                            <a
+                                              {% if banner_link != blank %}
+                                                href="{{ banner_link }}"
+                                              {% else %}
+                                                role="link" aria-disabled="true"
+                                              {% endif %}
+                                              arial-label="{{ image_alt }}"
+                                              class="banner__inner hover-effect{% if last_block.settings.content_position != 'bellow' %} flex relative align-{{ last_block.settings.content_position }}{% endif %}"
+                                              {% if last_block.settings.content_position != 'bellow' %}
+                                                style="--aspect-ratio: {{ image.aspect_ratio }};"
+                                              {% endif %}
                                             >
-                                              {% render 'responsive-image',
-                                                image: image,
-                                                type: 'other',
-                                                alt: image_alt
+                                              <div
+                                                class="banner__item-media block rounded hover-effect{% if last_block.settings.content_position != 'bellow' %} absolute inset-0{% endif %}"
+                                                style="--aspect-ratio: {{ image.aspect_ratio }};--point:{{ image.presentation.focal_point }};"
+                                              >
+                                                {% render 'responsive-image',
+                                                  image: image,
+                                                  type: 'other',
+                                                  alt: image_alt
+                                                %}
+                                              </div>
+                                              {% if heading != blank
+                                                or subheading != blank
+                                                or description != blank
+                                                or button_label != blank
+                                              %}
+                                                <div class="banner__item-info bg-transparent color-{{ color_scheme_banner }} w-full{% if last_block.settings.content_position != 'bellow' %} py-40 px-30{% else %} mt-20{% endif %} text-{{ last_block.settings.content_alignment }} relative z-1">
+                                                  {% if subheading != blank %}
+                                                    <div class="subheading mb-3">
+                                                      {{ subheading | escape }}
+                                                    </div>
+                                                  {% endif %}
+                                                  {% if heading != blank %}
+                                                    <h2 class="heading{% if last_block.settings.banner_column > 3 %} h5{% else %} h3{% endif %}">
+                                                      {{ heading }}
+                                                    </h2>
+                                                  {% endif %}
+                                                  {% if description != blank %}
+                                                    <div class="description mt-5">
+                                                      {{ description }}
+                                                    </div>
+                                                  {% endif %}
+                                                  {% if button_label != blank %}
+                                                    <button
+                                                      class="btn btn-primary mt-20 text-center w-custom"
+                                                      style="--width: 70%;--btn-padding-x: 2rem;"
+                                                      aria-label="{{ button_label }}"
+                                                    >
+                                                      <span class="btn-text relative z-1">{{ button_label }}</span>
+                                                    </button>
+                                                  {% endif %}
+                                                </div>
+                                              {%- endif -%}
+                                            </a>
+                                          </div>
+                                        {%- endif -%}
+                                      {%- endfor -%}
+                                    </div>
+                                  {%- when 'menu_product' -%}
+                                    <div class="col-mega mega-product">
+                                      {%- liquid
+                                        assign heading = last_block.settings.heading
+                                        assign product_column = last_block.settings.product_column
+                                      -%}
+                                      {%- if heading != blank -%}
+                                        <h2 class="section-heading h4 mb-20 slideIn-animate">
+                                          {{ heading }}
+                                        </h2>
+                                      {%- endif -%}
+                                      <slide-section
+                                        class="swiper hover-action slideIn-animate"
+                                        data-section-id="{{ section.id }}"
+                                        data-autoplay="false"
+                                        data-effect="slide"
+                                        data-loop="false"
+                                        data-speed="500"
+                                        data-spacing="20"
+                                        data-mobile="1"
+                                        data-desktop="{{ product_column }}"
+                                        data-tablet="{{ product_column }}"
+                                      >
+                                        {%- render 'swiper-navigation', show_on_hover: true -%}
+                                        <div class="swiper-wrapper">
+                                          {%- liquid
+                                            for product in last_block.settings.product_list
+                                              render 'card-product', card_product: product, section_id: section.id, class: ' swiper-slide', show_video: false, container: section_width, column: product_column, column_mobile: 1, padding: 20, indexFor: forloop.index
+                                            endfor
+                                          -%}
+                                        </div>
+                                      </slide-section>
+                                    </div>
+                                  {%- when 'menu_collection' -%}
+                                    <div class="col-mega mega-collection">
+                                      {%- liquid
+                                        assign heading = last_block.settings.heading
+                                        assign collection_column = last_block.settings.collection_column
+                                      -%}
+                                      {%- if heading != blank -%}
+                                        <h2 class="section-heading h4 mb-20 slideIn-animate">
+                                          {{ heading }}
+                                        </h2>
+                                      {%- endif -%}
+                                      <slide-section
+                                        class="swiper hover-action slideIn-animate"
+                                        data-section-id="{{ section.id }}"
+                                        data-autoplay="false"
+                                        data-effect="slide"
+                                        data-loop="false"
+                                        data-speed="500"
+                                        data-spacing="20"
+                                        data-mobile="1"
+                                        data-desktop="{{ collection_column }}"
+                                        data-tablet="{{ collection_column }}"
+                                      >
+                                        {%- render 'swiper-navigation', show_on_hover: true -%}
+                                        <div class="swiper-wrapper">
+                                          {% for collection in last_block.settings.collection %}
+                                            <div class="collection-item swiper-slide">
+                                              {% render 'collection-item',
+                                                card_collection: collection,
+                                                section: section,
+                                                container: section_width,
+                                                column: collection_column,
+                                                column_mobile: 1,
+                                                padding: 20
                                               %}
                                             </div>
-                                            {% if heading != blank
-                                              or subheading != blank
-                                              or description != blank
-                                              or button_label != blank
-                                            %}
-                                              <div class="banner__item-info bg-transparent color-{{ color_scheme_banner }} w-full{% if last_block.settings.content_position != 'bellow' %} py-40 px-30{% else %} mt-20{% endif %} text-{{ last_block.settings.content_alignment }} relative z-1">
-                                                {% if subheading != blank %}
-                                                  <div class="subheading mb-3">
-                                                    {{ subheading | escape }}
-                                                  </div>
-                                                {% endif %}
-                                                {% if heading != blank %}
-                                                  <h2 class="heading{% if last_block.settings.banner_column > 3 %} h5{% else %} h3{% endif %}">
-                                                    {{ heading }}
-                                                  </h2>
-                                                {% endif %}
-                                                {% if description != blank %}
-                                                  <div class="description mt-5">
-                                                    {{ description }}
-                                                  </div>
-                                                {% endif %}
-                                                {% if button_label != blank %}
-                                                  <button
-                                                    class="btn btn-primary mt-20 text-center w-custom"
-                                                    style="--width: 70%;--btn-padding-x: 2rem;"
-                                                    aria-label="{{ button_label }}"
-                                                  >
-                                                    <span class="btn-text relative z-1">{{ button_label }}</span>
-                                                  </button>
-                                                {% endif %}
-                                              </div>
-                                            {%- endif -%}
-                                          </a>
+                                          {% endfor %}
                                         </div>
-                                      {%- endif -%}
-                                    {%- endfor -%}
-                                  </div>
-                                {%- when 'menu_product' -%}
-                                  <div class="col-mega mega-product">
-                                    {%- liquid
-                                      assign heading = last_block.settings.heading
-                                      assign product_column = last_block.settings.product_column
-                                    -%}
-                                    {%- if heading != blank -%}
-                                      <h2 class="section-heading h4 mb-20 slideIn-animate">
-                                        {{ heading }}
-                                      </h2>
-                                    {%- endif -%}
-                                    <slide-section
-                                      class="swiper hover-action slideIn-animate"
-                                      data-section-id="{{ section.id }}"
-                                      data-autoplay="false"
-                                      data-effect="slide"
-                                      data-loop="false"
-                                      data-speed="500"
-                                      data-spacing="20"
-                                      data-mobile="1"
-                                      data-desktop="{{ product_column }}"
-                                      data-tablet="{{ product_column }}"
-                                    >
-                                      {%- render 'swiper-navigation', show_on_hover: true -%}
-                                      <div class="swiper-wrapper">
-                                        {%- liquid
-                                          for product in last_block.settings.product_list
-                                            render 'card-product', card_product: product, section_id: section.id, class: ' swiper-slide', show_video: false, container: section_width, column: product_column, column_mobile: 1, padding: 20, indexFor: forloop.index
-                                          endfor
-                                        -%}
-                                      </div>
-                                    </slide-section>
-                                  </div>
-                                {%- when 'menu_collection' -%}
-                                  <div class="col-mega mega-collection">
-                                    {%- liquid
-                                      assign heading = last_block.settings.heading
-                                      assign collection_column = last_block.settings.collection_column
-                                    -%}
-                                    {%- if heading != blank -%}
-                                      <h2 class="section-heading h4 mb-20 slideIn-animate">
-                                        {{ heading }}
-                                      </h2>
-                                    {%- endif -%}
-                                    <slide-section
-                                      class="swiper hover-action slideIn-animate"
-                                      data-section-id="{{ section.id }}"
-                                      data-autoplay="false"
-                                      data-effect="slide"
-                                      data-loop="false"
-                                      data-speed="500"
-                                      data-spacing="20"
-                                      data-mobile="1"
-                                      data-desktop="{{ collection_column }}"
-                                      data-tablet="{{ collection_column }}"
-                                    >
-                                      {%- render 'swiper-navigation', show_on_hover: true -%}
-                                      <div class="swiper-wrapper">
-                                        {% for collection in last_block.settings.collection %}
-                                          <div class="collection-item swiper-slide">
-                                            {% render 'collection-item',
-                                              card_collection: collection,
-                                              section: section,
-                                              container: section_width,
-                                              column: collection_column,
-                                              column_mobile: 1,
-                                              padding: 20
-                                            %}
-                                          </div>
-                                        {% endfor %}
-                                      </div>
-                                    </slide-section>
-                                  </div>
-                              {%- endcase -%}
-                            {%- endif -%}
-                          </div>
-                          {%- if dropdowns_animation == 'fade-in-down' -%}
+                                      </slide-section>
+                                    </div>
+                                {%- endcase -%}
+                              {%- endif -%}
                             </div>
-                          {%- endif -%}
+                          </div>
                         </div>
                       </details>
                     {%- else -%}

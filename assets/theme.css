@@ -1570,10 +1570,15 @@ modal-popup :is(.modal-overlay) {
   .media-gallery__image .show-on-hover {
     transform: scale(0.8);
   }
-  .hover-action:hover .show-on-hover {
+  .hover-action:hover .show-on-hover:not(.swiper-button-disabled) {
     opacity: 1;
+  }
+  .hover-action:hover .show-on-hover {
     visibility: visible;
     transform: translateX(0) scale(1);
+  }
+  .hover-action:hover .vertical-arrow .show-on-hover {
+    transform: translateX(-50%) rotate(90deg);
   }
   .hover-icon-zoom:hover .icon-zoom {
     transform: scale(1.1);
@@ -1755,7 +1760,7 @@ modal-popup :is(.modal-overlay) {
   --transition: opacity 0.3s, visibility 0.3s, transform 0.3s,
     -webkit-transform 0.3s;
 }
-.submenu-desktop {
+.submenu-desktop > * {
   max-height: 90vh;
 }
 .col-mega {
@@ -2072,8 +2077,13 @@ mini-cart-recommendations .quick__shop-action .hidden-1025 {
     #fff0 75% 100%
   );
   background-size: 40px 40px;
+  width: 0;
+  transition-delay: 0.35s;
+  --transition: width 0.4s ease;
 }
-
+cart-drawer.active .progress {
+  width: var(--width);
+}
 @keyframes progress {
   0% {
     background-position: 0 0;

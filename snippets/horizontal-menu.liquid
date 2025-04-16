@@ -3,7 +3,7 @@
 -%}
 {% if link.links.size > 0 %}
   {%- if type == 'classic' -%}
-    <div class="submenu classic pointer-none transition invisible z-5{% if menu_mobile == blank %} {{ dropdowns_animation }}{%- if dropdowns_animation != 'fade-in-down' %} py-30 bg-white shadow{% endif %} absolute submenu-desktop custom-scrollbar overflow-auto{% else %} bg-white sub-mb absolute inset-0 drawer drawer-right-mb top-rounded overflow-hidden{% endif %}">
+    <div class="submenu classic pointer-none transition invisible z-5 shadow{% if menu_mobile == blank %} {{ dropdowns_animation }} absolute submenu-desktop{% else %} bg-white sub-mb absolute inset-0 drawer drawer-right-mb top-rounded overflow-hidden{% endif %}">
       {%- if dropdowns_animation == 'fade-in-down' and menu_mobile == blank -%}
         <div class="menu-container py-30 bg-white shadow">
       {%- endif -%}
@@ -59,7 +59,7 @@
       </div>
     {%- endif -%}
   {%- endif -%}
-  <ul class="menu list-unstyled{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% elsif menu_mobile != blank%} px-gutter-x py-12{% endif %}">
+  <ul class="menu list-unstyled{%- if dropdowns_animation != 'fade-in-down' %} py-30 bg-white custom-scrollbar overflow-auto{% endif %}{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% elsif menu_mobile != blank%} px-gutter-x py-12{% endif %}">
     {% for child_link in link.links %}
       <li class="menu-link{% if child_link.links.size > 0 %} have-child{% if menu_mega == blank %} relative{% endif %}{% else %} py-6{% endif %}{% if menu_mega == blank and menu_mobile == blank %} px-20{% endif %}">
         {%- if child_link.links.size > 0 -%}
@@ -99,7 +99,7 @@
               </summary>
             </details>
           {% endif %}
-          <ul class="sub-children-menu list-unstyled overflow-hidden-mb{% if menu_mega == blank and menu_mobile == blank %} overflow-hidden mt-1025-20{% endif %}">
+          <ul class="sub-children-menu list-unstyled overflow-hidden-mb{% if menu_mega == blank and menu_mobile == blank %} overflow-hidden{% endif %}{% if menu_mega != blank and menu_mobile == blank %} mt-1025-20{% endif %}">
             {% for grandchild_link in child_link.links %}
               <li class="menu-link py-6{% if menu_mega == blank and menu_mobile == blank %} px-10{% endif %}">
                 <a
