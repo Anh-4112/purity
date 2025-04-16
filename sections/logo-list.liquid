@@ -1,0 +1,260 @@
+{{ 'section-scrolling-text.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width'
+  else
+    assign section_width = 'fluid_container'
+  endif
+  assign heading_size = section_st.heading_size
+
+  assign header_size = ''
+  if heading_size == 'small'
+    assign header_size = 'h4'
+  elsif heading_size == 'large'
+    assign header_size = 'h2'
+  else
+    assign header_size = 'h3'
+  endif
+-%}
+
+{%- capture style -%}
+    --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.speed }}s;
+{%- endcapture -%}
+{%- capture col_style -%}
+  {% if section_st.space_between < 15 %}--gap: {{ section_st.space_between }}px;{% else %}--gap: clamp(4rem, calc({{ section_st.space_between }} * var(--responsive-rate)), calc({{ section_st.space_between }}*1px));{% endif %}
+{%- endcapture -%}
+<div
+  class="section color-{{ section_st.color_scheme }} gradient section"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ section_width }}">
+    <div
+      class="flex{% if section_st.uppercase %} uppercase{% endif %} marquee overflow-hidden gap w-full justify-center {% if section_st.show_background_blur %}show-background-blur{% endif %}"
+      style="{{ col_style | strip | strip_newlines }}"
+    >
+      {%- for i in (0..5) -%}
+        <div
+          class="flex animation-marquee animation__marquee-{{ section_st.direction }} marquee whitespace-nowrap gap align-center"
+          style="{{ col_style | strip | strip_newlines }}"
+        >
+          {%- for block in section.blocks -%}
+            {% assign block_st = block.settings %}
+
+            {%- liquid
+              assign image = block_st.image_block
+              assign link_image = block_st.link_image
+              assign image_alt_default = 'sections.scrolling_text.alt' | t
+              assign image_alt = image.alt | default: image_alt_default | escape
+            -%}
+            <a
+              class="scrolling-image-item overflow-hidden flex align-center w-custom-mb w-custom h-full"
+              style="--width: {{ block_st.image_width }}px;--aspect-ratio: {{ image.aspect_ratio }}"
+              {% if link_image == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ link_image | default: "#" }}"
+              {% endif %}
+              aria-label="{{ 'sections.scrolling_text.alt' | t }}"
+            >
+              {%- if image != blank  -%}
+                <div
+                  class="scrolling-image image_scroll flex"
+                  style="--image-width: {{ block_st.image_width }}px;--aspect-ratio: {{ image.aspect_ratio }}"
+                >
+                  {% render 'responsive-image',
+                    image: image,
+                    type: 'other',
+                    image_alt: image_alt
+                  %}
+                </div>
+              {% else %}
+                <div
+                  class="w-custom h-full flex content-center"
+                  style="--width: {{ block_st.image_width }}px;--aspect-ratio: {{ image.aspect_ratio }}"
+                >
+                  {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
+                </div>
+              {%- endif -%}
+            </a>
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.logo_list.name",
+  "tag": "section",
+  "class": "section-logo-list",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.general"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "fix_width",
+          "label": "t:sections.all.layout.fix_width"
+        },
+        {
+          "value": "stretch_width",
+          "label": "t:sections.all.layout.stretch_width"
+        },
+        {
+          "value": "full_width",
+          "label": "t:sections.all.layout.full_width"
+        }
+      ],
+      "default": "fix_width",
+      "label": "t:sections.all.layout.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.info",
+      "default": "default-color-scheme"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.announcement-bar.settings.marquee_settings.label"
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "t:sections.scrolling_text.settings.direction.label",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.scrolling_text.settings.direction.left.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.scrolling_text.settings.direction.right.label"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "t:sections.scrolling_text.settings.speed.label",
+      "default": 15,
+      "min": 5,
+      "max": 50,
+      "step": 1,
+      "unit": "s"
+    },
+    {
+      "type": "range",
+      "id": "space_between",
+      "label": "t:sections.all.space_between.label",
+      "min": 10,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "show_background_blur",
+      "label": "t:sections.logo_list.settings.show_background_blur.label",
+      "default": true 
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "t:sections.all.image.label",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image_block",
+          "label": "t:sections.all.image.label"
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "label": "t:sections.scrolling_text.settings.blocks.image.image_width.label",
+          "default": 150,
+          "unit": "px"
+        },
+        {
+          "type": "url",
+          "id": "link_image",
+          "label": "t:sections.all.content_setting.link.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.logo_list.name",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
