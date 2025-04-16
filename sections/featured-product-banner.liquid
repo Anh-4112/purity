@@ -93,6 +93,10 @@
         align-items: flex-start;
         justify-content: center;
     }
+    .media-effect__item{
+      width: 10rem;
+      height: 10rem;
+    }
 {% endstyle %}
 <div
   class="section section color-{{ section_st.color_scheme }} gradient"
@@ -119,16 +123,21 @@
           class="media-product__main"
           style="--aspect-ratio: {{ ratio }};{% if image_mobile != blank %}--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
         >
-          {% render 'responsive-image',
-            type: 'banner',
-            container: section_st.section_width,
-            image: image,
-            image_mobile: image_mobile,
-            image_alt: image_alt
-          %}
+          {% if image != blank or image_mobile != blank %}
+            {% render 'responsive-image',
+              type: 'banner',
+              container: section_st.section_width,
+              image: image,
+              image_mobile: image_mobile,
+              image_alt: image_alt
+            %}
+          {% else %}
+            {%- render 'placeholder-render', type: 'lifestyle-2' -%}
+          {% endif %}
         </div>
         <media-effect>
-          {% for block in section.blocks %}
+          {% assign image_effect_blocks = section.blocks | where: "type", "image_effect" %}
+          {% for block in image_effect_blocks %}
             <div class="media-effect__item absolute">
               {%- liquid
                 assign image = block.settings.image
@@ -162,7 +171,7 @@
                       image_alt: image_alt
                     %}
                   {% else %}
-                    {%- render 'placeholder-render', type: 'lifestyle-2' -%}
+                    {%- render 'placeholder-render', type: 'product' -%}
                   {% endif %}
               {% endcase %}
             </div>
@@ -287,7 +296,7 @@
           "label": "t:sections.all.text_alignment.options__3.label"
         }
       ],
-      "default": "start",
+      "default": "center",
       "label": "t:sections.all.text_alignment.alignment"
     },
     {
@@ -467,7 +476,36 @@
   ],
   "presets": [
     {
-      "name": "t:sections.featured_product_banner.name"
+      "name": "t:sections.featured_product_banner.name",
+      "blocks": [
+        {
+          "type": "image_effect"
+        },
+        {
+          "type": "image_effect"
+        },
+        {
+          "type": "image_effect"
+        },
+        {
+          "type": "information"
+        },
+        {
+          "type": "information"
+        },
+        {
+          "type": "information"
+        },
+        {
+          "type": "information"
+        },
+        {
+          "type": "information"
+        },
+        {
+          "type": "information"
+        }
+      ]
     }
   ]
 }
