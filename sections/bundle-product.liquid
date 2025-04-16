@@ -1,6 +1,5 @@
 {{ 'section-bundle-products.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'section-bundle-products.js' | asset_url }}" defer="defer"></script>
-
 {% liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -24,7 +23,7 @@
   if heading_size == 'small'
     assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = 'fs-medium'
+    assign header_size = 'h1'
   endif
 
   assign image_width = section_st.image_width
@@ -52,11 +51,10 @@
 %}
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
-    {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {% style %}
-  .bundle-products__body bundle-item:first-child .product-item__inner {
-    padding-top: 0;
+  bundle-item.last-0:last-of-type {
+    padding-top: 2rem;
   }
 {% endstyle %}
 <div
@@ -182,7 +180,7 @@
             <bundle-item
               data-product-position="{{ forloop.index }}"
               style="--width: 8rem;"
-              class="bundle-item{% if forloop.first %} pt-0{% endif %} transition"
+              class="bundle-item border-bottom block last-0 py-20{% if forloop.first %} pt-0{% endif %} transition"
             >
               {% render 'card-product',
                 card_product: product,
@@ -198,10 +196,10 @@
                 type: 'bundle',
                 enable_quick_add: enable_quick_add,
                 class: '',
-                style_layout: ' flex gap-20 py-20',
+                style_layout: ' flex gap-20',
                 image_class: ' flex-auto w-custom',
                 image_rounded: ' rounded-10',
-                info_class: ' flex-1 mt-0 relative flex-md md-column'
+                info_class: ' flex-1 mt-0 relative flex-md column-md'
               %}
             </bundle-item>
           {%- endfor -%}
@@ -270,7 +268,7 @@
               {%- if show_button_add_all -%}
                 <button
                   type="submit"
-                  class="btn btn-primary w-full relative product_submit_button product-form__submit word-wrap relative mt-20"
+                  class="btn btn-primary w-full relative product_submit_button product-form__submit word-wrap relative mt-30 mt-1025-40"
                   aria-label="{{ 'products.product.add_all_to_cart' | t }}"
                 >
                   <span class="hidden-on-load">{{ 'products.product.add_all_to_cart' | t }}</span>
@@ -500,7 +498,7 @@
     {
       "type": "text",
       "id": "button_label",
-      "default": "View Usage Guide",
+      "default": "Button label",
       "label": "t:sections.all.content_setting.first_button_label.label"
     },
     {
