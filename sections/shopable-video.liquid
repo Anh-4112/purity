@@ -209,7 +209,7 @@
                   {% endif %}
                   {% if autoplay_video == false or local_video != blank %}
                     <div class="flex column align-center absolute z-1 bottom-15 right-15 gap-10">
-                      {% if autoplay_video == false %}
+                      {% if autoplay_video == false and local_video != blank %}
                         <button
                           aria-label="{{ 'accessibility.play_button.video' | t }}"
                           class="play-button pointer border-0 inline-flex align-center justify-content-center"
