@@ -239,7 +239,7 @@ input[type="number"].heading-color {
     .input-style
   ) {
   padding: var(--input-padding);
-  border: var(--inputs-border-width) solid var(--color-border);
+  border: var(--input-border-width) solid var(--color-border);
   background: var(--input-bg);
   color: var(--input-color);
   border-radius: var(--input-border-radius);
@@ -390,9 +390,6 @@ mark {
 .fs-small-3 {
   font-size: calc(var(--body-font-size) - 3px);
 }
-.fs-small {
-  font-size: calc(var(--body-font-size) - 2px);
-}
 .fs-small-1 {
   font-size: calc(var(--body-font-size) - 1px);
 }
@@ -446,11 +443,17 @@ mark {
 .fixed {
   position: fixed;
 }
+.sticky {
+  position: sticky;
+}
 .z-2 {
   z-index: 2;
 }
 .z-10 {
   z-index: 10;
+}
+.z-15 {
+  z-index: 15;
 }
 .top-15 {
   top: 1.5rem;
@@ -619,7 +622,7 @@ input[type="radio"]:checked + .text-swatch-label.pill {
   background-size: var(--bg-size, 0) var(--height, 1px);
   background-repeat: no-repeat;
   background-position: right bottom;
-  transition: background-size 0.55s cubic-bezier(0.2, 0.75, 0.5, 1);
+  transition: background-size 0.55s cubic-bezier(0.2, 0.75, 0.5, 1), color 0.3s;
 }
 .btn-text-transform {
   text-transform: var(--btn-text-transform);
