@@ -1148,6 +1148,12 @@ class VariantInput extends HTMLElement {
       : this.getAttribute("data-section-id");
   }
 
+  get blockId() {
+    return this.hasAttribute("data-block-id")
+      ? this.getAttribute("data-block-id")
+      : this.getAttribute("data-block-id");
+  }
+
   get productUrl() {
     return this.hasAttribute("data-product-url")
       ? this.getAttribute("data-product-url")
@@ -1254,19 +1260,26 @@ class VariantInput extends HTMLElement {
           responseText,
           "text/html"
         );
-        onSuccess(parsedHTML, this.sectionId, this.event_target);
+        onSuccess(parsedHTML, this.sectionId, this.event_target, this.blockId);
       })
       .catch((error) => console.error("Error:", error));
   }
 
-  updateProductInfo(parsedHTML, sectionId, eventTarget) {
+  updateProductInfo(parsedHTML, sectionId, eventTarget, blockId) {
+    const template = parsedHTML.querySelector('template');
+    let queryParsed , queryDocument;
+    if (template && blockId) {
+      const content = document.createElement("div");
+      content.appendChild(template.content.firstElementChild.cloneNode(true));
+      queryParsed = content.querySelector(`#Product-${blockId}`);
+      queryDocument = document.querySelector(`#Product-${blockId}`);
+    }else{
+      queryParsed = parsedHTML.getElementById(`Product-${sectionId}`);
+      queryDocument = document.getElementById(`Product-${sectionId}`);
+    }
     const updateContent = (blockClass) => {
-      const source = parsedHTML
-        .getElementById(`Product-${sectionId}`)
-        .querySelector(`.${blockClass}`);
-      const destination = document
-        .getElementById(`Product-${sectionId}`)
-        .querySelector(`.${blockClass}`);
+      const source = queryParsed.querySelector(`.${blockClass}`);
+      const destination = queryDocument.querySelector(`.${blockClass}`);
       if (source && destination) {
         destination.innerHTML = source.innerHTML;
         if (blockClass == "block-product__variant-picker") {
