@@ -37,7 +37,6 @@ class ActionSearch extends HTMLElement {
     if (this.actionSearch) {
       this.actionSearch.addEventListener("click", (event) => {
         event.preventDefault();
-        NextSkyTheme.eventModal(this, "open", false);
         if (
           this.recommendSearch &&
           this.recommendSearch.querySelector("template") &&
@@ -45,6 +44,8 @@ class ActionSearch extends HTMLElement {
         ) {
           this.updateProductRecommended();
         }
+        NextSkyTheme.eventModal(this, "open", false);
+        setTimeout(() => this.input.focus(), 300);
       });
     }
     if (this.type == "popup") {
@@ -107,7 +108,6 @@ class ActionSearch extends HTMLElement {
     ) {
       this.updateProductRecommended();
     }
-    NextSkyTheme.eventModal(this, "close", false);
   }
 
   actionSearchDesktop() {
@@ -122,7 +122,6 @@ class ActionSearch extends HTMLElement {
     ) {
       this.updateProductRecommended();
     }
-    NextSkyTheme.eventModal(this, "close", false);
   }
 
   clearSearch() {
@@ -162,6 +161,7 @@ class ActionSearch extends HTMLElement {
     if (this.predictiveSearchResults) {
       this.getSearchResults(searchTerm, predictiveSearch);
     }
+    NextSkyTheme.trapFocus(this);
   }
 
   getSearchResults(searchTerm, predictiveSearch) {
@@ -193,6 +193,7 @@ class ActionSearch extends HTMLElement {
             )}&options%5Bprefix%5D=last`;
           });
         }
+        NextSkyTheme.trapFocus(this);
       })
       .catch((error) => {
         this.form.classList.remove("loading", "results");

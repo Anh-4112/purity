@@ -42,7 +42,7 @@
     {% endif %}
     aria-label="{{ collection_title }}"
   >
-    <div class="collection-list__content-inner flex space-between align-center py-15 py-md-20 border-bottom gap-15{% if forloop.first %} pt-0{% endif %}">
+    <div class="collection-list__content-inner flex space-between align-center py-15 py-md-20 border-bottom gap-15">
       <div
         class="collection-list__content-text h4 relative flex gap"
         style="--gap: 8px;--gap-desktop: 8px;"
@@ -55,13 +55,13 @@
         {%- endif -%}
       </div>
       <span
-        class="collection-list__icon wh-1025-50 w-custom h-custom flex content-center border rounded-50 text-color btn-hover overflow-hidden transition-short"
+        class="collection-list__icon wh-1025-50 w-custom h-custom flex flex-auto content-center border rounded-50 text-color btn-hover overflow-hidden transition-short"
         style="--width:4.6rem;--height:4.6rem;"
       >
         {%- render 'icon-arrow-top' -%}
       </span>
     </div>
-    <div class="collection-list__image-hover hidden-mobile rounded w-custom h-full" style="opacity: 0;">
+    <div class="collection-list__image-hover hidden-mobile rounded w-custom h-full absolute" style="opacity: 0;">
       {%- if image != blank -%}
         {% render 'responsive-image',
           type: 'other',
@@ -74,7 +74,7 @@
           class: 'rounded'
         %}
       {%- else -%}
-        {% render 'placeholder-render', type: 'collection' %}
+        {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
       {%- endif -%}
     </div>
   </a>

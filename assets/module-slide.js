@@ -1,8 +1,8 @@
 function initSlide(_this) {
   let autoplay = _this?.dataset.autoplay === "true";
   const loop = _this?.dataset.loop === "true";
-  const centerSlide = _this?.dataset.centerSlide === "true";
   const itemDesktop = _this?.dataset.desktop ? _this?.dataset.desktop : 4;
+  const freeMode = _this?.dataset.freeMode === "true";
   let itemTablet = _this?.dataset.tablet ? _this?.dataset.tablet : "";
   const itemMobile = _this?.dataset.mobile ? _this?.dataset.mobile : 1;
   const direction = _this?.dataset.direction
@@ -38,8 +38,8 @@ function initSlide(_this) {
     _this.style.maxHeight = _this.offsetHeight + "px";
   }
   new Swiper(_this, {
-    slidesPerView: centerSlide ? "auto" : autoItem ? "auto" : itemMobile,
-    spaceBetween: centerSlide ? spacing : spacing >= 10 ? 10 : spacing,
+    slidesPerView: freeMode ? "auto" : autoItem ? "auto" : itemMobile,
+    spaceBetween: freeMode ? spacing : spacing >= 10 ? 10 : spacing,
     autoplay: autoplay,
     direction: direction,
     loop: loop,
@@ -47,14 +47,24 @@ function initSlide(_this) {
     speed: speed,
     watchSlidesProgress: true,
     watchSlidesVisibility: true,
-    centeredSlides: centerSlide,
+    grabCursor: true,
+    allowTouchMove: true,
+    freeMode: freeMode,
     grid: {
       rows: row,
       fill: "row",
     },
     navigation: {
-      nextEl: slideTab ? _this.closest('.section-product-tabs').querySelector(".swiper-button-next") : _this.querySelector(".swiper-button-next"),
-      prevEl: slideTab ? _this.closest('.section-product-tabs').querySelector(".swiper-button-prev") : _this.querySelector(".swiper-button-prev"),
+      nextEl: slideTab
+        ? _this
+            .closest(".section-product-tabs")
+            .querySelector(".swiper-button-next")
+        : _this.querySelector(".swiper-button-next"),
+      prevEl: slideTab
+        ? _this
+            .closest(".section-product-tabs")
+            .querySelector(".swiper-button-prev")
+        : _this.querySelector(".swiper-button-prev"),
     },
     pagination: {
       clickable: true,
@@ -91,9 +101,43 @@ function initSlide(_this) {
             }
           }
         }
+        if (_this.querySelector(".slide-video-1")) {
+          loadSlideVideo(_this.querySelector(".slide-video-1"));
+        }
+      },
+      slideChangeTransitionEnd: function () {
+        _this.querySelectorAll("video-local-slide").forEach((video) => {
+          loadSlideVideo(video);
+        });
       },
     },
   });
+}
+
+function loadSlideVideo(_this) {
+  if (!_this.getAttribute("loaded") && _this.querySelector("template")) {
+    const content = document.createElement("div");
+    content.appendChild(
+      _this.querySelector("template").content.firstElementChild.cloneNode(true)
+    );
+    _this.setAttribute("loaded", true);
+    const deferredElement = _this.appendChild(content.querySelector("video"));
+    const alt = deferredElement.getAttribute("alt");
+    const img = deferredElement.querySelector("img");
+    if (alt && img) {
+      img.setAttribute("alt", alt);
+    }
+    _this.thumb = _this.querySelector(".video-thumbnail");
+    if (_this.thumb) {
+      _this.thumb.remove();
+    }
+    if (
+      deferredElement.nodeName == "VIDEO" &&
+      deferredElement.getAttribute("autoplay")
+    ) {
+      deferredElement.play();
+    }
+  }
 }
 
 function initSlideMedia(_this, gallery, thumbnail) {
@@ -126,9 +170,11 @@ function initSlideMedia(_this, gallery, thumbnail) {
     watchOverflow = false;
   } else if (gallery == "gird") {
     swiperElement = _this;
-  } else if (gallery == "quick_view") {
+  } else if (gallery == "QuickView" || gallery == "CartUpSell") {
     swiperElement = _this;
-    itemMobile = 1.3;
+    if (gallery == "QuickView") {
+      itemMobile = 1.3;
+    }
     direction = "horizontal";
     if (window.innerWidth >= 768) {
       itemMobile = "auto";
@@ -163,7 +209,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
     pagination: {
       clickable: true,
       el: swiperElement.querySelector(".swiper-pagination"),
-      type: "custom",
+      type: gallery !== "CartUpSell" ? "custom" : "bullets",
       renderCustom: function (swiper, current, total) {
         return current + "/" + total;
       },

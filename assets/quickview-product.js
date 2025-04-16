@@ -67,8 +67,9 @@ class ButtonQuickView extends HTMLButtonElement {
 customElements.define("button-quick-view", ButtonQuickView, {
   extends: "button",
 });
-CustomElement.patchCustomElement(
-  "button",
-  "button-quick-view",
-  ButtonQuickView
-);
+CustomElement.observeAndPatchCustomElements({
+  "button-quick-view": {
+    tagElement: "button",
+    classElement: ButtonQuickView,
+  },
+});

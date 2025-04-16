@@ -25,7 +25,7 @@
         {{ 'customer.recover_password.subtext' | t }}
       </div>
       <div class="field">
-        {%- form 'recover_customer_password' -%}
+        {%- form 'recover_customer_password', novalidate: 'novalidate' -%}
           {% assign recover_success = form.posted_successfully? %}
           <div class="field relative w-full flex wrap transition">
             <input
@@ -44,9 +44,6 @@
               placeholder="{{ 'customer.login_page.email' | t }}*"
               class="w-full"
             >
-            <svg class="transition absolute" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <use href="#icon-mail"></use>
-            </svg>
             <label for="RecoverEmail" class="visually-hidden">
               {{ 'customer.login_page.email' | t }}
               <span class="required">*</span>
@@ -61,16 +58,8 @@
             </small>
           {%- endif -%}
           <button class="btn btn-primary w-full relative word-wrap relative">
-            <span class="hidden-on-load">{{ 'customer.login_page.submit' | t }}</span>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              class="spin opacity-0 pointer-none icon-load absolute"
-            >
-              <use href="#icon-load"></use>
-            </svg>
+            <span class="hidden-on-load transition-short">{{ 'customer.login_page.submit' | t }}</span>
+            {%- render 'loader' -%}
           </button>
           <a href="#login" aria-label="{{ 'customer.login_page.cancel' | t }}">
             {{ 'customer.login_page.back_login' | t }}
@@ -134,9 +123,6 @@
             required
             class="w-full"
           >
-          <svg class="transition absolute" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <use href="#icon-account"></use>
-          </svg>
           <label for="CustomerEmail" class="visually-hidden">
             {{ 'customer.login_page.email' | t }}
             <span class="required">*</span>
@@ -158,7 +144,13 @@
               required
               class="w-full"
             >
-            <show-pass-word class="show-pass-word transition absolute right-0">
+            <show-pass-word
+              class="show-pass-word transition absolute inline-flex right-0"
+              role="button"
+              tabindex="0"
+              aria-label=" {{ 'customer.login_page.password' | t }}"
+              aria-pressed="false"
+            >
               <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <use href="#icon-hide-password"></use>
               </svg>
@@ -176,16 +168,8 @@
           <span class="required-field">{{ 'customer.account.required' | t }}</span>
         </div>
         <button class="btn btn-primary w-full relative word-wrap relative">
-          <span class="hidden-on-load">{{ 'customer.login_page.sign_in' | t }}</span>
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            class="spin opacity-0 pointer-none icon-load absolute"
-          >
-            <use href="#icon-load"></use>
-          </svg>
+          <span class="hidden-on-load transition-short">{{ 'customer.login_page.sign_in' | t }}</span>
+          {%- render 'loader' -%}
         </button>
         <div class="creat_new-account flex">
           {{ 'customer.login_page.new_customer' | t }}

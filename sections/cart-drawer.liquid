@@ -24,8 +24,7 @@
   class="modal pointer-none active-modal-js"
   data-section-id="{{ section.id }}"
   data-cart-type="{{ add_cart_type }}"
-  tabindex="0"
-  role="dialog"
+  data-focus-item="cart-icon-bubble"
 >
   <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
   <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer invisible drawer drawer-right fixed right-0 z-15 inset-y-0 bg-secondary-1025 w-full">
@@ -48,6 +47,7 @@
           </span>
         </div>
         <button
+          type="button"
           is="button-close-model"
           class="modal__close pointer btn-reset w-30 h-full inline-flex align-center flex-end"
           aria-label="Close"
@@ -83,24 +83,32 @@
             {%- if cart_empty_collection != blank -%}
               <ul class="drawer__empty-collections list-unstyled flex column gap-15 w-full mt-30 mt-1025-40">
                 {% for collection in cart_empty_collection %}
-                  <li class="w-full">
-                    {% liquid
-                      assign collection_media = collection.featured_image
-                      assign collection_alt = collection.featured_image.alt | default: collection.title
-                      assign disable_lazy_loading = false
-                      if collection.metafields.custom.collection_empty.value.collection_image
-                        assign collection_media = collection.metafields.custom.collection_empty.value.collection_image
-                        assign disable_lazy_loading = true
-                      endif
-                    %}
+                  {% liquid
+                    assign collection_media = collection.featured_image
+                    assign collection_alt = collection.featured_image.alt | default: collection.title
+                    assign disable_lazy_loading = false
+                    if collection.metafields.custom.collection_empty.value.collection_image
+                      assign collection_media = collection.metafields.custom.collection_empty.value.collection_image
+                      assign disable_lazy_loading = true
+                    endif
+                  %}
+                  <li
+                    class="w-full"
+                    {% if collection_media %}
+                      style="--color-heading: {{ theme_st.overlay_image_color }};--color-text: {{ theme_st.overlay_image_color }};"
+                    {% endif %}
+                  >
                     <a
-                      class="block collection-item__media--ratio rounded relative"
+                      class="collection-item__media--ratio rounded relative hover-effect{% if collection_media %} w-full flex align-end{% endif %}"
+                      {% if collection_media %}
+                        style="--aspect-ratio: 20/7;"
+                      {% endif %}
                       draggable="false"
                       href="{{ collection.url }}"
                       aria-label="{{- collection.title -}}"
                     >
                       {%- if collection_media -%}
-                        <div class="rounded" style="--aspect-ratio: 20/7;">
+                        <div class="rounded inset-0 absolute" style="--aspect-ratio: 20/7;">
                           {% render 'responsive-image',
                             type: 'other',
                             image: collection_media,
@@ -109,17 +117,22 @@
                           %}
                         </div>
                       {%- endif -%}
-                      <div class="collection_info flex gap-10 align-center{% if collection_media %} absolute bottom-0 inset-x-0 p-gutter-x{% endif %}">
+                      <div class="collection_info relative z-1 w-full flex gap-10 space-between align-center{% if collection_media %} p-gutter-x{% endif %}">
                         <div class="collection-item__info">
                           <p class="h6">{{- collection.title -}}</p>
                           {% if collection.metafields.custom.collection_empty.value.collection_description != blank %}
-                            <span class="collection-item__description">
+                            <span class="collection-item__description text-color">
                               {{- collection.metafields.custom.collection_empty.value.collection_description -}}
                             </span>
                           {%- endif -%}
                         </div>
                         {%- if collection_media -%}
-                          <span class="collection-item__icon"></span>
+                          <span
+                            class="collection-list__icon wh-1025-50 w-custom h-custom flex content-center bg-white blur rounded-50 text-color btn-hover overflow-hidden transition-short flex-auto"
+                            style="--width:4.6rem;--height:4.6rem;"
+                          >
+                            {%- render 'icon-arrow-top' -%}
+                          </span>
                         {%- endif -%}
                       </div>
                     </a>
@@ -270,25 +283,30 @@
                                   </a>
                                   <cart-remove-button
                                     id="CartDrawer-Remove-{{ item.index | plus: 1 }}"
-                                    class="inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
                                     data-index="{{ item.index | plus: 1 }}"
                                   >
-                                    <svg
-                                      width="12"
-                                      height="12"
-                                      viewBox="0 0 12 12"
-                                      fill="none"
-                                      class="icon-zoom transition-short will-change text-color hidden-on-load"
+                                    <button
+                                      type="button"
+                                      class="inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
+                                      aria-label="{{- 'sections.cart.remove_title' | t: title: item.title -}}"
                                     >
-                                      <use href="#icon-close" />
-                                    </svg>
-                                    <span class="capitalize currentColor lh-1 visually-hidden">
-                                      {{- 'sections.cart.remove_title' | t: title: item.title -}}
-                                    </span>
-                                    <span
-                                      class="icon-rotator absolute top-0 right-0 rounded-50 opacity-0 w-custom h-custom"
-                                      style="--width: 1.5rem;--height: 1.5rem;"
-                                    ></span>
+                                      <svg
+                                        width="12"
+                                        height="12"
+                                        viewBox="0 0 12 12"
+                                        fill="none"
+                                        class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                                      >
+                                        <use href="#icon-close" />
+                                      </svg>
+                                      <span class="capitalize currentColor lh-1 visually-hidden">
+                                        {{- 'sections.cart.remove_title' | t: title: item.title -}}
+                                      </span>
+                                      <span
+                                        class="icon-rotator absolute top-0 right-0 rounded-50 opacity-0 w-custom h-custom"
+                                        style="--width: 1.5rem;--height: 1.5rem;"
+                                      ></span>
+                                    </button>
                                   </cart-remove-button>
                                 </div>
                                 {%- if item.product.has_only_default_variant == false
@@ -462,18 +480,7 @@
                   </div>
                 {%- endif -%}
                 <div class="cart-upsell-product">
-                  <slide-section
-                    class="swiper"
-                    data-section-id="{{ section.id }}"
-                    data-autoplay="false"
-                    data-effect="slide"
-                    data-loop="false"
-                    data-speed="500"
-                    data-spacing="0"
-                    data-mobile="1"
-                    data-desktop="1"
-                    data-tablet="1"
-                  >
+                  <cart-upsell-product class="swiper">
                     {%- render 'swiper-navigation', show_on_hover: true -%}
                     <div class="swiper-wrapper">
                       {%- if recommendation_product_type != 'auto' -%}
@@ -491,8 +498,11 @@
                               card_product: item,
                               section_id: section.id,
                               disable_hover_image: true,
+                              disable_show_video: true,
+                              disable_lazy_loading: true,
                               disable_badge: true,
                               disable_rate: true,
+                              disable_tag: true,
                               disable_color_swatches: true,
                               class: ' swiper-slide mini-cart',
                               style_layout: ' flex gap-10 block-1025',
@@ -505,7 +515,7 @@
                       {%- endif -%}
                     </div>
                     <div class="swiper-pagination mt-20"></div>
-                  </slide-section>
+                  </cart-upsell-product>
                 </div>
               </mini-cart-recommendations>
             </div>
@@ -551,104 +561,117 @@
               </div>
             {%- endif -%}
             {%- if show_gift_wrap and select_product_gift_wrap != blank -%}
-              <cart-gift-wrap-element class="block">
-                <div
-                  class="cart-addons-element drawer-spacing border-top"
-                  style="--padding-block: 0;--padding-block-desktop: 0;"
-                >
-                  <div class="cart-addons-title flex gap-10 space-between relative py-15">
-                    <span class="title heading-style flex gap-10 align-center lg-normal">
-                      <svg width="18" height="18" fill="none">
-                        <path fill="currentColor" d="M9.703 11.672a.703.703 0 1 0-1.406 0v2.812a.703.703 0 0 0 1.406 0v-2.812Z"/><path fill="#000" d="M1.969 10.969a.703.703 0 0 0-.703.703v2.812A3.52 3.52 0 0 0 4.78 18h8.438a3.52 3.52 0 0 0 3.515-3.516v-2.812a.703.703 0 1 0-1.406 0v2.812c0 1.164-.946 2.11-2.11 2.11H4.782a2.112 2.112 0 0 1-2.11-2.11v-2.812a.703.703 0 0 0-.702-.703ZM2.11 9.844h13.78c1.164 0 2.11-.947 2.11-2.11V6.328c0-1.163-.946-2.11-2.11-2.11h-2.347c.24-.413.379-.893.379-1.405A2.816 2.816 0 0 0 11.109 0C10.27 0 9.516.37 9 .955A2.806 2.806 0 0 0 6.89 0a2.816 2.816 0 0 0-2.812 2.813c0 .512.138.992.379 1.406H2.109C.946 4.219 0 5.165 0 6.329v1.405c0 1.163.946 2.11 2.11 2.11Zm9-8.438a1.408 1.408 0 0 1 0 2.813H9.702V2.812c0-.775.631-1.406 1.406-1.406ZM5.483 2.813a1.408 1.408 0 0 1 2.813 0v1.406H6.89c-.776 0-1.407-.631-1.407-1.407ZM1.406 6.328c0-.388.316-.703.703-.703h6.188v.703a.703.703 0 1 0 1.406 0v-.703h6.188c.387 0 .703.315.703.703v1.406a.704.704 0 0 1-.703.704H2.109a.704.704 0 0 1-.703-.704V6.328Z"/>
-                      </svg>
-                      {{ 'sections.cart.gift.title' | t -}}
-                    </span>
-                    <button
-                      type="button"
-                      class="toggle-addons btn-reset absolute inset-0 pointer"
-                      aria-label="{{- 'general.button.close' | t }}"
-                    >
-                      <span class="open-children-toggle transition">
-                        <span class="icon_plus-animation heading-color"></span>
+              {% liquid
+                assign gift_wrap = false
+                for product in select_product_gift_wrap
+                  if product.variants.size == 1 and product.selected_or_first_available_variant.available
+                    assign gift_wrap = true
+                  endif
+                endfor
+              %}
+              {%- if gift_wrap -%}
+                <cart-gift-wrap-element class="block">
+                  <div
+                    class="cart-addons-element drawer-spacing border-top"
+                    style="--padding-block: 0;--padding-block-desktop: 0;"
+                  >
+                    <div class="cart-addons-title flex gap-10 space-between relative py-15">
+                      <span class="title heading-style flex gap-10 align-center lg-normal">
+                        <svg width="18" height="18" fill="none">
+                          <path fill="currentColor" d="M9.703 11.672a.703.703 0 1 0-1.406 0v2.812a.703.703 0 0 0 1.406 0v-2.812Z"/><path fill="#000" d="M1.969 10.969a.703.703 0 0 0-.703.703v2.812A3.52 3.52 0 0 0 4.78 18h8.438a3.52 3.52 0 0 0 3.515-3.516v-2.812a.703.703 0 1 0-1.406 0v2.812c0 1.164-.946 2.11-2.11 2.11H4.782a2.112 2.112 0 0 1-2.11-2.11v-2.812a.703.703 0 0 0-.702-.703ZM2.11 9.844h13.78c1.164 0 2.11-.947 2.11-2.11V6.328c0-1.163-.946-2.11-2.11-2.11h-2.347c.24-.413.379-.893.379-1.405A2.816 2.816 0 0 0 11.109 0C10.27 0 9.516.37 9 .955A2.806 2.806 0 0 0 6.89 0a2.816 2.816 0 0 0-2.812 2.813c0 .512.138.992.379 1.406H2.109C.946 4.219 0 5.165 0 6.329v1.405c0 1.163.946 2.11 2.11 2.11Zm9-8.438a1.408 1.408 0 0 1 0 2.813H9.702V2.812c0-.775.631-1.406 1.406-1.406ZM5.483 2.813a1.408 1.408 0 0 1 2.813 0v1.406H6.89c-.776 0-1.407-.631-1.407-1.407ZM1.406 6.328c0-.388.316-.703.703-.703h6.188v.703a.703.703 0 1 0 1.406 0v-.703h6.188c.387 0 .703.315.703.703v1.406a.704.704 0 0 1-.703.704H2.109a.704.704 0 0 1-.703-.704V6.328Z"/>
+                        </svg>
+                        {{ 'sections.cart.gift.title' | t -}}
                       </span>
-                      <span class="visually-hidden">{{ 'general.button.close' | t }}</span>
-                    </button>
-                  </div>
-                  <div class="cart-addons-content overflow-hidden h-0 fs-small">
-                    <p class="heading-color">{{ 'sections.cart.gift.info' | t }}</p>
-                    {%- if select_product_gift_wrap != blank -%}
-                      <ul class="drawer__gift-wrap-product list-unstyled flex column gap-15 mt-20 p-20 drawer__gift-wrap-product list-unstyled flex column gap-15 p-20 bg-secondary rounded overflow-hidde">
-                        {% for product in select_product_gift_wrap %}
-                          {%- if product.variants.size == 1 -%}
-                            {%- liquid
-                              assign p_media = product.featured_media
-                              assign alt_features = p_media.alt | default: product.title | escape
-                            -%}
-                            <li class="product-item flex gap-20">
-                              <label
-                                for="gift-wrap-{{ product.id }}"
-                                class="flex gap-15 align-center ps-35 relative w-full"
-                              >
-                                <input
-                                  type="radio"
-                                  name="gift-wrap"
-                                  id="gift-wrap-{{ product.id }}"
-                                  value="{{ product.selected_or_first_available_variant.id }}"
-                                  class="absolute opacity-0 pointer custom-ratio"
-                                  {% if forloop.first %}
-                                    checked
-                                  {% endif %}
-                                >
-                                <div
-                                  class="dot ratio-dot absolute inset-y-0 left-0 my-auto w-custom h-custom rounded-50 border overflow-hidden bg-white"
-                                  style="--width: 2rem; --height: 2rem;--color-border: var(--btn-primary-bg-color);"
-                                ></div>
-                                {% if p_media %}
-                                  <div
-                                    class="image rounded-50 flex-auto w-custom h-custom overflow-hidden"
-                                    style="--width: 6rem; --height: 6rem;--aspect-ratio: 1.0"
-                                  >
-                                    {% render 'responsive-image',
-                                      type: 'product',
-                                      class: 'product__img',
-                                      image: p_media,
-                                      image_alt: alt_features
-                                    %}
-                                  </div>
-                                {% endif %}
-                                <div
-                                  class="info-product flex-auto w-custom"
-                                  style="{% if p_media %}--width: calc(100% - 7.5rem);{% else %}--width: calc(100% - 1.5rem);{% endif %}"
-                                >
-                                  <div class="word-break gap-3">
-                                    <span class="heading-style lh-normal">{{- product.title -}}</span>
-                                    /
-                                    {%- render 'price',
-                                      scope: 'item',
-                                      product: product,
-                                      class: 'lh-normal inline-block'
-                                    -%}
-                                  </div>
-                                  {{ product.description }}
-                                </div>
-                              </label>
-                            </li>
-                          {%- endif -%}
-                        {% endfor %}
-                      </ul>
-                    {%- endif -%}
-                    <div class="addon-actions mt-20 mb-40">
                       <button
                         type="button"
-                        class="select-package btn btn-primary w-full text-center"
-                        aria-label="{{- 'sections.cart.gift.select' | t }}"
+                        class="toggle-addons btn-reset absolute inset-0 pointer"
+                        aria-label="{{- 'general.button.close' | t }}"
                       >
-                        {{ 'sections.cart.gift.select' | t }}
+                        <span class="open-children-toggle transition">
+                          <span class="icon_plus-animation heading-color"></span>
+                        </span>
+                        <span class="visually-hidden">{{ 'general.button.close' | t }}</span>
                       </button>
                     </div>
+                    <div class="cart-addons-content overflow-hidden h-0 fs-small">
+                      <div class="cart-addons-content-inner">
+                        <p class="heading-color">{{ 'sections.cart.gift.info' | t }}</p>
+                        {%- if select_product_gift_wrap != blank -%}
+                          <ul class="drawer__gift-wrap-product list-unstyled flex column gap-15 mt-20 p-20 drawer__gift-wrap-product list-unstyled flex column gap-15 p-20 bg-secondary rounded overflow-hidde">
+                            {% for product in select_product_gift_wrap %}
+                              {%- if product.variants.size == 1 -%}
+                                {%- liquid
+                                  assign p_media = product.featured_media
+                                  assign alt_features = p_media.alt | default: product.title | escape
+                                -%}
+                                <li class="product-item flex gap-20">
+                                  <label
+                                    for="gift-wrap-{{ product.id }}"
+                                    class="flex gap-15 align-center ps-35 relative w-full"
+                                  >
+                                    <input
+                                      type="radio"
+                                      name="gift-wrap"
+                                      id="gift-wrap-{{ product.id }}"
+                                      value="{{ product.selected_or_first_available_variant.id }}"
+                                      class="absolute opacity-0 pointer custom-ratio"
+                                      {% if forloop.first %}
+                                        checked
+                                      {% endif %}
+                                    >
+                                    <div
+                                      class="dot ratio-dot absolute inset-y-0 left-0 my-auto w-custom h-custom rounded-50 border overflow-hidden bg-white"
+                                      style="--width: 2rem; --height: 2rem;--color-border: var(--btn-primary-bg-color);"
+                                    ></div>
+                                    {% if p_media %}
+                                      <div
+                                        class="image rounded-50 flex-auto w-custom h-custom overflow-hidden"
+                                        style="--width: 6rem; --height: 6rem;--aspect-ratio: 1.0"
+                                      >
+                                        {% render 'responsive-image',
+                                          type: 'product',
+                                          class: 'product__img',
+                                          image: p_media,
+                                          image_alt: alt_features
+                                        %}
+                                      </div>
+                                    {% endif %}
+                                    <div
+                                      class="info-product flex-auto w-custom"
+                                      style="{% if p_media %}--width: calc(100% - 7.5rem);{% else %}--width: calc(100% - 1.5rem);{% endif %}"
+                                    >
+                                      <div class="word-break gap-3">
+                                        <span class="heading-style lh-normal">{{- product.title -}}</span>
+                                        /
+                                        {%- render 'price',
+                                          scope: 'item',
+                                          product: product,
+                                          class: 'lh-normal inline-block'
+                                        -%}
+                                      </div>
+                                      {{ product.description }}
+                                    </div>
+                                  </label>
+                                </li>
+                              {%- endif -%}
+                            {% endfor %}
+                          </ul>
+                        {%- endif -%}
+                        <div class="addon-actions mt-20 mb-40">
+                          <button
+                            type="button"
+                            class="select-package btn btn-primary w-full text-center"
+                            aria-label="{{- 'sections.cart.gift.select' | t }}"
+                          >
+                            <span class="hidden-on-load transition-short"> {{ 'sections.cart.gift.select' | t }}</span>
+                            {%- render 'loader' -%}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </cart-gift-wrap-element>
+                </cart-gift-wrap-element>
+              {% endif %}
             {%- endif -%}
             {%- if show_cart_note -%}
               <cart-note-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-2">
@@ -689,7 +712,8 @@
                         class="apply-note btn btn-primary mt-20 w-full"
                         aria-label="{{- 'general.button.save' | t }}"
                       >
-                        {{ 'general.button.save' | t }}
+                        <span class="hidden-on-load transition-short"> {{ 'general.button.save' | t }}</span>
+                        {%- render 'loader' -%}
                       </button>
                     </div>
                   </div>
@@ -770,7 +794,10 @@
                         class="estimate btn btn-primary mt-20 w-full"
                         data-action="shipping"
                       >
-                        {{ 'sections.cart.shipping.estimate_shipping_button' | t }}
+                        <span class="hidden-on-load transition-short">
+                          {{ 'sections.cart.shipping.estimate_shipping_button' | t -}}
+                        </span>
+                        {%- render 'loader' -%}
                       </button>
                     </div>
                     <div class="addon-message mt-10 empty-hidden"></div>
@@ -781,39 +808,45 @@
           </div>
         </div>
         <div
-          class="drawer__footer-bottom js-contents border-top drawer-spacing"
+          class="drawer__footer-bottom border-top drawer-spacing"
         >
-          <div class="total h5 flex space-between gap-10">
-            <span class="text">{{ 'sections.cart.total' | t }}:</span>
-            <span class="total-price">
-              {{ cart.total_price | money_with_currency }}
-            </span>
+          <div
+            class="drawer__footer-bottom-total"
+          >
+            <div class="total h5 flex space-between gap-10">
+              <span class="text">{{ 'sections.cart.total' | t }}:</span>
+              <span class="total-price">
+                {{ cart.total_price | money_with_currency }}
+              </span>
+            </div>
+            <small class="tax-note caption-large word-break text-center">
+              {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+                {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+              {%- elsif cart.taxes_included -%}
+                {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
+              {%- elsif shop.shipping_policy.body != blank -%}
+                {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+              {%- else -%}
+                {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+              {%- endif -%}
+            </small>
           </div>
-          <small class="tax-note caption-large word-break text-center">
-            {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-              {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
-            {%- elsif cart.taxes_included -%}
-              {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
-            {%- elsif shop.shipping_policy.body != blank -%}
-              {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
-            {%- else -%}
-              {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
-            {%- endif -%}
-          </small>
           <form action="{{ routes.cart_url }}" method="POST" class="flex wrap gap-10 mt-20 mt-1025-30 mb-1025-10">
             <a
               href="{{ routes.cart_url }}"
               aria-label="{{ 'sections.cart.view_cart' | t }}"
               class="btn btn-outline"
             >
-              <span>{{ 'sections.cart.view_cart' | t }}</span>
+              <span class="hidden-on-load transition-short">{{ 'sections.cart.view_cart' | t }}</span>
+              {%- render 'loader' -%}
             </a>
             <button
               type="submit"
               name="checkout"
               class="grow-1 btn btn-primary"
             >
-              {{ 'sections.cart.checkout' | t }}
+              <span class="hidden-on-load transition-short"> {{ 'sections.cart.checkout' | t }}</span>
+              {%- render 'loader' -%}
             </button>
           </form>
         </div>

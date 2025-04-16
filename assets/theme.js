@@ -1,4 +1,4 @@
-import { initSlide } from "module-slide";
+import { initSlide, SlideSection } from "module-slide";
 import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
 import { CustomElement } from "module-safariElementPatch";
 import { ProductForm } from "module-addToCart";
@@ -12,6 +12,55 @@ document.addEventListener("shopify:section:load", function () {
 });
 
 const delegate = new NextSkyTheme.eventDelegate();
+
+try {
+  document.querySelector(":focus-visible");
+} catch (e) {
+  focusVisiblePolyfill();
+}
+
+function focusVisiblePolyfill() {
+  const navKeys = [
+    "ARROWUP",
+    "ARROWDOWN",
+    "ARROWLEFT",
+    "ARROWRIGHT",
+    "TAB",
+    "ENTER",
+    "SPACE",
+    "ESCAPE",
+    "HOME",
+    "END",
+    "PAGEUP",
+    "PAGEDOWN",
+  ];
+  let currentFocusedElement = null;
+  let mouseClick = null;
+
+  window.addEventListener("keydown", (event) => {
+    if (navKeys.includes(event.code.toUpperCase())) {
+      mouseClick = false;
+    }
+  });
+
+  window.addEventListener("mousedown", () => {
+    mouseClick = true;
+  });
+
+  window.addEventListener(
+    "focus",
+    () => {
+      if (currentFocusedElement)
+        currentFocusedElement.classList.remove("focused");
+
+      if (mouseClick) return;
+
+      currentFocusedElement = document.activeElement;
+      currentFocusedElement.classList.add("focused");
+    },
+    true
+  );
+}
 
 var Shopify = Shopify || {};
 if (typeof window.Shopify == "undefined") {
@@ -309,7 +358,12 @@ class SiteHeader extends HTMLElement {
 customElements.define("site-header", SiteHeader, {
   extends: "header",
 });
-CustomElement.patchCustomElement("header", "site-header", SiteHeader);
+CustomElement.observeAndPatchCustomElements({
+  "site-header": {
+    tagElement: "header",
+    classElement: SiteHeader,
+  },
+});
 
 class ToggleMenu extends HTMLElement {
   constructor() {
@@ -341,7 +395,7 @@ class ToggleMenu extends HTMLElement {
         ),
       100
     );
-    CustomElement.patchAllCustomElements({
+    CustomElement.observeAndPatchCustomElements({
       "button-close-model": {
         tagElement: "button",
         classElement: ButtonCloseModel,
@@ -399,11 +453,12 @@ class ButtonCloseModel extends HTMLButtonElement {
 customElements.define("button-close-model", ButtonCloseModel, {
   extends: "button",
 });
-CustomElement.patchCustomElement(
-  "button",
-  "button-close-model",
-  ButtonCloseModel
-);
+CustomElement.observeAndPatchCustomElements({
+  "button-close-model": {
+    tagElement: "button",
+    classElement: ButtonCloseModel,
+  },
+});
 
 const megaMenuCount = new WeakMap();
 class DetailsMegaMenu extends HTMLDetailsElement {
@@ -470,7 +525,8 @@ class DetailsMegaMenu extends HTMLDetailsElement {
     event.preventDefault(),
       this.menuTrigger === "hover" &&
       this.summaryElement.hasAttribute("data-href") &&
-      this.summaryElement.getAttribute("data-href").length > 0
+      this.summaryElement.getAttribute("data-href").length > 0 &&
+      (event.pointerType || this._open === true)
         ? (window.location.href = this.summaryElement.getAttribute("data-href"))
         : (this.open = !this.open);
   }
@@ -512,7 +568,9 @@ class DetailsMegaMenu extends HTMLDetailsElement {
   detectEscKeyboard(event) {
     if (event.code === "Escape") {
       const targetMenu = event.target.closest("details[open]");
-      targetMenu && (targetMenu.open = !1);
+      targetMenu &&
+        ((targetMenu.open = !1),
+        targetMenu.firstElementChild.focus({ focusVisible: true }));
     }
   }
   detectFocusOut(event) {
@@ -539,7 +597,7 @@ class DetailsMegaMenu extends HTMLDetailsElement {
     );
     const translateY = "-105%";
     return Motion.animate(
-      this.contentElement,
+      this.contentElement.firstElementChild,
       {
         transform: [`translateY(${translateY})`, "translateY(0)"],
       },
@@ -563,7 +621,7 @@ class DetailsMegaMenu extends HTMLDetailsElement {
     );
     const translateY = "-105%";
     return Motion.animate(
-      this.contentElement,
+      this.contentElement.firstElementChild,
       {
         transform: `translateY(${translateY})`,
       },
@@ -578,11 +636,12 @@ customElements.define("details-mega-menu", DetailsMegaMenu, {
   extends: "details",
 }),
   megaMenuCount.set(DetailsMegaMenu, 0);
-CustomElement.patchCustomElement(
-  "details",
-  "details-mega-menu",
-  DetailsMegaMenu
-);
+CustomElement.observeAndPatchCustomElements({
+  "details-mega-menu": {
+    tagElement: "details",
+    classElement: DetailsMegaMenu,
+  },
+});
 
 class SubMenuDetails extends HTMLDetailsElement {
   constructor() {
@@ -618,11 +677,22 @@ class SubMenuDetails extends HTMLDetailsElement {
         "click",
         this.onSummaryClicked.bind(this)
       );
+    this.initialize();
   }
 
   onSummaryClicked(event) {
     event.preventDefault();
     this.open = !this.open;
+  }
+
+  async initialize() {
+    if (this.content) {
+      Motion.animate(
+        this.content,
+        this._open ? { height: "auto" } : { height: 0 },
+        { duration: 0 }
+      );
+    }
   }
 
   async transition(value) {
@@ -644,7 +714,12 @@ class SubMenuDetails extends HTMLDetailsElement {
 customElements.define("submenu-details", SubMenuDetails, {
   extends: "details",
 });
-CustomElement.patchCustomElement("details", "submenu-details", SubMenuDetails);
+CustomElement.observeAndPatchCustomElements({
+  "submenu-details": {
+    tagElement: "details",
+    classElement: SubMenuDetails,
+  },
+});
 
 class CollapsibleRowDetails extends HTMLDetailsElement {
   constructor() {
@@ -687,14 +762,19 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
   }
 
   async initialize() {
-    Motion.animate(
-      this.content,
-      this._open ? { height: "auto" } : { height: 0 },
-      { duration: 0 }
-    );
+    if (this.content) {
+      Motion.animate(
+        this.content,
+        this._open ? { height: "auto" } : { height: 0 },
+        { duration: 0 }
+      );
+    }
   }
 
   async transition(value) {
+    if (!this.content) {
+      return;
+    }
     return value
       ? (Motion.animate(
           this.content,
@@ -715,11 +795,12 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
 customElements.define("collapsible-row", CollapsibleRowDetails, {
   extends: "details",
 });
-CustomElement.patchCustomElement(
-  "details",
-  "collapsible-row",
-  CollapsibleRowDetails
-);
+CustomElement.observeAndPatchCustomElements({
+  "collapsible-row": {
+    tagElement: "details",
+    classElement: CollapsibleRowDetails,
+  },
+});
 
 class RecentlyViewedProducts extends HTMLElement {
   constructor() {
@@ -1036,6 +1117,7 @@ class VariantInput extends HTMLElement {
     super(),
       (this.show_more = this.querySelector(".number-showmore")),
       (this.size_chart = this.querySelector(".open-size-chart")),
+      (this.event_target = null),
       (this.swatch = this.querySelector(
         ".product-card-swatch-js .variant-input"
       )),
@@ -1143,6 +1225,7 @@ class VariantInput extends HTMLElement {
 
   async onVariantChange(event) {
     event.preventDefault();
+    this.event_target = event.target;
     const selectedValues = Array.from(
       this.querySelectorAll('input[type="radio"]:checked')
     ).map((radio) => radio.value);
@@ -1172,12 +1255,12 @@ class VariantInput extends HTMLElement {
           responseText,
           "text/html"
         );
-        onSuccess(parsedHTML, this.sectionId, this.blockId);
+        onSuccess(parsedHTML, this.sectionId, this.event_target, this.blockId);
       })
       .catch((error) => console.error("Error:", error));
   }
 
-  updateProductInfo(parsedHTML, sectionId, blockId) {
+  updateProductInfo(parsedHTML, sectionId, eventTarget, blockId) {
     const template = parsedHTML.querySelector('template');
     let queryParsed , queryDocument;
     if (template && blockId) {
@@ -1194,6 +1277,11 @@ class VariantInput extends HTMLElement {
       const destination = queryDocument.querySelector(`.${blockClass}`);
       if (source && destination) {
         destination.innerHTML = source.innerHTML;
+        if (blockClass == "block-product__variant-picker") {
+          destination
+            .querySelector(`input[value="${eventTarget.value}"]:checked`)
+            .focus({ focusVisible: true });
+        }
       }
     };
 
@@ -1396,225 +1484,6 @@ class AnnouncementBar extends HTMLElement {
 }
 customElements.define("announcement-bar", AnnouncementBar);
 
-class InspirationShowcase extends HTMLElement {
-  constructor() {
-    super();
-    this.blocks = null;
-    this.containerElement = null;
-    this.currentVisibleIndex = 0;
-    this.scrollStartPosition = 0;
-    this.totalBlocks = 0;
-    this.middleOrder = 0;
-  }
-
-  connectedCallback() {
-    requestAnimationFrame(() => this.init());
-  }
-
-  init() {
-    this.blocks = Array.from(
-      this.querySelectorAll(".inspiration-showcase__block")
-    );
-    if (!this.blocks.length) return;
-
-    this.totalBlocks = this.blocks.length;
-    this.middleOrder = Math.ceil(this.totalBlocks / 2);
-
-    this.blocks.forEach((block, index) => {
-      block.style.order = index + 1;
-    });
-
-    this.containerElement = this.closest(".section");
-    if (!this.containerElement) return;
-
-    this.setupPinningAnimation();
-  }
-
-  setupPinningAnimation() {
-    this.scrollStartPosition =
-      this.containerElement.getBoundingClientRect().top + window.scrollY;
-
-    this.containerElement.style.height = "300vh";
-
-    Motion.scroll(
-      Motion.animate(this, {
-        opacity: [1, 1],
-      }),
-      {
-        target: this.containerElement,
-        offset: ["start start", "end end"],
-      }
-    );
-
-    Motion.scroll(
-      () => {
-        const scrollY = window.scrollY;
-        const relativeScrollPosition = scrollY - this.scrollStartPosition;
-        if (relativeScrollPosition > 0 && scrollY > this.scrollStartPosition) {
-          const scrollHeight =
-            this.containerElement.offsetHeight - window.innerHeight;
-          const blockCount = this.blocks.length;
-          const segmentSize = scrollHeight / blockCount;
-          const blockIndex = Math.min(
-            Math.floor(relativeScrollPosition / segmentSize),
-            blockCount - 1
-          );
-          if (blockIndex !== this.currentVisibleIndex) {
-            this.currentVisibleIndex = blockIndex;
-            this.updateActiveBlock(blockIndex);
-          }
-        } else if (
-          this.currentVisibleIndex !== Math.floor(this.blocks.length / 2)
-        ) {
-          this.currentVisibleIndex = Math.floor(this.blocks.length / 2);
-          this.updateActiveBlock(this.currentVisibleIndex);
-        }
-      },
-      { target: window }
-    );
-
-    const initialIndex = Math.floor(this.blocks.length / 2);
-    this.updateActiveBlock(initialIndex);
-  }
-
-  updateActiveBlock(activeIndex) {
-    const middlePosition = Math.ceil(this.totalBlocks / 2);
-    const activeBlock = this.blocks[activeIndex];
-    let currentMiddleBlock = null;
-    let currentMiddleIndex = -1;
-
-    if (!this.transitionsAdded) {
-      const style = document.createElement("style");
-      style.textContent = `
-        .inspiration-showcase__block {
-          transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), 
-                      opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-          will-change: transform, opacity, order;
-        }
-      `;
-      document.head.appendChild(style);
-      this.transitionsAdded = true;
-    }
-
-    this.blocks.forEach((block, index) => {
-      if (!block.style.transition) {
-        block.style.transition =
-          "transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)";
-      }
-
-      if (parseInt(block.style.order) === middlePosition) {
-        currentMiddleBlock = block;
-        currentMiddleIndex = index;
-      }
-    });
-    if (activeIndex === currentMiddleIndex) {
-      this.blocks.forEach((block, index) => {
-        const distanceFromActive = Math.abs(index - activeIndex);
-        if (distanceFromActive === 0) {
-          block.classList.add("active");
-          Motion.animate(
-            block,
-            {
-              scale: 1,
-              opacity: 1,
-            },
-            {
-              duration: 0.5,
-              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-            }
-          );
-        } else {
-          block.classList.remove("active");
-          const scale = Math.max(0.9, 1 - distanceFromActive * 0.05);
-          const opacity = Math.max(0.5, 1 - distanceFromActive * 0.25);
-          Motion.animate(
-            block,
-            {
-              scale: scale,
-              opacity: opacity,
-            },
-            {
-              duration: 0.5,
-              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-            }
-          );
-        }
-      });
-      return;
-    }
-    Promise.all([
-      Motion.animate(
-        activeBlock,
-        {
-          scale: [null, 0.95],
-          opacity: [null, 0.8],
-        },
-        {
-          duration: 0.2,
-          easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-        }
-      ).finished,
-      currentMiddleBlock
-        ? Motion.animate(
-            currentMiddleBlock,
-            {
-              scale: [null, 0.95],
-              opacity: [null, 0.8],
-            },
-            {
-              duration: 0.2,
-              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-            }
-          ).finished
-        : Promise.resolve(),
-    ]).then(() => {
-      const activeBlockOrder = parseInt(activeBlock.style.order);
-      activeBlock.style.order = middlePosition;
-
-      if (currentMiddleBlock) {
-        currentMiddleBlock.style.order = activeBlockOrder;
-      }
-      this.blocks.forEach((block, index) => {
-        const distanceFromActive = Math.abs(index - activeIndex);
-
-        if (distanceFromActive === 0) {
-          block.classList.add("active");
-          Motion.animate(
-            block,
-            {
-              scale: [0.95, 1.02, 1],
-              opacity: [0.8, 1],
-            },
-            {
-              duration: 0.5,
-              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-            }
-          );
-        } else {
-          block.classList.remove("active");
-          const scale = Math.max(0.9, 1 - distanceFromActive * 0.05);
-          const opacity = Math.max(0.5, 1 - distanceFromActive * 0.25);
-
-          Motion.animate(
-            block,
-            {
-              scale: scale,
-              opacity: opacity,
-            },
-            {
-              duration: 0.5,
-              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-            }
-          );
-        }
-      });
-    });
-  }
-
-  disconnectedCallback() {}
-}
-customElements.define("inspiration-showcase", InspirationShowcase);
-
 class CartDrawer extends HTMLElement {
   constructor() {
     super();
@@ -1676,7 +1545,7 @@ class CartDrawer extends HTMLElement {
       {
         id: this.sectionId,
         section: this.sectionId,
-        selector: ".drawer__footer-bottom",
+        selector: ".drawer__footer-bottom-total",
       },
     ];
   }
@@ -2003,8 +1872,44 @@ class MiniCartUpSell extends HTMLElement {
     }
   }
 }
-
 customElements.define("mini-cart-recommendations", MiniCartUpSell);
+
+class CartUpSellProduct extends SlideSection {
+  constructor() {
+    super();
+  }
+
+  init() {
+    let width = window.innerWidth;
+    window.addEventListener("resize", () => {
+      const newWidth = window.innerWidth;
+      if (newWidth <= 767 && width > 767) {
+        this.actionOnMobile();
+      }
+      if (newWidth > 767 && width <= 767) {
+        this.actionOutMobile();
+      }
+      width = newWidth;
+    });
+    if (width <= 767) {
+      this.actionOnMobile();
+    } else {
+      this.actionOutMobile();
+    }
+  }
+
+  actionOnMobile() {
+    this.initSlideMediaGallery("CartUpSell");
+    this.style.maxHeight = "auto";
+  }
+
+  actionOutMobile() {
+    this.initSlideMediaGallery("CartUpSell");
+    this.style.maxHeight =
+      this.closest(".drawer__body").offsetHeight - 140 + "px";
+  }
+}
+customElements.define("cart-upsell-product", CartUpSellProduct);
 
 class ProductTabs extends HTMLElement {
   constructor() {
@@ -2175,28 +2080,30 @@ class ProductTabs extends HTMLElement {
       const description = tab.querySelector(
         ".product-tabs__header-description"
       );
-      const mobileDescription = this.querySelector(".product-tabs__header-description-mobile");
+      const mobileDescription = this.querySelector(
+        ".product-tabs__header-description-mobile"
+      );
       if (description && tab.classList.contains("accordion-open")) {
         tab.classList.remove("accordion-open");
         description.classList.remove("is-open");
         if (typeof Motion !== "undefined") {
           Motion.animate(
             description,
-            { 
+            {
               opacity: [1, 0],
-              height: 0
+              height: 0,
             },
             { duration: 0.2 }
           );
-          
+
           if (mobileDescription) {
             Motion.animate(
               mobileDescription,
               {
-                opacity: [1, 0]
+                opacity: [1, 0],
               },
               {
-                duration: 0.2
+                duration: 0.2,
               }
             );
           }
@@ -2207,14 +2114,16 @@ class ProductTabs extends HTMLElement {
     });
     this._openAccordions.clear();
   }
-  
+
   toggleAccordion(tab, forceOpen = false) {
     const description = tab.querySelector(".product-tabs__header-description");
     if (!description || description.textContent.trim().length === 0) return;
-    
+
     const isOpen = tab.classList.contains("accordion-open");
-    const mobileDescription = this.querySelector(".product-tabs__header-description-mobile");
-    
+    const mobileDescription = this.querySelector(
+      ".product-tabs__header-description-mobile"
+    );
+
     if (!isOpen || forceOpen) {
       tab.classList.add("accordion-open");
       description.classList.add("is-open");
@@ -2224,9 +2133,9 @@ class ProductTabs extends HTMLElement {
       if (typeof Motion !== "undefined") {
         Motion.animate(
           description,
-          { 
+          {
             opacity: [0, 1],
-            height: "auto" 
+            height: "auto",
           },
           { duration: 0.2 }
         );
@@ -2234,10 +2143,10 @@ class ProductTabs extends HTMLElement {
           Motion.animate(
             mobileDescription,
             {
-              opacity: [0, 1]
+              opacity: [0, 1],
             },
             {
-              duration: 0.2
+              duration: 0.2,
             }
           );
         }
@@ -2326,7 +2235,7 @@ class ProductTabs extends HTMLElement {
             y: [0, 15],
           },
           {
-            duration: 0.2
+            duration: 0.2,
           }
         ).finished;
       } catch (e) {
@@ -2345,7 +2254,7 @@ class ProductTabs extends HTMLElement {
           y: [15, 0],
         },
         {
-          duration: 0.2
+          duration: 0.2,
         }
       );
     } catch (e) {

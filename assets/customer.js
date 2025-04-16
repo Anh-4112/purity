@@ -75,7 +75,6 @@ class CustomerAddresses {
   };
 
   _handleDeleteButtonClick = ({ currentTarget }) => {
-    // eslint-disable-next-line no-alert
     if (confirm(currentTarget.getAttribute(attributes.confirmMessage))) {
       Shopify.postLink(currentTarget.dataset.target, {
         parameters: { _method: 'delete' },
@@ -87,20 +86,44 @@ class CustomerAddresses {
 class ShowPassWord extends HTMLElement {
   constructor() {
     super();
-    this.init();
+    this.input = null;
+    this.iconHide = null;
+    this.iconView = null;
+    this.onClick = this.onClick.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
   }
-  init() {
-    this.addEventListener('click', this.onClick.bind(this));
+
+  connectedCallback() {
+    this.input = this.closest('.field')?.querySelector('input');
+    this.iconHide = this.querySelector('.icon-hide');
+    this.iconView = this.querySelector('.icon-view');
+
+    this.setAttribute('role', 'button');
+    this.setAttribute('tabindex', '0');
+    this.setAttribute('aria-pressed', 'false');
+
+    this.addEventListener('click', this.onClick);
+    this.addEventListener('keydown', this.onKeyDown);
   }
+
   onClick() {
-    var input = this.closest('.field').querySelector('input');
-    if (input.type === 'password') {
-      input.type = 'text';
-      this.classList.add('text');
-    } else {
-      input.type = 'password';
-      this.classList.remove('text');
+    if (!this.input) return;
+    const isVisible = this.input.type === 'text';
+    this.input.type = isVisible ? 'password' : 'text';
+    this.classList.toggle('text', !isVisible);
+    this.setAttribute('aria-pressed', String(!isVisible));
+    if (this.iconHide && this.iconView) {
+      this.iconHide.classList.toggle('hidden', !isVisible);
+      this.iconView.classList.toggle('hidden', isVisible);
+    }
+  }
+
+  onKeyDown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this.onClick();
     }
   }
 }
+
 customElements.define('show-pass-word', ShowPassWord);

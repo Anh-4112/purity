@@ -4,6 +4,7 @@
   assign color_scheme = section_st.color_scheme
   assign menu = section_st.menu
   assign transparent = section_st.transparent
+  assign dropdowns_animation = section_st.dropdowns_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -72,7 +73,7 @@
   data-sticky-type="{{ section_st.sticky_header_type }}"
   data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
   data-menu-trigger="{{ section_st.menu_trigger }}"
-  data-dropdowns-animation="{{ section_st.dropdowns_animation }}"
+  data-dropdowns-animation="{{ dropdowns_animation }}"
   class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
@@ -175,10 +176,13 @@
                           endif
                         -%}
                         <div
-                          class="mega-menu py-40 submenu transition invisible submenu-desktop custom-scrollbar overflow-auto {{ section_st.dropdowns_animation }} border-top overflow-y-auto absolute inset-x-0 z-2 bg-white shadow"
+                          class="mega-menu submenu transition invisible submenu-desktop {{ dropdowns_animation }} border-top inset-x-0 absolute{% if dropdowns_animation != 'fade-in-down' %} z-2 bg-white shadow{% endif %}"
                           style="--col-mega-width: {{ mega_width }}%; --gap: 20px; --delay: 0.05s;"
                         >
-                          <div class="container flex wrap gap">
+                          {%- if dropdowns_animation == 'fade-in-down' -%}
+                            <div class="menu-container z-2 bg-white shadow">
+                          {%- endif -%}
+                          <div class="container flex wrap gap py-40 custom-scrollbar overflow-auto">
                             {%- if link.links.size > 0 -%}
                               <div
                                 class="menu-list flex-1"
@@ -287,12 +291,6 @@
                                     {%- endfor -%}
                                   </div>
                                 {%- when 'menu_product' -%}
-                                  <link
-                                    rel="stylesheet"
-                                    href="{{ 'product.css' | asset_url }}"
-                                    media="print"
-                                    onload="this.media='all'"
-                                  >
                                   <div class="col-mega mega-product">
                                     {%- liquid
                                       assign heading = last_block.settings.heading
@@ -368,6 +366,9 @@
                               {%- endcase -%}
                             {%- endif -%}
                           </div>
+                          {%- if dropdowns_animation == 'fade-in-down' -%}
+                            </div>
+                          {%- endif -%}
                         </div>
                       </details>
                     {%- else -%}
@@ -476,12 +477,10 @@
           {%- if section_st.show_search or section_st.show_account or section_st.show_cart -%}
             <div class="flex gap" style="--gap: 7px;">
               {%- if section_st.show_search -%}
-                {% # theme-check-disable NestedSnippet %}
                 <a
                   href="{{ routes.search_url }}"
                   class="header__icon wh-40 flex content-center"
                   id="search-icon-bubble"
-                  data-custom-class="{{ section_width }}"
                 >
                   <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
                     {{ 'general.search.search' | t }}
@@ -492,7 +491,6 @@
                   </svg>
                   <span class="visually-hidden">{{ 'general.search.search' | t }}</span>
                 </a>
-                {% # theme-check-enable NestedSnippet %}
               {%- endif -%}
               {%- if section_st.show_account -%}
                 <a
@@ -586,7 +584,12 @@
                     {% endif %}
                     class="header-banner flex align-center"
                   >
-                    {% render 'responsive-image', image: section_st.banner_image, type: 'other', image_alt: image_alt %}
+                    {% render 'responsive-image',
+                      image: section_st.banner_image,
+                      type: 'other',
+                      image_alt: image_alt,
+                      disable_lazy_loading: true
+                    %}
                   </a>
                 </div>
               {%- endif -%}
@@ -749,12 +752,6 @@
                                         {%- endfor -%}
                                       </div>
                                     {%- when 'menu_product' -%}
-                                      <link
-                                        rel="stylesheet"
-                                        href="{{ 'product.css' | asset_url }}"
-                                        media="print"
-                                        onload="this.media='all'"
-                                      >
                                       <div class="col-mega mega-product px-gutter-x py-12">
                                         {%- liquid
                                           assign heading = last_block.settings.heading

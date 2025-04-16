@@ -10,6 +10,12 @@
     assign header_size = 'h1'
   endif
 -%}
+{% style %}
+  .blocks-container .shopify-block:first-child .collection-list__content-inner {
+    padding-top: 0;
+  }
+{% endstyle %}
+
 <div class="w-full h-full flex align-{{ align_vertical }}">
   <div class="w-full">
     {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}

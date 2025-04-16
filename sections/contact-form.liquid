@@ -118,9 +118,6 @@
                 <label class="field__label visually-hidden" for="ContactFormName-{{ section.id }}">
                   {{ 'templates.contact.form.name' | t -}}
                 </label>
-                <svg class="transition absolute" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <use href="#icon-account"></use>
-                </svg>
               </div>
               <div class="field relative w-full flex wrap transition field--with-error">
                 <input
@@ -145,9 +142,6 @@
                   {{ 'templates.contact.form.email' | t }}
                   <span class="required">*</span></label
                 >
-                <svg class="transition absolute" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <use href="#icon-mail"></use>
-                </svg>
                 {%- if form.errors contains 'email' -%}
                   <small class="contact__field-error" id="ContactForm-email-error">
                     <span class="visually-hidden">{{ 'accessibility.error' | t }}</span>
@@ -201,16 +195,8 @@
             class="contact__button"
           >
             <button type="submit" class="btn btn-primary w-full relative">
-              <span class="hidden-on-load">{{ section_st.button_label }}</span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                class="spin opacity-0 pointer-none icon-load absolute"
-              >
-                <use href="#icon-load"></use>
-              </svg>
+              <span class="hidden-on-load transition-short">{{ section_st.button_label }}</span>
+              {%- render 'loader' -%}
             </button>
           </div>
         {%- endform -%}

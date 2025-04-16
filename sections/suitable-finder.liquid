@@ -97,7 +97,7 @@
   }
 {% endstyle %}
 <div
-  class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %} overflow-hidden-mobile"
+  class="section color-{{ section_st.color_scheme }} gradient {% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %} overflow-hidden-mobile"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -129,9 +129,9 @@
         <slide-section
           class="product-tabs__header-image-mobile swiper hidden-md reveal_on_scroll"
           data-spacing="30"
-          data-center-slide="true"
-          data-loop="true"
-          data-effect="slide"
+          data-free-mode="true"
+          style="max-width: 100%;
+        width: 100%;"
         >
           <div class="swiper-wrapper">
             {%- for block in section.blocks -%}
@@ -167,7 +167,7 @@
                       padding: column_gap_slide
                     %}
                   {%- else -%}
-                    {% render 'placeholder-render', type: 'collection' %}
+                    {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
                   {%- endif -%}
                 </div>
               </div>
@@ -211,7 +211,7 @@
                       padding: column_gap_slide
                     %}
                   {%- else -%}
-                    {% render 'placeholder-render', type: 'collection' %}
+                    {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
                   {%- endif -%}
                 </div>
                 <div class="product-tabs__header-title text-wrap">
