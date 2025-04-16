@@ -10,14 +10,13 @@
   else
     assign section_width = 'fluid_container'
   endif
-
-  assign column_gap_slide = 0
+  assign padding_container_1025 = ''
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
+    assign padding_container_1025 = 'px-1025-120'
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
+    assign padding_container_1025 = 'px-1025-90'
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
+    assign padding_container_1025 = 'px-1025-60'
   endif
 
   assign heading_size = section_st.heading_size
@@ -25,7 +24,7 @@
   if heading_size == 'small'
     assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = 'h1'
+    assign header_size = 'fs-medium'
   endif
 
   assign image_width = section_st.image_width
@@ -55,94 +54,110 @@
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
     {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
-
+{% style %}
+  .bundle-products__body bundle-item:first-child .product-item__inner {
+    padding-top: 0;
+  }
+{% endstyle %}
 <div
-  class="section__bundle-product overflow-hidden section"
+  class="section__bundle-product overflow-hidden section color-{{ section_st.color_scheme }}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div
     class="{{ section_width }}"
   >
     <bundle-products
-      class="bundle-products flex wrap row-gap-20 {% if image_position == "right" %}row-reverse-md{% endif %} space-between gap-{{ column_gap_slide }}"
-      style="--row-gap: 2rem;--col-width: {{ image_width }}%"
+      class="bundle-products flex wrap row-gap-30 {% if image_position == "right" %}row-reverse-md{% endif %}"
+      style="--gap: 0px;--row-gap: 2rem;--col-width: {{ image_width }}%"
     >
-      <div class="bundle-products__image relative w-full col-1025-w-custom">
-        <div
-          class="rounded h-full"
-          {% if image != blank %}
-            style="--aspect-ratio: {{ ratio }}";
-          {% else %}
-            style="--aspect-ratio: 16/9";
-          {% endif %}
-        >
-          {%- liquid
-            assign alt = 'general.image.image_alt_default' | t
-            if image.alt
-              assign alt = image.alt | escape
-            endif
-          -%}
-          {%- if image != blank -%}
-            {% render 'responsive-image',
-              type: 'other',
-              container: section_width,
-              image: image,
-              image_alt: alt,
-              class: 'rounded'
-            %}
-          {% else %}
-            {% render 'placeholder-render', type: 'collection-6', class: 'img-placeholder h-full w-full' %}
-          {% endif %}
-        </div>
-        {%- for block in section.blocks -%}
-          {% liquid
-            assign block_st = block.settings
-            assign position_top = block_st.position_top
-            assign position_left = block_st.position_left
-            assign product = block_st.product
-          %}
+      <div
+        class="bundle-products__image w-full col-1025-w-custom sticky top-0"
+      >
+        <div class="relative">
           <div
-            class="absolute bundle-products-link"
-            style="--position-top: {{ position_top }}%; --position-left: {{ position_left }}%;"
-            data-product-position="{{ forloop.index }}"
-            {{ block.shopify_attributes }}
+            class="rounded"
+            style="--aspect-ratio: {{ ratio }}"
           >
-            <div class="bundle-products-hotspot pointer relative">
-              <a
-                aria-label="{{ product.title }}"
-                class="product__name heading-style block"
-                href="{{ product.url }}"
-                target="_blank"
-              >
-                <span class="icon-dot flex content-center dot pointer-none">
-                  {{ forloop.index }}
-                </span>
-              </a>
-            </div>
             {%- liquid
-              assign position_x = ''
-              if position_left > 80
-                assign position_x = ' right'
-              elsif position_left < 20
-                assign position_x = ' left'
-              endif
-              assign position_y = ''
-              if position_top > 65
-                assign position_y = ' bottom'
-              elsif position_top < 35
-                assign position_y = ' top'
+              assign alt = 'general.image.image_alt_default' | t
+              if image.alt
+                assign alt = image.alt | escape
               endif
             -%}
+            {%- if image != blank -%}
+              {% render 'responsive-image',
+                type: 'other',
+                container: section_width,
+                image: image,
+                image_alt: alt,
+                class: 'rounded'
+              %}
+            {% else %}
+              {% render 'placeholder-render', type: 'collection-6', class: 'img-placeholder h-full w-full' %}
+            {% endif %}
           </div>
-        {%- endfor -%}
+          {%- for block in section.blocks -%}
+            {% liquid
+              assign block_st = block.settings
+              assign position_top = block_st.position_top
+              assign position_left = block_st.position_left
+              assign product = block_st.product
+            %}
+            <div
+              class="absolute bundle-products-link z-2 flex justify-center overflow-hidden"
+              style="--position-top: {{ position_top }}%; --position-left: {{ position_left }}%;"
+              data-product-position="{{ forloop.index }}"
+              {{ block.shopify_attributes }}
+            >
+              <div class="bundle-products-hotspot pointer relative">
+                <a
+                  aria-label="{{ product.title }}"
+                  class="product__name heading-style inline-flex w-custom h-custom pointer content-center rounded-50"
+                  style="--width: 4.6rem;--height: 4.6rem;"
+                  {% if product.url != blank %}
+                    href="{{ product.url }}"
+                  {% else %}
+                    role="link"
+                  {% endif %}
+                  target="_blank"
+                >
+                  <span
+                    class="icon-dot transition flex content-center dot pointer-none w-custom h-custom rounded-50 bg-white grey-color relative"
+                    style="--width: 2.6rem;--height: 2.6rem;--color-grey:--btn-primary-bg-color"
+                  >
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                      <use href="#icon-dot"></use>
+                    </svg>
+                  </span>
+                </a>
+              </div>
+              {%- liquid
+                assign position_x = ''
+                if position_left > 80
+                  assign position_x = ' right'
+                elsif position_left < 20
+                  assign position_x = ' left'
+                endif
+                assign position_y = ''
+                if position_top > 65
+                  assign position_y = ' bottom'
+                elsif position_top < 35
+                  assign position_y = ' top'
+                endif
+              -%}
+            </div>
+          {%- endfor -%}
+        </div>
       </div>
-      <div class="bundle-products__body w-full col-1025-remaining align-self-center">
+      <div
+        class="bundle-products__body w-full col-1025-remaining align-self-center {{ padding_container_1025 }}{% if image_position == "right" %} padding-bundle-left-0{% else %} padding-bundle-right-0{% endif %}"
+      >
         {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
           <div
-            class="section-header text-{{ text_alignment }}"
+            class="section-header text-{{ text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}"
           >
             {%- if section_st.subheading != blank -%}
-              <div class="section-subheading h7 mb-5 mb-md-10 body_weight">
+              <div class="section-subheading fs-big-2 mb-10">
                 {{ section_st.subheading }}
               </div>
             {%- endif -%}
@@ -152,7 +167,7 @@
               </h2>
             {%- endif -%}
             {%- if section_st.description != blank -%}
-              <div class="section-description">
+              <div class="section-description mt-15">
                 {{ section_st.description }}
               </div>
             {%- endif -%}
@@ -166,6 +181,8 @@
             -%}
             <bundle-item
               data-product-position="{{ forloop.index }}"
+              style="--width: 8rem;"
+              class="bundle-item{% if forloop.first %} pt-0{% endif %} transition"
             >
               {% render 'card-product',
                 card_product: product,
@@ -178,8 +195,13 @@
                 disable_vendor: true,
                 disable_hover_image: true,
                 show_quick_add: true,
-                type: 'list',
-                enable_quick_add: enable_quick_add
+                type: 'bundle',
+                enable_quick_add: enable_quick_add,
+                class: '',
+                style_layout: ' flex gap-20 py-20',
+                image_class: ' flex-auto w-custom',
+                image_rounded: ' rounded-10',
+                info_class: ' flex-1 mt-0 relative flex-md md-column'
               %}
             </bundle-item>
           {%- endfor -%}
@@ -194,7 +216,7 @@
             >
               <input type="hidden" name="form_type" value="product">
               <input type="hidden" name="utf8" value="✓">
-              <div class="product-bundle-products-list ">
+              <div class="product-bundle-products-list">
                 {%- for block in section.blocks -%}
                   {%- liquid
                     assign blo_settings = block.settings
@@ -248,27 +270,37 @@
               {%- if show_button_add_all -%}
                 <button
                   type="submit"
-                  class="btn btn-primary w-full relative product_submit_button product-form__submit word-wrap relative"
+                  class="btn btn-primary w-full relative product_submit_button product-form__submit word-wrap relative mt-20"
                   aria-label="{{ 'products.product.add_all_to_cart' | t }}"
                 >
-                  <span class="hidden-on-load transition-short">{{ 'products.product.add_all_to_cart' | t }}</span>
-                  {%- render 'loader' -%}
+                  <span class="hidden-on-load">{{ 'products.product.add_all_to_cart' | t }}</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    class="spin opacity-0 pointer-none icon-load absolute"
+                  >
+                    <use href="#icon-load"></use>
+                  </svg>
                 </button>
               {%- endif -%}
             </form>
           </product-form>
           {%- if section_st.button_label != blank %}
-            <a
-              {% if section_st.button_link == blank %}
-                role="link" aria-disabled="true"
-              {% else %}
-                href="{{ section_st.button_link | default: "#" }}"
-              {% endif %}
-              aria-label="{{ section_st.button_label }}"
-              class="btn btn-link align-self-center"
-            >
-              {{ section_st.button_label }}
-            </a>
+            <div class="mt-20 text-center">
+              <a
+                {% if section_st.button_link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ section_st.button_link | default: "#" }}"
+                {% endif %}
+                aria-label="{{ section_st.button_label }}"
+                class="heading-style text-size border-animation pointer"
+              >
+                {{ section_st.button_label }}
+              </a>
+            </div>
           {%- endif -%}
         </div>
       </div>
@@ -323,12 +355,12 @@
       "type": "text",
       "id": "subheading",
       "label": "t:sections.all.content_setting.subheading.label",
-      "default": "The subheading"
+      "default": "Subheading"
     },
     {
       "type": "text",
       "id": "title",
-      "default": "The heading",
+      "default": "Heading",
       "label": "t:sections.all.content_setting.heading.label"
     },
     {
@@ -463,7 +495,7 @@
       "type": "checkbox",
       "id": "enable_quick_add",
       "label": "t:sections.bundle-products.settings.enable_quick_add_for_items.label",
-      "default": false
+      "default": true
     },
     {
       "type": "text",
