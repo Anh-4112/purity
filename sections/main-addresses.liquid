@@ -20,24 +20,28 @@
     style="{{ style | strip | strip_newlines }}"
   >
     <div class="address__header flex wrap column">
-      <div class="address__header-inner">
+      <div class="address__header-inner text-center mb-60">
         <h1>{{ 'customer.addresses.title' | t }}</h1>
-        <a href="{{ routes.account_url }}" aria-label="{{ 'customer.account.return' | t }}">
+        <a href="{{ routes.account_url }}" aria-label="{{ 'customer.account.return' | t }}" class="underline mt-15">
           {{ 'customer.account.return' | t }}
         </a>
       </div>
-      <div data-address>
-        <button
-          type="button"
-          aria-expanded="false"
-          aria-controls="AddAddress"
-        >
-          {{ 'customer.addresses.add_new' | t }}
-        </button>
-        <div id="AddAddress">
-          <h2 id="AddressNewHeading">{{ 'customer.addresses.add_new' | t }}</h2>
+      <div data-address class="flex justify-center column">
+        <div class="flex justify-center">
+          <button
+            type="button"
+            aria-expanded="false"
+            aria-controls="AddAddress"
+            class="btn btn-primary"
+          >
+            {{ 'customer.addresses.add_new' | t }}
+          </button>
+        </div>
+        <div id="AddAddress" class="w-full max-w-custom mx-auto" style="--max-width: 60rem;">
+          <h2 id="AddressNewHeading" class="h3 mb-30 mt-20 text-center">{{ 'customer.addresses.add_new' | t }}</h2>
           {%- form 'customer_address', customer.new_address, aria-labelledBy: 'AddressNewHeading' -%}
             <div class="field form-group relative w-full flex wrap transition">
+              <label for="AddressFirstNameNew" class="mb-5">{{ 'customer.addresses.first_name' | t }}</label>
               <input
                 type="text"
                 id="AddressFirstNameNew"
@@ -46,9 +50,9 @@
                 autocomplete="given-name"
                 placeholder="{{ 'customer.addresses.first_name' | t }}"
               >
-              <label for="AddressFirstNameNew">{{ 'customer.addresses.first_name' | t }}</label>
             </div>
             <div class="field form-group relative w-full flex wrap transition">
+              <label for="AddressLastNameNew" class="mb-5 mt-20">{{ 'customer.addresses.last_name' | t }}</label>
               <input
                 type="text"
                 id="AddressLastNameNew"
@@ -57,9 +61,9 @@
                 autocomplete="family-name"
                 placeholder="{{ 'customer.addresses.last_name' | t }}"
               >
-              <label for="AddressLastNameNew">{{ 'customer.addresses.last_name' | t }}</label>
             </div>
             <div class="field form-group relative w-full flex wrap transition">
+              <label for="AddressCompanyNew" class="mb-5 mt-20">{{ 'customer.addresses.company' | t }}</label>
               <input
                 type="text"
                 id="AddressCompanyNew"
@@ -68,9 +72,9 @@
                 autocomplete="organization"
                 placeholder="{{ 'customer.addresses.company' | t }}"
               >
-              <label for="AddressCompanyNew">{{ 'customer.addresses.company' | t }}</label>
             </div>
             <div class="field form-group relative w-full flex wrap transition">
+              <label for="AddressAddress1New" class="mb-5 mt-20">{{ 'customer.addresses.address1' | t }}</label>
               <input
                 type="text"
                 id="AddressAddress1New"
@@ -79,9 +83,9 @@
                 autocomplete="address-line1"
                 placeholder="{{ 'customer.addresses.address1' | t }}"
               >
-              <label for="AddressAddress1New">{{ 'customer.addresses.address1' | t }}</label>
             </div>
             <div class="field form-group relative w-full flex wrap transition">
+              <label for="AddressAddress2New" class="mb-5 mt-20">{{ 'customer.addresses.address2' | t }}</label>
               <input
                 type="text"
                 id="AddressAddress2New"
@@ -90,9 +94,9 @@
                 autocomplete="address-line2"
                 placeholder="{{ 'customer.addresses.address2' | t }}"
               >
-              <label for="AddressAddress2New">{{ 'customer.addresses.address2' | t }}</label>
             </div>
             <div class="field form-group relative w-full flex wrap transition">
+              <label for="AddressCityNew" class="mb-5 mt-20">{{ 'customer.addresses.city' | t }}</label>
               <input
                 type="text"
                 id="AddressCityNew"
@@ -101,10 +105,9 @@
                 autocomplete="address-level2"
                 placeholder="{{ 'customer.addresses.city' | t }}"
               >
-              <label for="AddressCityNew">{{ 'customer.addresses.city' | t }}</label>
             </div>
             <div>
-              <label for="AddressCountryNew">{{ 'customer.addresses.country' | t }}</label>
+              <label for="AddressCountryNew" class="mb-5 mt-20">{{ 'customer.addresses.country' | t }}</label>
               <div class="select relative">
                 <select
                   id="AddressCountryNew"
@@ -117,8 +120,8 @@
                 </select>
               </div>
             </div>
-            <div id="AddressProvinceContainerNew" style="display: none">
-              <label for="AddressProvinceNew">{{ 'customer.addresses.province' | t }}</label>
+            <div id="AddressProvinceContainerNew">
+              <label for="AddressProvinceNew" class="mb-5 mt-20">{{ 'customer.addresses.province' | t }}</label>
               <div class="select relative">
                 <select
                   id="AddressProvinceNew"
@@ -130,6 +133,7 @@
               </div>
             </div>
             <div class="field form-group relative w-full flex wrap transition">
+              <label for="AddressZipNew" class="mb-5 mt-20">{{ 'customer.addresses.zip' | t }}</label>
               <input
                 type="text"
                 id="AddressZipNew"
@@ -139,9 +143,9 @@
                 autocomplete="postal-code"
                 placeholder="{{ 'customer.addresses.zip' | t }}"
               >
-              <label for="AddressZipNew">{{ 'customer.addresses.zip' | t }}</label>
             </div>
             <div class="field form-group relative w-full flex wrap transition">
+              <label for="AddressPhoneNew" class="mb-5 mt-20">{{ 'customer.addresses.phone' | t }}</label>
               <input
                 type="tel"
                 id="AddressPhoneNew"
@@ -150,24 +154,23 @@
                 autocomplete="tel"
                 placeholder="{{ 'customer.addresses.phone' | t }}"
               >
-              <label for="AddressPhoneNew">{{ 'customer.addresses.phone' | t }}</label>
             </div>
-            <div class="address-checkbox">
+            <div class="address-checkbox mt-20">
               {{ form.set_as_default_checkbox }}
               <label for="address_default_address_new">{{ 'customer.addresses.set_default' | t }}</label>
             </div>
-            <div class="mt-5">
-              <button>{{ 'customer.addresses.add' | t }}</button>
-              <button type="reset">{{ 'customer.addresses.cancel' | t }}</button>
+            <div class="mt-10 flex gap-20">
+              <button class="btn btn-primary w-50-percent">{{ 'customer.addresses.add' | t }}</button>
+              <button class="btn btn-outline w-50-percent" type="reset">{{ 'customer.addresses.cancel' | t }}</button>
             </div>
           {%- endform -%}
         </div>
       </div>
     </div>
 
-    <ul role="list">
+    <ul role="list" class="w-full max-w-custom mx-auto list-unstyled mt-30" style="--max-width: 60rem;">
       {%- for address in customer.addresses -%}
-        <li data-address>
+        <li data-address class="p-24 bg-">
           {%- if address == customer.default_address -%}
             <h2>{{ 'customer.addresses.default' | t }}</h2>
           {%- endif -%}
