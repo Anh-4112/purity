@@ -195,7 +195,7 @@
                             column: items_per_row
                           %}
                         {% else %}
-                          {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                          {% render 'placeholder-render', type: 'collection' %}
                         {% endif %}
                       {% endif %}
                     </video-local>
@@ -204,7 +204,7 @@
                       class="video-item--ratio"
                       style="--aspect-ratio: {{ video_ratio }};"
                     >
-                      {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {% render 'placeholder-render', type: 'collection' %}
                     </div>
                   {% endif %}
                   {% if autoplay_video == false or local_video != blank %}
@@ -334,7 +334,7 @@
                     column: items_per_row
                   %}
                 {% else %}
-                  {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {% render 'placeholder-render', type: 'collection' %}
                 {% endif %}
               {% endif %}
             </video-local>
@@ -343,7 +343,7 @@
               class="video-item--ratio"
               style="--aspect-ratio: {{ video_ratio }};"
             >
-              {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% render 'placeholder-render', type: 'collection' %}
             </div>
           {% endif %}
           <icon-close class="shopable-sticky__close pointer-none border inline-flex mx-auto rounded-50 overflow-hidden absolute top-0 inset-x-0 w-50 h-50 content-center heading-color bg-white">
@@ -474,7 +474,7 @@
                                 column: items_per_row
                               %}
                             {% else %}
-                              {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                              {% render 'placeholder-render', type: 'collection' %}
                             {% endif %}
                           {% endif %}
                         </video-local>
@@ -483,7 +483,7 @@
                           class="video-item--ratio"
                           style="--aspect-ratio: {{ video_ratio }};"
                         >
-                          {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                          {% render 'placeholder-render', type: 'collection' %}
                         </div>
                       {% endif %}
                       <div class="popup-information__mobile hidden-1025 flex align-center space-between absolute bottom-15 right-15 left-15">
