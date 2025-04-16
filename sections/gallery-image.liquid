@@ -44,28 +44,6 @@
   elsif section_st.column_gap == 'small'
     assign column_gap_slide = 10
   endif
-  assign ratio = '3/4'
-  for block in section.blocks
-    assign block_st = block.settings
-    assign image = block_st.image
-    assign video = block_st.video_local
-    if image_ratio != 'adapt'
-      case image_ratio
-        when 'square'
-          assign ratio = '1/1'
-        when 'landscape'
-          assign ratio = '4/3'
-        when 'portrait'
-          assign ratio = '3/4'
-      endcase
-    else
-      if video != blank
-        assign ratio = video.aspect_ratio
-      elsif image != blank
-        assign ratio = image.aspect_ratio
-      endif
-    endif
-  endfor
 -%}
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -125,12 +103,35 @@
               assign image = block_st.image
               assign video = block_st.video_local
               assign media_link = block_st.media_link
-              assign image_alt = image.alt | default: 'general.image.image_alt_default' | t
+              assign image_alt = 'gallery_image.alt_text.default' | t
+              if video.alt != blank
+                assign image_alt = video.alt
+              elsif image.alt != blank
+                assign image_alt = image.alt
+              endif
+              assign ratio = '3/4'
+              for block in section.blocks
+                if image_ratio != 'adapt'
+                  case image_ratio
+                    when 'square'
+                      assign ratio = '1/1'
+                    when 'landscape'
+                      assign ratio = '4/3'
+                    when 'portrait'
+                      assign ratio = '3/4'
+                  endcase
+                else
+                  if video != blank
+                    assign ratio = video.aspect_ratio
+                  elsif image != blank
+                    assign ratio = image.aspect_ratio
+                  endif
+                endif
+              endfor
             -%}
             <div class="swiper-slide">
               <div
                 class="gallery-list__item"
-                style="--aspect-ratio: {{ ratio }}"
               >
                 <a
                   {% if media_link == blank %}
@@ -139,6 +140,7 @@
                     href="{{ media_link | default: "#" }}"
                   {% endif %}
                   aria-label="{{ image_alt }}"
+                  style="--aspect-ratio: {{ ratio }}"
                 >
                   {%- if video != blank -%}
                     {%- liquid
@@ -202,19 +204,43 @@
             assign image = block_st.image
             assign video = block_st.video_local
             assign media_link = block_st.media_link
-            assign image_alt = image.alt | default: 'general.image.image_alt_default' | t
+            assign image_alt = 'gallery_image.alt_text.default' | t
+            if video.alt != blank
+              assign image_alt = video.alt
+            elsif image.alt != blank
+              assign image_alt = image.alt
+            endif
+            for block in section.blocks
+              if image_ratio != 'adapt'
+                case image_ratio
+                  when 'square'
+                    assign ratio = '1/1'
+                  when 'landscape'
+                    assign ratio = '4/3'
+                  when 'portrait'
+                    assign ratio = '3/4'
+                endcase
+              else
+                if video != blank
+                  assign ratio = video.aspect_ratio
+                elsif image != blank
+                  assign ratio = image.aspect_ratio
+                endif
+              endif
+            endfor
           -%}
           <div
             class="gallery-list__item"
-            style="--aspect-ratio: {{ ratio }}"
           >
             <a
+              class="rounded"
               {% if media_link == blank %}
                 role="link" aria-disabled="true"
               {% else %}
                 href="{{ media_link | default: "#" }}"
               {% endif %}
               aria-label="{{ image_alt }}"
+              style="--aspect-ratio: {{ ratio }}"
             >
               {%- if video != blank -%}
                 {%- liquid
@@ -423,13 +449,13 @@
       "type": "checkbox",
       "id": "enable_carousel",
       "label": "t:sections.all.carousel.enable_carousel.label",
-      "default": true,
-      "info": "t:sections.all.carousel.enable_carousel.description"
+      "default": false,
+      "info": "t:sections.all.carousel.enable_carousel.description_media"
     },
     {
       "type": "checkbox",
       "id": "show_navigation",
-      "default": true,
+      "default": false,
       "label": "t:sections.all.carousel.show_navigation.label"
     },
     {
@@ -443,6 +469,10 @@
       "id": "reveal_slide",
       "default": false,
       "label": "t:sections.all.carousel.reveal_slide.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.mobile_options.label"
     },
     {
       "type": "range",
