@@ -50,8 +50,8 @@ function getFocusableElements(container) {
     )
   );
 }
-var trapFocusHandlers = {};
 
+const trapFocusHandlers = {};
 export function trapFocus(container, elementToFocus = container) {
   var elements = getFocusableElements(container);
   var first = elements[0];
@@ -162,8 +162,7 @@ export function eventModal(
       setTimeout(() => {
         modal_element.classList.remove("active", "delay");
         if (active_modal.length == 1) {
-          root.classList.remove("open-modal");
-          root.style.removeProperty("padding-right");
+          removeModalAction(modal_element);
         }
       }, 350);
       modal_element.querySelector(".model_media").classList.remove("open");
@@ -175,8 +174,7 @@ export function eventModal(
     }
     if (!modal_element.classList.contains("delay")) {
       if (active_modal.length == 1) {
-        root.classList.remove("open-modal");
-        root.style.removeProperty("padding-right");
+        removeModalAction(modal_element);
       }
     }
     removeTrapFocus(modal_element);
@@ -184,6 +182,17 @@ export function eventModal(
       trapFocus(document.getElementById(focus_item));
     }
   }
+}
+
+function removeModalAction(modal_element) {
+  root.classList.remove("open-modal");
+  root.style.removeProperty("padding-right");
+  modal_element
+    .querySelectorAll("button")
+    .forEach((button) => button.classList.remove("active"));
+  modal_element
+    .querySelectorAll(".drawer-bottom")
+    .forEach((addon) => addon.classList.remove("open"));
 }
 
 export class eventDelegate {

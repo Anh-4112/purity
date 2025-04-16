@@ -2089,15 +2089,15 @@ class CartUpSellProduct extends SlideSection {
     let width = window.innerWidth;
     window.addEventListener("resize", () => {
       const newWidth = window.innerWidth;
-      if (newWidth <= 767 && width > 767) {
+      if (newWidth <= 1024 && width > 1024) {
         this.actionOnMobile();
       }
-      if (newWidth > 767 && width <= 767) {
+      if (newWidth > 1024 && width <= 1024) {
         this.actionOutMobile();
       }
       width = newWidth;
     });
-    if (width <= 767) {
+    if (width <= 1024) {
       this.actionOnMobile();
     } else {
       this.actionOutMobile();
