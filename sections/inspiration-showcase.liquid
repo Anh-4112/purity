@@ -21,13 +21,13 @@
     assign text_content_size = 'h6'
   endif
 
-  assign column_gap_slide = 0
+  assign column_gap_slide = 'gap-0'
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
+    assign column_gap_slide = 'gap-30 gap-md-50'
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
+    assign column_gap_slide = 'gap-20 gap-md-30'
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
+    assign column_gap_slide = 'gap-10 gap-md-20'
   endif
 -%}
 {%- capture style -%}
@@ -42,115 +42,126 @@
   {%- endif %}
 {%- endcapture -%}
 {% style %}
-    inspiration-showcase{
-      display: flex;
-    }
+  inspiration-showcase {
+    display: flex;
+  }
+  .inspiration-showcase__block {
+    width: 10rem;
+  }
+  .inspiration-showcase__block.active {
+    width: 18rem;
+  }
+    @media screen and (max-width: 767.98px) {
     .inspiration-showcase__block {
-        flex: 0 0 auto;
+      width: 7.6rem;
     }
-    .inspiration-showcase__block{
-      width: 10rem;
-      height: 15rem;
+    .inspiration-showcase__block.active {
+      width: 15rem;
     }
-    .inspiration-showcase__block.active{
-      width: 18rem;
-      height: 27rem;
-    }
+  }
 {% endstyle %}
 <div
   class="section section-case color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
 >
-    <div class="{{ section_width }}">
-        <inspiration-showcase class="content-center gap-{{ column_gap_slide }}">
-          {%- for block in section.blocks -%}
-            {%- liquid
-              assign block_st = block.settings
-              assign media_type = section_st.media_type
-              assign media = block_st.image
-              assign video = block_st.video
-              assign image_alt = media.alt
-              if image_alt == blank
-                assign image_alt = 'general.image.image_alt_default' | t
+  <div class="{{ section_width }}">
+    <inspiration-showcase class="content-center {{ column_gap_slide }} mb-30">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign block_st = block.settings
+          assign media_type = section_st.media_type
+          assign media = block_st.image
+          assign video = block_st.video
+          assign image_alt = media.alt
+          if image_alt == blank
+            assign image_alt = 'general.image.image_alt_default' | t
+          endif
+          assign middle_index = section.blocks.size | divided_by: 2 | floor
+          assign is_middle = false
+          if forloop.index0 == middle_index
+            assign is_middle = true
+          endif
+
+          if is_middle
+            assign active_class = 'active'
+          else
+            assign active_class = ''
+          endif
+          assign image_ratio = section_st.image_ratio
+
+          assign ratio = '3/4'
+          if media_type != 'rounded'
+            if image_ratio != 'adapt'
+              case image_ratio
+                when 'square'
+                  assign ratio = '1/1'
+                when 'landscape'
+                  assign ratio = '4/3'
+                when 'portrait'
+                  assign ratio = '3/4'
+              endcase
+            else
+              if video != blank
+                assign ratio = video.aspect_ratio
+              elsif media != blank
+                assign ratio = media.aspect_ratio
               endif
-              assign middle_index = section.blocks.size | divided_by: 2 | floor
-              assign is_middle = false
-              if forloop.index0 == middle_index
-                assign is_middle = true
-              endif
-              
-              if is_middle
-                assign active_class = 'active'
-              else
-                assign active_class = ''
-              endif
-              assign image_ratio = section_st.image_ratio
-              assign ratio = '3/4'
-              if image_ratio != 'adapt'
-                case image_ratio
-                  when 'square'
-                    assign ratio = '1/1'
-                  when 'landscape'
-                    assign ratio = '4/3'
-                  when 'portrait'
-                    assign ratio = '3/4'
-                endcase
-              else
-                if video != blank
-                  assign ratio = video.aspect_ratio
-                elsif media != blank
-                  assign ratio = media.aspect_ratio
-                endif
-              endif
-            -%}
-            <div class="inspiration-showcase__block flex-1 {{ active_class }}">
-                <div class="inspiration-showcase__media {{ media_type }}" style="--aspect-ratio: {{ ratio }}">
-                 {%- if video != blank -%}
-                    {%- liquid
-                      assign source = video.sources
-                      assign source_url = ''
-                      for s in source
-                        if s.format == 'mp4'
-                          assign source_url = s.url
-                          break
-                        endif
-                      endfor
-                      assign video_poster = video.preview_image | image_url: width: 1100
-                    -%}
-                    <video-local>
-                      <video
-                        loop="true"
-                        data-src="{{ source_url }}"
-                        poster="{{ video_poster }}"
-                        playsinline="true"
-                        autoplay
-                        muted
-                        size="{{ sizes }}"
-                      ></video>
-                    </video-local>
-                 {%- elsif media != blank -%}
-                  {% render 'responsive-image',
-                    type: 'banner',
-                    container: section_st.section_width,
-                    image: media,
-                    image_alt: image_alt,
-                    padding: column_gap_slide,
-                    column: section.blocks.size
-                  %}
-                 {%- else -%}
-                  {% render 'placeholder-render', type: 'blog' %}
-                 {%- endif -%}
-                </div>
-            </div>
-          {%- endfor -%}
-        </inspiration-showcase>
-        <div class="inspiration-showcase__text text-center">
-          <div class="text-content {{ text_content_size }}">
-            {{ text }}
+            endif
+          else
+            assign ratio = '1/1'
+            assign media_type = 'rounded-50'
+          endif
+        -%}
+        <div class="inspiration-showcase__block {{ active_class }}">
+          <div
+            class="inspiration-showcase__media {{ media_type }} rounded video-section"
+            style="--aspect-ratio: {{ ratio }};{% if section_st.media_type == 'oval' %}--img-rounded: 100px;{% endif %}"
+          >
+            {%- if video != blank -%}
+              {%- liquid
+                assign source = video.sources
+                assign source_url = ''
+                for s in source
+                  if s.format == 'mp4'
+                    assign source_url = s.url
+                    break
+                  endif
+                endfor
+                assign video_poster = video.preview_image | image_url: width: 1100
+              -%}
+              <video-local>
+                <video
+                  loop="true"
+                  data-src="{{ source_url }}"
+                  poster="{{ video_poster }}"
+                  playsinline="true"
+                  autoplay
+                  muted
+                  size="{{ sizes }}"
+                ></video>
+              </video-local>
+            {%- elsif media != blank -%}
+              {% render 'responsive-image',
+                type: 'banner',
+                container: section_st.section_width,
+                image: media,
+                image_alt: image_alt,
+                padding: column_gap_slide,
+                column: section.blocks.size
+              %}
+            {%- else -%}
+              {% render 'placeholder-render', type: 'blog' %}
+            {%- endif -%}
           </div>
         </div>
-
+      {%- endfor -%}
+    </inspiration-showcase>
+    <div class="inspiration-showcase__text text-center">
+      <div class="text-content {{ text_content_size }}">
+        {{ text }}
+      </div>
     </div>
+  </div>
 </div>
 {% schema %}
 {
@@ -197,7 +208,7 @@
       "type": "textarea",
       "id": "text",
       "label": "t:sections.all.text.label",
-      "default": "Your face, your rules—swipe, blend, 🌿 and glow like the powerhouse you are. Beauty isn't a standard, it's your statement! 💫 "
+      "default": "Add a short description for this section."
     },
     {
       "type": "select",
@@ -228,16 +239,16 @@
       "id": "media_type",
       "options": [
         {
+          "value": "default",
+          "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__3.label"
+        },
+        {
           "value": "rounded",
           "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__1.label"
         },
         {
           "value": "oval",
           "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__2.label"
-        },
-        {
-          "value": "square",
-          "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__3.label"
         }
       ],
       "default": "oval",
