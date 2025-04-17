@@ -47,7 +47,6 @@
             endif
             if p_media.media_type == 'video' or p_media.media_type == 'external_video'
               assign type_video = true
-              assign product_show_image_hover = false
             endif
           -%}
           <div
@@ -67,14 +66,14 @@
                   class="product__media animation-swatches{{ image_rounded }}"
                   style="--aspect-ratio: {{ ratio }};"
                 >
+                  {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
                   {% if type_video and product_show_video_featured and disable_show_video != true %}
                     {% if p_media.media_type == 'video' %}
-                      <video-product class="product__img product__img_video lazy-video-item">
-                        {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
+                      <video-product class="product__img featured-image product__img_video lazy-video-item">
                         {% render 'responsive-image',
                           type: 'product',
-                          class: 'product__img',
-                          image: p_media,
+                          class: 'product__img video-thumbnail',
+                          image: p_media.preview_image,
                           image_alt: alt_features,
                           container: container,
                           column: column,
@@ -98,12 +97,11 @@
                       {% liquid
                         assign video_id = p_media.external_id
                       %}
-                      <video-product class="product__img product__img_video lazy-video-item">
-                        {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
+                      <video-product class="product__img featured-image product__img_video lazy-video-item">
                         {% render 'responsive-image',
                           type: 'product',
-                          class: 'product__img',
-                          image: p_media,
+                          class: 'product__img video-thumbnail',
+                          image: p_media.preview_image,
                           image_alt: alt_features,
                           container: container,
                           column: column,
@@ -127,21 +125,17 @@
                         </template>
                       </video-product>
                     {% endif %}
-                    {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
-                    {% render 'responsive-image',
-                      type: 'product',
-                      class: 'product__img secondary-image hidden',
-                      image: p_media,
-                      image_alt: alt_features,
-                      container: container,
-                      column: column,
-                      column_mobile: column_mobile,
-                      padding: padding,
-                      disable_lazy_loading: disable_lazy_loading,
-                      sizes: sizes
-                    %}
+                    {%- liquid
+                      if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true
+                        assign alt_features = card_product.media[1].alt | default: card_product.title | escape
+                        assign media_hover = card_product.media[1]
+                        if media_hover.media_type == 'video' or media_hover.media_type == 'external_video' or media_hover.media_type == 'model'
+                          assign media_hover = card_product.media[1].preview_image
+                        endif
+                        render 'responsive-image', type: 'product', class: 'product__hover-img transition invisible absolute inset-0 hidden', image: media_hover, image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding, sizes: sizes, disable_lazy_loading: disable_lazy_loading
+                      endif
+                    -%}
                   {% else %}
-                    {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
                     {% render 'responsive-image',
                       type: 'product',
                       class: 'product__img featured-image',
@@ -158,7 +152,11 @@
                     {%- liquid
                       if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true
                         assign alt_features = card_product.media[1].alt | default: card_product.title | escape
-                        render 'responsive-image', type: 'product', class: 'product__hover-img transition invisible absolute inset-0', image: card_product.media[1], image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding, sizes: sizes, disable_lazy_loading: disable_lazy_loading
+                        assign media_hover = card_product.media[1]
+                        if media_hover.media_type == 'video' or media_hover.media_type == 'external_video' or media_hover.media_type == 'model'
+                          assign media_hover = card_product.media[1].preview_image
+                        endif
+                        render 'responsive-image', type: 'product', class: 'product__hover-img transition invisible absolute inset-0', image: media_hover, image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding, sizes: sizes, disable_lazy_loading: disable_lazy_loading
                       endif
                     -%}
                   {% endif %}

@@ -101,8 +101,12 @@
                   assign fetchpriority = 'high'
                 endif
               endif
+              assign image_alt = image.alt | default: heading | escape
             %}
-            <div {{ block.shopify_attributes }} class="swiper-slide{% if slide_height == 'adapt' or slide_height == 'full_screen' %} h-auto{% endif %}">
+            <div
+              {{ block.shopify_attributes }}
+              class="swiper-slide{% if slide_height == 'adapt' or slide_height == 'full_screen' %} h-auto{% endif %}"
+            >
               <div
                 class="sec__inner flex{% if slide_height == 'adapt' and image_mobile != blank %} ratio-mobile{% endif %}{% if slide_height == 'adapt' or slide_height == 'full_screen' %} h-full{% endif %} h-{{ slide_height }}{% if show_text_bellow_image %} column flex-md-row text-bellow-mb{% endif %}"
                 style="{% if slide_height == 'adapt' or slide_height == "full_screen" %}--aspect-ratio: {{ ratio_dk }};--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
@@ -163,12 +167,6 @@
                         </template>
                       </video-local-slide>
                     {% else %}
-                      {%- liquid
-                        assign image_alt = image.alt
-                        if image_alt == blank
-                          assign image_alt = heading
-                        endif
-                      -%}
                       {% render 'responsive-image',
                         type: 'banner',
                         class: '',
@@ -192,10 +190,11 @@
                     class="sec__content w-full{% if show_text_bellow_image == false %} flex py-custom{% else %} flex-md{% endif %} {{ desktop_content_position }} text-{{ block_st.text_alignment_mobile }} text-md-{{ text_alignment }} container relative{% if show_text_bellow_image %} mt-40 mt-md-0{% endif %} z-2"
                     style="--padding-block: 100;"
                   >
+                    {% assign animate_delay = 25 %}
                     <div class="sec__content-inner prose max-w-100">
                       {% if subheading != blank %}
                         <div class="sec__content-subheading subheading_weight">
-                          {% assign animate_delay = 30 %}
+                          {% assign animate_delay = animate_delay | plus: 5 %}
                           <motion-effect
                             data-animate="fade-up"
                             data-animate-delay="{{ animate_delay }}"
