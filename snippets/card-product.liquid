@@ -198,87 +198,97 @@
                   assign qty_rules = true
                 endif
               -%}
-              {%- if card_product.variants.size > 1 or qty_rules -%}
-                <button
-                  type="button"
-                  is="button-quick-view"
-                  class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
-                  data-url="{{ shop.url }}/products/{{ card_product.handle }}"
-                  aria-label="{{ 'products.product.quickview' | t }}"
-                >
-                  <span class="product-quickview-btn hidden-on-load transition-short d-none block-1025">
-                    {{ 'products.product.quickview' | t }}
-                  </span>
-                  {%- render 'loader' -%}
-                  <svg
-                    width="16"
-                    height="16"
-                    class="hidden-1025 hidden-on-load transition-short"
-                    viewBox="0 0 16 16"
-                    fill="none"
+              <div class="quick__shop-action absolute inset-x-15 bottom-15 z-2 overflow-hidden">
+                {%- if card_product.variants.size > 1 or qty_rules -%}
+                  <button
+                    type="button"
+                    is="button-quick-view"
+                    class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                    data-url="{{ shop.url }}/products/{{ card_product.handle }}"
+                    aria-label="{{ 'products.product.quickview' | t }}"
                   >
-                    <use href="#icon-cart" />
-                  </svg>
-                </button>
-              {%- else -%}
-                <product-form class="quick-add">
-                  {%- form 'product',
-                    card_product,
-                    id: product_form_id,
-                    class: 'form',
-                    novalidate: 'novalidate',
-                    data-type: 'add-to-cart-form'
-                  -%}
-                    <input
-                      type="hidden"
-                      name="id"
-                      value="{{ card_product.selected_or_first_available_variant.id }}"
-                      disabled
+                    <span class="product-quickview-btn hidden-on-load transition-short d-none block-1025">
+                      {{ 'products.product.quickview' | t }}
+                    </span>
+                    {%- render 'loader' -%}
+                    <svg
+                      width="16"
+                      height="16"
+                      class="hidden-1025 hidden-on-load transition-short"
+                      viewBox="0 0 16 16"
+                      fill="none"
                     >
-                    <button
-                      id="{{ product_form_id }}-submit"
-                      type="submit"
-                      name="add"
-                      class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
-                      aria-haspopup="dialog"
-                      aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
-                      aria-live="polite"
-                      data-sold-out-message="true"
-                      {% if card_product.selected_or_first_available_variant.available == false %}
+                      <use href="#icon-cart" />
+                    </svg>
+                  </button>
+                {%- else -%}
+                  <product-form class="quick-add">
+                    {%- form 'product',
+                      card_product,
+                      id: product_form_id,
+                      class: 'form',
+                      novalidate: 'novalidate',
+                      data-type: 'add-to-cart-form'
+                    -%}
+                      <input
+                        type="hidden"
+                        name="id"
+                        value="{{ card_product.selected_or_first_available_variant.id }}"
                         disabled
-                      {% endif %}
-                    >
-                      <span class="product-addtocart-btn hidden-on-load transition-short d-none block-1025">
-                        {%- if card_product.selected_or_first_available_variant.available -%}
-                          {{ 'products.product.add_to_cart' | t }}
-                        {%- else -%}
-                          {{ 'products.product.sold_out' | t }}
-                        {%- endif -%}
-                      </span>
-                      {%- render 'loader' -%}
-                      <svg
-                        width="16"
-                        height="16"
-                        class="hidden-1025 hidden-on-load transition-short"
-                        viewBox="0 0 16 16"
-                        fill="none"
                       >
-                        <use href="#icon-cart" />
-                      </svg>
-                    </button>
-                  {%- endform -%}
-                </product-form>
-              {%- endif -%}
+                      <button
+                        id="{{ product_form_id }}-submit"
+                        type="submit"
+                        name="add"
+                        class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                        aria-haspopup="dialog"
+                        aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
+                        aria-live="polite"
+                        data-sold-out-message="true"
+                        {% if card_product.selected_or_first_available_variant.available == false %}
+                          disabled
+                        {% endif %}
+                      >
+                        <span class="product-addtocart-btn hidden-on-load transition-short d-none block-1025">
+                          {%- if card_product.selected_or_first_available_variant.available -%}
+                            {{ 'products.product.add_to_cart' | t }}
+                          {%- else -%}
+                            {{ 'products.product.sold_out' | t }}
+                          {%- endif -%}
+                        </span>
+                        {%- render 'loader' -%}
+                        <svg
+                          width="16"
+                          height="16"
+                          class="hidden-1025 hidden-on-load transition-short"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <use href="#icon-cart" />
+                        </svg>
+                      </button>
+                    {%- endform -%}
+                  </product-form>
+                {%- endif -%}
+              </div>
             {%- endif -%}
           </div>
         {%- endif -%}
         <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}">
           {% if product_show_tag and disable_tag != true and card_product.tags != blank %}
-            <div class="product__tag grey-color fs-small">
-              <ul>
+            <div class="product__tag grey-color mb-8 fs-13 lh-normal">
+              <ul
+                class="list-unstyled flex wrap gap{% if settings.product_alignment == 'center' %} justify-center{% endif %}"
+                style="--gap: 6px;"
+              >
                 {% for tags in card_product.tags %}
                   <li>
-                    <a href="/collections/all/{{ tags | handleize }}">{{ tags }}</a>
+                    <a
+                      class="product__tag-inner inline-flex align-center lh-1 px-15 py-7 btn-rounded btn-hover overflow-hidden border grey-color relative"
+                      href="/collections/all/{{ tags | handleize }}"
+                    >
+                      {{- tags -}}
+                    </a>
                   </li>
                   {% liquid
                     if forloop.index == 2

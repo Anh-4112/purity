@@ -29,7 +29,7 @@ announcement-bar close-button:focus-visible {
   box-shadow: none;
 }
 announcement-bar close-button:focus-visible::after {
-  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
+  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: -5px;
 }
 
@@ -51,7 +51,6 @@ a.product-image.focus-inset:focus-visible,
   border: 0;
   box-shadow: none;
 }
-
 a.product-image.focus-inset:focus-visible:after,
 .banner__media.collection-media a:focus-visible:after,
 .scrolling__bar-link:focus-visible::before,
@@ -69,26 +68,27 @@ a.collection-item__media--ratio:focus-visible::after {
     inset 0 0 0 4px rgb(var(--color-white));
 }
 .variant-options:focus-visible + label {
-  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
-  outline-offset: 0.3rem;
-  box-shadow: none;
+  outline: 0;
+  border: 0;
+  box-shadow: 0 0 0 1px var(--color-border, #000);
 }
 .banner__media.collection-media a:focus-visible:after,
 .article-card .banner__media a:focus-visible::after {
   border-radius: var(--img-rounded);
 }
-slide-section .product__name:focus-visible {
-  box-shadow: inset 0 0 0 3px rgba(var(--color-heading-rgb), 0.6);
+slide-section
+  :is(.product__name, .product__vendor a, .product__tag-inner):focus-visible {
+  box-shadow: inset 0 0 0 3px rgba(var(--color-heading-rgb), 0.9);
   outline: 0;
 }
 .focus-inset:focus-visible {
-  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
+  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: -0.2rem;
   box-shadow: 0 0 0.2rem 0 rgba(var(--color-text), 0.3);
 }
 .focused.focus-inset,
 .no-js .focus-inset:focus {
-  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
+  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: -0.2rem;
   box-shadow: 0 0 0.2rem 0 rgba(var(--color-text), 0.3);
 }
@@ -97,7 +97,7 @@ slide-section .product__name:focus-visible {
   box-shadow: none;
 }
 .main-product-section media-gallery .slider-image img:focus-visible {
-  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
+  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: -2px;
 }
 /*
@@ -110,14 +110,14 @@ slide-section .product__name:focus-visible {
   outline: 0 !important;
 }
 .focus-offset:focus-visible {
-  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
+  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: 1rem;
   box-shadow: 0 0 0 1rem var(--color-background),
     0 0 0.2rem 1.2rem rgba(var(--color-text), 0.3);
 }
 .focus-offset.focused,
 .no-js .focus-offset:focus {
-  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
+  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: 1rem;
   box-shadow: 0 0 0 1rem var(--color-background),
     0 0 0.2rem 1.2rem rgba(var(--color-text), 0.3);
@@ -146,7 +146,7 @@ html.no-js .no-js-scroll {
 /* Fallback - for browsers that don't support :focus-visible, a fallback is set for :focus */
 .focused,
 .no-js *:focus {
-  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
+  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: 0.3rem;
   box-shadow: 0 0 0 0.3rem rgb(var(--color-text)),
     0 0 0.5rem 0.4rem rgba(var(--color-white), 0.3);
@@ -164,8 +164,8 @@ button:focus-visible,
 .shopify-payment-button [role="button"]:focus {
   outline: 0;
   box-shadow: 0 0 0 0.3rem var(--color-background),
-    0 0 0 0.5rem rgba(var(--color-heading-rgb), 0.6),
-    0 0 0.5rem 0.4rem rgba(var(--color-heading-rgb), 0.6);
+    0 0 0 0.5rem rgba(var(--color-heading-rgb), 0.9),
+    0 0 0.5rem 0.4rem rgba(var(--color-heading-rgb), 0.9);
 }
 
 .button:focus:not(:focus-visible):not(.focused),
@@ -180,7 +180,8 @@ button:focus-visible,
 .select__select:focus-visible,
 .customer .field input:focus-visible,
 .customer select:focus-visible,
-.localization-form__select:focus-visible.localization-form__select:after {
+.localization-form__select:focus-visible.localization-form__select:after,
+.btn__quick-shop:focus-visible {
   box-shadow: none;
   outline: 0;
   border-radius: var(--input-border-radius);
@@ -195,7 +196,7 @@ body .spr-form-input:focus {
 }
 .quantity__button:focus-visible,
 .quantity__input:focus-visible {
-  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
+  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   background-color: var(--color-background);
   z-index: 2;
   box-shadow: 0 0 0 3px var(--color-background),
@@ -218,8 +219,8 @@ body .spr-form-input:focus {
 }
 .tns-nav button:focus-visible:after {
   box-shadow: 0 0 0 0.3rem var(--color-background),
-    0 0 0 0.5rem rgba(var(--color-heading-rgb), 0.6),
-    0 0 0.5rem 0.4rem rgba(var(--color-heading-rgb), 0.6);
+    0 0 0 0.5rem rgba(var(--color-heading-rgb), 0.9),
+    0 0 0.5rem 0.4rem rgba(var(--color-heading-rgb), 0.9);
 }
 /* outline and border styling for Windows High Contrast Mode */
 @media (forced-colors: active) {
@@ -324,7 +325,7 @@ textarea:focus,
   box-shadow: none;
 }
 *:focus-visible {
-  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
+  outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: 0.2rem;
   transition: none;
 }
