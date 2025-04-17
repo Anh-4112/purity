@@ -2599,6 +2599,8 @@ class ImageComparison extends HTMLElement {
     this.animated = false;
     this.observer = null;
     
+    this.isHovering = false;
+    
     this.init();
     this.setupDrag();
     this.slider.addEventListener("focus", () => {
@@ -2614,7 +2616,46 @@ class ImageComparison extends HTMLElement {
       this.moveSlider(Motion.clamp(-this.boundary, this.boundary, this.x));
     });
     this.setupIntersectionObserver();
+    this.setupHoverTracking();
   }
+
+  setupHoverTracking() {
+    this.addEventListener('mouseenter', () => {
+      this.isHovering = true;
+      this.updateSliderStatus();
+    });
+    this.addEventListener('mouseleave', () => {
+      this.isHovering = false;
+      this.updateSliderStatus();
+    });
+    this.addEventListener('touchstart', () => {
+      this.isHovering = true;
+      this.updateSliderStatus();
+    });
+    this.addEventListener('touchend', () => {
+      this.isHovering = false;
+      this.updateSliderStatus();
+    });
+  }
+
+    updateSliderStatus() {
+      const swiperContainer = this.closest('slide-section');
+      if (!swiperContainer) return;
+      
+      const swiperInstance = swiperContainer.swiper;
+      if (!swiperInstance) return;
+      
+      swiperInstance.allowTouchMove = !this.isHovering;
+      
+      if (this.isHovering) {
+        swiperInstance.allowSlideNext = false;
+        swiperInstance.allowSlidePrev = false;
+      } else {
+        swiperInstance.allowSlideNext = true;
+        swiperInstance.allowSlidePrev = true;
+      }
+      swiperInstance.update();
+    }
 
   init() {
     this.boundary = this.container.clientWidth / 2;
@@ -2764,6 +2805,11 @@ class ImageComparison extends HTMLElement {
     
     window.removeEventListener('resize', this.init);
     document.removeEventListener('keydown', this.handleKeyDown);
+    
+    this.removeEventListener('mouseenter', null);
+    this.removeEventListener('mouseleave', null);
+    this.removeEventListener('touchstart', null);
+    this.removeEventListener('touchend', null);
   }
 }
 customElements.define("image-comparison", ImageComparison);
