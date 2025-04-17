@@ -1,4 +1,5 @@
 {{ 'customer.css' | asset_url | stylesheet_tag }}
+{{ 'banner.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -37,7 +38,11 @@
             {{ 'customer.addresses.add_new' | t }}
           </button>
         </div>
-        <div id="AddAddress" class="w-full max-w-custom mx-auto" style="--max-width: 60rem;">
+        <div
+          id="AddAddress"
+          class="w-full max-w-custom mx-auto x-min-value bg-grey rounded-10 mt-20 pb-20"
+          style="--max-width: 60rem;--padding-inline: 50"
+        >
           <h2 id="AddressNewHeading" class="h3 mb-30 mt-20 text-center">{{ 'customer.addresses.add_new' | t }}</h2>
           {%- form 'customer_address', customer.new_address, aria-labelledBy: 'AddressNewHeading' -%}
             <div class="field form-group relative w-full flex wrap transition">
@@ -168,169 +173,190 @@
       </div>
     </div>
 
-    <ul role="list" class="w-full max-w-custom mx-auto list-unstyled mt-30" style="--max-width: 60rem;">
+    <ul
+      role="list"
+      class="w-full max-w-custom mx-auto list-unstyled mt-30"
+      style="--max-width: 60rem;--padding-inline: 50"
+    >
       {%- for address in customer.addresses -%}
-        <li data-address class="p-24 bg-">
-          {%- if address == customer.default_address -%}
-            <h2>{{ 'customer.addresses.default' | t }}</h2>
-          {%- endif -%}
-          {{ address | format_address }}
-          <div class="mt-40">
-            <button
-              type="button"
-              id="EditFormButton_{{ address.id }}"
-              aria-label="{{ 'customer.addresses.edit_address' | t }} {{ forloop.index }}"
-              aria-controls="EditAddress_{{ address.id }}"
-              aria-expanded="false"
-              data-address-id="{{ address.id }}"
-            >
-              {{ 'customer.addresses.edit' | t }}
-            </button>
-            <button
-              type="button"
-              aria-label="{{ 'customer.addresses.delete' | t }} {{ forloop.index }}"
-              data-target="{{ address.url }}"
-              data-confirm-message="{{ 'customer.addresses.delete_confirm' | t }}"
-            >
-              {{ 'customer.addresses.delete' | t }}
-            </button>
-            <div id="EditAddress_{{ address.id }}" class="mt-60">
-              <h2>{{ 'customer.addresses.edit_address' | t }}</h2>
-              {%- form 'customer_address', address -%}
-                <div class="field form-group relative w-full flex wrap transition">
-                  <input
-                    type="text"
-                    id="AddressFirstName_{{ form.id }}"
-                    name="address[first_name]"
-                    value="{{ form.first_name }}"
-                    autocomplete="given-name"
-                    placeholder="{{ 'customer.addresses.first_name' | t }}"
-                  >
-                  <label for="AddressFirstName_{{ form.id }}">{{ 'customer.addresses.first_name' | t }}</label>
-                </div>
-                <div class="field form-group relative w-full flex wrap transition">
-                  <input
-                    type="text"
-                    id="AddressLastName_{{ form.id }}"
-                    name="address[last_name]"
-                    value="{{ form.last_name }}"
-                    autocomplete="family-name"
-                    placeholder="{{ 'customer.addresses.last_name' | t }}"
-                  >
-                  <label for="AddressLastName_{{ form.id }}">{{ 'customer.addresses.last_name' | t }}</label>
-                </div>
-                <div class="field form-group relative w-full flex wrap transition">
-                  <input
-                    type="text"
-                    id="AddressCompany_{{ form.id }}"
-                    name="address[company]"
-                    value="{{ form.company }}"
-                    autocomplete="organization"
-                    placeholder="{{ 'customer.addresses.company' | t }}"
-                  >
-                  <label for="AddressCompany_{{ form.id }}">{{ 'customer.addresses.company' | t }}</label>
-                </div>
-                <div class="field form-group relative w-full flex wrap transition">
-                  <input
-                    type="text"
-                    id="AddressAddress1_{{ form.id }}"
-                    name="address[address1]"
-                    value="{{ form.address1 }}"
-                    autocomplete="address-line1"
-                    placeholder="{{ 'customer.addresses.address1' | t }}"
-                  >
-                  <label for="AddressAddress1_{{ form.id }}">{{ 'customer.addresses.address1' | t }}</label>
-                </div>
-                <div class="field form-group relative w-full flex wrap transition">
-                  <input
-                    type="text"
-                    id="AddressAddress2_{{ form.id }}"
-                    name="address[address2]"
-                    value="{{ form.address2 }}"
-                    autocomplete="address-line2"
-                    placeholder="{{ 'customer.addresses.address2' | t }}"
-                  >
-                  <label for="AddressAddress2_{{ form.id }}">{{ 'customer.addresses.address2' | t }}</label>
-                </div>
-                <div class="field form-group relative w-full flex wrap transition">
-                  <input
-                    type="text"
-                    id="AddressCity_{{ form.id }}"
-                    name="address[city]"
-                    value="{{ form.city }}"
-                    autocomplete="address-level2"
-                    placeholder="{{ 'customer.addresses.city' | t }}"
-                  >
-                  <label for="AddressCity_{{ form.id }}">{{ 'customer.addresses.city' | t }}</label>
-                </div>
-                <div>
-                  <label for="AddressCountry_{{ form.id }}">
-                    {{ 'customer.addresses.country' | t }}
-                  </label>
-                  <div class="select relative mt-5">
-                    <select
-                      id="AddressCountry_{{ form.id }}"
-                      name="address[country]"
-                      data-address-country-select
-                      data-default="{{ form.country }}"
-                      data-form-id="{{ form.id }}"
-                      autocomplete="country"
-                      class="w-full"
+        <li data-address class="p-24 bg-grey mb-20 x-min-value rounded-10 py-20">
+          <div class="relative">
+            <div>
+              {%- if address == customer.default_address -%}
+                <h2>{{ 'customer.addresses.default' | t }}</h2>
+              {%- endif -%}
+              {{ address | format_address }}
+            </div>
+            <div>
+              <button
+                type="button"
+                id="EditFormButton_{{ address.id }}"
+                aria-label="{{ 'customer.addresses.edit_address' | t }} {{ forloop.index }}"
+                aria-controls="EditAddress_{{ address.id }}"
+                aria-expanded="false"
+                data-address-id="{{ address.id }}"
+                class="absolute top-0 right-custom"
+                style="--right: 7rem;"
+              >
+                {{ 'customer.addresses.edit' | t }}
+              </button>
+              <button
+                type="button"
+                aria-label="{{ 'customer.addresses.delete' | t }} {{ forloop.index }}"
+                data-target="{{ address.url }}"
+                data-confirm-message="{{ 'customer.addresses.delete_confirm' | t }}"
+                class="absolute top-0 right-0"
+              >
+                {{ 'customer.addresses.delete' | t }}
+              </button>
+              <div id="EditAddress_{{ address.id }}" class="mb-30 mt-20">
+                <h2>{{ 'customer.addresses.edit_address' | t }}</h2>
+                {%- form 'customer_address', address -%}
+                  <div class="field form-group relative w-full flex wrap transition">
+                    <label for="AddressFirstName_{{ form.id }}" class="mb-5">
+                      {{- 'customer.addresses.first_name' | t -}}
+                    </label>
+                    <input
+                      type="text"
+                      id="AddressFirstName_{{ form.id }}"
+                      name="address[first_name]"
+                      value="{{ form.first_name }}"
+                      autocomplete="given-name"
+                      placeholder="{{ 'customer.addresses.first_name' | t }}"
                     >
-                      {{ all_country_option_tags }}
-                    </select>
                   </div>
-                </div>
-                <div id="AddressProvinceContainer_{{ form.id }}" style="display:none;">
-                  <label for="AddressProvince_{{ form.id }}">
-                    {{ 'customer.addresses.province' | t }}
-                  </label>
-                  <div class="select relative">
-                    <select
-                      id="AddressProvince_{{ form.id }}"
-                      name="address[province]"
-                      data-default="{{ form.province }}"
-                      autocomplete="address-level1"
-                      class="w-full"
-                    ></select>
+                  <div class="field form-group relative w-full flex wrap transition">
+                    <label for="AddressLastName_{{ form.id }}" class="mb-5 mt-20">
+                      {{- 'customer.addresses.last_name' | t -}}
+                    </label>
+                    <input
+                      type="text"
+                      id="AddressLastName_{{ form.id }}"
+                      name="address[last_name]"
+                      value="{{ form.last_name }}"
+                      autocomplete="family-name"
+                      placeholder="{{ 'customer.addresses.last_name' | t }}"
+                    >
                   </div>
-                </div>
-                <div class="field form-group relative w-full flex wrap transition">
-                  <input
-                    type="text"
-                    id="AddressZip_{{ form.id }}"
-                    name="address[zip]"
-                    value="{{ form.zip }}"
-                    autocapitalize="characters"
-                    autocomplete="postal-code"
-                    placeholder="{{ 'customer.addresses.zip' | t }}"
-                  >
-                  <label for="AddressZip_{{ form.id }}">{{ 'customer.addresses.zip' | t }}</label>
-                </div>
-                <div class="field form-group relative w-full flex wrap transition">
-                  <input
-                    type="tel"
-                    id="AddressPhone_{{ form.id }}"
-                    name="address[phone]"
-                    value="{{ form.phone }}"
-                    autocomplete="tel"
-                    placeholder="{{ 'customer.addresses.phone' | t }}"
-                  >
-                  <label for="AddressPhone_{{ form.id }}">{{ 'customer.addresses.phone' | t }}</label>
-                </div>
-                <div>
-                  {{ form.set_as_default_checkbox }}
-                  <label for="address_default_address_{{ form.id }}" class="inline-block w-auto">
-                    {{ 'customer.addresses.set_default' | t }}
-                  </label>
-                </div>
-                <div class="mt-15">
-                  <button>{{ 'customer.addresses.update' | t }}</button>
-                  <button type="reset">
-                    {{ 'customer.addresses.cancel' | t }}
-                  </button>
-                </div>
-              {%- endform -%}
+                  <div class="field form-group relative w-full flex wrap transition">
+                    <label for="AddressCompany_{{ form.id }}" class="mb-5 mt-20">
+                      {{- 'customer.addresses.company' | t -}}
+                    </label>
+                    <input
+                      type="text"
+                      id="AddressCompany_{{ form.id }}"
+                      name="address[company]"
+                      value="{{ form.company }}"
+                      autocomplete="organization"
+                      placeholder="{{ 'customer.addresses.company' | t }}"
+                    >
+                  </div>
+                  <div class="field form-group relative w-full flex wrap transition">
+                    <label for="AddressAddress1_{{ form.id }}" class="mb-5 mt-20">
+                      {{- 'customer.addresses.address1' | t -}}
+                    </label>
+                    <input
+                      type="text"
+                      id="AddressAddress1_{{ form.id }}"
+                      name="address[address1]"
+                      value="{{ form.address1 }}"
+                      autocomplete="address-line1"
+                      placeholder="{{ 'customer.addresses.address1' | t }}"
+                    >
+                  </div>
+                  <div class="field form-group relative w-full flex wrap transition">
+                    <label for="AddressAddress2_{{ form.id }}" class="mb-5 mt-20">
+                      {{- 'customer.addresses.address2' | t -}}
+                    </label>
+                    <input
+                      type="text"
+                      id="AddressAddress2_{{ form.id }}"
+                      name="address[address2]"
+                      value="{{ form.address2 }}"
+                      autocomplete="address-line2"
+                      placeholder="{{ 'customer.addresses.address2' | t }}"
+                    >
+                  </div>
+                  <div class="field form-group relative w-full flex wrap transition">
+                    <label for="AddressCity_{{ form.id }}" class="mb-5 mt-20">{{ 'customer.addresses.city' | t }}</label>
+                    <input
+                      type="text"
+                      id="AddressCity_{{ form.id }}"
+                      name="address[city]"
+                      value="{{ form.city }}"
+                      autocomplete="address-level2"
+                      placeholder="{{ 'customer.addresses.city' | t }}"
+                    >
+                  </div>
+                  <div>
+                    <label for="AddressCountry_{{ form.id }}" class="mb-5 mt-20">
+                      {{ 'customer.addresses.country' | t }}
+                    </label>
+                    <div class="select relative mt-5">
+                      <select
+                        id="AddressCountry_{{ form.id }}"
+                        name="address[country]"
+                        data-address-country-select
+                        data-default="{{ form.country }}"
+                        data-form-id="{{ form.id }}"
+                        autocomplete="country"
+                        class="w-full"
+                      >
+                        {{ all_country_option_tags }}
+                      </select>
+                    </div>
+                  </div>
+                  <div id="AddressProvinceContainer_{{ form.id }}" style="display:none;" class="mb-5 mt-20">
+                    <label for="AddressProvince_{{ form.id }}">
+                      {{ 'customer.addresses.province' | t }}
+                    </label>
+                    <div class="select relative">
+                      <select
+                        id="AddressProvince_{{ form.id }}"
+                        name="address[province]"
+                        data-default="{{ form.province }}"
+                        autocomplete="address-level1"
+                        class="w-full"
+                      ></select>
+                    </div>
+                  </div>
+                  <div class="field form-group relative w-full flex wrap transition" class="mb-5 mt-20">
+                    <label for="AddressZip_{{ form.id }}">{{ 'customer.addresses.zip' | t }}</label>
+                    <input
+                      type="text"
+                      id="AddressZip_{{ form.id }}"
+                      name="address[zip]"
+                      value="{{ form.zip }}"
+                      autocapitalize="characters"
+                      autocomplete="postal-code"
+                      placeholder="{{ 'customer.addresses.zip' | t }}"
+                    >
+                  </div>
+                  <div class="field form-group relative w-full flex wrap transition" class="mb-5 mt-20">
+                    <label for="AddressPhone_{{ form.id }}">{{ 'customer.addresses.phone' | t }}</label>
+                    <input
+                      type="tel"
+                      id="AddressPhone_{{ form.id }}"
+                      name="address[phone]"
+                      value="{{ form.phone }}"
+                      autocomplete="tel"
+                      placeholder="{{ 'customer.addresses.phone' | t }}"
+                    >
+                  </div>
+                  <div>
+                    {{ form.set_as_default_checkbox }}
+                    <label for="address_default_address_{{ form.id }}" class="inline-block w-auto">
+                      {{ 'customer.addresses.set_default' | t }}
+                    </label>
+                  </div>
+                  <div class="mt-15">
+                    <button>{{ 'customer.addresses.update' | t }}</button>
+                    <button type="reset">
+                      {{ 'customer.addresses.cancel' | t }}
+                    </button>
+                  </div>
+                {%- endform -%}
+              </div>
             </div>
           </div>
         </li>
@@ -340,12 +366,20 @@
     {%- if paginate.pages > 1 -%}
       {%- if paginate.parts.size > 0 -%}
         <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
-          <ul role="list">
+          <ul
+            role="list"
+            class="list-unstyled flex justify-self-center justify-center wrap gap-10 body-weight w-custom mt-30"
+            style="--width: 80%"
+          >
             {%- if paginate.previous -%}
               <li>
-                <a href="{{ paginate.previous.url }}" aria-label="{{ 'general.pagination.previous' | t }}">
-                  <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
+                <a
+                  href="{{ paginate.previous.url }}"
+                  aria-label="{{ 'general.pagination.previous' | t }}"
+                  class="w-50 h-50 border flex content-center rounded-50 btn p-0 btn-primary"
+                >
+                  <svg width="6" height="11" fill="none">
+                    <use href="#icon-back" />
                   </svg>
                 </a>
               </li>
@@ -354,16 +388,26 @@
             {%- for part in paginate.parts -%}
               <li>
                 {%- if part.is_link -%}
-                  <a href="{{ part.url }}" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
+                  <a
+                    href="{{ part.url }}"
+                    aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+                    class="w-50 h-50 border flex content-center rounded-50 btn p-0 btn-outline body_weight"
+                  >
                     {{- part.title -}}
                   </a>
                 {%- else -%}
                   {%- if part.title == paginate.current_page -%}
-                    <span aria-current="page" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
+                    <span
+                      aria-current="page"
+                      aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+                      class="w-50 h-50 border flex content-center rounded-50 btn p-0 btn-primary body_weight"
+                    >
                       {{- part.title -}}
                     </span>
                   {%- else -%}
-                    <span>{{ part.title }}</span>
+                    <span class="w-50 h-50 border flex content-center rounded-50 btn p-0 btn-outline body_weight">
+                      {{- part.title -}}
+                    </span>
                   {%- endif -%}
                 {%- endif -%}
               </li>
@@ -371,9 +415,13 @@
 
             {%- if paginate.next -%}
               <li>
-                <a href="{{ paginate.next.url }}" aria-label="{{ 'general.pagination.next' | t }}">
-                  <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
+                <a
+                  href="{{ paginate.next.url }}"
+                  aria-label="{{ 'general.pagination.next' | t }}"
+                  class="w-50 h-50 border flex content-center rounded-50 btn p-0 btn-primary"
+                >
+                  <svg width="6" height="11" fill="none">
+                    <use href="#icon-next" />
                   </svg>
                 </a>
               </li>
