@@ -10,8 +10,8 @@
   style="{{ style | strip | strip_newlines }}--max-width: 56rem;--bs-gutter-x: 3rem;"
 >
   <div class="w-full">
-    <div class="section-header">
-      <h1 class="heading-title text-center">
+    <div class="mb-60">
+      <h1 class="heading-title text-center mb-15">
         {{ 'customer.register.title' | t }}
       </h1>
       <div class="heading-description text-center">
@@ -93,12 +93,13 @@
             autocapitalize="off"
             autocomplete="email"
             aria-required="true"
-            {% if form.errors contains 'email' %}
+            {% if form.errors %}
               aria-invalid="true"
               aria-describedby="RegisterForm-email-error"
+              style="--color-border: #D0473E"
             {% endif %}
             placeholder="{{ 'customer.register.email' | t }}*"
-            class="w-full"
+            class="w-full {% if form.errors %} border{% endif %}"
             required
           >
           <label for="RegisterForm-email" class="visually-hidden">

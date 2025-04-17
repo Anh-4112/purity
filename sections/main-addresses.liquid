@@ -25,8 +25,8 @@
       style="--max-width: 60rem;--padding-inline: 50"
     >
       <div class="address__header-inner text-center mb-60">
-        <h1>{{ 'customer.addresses.title' | t }}</h1>
-        <a href="{{ routes.account_url }}" aria-label="{{ 'customer.account.return' | t }}" class="underline mt-15">
+        <h1 class="mb-15">{{ 'customer.addresses.title' | t }}</h1>
+        <a href="{{ routes.account_url }}" aria-label="{{ 'customer.account.return' | t }}" class="underline">
           {{ 'customer.account.return' | t }}
         </a>
       </div>
@@ -42,10 +42,10 @@
           </button>
           <div
             id="AddAddress"
-            class="w-full max-w-custom mx-auto px-custom bg-grey rounded-10 mt-20 pb-20"
+            class="w-full max-w-custom mx-auto px-custom bg-grey rounded-10 mt-20 pb-30"
             style="--max-width: 60rem;--padding-inline: 50;"
           >
-            <h2 id="AddressNewHeading" class="h3 mb-30 mt-20 text-center">{{ 'customer.addresses.add_new' | t }}</h2>
+            <h2 id="AddressNewHeading" class="h3 mb-30 mt-30 text-center">{{ 'customer.addresses.add_new' | t }}</h2>
             {%- form 'customer_address', customer.new_address, aria-labelledBy: 'AddressNewHeading' -%}
               <div class="field form-group relative w-full flex wrap transition">
                 <label for="AddressFirstNameNew" class="mb-5">{{ 'customer.addresses.first_name' | t }}</label>
@@ -166,8 +166,13 @@
                 {{ form.set_as_default_checkbox }}
                 <label for="address_default_address_new">{{ 'customer.addresses.set_default' | t }}</label>
               </div>
-              <div class="mt-10 flex gap wrap row-gap-custom" style="--row-gap: 1rem;--col-width: 50%;--gap: 2rem;">
-                <button class="btn btn-primary w-full col-1025-w-custom">{{ 'customer.addresses.add' | t }}</button>
+              <div class="mt-20 flex gap wrap row-gap-custom" style="--row-gap: 1rem;--col-width: 50%;--gap: 2rem;">
+                <button class="btn btn-primary w-full col-1025-w-custom">
+                  <span class="hidden-on-load transition-short">
+                    {{ 'customer.addresses.add' | t }}
+                  </span>
+                  {%- render 'loader' -%}
+                </button>
                 <button class="btn btn-outline w-full col-1025-remaining" type="reset">
                   {{ 'customer.addresses.cancel' | t }}
                 </button>
@@ -184,11 +189,11 @@
       style="--max-width: 60rem;--padding-inline: 50"
     >
       {%- for address in customer.addresses -%}
-        <li data-address class="p-24 bg-grey mb-20 px-custom rounded-10 py-20">
+        <li data-address class="py-30 bg-grey mb-20 px-custom rounded-10">
           <div class="relative">
             <div>
               {%- if address == customer.default_address -%}
-                <h2 class="h4">{{ 'customer.addresses.default' | t }}</h2>
+                <h2 class="h4 mb-20">{{ 'customer.addresses.default' | t }}</h2>
               {%- endif -%}
               {{ address | format_address }}
             </div>
@@ -221,9 +226,9 @@
                 {{ 'customer.addresses.delete' | t }}
               </button>
               <div id="EditAddress_{{ address.id }}" class="mb-30 mt-20">
-                <h2>{{ 'customer.addresses.edit_address' | t }}</h2>
+                <h2 class="h4 mb-30 text-center">{{ 'customer.addresses.edit_address' | t }}</h2>
                 {%- form 'customer_address', address -%}
-                  <div class="field form-group relative w-full flex wrap transition">
+                  <div class="field form-group relative w-full flex wrap">
                     <label for="AddressFirstName_{{ form.id }}" class="mb-5">
                       {{- 'customer.addresses.first_name' | t -}}
                     </label>
@@ -236,7 +241,7 @@
                       placeholder="{{ 'customer.addresses.first_name' | t }}"
                     >
                   </div>
-                  <div class="field form-group relative w-full flex wrap transition">
+                  <div class="field form-group relative w-full flex wrap">
                     <label for="AddressLastName_{{ form.id }}" class="mb-5 mt-20">
                       {{- 'customer.addresses.last_name' | t -}}
                     </label>
@@ -249,7 +254,7 @@
                       placeholder="{{ 'customer.addresses.last_name' | t }}"
                     >
                   </div>
-                  <div class="field form-group relative w-full flex wrap transition">
+                  <div class="field form-group relative w-full flex wrap">
                     <label for="AddressCompany_{{ form.id }}" class="mb-5 mt-20">
                       {{- 'customer.addresses.company' | t -}}
                     </label>
@@ -262,7 +267,7 @@
                       placeholder="{{ 'customer.addresses.company' | t }}"
                     >
                   </div>
-                  <div class="field form-group relative w-full flex wrap transition">
+                  <div class="field form-group relative w-full flex wrap">
                     <label for="AddressAddress1_{{ form.id }}" class="mb-5 mt-20">
                       {{- 'customer.addresses.address1' | t -}}
                     </label>
@@ -275,7 +280,7 @@
                       placeholder="{{ 'customer.addresses.address1' | t }}"
                     >
                   </div>
-                  <div class="field form-group relative w-full flex wrap transition">
+                  <div class="field form-group relative w-full flex wrap">
                     <label for="AddressAddress2_{{ form.id }}" class="mb-5 mt-20">
                       {{- 'customer.addresses.address2' | t -}}
                     </label>
@@ -288,7 +293,7 @@
                       placeholder="{{ 'customer.addresses.address2' | t }}"
                     >
                   </div>
-                  <div class="field form-group relative w-full flex wrap transition">
+                  <div class="field form-group relative w-full flex wrap">
                     <label for="AddressCity_{{ form.id }}" class="mb-5 mt-20">
                       {{- 'customer.addresses.city' | t -}}
                     </label>
@@ -301,11 +306,11 @@
                       placeholder="{{ 'customer.addresses.city' | t }}"
                     >
                   </div>
-                  <div>
+                  <div class="field form-group relative w-full flex wrap">
                     <label for="AddressCountry_{{ form.id }}" class="mb-5 mt-20">
                       {{ 'customer.addresses.country' | t }}
                     </label>
-                    <div class="select relative mt-5">
+                    <div class="select relative w-full">
                       <select
                         id="AddressCountry_{{ form.id }}"
                         name="address[country]"
@@ -319,8 +324,8 @@
                       </select>
                     </div>
                   </div>
-                  <div id="AddressProvinceContainer_{{ form.id }}" style="display:none;" class="mb-5 mt-20">
-                    <label for="AddressProvince_{{ form.id }}">
+                  <div id="AddressProvinceContainer_{{ form.id }}" style="display:none;">
+                    <label for="AddressProvince_{{ form.id }}" class="mb-5 mt-20">
                       {{ 'customer.addresses.province' | t }}
                     </label>
                     <div class="select relative">
@@ -333,8 +338,8 @@
                       ></select>
                     </div>
                   </div>
-                  <div class="field form-group relative w-full flex wrap transition" class="mb-5 mt-20">
-                    <label for="AddressZip_{{ form.id }}">{{ 'customer.addresses.zip' | t }}</label>
+                  <div class="field form-group relative w-full flex wrap">
+                    <label for="AddressZip_{{ form.id }}" class="mb-5 mt-20">{{ 'customer.addresses.zip' | t }}</label>
                     <input
                       type="text"
                       id="AddressZip_{{ form.id }}"
@@ -345,8 +350,8 @@
                       placeholder="{{ 'customer.addresses.zip' | t }}"
                     >
                   </div>
-                  <div class="field form-group relative w-full flex wrap transition" class="mb-5 mt-20">
-                    <label for="AddressPhone_{{ form.id }}">{{ 'customer.addresses.phone' | t }}</label>
+                  <div class="field form-group relative w-full flex wrap">
+                    <label for="AddressPhone_{{ form.id }}" class="mb-5 mt-20">{{ 'customer.addresses.phone' | t }}</label>
                     <input
                       type="tel"
                       id="AddressPhone_{{ form.id }}"
@@ -358,11 +363,11 @@
                   </div>
                   <div>
                     {{ form.set_as_default_checkbox }}
-                    <label for="address_default_address_{{ form.id }}" class="inline-block w-auto mt-10">
+                    <label for="address_default_address_{{ form.id }}" class="inline-block w-auto mt-10 ">
                       {{ 'customer.addresses.set_default' | t }}
                     </label>
                   </div>
-                  <div class="mt-10 flex gap wrap row-gap-custom" style="--row-gap: 1rem;--col-width: 50%;--gap: 2rem;">
+                  <div class="mt-20 flex gap wrap row-gap-custom" style="--row-gap: 1rem;--col-width: 50%;--gap: 2rem;">
                     <button class="btn btn-primary w-full col-1025-w-custom">
                       {{ 'customer.addresses.update' | t }}
                     </button>

@@ -68,7 +68,7 @@
       {%- endform -%}
     </div>
   </div>
-  <div id="login" class="section-header text-center mb-60">
+  <div id="login" class="text-center mb-60">
     <h1 tabindex="-1" class="heading-title">
       {{ 'customer.login_page.title' | t }}
     </h1>
@@ -81,8 +81,11 @@
     style="--max-width: 50rem;"
   >
     {%- if recover_success == true -%}
-      <div class="form__message success w-full mb-20 fs-small inline-flex align-center gap-10"
-            tabindex="-1" autofocus>
+      <div
+        class="form__message success w-full mb-20 fs-small inline-flex align-center gap-10"
+        tabindex="-1"
+        autofocus
+      >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <use href="#icon-success"></use>
         </svg>
@@ -126,10 +129,11 @@
           autocapitalize="off"
           {% if form.errors contains 'form' %}
             aria-invalid="true"
+            style="--color-border: #D0473E"
           {% endif %}
           placeholder="{{ 'customer.login_page.email' | t }}*"
           required
-          class="w-full fs-small-1 text-color"
+          class="w-full fs-small-1 text-color{% if form.errors contains 'form' %} border{% endif %}"
         >
         <label for="CustomerEmail" class="visually-hidden">
           {{ 'customer.login_page.email' | t }}
@@ -178,7 +182,7 @@
         <a
           href="{{ routes.account_register_url }}"
           aria-label="{{ 'customer.login_page.create_account' | t }}"
-          class="heading-color underline"
+          class="heading-color underline ms-5"
         >
           {{ 'customer.login_page.create_account' | t }}
         </a>
