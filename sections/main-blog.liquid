@@ -98,7 +98,122 @@
           style="{{ col_style | strip | strip_newlines }}"
           id="section__content-items"
         >
+          {%- liquid
+            assign form_positions = ''
+            for block in section.blocks
+              assign position = block.settings.form_position
+              assign form_positions = form_positions | append: position | append: ','
+            endfor
+          -%}
+          {% assign arr = form_positions | split: ',' %}
           {%- for article in blog.articles limit: section_st.maximum_posts_to_show -%}
+            {%- liquid
+              assign index = forloop.index0 | plus: 1
+              assign found = false
+              for item in arr
+                assign item_int = item | plus: 0
+                if item_int == index
+                  assign found = true
+                  break
+                endif
+              endfor
+            -%}
+            {%- if found -%}
+              {%- for block in section.blocks -%}
+                <div
+                  {{ block.shopify_attributes }}
+                  class="blog-subscribe flex column"
+                  id="blocks blog-subscribe-{{ block.id }}"
+                >
+                  {% if block.settings.form_title != blank or block.settings.form_description != blank %}
+                    <div class="section-header">
+                      {% if block.settings.show_email_icon %}
+                        <svg width="46" height="45" fill="none">
+                          <use href="#icon-email-newletter" />
+                        </svg>
+                      {% endif %}
+                      {% if block.settings.form_title != blank %}
+                        <h2 class="subscribe-title">
+                          {{ block.settings.form_title }}
+                        </h2>
+                      {% endif %}
+                      {% if block.settings.form_description != blank %}
+                        <div class="short-des">
+                          {{ block.settings.form_description }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                  {% form 'customer', class: 'subscribe-form', novalidate: 'novalidate' %}
+                    <input type="hidden" name="contact[tags]" value="subscribe">
+                    <div class="subscribe-form__field-wrapper">
+                      <div class="field relative w-full flex transition">
+                        <div class="relative">
+                          <input
+                            id="subscribeForm--{{ block.id }}"
+                            type="email"
+                            name="contact[email]"
+                            class="field__input w-full"
+                            value="{{ form.email }}"
+                            aria-required="true"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            autocomplete="email"
+                            {% if form.errors %}
+                              autofocus
+                              aria-invalid="true"
+                              aria-describedby="subscribe-error--{{ section.id }}"
+                            {% elsif form.posted_successfully? %}
+                              aria-describedby="subscribe-success--{{ section.id }}"
+                            {% endif %}
+                            placeholder="{{ 'subscribe.label' | t }}"
+                            required
+                          >
+                          <label class="visually-hidden" for="subscribeForm--{{ block.id }}">
+                            {{- 'subscribe.label' | t -}}
+                          </label>
+                        </div>
+                        <button
+                          type="submit"
+                          class="subscriber-form__button btn p-0 btn-primary btn-hover wh-55"
+                          name="commit"
+                          id="Subscribe-{{ section.id }}"
+                          aria-label="{{ 'subscribe.button_label' | t }}"
+                        >
+                          <svg class="hidden-on-load" width="6" height="11" fill="none">
+                            <use href="#icon-next" />
+                          </svg>
+                          {%- render 'loader' -%}
+                        </button>
+                        {%- if block.settings.note != blank -%}
+                          <div class="footer__block-note rich__text-m0 fs-small-1">
+                            {{ block.settings.note }}
+                          </div>
+                        {%- endif -%}
+                      </div>
+                      {%- if form.posted_successfully? -%}
+                        <div
+                          class="subscribe-form__message subscribe-form__message--success form__message success form__message fs-small inline-flex align-center gap-10"
+                          id="ContactFooter-success"
+                          tabindex="-1"
+                        >
+                          {%- render 'icon-success' -%}
+                          {{- 'subscribe.success' | t }}
+                        </div>
+                      {%- elsif form.errors -%}
+                        <small class="subscribe-form__message form__message" id="subscribe-error--{{ section.id }}">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto">
+                            <use href="#icon-error"></use>
+                          </svg>
+                          {{- form.errors.translated_fields.email | capitalize }}
+                          {{ form.errors.messages.email -}}
+                        </small>
+                      {%- endif -%}
+                    </div>
+                  {% endform %}
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
             <div class="blog-articles__article article text-{{ section_st.text_alignment }}">
               {% render 'article-card',
                 article: article,
@@ -130,6 +245,23 @@
     {%- endif -%}
   </div>
 </div>
+
+<script type="module">
+  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
+  document.addEventListener('DOMContentLoaded', () => {
+    setupFormValidation({
+      formSelector: 'form.subscribe-form',
+      fields: {
+        'contact[email]': (value) =>
+          !value
+            ? '{{ "customer.validate.email" | t }}'
+            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            ? '{{ "customer.validate.email_invalid" | t }}'
+            : '',
+      },
+    });
+  });
+</script>
 
 {% schema %}
 {
@@ -338,6 +470,47 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    }
+  ],
+  "max_blocks": 1,
+  "blocks": [
+    {
+      "type": "subcribe_form",
+      "name": "t:sections.main-blog.blocks.name",
+      "settings": [
+        {
+          "type": "range",
+          "id": "form_position",
+          "min": 1,
+          "max": 24,
+          "step": 1,
+          "default": 6,
+          "label": "t:sections.main-blog.blocks.settings.form_position"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_email_icon",
+          "default": true,
+          "label": "t:sections.main-blog.blocks.settings.show_email_icon"
+        },
+        {
+          "type": "text",
+          "id": "form_title",
+          "label": "t:sections.all.content_setting.heading.label",
+          "default": "Newsletter"
+        },
+        {
+          "type": "textarea",
+          "id": "form_description",
+          "label": "t:sections.all.content_setting.description.label",
+          "default": "Add a short description for this block."
+        },
+        {
+          "type": "richtext",
+          "id": "note",
+          "label": "t:sections.footer.blocks.newsletter_block.settings.note.label"
+        }
+      ]
     }
   ]
 }

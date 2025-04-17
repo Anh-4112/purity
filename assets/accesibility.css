@@ -68,7 +68,6 @@ a.collection-item__media--ratio:focus-visible::after {
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.6),
     inset 0 0 0 4px rgb(var(--color-white));
 }
-
 .variant-options:focus-visible + label {
   outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
   outline-offset: 0.3rem;
@@ -78,30 +77,25 @@ a.collection-item__media--ratio:focus-visible::after {
 .article-card .banner__media a:focus-visible::after {
   border-radius: var(--img-rounded);
 }
-
 slide-section .product__name:focus-visible {
   box-shadow: inset 0 0 0 3px rgba(var(--color-heading-rgb), 0.6);
   outline: 0;
 }
-
 .focus-inset:focus-visible {
   outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
   outline-offset: -0.2rem;
   box-shadow: 0 0 0.2rem 0 rgba(var(--color-text), 0.3);
 }
-
 .focused.focus-inset,
 .no-js .focus-inset:focus {
   outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
   outline-offset: -0.2rem;
   box-shadow: 0 0 0.2rem 0 rgba(var(--color-text), 0.3);
 }
-
 .no-js .focus-inset:focus:not(:focus-visible) {
   outline: 0;
   box-shadow: none;
 }
-
 .main-product-section media-gallery .slider-image img:focus-visible {
   outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
   outline-offset: -2px;
@@ -115,14 +109,12 @@ slide-section .product__name:focus-visible {
   box-shadow: none !important;
   outline: 0 !important;
 }
-
 .focus-offset:focus-visible {
   outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
   outline-offset: 1rem;
   box-shadow: 0 0 0 1rem var(--color-background),
     0 0 0.2rem 1.2rem rgba(var(--color-text), 0.3);
 }
-
 .focus-offset.focused,
 .no-js .focus-offset:focus {
   outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
@@ -130,33 +122,27 @@ slide-section .product__name:focus-visible {
   box-shadow: 0 0 0 1rem var(--color-background),
     0 0 0.2rem 1.2rem rgba(var(--color-text), 0.3);
 }
-
 .no-js .focus-offset:focus:not(:focus-visible) {
   outline: 0;
   box-shadow: none;
 }
-
 /* Focus ring - default (with offset) */
 html.no-js .no-js-hover:hover .shopable-image-product {
   opacity: 1;
   pointer-events: auto;
 }
-
 html.no-js .no-js-hidden {
   display: none !important;
 }
-
 html.no-js .no-js-scroll {
   overflow-x: auto;
 }
-
 .form__message:focus-visible,
 .form__message:focus-visible *,
 .form-status {
   outline: none;
   box-shadow: none;
 }
-
 /* Fallback - for browsers that don't support :focus-visible, a fallback is set for :focus */
 .focused,
 .no-js *:focus {
@@ -190,7 +176,6 @@ button:focus-visible,
   [role="button"]:focus:not(:focus-visible):not(.focused) {
   box-shadow: inherit;
 }
-
 .field__input:focus-visible,
 .select__select:focus-visible,
 .customer .field input:focus-visible,
@@ -201,7 +186,6 @@ button:focus-visible,
   border-radius: var(--input-border-radius);
   border-color: var(--heading-color);
 }
-
 body .spr-form-input:focus-visible,
 body .spr-form-input:focus {
   box-shadow: none;
@@ -209,7 +193,6 @@ body .spr-form-input:focus {
   border-radius: var(--input-border-radius);
   border-color: var(--heading-color);
 }
-
 .quantity__button:focus-visible,
 .quantity__input:focus-visible {
   outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.6);
@@ -218,31 +201,26 @@ body .spr-form-input:focus {
   box-shadow: 0 0 0 3px var(--color-background),
     inset 0 0 0 5px rgb(var(--color-white));
 }
-
 .quantity__input:-webkit-autofill,
 .quantity__input:-webkit-autofill:hover,
 .quantity__input:-webkit-autofill:active {
   box-shadow: 0 0 0 10rem var(--color-background) inset !important;
   -webkit-box-shadow: 0 0 0 10rem var(--color-background) inset !important;
 }
-
 .quantity__input::-webkit-outer-spin-button,
 .quantity__input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 .tns-nav button:focus-visible {
   outline: 0;
   box-shadow: none;
 }
-
 .tns-nav button:focus-visible:after {
   box-shadow: 0 0 0 0.3rem var(--color-background),
     0 0 0 0.5rem rgba(var(--color-heading-rgb), 0.6),
     0 0 0.5rem 0.4rem rgba(var(--color-heading-rgb), 0.6);
 }
-
 /* outline and border styling for Windows High Contrast Mode */
 @media (forced-colors: active) {
   .button,
@@ -262,7 +240,26 @@ body .spr-form-input:focus {
   .shopify-payment-button [role="button"]:focus {
     outline: solid transparent 1px;
   }
-
+  :is(
+      input[type="search"],
+      input[type="tel"],
+      input[type="text"],
+      input[type="number"],
+      input[type="email"],
+      input[type="password"],
+      select,
+      textarea,
+      .input-style
+    ):focus {
+    outline: 0;
+    border-color: var(--color-heading);
+  }
+  :is(input, select, textarea, .input-style).border-0:focus,
+  :is(input, select, textarea, .input-style).border-0:focus-visible {
+    box-shadow: 0 0 0 1px var(--color-heading),
+      inset 0 0 0 calc(var(--shadow-position, -3px) * -1)
+        rgb(var(--color-white));
+  }
   .field__input:focus,
   .select__select:focus,
   .customer .field input:focus,
@@ -498,4 +495,12 @@ html.no-js details[open].type-canvas .has-overlay:after {
 
 .no-js quantity-input input.quantity__input:focus {
   border-color: var(--heading-color) !important;
+}
+@media (min-width: 1025px) {
+  :is(input, select, textarea, .input-style).border-0:focus,
+  :is(input, select, textarea, .input-style).border-0:focus-visible {
+    box-shadow: 0 0 0 1px var(--color-heading),
+      inset 0 0 0 calc(var(--shadow-position, -3px) * -1)
+        rgb(var(--color-white));
+  }
 }

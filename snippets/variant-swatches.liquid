@@ -76,7 +76,7 @@
         </label>
         <select
           id="VariantRadiosBundle-{{ section.id }}-{{ product.id }}"
-          class="padding-0 h-auto border-0 mt-6 max-w-100"
+          class="border-0 h-auto max-w-100 fs-small lh-global"
         >
           {% liquid
             assign color_option = ''
@@ -155,6 +155,9 @@
     <variant-input
       class="product-variants-js flex column wrap gap-25 pt-25 border-top"
       data-section-id="{{ section.id }}"
+      {% if type == 'shopable' %}
+        data-block-id="{{ block_id }}"
+      {% endif %}
       data-product-url="{{ product.url }}"
     >
       {%- for option in product.options_with_values -%}

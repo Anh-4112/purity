@@ -1,6 +1,5 @@
 {% liquid
   assign section_st = section.settings
-  assign section_width = ''
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -8,57 +7,37 @@
   else
     assign section_width = 'fluid_container'
   endif
-  assign content_alignment = section_st.text_alignment
+
+  assign text_alignment = ''
+  if section_st.text_alignment == 'start'
+    assign text_alignment = 'flex-start'
+  elsif section_st.text_alignment == 'center'
+    assign text_alignment = 'justify-content-center'
+  else
+    assign text_alignment = 'flex-end'
+  endif
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
+
 <div
-  class="section section__rich-text color-{{ section_st.color_scheme }} gradient "
+  class="section gradient"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div
-      class="rich-text__content-inner"
-      style="--max-width: {{ section_st.max_width }}%"
-    >
-      <div class="rich-text__content{% if section_st.text_alignment == 'center' %} mx-auto{% endif %} max-w-custom text-{{ content_alignment }} justify-content-{{ content_alignment }}">
-        {% content_for 'blocks' %}
-      </div>
+    <div class="page-title-breadcrumb mb-75">
+      {% render 'breadcrumbs', class: text_alignment %}
     </div>
   </div>
 </div>
 
 {% schema %}
 {
-  "name": "t:sections.rich-text.name",
+  "name": "t:sections.all.section_setting.page_heading.breadcrumb.label",
   "tag": "section",
-  "class": "section",
-  "disabled_on": {
-    "groups": ["header", "footer", "custom.overlay"]
-  },
-  "blocks": [
-    {
-      "type": "@app"
-    },
-    {
-      "type": "heading"
-    },
-    {
-      "type": "subheading"
-    },
-    {
-      "type": "description"
-    },
-    {
-      "type": "button"
-    }
-  ],
+  "class": "breadcrumb",
   "settings": [
-    {
-      "type": "paragraph",
-      "content": "t:sections.all.how_to_use"
-    },
     {
       "type": "header",
       "content": "t:sections.all.general"
@@ -84,18 +63,11 @@
       "label": "t:sections.all.layout.label"
     },
     {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:sections.all.colors.label",
-      "info": "t:sections.all.colors.info",
-      "default": "default-color-scheme"
-    },
-    {
       "type": "select",
       "id": "text_alignment",
       "options": [
         {
-          "value": "left",
+          "value": "start",
           "label": "t:sections.all.text_alignment.options__1.label"
         },
         {
@@ -103,21 +75,12 @@
           "label": "t:sections.all.text_alignment.options__2.label"
         },
         {
-          "value": "right",
+          "value": "end",
           "label": "t:sections.all.text_alignment.options__3.label"
         }
       ],
-      "default": "left",
+      "default": "start",
       "label": "t:sections.all.text_alignment.label"
-    },
-    {
-      "type": "range",
-      "id": "max_width",
-      "min": 40,
-      "max": 100,
-      "unit": "%",
-      "default": 100,
-      "label": "t:sections.rich-text.settings.max_width.label"
     },
     {
       "type": "header",
@@ -142,22 +105,6 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
-    }
-  ],
-  "presets": [
-    {
-      "name": "t:sections.rich-text.name",
-      "blocks": [
-        {
-          "type": "heading"
-        },
-        {
-          "type": "description"
-        },
-        {
-          "type": "button"
-        }
-      ]
     }
   ]
 }
