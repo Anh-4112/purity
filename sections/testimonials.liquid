@@ -22,7 +22,7 @@
   if heading_size == 'small'
     assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = 'fs-medium'
+    assign header_size = 'h1'
   endif
 
   assign column_gap_slide = 0
@@ -43,8 +43,8 @@
     width: 110px;
   }
   testimonials-thumb .swiper-slide {
-        width: 200px;
-    }
+    width: 200px;
+  }
 {% endstyle %}
 <div
   class="section color-{{ section_st.color_scheme }} gradient"
@@ -108,8 +108,8 @@
       </testimonial-slide>
       {%- if show_pagination -%}
         <testimonials-thumb
-        id="testimonials-thumb-swiper-{{ section.id }}"
-        class="swiper"
+          id="testimonials-thumb-swiper-{{ section.id }}"
+          class="swiper"
         >
           <div class="swiper-wrapper">
             {%- for block in section.blocks -%}
