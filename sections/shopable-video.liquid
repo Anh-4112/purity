@@ -561,7 +561,11 @@
                           class="product__name heading-style block"
                           href="{{ card_product.url }}"
                         >
+                          {% if card_product.title != blank %}
                           {{- card_product.title -}}
+                          {% else %}
+                            {{ 'onboarding.product_title' | t }}
+                          {% endif %}
                         </a>
                         {% render 'review', review_star: true, product: card_product %}
                         <div class="block-product__price">
