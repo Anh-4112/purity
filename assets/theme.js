@@ -2583,3 +2583,187 @@ class NavBar extends HTMLElement {
   }
 }
 customElements.define("mobile-navigation-bar", NavBar);
+
+class ImageComparison extends HTMLElement {
+  constructor() {
+    super();
+    this.container = this;
+    this.slider = this.querySelector(".slider");
+    this.overlay = this.querySelector(".image-after");
+    this.x = 0;
+    this.boundary = 300;
+    this.mixClipPath
+    this.mixSliderColor
+    this.step = 50;
+    this.elastic = 0.1;
+    this.animated = false;
+    this.observer = null;
+    
+    this.init();
+    this.setupDrag();
+    this.slider.addEventListener("focus", () => {
+      document.addEventListener("keydown", this.handleKeyDown.bind(this));
+    });
+
+    this.slider.addEventListener("blur", () => {
+      document.removeEventListener("keydown", this.handleKeyDown.bind(this));
+    });
+
+    window.addEventListener("resize", () => {
+      this.init();
+      this.moveSlider(Motion.clamp(-this.boundary, this.boundary, this.x));
+    });
+    this.setupIntersectionObserver();
+  }
+
+  init() {
+    this.boundary = this.container.clientWidth / 2;
+
+    this.mixClipPath = Motion.transform(
+      [-this.boundary, this.boundary],
+      ["inset(0% 0% 0% 0%)", "inset(0% 0% 0% 100%)"]
+    );
+
+    this.mixSliderColor = Motion.transform(
+      [
+        -this.boundary + 20,
+        -this.boundary + 60,
+        this.boundary - 60,
+        this.boundary - 20,
+      ],
+      [
+        "rgba(255, 255, 255, 0)",
+        "rgba(255, 255, 255, 1)",
+        "rgba(255, 255, 255, 1)",
+        "rgba(255, 255, 255, 0)",
+      ]
+    );
+
+    if (!this.animated) {
+      const startPosition = -this.boundary + (this.boundary * 0.2);
+      this.moveSlider(startPosition);
+    } else {
+      this.moveSlider(0);
+    }
+  }
+
+  setupIntersectionObserver() {
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !this.animated) {
+          this.runEntranceAnimation();
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.2
+    });
+    this.observer.observe(this);
+  }
+  
+  runEntranceAnimation() {
+    this.animated = true;
+    const startPosition = -this.boundary + (this.boundary * 0.2);
+    Motion.animate(
+      startPosition,
+      0,
+      {
+        onUpdate: (value) => this.moveSlider(value),
+        type: "spring",
+        stiffness: 80,
+        damping: 20,
+        duration: 0.8,
+        delay: 0.2 
+      }
+    );
+  }
+
+  moveSlider(newX) {
+    this.x = newX;
+    this.overlay.style.clipPath = this.mixClipPath(this.x);
+    this.slider.style.transform = `translateX(${this.x}px)`;
+    this.slider.style.backgroundColor = this.mixSliderColor(this.x);
+  }
+
+  handleKeyDown(event) {
+    let moveBy = 0;
+
+    if (event.key === "ArrowLeft") {
+      moveBy = -this.step;
+    } else if (event.key === "ArrowRight") {
+      moveBy = this.step;
+    } else {
+      return;
+    }
+
+    Motion.animate(
+      this.x,
+      Motion.clamp(-this.boundary, this.boundary, this.x + moveBy),
+      {
+        onUpdate: (value) => this.moveSlider(value),
+        type: "spring",
+        stiffness: 900,
+        damping: 40,
+        velocity: moveBy * 10,
+      }
+    );
+  }
+
+  setupDrag() {
+    let startX = 0;
+    let newX = 0;
+    const _this = this;
+    function updateX() {
+      _this.moveSlider(newX);
+    }
+
+    this.slider.addEventListener("pointerdown", (e) => {
+      startX = this.x - e.clientX;
+      document.body.style.cursor = "grabbing";
+      this.slider.style.cursor = "grabbing";
+      this.slider.classList.add("active");
+      this.slider.setPointerCapture(e.pointerId);
+    });
+
+    this.slider.addEventListener("pointermove", (e) => {
+      if (!this.slider.hasPointerCapture(e.pointerId)) return;
+      newX = startX + e.clientX;
+      if (newX < -this.boundary) {
+        newX = -this.boundary + (newX + this.boundary) * this.elastic;
+      } else if (newX > this.boundary) {
+        newX = this.boundary + (newX - this.boundary) * this.elastic;
+      }
+      Motion.frame.render(updateX);
+    });
+
+    this.slider.addEventListener("pointerup", (e) => {
+      if (!this.slider.hasPointerCapture(e.pointerId)) return;
+      this.slider.releasePointerCapture(e.pointerId);
+      document.body.style.cursor = "default";
+      this.slider.style.cursor = "grab";
+      this.slider.classList.remove("active");
+      if (this.x < -this.boundary || this.x > this.boundary) {
+        const targetX =
+          this.x < -this.boundary ? -this.boundary : this.boundary;
+        Motion.animate(this.x, targetX, {
+          onUpdate: (value) => this.moveSlider(value),
+          type: "spring",
+          stiffness: 900,
+          damping: 40,
+        });
+      }
+    });
+  }
+
+  disconnectedCallback() {
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
+    }
+    
+    window.removeEventListener('resize', this.init);
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+}
+customElements.define("image-comparison", ImageComparison);
