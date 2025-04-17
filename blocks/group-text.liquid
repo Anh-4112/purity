@@ -9,9 +9,9 @@
   }
 {%- endstyle -%}
 
-<div class="group__text w-full h-full flex align-{{ block_st.vertical_alignment }}">
+<div class="group__text w-full h-full flex align-{{ block_st.vertical_alignment }} justify-content-{{ block_st.text_alignment }}">
   <div
-    class="color-{{ block.settings.color_scheme }} gradient flex column w-full{% if section_st.equal_height_adjustment %} h-full justify-content-{{ block_st.vertical_alignment }}{% endif %} text-{{ block_st.text_alignment }} align-{{ block_st.text_alignment }} rounded"
+    class="color-{{ block.settings.color_scheme }} gradient flex wrap w-full{% if section_st.equal_height_adjustment %} h-full justify-content-{{ block_st.vertical_alignment }}{% endif %} text-{{ block_st.text_alignment }} justify-content-{{ block_st.text_alignment }} rounded"
   >
     {% content_for 'blocks' %}
   </div>
@@ -41,7 +41,16 @@
       "type": "button"
     },
     {
+      "type": "_item-faq"
+    },
+    {
+      "type": "_icon-box"
+    },
+    {
       "type": "_social-icon"
+    },
+    {
+      "type": "group-text"
     }
   ],
   "settings": [
