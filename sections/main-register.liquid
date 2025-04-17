@@ -56,7 +56,7 @@
                   value="{{ form.first_name }}"
                 {% endif %}
                 autocomplete="given-name"
-                placeholder="{{ 'customer.register.first_name' | t }}*"
+                placeholder="{{ 'customer.register.first_name' | t }} *"
                 class="w-full"
               >
               <label for="RegisterForm-FirstName" class="visually-hidden">
@@ -72,7 +72,7 @@
                   value="{{ form.last_name }}"
                 {% endif %}
                 autocomplete="family-name"
-                placeholder="{{ 'customer.register.last_name' | t }}*"
+                placeholder="{{ 'customer.register.last_name' | t }} *"
                 class="w-full"
               >
               <label for="RegisterForm-LastName" class="visually-hidden">
@@ -98,7 +98,7 @@
               aria-describedby="RegisterForm-email-error"
               style="--color-border: #D0473E"
             {% endif %}
-            placeholder="{{ 'customer.register.email' | t }}*"
+            placeholder="{{ 'customer.register.email' | t }} *"
             class="w-full {% if form.errors %} border{% endif %}"
             required
           >
@@ -117,31 +117,33 @@
           </span>
         {%- endif -%}
         <div class="field relative w-full flex wrap transition mb-10">
-          <input
-            type="password"
-            name="customer[password]"
-            id="RegisterForm-password"
-            aria-required="true"
-            {% if form.errors contains 'password' %}
-              aria-invalid="true"
-              aria-describedby="RegisterForm-password-error"
-            {% endif %}
-            placeholder="{{ 'customer.register.password' | t }}*"
-            required
-            class="w-full"
-          >
-          <show-pass-word class="show-pass-word transition absolute inset-y-0 flex content-center right-25">
-            <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <use href="#icon-hide-password"></use>
-            </svg>
-            <svg class="icon-view hidden" width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <use href="#icon-show-password"></use>
-            </svg>
-          </show-pass-word>
-          <label for="RegisterForm-password" class="visually-hidden">
-            {{ 'customer.register.password' | t }}
-            <span class="required">*</span>
-          </label>
+          <div class="w-full relative">
+            <input
+              type="password"
+              name="customer[password]"
+              id="RegisterForm-password"
+              aria-required="true"
+              {% if form.errors contains 'password' %}
+                aria-invalid="true"
+                aria-describedby="RegisterForm-password-error"
+              {% endif %}
+              placeholder="{{ 'customer.register.password' | t }} *"
+              required
+              class="w-full"
+            >
+            <show-pass-word class="show-pass-word transition absolute inset-y-0 flex content-center right-25">
+              <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <use href="#icon-hide-password"></use>
+              </svg>
+              <svg class="icon-view hidden" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <use href="#icon-show-password"></use>
+              </svg>
+            </show-pass-word>
+            <label for="RegisterForm-password" class="visually-hidden">
+              {{ 'customer.register.password' | t }}
+              <span class="required">*</span>
+            </label>
+          </div>
         </div>
         {% if form.errors contains 'password' %}
           <div

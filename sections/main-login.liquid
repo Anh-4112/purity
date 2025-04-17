@@ -46,7 +46,7 @@
               autofocus
               style="--color-border: #D0473E"
             {% endif %}
-            placeholder="{{ 'customer.login_page.email' | t }}*"
+            placeholder="{{ 'customer.login_page.email' | t }} *"
             class="w-full text-color{% if form.errors %} border{% endif %}"
           >
           <label for="RecoverEmail" class="visually-hidden">
@@ -131,7 +131,7 @@
             aria-invalid="true"
             style="--color-border: #D0473E"
           {% endif %}
-          placeholder="{{ 'customer.login_page.email' | t }}*"
+          placeholder="{{ 'customer.login_page.email' | t }} *"
           required
           class="w-full fs-small-1 text-color{% if form.errors contains 'form' %} border{% endif %}"
         >
@@ -142,32 +142,34 @@
       </div>
 
       {%- if form.password_needed -%}
-        <div class="field relative w-full flex wrap transition">
-          <input
-            type="password"
-            value=""
-            name="customer[password]"
-            id="CustomerPassword"
-            autocomplete="current-password"
-            {% if form.errors contains 'form' %}
-              aria-invalid="true"
-            {% endif %}
-            placeholder="{{ 'customer.login_page.password' | t }}*"
-            required
-            class="w-full fs-small-1 text-color"
-          >
-          <show-pass-word class="show-pass-word transition absolute inset-y-0 flex content-center right-25">
-            <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <use href="#icon-hide-password"></use>
-            </svg>
-            <svg class="icon-view hidden" width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <use href="#icon-show-password"></use>
-            </svg>
-          </show-pass-word>
-          <label for="CustomerPassword" class="visually-hidden">
-            {{ 'customer.login_page.password' | t }}
-            <span class="required">*</span>
-          </label>
+        <div class="field relative w-full flex wrap transition show-hide-password">
+          <div class="w-full relative">
+            <input
+              type="password"
+              value=""
+              name="customer[password]"
+              id="CustomerPassword"
+              autocomplete="current-password"
+              {% if form.errors contains 'form' %}
+                aria-invalid="true"
+              {% endif %}
+              placeholder="{{ 'customer.login_page.password' | t }} *"
+              required
+              class="w-full fs-small-1 text-color"
+            >
+            <show-pass-word class="show-pass-word transition absolute inset-y-0 flex content-center right-25">
+              <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <use href="#icon-hide-password"></use>
+              </svg>
+              <svg class="icon-view hidden" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <use href="#icon-show-password"></use>
+              </svg>
+            </show-pass-word>
+            <label for="CustomerPassword" class="visually-hidden">
+              {{ 'customer.login_page.password' | t }}
+              <span class="required">*</span>
+            </label>
+          </div>
         </div>
       {%- endif -%}
       <div class="mt-10 mb-30 text-start">

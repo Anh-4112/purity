@@ -36,6 +36,10 @@ export class FormValidator {
       } else {
         errorElement.textContent = "";
         input.classList.remove(this.options.errorClass);
+
+        if (errorElement.textContent === "") {
+          this.removeErrorElement(errorElement); 
+        }
       }
     }
 
@@ -43,13 +47,22 @@ export class FormValidator {
   }
 
   getOrCreateErrorEl(input) {
-    let errorEl = input.nextElementSibling;
-    if (!errorEl || !errorEl.classList.contains("form-error-message")) {
+    const parentElement = input.closest('.field.relative');
+
+    let errorEl = parentElement.querySelector('.form-error-message');
+    if (!errorEl) {
       errorEl = document.createElement("div");
-      errorEl.className = "form-error-message warning mt-10";
-      input.parentNode.insertBefore(errorEl, input.nextSibling);
+      errorEl.className = "form-error-message warning mt-10"; 
+      parentElement.appendChild(errorEl); 
     }
+
     return errorEl;
+  }
+
+  removeErrorElement(errorEl) {
+    if (errorEl) {
+      errorEl.remove();
+    }
   }
 }
 
@@ -76,7 +89,7 @@ export function setupFormValidation({
     const submitButton = e.submitter || form.querySelector(buttonSelector);
     const spinner = submitButton?.querySelector(".icon-load");
     const text = submitButton?.querySelector(
-      ".hidden-on-load transition-short"
+      ".hidden-on-load.transition-short"
     );
 
     submitButton?.classList.add("loading");
