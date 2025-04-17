@@ -7,7 +7,6 @@ class ActionSearch extends HTMLElement {
     super();
     this.input = this.querySelector('input[type="search"]');
     this.form = this.querySelector("form#search_mini_form");
-    this.reset = this.querySelector(".search__reset");
     this.templateRecommendedDefault = this.querySelector(
       ".template-recommended-default"
     );
@@ -51,7 +50,6 @@ class ActionSearch extends HTMLElement {
     if (this.type == "popup") {
       this.innerWidth();
     }
-    this.clearSearch();
   }
 
   innerWidth() {
@@ -122,29 +120,6 @@ class ActionSearch extends HTMLElement {
     ) {
       this.updateProductRecommended();
     }
-  }
-
-  clearSearch() {
-    const _this = this;
-    if (!this.reset) return;
-    this.reset.addEventListener("click", () => {
-      this.form.classList.add("loading");
-      this.input.value = "";
-      this.input.focus();
-      setTimeout(() => this.onInput(), 100);
-    });
-    this.reset.addEventListener(
-      "keypress",
-      function (event) {
-        if (event.key === "Enter") {
-          this.form.classList.add("loading");
-          this.input.value = "";
-          this.input.focus();
-          setTimeout(() => this.onInput(), 100);
-        }
-      }.bind(this),
-      false
-    );
   }
 
   onInput() {

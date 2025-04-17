@@ -1,0 +1,90 @@
+{%- liquid
+  assign items_to_show = block.settings.items_to_show
+  assign show_navigation = block.settings.show_navigation
+  assign show_pagination = block.settings.show_pagination
+-%}
+{%- if closest.product != blank -%}
+  {%- if closest.product.metafields.custom.media_lightbox.value -%}
+    <slide-section
+      class="swiper hover-action"
+      data-section-id="{{ section.id }}"
+      data-effect="slide"
+      data-speed="500"
+      data-desktop="{{ items_to_show }}"
+      data-mobile="1"
+      data-tablet="1"
+      data-spacing="10"
+    >
+      {% if show_navigation %}
+        {%- render 'swiper-navigation', show_on_hover: true -%}
+      {% endif %}
+      <div class="swiper-wrapper">
+        {%- for media in closest.product.metafields.custom.media_lightbox.value -%}
+          <div class="swiper-slide">
+            {%- assign image_alt = media.alt | default: closest.product.title | escape -%}
+            <div class="media-lightbox-item">
+              <video-local-lightbox tabindex="0">
+                <div class="video-thumbnail">
+                  {% render 'responsive-image', type: 'banner', image: media, image_alt: image_alt %}
+                </div>
+                {% if media.media_type == 'video' -%}
+                  <template>
+                    {{
+                      media
+                      | video_tag:
+                        image_size: '1100x',
+                        autoplay: true,
+                        loop: true,
+                        controls: false,
+                        muted: true,
+                        alt: image_alt
+                    }}
+                  </template>
+                {% endif %}
+              </video-local-lightbox>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if show_pagination -%}
+        <div
+          class="swiper-pagination"
+        ></div>
+      {% endif %}
+    </slide-section>
+  {% endif %}
+{% endif %}
+{% schema %}
+{
+  "name": "t:sections.all.product_setting.media_lightbox.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.product_setting.media_lightbox.name"
+    },
+    {
+      "type": "range",
+      "id": "items_to_show",
+      "label": "t:sections.all.items_to_show.label",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "default": true,
+      "label": "t:sections.all.carousel.show_navigation.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "default": false,
+      "label": "t:sections.all.carousel.show_pagination.label"
+    }
+  ],
+  "presets": [{ "name": "t:sections.all.product_setting.media_lightbox.name" }]
+}
+{% endschema %}

@@ -15,7 +15,9 @@ function initSlide(_this) {
   const effect = _this?.dataset.effect ? _this?.dataset.effect : "slide";
   const row = _this?.dataset.row ? _this?.dataset.row : 1;
   let spacing = _this?.dataset.spacing ? _this?.dataset.spacing : 30;
-  const progressbar = _this?.dataset.paginationProgressbar === "true";
+  const pagination = _this?.dataset.pagination
+    ? _this?.dataset.pagination
+    : "bullets";
   const autoItem = _this?.dataset.itemMobile === "true";
   const slideTab = _this?.dataset.slideTab === "true";
   let arrowCenterImage = _this?.dataset.itemMobile === "true";
@@ -69,7 +71,10 @@ function initSlide(_this) {
     pagination: {
       clickable: true,
       el: _this.querySelector(".swiper-pagination"),
-      type: progressbar ? "progressbar" : "bullets",
+      type: pagination ? pagination : "bullets",
+      renderCustom: function (swiper, current, total) {
+        return current + "/" + total;
+      },
     },
     breakpoints: {
       768: {
