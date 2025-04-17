@@ -7,49 +7,36 @@
   else
     assign section_width = 'fluid_container'
   endif
+
+  assign text_alignment = ''
+  if section_st.text_alignment == 'start'
+    assign text_alignment = 'flex-start'
+  elsif section_st.text_alignment == 'center'
+    assign text_alignment = 'justify-content-center'
+  else
+    assign text_alignment = 'flex-end'
+  endif
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 
 <div
-  class="page-heading section color-{{ section_st.color_scheme }} gradient text-{{ section_st.text_alignment }}"
+  class="section gradient"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div class="section-header">
-      {% for block in section.blocks %}
-        {%- liquid
-          assign block_st = block.settings
-        -%}
-        {% case block.type %}
-          {% when 'heading' %}
-            <h1 class="heading-title">
-              {% if block_st.heading != blank %}
-                {{ block_st.heading }}
-              {% else %}
-                {{ page.title }}
-              {% endif %}
-            </h1>
-          {% when 'description' %}
-            <div class="heading-description rte">
-              {%- if block_st.description != blank -%}
-                {{ block_st.description }}
-              {%- else -%}
-                {{ page.content }}
-              {%- endif -%}
-            </div>
-        {% endcase %}
-      {% endfor %}
+    <div class="page-title-breadcrumb mb-75">
+      {% render 'breadcrumbs', class: text_alignment %}
     </div>
   </div>
 </div>
 
 {% schema %}
 {
-  "name": "t:sections.all.section_setting.page_heading.label",
+  "name": "t:sections.all.section_setting.page_heading.breadcrumb.label",
   "tag": "section",
-  "class": "page-heading",
+  "class": "breadcrumb",
   "settings": [
     {
       "type": "header",
@@ -74,13 +61,6 @@
       ],
       "default": "fix_width",
       "label": "t:sections.all.layout.label"
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:sections.all.colors.label",
-      "info": "t:sections.all.colors.info",
-      "default": "default-color-scheme"
     },
     {
       "type": "select",
@@ -125,34 +105,6 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
-    }
-  ],
-  "max_blocks": 3,
-  "blocks": [
-    {
-      "type": "heading",
-      "name": "t:sections.all.section_setting.page_heading.label",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "t:sections.all.section_setting.page_heading.label"
-        }
-      ]
-    },
-    {
-      "type": "description",
-      "name": "t:sections.all.section_setting.page_heading.description.label",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "richtext",
-          "id": "description",
-          "label": "t:sections.all.section_setting.page_heading.description.label",
-          "info": "t:sections.all.section_setting.page_heading.description.info"
-        }
-      ]
     }
   ]
 }
