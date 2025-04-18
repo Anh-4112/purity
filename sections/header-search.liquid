@@ -60,7 +60,7 @@
   data-focus-item="search-icon-bubble"
 >
   <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-  <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer invisible drawer{% if search_type != 'popup' %} drawer-right{% else %} drawer-top{% endif %} fixed right-0 z-15 inset-y-0 bg-white w-full">
+  <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer drawer{% if search_type != 'popup' %} drawer-right{% else %} drawer-top{% endif %} fixed right-0 z-15 inset-y-0 bg-white w-full">
     <div class="drawer__body h-full flex column{% if search_type == 'popup' %} pt-1025-60 custom-scrollbar{% endif %}">
       <div class="search__header drawer__header drawer-spacing border-bottom flex gap-10 space-between{% if search_type == 'popup' %} justify-center-1025 p-1025-0 border-1025-0{% endif %}">
         {% if search_type == 'popup' %}
@@ -135,7 +135,7 @@
             </button>
             <input
               class="search__input field__input flex-1"
-              style="--input-bg:transparent;--inputs-border-width: 0;--input-padding: 0;--input-height: 6rem;--input-placeholder-color: var(--color-heading);"
+              style="--input-bg:transparent;--input-border-width: 0;--input-padding: 0;--input-height: 6rem;--input-placeholder-color: var(--color-heading);"
               type="search"
               name="q"
               placeholder="{{ 'general.search.search' | t }}"
@@ -152,16 +152,10 @@
             <div
               class="search__action-right inline-flex align-center inset-y-0 right-28 absolute"
             >
-              <button
-                type="reset"
-                class="search__reset btn-reset fs-0 relative"
-                aria-label="{{ 'general.search.clear' | t }}"
-              >
-                <span
-                  class="icon-rotator bg-secondary opacity-0 w-custom h-custom inline-flex rounded-50 transition-short"
-                  style="--width: 1.5rem;--height: 1.5rem;"
-                ></span>
-              </button>
+              <span
+                class="icon-rotator bg-secondary opacity-0 w-custom h-custom inline-flex rounded-50 transition-short"
+                style="--width: 1.5rem;--height: 1.5rem;"
+              ></span>
             </div>
           </div>
           {%- if search_popular_keywords != blank -%}

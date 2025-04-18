@@ -1,0 +1,61 @@
+{% liquid
+  assign block_st = block.settings
+%}
+<div
+  class="group__faqs-content w-full"
+>
+  <div class="faq-container w-full{% if block_st.framed %} rounded border{% endif %} p-40">
+    <div>
+      <h2
+        class="heading-letter-spacing"
+        {{ block.shopify_attributes }}
+      >
+        <span>{{ block_st.heading }}</span>
+      </h2>
+    </div>
+    {% content_for 'blocks' %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.faq.name",
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "_item-faq"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.all.content_setting.heading.label",
+      "default": "Questions heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "framed",
+      "label": "t:sections.faq.settings.framed",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.faq.name",
+      "blocks": [
+        {
+          "type": "_item-faq"
+        },
+        {
+          "type": "_item-faq"
+        },
+        {
+          "type": "_item-faq"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -50,8 +50,8 @@ function getFocusableElements(container) {
     )
   );
 }
-var trapFocusHandlers = {};
 
+const trapFocusHandlers = {};
 export function trapFocus(container, elementToFocus = container) {
   var elements = getFocusableElements(container);
   var first = elements[0];
@@ -155,18 +155,19 @@ export function eventModal(
     const focus_item = modal_element.hasAttribute("data-focus-item")
       ? modal_element.getAttribute("data-focus-item")
       : "";
-    if (
-      modal_element.classList.contains("delay") &&
-      modal_element.querySelector(".model_media")
-    ) {
-      setTimeout(() => {
+    if (modal_element.classList.contains("delay")) {
+      if (modal_element.querySelector(".model_media")) {
+        setTimeout(() => {
+          modal_element.classList.remove("active", "delay");
+          if (active_modal.length <= 1) {
+            removeModalAction(modal_element);
+          }
+        }, 350);
+        modal_element.querySelector(".model_media").classList.remove("open");
+      } else {
         modal_element.classList.remove("active", "delay");
-        if (active_modal.length == 1) {
-          root.classList.remove("open-modal");
-          root.style.removeProperty("padding-right");
-        }
-      }, 350);
-      modal_element.querySelector(".model_media").classList.remove("open");
+        removeModalAction(modal_element);
+      }
     } else {
       modal_element.classList.remove("active");
     }
@@ -174,9 +175,8 @@ export function eventModal(
       setTimeout(() => modal_element.remove(), 600);
     }
     if (!modal_element.classList.contains("delay")) {
-      if (active_modal.length == 1) {
-        root.classList.remove("open-modal");
-        root.style.removeProperty("padding-right");
+      if (active_modal.length <= 1) {
+        removeModalAction(modal_element);
       }
     }
     removeTrapFocus(modal_element);
@@ -184,6 +184,17 @@ export function eventModal(
       trapFocus(document.getElementById(focus_item));
     }
   }
+}
+
+function removeModalAction(modal_element) {
+  root.classList.remove("open-modal");
+  root.style.removeProperty("padding-right");
+  modal_element
+    .querySelectorAll("button")
+    .forEach((button) => button.classList.remove("active"));
+  modal_element
+    .querySelectorAll(".drawer-bottom")
+    .forEach((addon) => addon.classList.remove("open"));
 }
 
 export class eventDelegate {

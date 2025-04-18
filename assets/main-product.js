@@ -80,3 +80,22 @@ class StickyAddCart extends HTMLElement {
   init() {}
 }
 customElements.define("sticky-add-cart", StickyAddCart);
+
+const infoGallerySlide = () => {
+  const gallery = document.querySelectorAll(".info-gallery__card");
+  gallery.forEach((e) => {
+    e.addEventListener("mouseover", (event) => {
+      const currentTarget = event.currentTarget;
+      if (!currentTarget.classList.contains("active")) {
+        gallery.forEach((el) => {
+          el.classList.remove("active");
+        });
+        currentTarget.classList.add("active");
+      }
+    });
+  });
+};
+document.addEventListener("shopify:section:load", function () {
+  infoGallerySlide();
+});
+infoGallerySlide();

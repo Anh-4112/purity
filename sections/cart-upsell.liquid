@@ -1,4 +1,5 @@
 {%- if recommendations.products_count > 0 -%}
+  {%- render 'swiper-navigation', class-slideshow: 'hidden block-1025 vertical-arrow', show_on_hover: true -%}
   <div class="swiper-wrapper">
     {%- for product in recommendations.products -%}
       {% liquid
@@ -29,4 +30,5 @@
       {%- endif -%}
     {%- endfor -%}
   </div>
+  <div class="swiper-pagination mt-20 hidden-1025"></div>
 {%- endif -%}

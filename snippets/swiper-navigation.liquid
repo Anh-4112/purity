@@ -12,7 +12,7 @@
 %}
 <div class="swiper-actions {{ class-slideshow }}{% if show_action == true %} flex gap-10 mt-15{% endif %}">
   <div
-    class="swiper-arrow swiper-button-prev overflow-hidden {{ class }}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center{% if type == "slideshow" %} left-0{% else %} shadow bg-white btn-hover transition{% endif %}{{ show_action_class }}"
+    class="swiper-arrow swiper-button-prev overflow-hidden {{ class }}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center{% if type == "slideshow" %} left-0{% else %} shadow bg-white btn-hover blur transition{% endif %}{{ show_action_class }}"
     style="--transform-x: 2rem;"
   >
     {% if type != 'slideshow' %}
@@ -21,8 +21,13 @@
       </svg>
     {% endif %}
   </div>
+  {% if navigation_custom %}
+    <div
+      class="swiper-pagination"
+    ></div>
+  {% endif %}
   <div
-    class="swiper-arrow swiper-button-next overflow-hidden {{ class }}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center{% if type == "slideshow" %} right-0{% else %} shadow bg-white btn-hover transition{% endif %}{{ show_action_class }}"
+    class="swiper-arrow swiper-button-next overflow-hidden {{ class }}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center{% if type == "slideshow" %} right-0{% else %} shadow bg-white btn-hover blur transition{% endif %}{{ show_action_class }}"
     style="--transform-x: -2rem;"
   >
     {% if type != 'slideshow' %}

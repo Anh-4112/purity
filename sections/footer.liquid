@@ -114,8 +114,17 @@
                                 id="Subscribe-{{ section.id }}"
                                 aria-label="{{ 'subscribe.button_label' | t }}"
                               >
-                                <svg width="6" height="11" fill="none">
+                                <svg class="hidden-on-load" width="6" height="11" fill="none">
                                   <use href="#icon-next" />
+                                </svg>
+                                <svg
+                                  width="14"
+                                  height="14"
+                                  viewBox="0 0 14 14"
+                                  fill="none"
+                                  class="spin opacity-0 pointer-none icon-load absolute"
+                                >
+                                  <use href="#icon-load"></use>
                                 </svg>
                               </button>
                             </div>
@@ -332,7 +341,22 @@
     </div>
   </div>
 </footer>
-
+<script type="module">
+  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
+  document.addEventListener('DOMContentLoaded', () => {
+    setupFormValidation({
+      formSelector: 'form#ContactFooter',
+      fields: {
+        email: (value) =>
+          !value
+            ? '{{ "customer.validate.email" | t }}'
+            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            ? '{{ "customer.validate.email_invalid" | t }}'
+            : '',
+      },
+    });
+  });
+</script>
 {% schema %}
 {
   "name": "t:sections.footer.name",

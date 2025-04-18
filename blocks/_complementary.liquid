@@ -1,10 +1,9 @@
 {%- liquid
   assign product = closest.product
   assign block_heading = block.settings.block_heading
-  assign show_pagination = block.settings.show_pagination
   assign show_navigation = block.settings.show_navigation
   assign product_list_limit = block.settings.product_list_limit
-  assign products_per_page = block.settings.products_per_page
+  assign products_per_row = block.settings.products_per_row
 -%}
 {% if product.metafields.custom.external_affiliate == blank %}
   <product-recommendations
@@ -18,13 +17,15 @@
         </h2>
       {% endif %}
       <slide-section
-        class="swiper hover-action {% if block_heading == blank %} mt-30{% endif %}"
+        class="swiper hover-action{% if block_heading == blank %} mt-30{% endif %}"
         data-section-id="{{ section.id }}"
         data-effect="slide"
         data-speed="500"
-        data-desktop="{{ products_per_page }}"
-        data-mobile="2"
-        data-tablet="3"
+        data-pagination="custom"
+        data-row="{{ products_per_row }}"
+        data-desktop="1"
+        data-mobile="1"
+        data-tablet="1"
         data-spacing="20"
       >
         <div class="swiper-wrapper">
@@ -33,21 +34,18 @@
               card_product: product,
               section_id: section.id,
               disable_hover_image: true,
+              disable_show_video: true,
+              disable_lazy_loading: true,
               disable_badge: true,
               disable_rate: true,
+              disable_tag: true,
               disable_color_swatches: true,
-              disable_quickview: true,
               class: ' swiper-slide'
             %}
           {%- endfor -%}
         </div>
         {% if show_navigation %}
-          {%- render 'swiper-navigation', show_on_hover: true -%}
-        {% endif %}
-        {% if show_pagination %}
-          <div
-            class="swiper-pagination"
-          ></div>
+          {%- render 'swiper-navigation', show_on_hover: true, navigation_custom: true -%}
         {% endif %}
       </slide-section>
     {% endif %}
@@ -78,24 +76,18 @@
     },
     {
       "type": "range",
-      "id": "products_per_page",
+      "id": "products_per_row",
       "min": 1,
-      "max": 4,
+      "max": 3,
       "step": 1,
-      "default": 3,
-      "label": "t:sections.all.product_setting.complementary_products.settings.products_per_page.label"
+      "default": 2,
+      "label": "t:sections.all.product_setting.complementary_products.settings.products_per_row.label"
     },
     {
       "type": "checkbox",
       "id": "show_navigation",
       "default": true,
       "label": "t:sections.all.carousel.show_navigation.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_pagination",
-      "default": false,
-      "label": "t:sections.all.carousel.show_pagination.label"
     }
   ],
   "presets": [{ "name": "t:sections.all.product_setting.complementary_products.name" }]

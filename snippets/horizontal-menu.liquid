@@ -3,41 +3,39 @@
 -%}
 {% if link.links.size > 0 %}
   {%- if type == 'classic' -%}
-    <div class="submenu classic transition invisible z-5{% if menu_mobile == blank %} {{ dropdowns_animation }}{%- if dropdowns_animation != 'fade-in-down' %} py-30 bg-white shadow{% endif %} absolute submenu-desktop custom-scrollbar overflow-auto{% else %} bg-white sub-mb absolute inset-0 drawer drawer-right-mb top-rounded overflow-hidden{% endif %}">
-      {%- if dropdowns_animation == 'fade-in-down' and menu_mobile == blank -%}
-        <div class="menu-container py-30 bg-white shadow">
-      {%- endif -%}
-      {%- if menu_mobile != blank -%}
-        <div class="submenu-header flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3">
-          <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
+    <div class="submenu classic pointer-none transition invisible z-5{% if menu_mobile == blank %} {{ dropdowns_animation }} absolute submenu-desktop{% else %} bg-white sub-mb absolute inset-0 drawer drawer-right-mb overflow-hidden flex column{% endif %}">
+      <div class="menu-container py-1025-30 bg-white custom-scrollbar overflow-auto">
+        {%- if menu_mobile != blank -%}
+          <div class="submenu-header heading-color flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3 mb-10">
+            <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
+              <button
+                class="pointer btn-reset flex align-center gap-25 heading-color"
+                aria-label="{{ link.title }}"
+              >
+                <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
+                  <use href="#icon-back" />
+                </svg>
+                <span class="fs-18 menu_weight">{{- link.title -}}</span>
+              </button>
+            </div>
             <button
-              class="pointer"
-              aria-label="{{ link.title }}"
+              class="modal__close btn-close-menu top-10 right-10 btn-reset rounded-50 inline-flex content-center pointer heading-color"
+              style="--width: 2.4rem;"
+              aria-label="{{ 'accessibility.button.close' | t }}"
+              is="button-close-model"
             >
-              <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
-                <use href="#icon-back" />
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <use href="#icon-close" />
               </svg>
-              <span class="fs-18 menu_weight">{{- link.title -}}</span>
             </button>
           </div>
-          <button
-            class="modal__close btn-close-menu top-10 right-10 btn-reset rounded-50 inline-flex content-center pointer"
-            style="--width: 2.4rem;"
-            aria-label="{{ 'accessibility.button.close' | t }}"
-            is="button-close-model"
-          >
-            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-              <use href="#icon-close" />
-            </svg>
-          </button>
-        </div>
-      {%- endif -%}
+        {%- endif -%}
   {%- else -%}
     {%- if menu_mobile != blank -%}
-      <div class="submenu-header flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3">
+      <div class="submenu-header heading-color flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3 mb-10">
         <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
           <button
-            class="pointer"
+            class="pointer btn-reset flex align-center gap-25 heading-color"
             aria-label="{{ link.title }}"
           >
             <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
@@ -47,19 +45,19 @@
           </button>
         </div>
         <button
-          class="modal__close btn-close-menu top-10 right-10 btn-reset rounded-50 inline-flex content-center pointer"
+          class="modal__close btn-close-menu top-10 right-10 btn-reset rounded-50 inline-flex content-center pointer heading-color"
           style="--width: 2.4rem;"
           aria-label="{{ 'accessibility.button.close' | t }}"
           is="button-close-model"
         >
-          <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <use href="#icon-close" />
           </svg>
         </button>
       </div>
     {%- endif -%}
   {%- endif -%}
-  <ul class="menu list-unstyled{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% elsif menu_mobile != blank%} px-gutter-x py-12{% endif %}">
+  <ul class="menu list-unstyled{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% elsif menu_mobile != blank %} px-gutter-x py-12{% endif %}">
     {% for child_link in link.links %}
       <li class="menu-link{% if child_link.links.size > 0 %} have-child{% if menu_mega == blank %} relative{% endif %}{% else %} py-6{% endif %}{% if menu_mega == blank and menu_mobile == blank %} px-20{% endif %}">
         {%- if child_link.links.size > 0 -%}
@@ -82,7 +80,7 @@
               {% endif %}
             >
               <summary
-                class="menu__item level-2 py-6{% if type != 'classic' %} fs-18 heading-style{% endif %} flex align-center gap-5 space-between inside-out-hover"
+                class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %}{% if menu_mobile != blank %} fs-18 heading-style py-10{% else %} py-6{% endif %} flex align-center gap-5 space-between inside-out-hover"
                 aria-label="{{ child_link.title }}"
               >
                 <span class="menu__title border-animation relative">
@@ -99,7 +97,7 @@
               </summary>
             </details>
           {% endif %}
-          <ul class="sub-children-menu list-unstyled overflow-hidden-mb{% if menu_mega == blank and menu_mobile == blank %} overflow-hidden{% else %} mt-20{% endif %}{% if menu_mobile != blank %} {% endif %}">
+          <ul class="sub-children-menu list-unstyled overflow-hidden-mb{% if menu_mega == blank and menu_mobile == blank %} overflow-hidden{% endif %}{% if menu_mega != blank and menu_mobile == blank %} mt-1025-20{% endif %}">
             {% for grandchild_link in child_link.links %}
               <li class="menu-link py-6{% if menu_mega == blank and menu_mobile == blank %} px-10{% endif %}">
                 <a
@@ -114,7 +112,7 @@
           </ul>
         {%- else -%}
           <a
-            class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %} border-animation relative{% if menu_mega != blank %} heading-style h6{% endif %}"
+            class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %}{% if menu_mobile != blank %} fs-18 heading-style{% endif %} border-animation relative{% if menu_mega != blank %} heading-style h6{% endif %}"
             aria-label="{{ child_link.title }}"
             href="{{ child_link.url }}"
           >
@@ -125,17 +123,15 @@
     {% endfor %}
   </ul>
   {%- if type == 'classic' -%}
-    {%- if dropdowns_animation == 'fade-in-down' and menu_mobile == blank -%}
-      </div>
-    {%- endif -%}
+    </div>
     </div>
   {%- endif -%}
 {%- else -%}
   {%- if menu_mobile != blank -%}
-    <div class="submenu-header flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3">
+    <div class="submenu-header heading-color flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3 mb-10">
       <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
         <button
-          class="pointer"
+          class="pointer btn-reset flex align-center gap-25 heading-color"
           aria-label="{{ link.title }}"
         >
           <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
@@ -145,12 +141,12 @@
         </button>
       </div>
       <button
-        class="modal__close btn-close-menu top-10 right-10 btn-reset rounded-50 inline-flex content-center pointer"
+        class="modal__close btn-close-menu top-10 right-10 btn-reset rounded-50 inline-flex content-center pointer heading-color"
         style="--width: 2.4rem;"
         aria-label="{{ 'accessibility.button.close' | t }}"
         is="button-close-model"
       >
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <use href="#icon-close" />
         </svg>
       </button>

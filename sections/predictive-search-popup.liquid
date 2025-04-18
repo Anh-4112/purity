@@ -1,6 +1,5 @@
 {%- liquid
   assign theme_st = settings
-  assign search_type = theme_st.search_type
   assign show_search_vendor = theme_st.show_search_vendor
   if show_search_vendor
     assign show_search_vendor = false
@@ -136,21 +135,19 @@
           {%- endif -%}
           {%- if predictive_search.resources.products.size > 0 -%}
             <div class="search-product mt-20 mt-1025-50">
-              <div class="search-result-heading">
-                <div class="heading-color mb-20 h6">
+              <div class="search-result-heading mb-20 flex space-between gap-10 align-center">
+                <div class="heading-color h6">
                   {{ 'general.search.products' | t }}
                 </div>
                 {%- if predictive_search.resources.products.size > limit_item -%}
-                  <div class="search-more-result">
-                    <a
-                      role="option"
-                      aria-selected="false"
-                      aria-label="{{ 'general.search.more_result' | t }}"
-                      class="block text-center more-result-link btn btn-primary mt-20"
-                    >
-                      {{ 'general.search.more_result' | t }} ({{ predictive_search.resources.products.size }})
-                    </a>
-                  </div>
+                  <a
+                    role="option"
+                    aria-selected="false"
+                    aria-label="{{ 'general.search.more_result' | t }}"
+                    class="block text-center more-result-link lh-normal btn btn-link border-animation"
+                  >
+                    {{ 'general.search.more_result' | t }} ({{ predictive_search.resources.products.size }})
+                  </a>
                 {%- endif -%}
               </div>
               <div class="list-search-product">
@@ -181,8 +178,7 @@
                         disable_quickview: true,
                         disable_show_video: true,
                         class: ' swiper-slide',
-                        disable_lazy_loading: true,
-                        sizes: sizes
+                        disable_lazy_loading: true
                       %}
                     {%- endfor -%}
                   </div>

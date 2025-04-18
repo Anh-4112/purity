@@ -42,20 +42,9 @@
   {%- endif %}
 {%- endcapture -%}
 {% style %}
-.section-case{
-  height: 300vh;
-  position: relative;
-}
-.section-case > div {
-        position: sticky;
-        top: 0;
-        overflow: hidden;
-        height: 100vh;
-    }
     inspiration-showcase{
       display: flex;
     }
-
     .inspiration-showcase__block {
         flex: 0 0 auto;
     }
@@ -77,7 +66,7 @@
           {%- for block in section.blocks -%}
             {%- liquid
               assign block_st = block.settings
-              assign media_type = block_st.media_type
+              assign media_type = section_st.media_type
               assign media = block_st.image
               assign video = block_st.video
               assign image_alt = media.alt
@@ -95,9 +84,27 @@
               else
                 assign active_class = ''
               endif
+              assign image_ratio = section_st.image_ratio
+              assign ratio = '3/4'
+              if image_ratio != 'adapt'
+                case image_ratio
+                  when 'square'
+                    assign ratio = '1/1'
+                  when 'landscape'
+                    assign ratio = '4/3'
+                  when 'portrait'
+                    assign ratio = '3/4'
+                endcase
+              else
+                if video != blank
+                  assign ratio = video.aspect_ratio
+                elsif media != blank
+                  assign ratio = media.aspect_ratio
+                endif
+              endif
             -%}
             <div class="inspiration-showcase__block flex-1 {{ active_class }}">
-                <div class="inspiration-showcase__media {{ media_type }}">
+                <div class="inspiration-showcase__media {{ media_type }}" style="--aspect-ratio: {{ ratio }}">
                  {%- if video != blank -%}
                     {%- liquid
                       assign source = video.sources
@@ -131,7 +138,7 @@
                     column: section.blocks.size
                   %}
                  {%- else -%}
-                  {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {% render 'placeholder-render', type: 'blog' %}
                  {%- endif -%}
                 </div>
             </div>
@@ -213,6 +220,30 @@
       "label": "t:sections.scrolling_text.settings.text_size.label"
     },
     {
+      "type": "header",
+      "content": "t:sections.inspiration-showcase.blocks.settings.header"
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "options": [
+        {
+          "value": "rounded",
+          "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__1.label"
+        },
+        {
+          "value": "oval",
+          "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__3.label"
+        }
+      ],
+      "default": "oval",
+      "label": "t:sections.inspiration-showcase.blocks.settings.media_style.label"
+    },
+    {
       "type": "select",
       "id": "column_gap",
       "options": [
@@ -235,6 +266,30 @@
       ],
       "default": "medium",
       "label": "t:sections.all.padding.column_gap.label"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.all.image.aspect_ratio.adapt"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.all.image.aspect_ratio.options__1"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.all.image.aspect_ratio.options__2"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.all.image.aspect_ratio.options__3"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.all.image.aspect_ratio.label"
     },
     {
       "type": "header",
@@ -275,26 +330,6 @@
           "type": "video",
           "id": "video",
           "label": "t:sections.all.video.label"
-        },
-        {
-          "type": "select",
-          "id": "media_type",
-          "options": [
-            {
-              "value": "rounded",
-              "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__1.label"
-            },
-            {
-              "value": "oval",
-              "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__2.label"
-            },
-            {
-              "value": "square",
-              "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__3.label"
-            }
-          ],
-          "default": "oval",
-          "label": "t:sections.inspiration-showcase.blocks.settings.media_style.label"
         }
       ]
     }

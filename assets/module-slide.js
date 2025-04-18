@@ -1,8 +1,8 @@
 function initSlide(_this) {
   let autoplay = _this?.dataset.autoplay === "true";
   const loop = _this?.dataset.loop === "true";
-  const centerSlide = _this?.dataset.centerSlide === "true";
   const itemDesktop = _this?.dataset.desktop ? _this?.dataset.desktop : 4;
+  const freeMode = _this?.dataset.freeMode === "true";
   let itemTablet = _this?.dataset.tablet ? _this?.dataset.tablet : "";
   const itemMobile = _this?.dataset.mobile ? _this?.dataset.mobile : 1;
   const direction = _this?.dataset.direction
@@ -15,7 +15,9 @@ function initSlide(_this) {
   const effect = _this?.dataset.effect ? _this?.dataset.effect : "slide";
   const row = _this?.dataset.row ? _this?.dataset.row : 1;
   let spacing = _this?.dataset.spacing ? _this?.dataset.spacing : 30;
-  const progressbar = _this?.dataset.paginationProgressbar === "true";
+  const pagination = _this?.dataset.pagination
+    ? _this?.dataset.pagination
+    : "bullets";
   const autoItem = _this?.dataset.itemMobile === "true";
   const slideTab = _this?.dataset.slideTab === "true";
   let arrowCenterImage = _this?.dataset.itemMobile === "true";
@@ -38,8 +40,8 @@ function initSlide(_this) {
     _this.style.maxHeight = _this.offsetHeight + "px";
   }
   new Swiper(_this, {
-    slidesPerView: centerSlide ? "auto" : autoItem ? "auto" : itemMobile,
-    spaceBetween: centerSlide ? spacing : spacing >= 10 ? 10 : spacing,
+    slidesPerView: freeMode ? "auto" : autoItem ? "auto" : itemMobile,
+    spaceBetween: freeMode ? spacing : spacing >= 10 ? 10 : spacing,
     autoplay: autoplay,
     direction: direction,
     loop: loop,
@@ -47,9 +49,9 @@ function initSlide(_this) {
     speed: speed,
     watchSlidesProgress: true,
     watchSlidesVisibility: true,
-    centeredSlides: centerSlide,
     grabCursor: true,
     allowTouchMove: true,
+    freeMode: freeMode,
     grid: {
       rows: row,
       fill: "row",
@@ -69,7 +71,10 @@ function initSlide(_this) {
     pagination: {
       clickable: true,
       el: _this.querySelector(".swiper-pagination"),
-      type: progressbar ? "progressbar" : "bullets",
+      type: pagination ? pagination : "bullets",
+      renderCustom: function (swiper, current, total) {
+        return current + "/" + total;
+      },
     },
     breakpoints: {
       768: {
@@ -147,7 +152,8 @@ function initSlideMedia(_this, gallery, thumbnail) {
   let watchOverflow = true;
   let loop = true;
   let speed = 300;
-  let invert = false;
+  let spaceBetween = 10;
+  let mousewheel = false;
   let itemMobile = gallery == "thumbnail" ? 5 : 1;
   let direction = _this.dataset.thumbDirection
     ? _this.dataset.thumbDirection
@@ -172,6 +178,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
     swiperElement = _this;
   } else if (gallery == "QuickView" || gallery == "CartUpSell") {
     swiperElement = _this;
+    spaceBetween = 20;
     if (gallery == "QuickView") {
       itemMobile = 1.3;
     }
@@ -179,18 +186,16 @@ function initSlideMedia(_this, gallery, thumbnail) {
     if (window.innerWidth >= 768) {
       itemMobile = "auto";
       direction = "vertical";
-      invert = true;
+      mousewheel = true;
       loop = false;
       speed = 150;
     }
   }
   const swiperSlide = new Swiper(swiperElement, {
     slidesPerView: itemMobile,
-    spaceBetween: 10,
+    spaceBetween: spaceBetween,
     autoplay: false,
-    mousewheel: {
-      invert: invert,
-    },
+    mousewheel: mousewheel,
     speed: speed,
     direction: "horizontal",
     loop: loop,

@@ -39,20 +39,6 @@
                 {{ page.content }}
               {%- endif -%}
             </div>
-          {%- when 'breadcrumb' -%}
-            {%- liquid
-              assign text_alignment = ''
-              if block_st.text_alignment == 'left'
-                assign text_alignment = 'flex-start'
-              elsif block_st.text_alignment == 'center'
-                assign text_alignment = 'justify-content-center'
-              else
-                assign text_alignment = 'flex-end'
-              endif
-            -%}
-            <div class="page-title-breadcrumb">
-              {% render 'breadcrumbs', class: text_alignment %}
-            </div>
         {% endcase %}
       {% endfor %}
     </div>
@@ -165,33 +151,6 @@
           "id": "description",
           "label": "t:sections.all.section_setting.page_heading.description.label",
           "info": "t:sections.all.section_setting.page_heading.description.info"
-        }
-      ]
-    },
-    {
-      "type": "breadcrumb",
-      "name": "t:sections.all.section_setting.page_heading.breadcrumb.label",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "select",
-          "id": "text_alignment",
-          "options": [
-            {
-              "value": "left",
-              "label": "t:sections.all.text_alignment.options__1.label"
-            },
-            {
-              "value": "center",
-              "label": "t:sections.all.text_alignment.options__2.label"
-            },
-            {
-              "value": "right",
-              "label": "t:sections.all.text_alignment.options__3.label"
-            }
-          ],
-          "default": "left",
-          "label": "t:sections.all.text_alignment.alignment"
         }
       ]
     }

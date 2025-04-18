@@ -2,7 +2,7 @@
   assign theme_st = settings
 %}
 <!doctype html>
-<html class="js{% if theme_st.rtl %} rtl{% endif %}" lang="{{ request.locale.iso_code }}">
+<html class="no-js{% if theme_st.rtl %} rtl{% endif %}" lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -129,6 +129,8 @@
         --color-white: 255, 255, 255;
         --color-dark: #000;
         --color-grey: rgba(var(--color-text-rgb), 0.6);
+        --sale-bg: {{ theme_st.sale_background }};
+         --sale-color: {{ theme_st.sale_color }};
         --color-grey-light: rgba(var(--color-text-rgb), 0.2);
         --responsive-rate: ((100vw - 575px) / (1410 - 575));
 
@@ -304,6 +306,16 @@
         predictive_search_url: '{{ routes.predictive_search_url }}',
         search_url: '{{ routes.search_url }}'
       };
+      window.variantStrings = {
+        login_successful: ` {{ 'customer.login_page.login_successful' | t }}`,
+        login_invalid: ` {{ 'customer.login_page.login_invalid' | t }}`,
+      };
+    </script>
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
     </script>
   </body>
 </html>

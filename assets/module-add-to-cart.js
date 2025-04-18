@@ -6,6 +6,7 @@ export class ProductForm extends HTMLElement {
     this.form = this.querySelector("form");
     this.cart = document.querySelector("cart-drawer");
     this.quickView = document.querySelector("quickview-drawer");
+    this.shopifyShopableVideo = document.querySelector('.modal-shopable-video');
     if (this.form) {
       if (this.form.querySelector("[name=id]")) {
         this.form.querySelector("[name=id]").disabled = false;
@@ -86,6 +87,9 @@ export class ProductForm extends HTMLElement {
           if (document.querySelector("quickview-drawer.active")) {
             NextSkyTheme.eventModal(this.quickView, "close", false);
           }
+          if (document.querySelector(".modal-shopable-video.active")) {
+            NextSkyTheme.eventModal(this.shopifyShopableVideo, "close", false);
+          }
         }
       })
       .catch((e) => {
@@ -117,7 +121,7 @@ export class ProductForm extends HTMLElement {
       {
         id: this.cart.sectionId,
         section: this.cart.sectionId,
-        selector: ".drawer__header",
+        selector: ".drawer__header-cart",
       },
       {
         id: "cart-icon-bubble",
@@ -307,7 +311,7 @@ class CartItems extends ProductForm {
       {
         id: this.cart.sectionId,
         section: this.cart.sectionId,
-        selector: ".drawer__header",
+        selector: ".drawer__header-cart",
       },
       {
         id: "cart-icon-bubble",

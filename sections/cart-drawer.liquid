@@ -27,10 +27,10 @@
   data-focus-item="cart-icon-bubble"
 >
   <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-  <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer invisible drawer drawer-right fixed right-0 z-15 inset-y-0 bg-secondary-1025 w-full">
+  <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 z-15 inset-y-0 w-full{% if enable_product_recommendations and cart != empty %} bg-secondary-1025 rounded-1025-0{% endif %}">
     <div class="drawer__body h-full flex column bg-white rounded-start">
       <div
-        class="drawer__header flex gap-10 space-between align-center drawer-spacing border-bottom"
+        class="drawer__header drawer__header-cart flex gap-10 space-between align-center drawer-spacing border-bottom"
         style="--padding-block-desktop: 2.15rem;"
       >
         <div class="drawer__heading h5 flex gap align-center" style="--gap: 6px">
@@ -204,7 +204,7 @@
             >
               <div
                 class="progress rounded-10 h-custom absolute left-0 inset-y-0 transition"
-                style="width: {{ progress }}%"
+                style="--width: {{ progress }}%"
               ></div>
             </div>
           </div>
@@ -287,7 +287,7 @@
                                   >
                                     <button
                                       type="button"
-                                      class="inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
+                                      class="btn-reset inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
                                       aria-label="{{- 'sections.cart.remove_title' | t: title: item.title -}}"
                                     >
                                       <svg
@@ -471,6 +471,7 @@
               style="--max-width: 26rem; --width: 6rem;"
             >
               <mini-cart-recommendations
+                class="flex column h-full"
                 data-type="{{ recommendation_product_type }}"
                 data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=cart-upsell"
               >
@@ -479,9 +480,12 @@
                     {{ product_recommendations_heading }}
                   </div>
                 {%- endif -%}
-                <div class="cart-upsell-product">
-                  <cart-upsell-product class="swiper">
-                    {%- render 'swiper-navigation', show_on_hover: true -%}
+                <div class="cart-upsell-product grow-1">
+                  <cart-upsell-product class="swiper hover-action">
+                    {%- render 'swiper-navigation',
+                      class-slideshow: 'hidden block-1025 vertical-arrow',
+                      show_on_hover: true
+                    -%}
                     <div class="swiper-wrapper">
                       {%- if recommendation_product_type != 'auto' -%}
                         {%- for item in select_product_recommendation -%}
@@ -514,7 +518,7 @@
                         {%- endfor -%}
                       {%- endif -%}
                     </div>
-                    <div class="swiper-pagination mt-20"></div>
+                    <div class="swiper-pagination mt-20 hidden-1025"></div>
                   </cart-upsell-product>
                 </div>
               </mini-cart-recommendations>
