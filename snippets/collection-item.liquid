@@ -53,58 +53,58 @@
     assign collection_title_size = 'h4'
   endif
 %}
-  <div
-    class="collection-item__wrapper hover-effect {{ class }}{% if content_position == 'overlay' %} flex align-end relative{% endif %}"
-    {% if content_position == 'overlay' %}
+<div
+  class="collection-item__wrapper item-load hover-effect {{ class }}{% if content_position == 'overlay' %} flex align-end relative{% endif %}"
+  {% if content_position == 'overlay' %}
+    style="--aspect-ratio: {{ ratio }};"
+  {% endif %}
+>
+  <div class="collection-item__media{% if content_position == 'overlay' %} inset-0{% endif %}">
+    <a
+      class="block collection-item__media--ratio rounded{% if content_position == 'overlay' %} w-full h-full{% endif %}"
+      draggable="false"
+      {% if card_collection.url != blank %}
+        href="{{ card_collection.url }}"
+      {% else %}
+        role="link"
+      {% endif %}
+      aria-label="{{- card_collection.title -}}"
       style="--aspect-ratio: {{ ratio }};"
-    {% endif %}
-  >
-    <div class="collection-item__media{% if content_position == 'overlay' %} inset-0{% endif %}">
-      <a
-        class="block collection-item__media--ratio rounded{% if content_position == 'overlay' %} w-full h-full{% endif %}"
-        draggable="false"
-        {% if card_collection.url != blank %}
-          href="{{ card_collection.url }}"
+    >
+      <div class="{% if content_position == 'overlay' %}overlay-linear {% endif %}inset-0 absolute z-2 rounded"></div>
+      {% assign collection_media = card_collection.featured_image %}
+      {%- if collection_media or collection_image != blank -%}
+        {% if collection_image != blank %}
+          {% render 'responsive-image',
+            type: 'other',
+            image: collection_image,
+            image_alt: alt_text,
+            container: container,
+            column: column,
+            column_mobile: column_mobile,
+            padding: padding
+          %}
         {% else %}
-          role="link"
+          {% render 'responsive-image',
+            type: 'other',
+            image: collection_media,
+            image_alt: alt_text,
+            container: container,
+            column: column,
+            column_mobile: column_mobile,
+            padding: padding,
+            class: 'rounded'
+          %}
         {% endif %}
-        aria-label="{{- card_collection.title -}}"
-        style="--aspect-ratio: {{ ratio }};"
-      >
-        <div class="{% if content_position == 'overlay' %}overlay-linear {% endif %}inset-0 absolute z-2 rounded"></div>
-        {% assign collection_media = card_collection.featured_image %}
-        {%- if collection_media or collection_image != blank -%}
-          {% if collection_image != blank %}
-            {% render 'responsive-image',
-              type: 'other',
-              image: collection_image,
-              image_alt: alt_text,
-              container: container,
-              column: column,
-              column_mobile: column_mobile,
-              padding: padding
-            %}
-          {% else %}
-            {% render 'responsive-image',
-              type: 'other',
-              image: collection_media,
-              image_alt: alt_text,
-              container: container,
-              column: column,
-              column_mobile: column_mobile,
-              padding: padding,
-              class: 'rounded'
-            %}
-          {% endif %}
-        {%- else -%}
-          {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
-        {%- endif -%}
-      </a>
-    </div>
-    <div
-      class="collection-information flex gap-10 max-w-100 justify-{{ content_alignment }} text-{{ content_alignment }}{% if content_position == 'overlay' %} px-20 px-1025-35 pb-15 pb-1025-30 pt-15 z-2 w-full{% else %} mt-15{% endif %}"
-      {% if content_position == 'overlay' %}
-        style="--color-heading: {{ section_st.overlay_image_color }};--color-text: {{ section_st.overlay_image_color }}"
+      {%- else -%}
+        {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
+      {%- endif -%}
+    </a>
+  </div>
+  <div
+    class="collection-information flex gap-10 max-w-100 justify-{{ content_alignment }} text-{{ content_alignment }}{% if content_position == 'overlay' %} px-20 px-1025-35 pb-15 pb-1025-30 pt-15 z-2 w-full{% else %} mt-15{% endif %}"
+    {% if content_position == 'overlay' %}
+      style="--color-heading: {{ section_st.overlay_image_color }};--color-text: {{ section_st.overlay_image_color }}"
     {% endif %}
   >
     {%- if block_st.collection_title == blank -%}
@@ -125,6 +125,18 @@
           aria-label="{{ block_st.collection.title }}"
         >
           {{ block_st.collection.title }}
+        </a>
+      {%- elsif block_st.collection == blank and card_collection.title -%}
+        <a
+          class="heading-style border-animation {{ collection_title_size }}"
+          {% if card_collection.title == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ card_collection.url }}"
+          {% endif %}
+          aria-label="{{ card_collection.title }}"
+        >
+          {{- card_collection.title -}}
         </a>
       {%- else -%}
         <a
@@ -156,10 +168,16 @@
       </a>
     {%- endif -%}
     {%- if show_product_count -%}
-      <div class="product-count text-color fs-13 body_weight">
-        {%- assign pc = block_st.collection.products_count | default: 0 -%}
-        {{ pc }}
-      </div>
+      {% if card_collection.products_count %}
+        <div class="product-count text-color fs-13 body_weight">
+          {{ card_collection.products_count }}
+        </div>
+      {% else %}
+        <div class="product-count text-color fs-13 body_weight">
+          {%- assign pc = block_st.collection.products_count | default: 0 -%}
+          {{ pc }}
+        </div>
+      {% endif %}
     {%- endif -%}
   </div>
 </div>
