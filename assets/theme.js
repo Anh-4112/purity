@@ -2041,7 +2041,6 @@ class CollectionHover extends HTMLElement {
     this.imageHover.style.top = "-9999px";
 
     this.imageHover.style.transition = "none";
-    this.imageHover.style.display = "flex";
   }
 
   updateImageSize() {
