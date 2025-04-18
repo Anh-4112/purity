@@ -1,24 +1,18 @@
 {{ 'customer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'customer.js' | asset_url }}" defer="defer"></script>
 {%- liquid
   assign section_st = section.settings
-  if section_st.section_width == 'fix_width'
-    assign section_width = 'container'
-  elsif section_st.section_width == 'full_width'
-    assign section_width = 'full-width px-20'
-  else
-    assign section_width = 'fluid_container'
-  endif
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 <div
-  class="customer register section"
-  style="{{ style | strip | strip_newlines }}"
+  class="stretch_width customer register section flex column content-center w-full max-w-custom-all mx-auto"
+  style="{{ style | strip | strip_newlines }}--max-width: 56rem;--bs-gutter-x: 3rem;"
 >
-  <div class="{{ section_width }}">
-    <div class="section-header">
-      <h1 class="heading-title text-center">
+  <div class="w-full">
+    <div class="mb-60">
+      <h1 class="heading-title text-center mb-15">
         {{ 'customer.register.title' | t }}
       </h1>
       <div class="heading-description text-center">
@@ -28,12 +22,14 @@
     <div class="field">
       {%- form 'create_customer', novalidate: 'novalidate' -%}
         {%- if form.errors -%}
-          <div class="form__message error flex" tabindex="-1" autofocus>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <use href="#icon-error"></use>
-            </svg>
+          <div class="form__message error flex align-center gap-10 mb-10" tabindex="-1" autofocus>
+            <div class="flex content-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <use href="#icon-error"></use>
+              </svg>
+            </div>
             {%- for field in form.errors -%}
-              <ul>
+              <ul class="list-unstyled w-custom" style="--width: calc(100% - 24px)">
                 <li>
                   {%- if field == 'form' -%}
                     {{ form.errors.messages[field] }}
@@ -49,9 +45,9 @@
           </div>
         {%- endif -%}
         <div
-          class="field grid-cols"
+          class="field grid-cols mb-20"
         >
-          <div class="flex">
+          <div class="flex gap-20">
             <div class="field relative w-full flex wrap transition">
               <input
                 type="text"
@@ -61,7 +57,7 @@
                   value="{{ form.first_name }}"
                 {% endif %}
                 autocomplete="given-name"
-                placeholder="{{ 'customer.register.first_name' | t }}*"
+                placeholder="{{ 'customer.register.first_name' | t }} *"
                 class="w-full"
               >
               <label for="RegisterForm-FirstName" class="visually-hidden">
@@ -77,7 +73,7 @@
                   value="{{ form.last_name }}"
                 {% endif %}
                 autocomplete="family-name"
-                placeholder="{{ 'customer.register.last_name' | t }}*"
+                placeholder="{{ 'customer.register.last_name' | t }} *"
                 class="w-full"
               >
               <label for="RegisterForm-LastName" class="visually-hidden">
@@ -86,7 +82,7 @@
             </div>
           </div>
         </div>
-        <div class="field relative w-full flex wrap transition">
+        <div class="field relative w-full flex wrap transition {%- if form.errors contains 'email' -%} mb-10{% else %} mb-20{% endif %}">
           <input
             type="email"
             name="customer[email]"
@@ -98,12 +94,13 @@
             autocapitalize="off"
             autocomplete="email"
             aria-required="true"
-            {% if form.errors contains 'email' %}
+            {% if form.errors %}
               aria-invalid="true"
               aria-describedby="RegisterForm-email-error"
+              style="--color-border: #D0473E"
             {% endif %}
-            placeholder="{{ 'customer.register.email' | t }}*"
-            class="w-full"
+            placeholder="{{ 'customer.register.email' | t }} *"
+            class="w-full {% if form.errors %} border{% endif %}"
             required
           >
           <label for="RegisterForm-email" class="visually-hidden">
@@ -112,68 +109,68 @@
           </label>
         </div>
         {%- if form.errors contains 'email' -%}
-          <span id="RegisterForm-email-error" class="form__message">
+          <span id="RegisterForm-email-error" class="form__message error flex align-center gap-10 mb-10">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto">
               <use href="#icon-error"></use>
             </svg>
             {{ form.errors.translated_fields.email | capitalize }}
-            {{ form.errors.messages.email }}.
+            {{ form.errors.messages.email }}
           </span>
         {%- endif -%}
-        <div class="field relative w-full flex wrap transition">
-          <input
-            type="password"
-            name="customer[password]"
-            id="RegisterForm-password"
-            aria-required="true"
-            {% if form.errors contains 'password' %}
-              aria-invalid="true"
-              aria-describedby="RegisterForm-password-error"
-            {% endif %}
-            placeholder="{{ 'customer.register.password' | t }}*"
-            required
-            class="w-full"
-          >
-          <show-pass-word
-            class="show-pass-word transition absolute inline-flex right-0"
-            role="button"
-            tabindex="0"
-            aria-label="{{ 'customer.register.password' | t }}"
-            aria-pressed="false"
-          >
-            <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <use href="#icon-hide-password"></use>
-            </svg>
-            <svg class="icon-view hidden" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <use href="#icon-show-password"></use>
-            </svg>
-          </show-pass-word>
-          <label for="RegisterForm-password" class="visually-hidden">
-            {{ 'customer.register.password' | t }}
-            <span class="required">*</span>
-          </label>
+        <div class="field relative w-full flex wrap transition mb-10">
+          <div class="w-full relative">
+            <input
+              type="password"
+              name="customer[password]"
+              id="RegisterForm-password"
+              aria-required="true"
+              {% if form.errors contains 'password' %}
+                aria-invalid="true"
+                aria-describedby="RegisterForm-password-error"
+              {% endif %}
+              placeholder="{{ 'customer.register.password' | t }} *"
+              required
+              class="w-full"
+            >
+            <show-pass-word class="show-pass-word transition absolute inset-y-0 flex content-center right-25">
+              <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <use href="#icon-hide-password"></use>
+              </svg>
+              <svg class="icon-view hidden" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <use href="#icon-show-password"></use>
+              </svg>
+            </show-pass-word>
+            <label for="RegisterForm-password" class="visually-hidden">
+              {{ 'customer.register.password' | t }}
+              <span class="required">*</span>
+            </label>
+          </div>
         </div>
-        {%- if form.errors contains 'password' -%}
-          <span id="RegisterForm-password-error" class="form__message">
+        {% if form.errors contains 'password' %}
+          <div
+            id="RegisterForm-password-error"
+            class="error form__message fs-small inline-flex align-center gap-10 mb-10 w-full h-custom"
+            style="--height: 5.6rem;"
+          >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <use href="#icon-error"></use>
             </svg>
             {{ form.errors.translated_fields.password | capitalize }}
-            {{ form.errors.messages.password }}.
-          </span>
+            {{ form.errors.messages.password }}
+          </div>
         {%- endif -%}
-        <div class="mt-18 text-start">
-          <span class="required-field">{{ 'customer.account.required' | t }}</span>
+        <div class="mb-30 text-start lh-small">
+          <span class="required-field fs-small">{{ 'customer.account.required' | t }}</span>
         </div>
         <button class="btn btn-primary w-full relative product_submit_button product-form__submit word-wrap relative">
           <span class="hidden-on-load transition-short"> {{ 'customer.register.submit' | t }}</span>
           {%- render 'loader' -%}
         </button>
-        <div class="creat_new-account flex">
+        <div class="creat_new-account flex justify-center mt-30">
           <span class="me-5">{{ 'customer.login_page.have_account' | t }}</span>
           <a
             href="{{ routes.account_login_url }}"
-            class="heading-color"
+            class="heading-color underline"
             aria-label="{{ 'customer.login_page.sign_in' | t }}"
           >
             {{ 'customer.login_page.title' | t }}
@@ -185,7 +182,6 @@
 </div>
 <script type="module">
   import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
-  import '{{ "customer.js" | asset_url }}';
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form[action*="/account"]',
@@ -209,30 +205,6 @@
 {
   "name": "t:sections.main-register.name",
   "settings": [
-    {
-      "type": "header",
-      "content": "t:sections.all.general"
-    },
-    {
-      "type": "select",
-      "id": "section_width",
-      "options": [
-        {
-          "value": "fix_width",
-          "label": "t:sections.all.layout.fix_width"
-        },
-        {
-          "value": "stretch_width",
-          "label": "t:sections.all.layout.stretch_width"
-        },
-        {
-          "value": "full_width",
-          "label": "t:sections.all.layout.full_width"
-        }
-      ],
-      "default": "fix_width",
-      "label": "t:sections.all.layout.label"
-    },
     {
       "type": "header",
       "content": "t:sections.all.padding.section_padding_heading"

@@ -8,10 +8,6 @@
   if show_search_price
     assign show_search_price = false
   endif
-  assign search_page_articles = false
-  if predictive_search.resources.pages.size > 0 or predictive_search.resources.articles.size > 0
-    assign search_page_articles = true
-  endif
   assign limit = 5
 -%}
 {%- if predictive_search.performed -%}
@@ -73,7 +69,6 @@
                   disable_quickview: true,
                   disable_show_video: true,
                   disable_lazy_loading: true,
-                  sizes: sizes,
                   type: 'list'
                 %}
               {%- endfor -%}

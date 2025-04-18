@@ -11,7 +11,6 @@
   endif
 
   assign heading_size = section_st.heading_size
-  assign text_alignment = section_st.text_alignment
   assign items_per_row = section_st.items_per_row
   assign show_pagination = section_st.show_pagination
   assign show_navigation = section_st.show_navigation
@@ -25,25 +24,16 @@
     assign header_size = 'h1'
   endif
 
-  assign column_gap_slide = 0
-  if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-  elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-  elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
-  endif
 -%}
 {%- capture style -%}
-      --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
-      {% if heading_size == 'large' %}--font-size: 40;{% endif %}
+      --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--max-width: {{ section_st.content_max_width }}%;
 {%- endcapture -%}
 {% style %}
   .w-110 {
     width: 110px;
   }
-  testimonials-thumb .swiper-slide {
-    width: 200px;
+  testimonials-thumb .swiper-slide:not(.swiper-slide-thumb-active) {
+    opacity: 0.4;
   }
 {% endstyle %}
 <div
@@ -51,12 +41,10 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
-      <div
-        class="section-header text-{{ text_alignment }}"
-      >
+    {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
+      <div class="section-header section-header__in-section d-block text-{{ section_st.text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}">
         {%- if section_st.subheading != blank -%}
-          <div class="section-subheading subheading_weight">
+          <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight fs-big-2">
             {{ section_st.subheading }}
           </div>
         {%- endif -%}
@@ -66,7 +54,7 @@
           </h2>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description">
+          <div class="section-description mt-15">
             {{ section_st.description }}
           </div>
         {%- endif -%}
@@ -75,7 +63,7 @@
     {%- if section.blocks.size > 0 -%}
       <testimonial-slide
         id="swiper-{{ section.id }}"
-        class="swiper"
+        class="swiper mb-40 mb-md-60 max-w-custom"
         data-section-id="{{ section.id }}"
         data-autoplay="{{ slide_auto_change }}"
         data-autoplay-speed="{{ change_slide_every | times: 1000 }}"
@@ -91,14 +79,14 @@
         <div class="swiper-wrapper">
           {%- for block in section.blocks -%}
             {% assign block_st = block.settings %}
-            <div class="swiper-slide testimonials-item">
+            <div class="swiper-slide testimonials-item flex column justify-center">
               {% if section_st.show_icon_quote %}
-                <div class="icon-quote">
+                <div class="icon-quote inline-flex justify-center mb-30">
                   {% render 'icon-quote' | custom_width: 56 %}
                 </div>
               {% endif %}
               {% if block_st.testimonial_quote %}
-                <div class="testimonials-quote">
+                <div class="testimonials-quote inline-flex justify-center text-center h4">
                   {{ block_st.testimonial_quote }}
                 </div>
               {% endif %}
@@ -111,7 +99,7 @@
           id="testimonials-thumb-swiper-{{ section.id }}"
           class="swiper"
         >
-          <div class="swiper-wrapper">
+          <div class="swiper-wrapper justify-center ms-30">
             {%- for block in section.blocks -%}
               {%- liquid
                 assign block_st = block.settings
@@ -121,11 +109,11 @@
                   assign alt_text = 'general.image.image_alt_default' | t
                 endif
               -%}
-              <div class="swiper-slide">
-                <div class="testimonials-thumb-item">
+              <div class="swiper-slide h-custom w-custom" style="--width: 18rem;--height: 6rem;">
+                <div class="testimonials-thumb-item flex content-center h-full">
                   {% if block_st.testimonial_image != blank %}
                     {% render 'responsive-image',
-                      type: 'other',
+                      type: 'banner',
                       image: block_st.testimonial_image,
                       image_alt: alt_text,
                       container: section_width,
@@ -149,7 +137,7 @@
   "name": "t:sections.testimonials.name",
   "tag": "section",
   "class": "section-testimonials",
-  "max_blocks": 6,
+  "max_blocks": 4,
   "disabled_on": {
     "groups": ["header", "footer", "custom.overlay"]
   },
@@ -191,13 +179,15 @@
     },
     {
       "type": "text",
-      "id": "title",
-      "label": "t:sections.all.content_setting.heading.label"
+      "id": "subheading",
+      "label": "t:sections.all.content_setting.subheading.label",
+      "default": "Subheading"
     },
     {
       "type": "text",
-      "id": "subheading",
-      "label": "t:sections.all.content_setting.subheading.label"
+      "id": "title",
+      "label": "t:sections.all.content_setting.heading.label",
+      "default": "Heading"
     },
     {
       "type": "richtext",
@@ -247,6 +237,16 @@
     {
       "type": "header",
       "content": "t:sections.testimonials.settings.header"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 40,
+      "max": 100,
+      "unit": "%",
+      "default": 70,
+      "label": "t:sections.rich-text.settings.max_width.label",
+      "info": "t:sections.rich-text.settings.max_width.info"
     },
     {
       "type": "checkbox",
@@ -314,7 +314,7 @@
       "step": 1,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
-      "default": 0
+      "default": 48
     },
     {
       "type": "range",

@@ -846,6 +846,7 @@ class RecentlyViewedProducts extends HTMLElement {
         ) {
           this.innerHTML = recentlyViewedProducts.innerHTML;
         }
+        new LazyLoader(".image-lazy-load");
       })
       .finally(() => {})
       .catch((e) => {
@@ -1339,6 +1340,21 @@ class VariantInput extends HTMLElement {
     } else {
       queryParsed = parsedHTML.getElementById(`Product-${sectionId}`);
       queryDocument = document.getElementById(`Product-${sectionId}`);
+      const selectedVariant = queryParsed.querySelector(
+        ".productVariantSelected"
+      )?.textContent;
+      if (selectedVariant) {
+        const variant = JSON.parse(selectedVariant);
+        if (variant.id) {
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.set("variant", variant.id);
+          window.history.replaceState(
+            { path: newUrl.toString() },
+            "",
+            newUrl.toString()
+          );
+        }
+      }
     }
     const updateContent = (blockClass) => {
       const source = queryParsed.querySelector(`.${blockClass}`);
@@ -1979,370 +1995,6 @@ class CartUpSellProduct extends SlideSection {
 }
 customElements.define("cart-upsell-product", CartUpSellProduct);
 
-class ProductTabs extends HTMLElement {
-  constructor() {
-    super();
-    this._selectedTab = null;
-    this._tabs = null;
-    this._tabContents = null;
-    this._openAccordions = new Set();
-    this._dot = this.querySelector(".product-tabs__dot");
-    this._rangeSlider = this.querySelector("range-slider");
-    this._sizeDot = this.dataset.sizeDot;
-
-    if (Shopify && Shopify.designMode) {
-      this.addEventListener("shopify:block:select", (event) => {
-        const targetBlock = event.target.closest("[data-block-id]");
-        if (targetBlock) {
-          this.setTab(targetBlock.dataset.blockId, true);
-        }
-      });
-    }
-  }
-
-  static get observedAttributes() {
-    return ["selected-tab"];
-  }
-
-  get selectedTab() {
-    return this.getAttribute("selected-tab") || "";
-  }
-
-  set selectedTab(blockId) {
-    if (blockId && this.getAttribute("selected-tab") !== blockId) {
-      this.setAttribute("selected-tab", blockId);
-    }
-  }
-
-  get tabs() {
-    return (
-      this._tabs ||
-      Array.from(this.querySelectorAll(".product-tabs__header-item"))
-    );
-  }
-
-  get tabContents() {
-    return (
-      this._tabContents ||
-      Array.from(this.querySelectorAll(".product-tabs__content-item"))
-    );
-  }
-
-  connectedCallback() {
-    setTimeout(() => this.init(), 10);
-  }
-
-  init() {
-    this._tabs = Array.from(
-      this.querySelectorAll(".product-tabs__header-item")
-    );
-    this._tabContents = Array.from(
-      this.querySelectorAll(".product-tabs__content-item")
-    );
-    if (!this._tabs.length || !this._tabContents.length) return;
-    const initialTab = this._tabs[0];
-    this.selectedTab = initialTab.dataset.blockId;
-    this.setupEventListeners();
-    this.updateTabDisplay(this.selectedTab, false);
-  }
-
-  updateDotPosition(activeTab, animate = true) {
-    if (!this._dot || !activeTab || !this._rangeSlider) return;
-
-    let targetTab = activeTab;
-    if (!activeTab.classList.contains("product-tabs__header-item-js")) {
-      const jsTab =
-        activeTab.querySelector(".product-tabs__header-item-js.active") ||
-        this.querySelector(".product-tabs__header-item-js.active");
-      if (jsTab) {
-        targetTab = jsTab;
-      }
-    }
-
-    const dotWidth = parseInt(this._sizeDot || 26, 10);
-    const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
-    const tabRect = targetTab.getBoundingClientRect();
-    const tabCenter = tabRect.left + tabRect.width / 2;
-    const relativeCenterX = tabCenter - rangeSliderRect.left;
-    const adjustedPosition = relativeCenterX - dotWidth / 2;
-
-    if (animate) {
-      if (typeof Motion !== "undefined") {
-        Motion.animate(
-          this._dot,
-          { left: `${adjustedPosition}px` },
-          { duration: 0.2, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
-        );
-      } else {
-        this._dot.style.left = `${adjustedPosition}px`;
-      }
-    } else {
-      this._dot.style.transition = "none";
-      this._dot.style.left = `${adjustedPosition}px`;
-      void this._dot.offsetWidth;
-      this._dot.style.transition = "left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)";
-    }
-  }
-
-  handleResize() {
-    if (!this._rangeSlider) return;
-    const activeTab = this.querySelector(".product-tabs__header-item.active");
-    if (activeTab) {
-      this.updateDotPosition(activeTab, false);
-    }
-  }
-
-  setupEventListeners() {
-    this._tabs.forEach((tab) => {
-      tab.addEventListener("click", (event) => {
-        if (event.target.closest(".product-tabs__header-description")) {
-          return;
-        }
-        const description = tab.querySelector(
-          ".product-tabs__header-description"
-        );
-        if (
-          tab.classList.contains("active") &&
-          description &&
-          description.textContent.trim().length > 0
-        ) {
-          this.toggleAccordion(tab);
-        } else {
-          const blockId = tab.dataset.blockId;
-          if (blockId !== this.selectedTab) {
-            this.selectedTab = blockId;
-            if (this._rangeSlider) {
-              this.updateDotPosition(tab);
-            }
-          }
-        }
-      });
-      tab.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          const description = tab.querySelector(
-            ".product-tabs__header-description"
-          );
-          if (
-            tab.classList.contains("active") &&
-            description &&
-            description.textContent.trim().length > 0
-          ) {
-            this.toggleAccordion(tab);
-          } else {
-            const blockId = tab.dataset.blockId;
-            if (blockId !== this.selectedTab) {
-              this.selectedTab = blockId;
-              if (this._rangeSlider) {
-                this.updateDotPosition(tab);
-              }
-            }
-          }
-        }
-      });
-    });
-  }
-
-  closeAllAccordions() {
-    this._tabs.forEach((tab) => {
-      const description = tab.querySelector(
-        ".product-tabs__header-description"
-      );
-      const mobileDescription = this.querySelector(
-        ".product-tabs__header-description-mobile"
-      );
-      if (description && tab.classList.contains("accordion-open")) {
-        tab.classList.remove("accordion-open");
-        description.classList.remove("is-open");
-        if (typeof Motion !== "undefined") {
-          Motion.animate(
-            description,
-            {
-              opacity: [1, 0],
-              height: 0,
-            },
-            { duration: 0.2 }
-          );
-
-          if (mobileDescription) {
-            Motion.animate(
-              mobileDescription,
-              {
-                opacity: [1, 0],
-              },
-              {
-                duration: 0.2,
-              }
-            );
-          }
-        } else {
-          description.style.height = "0";
-        }
-      }
-    });
-    this._openAccordions.clear();
-  }
-
-  toggleAccordion(tab, forceOpen = false) {
-    const description = tab.querySelector(".product-tabs__header-description");
-    if (!description || description.textContent.trim().length === 0) return;
-
-    const isOpen = tab.classList.contains("accordion-open");
-    const mobileDescription = this.querySelector(
-      ".product-tabs__header-description-mobile"
-    );
-
-    if (!isOpen || forceOpen) {
-      tab.classList.add("accordion-open");
-      description.classList.add("is-open");
-      if (mobileDescription) {
-        mobileDescription.innerHTML = description.innerHTML;
-      }
-      if (typeof Motion !== "undefined") {
-        Motion.animate(
-          description,
-          {
-            opacity: [0, 1],
-            height: "auto",
-          },
-          { duration: 0.2 }
-        );
-        if (mobileDescription) {
-          Motion.animate(
-            mobileDescription,
-            {
-              opacity: [0, 1],
-            },
-            {
-              duration: 0.2,
-            }
-          );
-        }
-      } else {
-        description.style.height = "auto";
-      }
-      this._openAccordions.add(tab.dataset.blockId);
-    }
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === "selected-tab" && oldValue !== newValue && oldValue !== null) {
-      this.updateTabDisplay(newValue, true);
-    }
-  }
-
-  updateTabDisplay(blockId, animate = true) {
-    if (this._isAnimating) return;
-    this._isAnimating = true;
-    if (animate) {
-      this.closeAllAccordions();
-    }
-    let activeTab = null;
-    this.tabs.forEach((tab) => {
-      const isSelected = tab.dataset.blockId === blockId;
-      tab.classList.toggle("selected", isSelected);
-      tab.classList.toggle("active", isSelected);
-      tab.setAttribute("aria-selected", isSelected ? "true" : "false");
-
-      if (isSelected) {
-        activeTab = tab;
-        const description = tab.querySelector(
-          ".product-tabs__header-description"
-        );
-        if (description && description.textContent.trim().length > 0) {
-          this.toggleAccordion(tab, true);
-        }
-      }
-    });
-
-    if (this._rangeSlider && activeTab) {
-      this.updateDotPosition(activeTab, animate);
-    }
-
-    const oldContent = this.querySelector(".product-tabs__content-item.active");
-    const newContent = this.querySelector(
-      `.product-tabs__content-item[data-block-id="${blockId}"]`
-    );
-
-    if (!newContent) {
-      this._isAnimating = false;
-      return;
-    }
-
-    if (animate && typeof Motion !== "undefined" && oldContent !== newContent) {
-      this.transition(oldContent, newContent).finally(() => {
-        this._isAnimating = false;
-      });
-    } else {
-      this.tabContents.forEach((content) => {
-        content.classList.remove("active");
-        content.classList.add("hidden");
-      });
-
-      newContent.classList.add("active");
-      newContent.classList.remove("hidden");
-      this._isAnimating = false;
-    }
-
-    this.dispatchEvent(
-      new CustomEvent("tabChanged", {
-        detail: { blockId },
-        bubbles: true,
-      })
-    );
-  }
-
-  async transition(fromPanel, toPanel) {
-    if (!fromPanel || !toPanel) return;
-    if (fromPanel) {
-      try {
-        await Motion.animate(
-          fromPanel,
-          {
-            opacity: [1, 0],
-            y: [0, 15],
-          },
-          {
-            duration: 0.3,
-          }
-        ).finished;
-      } catch (e) {
-        console.error("Animation error:", e);
-      }
-      fromPanel.classList.remove("active");
-      fromPanel.classList.add("hidden");
-    }
-    toPanel.classList.add("active");
-    toPanel.classList.remove("hidden");
-    try {
-      Motion.animate(
-        toPanel,
-        {
-          opacity: [0, 1],
-          y: [15, 0],
-        },
-        {
-          duration: 0.3,
-        }
-      );
-    } catch (e) {
-      console.error("Animation error:", e);
-    }
-  }
-
-  disconnectedCallback() {
-    if (this._tabs) {
-      this._tabs.forEach((tab) => {
-        tab.removeEventListener("click", null);
-      });
-    }
-    if (this._rangeSlider) {
-      window.removeEventListener("resize", this.handleResize);
-    }
-  }
-}
-customElements.define("product-tabs", ProductTabs);
-
 class CollectionHover extends HTMLElement {
   constructor() {
     super();
@@ -2646,7 +2298,72 @@ class NavBar extends HTMLElement {
   }
 }
 customElements.define("mobile-navigation-bar", NavBar);
-
+var BlsCustomer = (function () {
+  return {
+    init: function () {
+      this.toggleForm(), this.deleteAddresses(), this.addAddresses();
+    },
+    toggleForm: function () {
+      const e = document.querySelector('.add-address');
+      const c = document.querySelector('.cancel-add');
+      if (e !== null && c !== null) {
+        e.addEventListener('click', () => {
+          if (e.getAttribute('aria-expanded') === 'false') {
+            e.setAttribute('aria-expanded', 'true');
+            e.closest('.bls-customer__address').classList.add('active');
+          } else {
+            e.setAttribute('aria-expanded', 'false');
+            e.closest('.bls-customer__address').classList.remove('active');
+          }
+        });
+        c.addEventListener('click', () => {
+          if (
+            c.closest('.bls-customer__address').classList.contains('active')
+          ) {
+            e.closest('.bls-customer__address').classList.remove('active');
+            e.closest('.add-address').setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+    },
+    deleteAddresses: function () {
+      const btn = document.querySelectorAll('.address-delete');
+      btn.forEach((e) => {
+        e.addEventListener('click', () => {
+          const id = e?.dataset.formId;
+          const msg = e?.dataset.confirmMessage;
+          if (confirm(msg || 'Are you sure you wish to delete this address?')) {
+            Shopify.postLink('/account/addresses/' + id, {
+              parameters: { _method: 'delete' },
+            });
+          }
+        });
+      });
+    },
+    addAddresses: function () {
+      if (Shopify && document.getElementById('AddressCountryNew')) {
+        new Shopify.CountryProvinceSelector(
+          'AddressCountryNew',
+          'AddressProvinceNew',
+          {
+            hideElement: 'AddressProvinceNewContainer',
+          }
+        );
+      }
+      const edit = document.querySelectorAll('.edit-country-option');
+      edit.forEach((e) => {
+        const formId = e?.dataset.formId;
+        const editCountry = 'AddressCountry_' + formId;
+        const editProvince = 'AddressProvince_' + formId;
+        const editContainer = 'AddressProvinceContainer_' + formId;
+        new Shopify.CountryProvinceSelector(editCountry, editProvince, {
+          hideElement: editContainer,
+        });
+      });
+    },
+  };
+})();
+BlsCustomer.init();
 class ImageComparison extends HTMLElement {
   constructor() {
     super();

@@ -41,10 +41,6 @@ th {
   border: 1px solid var(--color-border);
   vertical-align: middle;
 }
-td,
-th {
-  padding: 11px 12px;
-}
 blockquote {
   background-color: var(--accent-color-second);
   font-size: clamp(1.6rem, 2.5vw, 2rem);
@@ -161,8 +157,8 @@ blockquote {
 .w-50 {
   width: 5rem;
 }
-.h-auto {
-  height: auto;
+.max-w-100 {
+  max-width: 100%;
 }
 .h-0 {
   height: 0;
@@ -413,9 +409,6 @@ blockquote {
 .mt-25 {
   margin-top: 2.5rem;
 }
-.mb-8 {
-  margin-bottom: 8px;
-}
 .mb-13 {
   margin-bottom: 1.3rem;
 }
@@ -499,9 +492,6 @@ blockquote {
 }
 .mb-50 {
   margin-bottom: 5rem;
-}
-.mb-60 {
-  margin-bottom: clamp(4rem, 4.5vw, 6rem);
 }
 .ms-5 {
   margin-inline-start: 5px;
@@ -678,9 +668,6 @@ blockquote {
 }
 .top-rounded {
   border-radius: var(--img-rounded) var(--img-rounded) 0 0;
-}
-.lh-1 {
-  line-height: 1;
 }
 .lh-small {
   line-height: 1.5;
@@ -1030,13 +1017,6 @@ modal-popup :is(.modal-overlay) {
   }
   .justify-md-end {
     justify-content: flex-end;
-  }
-  .gap-md-20 {
-    gap: 2rem;
-  }
-  :where(.gap-md-30) {
-    --gap: 3rem;
-    gap: var(--gap);
   }
   .justify-content-inherit {
     justify-content: inherit;
@@ -1801,13 +1781,14 @@ modal-popup :is(.modal-overlay) {
 .error {
   padding: var(--mes-padding-block, 1.2rem) 2rem;
   position: relative;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   color: var(--color);
   background-color: var(--background);
   border: 1px solid var(--border-color);
   border-radius: var(--btn-radius);
   gap: 0.5rem;
   font-weight: var(--subheading_weight, 500);
+  line-height: normal;
 }
 .success,
 .message-success {
@@ -1819,7 +1800,7 @@ modal-popup :is(.modal-overlay) {
 .error,
 .message-error {
   --color: #cd3b32;
-  --border-color: #eac9c9;
+  --border-color: #cd3b32;
   --background: #fcf3f3;
   --color-link: var(--color-error);
 }
