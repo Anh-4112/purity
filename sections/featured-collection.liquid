@@ -48,10 +48,10 @@
   endif
 -%}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40; --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;{% endif %}
 {%- endcapture -%}
 {%- capture col_style -%}
-  --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}; --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--row-gap: 3rem;
+  --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }};--row-gap: 3rem;
 {%- endcapture -%}
 <div
   class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
