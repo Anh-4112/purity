@@ -38,7 +38,7 @@ export class FormValidator {
         input.classList.remove(this.options.errorClass);
 
         if (errorElement.textContent === "") {
-          this.removeErrorElement(errorElement); 
+          this.removeErrorElement(errorElement);
         }
       }
     }
@@ -47,13 +47,13 @@ export class FormValidator {
   }
 
   getOrCreateErrorEl(input) {
-    const parentElement = input.closest('.field.relative');
+    const parentElement = input.closest(".field.relative");
 
-    let errorEl = parentElement.querySelector('.form-error-message');
+    let errorEl = parentElement.querySelector(".form-error-message");
     if (!errorEl) {
       errorEl = document.createElement("div");
-      errorEl.className = "form-error-message warning mt-10"; 
-      parentElement.appendChild(errorEl); 
+      errorEl.className = "form-error-message warning mt-10";
+      parentElement.appendChild(errorEl);
     }
 
     return errorEl;
@@ -71,29 +71,31 @@ export function setupFormValidation({
   fields,
   buttonSelector = 'button[type="submit"]',
 }) {
-  const form = document.querySelector(formSelector);
-  if (!form) return;
+  const forms = document.querySelectorAll(formSelector);
+  if (!forms.length) return;
 
-  const validator = new FormValidator(form, fields, {
-    errorClass: "input-error",
-  });
+  forms.forEach((form) => {
+    const validator = new FormValidator(form, fields, {
+      errorClass: "input-error",
+    });
 
-  form.addEventListener("submit", (e) => {
-    const isValid = validator.validate();
-    if (!isValid) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      return false;
-    }
+    form.addEventListener("submit", (e) => {
+      const isValid = validator.validate();
+      if (!isValid) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return false;
+      }
 
-    const submitButton = e.submitter || form.querySelector(buttonSelector);
-    const spinner = submitButton?.querySelector(".icon-load");
-    const text = submitButton?.querySelector(
-      ".hidden-on-load.transition-short"
-    );
+      const submitButton = e.submitter || form.querySelector(buttonSelector);
+      const spinner = submitButton?.querySelector(".icon-load");
+      const text = submitButton?.querySelector(
+        ".hidden-on-load.transition-short"
+      );
 
-    submitButton?.classList.add("loading");
-    spinner?.classList.remove("opacity-0", "pointer-none");
-    text?.classList.add("opacity-0");
+      submitButton?.classList.add("loading");
+      spinner?.classList.remove("opacity-0", "pointer-none");
+      text?.classList.add("opacity-0");
+    });
   });
 }

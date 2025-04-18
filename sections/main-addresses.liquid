@@ -7,6 +7,7 @@
   else
     assign section_width = 'fluid_container'
   endif
+  assign edit_address_id = 'EditAddressForm-' | append: section.id
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -259,7 +260,12 @@
                     <span class="default">{{ 'customer.addresses.default' | t }}</span>
                   {% endif %}
                 </h3>
-                {% form 'customer_address', address, id: 'Editaddress_form', novalidate: 'novalidate' %}
+                {% form 'customer_address',
+                  address,
+                  id: edit_address_id,
+                  novalidate: 'novalidate',
+                  class: 'edit_addressform'
+                %}
                   <div class="customer-form__edit-wrapper">
                     <div class="address-form my-3 bls-customer-form__edit">
                       <div class="field relative form-group mb-15 flex column">
@@ -441,6 +447,7 @@
   }
 </style>
 <script type="module">
+  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
   Shopify.CustomerAddress = {
     toggleForm: function (id) {
       var edit = document.getElementById('EditAddress_' + id);
@@ -449,7 +456,6 @@
       return false;
     },
   };
-  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form#Newaddress_form',
@@ -463,7 +469,7 @@
       },
     });
     setupFormValidation({
-      formSelector: 'form#Editaddress_form',
+      formSelector: 'form.edit_addressform',
       fields: {
         'address[first_name]': (value) => (!value ? '{{ 'customer.validate.first_name' | t }}' : ''),
         'address[last_name]': (value) => (!value ? '{{ 'customer.validate.last_name' | t }}' : ''),
