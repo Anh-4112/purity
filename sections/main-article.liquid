@@ -269,13 +269,22 @@
                   assign aspect_ratio = '4/3'
               endcase
             %}
-            <div {{ block.shopify_attributes }} class="blog-post-related py-60 mt-20">
+            <div
+              {{ block.shopify_attributes }}
+              class="blog-post-related py-60 mt-20 bg-custom"
+              style="--bg-color-custom: {{ block_st.background_color }};"
+            >
               <div class="border-0">
                 <div class="relate__header text-center mb-40">
                   {%- if block_st.related_heading != blank -%}
                     <h2 class="relate__heading m-0">
                       {{ block_st.related_heading }}
                     </h2>
+                  {%- endif -%}
+                  {%- if block_st.related_description != blank -%}
+                    <div class="relate__description">
+                      {{ block_st.related_description }}
+                    </div>
                   {%- endif -%}
                 </div>
                 <div class="blog-posts-main">
@@ -284,7 +293,7 @@
                       assign current_id = article.id
                     -%}
                     <slide-section
-                      data-desktop="2"
+                      data-desktop="3"
                       data-tablet="2"
                       data-loop="true"
                       data-autoplay="false"
@@ -433,7 +442,8 @@
                     {% endif %}
                   >
                     <div
-                      class="article-template__comment-fields field relative w-full flex column flex-sm-row gap-20 mb-20">
+                      class="article-template__comment-fields field relative w-full flex column flex-sm-row gap-20 mb-20"
+                    >
                       <div class="field relative field--with-error flex-1">
                         <input
                           type="text"
@@ -779,6 +789,17 @@
           "id": "related_heading",
           "label": "t:sections.all.content_setting.heading.label",
           "default": "Related posts"
+        },
+        {
+          "type": "richtext",
+          "id": "related_description",
+          "label": "t:sections.all.content_setting.description.label"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "t:sections.image-with-text.settings.background_color",
+          "default": "#D0473E"
         },
         {
           "type": "select",
