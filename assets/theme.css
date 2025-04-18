@@ -161,9 +161,6 @@ blockquote {
 .w-50 {
   width: 5rem;
 }
-.max-w-100 {
-  max-width: 100%;
-}
 .h-auto {
   height: auto;
 }
@@ -494,9 +491,6 @@ blockquote {
 .mb-22 {
   margin-bottom: 2.2rem;
 }
-.mb-20 {
-  margin-bottom: 2rem;
-}
 .mb-23 {
   margin-bottom: 2.3rem;
 }
@@ -733,68 +727,6 @@ blockquote {
 }
 .open-modal {
   overflow: hidden;
-}
-:where(.modal-inner:not(.draw-mb)) {
-  transform: translateY(100%);
-  -webkit-transform: translateY(100%);
-  will-change: transform;
-  bottom: 0;
-  max-height: calc(100vh - 60px);
-  top: auto;
-  --transition: 0.3s;
-}
-:where(.drawer-left-mb) {
-  transform: translateX(-100%);
-}
-.drawer-right-mb {
-  transform: translateX(100%);
-}
-.drawer-bottom {
-  transform: translateY(100%);
-}
-.drawer {
-  --delay: 0.05s;
-}
-@media (min-width: 576px) {
-  .modal-inner,
-  .draw-mb {
-    max-width: var(--drawer-width, 48rem);
-  }
-  :where(.rounded-start, .draw-mb:not(.drawer-left)) {
-    border-top-left-radius: var(--img-rounded);
-    border-bottom-left-radius: var(--img-rounded);
-  }
-  .drawer-left {
-    border-top-right-radius: var(--img-rounded);
-    border-bottom-right-radius: var(--img-rounded);
-  }
-  menu-drawer .modal-inner {
-    overflow-x: hidden;
-  }
-}
-@media (min-width: 1025px) {
-  .modal-inner {
-    transform: translateX(var(--slide-out, -100%)) translateY(0);
-    -webkit-transform: translateX(var(--slide-out, -100%)) translateY(0);
-    top: 0;
-    max-height: 100vh;
-  }
-  :where(.drawer-left) {
-    --slide-out: -100%;
-    border-top-right-radius: var(--img-rounded);
-    border-bottom-right-radius: var(--img-rounded);
-  }
-  .drawer-right {
-    --slide-out: 100%;
-    border-top-left-radius: var(--img-rounded);
-    border-bottom-left-radius: var(--img-rounded);
-  }
-  .drawer-top {
-    transform: translateX(0) translateY(-100%);
-    -webkit-transform: translateX(0) translateY(-100%);
-    max-width: unset;
-    border-radius: 0;
-  }
 }
 @media (max-width: 1024.89px) {
   .btn-close-model {
@@ -1935,6 +1867,9 @@ modal-popup :is(.modal-overlay) {
   transform: translate(-50%, -50%) rotate(90deg);
 }
 @media screen and (min-width: 1025px) {
+  .rounded-1025-0 {
+    border-radius: 0;
+  }
   .rounded-1025-left,
   .rtl .rounded-1025-right {
     border-top-left-radius: var(--img-rounded);
@@ -2085,9 +2020,6 @@ cart-drawer.active .progress {
   mini-cart-recommendations .card-product-price {
     justify-content: center;
     line-height: normal;
-  }
-  cart-drawer .modal-inner {
-    border-radius: 0;
   }
 }
 html:not(.open-nav, .open-canvas) mobile-navigation-bar {

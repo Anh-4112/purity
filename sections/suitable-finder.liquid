@@ -55,38 +55,29 @@
 {%- capture style -%} --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}--image-collection-width: {{ image_collection_width }}px;
 {%- endcapture -%}
 {% style %}
-  range-slider{
-    background: var(--background-gradient);
-  }
-  range-slider span{
+  range-slider span {
     position: absolute;
-    width: {{ size_dot_range_slider }}px;
-    height: {{ size_dot_range_slider }}px;
-    background: white;
-    border-radius: 50%;
     top: 50%;
     transform: translateY(-50%);
     left: var(--progress-width);
   }
-  .product-tabs__header-image,
-  .product-tabs__header-item.swiper-slide{
-    max-width: 100%;
-    width: var(--image-collection-width);
-  }
   @media screen and (max-width: 767.98px) {
-    .product-tabs__header-content{
+    .product-tabs__header-content {
       max-width: 100%;
       width: 100%;
       justify-content: space-between;
       gap: 12px;
     }
-    .overflow-hidden-mobile{
-      overflow: hidden;
+    .tab-image {
+      opacity: 0.5;
+    }
+    .tab-image.active {
+      opacity: 1;
     }
   }
 {% endstyle %}
 <div
-  class="section color-{{ section_st.color_scheme }} gradient {% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %} overflow-hidden-mobile"
+  class="section color-{{ section_st.color_scheme }} gradient {% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %} overflow-hidden-mb"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -114,9 +105,9 @@
     <product-tabs
       data-size-dot="{{ size_dot_range_slider }}"
     >
-      <div class="product-tabs__header flex column align-center type-{{ section_st.media_type }} mb-30 mb-md-40">
+      <div class="product-tabs__header flex column align-center type-{{ section_st.media_type }} mb-40 mb-md-50">
         <slide-section
-          class="product-tabs__header-image-mobile swiper hidden-md reveal_on_scroll"
+          class="product-tabs__header-image-mobile swiper hidden-md reveal_on_scroll mb-20"
           data-spacing="30"
           data-free-mode="true"
           style="
@@ -140,23 +131,28 @@
                 else
                   assign alt_text = 'sections.collection_list.sample_name' | t
                 endif
-
                 assign aspect_ratio = '2'
+                assign class = 'rounded'
                 case section_st.media_type
                   when 'rounded'
                     assign aspect_ratio = '1/1'
+                    assign class = 'rounded-50'
                   when 'oval'
                     assign aspect_ratio = '2'
                   else
-                    assign aspect_ratio = 'image.aspect_ratio'
+                    assign aspect_ratio = image.aspect_ratio
                 endcase
               -%}
               <div
-                class="product-tabs__header-item flex column content-center pointer swiper-slide"
+                class="product-tabs__header-item tab-image transition w-custom max-w-100 flex column content-center pointer swiper-slide"
+                style="--width: var(--image-collection-width);"
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
               >
-                <div class="product-tabs__header-image" style="--aspect-ratio: {{ aspect_ratio }}">
+                <div
+                  class="product-tabs__header-image w-full"
+                  style="--aspect-ratio: {{ aspect_ratio }};{% if section_st.media_type == 'oval' %}--img-rounded: 50px;{% endif %}"
+                >
                   {%- if image != blank -%}
                     {% render 'responsive-image',
                       type: 'other',
@@ -165,17 +161,21 @@
                       container: section_width,
                       column: items_per_row,
                       column_mobile: section_st.items_per_row_mobile,
-                      padding: column_gap_slide
+                      padding: column_gap_slide,
+                      class: class
                     %}
                   {%- else -%}
-                    {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
+                    {% render 'placeholder-render',
+                      type: 'collection',
+                      class: 'img-placeholder h-full w-full rounded'
+                    %}
                   {%- endif -%}
                 </div>
               </div>
             {%- endfor -%}
           </div>
         </slide-section>
-        <div class="product-tabs__header-content flex gap-30 mb-20">
+        <div class="product-tabs__header-content flex gap-30 mb-30">
           {%- for block in section.blocks -%}
             {%- liquid
               assign block_st = block.settings
@@ -212,8 +212,8 @@
                 {{ block.shopify_attributes }}
               >
                 <div
-                  class="product-tabs__header-image hidden-mobile mb-10"
-                  style="--aspect-ratio: {{ aspect_ratio }};{% if section_st.media_type == 'oval' %}--img-rounded: 50px;{% endif %}"
+                  class="product-tabs__header-image hidden-mobile mb-10 w-custom max-w-100"
+                  style="--aspect-ratio: {{ aspect_ratio }};{% if section_st.media_type == 'oval' %}--img-rounded: 50px;{% endif %}; --width: var(--image-collection-width);"
                 >
                   {%- if image != blank -%}
                     {% render 'responsive-image',
@@ -233,7 +233,7 @@
                     %}
                   {%- endif -%}
                 </div>
-                <div class="product-tabs__header-title text-wrap">
+                <div class="product-tabs__header-title word-break heading-color text-center">
                   {{ collection_title }}
                 </div>
               </div>
@@ -242,10 +242,14 @@
         </div>
         {%- if section_st.show_range_slider -%}
           <range-slider
-            class="relative w-full max-w-custom h-custom btn-radius block"
-            style="--background-gradient: {{ section_st.range_slider_background }};--progress-width: {{ space_left }}px;--width-range-slider: {{ width_range_slider }}px;--max-width: var(--width-range-slider);--height: 5px;"
+            class="relative w-full max-w-custom block"
+            style="--bg-color-custom: {{ section_st.range_slider_background }};--progress-width: {{ space_left }}px;--width-range-slider: {{ width_range_slider }}px;--max-width: var(--width-range-slider);--height: 4px;"
           >
-            <span class="product-tabs__dot">
+            <div class="bg-custom overflow-hidden h-custom btn-rounded"></div>
+            <span
+              class="product-tabs__dot pointer absolute w-custom h-custom"
+              style="--width: 2.6rem; --height: 2.6rem"
+            >
               <svg width="26" height="26" fill="none">
                 <circle cx="13" cy="13" r="11.5" fill="#000" stroke="#fff" stroke-width="3"/><circle cx="13" cy="13" r="3" fill="#fff"/>
               </svg>
@@ -260,7 +264,7 @@
         -%}
         {%- if collection.products.size > 0 -%}
           <div
-            class="product-tabs__content-item product-tabs__content-item-{{ block.id }}"
+            class="product-tabs__content-item product-tabs__content-item-{{ block.id }}{% if forloop.first %} active{% else %} hidden{% endif %}"
             data-block-id="{{ block.id }}"
             {{ block.shopify_attributes }}
           >
@@ -304,7 +308,7 @@
           </div>
         {%- else -%}
           <div
-            class="product-tabs__content-item product-tabs__content-item-{{ block.id }}"
+            class="product-tabs__content-item product-tabs__content-item-{{ block.id }}{% if forloop.first %} active{% else %} hidden{% endif %}"
             data-block-id="{{ block.id }}"
             {{ block.shopify_attributes }}
           >
@@ -407,12 +411,12 @@
       "id": "media_type",
       "options": [
         {
-          "value": "rounded",
-          "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__1.label"
-        },
-        {
           "value": "oval",
           "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__2.label"
+        },
+        {
+          "value": "rounded",
+          "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__1.label"
         },
         {
           "value": "square",
