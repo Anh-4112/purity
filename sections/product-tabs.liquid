@@ -49,19 +49,16 @@
     {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- style -%}
-  .product-tabs__content-item:not(.active) {
-    display: none;
-  }
   @media (max-width: 1024.98px) {
-    .product-tabs__header-title {
+    .vertical-tab .product-tabs__header-title {
       color: var(--color-grey);
       transition: color 0.3s ease;
       white-space: nowrap;
     }
-    .product-tabs__header-item.active .product-tabs__header-title {
+    .vertical-tab .product-tabs__header-item.active .product-tabs__header-title {
       color: var(--color-heading);
     }
-    .product-tabs__header {
+    .vertical-tab .product-tabs__header {
       margin-inline: calc(-1 * var(--bs-gutter-x));
       padding-inline: var(--bs-gutter-x);
     }
@@ -77,14 +74,14 @@
       width: 100vw;
       z-index: 2;
     }
-    .product-tabs__header-item {
+    .vertical-tab .product-tabs__header-item {
       background-image: linear-gradient(to right, #000 100%, transparent 0%);
       background-position: 0 100%;
       background-repeat: no-repeat;
       background-size: 0% 1px;
       transition: background-size 0.4s ease;
     }
-    .product-tabs__header-item.active {
+    .vertical-tab .product-tabs__header-item.active {
       background-size: 100% 1px;
     }
   }
@@ -94,7 +91,7 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <product-tabs class="flex wrap gap" style="--col-width: 32.8rem;--gap: 3rem;">
+    <product-tabs class="vertical-tab flex wrap gap" style="--col-width: 32.8rem;--gap: 3rem;">
       <div class="col-left col-1025-w-custom w-full relative-1025">
         {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
           <div
@@ -115,9 +112,6 @@
                 {{ section_st.description }}
               </div>
             {%- endif -%}
-            {% if show_navigation %}
-              {%- render 'swiper-navigation', show_action: true -%}
-            {% endif %}
           </div>
         {%- endif -%}
         {%- if section.blocks.size > 0 -%}
@@ -185,7 +179,7 @@
                 {{ block.shopify_attributes }}
               >
                 <slide-section
-                  class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+                  class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
                   data-section-id="{{ block.id }}"
                   data-autoplay="false"
                   data-effect="slide"
@@ -198,6 +192,9 @@
                   data-free-scroll="{{ data_free_scroll }}"
                   data-slide-tab="true"
                 >
+                  {% if show_navigation %}
+                    {%- render 'swiper-navigation', show_on_hover: true -%}
+                  {% endif %}
                   <div class="swiper-wrapper">
                     {%- for product in collection.products limit: items_to_show -%}
                       {% render 'card-product',
@@ -227,7 +224,7 @@
                 {{ block.shopify_attributes }}
               >
                 <slide-section
-                  class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+                  class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
                   data-section-id="{{ block.id }}"
                   data-autoplay="false"
                   data-effect="slide"
@@ -240,6 +237,9 @@
                   data-free-scroll="{{ data_free_scroll }}"
                   data-slide-tab="true"
                 >
+                  {% if show_navigation %}
+                    {%- render 'swiper-navigation', show_on_hover: true -%}
+                  {% endif %}
                   <div class="swiper-wrapper">
                     {%- for product in (1..5) -%}
                       {% render 'card-product',
