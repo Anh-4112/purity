@@ -293,6 +293,9 @@ blockquote {
 .px-30 {
   padding-inline: 3rem;
 }
+.py-4 {
+  padding-block: 0.4rem;
+}
 .py-5 {
   padding-block: 0.5rem;
 }
@@ -322,6 +325,9 @@ blockquote {
 }
 .py-50 {
   padding-block: clamp(3rem, 3vw, 5rem);
+}
+.py-60 {
+  padding-block: clamp(4rem, 4vw, 6rem);
 }
 .pt-5 {
   padding-top: 5px;
@@ -374,6 +380,9 @@ blockquote {
 }
 .pb-30 {
   padding-bottom: 3rem;
+}
+.pb-60 {
+  padding-bottom: clamp(4rem, 4.5vw, 6rem);
 }
 .ms-3 {
   margin-inline-start: 3px;
@@ -507,7 +516,7 @@ blockquote {
   margin-bottom: 3.3rem;
 }
 .mb-50 {
-  margin-bottom: 5rem;
+  margin-bottom: clamp(3.5rem, 4vw, 5rem);
 }
 .mb-60 {
   margin-bottom: clamp(4rem, 4.5vw, 6rem);
@@ -1162,6 +1171,9 @@ modal-popup :is(.modal-overlay) {
   }
   .relative-lg {
     position: relative;
+  }
+  .gap-lg-40{
+    gap: 4rem;
   }
 }
 @media (min-width: 1025px) {
@@ -1882,6 +1894,10 @@ modal-popup :is(.modal-overlay) {
   --background: #fff2de;
   --color-link: var(--color-warning);
 }
+.text-red-500{
+  --color-error: #cd3b32;
+ color: var(--color-error);
+}
 .notification {
   position: fixed;
   inset-inline-end: 3rem;
@@ -2082,4 +2098,16 @@ html:not(.open-nav, .open-canvas) mobile-navigation-bar {
 }
 .search-modal__form:not(.results) .predictive-search {
   display: none;
+}
+.container-min {
+  width: 800px;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.pagination__item:hover,
+.pagination__item--current {
+    background-color: var(--btn-primary-bg-color);
+    color: var(--btn-primary-color);
+    border-color: var(--btn-primary-bg-color);
 }
