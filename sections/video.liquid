@@ -103,7 +103,7 @@
       {% liquid
         assign poster = section_st.video_poster | default: section_st.video_local.preview_image
       %}
-      <div class="video-thumbnail absolute banner__media overflow-hidden{{rounded}}">
+      <div class="video-thumbnail absolute banner__media overflow-hidden{{rounded}}"  style="{% if section_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ aspect_ratio }}{% else %}--aspect-ratio: 16/9;{% endif %}">
         {%- if poster != null -%}
           {%- liquid
             assign image_alt_default = 'general.image.image_alt_default' | t
