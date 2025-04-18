@@ -1,6 +1,5 @@
 {%- liquid
   assign theme_st = settings
-  assign search_type = theme_st.search_type
   assign show_search_vendor = theme_st.show_search_vendor
   if show_search_vendor
     assign show_search_vendor = false
@@ -179,8 +178,7 @@
                         disable_quickview: true,
                         disable_show_video: true,
                         class: ' swiper-slide',
-                        disable_lazy_loading: true,
-                        sizes: sizes
+                        disable_lazy_loading: true
                       %}
                     {%- endfor -%}
                   </div>

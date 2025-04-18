@@ -846,6 +846,7 @@ class RecentlyViewedProducts extends HTMLElement {
         ) {
           this.innerHTML = recentlyViewedProducts.innerHTML;
         }
+        new LazyLoader(".image-lazy-load");
       })
       .finally(() => {})
       .catch((e) => {
@@ -1329,16 +1330,31 @@ class VariantInput extends HTMLElement {
   }
 
   updateProductInfo(parsedHTML, sectionId, eventTarget, blockId) {
-    const template = parsedHTML.querySelector('template');
-    let queryParsed , queryDocument;
+    const template = parsedHTML.querySelector("template");
+    let queryParsed, queryDocument;
     if (template && blockId) {
       const content = document.createElement("div");
       content.appendChild(template.content.firstElementChild.cloneNode(true));
       queryParsed = content.querySelector(`#Product-${blockId}`);
       queryDocument = document.querySelector(`#Product-${blockId}`);
-    }else{
+    } else {
       queryParsed = parsedHTML.getElementById(`Product-${sectionId}`);
       queryDocument = document.getElementById(`Product-${sectionId}`);
+      const selectedVariant = queryParsed.querySelector(
+        ".productVariantSelected"
+      )?.textContent;
+      if (selectedVariant) {
+        const variant = JSON.parse(selectedVariant);
+        if (variant.id) {
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.set("variant", variant.id);
+          window.history.replaceState(
+            { path: newUrl.toString() },
+            "",
+            newUrl.toString()
+          );
+        }
+      }
     }
     const updateContent = (blockClass) => {
       const source = queryParsed.querySelector(`.${blockClass}`);
@@ -2688,4 +2704,3 @@ CustomElement.observeAndPatchCustomElements({
     classElement: AskQuestion,
   },
 });
-
