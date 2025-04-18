@@ -69,6 +69,9 @@ class ProductTabs extends HTMLElement {
         this.selectedTab = initialTab.dataset.blockId;
         this.setupEventListeners();
         this.updateTabDisplay(this.selectedTab, false);
+        setTimeout(() => {
+            this.initContentSwipers();
+        }, 10);
     }
 
     setupEventListeners() {
@@ -242,9 +245,30 @@ class ProductTabs extends HTMLElement {
             return;
         }
 
+        const initContentSwiper = () => {
+            if (newContent) {
+                const contentSlideSection = newContent.querySelector('slide-section');
+                if (contentSlideSection && contentSlideSection.swiper) {
+                    try {
+                        if (contentSlideSection.swiper.initialized) {
+                            contentSlideSection.swiper.update();
+                        }
+                        
+                        setTimeout(() => {
+                            if (contentSlideSection.swiper && contentSlideSection.swiper.initialized) {
+                                contentSlideSection.swiper.update();
+                            }
+                        }, 10);
+                    } catch(e) {
+                    }
+                }
+            }
+        };
+
         if (animate && typeof Motion !== "undefined" && oldContent !== newContent) {
             this.transition(oldContent, newContent).finally(() => {
                 this._isAnimating = false;
+                initContentSwiper();
             });
         } else {
             this.tabContents.forEach((content) => {
@@ -255,6 +279,7 @@ class ProductTabs extends HTMLElement {
             newContent.classList.add("active");
             newContent.classList.remove("hidden");
             this._isAnimating = false;
+            initContentSwiper();
         }
 
         this.dispatchEvent(
@@ -263,6 +288,17 @@ class ProductTabs extends HTMLElement {
                 bubbles: true,
             })
         );
+    }
+
+    initContentSwipers() {
+        this.tabContents.forEach(content => {
+            const slideSection = content.querySelector('slide-section');
+            if (slideSection && slideSection.swiper) {
+                if (slideSection.swiper.initialized) {
+                    slideSection.swiper.update();
+                }
+            }
+        });
     }
 
     async transition(fromPanel, toPanel) {
@@ -587,6 +623,14 @@ class SuitableFinder extends ProductTabs {
 
     handleResize() {
         super.handleResize();
+        this.tabContents.forEach(content => {
+            if (content.classList.contains('active')) {
+                const slideSection = content.querySelector('slide-section');
+                if (slideSection && slideSection.swiper && slideSection.swiper.initialized) {
+                    slideSection.swiper.update();
+                }
+            }
+        });
         
         if (!this._rangeSlider) return;
 

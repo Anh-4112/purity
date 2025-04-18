@@ -154,7 +154,7 @@
                   class="product-tabs__header-image w-full"
                   style="--aspect-ratio: {{ aspect_ratio }};{% if section_st.media_type == 'oval' %}--img-rounded: 50px;{% endif %}"
                 >
-                  {%- if image != blank or collection_media -%}
+                  {%- if image != blank or collection_media != blank -%}
                       {%- if image != blank -%}
                         {% render 'responsive-image',
                           type: 'other',
@@ -233,7 +233,7 @@
                   class="product-tabs__header-image hidden-mobile mb-10 w-custom max-w-100"
                   style="--aspect-ratio: {{ aspect_ratio }};{% if section_st.media_type == 'oval' %}--img-rounded: 50px;{% endif %}; --width: var(--image-collection-width);"
                 >
-                  {%- if image != blank or collection_media -%}
+                  {%- if image != blank or collection_media != blank -%}
                     {%- if image != blank -%}
                       {% render 'responsive-image',
                         type: 'other',

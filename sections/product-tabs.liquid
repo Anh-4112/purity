@@ -219,7 +219,7 @@
               </div>
             {%- else -%}
               <div
-                class="product-tabs__content-item product-tabs__content-item-{{ block.id }}"
+                class="product-tabs__content-item product-tabs__content-item-{{ block.id }}{% if forloop.first %} active{% else %} hidden{% endif %}"
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
               >
@@ -235,7 +235,6 @@
                   data-desktop="{{ items_per_row }}"
                   data-tablet="{{ items_per_row_tablet }}"
                   data-free-scroll="{{ data_free_scroll }}"
-                  data-slide-tab="true"
                 >
                   {% if show_navigation %}
                     {%- render 'swiper-navigation', show_on_hover: true -%}
