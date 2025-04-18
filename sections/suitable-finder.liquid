@@ -43,7 +43,6 @@
   elsif section_st.column_gap == 'small'
     assign column_gap_slide = 10
   endif
-
   assign block_size = section.blocks.size
 
   assign total_gap = block_size | minus: 1
@@ -57,14 +56,7 @@
 {%- endcapture -%}
 {% style %}
   range-slider{
-    max-width: var(--width-range-slider);
-    width: 100%;
-    height: 5px;
     background: var(--background-gradient);
-    border-radius: 99px;
-    overflow: hidden;
-    display: block;
-    margin-bottom: 2rem;
   }
   range-slider span{
     position: absolute;
@@ -75,9 +67,6 @@
     top: 50%;
     transform: translateY(-50%);
     left: var(--progress-width);
-  }
-  .product-tabs__header-item.swiper-slide{
-
   }
   .product-tabs__header-image,
   .product-tabs__header-item.swiper-slide{
@@ -125,13 +114,15 @@
     <product-tabs
       data-size-dot="{{ size_dot_range_slider }}"
     >
-      <div class="product-tabs__header flex column align-center type-{{ section_st.media_type }}">
+      <div class="product-tabs__header flex column align-center type-{{ section_st.media_type }} mb-30 mb-md-40">
         <slide-section
           class="product-tabs__header-image-mobile swiper hidden-md reveal_on_scroll"
           data-spacing="30"
           data-free-mode="true"
-          style="max-width: 100%;
-        width: 100%;"
+          style="
+            max-width: 100%;
+            width: 100%;
+          "
         >
           <div class="swiper-wrapper">
             {%- for block in section.blocks -%}
@@ -149,13 +140,23 @@
                 else
                   assign alt_text = 'sections.collection_list.sample_name' | t
                 endif
+
+                assign aspect_ratio = '2'
+                case section_st.media_type
+                  when 'rounded'
+                    assign aspect_ratio = '1/1'
+                  when 'oval'
+                    assign aspect_ratio = '2'
+                  else
+                    assign aspect_ratio = 'image.aspect_ratio'
+                endcase
               -%}
               <div
                 class="product-tabs__header-item flex column content-center pointer swiper-slide"
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
               >
-                <div class="product-tabs__header-image">
+                <div class="product-tabs__header-image" style="--aspect-ratio: {{ aspect_ratio }}">
                   {%- if image != blank -%}
                     {% render 'responsive-image',
                       type: 'other',
@@ -190,6 +191,17 @@
               else
                 assign alt_text = 'sections.collection_list.sample_name' | t
               endif
+              assign aspect_ratio = '2'
+              assign class = 'rounded'
+              case section_st.media_type
+                when 'rounded'
+                  assign aspect_ratio = '1/1'
+                  assign class = 'rounded-50'
+                when 'oval'
+                  assign aspect_ratio = '2'
+                else
+                  assign aspect_ratio = image.aspect_ratio
+              endcase
             -%}
             {%- if collection_title != blank -%}
               <div
@@ -199,7 +211,10 @@
                 tabindex="0"
                 {{ block.shopify_attributes }}
               >
-                <div class="product-tabs__header-image hidden-mobile">
+                <div
+                  class="product-tabs__header-image hidden-mobile mb-10"
+                  style="--aspect-ratio: {{ aspect_ratio }};{% if section_st.media_type == 'oval' %}--img-rounded: 50px;{% endif %}"
+                >
                   {%- if image != blank -%}
                     {% render 'responsive-image',
                       type: 'other',
@@ -208,10 +223,14 @@
                       container: section_width,
                       column: items_per_row,
                       column_mobile: section_st.items_per_row_mobile,
-                      padding: column_gap_slide
+                      padding: column_gap_slide,
+                      class: class
                     %}
                   {%- else -%}
-                    {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
+                    {% render 'placeholder-render',
+                      type: 'collection',
+                      class: 'img-placeholder h-full w-full rounded'
+                    %}
                   {%- endif -%}
                 </div>
                 <div class="product-tabs__header-title text-wrap">
@@ -223,10 +242,14 @@
         </div>
         {%- if section_st.show_range_slider -%}
           <range-slider
-            class="relative"
-            style="--background-gradient: {{ section_st.range_slider_background }};--progress-width: {{ space_left }}px;--width-range-slider: {{ width_range_slider }}px;"
+            class="relative w-full max-w-custom h-custom btn-radius block"
+            style="--background-gradient: {{ section_st.range_slider_background }};--progress-width: {{ space_left }}px;--width-range-slider: {{ width_range_slider }}px;--max-width: var(--width-range-slider);--height: 5px;"
           >
-            <span class="product-tabs__dot"></span>
+            <span class="product-tabs__dot">
+              <svg width="26" height="26" fill="none">
+                <circle cx="13" cy="13" r="11.5" fill="#000" stroke="#fff" stroke-width="3"/><circle cx="13" cy="13" r="3" fill="#fff"/>
+              </svg>
+            </span>
           </range-slider>
         {%- endif -%}
       </div>
@@ -374,8 +397,8 @@
       "id": "image_collection_width",
       "label": "t:sections.suitable-finder.settings.image_collection_width.label",
       "default": 150,
-      "min": 100,
-      "max": 300,
+      "min": 50,
+      "max": 200,
       "step": 5,
       "unit": "px"
     },
@@ -405,14 +428,14 @@
     },
     {
       "type": "text",
-      "id": "title",
-      "default": "The heading",
-      "label": "t:sections.all.content_setting.heading.label"
+      "id": "subheading",
+      "label": "t:sections.all.content_setting.subheading.label"
     },
     {
       "type": "text",
-      "id": "subheading",
-      "label": "t:sections.all.content_setting.subheading.label"
+      "id": "title",
+      "default": "Heading",
+      "label": "t:sections.all.content_setting.heading.label"
     },
     {
       "type": "richtext",
@@ -460,15 +483,6 @@
       "label": "t:sections.all.text_alignment.alignment"
     },
     {
-      "type": "range",
-      "id": "items_to_show",
-      "label": "t:sections.all.items_to_show.label",
-      "min": 2,
-      "max": 12,
-      "step": 1,
-      "default": 8
-    },
-    {
       "type": "header",
       "content": "t:sections.suitable-finder.settings.range_slider.header"
     },
@@ -487,6 +501,15 @@
     {
       "type": "header",
       "content": "t:sections.all.carousel.header"
+    },
+    {
+      "type": "range",
+      "id": "items_to_show",
+      "label": "t:sections.all.items_to_show.label",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
     },
     {
       "type": "range",

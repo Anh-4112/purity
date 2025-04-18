@@ -271,16 +271,8 @@
                   class="btn btn-primary w-full relative product_submit_button product-form__submit word-wrap relative mt-30 mt-1025-40"
                   aria-label="{{ 'products.product.add_all_to_cart' | t }}"
                 >
-                  <span class="hidden-on-load">{{ 'products.product.add_all_to_cart' | t }}</span>
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    class="spin opacity-0 pointer-none icon-load absolute"
-                  >
-                    <use href="#icon-load"></use>
-                  </svg>
+                  <span class="hidden-on-load transition-short">{{ 'products.product.add_all_to_cart' | t }}</span>
+                  {%- render 'loader' -%}
                 </button>
               {%- endif -%}
             </form>
