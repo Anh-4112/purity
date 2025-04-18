@@ -121,7 +121,7 @@ export class ProductForm extends HTMLElement {
       {
         id: this.cart.sectionId,
         section: this.cart.sectionId,
-        selector: ".drawer__header",
+        selector: ".drawer__header-cart",
       },
       {
         id: "cart-icon-bubble",
@@ -311,7 +311,7 @@ class CartItems extends ProductForm {
       {
         id: this.cart.sectionId,
         section: this.cart.sectionId,
-        selector: ".drawer__header",
+        selector: ".drawer__header-cart",
       },
       {
         id: "cart-icon-bubble",

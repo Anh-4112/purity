@@ -15,9 +15,10 @@ function initSlide(_this) {
   const effect = _this?.dataset.effect ? _this?.dataset.effect : "slide";
   const row = _this?.dataset.row ? _this?.dataset.row : 1;
   let spacing = _this?.dataset.spacing ? _this?.dataset.spacing : 30;
-  const progressbar = _this?.dataset.paginationProgressbar === "true";
+  const pagination = _this?.dataset.pagination
+    ? _this?.dataset.pagination
+    : "bullets";
   const autoItem = _this?.dataset.itemMobile === "true";
-  const slideTab = _this?.dataset.slideTab === "true";
   let arrowCenterImage = _this?.dataset.itemMobile === "true";
   spacing = Number(spacing);
   autoPlaySpeed = Number(autoPlaySpeed);
@@ -55,21 +56,16 @@ function initSlide(_this) {
       fill: "row",
     },
     navigation: {
-      nextEl: slideTab
-        ? _this
-            .closest(".section-product-tabs")
-            .querySelector(".swiper-button-next")
-        : _this.querySelector(".swiper-button-next"),
-      prevEl: slideTab
-        ? _this
-            .closest(".section-product-tabs")
-            .querySelector(".swiper-button-prev")
-        : _this.querySelector(".swiper-button-prev"),
+      nextEl: _this.querySelector(".swiper-button-next"),
+      prevEl: _this.querySelector(".swiper-button-prev"),
     },
     pagination: {
       clickable: true,
       el: _this.querySelector(".swiper-pagination"),
-      type: progressbar ? "progressbar" : "bullets",
+      type: pagination ? pagination : "bullets",
+      renderCustom: function (swiper, current, total) {
+        return current + "/" + total;
+      },
     },
     breakpoints: {
       768: {

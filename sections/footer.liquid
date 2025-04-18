@@ -24,7 +24,7 @@
   }
 </style>
 <footer
-  class="footer color-{{ section_st.color_scheme }} gradient"
+  class="footer color-{{ section_st.color_scheme }} gradient border-top"
   style="{{ style | strip | strip_newlines }}"
 >
   {%- if section_st.enable_back_top -%}
@@ -138,7 +138,6 @@
                               <span>
                                 {{- form.errors.translated_fields.email | capitalize }}
                                 {{ form.errors.messages.email -}}
-                                Invalid email or already subscribed"
                               </span>
                             </div>
                           {%- endif -%}

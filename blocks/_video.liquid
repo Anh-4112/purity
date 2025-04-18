@@ -41,11 +41,11 @@
         {% liquid
           if block_st.video_url.type == 'youtube'
             assign video_base_url = 'https://www.youtube.com/embed/'
-            assign video_class = 'js-youtube'
+            assign video_class = 'js-youtube w-full h-full'
             assign mute_param = 'mute'
           else
             assign video_base_url = 'https://player.vimeo.com/video/'
-            assign video_class = 'js-vimeo vimeo-video bg-dark'
+            assign video_class = 'js-vimeo vimeo-video bg-dark w-full h-full'
             assign mute_param = 'muted'
           endif
         %}

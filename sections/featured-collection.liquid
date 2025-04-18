@@ -34,12 +34,24 @@
   if items_per_row > 3
     assign items_per_row_tablet = items_per_row | minus: 1
   endif
+  assign column_gap_slide = 0
+  assign column_gap_mb = 0
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 30
+    assign column_gap_mb = 20
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+    assign column_gap_mb = 10
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 10
+    assign column_gap_mb = 5
+  endif
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- capture col_style -%}
-  --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
+  --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}; --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--row-gap: 3rem;
 {%- endcapture -%}
 <div
   class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"

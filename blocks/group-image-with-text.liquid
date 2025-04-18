@@ -51,6 +51,20 @@
       {%- else -%}
         {%- render 'placeholder-render', type: 'lifestyle-1', class: 'img-placeholder h-full w-full' -%}
       {% endif %}
+      {% if block_st.content_position == 'bellow' %}
+        <div
+          class="block__highlight_text w-content absolute{% if block_st.vertical_position == 'top' %} top-15{% else %} bottom-15{% endif %} left-15 subheading_weight lh-normal inline-block text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-10 px-15 btn-rounded{% endif %}"
+          style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
+          {{ block.shopify_attributes }}
+        >
+          {%- if block_st.highlight_text_icon == 'star' -%}
+            {%- render 'icon-star' -%}
+          {%- elsif block_st.highlight_text_icon == 'dot' -%}
+            {%- render 'icon-dot' -%}
+          {%- endif -%}
+          {{ block_st.badge | escape }}
+        </div>
+      {% endif %}
     </div>
     <div
       class="group__block--content w-full z-3 flex {% if block_st.content_position == 'overlay' %} {{ block_st.desktop_content_position }} p-30 text-{{ block_st.text_alignment }}{% else %} mt-40 justify-content-{{ block_st.text_alignment }}{% endif %}"
@@ -212,6 +226,64 @@
       ],
       "default": "start",
       "label": "t:sections.all.text_alignment.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.multi_content.blocks.bellow_image"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "default": "Highlight text",
+      "label": "t:sections.multi_content.blocks.badge"
+    },
+    {
+      "type": "select",
+      "id": "highlight_text_icon",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__1.label"
+        },
+        {
+          "value": "star",
+          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__2.label"
+        },
+        {
+          "value": "dot",
+          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__3.label"
+        }
+      ],
+      "default": "star",
+      "label": "t:sections.all.content_setting.highlight_text.settings.icons.label"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.image-with-text.settings.background_color",
+      "default": "#D0473E"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.image-with-text.settings.text_color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "vertical_position",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:sections.all.padding.padding_top"
+        },
+        {
+          "value": "bottom",
+          "label": "t:sections.all.padding.padding_bottom"
+        }
+      ],
+      "default": "bottom",
+      "label": "t:sections.bundle-products.blocks.settings.position_top"
     },
     {
       "type": "header",

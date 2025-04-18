@@ -1,0 +1,21 @@
+{%- if closest.product != blank -%}
+  {%- if closest.product.metafields.custom.key_features.value -%}
+    <ul>
+      {%- for features in closest.product.metafields.custom.key_features.value -%}
+        <li>
+          {%- if features.title and features.description -%}
+            <span class="features-title-label heading-style">{{ features.title }}:</span>
+            <span class="features-description-value">{{ features.description }}</span>
+          {% endif %}
+        </li>
+      {%- endfor -%}
+    </ul>
+  {% endif %}
+{% endif %}
+{% schema %}
+{
+  "name": "t:sections.all.product_setting.key_features.name",
+  "class": "block-product__key-features my-25 slideIn-animate",
+  "presets": [{ "name": "t:sections.all.product_setting.key_features.name" }]
+}
+{% endschema %}
