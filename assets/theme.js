@@ -1329,14 +1329,14 @@ class VariantInput extends HTMLElement {
   }
 
   updateProductInfo(parsedHTML, sectionId, eventTarget, blockId) {
-    const template = parsedHTML.querySelector('template');
-    let queryParsed , queryDocument;
+    const template = parsedHTML.querySelector("template");
+    let queryParsed, queryDocument;
     if (template && blockId) {
       const content = document.createElement("div");
       content.appendChild(template.content.firstElementChild.cloneNode(true));
       queryParsed = content.querySelector(`#Product-${blockId}`);
       queryDocument = document.querySelector(`#Product-${blockId}`);
-    }else{
+    } else {
       queryParsed = parsedHTML.getElementById(`Product-${sectionId}`);
       queryDocument = document.getElementById(`Product-${sectionId}`);
     }
@@ -2303,7 +2303,7 @@ class ProductTabs extends HTMLElement {
             y: [0, 15],
           },
           {
-            duration: 0.2,
+            duration: 0.3,
           }
         ).finished;
       } catch (e) {
@@ -2322,7 +2322,7 @@ class ProductTabs extends HTMLElement {
           y: [15, 0],
         },
         {
-          duration: 0.2,
+          duration: 0.3,
         }
       );
     } catch (e) {
@@ -2655,15 +2655,15 @@ class ImageComparison extends HTMLElement {
     this.overlay = this.querySelector(".image-after");
     this.x = 0;
     this.boundary = 300;
-    this.mixClipPath
-    this.mixSliderColor
+    this.mixClipPath;
+    this.mixSliderColor;
     this.step = 50;
     this.elastic = 0.1;
     this.animated = false;
     this.observer = null;
-    
+
     this.isHovering = false;
-    
+
     this.init();
     this.setupDrag();
     this.slider.addEventListener("focus", () => {
@@ -2683,42 +2683,42 @@ class ImageComparison extends HTMLElement {
   }
 
   setupHoverTracking() {
-    this.addEventListener('mouseenter', () => {
+    this.addEventListener("mouseenter", () => {
       this.isHovering = true;
       this.updateSliderStatus();
     });
-    this.addEventListener('mouseleave', () => {
+    this.addEventListener("mouseleave", () => {
       this.isHovering = false;
       this.updateSliderStatus();
     });
-    this.addEventListener('touchstart', () => {
+    this.addEventListener("touchstart", () => {
       this.isHovering = true;
       this.updateSliderStatus();
     });
-    this.addEventListener('touchend', () => {
+    this.addEventListener("touchend", () => {
       this.isHovering = false;
       this.updateSliderStatus();
     });
   }
 
-    updateSliderStatus() {
-      const swiperContainer = this.closest('slide-section');
-      if (!swiperContainer) return;
-      
-      const swiperInstance = swiperContainer.swiper;
-      if (!swiperInstance) return;
-      
-      swiperInstance.allowTouchMove = !this.isHovering;
-      
-      if (this.isHovering) {
-        swiperInstance.allowSlideNext = false;
-        swiperInstance.allowSlidePrev = false;
-      } else {
-        swiperInstance.allowSlideNext = true;
-        swiperInstance.allowSlidePrev = true;
-      }
-      swiperInstance.update();
+  updateSliderStatus() {
+    const swiperContainer = this.closest("slide-section");
+    if (!swiperContainer) return;
+
+    const swiperInstance = swiperContainer.swiper;
+    if (!swiperInstance) return;
+
+    swiperInstance.allowTouchMove = !this.isHovering;
+
+    if (this.isHovering) {
+      swiperInstance.allowSlideNext = false;
+      swiperInstance.allowSlidePrev = false;
+    } else {
+      swiperInstance.allowSlideNext = true;
+      swiperInstance.allowSlidePrev = true;
     }
+    swiperInstance.update();
+  }
 
   init() {
     this.boundary = this.container.clientWidth / 2;
@@ -2744,7 +2744,7 @@ class ImageComparison extends HTMLElement {
     );
 
     if (!this.animated) {
-      const startPosition = -this.boundary + (this.boundary * 0.2);
+      const startPosition = -this.boundary + this.boundary * 0.2;
       this.moveSlider(startPosition);
     } else {
       this.moveSlider(0);
@@ -2752,35 +2752,34 @@ class ImageComparison extends HTMLElement {
   }
 
   setupIntersectionObserver() {
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !this.animated) {
-          this.runEntranceAnimation();
-        }
-      });
-    }, {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.2
-    });
-    this.observer.observe(this);
-  }
-  
-  runEntranceAnimation() {
-    this.animated = true;
-    const startPosition = -this.boundary + (this.boundary * 0.2);
-    Motion.animate(
-      startPosition,
-      0,
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !this.animated) {
+            this.runEntranceAnimation();
+          }
+        });
+      },
       {
-        onUpdate: (value) => this.moveSlider(value),
-        type: "spring",
-        stiffness: 80,
-        damping: 20,
-        duration: 0.8,
-        delay: 0.2 
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.2,
       }
     );
+    this.observer.observe(this);
+  }
+
+  runEntranceAnimation() {
+    this.animated = true;
+    const startPosition = -this.boundary + this.boundary * 0.2;
+    Motion.animate(startPosition, 0, {
+      onUpdate: (value) => this.moveSlider(value),
+      type: "spring",
+      stiffness: 80,
+      damping: 20,
+      duration: 0.8,
+      delay: 0.2,
+    });
   }
 
   moveSlider(newX) {
@@ -2865,14 +2864,14 @@ class ImageComparison extends HTMLElement {
       this.observer.disconnect();
       this.observer = null;
     }
-    
-    window.removeEventListener('resize', this.init);
-    document.removeEventListener('keydown', this.handleKeyDown);
-    
-    this.removeEventListener('mouseenter', null);
-    this.removeEventListener('mouseleave', null);
-    this.removeEventListener('touchstart', null);
-    this.removeEventListener('touchend', null);
+
+    window.removeEventListener("resize", this.init);
+    document.removeEventListener("keydown", this.handleKeyDown);
+
+    this.removeEventListener("mouseenter", null);
+    this.removeEventListener("mouseleave", null);
+    this.removeEventListener("touchstart", null);
+    this.removeEventListener("touchend", null);
   }
 }
 customElements.define("image-comparison", ImageComparison);
