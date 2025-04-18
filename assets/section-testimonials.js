@@ -24,7 +24,7 @@ class TestimonialsSlide extends SlideSection {
       allowTouchMove: true,
       slideActiveClass: 'swiper-slide-thumb-active',
       breakpoints: {
-        576: {
+        768: {
           slidesPerView: "auto"
         }
       },
