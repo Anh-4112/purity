@@ -1,3 +1,4 @@
+<script type="module" src="{{ 'section-vertical-product-tabs.js' | asset_url }}" defer="defer"></script>
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -102,7 +103,7 @@
         {%- endif -%}
       </div>
     {%- endif -%}
-    <product-tabs
+    <suitable-finder
       data-size-dot="{{ size_dot_range_slider }}"
     >
       <div class="product-tabs__header flex column align-center type-{{ section_st.media_type }} mb-40 mb-md-50">
@@ -110,10 +111,7 @@
           class="product-tabs__header-image-mobile swiper hidden-md reveal_on_scroll mb-20"
           data-spacing="30"
           data-free-mode="true"
-          style="
-            max-width: 100%;
-            width: 100%;
-          "
+          style="max-width: 100%;xwidth: 100%;"
         >
           <div class="swiper-wrapper">
             {%- for block in section.blocks -%}
@@ -124,10 +122,13 @@
                   assign collection_title = collections[block_st.collection].title
                 endif
                 assign image = block_st.collection_image | default: block_st.collection.image
+                assign collection_media = collections[block_st.collection].featured_image
                 if image.alt != blank
                   assign alt_text = image.alt
                 elsif collection_title != blank
                   assign alt_text = collection_title
+                elsif collection_media != blank
+                  assign alt_text = collection_media.alt
                 else
                   assign alt_text = 'sections.collection_list.sample_name' | t
                 endif
@@ -144,7 +145,7 @@
                 endcase
               -%}
               <div
-                class="product-tabs__header-item tab-image transition w-custom max-w-100 flex column content-center pointer swiper-slide"
+                class="product-tabs__header-item tab-image transition w-custom max-w-100 flex column content-center pointer swiper-slide {% if forloop.first %}active{% endif %}"
                 style="--width: var(--image-collection-width);"
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
@@ -153,17 +154,30 @@
                   class="product-tabs__header-image w-full"
                   style="--aspect-ratio: {{ aspect_ratio }};{% if section_st.media_type == 'oval' %}--img-rounded: 50px;{% endif %}"
                 >
-                  {%- if image != blank -%}
-                    {% render 'responsive-image',
-                      type: 'other',
-                      image: image,
-                      image_alt: alt_text,
-                      container: section_width,
-                      column: items_per_row,
-                      column_mobile: section_st.items_per_row_mobile,
-                      padding: column_gap_slide,
-                      class: class
-                    %}
+                  {%- if image != blank or collection_media != blank -%}
+                      {%- if image != blank -%}
+                        {% render 'responsive-image',
+                          type: 'other',
+                          image: image,
+                          image_alt: alt_text,
+                          container: section_width,
+                          column: items_per_row,
+                          column_mobile: section_st.items_per_row_mobile,
+                          padding: column_gap_slide,
+                          class: class
+                        %}
+                      {% else %}
+                        {% render 'responsive-image',
+                          type: 'other',
+                          image: collection_media,
+                          image_alt: alt_text,
+                          container: section_width,
+                          column: items_per_row,
+                          column_mobile: section_st.items_per_row_mobile,
+                          padding: column_gap_slide,
+                          class: class
+                        %}
+                      {% endif %}
                   {%- else -%}
                     {% render 'placeholder-render',
                       type: 'collection',
@@ -184,10 +198,13 @@
                 assign collection_title = collections[block_st.collection].title
               endif
               assign image = block_st.collection_image | default: block_st.collection.image
+              assign collection_media = collections[block_st.collection].featured_image
               if image.alt != blank
-                assign alt_text = image.alt
+              assign alt_text = image.alt
               elsif collection_title != blank
                 assign alt_text = collection_title
+              elsif collection_media != blank
+                assign alt_text = collection_media.alt
               else
                 assign alt_text = 'sections.collection_list.sample_name' | t
               endif
@@ -205,27 +222,41 @@
             -%}
             {%- if collection_title != blank -%}
               <div
-                class="product-tabs__header-item product-tabs__header-item-js flex column content-center pointer"
+                class="product-tabs__header-item product-tabs__header-item-js flex column content-center pointer {% if forloop.first %}active{% endif %}"
                 data-block-id="{{ block.id }}"
                 role="tab"
                 tabindex="0"
+                data-position="{{ forloop.index }}"
                 {{ block.shopify_attributes }}
               >
                 <div
                   class="product-tabs__header-image hidden-mobile mb-10 w-custom max-w-100"
                   style="--aspect-ratio: {{ aspect_ratio }};{% if section_st.media_type == 'oval' %}--img-rounded: 50px;{% endif %}; --width: var(--image-collection-width);"
                 >
-                  {%- if image != blank -%}
-                    {% render 'responsive-image',
-                      type: 'other',
-                      image: image,
-                      image_alt: alt_text,
-                      container: section_width,
-                      column: items_per_row,
-                      column_mobile: section_st.items_per_row_mobile,
-                      padding: column_gap_slide,
-                      class: class
-                    %}
+                  {%- if image != blank or collection_media != blank -%}
+                    {%- if image != blank -%}
+                      {% render 'responsive-image',
+                        type: 'other',
+                        image: image,
+                        image_alt: alt_text,
+                        container: section_width,
+                        column: items_per_row,
+                        column_mobile: section_st.items_per_row_mobile,
+                        padding: column_gap_slide,
+                        class: class
+                      %}
+                    {% else %}
+                      {% render 'responsive-image',
+                        type: 'other',
+                        image: collection_media,
+                        image_alt: alt_text,
+                        container: section_width,
+                        column: items_per_row,
+                        column_mobile: section_st.items_per_row_mobile,
+                        padding: column_gap_slide,
+                        class: class
+                      %}
+                    {% endif %}
                   {%- else -%}
                     {% render 'placeholder-render',
                       type: 'collection',
@@ -351,7 +382,7 @@
           </div>
         {%- endif -%}
       {%- endfor -%}
-    </product-tabs>
+    </suitable-finder>
   </div>
 </div>
 
