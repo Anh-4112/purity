@@ -1,98 +1,108 @@
 {{ 'customer.css' | asset_url | stylesheet_tag }}
-{%- liquid
+{% liquid
   assign section_st = section.settings
-  if section_st.section_width == 'fix_width'
-    assign section_width = 'container'
-  elsif section_st.section_width == 'full_width'
-    assign section_width = 'full-width px-20'
-  else
-    assign section_width = 'fluid_container'
-  endif
--%}
+%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 <div
-  class="customer login section"
-  style="{{ style | strip | strip_newlines }}"
+  class="stretch_width section flex column content-center w-full max-w-custom-all mx-auto"
+  style="{{ style | strip | strip_newlines }}--max-width: 56rem;--bs-gutter-x: 3rem;"
 >
-  <div class="{{ section_width }}">
-    <h1 id="recover" tabindex="-1" class="heading-title text-center">
-      {{ 'customer.recover_password.submit' | t }}
-    </h1>
-    <div class="reset-password-inner">
-      <div class="text-center">
-        {{ 'customer.recover_password.subtext' | t }}
-      </div>
-      <div class="field">
-        {%- form 'recover_customer_password', novalidate: 'novalidate' -%}
-          {% assign recover_success = form.posted_successfully? %}
-          <div class="field relative w-full flex wrap transition">
-            <input
-              type="email"
-              value=""
-              name="email"
-              id="RecoverEmail"
-              autocorrect="off"
-              autocapitalize="off"
-              autocomplete="email"
-              {% if form.errors %}
-                aria-invalid="true"
-                aria-describedby="RecoverEmail-email-error"
-                autofocus
-              {% endif %}
-              placeholder="{{ 'customer.login_page.email' | t }}*"
-              class="w-full"
-            >
-            <label for="RecoverEmail" class="visually-hidden">
-              {{ 'customer.login_page.email' | t }}
-              <span class="required">*</span>
-            </label>
+  <h1 id="recover" tabindex="-1" class="heading-title text-center mb-15">
+    {{ 'customer.recover_password.submit' | t }}
+  </h1>
+  <div class="reset-password-inner">
+    <div class="text-center mb-60">
+      {{ 'customer.recover_password.subtext' | t }}
+    </div>
+    <div class="field">
+      {%- form 'recover_customer_password' -%}
+        {% assign recover_success = form.posted_successfully? %}
+        {%- if form.errors -%}
+          <div
+            id="RecoverEmail-email-error error"
+            class="error form__message fs-small inline-flex align-center gap-10 mb-20 w-full h-custom"
+            style="--height: 5.6rem;"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <use href="#icon-error"></use>
+            </svg>
+            {{ form.errors.messages.form }}
           </div>
-          {%- if form.errors -%}
-            <small id="RecoverEmail-email-error" class="form__message">
+        {%- endif -%}
+        <div class="field relative w-full flex wrap transition mb-30">
+          <input
+            type="email"
+            value=""
+            name="email"
+            id="RecoverEmail"
+            autocorrect="off"
+            autocapitalize="off"
+            autocomplete="email"
+            {% if form.errors %}
+              aria-invalid="true"
+              aria-describedby="RecoverEmail-email-error"
+              autofocus
+              style="--color-border: #D0473E"
+            {% endif %}
+            placeholder="{{ 'customer.login_page.email' | t }} *"
+            class="w-full text-color{% if form.errors %} border{% endif %}"
+          >
+          <label for="RecoverEmail" class="visually-hidden">
+            {{ 'customer.login_page.email' | t }}
+            <span class="required">*</span>
+          </label>
+        </div>
+        <button class="btn btn-primary w-full relative word-wrap relative mb-30">
+          <span class="hidden-on-load transition-short">{{ 'customer.login_page.submit' | t }}</span>
+          {%- render 'loader' -%}
+        </button>
+        <a
+          href="#login"
+          aria-label="{{ 'customer.login_page.cancel' | t }}"
+          class="text-center heading-style underline flex justify-center"
+        >
+          {{ 'customer.login_page.back_login' | t }}
+        </a>
+      {%- endform -%}
+    </div>
+  </div>
+  <div id="login" class="text-center mb-60">
+    <h1 tabindex="-1" class="heading-title">
+      {{ 'customer.login_page.title' | t }}
+    </h1>
+    <div class="heading-description mt-15">
+      {{ 'customer.login_page.login_detail' | t }}
+    </div>
+  </div>
+  <div
+    class="login-inner field relative w-full flex justify-center wrap transition column max-w-custom"
+    style="--max-width: 50rem;"
+  >
+    {%- if recover_success == true -%}
+      <div
+        class="form__message success w-full mb-20 fs-small inline-flex align-center gap-10"
+        tabindex="-1"
+        autofocus
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <use href="#icon-success"></use>
+        </svg>
+        {{ 'customer.recover_password.success' | t }}
+      </div>
+    {%- endif -%}
+    {%- form 'customer_login', novalidate: 'novalidate' -%}
+      {%- if form.errors -%}
+        {%- if form.errors -%}
+          <div class="form__message error flex align-center gap-10 mb-10" tabindex="-1" autofocus>
+            <div class="flex content-center">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <use href="#icon-error"></use>
               </svg>
-              {{ form.errors.messages.form }}
-            </small>
-          {%- endif -%}
-          <button class="btn btn-primary w-full relative word-wrap relative">
-            <span class="hidden-on-load transition-short">{{ 'customer.login_page.submit' | t }}</span>
-            {%- render 'loader' -%}
-          </button>
-          <a href="#login" aria-label="{{ 'customer.login_page.cancel' | t }}">
-            {{ 'customer.login_page.back_login' | t }}
-          </a>
-        {%- endform -%}
-      </div>
-    </div>
-    <div id="login" class="section-header">
-      <h1 tabindex="-1" class="heading-title">
-        {{ 'customer.login_page.title' | t }}
-      </h1>
-      <div class="heading-description">
-        {{ 'customer.login_page.login_detail' | t }}
-      </div>
-    </div>
-    <div class="login-inner field relative w-full flex -wrap transition column">
-      {%- if recover_success == true -%}
-        <div class="form__message success w-full" tabindex="-1" autofocus>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <use href="#icon-success"></use>
-          </svg>
-          {{ 'customer.recover_password.success' | t }}
-        </div>
-      {%- endif -%}
-      {%- form 'customer_login', novalidate: 'novalidate' -%}
-        {%- if form.errors -%}
-          <div class="form__message error flex" tabindex="-1" autofocus>
-            <span class="visually-hidden">{{ 'accessibility.error' | t }} </span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto">
-              <use href="#icon-error"></use>
-            </svg>
+            </div>
             {%- for field in form.errors -%}
-              <ul>
+              <ul class="list-unstyled w-custom" style="--width: calc(100% - 24px)">
                 <li>
                   {%- if field == 'form' -%}
                     {{ form.errors.messages[field] }}
@@ -107,30 +117,33 @@
             {%- endfor -%}
           </div>
         {%- endif -%}
+      {%- endif -%}
 
-        <div class="field relative w-full flex wrap transition">
-          <input
-            type="email"
-            name="customer[email]"
-            id="CustomerEmail"
-            autocomplete="email"
-            autocorrect="off"
-            autocapitalize="off"
-            {% if form.errors contains 'form' %}
-              aria-invalid="true"
-            {% endif %}
-            placeholder="{{ 'customer.login_page.email' | t }}*"
-            required
-            class="w-full"
-          >
-          <label for="CustomerEmail" class="visually-hidden">
-            {{ 'customer.login_page.email' | t }}
-            <span class="required">*</span>
-          </label>
-        </div>
+      <div class="field relative w-full flex wrap transition mb-20">
+        <input
+          type="email"
+          name="customer[email]"
+          id="CustomerEmail"
+          autocomplete="email"
+          autocorrect="off"
+          autocapitalize="off"
+          {% if form.errors contains 'form' %}
+            aria-invalid="true"
+            style="--color-border: #D0473E"
+          {% endif %}
+          placeholder="{{ 'customer.login_page.email' | t }} *"
+          required
+          class="w-full fs-small-1 text-color{% if form.errors contains 'form' %} border{% endif %}"
+        >
+        <label for="CustomerEmail" class="visually-hidden">
+          {{ 'customer.login_page.email' | t }}
+          <span class="required">*</span>
+        </label>
+      </div>
 
-        {%- if form.password_needed -%}
-          <div class="field relative w-full flex wrap transition">
+      {%- if form.password_needed -%}
+        <div class="field relative w-full flex wrap transition show-hide-password">
+          <div class="w-full relative">
             <input
               type="password"
               value=""
@@ -140,21 +153,15 @@
               {% if form.errors contains 'form' %}
                 aria-invalid="true"
               {% endif %}
-              placeholder="{{ 'customer.login_page.password' | t }}*"
+              placeholder="{{ 'customer.login_page.password' | t }} *"
               required
-              class="w-full"
+              class="w-full fs-small-1 text-color"
             >
-            <show-pass-word
-              class="show-pass-word transition absolute inline-flex right-0"
-              role="button"
-              tabindex="0"
-              aria-label=" {{ 'customer.login_page.password' | t }}"
-              aria-pressed="false"
-            >
+            <show-pass-word class="show-pass-word transition absolute inset-y-0 flex content-center right-25">
               <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <use href="#icon-hide-password"></use>
               </svg>
-              <svg class="icon-view hidden" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <svg class="icon-view hidden" width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <use href="#icon-show-password"></use>
               </svg>
             </show-pass-word>
@@ -163,47 +170,49 @@
               <span class="required">*</span>
             </label>
           </div>
-        {%- endif -%}
-        <div class="mt-18 text-start">
-          <span class="required-field">{{ 'customer.account.required' | t }}</span>
         </div>
-        <button class="btn btn-primary w-full relative word-wrap relative">
-          <span class="hidden-on-load transition-short">{{ 'customer.login_page.sign_in' | t }}</span>
-          {%- render 'loader' -%}
+      {%- endif -%}
+      <div class="mt-10 mb-30 text-start">
+        <span class="required-field fs-small">{{ 'customer.account.required' | t }}</span>
+      </div>
+      <button class="btn btn-primary w-full relative word-wrap relative mb-30">
+        <span class="hidden-on-load transition-short">{{ 'customer.login_page.sign_in' | t }}</span>
+        {%- render 'loader' -%}
+      </button>
+      <div class="creat_new-account flex justify-center">
+        {{ 'customer.login_page.new_customer' | t }}
+        <a
+          href="{{ routes.account_register_url }}"
+          aria-label="{{ 'customer.login_page.create_account' | t }}"
+          class="heading-color underline ms-5"
+        >
+          {{ 'customer.login_page.create_account' | t }}
+        </a>
+      </div>
+      <div class="forgot-password flex justify-center">
+        <a href="#recover" class="heading-color underline" aria-label="{{ 'customer.login_page.forgot_password' | t }}">
+          {{ 'customer.login_page.forgot_password' | t }}
+        </a>
+      </div>
+    {%- endform -%}
+  </div>
+
+  {%- if shop.checkout.guest_login -%}
+    <div>
+      <h2>{{ 'customer.login_page.guest_title' | t }}</h2>
+
+      {%- form 'guest_login' -%}
+        <button class="button">
+          {{ 'customer.login_page.guest_continue' | t }}
         </button>
-        <div class="creat_new-account flex">
-          {{ 'customer.login_page.new_customer' | t }}
-          <a
-            href="{{ routes.account_register_url }}"
-            aria-label="{{ 'customer.login_page.create_account' | t }}"
-          >
-            {{ 'customer.login_page.create_account' | t }}
-          </a>
-        </div>
-        <div class="forgot-password">
-          <a href="#recover" class="heading-color" aria-label="{{ 'customer.login_page.forgot_password' | t }}">
-            {{ 'customer.login_page.forgot_password' | t }}
-          </a>
-        </div>
       {%- endform -%}
     </div>
-
-    {%- if shop.checkout.guest_login -%}
-      <div>
-        <h2>{{ 'customer.login_page.guest_title' | t }}</h2>
-
-        {%- form 'guest_login' -%}
-          <button class="button">
-            {{ 'customer.login_page.guest_continue' | t }}
-          </button>
-        {%- endform -%}
-      </div>
-    {%- endif -%}
-  </div>
+  {%- endif -%}
 </div>
 <script type="module">
   import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
   import '{{ "customer.js" | asset_url }}';
+
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form[action*="/account/login"]',
@@ -241,30 +250,6 @@
 {
   "name": "t:sections.main-login.name",
   "settings": [
-    {
-      "type": "header",
-      "content": "t:sections.all.general"
-    },
-    {
-      "type": "select",
-      "id": "section_width",
-      "options": [
-        {
-          "value": "fix_width",
-          "label": "t:sections.all.layout.fix_width"
-        },
-        {
-          "value": "stretch_width",
-          "label": "t:sections.all.layout.stretch_width"
-        },
-        {
-          "value": "full_width",
-          "label": "t:sections.all.layout.full_width"
-        }
-      ],
-      "default": "fix_width",
-      "label": "t:sections.all.layout.label"
-    },
     {
       "type": "header",
       "content": "t:sections.all.padding.section_padding_heading"

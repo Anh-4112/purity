@@ -1,10 +1,10 @@
 {%- unless template == 'index' or template == '404' -%}
   {%- assign t = template | split: '.' | first -%}
   <nav class="breadcrumbs flex {{ class }}" role="navigation" aria-label="breadcrumbs">
-    <ol class="navigation__breadcrumb-list flex wrap">
-      <li class="bls__breadcrumb-item">
+    <ul class="navigation__breadcrumb-list list-unstyled my-0 px-0 fs-small-1 flex wrap">
+      <li class="bls__breadcrumb-item dash-between flex align-center flex align-center">
         <a
-          class="navigation__breadcrumb-link"
+          class="navigation__breadcrumb-link heading-style"
           href="{{ routes.root_url }}"
           aria-label="{{- 'general.breadcrumb.home' | t -}}"
         >
@@ -13,34 +13,34 @@
       </li>
       {%- case t -%}
         {%- when 'page' -%}
-          <li class="navigation__breadcrumb-item">
+          <li class="navigation__breadcrumb-item dash-between flex align-center">
             <span class="navigation__breadcrumb-link" aria-current="page">
               {{- page.title -}}
             </span>
           </li>
         {%- when 'product' -%}
           {%- if collection.url -%}
-            <li class="navigation__breadcrumb-item">
+            <li class="navigation__breadcrumb-item dash-between flex align-center">
               {{ collection.title | link_to: collection.url }}
             </li>
           {%- endif -%}
-          <li class="navigation__breadcrumb-item">
+          <li class="navigation__breadcrumb-item dash-between flex align-center">
             <span class="navigation__breadcrumb-link" aria-current="page">
               {{- product.title -}}
             </span>
           </li>
         {%- when 'collection' and collection.handle -%}
           {%- if current_tags -%}
-            <li class="navigation__breadcrumb-item">
+            <li class="navigation__breadcrumb-item dash-between flex align-center">
               {{ collection.title | link_to: collection.url }}
             </li>
-            <li class="navigation__breadcrumb-item">
+            <li class="navigation__breadcrumb-item dash-between flex align-center">
               <span class="navigation__breadcrumb-link" aria-current="page">
                 {{- current_tags | join: ' + ' -}}
               </span>
             </li>
           {%- else -%}
-            <li class="navigation__breadcrumb-item">
+            <li class="navigation__breadcrumb-item dash-between flex align-center">
               <span class="navigation__breadcrumb-link" aria-current="page">
                 {{- collection.title -}}
               </span>
@@ -48,37 +48,37 @@
           {%- endif -%}
         {%- when 'blog' -%}
           {%- if current_tags -%}
-            <li class="navigation__breadcrumb-item">
+            <li class="navigation__breadcrumb-item dash-between flex align-center">
               {{ blog.title | link_to: blog.url }}
             </li>
-            <li class="navigation__breadcrumb-item">
+            <li class="navigation__breadcrumb-item dash-between flex align-center">
               <span class="navigation__breadcrumb-link" aria-current="page">
                 {{- current_tags | join: ' + ' -}}
               </span>
             </li>
           {%- else -%}
-            <li class="navigation__breadcrumb-item">
+            <li class="navigation__breadcrumb-item dash-between flex align-center">
               <span class="navigation__breadcrumb-link" aria-current="page">
                 {{- blog.title -}}
               </span>
             </li>
           {%- endif -%}
         {%- when 'article' -%}
-          <li class="navigation__breadcrumb-item">
+          <li class="navigation__breadcrumb-item dash-between flex align-center">
             {{ blog.title | link_to: blog.url }}
           </li>
-          <li class="navigation__breadcrumb-item">
+          <li class="navigation__breadcrumb-item dash-between flex align-center">
             <span class="navigation__breadcrumb-link" aria-current="page">
               {{- article.title -}}
             </span>
           </li>
         {%- else -%}
-          <li class="navigation__breadcrumb-item">
+          <li class="navigation__breadcrumb-item dash-between flex align-center">
             <span class="navigation__breadcrumb-link" aria-current="page">
               {{- page_title -}}
             </span>
           </li>
       {%- endcase -%}
-    </ol>
+    </ul>
   </nav>
 {%- endunless -%}
