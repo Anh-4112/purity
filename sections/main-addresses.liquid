@@ -1,3 +1,4 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -14,7 +15,7 @@
 {%- endcapture -%}
 <section class="section" style="{{ style | strip | strip_newlines }}">
   <div class="{{ section_width }}">
-    <div class="flex wrap column w-full max-w-custom mx-auto" style="--max-width: 60rem;--padding-inline: 50">
+    <div class="flex wrap column w-full max-w-custom-all mx-auto" style="--max-width: 60rem;--padding-inline: 50">
       <div class="w-full">
         <div class="your-addresses bls-customer__address mt-0 mb-30">
           <div class="address__header-inner text-center mb-60">
@@ -31,7 +32,7 @@
           >
             {{ 'customer.addresses.add_new' | t }}
           </button>
-          <div class="form-add-addresses mt-30 grey-bg p-30 rounded-5" id="AddAddress">
+          <div class="form-add-addresses mt-30 grey-bg p-30 rounded-10" id="AddAddress">
             {% form 'customer_address', customer.new_address, id: 'Newaddress_form', novalidate: 'novalidate' %}
               <div class="customer-form__new-wrapper">
                 <div
@@ -198,7 +199,7 @@
             {% for address in customer.addresses %}
               <div class="customer__address-info mt-15 col-lg-6">
                 <div class="address-info-inner py-30 bg-grey mb-20 px-custom rounded-10">
-                  <h3 class="title-info mt-0 fs-18 px-30 py-15 grey-bg mb-25">
+                  <h3 class="title-info mt-0 fs-18 px-30 grey-bg mb-25">
                     {%- if address.address1 != blank -%}
                       {{ address.address1 }}
                       {% if address == customer.default_address %}
@@ -224,7 +225,7 @@
                     <p>{{ address.zip }}</p>
                     <p>{{ address.phone }}</p>
                   </div>
-                  <div class="flex info-actions gap-10 px-30 pb-30">
+                  <div class="flex info-actions gap-10 px-30" style="--btn-padding-y: 1rem;">
                     <button
                       type="button"
                       id="EditFormButton_{{ address.id }}"
@@ -252,7 +253,7 @@
           </div>
           {%- for address in customer.addresses -%}
             <div id="EditAddress_{{ address.id }}" style="display: none;">
-              <div class="your-addresses border mt-30 p-30 grey-bg rounded-5">
+              <div class="your-addresses border mt-30 p-30 grey-bg rounded-10">
                 <h3 class="title-default edit-address-title text-left mt-0">
                   {{ 'customer.addresses.edit_address' | t }}: {{ address.first_name }}
                   {{ address.last_name }}
