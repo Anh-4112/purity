@@ -111,10 +111,7 @@
           class="product-tabs__header-image-mobile swiper hidden-md reveal_on_scroll mb-20"
           data-spacing="30"
           data-free-mode="true"
-          style="
-            max-width: 100%;
-            width: 100%;
-          "
+          style="max-width: 100%;xwidth: 100%;"
         >
           <div class="swiper-wrapper">
             {%- for block in section.blocks -%}
@@ -148,7 +145,7 @@
                 endcase
               -%}
               <div
-                class="product-tabs__header-item tab-image transition w-custom max-w-100 flex column content-center pointer swiper-slide"
+                class="product-tabs__header-item tab-image transition w-custom max-w-100 flex column content-center pointer swiper-slide {% if forloop.first %}active{% endif %}"
                 style="--width: var(--image-collection-width);"
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
@@ -225,10 +222,11 @@
             -%}
             {%- if collection_title != blank -%}
               <div
-                class="product-tabs__header-item product-tabs__header-item-js flex column content-center pointer"
+                class="product-tabs__header-item product-tabs__header-item-js flex column content-center pointer {% if forloop.first %}active{% endif %}"
                 data-block-id="{{ block.id }}"
                 role="tab"
                 tabindex="0"
+                data-position="{{ forloop.index }}"
                 {{ block.shopify_attributes }}
               >
                 <div

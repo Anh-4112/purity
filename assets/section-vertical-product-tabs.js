@@ -211,12 +211,12 @@ class ProductTabs extends HTMLElement {
             this.closeAllAccordions();
         }
         let activeTab = null;
+        const slideSectionHeader = this.querySelector('.product-tabs__header-image-mobile');
         this.tabs.forEach((tab) => {
             const isSelected = tab.dataset.blockId === blockId;
             tab.classList.toggle("selected", isSelected);
             tab.classList.toggle("active", isSelected);
             tab.setAttribute("aria-selected", isSelected ? "true" : "false");
-
             if (isSelected) {
                 activeTab = tab;
                 const description = tab.querySelector(
@@ -224,6 +224,10 @@ class ProductTabs extends HTMLElement {
                 );
                 if (description && description.textContent.trim().length > 0) {
                     this.toggleAccordion(tab, true);
+                }
+                const position = tab.dataset.position;
+                if (slideSectionHeader) {
+                    slideSectionHeader.swiper.slideToLoop(position - 1, 300, true);
                 }
             }
         });
@@ -320,8 +324,8 @@ class SuitableFinder extends ProductTabs {
         this._rangeSlider = this.querySelector("range-slider");
         this._sizeDot = this.dataset.sizeDot;
         this._isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        this._isDragging = false;
         
-        // Bind methods
         this.handleDotMouseDown = this.handleDotMouseDown.bind(this);
         this.handleDotMouseMove = this.handleDotMouseMove.bind(this);
         this.handleDotMouseUp = this.handleDotMouseUp.bind(this);
@@ -329,26 +333,35 @@ class SuitableFinder extends ProductTabs {
         this.handleDotTouchMove = this.handleDotTouchMove.bind(this);
         this.handleDotTouchEnd = this.handleDotTouchEnd.bind(this);
         this.handleResize = this.handleResize.bind(this);
+        this._isInitialized = false;
     }
     
     connectedCallback() {
         super.connectedCallback();
         
         if (this._dot && this._rangeSlider) {
-            this.setupDraggableDot();
-            const activeTab = this.querySelector(".product-tabs__header-item.active");
-            if (activeTab) {
-                this.updateDotPosition(activeTab, false);
-            }
+            this._dot.style.transition = "none";
+            
+            requestAnimationFrame(() => {
+                this.setupDraggableDot();
+                const activeTab = this.querySelector(".product-tabs__header-item.active");
+                if (activeTab) {
+                    this.updateDotPosition(activeTab, false);
+                    
+                    requestAnimationFrame(() => {
+                        if (this._dot) {
+                            this._dot.style.transition = "left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)";
+                            this._isInitialized = true;
+                        }
+                    });
+                }
+            });
         }
         
-        window.addEventListener("scroll", this.calculateTabPositions.bind(this), { passive: true });
+        window.addEventListener("resize", this.handleResize, { passive: true });
     }
     
     setupEventListeners() {
-        // Don't call super.setupEventListeners() to avoid double event binding
-        // Instead, implement the complete event handling here with dot functionality included
-        
         this._tabs.forEach((tab) => {
             tab.addEventListener("click", (event) => {
                 if (event.target.closest(".product-tabs__header-description")) {
@@ -368,7 +381,7 @@ class SuitableFinder extends ProductTabs {
                     if (blockId !== this.selectedTab) {
                         this.selectedTab = blockId;
                         if (this._rangeSlider) {
-                            this.updateDotPosition(tab, true);
+                            this.updateDotPosition(tab, this._isInitialized);
                         }
                     }
                 }
@@ -431,36 +444,41 @@ class SuitableFinder extends ProductTabs {
         this._isDragging = true;
         this._dot.style.cursor = "grabbing";
         this._dot.style.transition = "none";
-
+    
         document.addEventListener("mousemove", this.handleDotMouseMove);
         document.addEventListener("mouseup", this.handleDotMouseUp);
-
+    
         this._startPosition = event.clientX;
-        this._currentPosition = parseInt(this._dot.style.left) || 0;
-
+        
+        const computedLeft = window.getComputedStyle(this._dot).left;
+        this._currentPosition = parseInt(computedLeft) || 0;
+    
         this.calculateTabPositions();
     }
 
     handleDotMouseMove(event) {
         if (!this._isDragging) return;
 
-        event.preventDefault();
+        if (this._animationFrameId) {
+            cancelAnimationFrame(this._animationFrameId);
+        }
+        
+        this._animationFrameId = requestAnimationFrame(() => {
+            const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
+            const dotWidth = parseInt(this._sizeDot || 26, 10);
 
-        const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
-        const dotWidth = parseInt(this._sizeDot || 26, 10);
+            let newPosition = this._currentPosition + (event.clientX - this._startPosition);
 
-        let newPosition =
-            this._currentPosition + (event.clientX - this._startPosition);
+            newPosition = Math.max(
+                0,
+                Math.min(rangeSliderRect.width - dotWidth, newPosition)
+            );
 
-        newPosition = Math.max(
-            0,
-            Math.min(rangeSliderRect.width - dotWidth, newPosition)
-        );
+            this._dot.style.left = `${newPosition}px`;
 
-        this._dot.style.left = `${newPosition}px`;
-
-        const dotCenter = newPosition + dotWidth / 2;
-        this.activateTabWhileDragging(dotCenter);
+            const dotCenter = newPosition + dotWidth / 2;
+            this.activateTabWhileDragging(dotCenter);
+        });
     }
     
     activateTabWhileDragging(position) {
@@ -521,7 +539,9 @@ class SuitableFinder extends ProductTabs {
         document.addEventListener("touchend", this.handleDotTouchEnd);
 
         this._startPosition = event.touches[0].clientX;
-        this._currentPosition = parseInt(this._dot.style.left) || 0;
+        
+        const computedLeft = window.getComputedStyle(this._dot).left;
+        this._currentPosition = parseInt(computedLeft) || 0;
 
         this.calculateTabPositions();
     }
@@ -531,18 +551,23 @@ class SuitableFinder extends ProductTabs {
 
         event.preventDefault();
 
-        const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
-        const dotWidth = parseInt(this._sizeDot || 26, 10);
+        if (this._animationFrameId) {
+            cancelAnimationFrame(this._animationFrameId);
+        }
+        
+        this._animationFrameId = requestAnimationFrame(() => {
+            const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
+            const dotWidth = parseInt(this._sizeDot || 26, 10);
 
-        let newPosition = this._currentPosition + (event.touches[0].clientX - this._startPosition);
+            let newPosition = this._currentPosition + (event.touches[0].clientX - this._startPosition);
 
-        newPosition = Math.max(0, Math.min(rangeSliderRect.width - dotWidth, newPosition));
+            newPosition = Math.max(0, Math.min(rangeSliderRect.width - dotWidth, newPosition));
 
-        this._dot.style.left = `${newPosition}px`;
+            this._dot.style.left = `${newPosition}px`;
 
-        const dotCenter = newPosition + dotWidth / 2;
-
-        this.activateTabWhileDragging(dotCenter);
+            const dotCenter = newPosition + dotWidth / 2;
+            this.activateTabWhileDragging(dotCenter);
+        });
     }
 
     handleDotTouchEnd(event) {
@@ -560,33 +585,14 @@ class SuitableFinder extends ProductTabs {
         }
     }
 
-    findClosestTabWhileDragging(position) {
-        if (!this._tabPositions.length) return;
-
-        let closestTab = null;
-        let minDistance = Infinity;
-
-        this._tabPositions.forEach((item) => {
-            const distance = Math.abs(item.position - position);
-            if (distance < minDistance) {
-                minDistance = distance;
-                closestTab = item;
-            }
-        });
-
-        this._tabs.forEach((tab) => {
-            tab.classList.remove("hovered");
-        });
-
-        if (closestTab) {
-            closestTab.tab.classList.add("hovered");
-        }
-    }
-
     handleResize() {
         super.handleResize();
         
         if (!this._rangeSlider) return;
+
+        if (this._rangeSlider.offsetParent === null || !this.isInViewport(this._rangeSlider)) {
+            return;
+        }
 
         this.calculateTabPositions();
 
@@ -594,6 +600,14 @@ class SuitableFinder extends ProductTabs {
         if (activeTab) {
             this.updateDotPosition(activeTab, false);
         }
+    }
+    
+    isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.bottom >= 0
+        );
     }
     
     updateDotPosition(activeTab, animate = true) {
@@ -615,27 +629,42 @@ class SuitableFinder extends ProductTabs {
         const tabCenter = tabRect.left + tabRect.width / 2;
         const relativeCenterX = tabCenter - rangeSliderRect.left;
         const adjustedPosition = relativeCenterX - dotWidth / 2;
+        
+        this._rangeSlider.style.setProperty(
+            "--progress-width",
+            `${adjustedPosition}px`
+        );
 
-        if (animate) {
-            Motion.animate(
-                this._dot,
-                { left: `${adjustedPosition}px` },
-                { duration: 0.2, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)" }
-            );
+        if (!animate || !this._isInitialized) {
+            this._dot.style.transition = "none";
+            this._dot.style.left = `${adjustedPosition}px`;
+            
+            if (!animate) {
+                void this._dot.offsetWidth;
+            }
+        } else {
+            this._dot.style.transition = "left 0.15s cubic-bezier(0.25, 0.1, 0.25, 1)";
+            this._dot.style.left = `${adjustedPosition}px`;
         }
     }
     
     updateTabDisplay(blockId, animate = true) {
         super.updateTabDisplay(blockId, animate);
         
-        const activeTab = this.querySelector(".product-tabs__header-item.active");
-        if (this._rangeSlider && activeTab) {
-            this.updateDotPosition(activeTab, false);
+        if (this._rangeSlider) {
+            const activeTab = this.querySelector(".product-tabs__header-item.active");
+            if (activeTab) {
+                this.updateDotPosition(activeTab, this._isInitialized && animate);
+            }
         }
     }
     
     disconnectedCallback() {
         super.disconnectedCallback();
+        
+        if (this._animationFrameId) {
+            cancelAnimationFrame(this._animationFrameId);
+        }
         
         if (this._dot) {
             this._dot.removeEventListener("mousedown", this.handleDotMouseDown);
@@ -646,6 +675,8 @@ class SuitableFinder extends ProductTabs {
         document.removeEventListener("mouseup", this.handleDotMouseUp);
         document.removeEventListener("touchmove", this.handleDotTouchMove);
         document.removeEventListener("touchend", this.handleDotTouchEnd);
+        
+        window.removeEventListener("resize", this.handleResize, { passive: true });
         window.removeEventListener("scroll", this.calculateTabPositions.bind(this));
     }
 }
