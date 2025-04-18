@@ -36,9 +36,9 @@
             {%- if show_cate -%}
               {% assign blog_name = article.handle | split: '/' | first %}
               {% if blog_name != blank %}
-                <li class="blog-meta-tag blog-cate inline-flex align-center">
+                <li class="blog-meta-tag blog-cate inline-flex align-center me-5">
                   <a
-                    class="post-tags blog-cate badge bg-primary color-white  rounded-pill fs-13 px-15 py-4"
+                    class="post-tags blog-cate inline-block bg-primary color-white  rounded-pill fs-13 px-15 py-4"
                     href="{{ blog.url }}"
                     aria-label="blog category"
                   >
@@ -62,14 +62,14 @@
             {% endif %}
           </ul>
         {%- endif -%}
-        <div class="mb-5 card__heading{% if sec_settings.columns_desktop > 3 %} h5{% else %} h4{% endif %}">
+        <h4 class="capitalize mb-5 card__heading{% if sec_settings.columns_desktop > 3 %} h5{% else %} h4{% endif %}">
           <a href="{{ article.url }}" class="heading-color remove-underline">
             {{ article.title | escape }}
           </a>
-        </div>
+        </h4>
         {%- if show_excerpt -%}
           {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
-            <p class="article-card__excerpt rte-width rte mb-10">
+            <p class="article-card__excerpt rte-width rte mb-15">
               {%- if article.excerpt.size > 0 -%}
                 {{ article.excerpt | strip_html | truncatewords: 30 }}
               {%- else -%}
