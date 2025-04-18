@@ -73,7 +73,7 @@
             -%}
             <a
               class="scrolling-image-item overflow-hidden w-custom-mb w-custom"
-              style="--width: {{ block_st.image_width }}px;"
+              style="--width: {{ section_st.image_width }}px;"
               {% if link_image == blank %}
                 role="link" aria-disabled="true"
               {% else %}
@@ -83,15 +83,15 @@
             >
               {%- if image != blank -%}
                 <div
-                  class="scrolling-image image_scroll"
-                  style="--image-width: {{ block_st.image_width }}px;--aspect-ratio: {{ image.aspect_ratio }};"
+                  class="scrolling-image image_scroll rounded"
+                  style="--image-width: {{ section_st.image_width }}px;--aspect-ratio: {{ image.aspect_ratio }};"
                 >
                   {% render 'responsive-image', image: image, type: 'banner', image_alt: image_alt %}
                 </div>
               {% else %}
                 <div
                   class="w-custom flex content-center"
-                  style="--width: {{ block_st.image_width }}px;"
+                  style="--width: {{ section_st.image_width }}px;"
                 >
                   {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full rounded' %}
                 </div>
@@ -106,7 +106,7 @@
 
 {% schema %}
 {
-  "name": "t:sections.logo_list.name",
+  "name": "t:sections.scrolling_image.name",
   "tag": "section",
   "class": "section-logo-list",
   "disabled_on": {
@@ -143,6 +143,22 @@
       "label": "t:sections.all.colors.label",
       "info": "t:sections.all.colors.info",
       "default": "default-color-scheme"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 20,
+      "max": 320,
+      "step": 5,
+      "label": "t:sections.all.image.width",
+      "default": 150,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_background_blur",
+      "label": "t:sections.scrolling_image.settings.show_background_blur.label",
+      "default": true
     },
     {
       "type": "header",
@@ -246,12 +262,6 @@
       "default": 100
     },
     {
-      "type": "checkbox",
-      "id": "show_background_blur",
-      "label": "t:sections.logo_list.settings.show_background_blur.label",
-      "default": true
-    },
-    {
       "type": "header",
       "content": "t:sections.all.padding.section_padding_heading"
     },
@@ -288,16 +298,6 @@
           "label": "t:sections.all.image.label"
         },
         {
-          "type": "range",
-          "id": "image_width",
-          "min": 20,
-          "max": 200,
-          "step": 5,
-          "label": "t:sections.scrolling_text.settings.blocks.image.image_width.label",
-          "default": 150,
-          "unit": "px"
-        },
-        {
           "type": "url",
           "id": "link_image",
           "label": "t:sections.all.content_setting.link.label"
@@ -307,7 +307,7 @@
   ],
   "presets": [
     {
-      "name": "t:sections.logo_list.name",
+      "name": "t:sections.scrolling_image.name",
       "blocks": [
         {
           "type": "image"
