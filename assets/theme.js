@@ -1048,6 +1048,7 @@ class VideoSection extends HTMLElement {
   }
 }
 customElements.define("video-section", VideoSection);
+
 class VideoLocal extends HTMLElement {
   constructor() {
     super();
@@ -1059,23 +1060,27 @@ class VideoLocal extends HTMLElement {
     }, 100);
   }
 
-  loadContent() {
-    const _this = this;
-    if (!this.getAttribute("loaded") && this.querySelector("template")) {
+  loadContentVideo(_this) {
+    if (!_this.getAttribute("loaded") && _this.querySelector("template")) {
       const content = document.createElement("div");
       content.appendChild(
-        this.querySelector("template").content.firstElementChild.cloneNode(true)
+        _this
+          .querySelector("template")
+          .content.firstElementChild.cloneNode(true)
       );
-      this.setAttribute("loaded", true);
-      const deferredElement = this.appendChild(content.querySelector("video"));
+      _this.setAttribute("loaded", true);
+      const video = content.querySelector("video")
+        ? content.querySelector("video")
+        : content.querySelector("iframe");
+      const deferredElement = _this.appendChild(video);
       const alt = deferredElement.getAttribute("alt");
       const img = deferredElement.querySelector("img");
       if (alt && img) {
         img.setAttribute("alt", alt);
       }
-      this.thumb = this.querySelector(".video-thumbnail");
-      if (this.thumb) {
-        this.thumb.remove();
+      _this.thumb = _this.querySelector(".video-thumbnail");
+      if (_this.thumb) {
+        _this.thumb.remove();
       }
       if (
         deferredElement.nodeName == "VIDEO" &&
@@ -1084,10 +1089,14 @@ class VideoLocal extends HTMLElement {
         deferredElement.play();
       }
     }
+  }
 
+  loadContent() {
+    const _this = this;
     const handleIntersection = (entries, observer) => {
       if (!entries[0].isIntersecting) return;
       observer.unobserve(_this);
+      this.loadContentVideo(_this);
       const videos = _this.querySelectorAll("video");
       videos.forEach((video) => {
         const dataSrc = video.dataset.src;
@@ -1116,6 +1125,53 @@ class VideoLocalPlay extends VideoLocal {
   }
 }
 customElements.define("video-local-play", VideoLocalPlay);
+
+class VideoProduct extends VideoLocal {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    setTimeout(() => {
+      this.loadContent();
+    }, 100);
+  }
+}
+customElements.define("video-product", VideoProduct);
+
+class VideoProductGallery extends VideoLocal {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  init() {
+    if (this.hasAttribute("auto-play")) {
+      setTimeout(() => {
+        this.loadContent();
+      }, 100);
+    } else {
+      const poster = this.querySelector("button");
+      if (!poster) return;
+      poster.addEventListener("click", this.loadContent.bind(this));
+    }
+  }
+}
+customElements.define("video-product-gallery", VideoProductGallery);
+
+class VideoLocalLightbox extends VideoLocal {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  init() {
+    setTimeout(() => {
+      this.loadContent();
+    }, 100);
+  }
+}
+customElements.define("video-local-lightbox", VideoLocalLightbox);
 
 class VariantInput extends HTMLElement {
   constructor() {
@@ -1207,6 +1263,13 @@ class VariantInput extends HTMLElement {
           currentImage.className,
           currentImage.sizes
         );
+
+        const secondaryImage = this.closest(".product__item-js").querySelector(
+          ".product__hover-img"
+        );
+        if (secondaryImage) {
+          secondaryImage.classList.remove("hidden");
+        }
 
         if (currentImage.src !== newImage.src) {
           await Motion.animate(
@@ -1344,12 +1407,12 @@ class VariantInput extends HTMLElement {
     if (size_chart) {
       const content = document.createElement("div");
       content.appendChild(size_chart.content.firstElementChild.cloneNode(true));
-      NextSkyTheme.body.appendChild(content.querySelector("modal-popup"));
+      NextSkyTheme.body.appendChild(content.querySelector("size-chart-popup"));
     }
     setTimeout(
       () =>
         NextSkyTheme.eventModal(
-          document.querySelector("modal-popup"),
+          document.querySelector("size-chart-popup"),
           "open",
           true
         ),
@@ -1531,7 +1594,7 @@ class CartDrawer extends HTMLElement {
       {
         id: this.sectionId,
         section: this.sectionId,
-        selector: ".drawer__header",
+        selector: ".drawer__header-cart",
       },
       {
         id: "cart-icon-bubble",
@@ -2813,3 +2876,45 @@ class ImageComparison extends HTMLElement {
   }
 }
 customElements.define("image-comparison", ImageComparison);
+
+class AskQuestion extends HTMLButtonElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    this.addEventListener("click", this.onClick.bind(this), false);
+  }
+  onClick(e) {
+    const ask_question = e.target
+      .closest(".ask-question")
+      .querySelector("template");
+    if (ask_question) {
+      const content = document.createElement("div");
+      content.appendChild(
+        ask_question.content.firstElementChild.cloneNode(true)
+      );
+      NextSkyTheme.body.appendChild(
+        content.querySelector("ask-question-popup")
+      );
+    }
+    setTimeout(
+      () =>
+        NextSkyTheme.eventModal(
+          document.querySelector("ask-question-popup"),
+          "open",
+          true
+        ),
+      100
+    );
+  }
+}
+customElements.define("ask-question", AskQuestion, {
+  extends: "button",
+});
+CustomElement.observeAndPatchCustomElements({
+  "ask-question": {
+    tagElement: "button",
+    classElement: AskQuestion,
+  },
+});

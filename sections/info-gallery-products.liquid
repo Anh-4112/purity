@@ -1,0 +1,351 @@
+{%- if product.metafields.custom.info_gallery.value -%}
+  {%- liquid
+    assign section_st = section.settings
+    if section_st.section_width == 'fix_width'
+      assign section_width = 'container'
+    elsif section_st.section_width == 'full_width'
+      assign section_width = 'full-width px-20'
+    else
+      assign section_width = 'fluid_container'
+    endif
+    assign heading_size = section_st.heading_size
+    assign text_alignment = section_st.text_alignment
+    assign desktop_content_position = section_st.desktop_content_position
+    assign content_alignment = section_st.content_alignment
+    assign content_alignment_mobile = section_st.content_alignment_mobile
+    assign header_size = ''
+    if heading_size == 'small'
+      assign header_size = 'h3'
+    elsif heading_size == 'large'
+      assign header_size = 'h1'
+    endif
+  -%}
+  {%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
+{%- endcapture -%}
+  <div
+    class="section color-{{ section_st.color_scheme }} section__info-gallery-product gradient"
+    style="{{ style | strip | strip_newlines }}"
+  >
+    <div class="{{ section_width }}">
+      {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
+        <div
+          class="section-header text-{{ text_alignment }}"
+        >
+          {%- if section_st.subheading != blank -%}
+            <div class="section-subheading">
+              {{ section_st.subheading }}
+            </div>
+          {%- endif -%}
+          {%- if section_st.heading != blank -%}
+            <h2 class="section-heading {{ header_size }}">
+              {{ section_st.heading }}
+            </h2>
+          {%- endif -%}
+          {%- if section_st.description != blank -%}
+            <div class="section-description">
+              {{ section_st.description }}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+      <div class="info-gallery__wrapper">
+        <ul
+          class="info-gallery__list"
+          role="list"
+          style="--flex-gallery: {{ product.metafields.custom.info_gallery.value.count }}"
+        >
+          {%- for info_gallery in product.metafields.custom.info_gallery.value -%}
+            <li class="info-gallery__card{% if forloop.index == 1 %} active{% endif %}">
+              {%- assign image_alt = info_gallery.image.alt | default: product.title | escape -%}
+              <div class="info-gallery__media">
+                {% render 'responsive-image', type: 'banner', image: info_gallery.image, image_alt: image_alt %}
+                <div class="info-gallery__label">
+                  <span>{{ 'general.content.info.step_html' | t: index: forloop.index }}</span>
+                </div>
+              </div>
+              {%- if info_gallery.subheading or info_gallery.heading or info_gallery.description -%}
+                <div class="info-gallery__info">
+                  <div class="sec__content w-full {{ desktop_content_position }} text-{{ content_alignment_mobile }} text-md-{{ content_alignment }} container relative z-2">
+                    {% assign animate_delay = 25 %}
+                    <div class="sec__content-inner prose max-w-100">
+                      {%- if info_gallery.subheading -%}
+                        <div class="sec__content-subheading">
+                          {% assign animate_delay = animate_delay | plus: 5 %}
+                          <motion-effect
+                            data-animate="fade-up"
+                            data-animate-delay="{{ animate_delay }}"
+                            class="block"
+                          >
+                            {{ 'general.content.subheading' | t }}
+                          </motion-effect>
+                        </div>
+                      {%- endif -%}
+                      {%- if info_gallery.subheading -%}
+                        <div class="sec__content-heading mb-10 {{ heading_size }}">
+                          {% assign animate_delay = animate_delay | plus: 5 %}
+                          <motion-effect
+                            data-animate="fade-up"
+                            data-animate-delay="{{ animate_delay }}"
+                            class="block"
+                          >
+                            {{ 'general.content.heading' | t }}
+                          </motion-effect>
+                        </div>
+                      {%- endif -%}
+                      {%- if info_gallery.description -%}
+                        <div class="sec__content-des">
+                          {% assign animate_delay = animate_delay | plus: 5 %}
+                          <motion-effect
+                            data-animate="fade-up"
+                            data-animate-delay="{{ animate_delay }}"
+                            class="block"
+                          >
+                            {{ 'general.content.description' | t }}
+                          </motion-effect>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "t:sections.info-gallery-products.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.general"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "fix_width",
+          "label": "t:sections.all.layout.fix_width"
+        },
+        {
+          "value": "stretch_width",
+          "label": "t:sections.all.layout.stretch_width"
+        },
+        {
+          "value": "full_width",
+          "label": "t:sections.all.layout.full_width"
+        }
+      ],
+      "default": "fix_width",
+      "label": "t:sections.all.layout.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.info",
+      "default": "default-color-scheme"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_header.label"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.all.content_setting.subheading.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.all.content_setting.heading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.all.content_setting.description.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:sections.all.content_header.heading_size.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.all.content_header.heading_size.options__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.all.content_header.heading_size.options__3.label"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.all.content_header.heading_size.label"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.all.text_alignment.alignment"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_setting.label"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_position",
+      "default": "middle-left",
+      "label": "t:sections.all.desktop_content_position.label",
+      "info": "t:sections.all.desktop_content_position.info",
+      "options": [
+        {
+          "group": "t:sections.all.desktop_content_position.group.top.label",
+          "value": "top-left",
+          "label": "t:sections.all.desktop_content_position.options__1.label"
+        },
+        {
+          "group": "t:sections.all.desktop_content_position.group.top.label",
+          "value": "top-center",
+          "label": "t:sections.all.desktop_content_position.options__2.label"
+        },
+        {
+          "group": "t:sections.all.desktop_content_position.group.top.label",
+          "value": "top-right",
+          "label": "t:sections.all.desktop_content_position.options__3.label"
+        },
+        {
+          "group": "t:sections.all.desktop_content_position.group.middle.label",
+          "value": "middle-left",
+          "label": "t:sections.all.desktop_content_position.options__4.label"
+        },
+        {
+          "group": "t:sections.all.desktop_content_position.group.middle.label",
+          "value": "middle-center",
+          "label": "t:sections.all.desktop_content_position.options__5.label"
+        },
+        {
+          "group": "t:sections.all.desktop_content_position.group.middle.label",
+          "value": "middle-right",
+          "label": "t:sections.all.desktop_content_position.options__6.label"
+        },
+        {
+          "group": "t:sections.all.desktop_content_position.group.bottom.label",
+          "value": "bottom-left",
+          "label": "t:sections.all.desktop_content_position.options__7.label"
+        },
+        {
+          "group": "t:sections.all.desktop_content_position.group.bottom.label",
+          "value": "bottom-center",
+          "label": "t:sections.all.desktop_content_position.options__8.label"
+        },
+        {
+          "group": "t:sections.all.desktop_content_position.group.bottom.label",
+          "value": "bottom-right",
+          "label": "t:sections.all.desktop_content_position.options__9.label"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "start",
+      "label": "t:sections.all.text_alignment.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.mobile_options.mobile_layout.label"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment_mobile",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "start",
+      "label": "t:sections.all.text_alignment.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.info-gallery-products.name"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

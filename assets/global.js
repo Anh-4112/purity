@@ -155,17 +155,19 @@ export function eventModal(
     const focus_item = modal_element.hasAttribute("data-focus-item")
       ? modal_element.getAttribute("data-focus-item")
       : "";
-    if (
-      modal_element.classList.contains("delay") &&
-      modal_element.querySelector(".model_media")
-    ) {
-      setTimeout(() => {
+    if (modal_element.classList.contains("delay")) {
+      if (modal_element.querySelector(".model_media")) {
+        setTimeout(() => {
+          modal_element.classList.remove("active", "delay");
+          if (active_modal.length <= 1) {
+            removeModalAction(modal_element);
+          }
+        }, 350);
+        modal_element.querySelector(".model_media").classList.remove("open");
+      } else {
         modal_element.classList.remove("active", "delay");
-        if (active_modal.length == 1) {
-          removeModalAction(modal_element);
-        }
-      }, 350);
-      modal_element.querySelector(".model_media").classList.remove("open");
+        removeModalAction(modal_element);
+      }
     } else {
       modal_element.classList.remove("active");
     }
@@ -173,7 +175,7 @@ export function eventModal(
       setTimeout(() => modal_element.remove(), 600);
     }
     if (!modal_element.classList.contains("delay")) {
-      if (active_modal.length == 1) {
+      if (active_modal.length <= 1) {
         removeModalAction(modal_element);
       }
     }

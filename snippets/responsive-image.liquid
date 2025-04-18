@@ -142,11 +142,10 @@
       >
     </picture>
   {% else %}
-    {% assign width = width | default: image.width %}
     {%- capture srcset_image -%}
       {% for width in widths %}{{- -}}
         {% assign width_format = width | times: 1 %}{{- -}}
-        {%- if image.width >= width_format -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- endif -%}{{- -}}
+        {%- if image.width and image.width >= width_format -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- else -%}{{ image | image_url: width: width_format }} {{ width_format }}w,{%- endif -%}{{- -}}
       {% endfor %}{{- -}}
     {%- endcapture -%}
     <img

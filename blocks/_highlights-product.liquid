@@ -1,0 +1,28 @@
+{%- if closest.product != blank -%}
+  {%- if closest.product.metafields.custom.highlights.value -%}
+    <ul>
+      {%- for highlights in closest.product.metafields.custom.highlights.value -%}
+        <li>
+          {% assign image_alt = highlights.title | default: closest.product.title | escape %}
+          {%- if highlights.icon -%}
+            <div class="highlights-icon">
+              {% render 'responsive-image', type: 'other', image: highlights.icon, image_alt: image_alt %}
+            </div>
+          {% endif %}
+          {%- if highlights.title -%}
+            <div class="highlights-text">
+              <span>{{ highlights.title }}</span>
+            </div>
+          {% endif %}
+        </li>
+      {%- endfor -%}
+    </ul>
+  {% endif %}
+{% endif %}
+{% schema %}
+{
+  "name": "t:sections.all.product_setting.highlights.name",
+  "class": "block-product__highlights my-25 rte slideIn-animate",
+  "presets": [{ "name": "t:sections.all.product_setting.highlights.name" }]
+}
+{% endschema %}

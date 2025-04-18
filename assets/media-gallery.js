@@ -30,26 +30,22 @@ class GridGallery extends MediaGallery {
 
   init() {
     if (this.MediaGalleryHtml) {
-      this.resizeWindow(767);
-    }
-  }
-
-  resizeWindow(width) {
-    let innerWidth = window.innerWidth;
-    window.addEventListener("resize", () => {
-      const newWidth = window.innerWidth;
-      if (newWidth <= width && innerWidth > width) {
+      let width = window.innerWidth;
+      window.addEventListener("resize", () => {
+        const newWidth = window.innerWidth;
+        if (newWidth <= 767 && width > 767) {
+          this.actionOnMobile();
+        }
+        if (newWidth > 767 && width <= 767) {
+          this.actionOutMobile();
+        }
+        width = newWidth;
+      });
+      if (width <= 767) {
         this.actionOnMobile();
-      }
-      if (newWidth > width && innerWidth <= width) {
+      } else {
         this.actionOutMobile();
       }
-      innerWidth = newWidth;
-    });
-    if (innerWidth <= width) {
-      this.actionOnMobile();
-    } else {
-      this.actionOutMobile();
     }
   }
 
@@ -84,12 +80,6 @@ class QuickViewGallery extends GridGallery {
     super();
     this.MediaGalleryHtml = this.innerHTML;
     this.init();
-  }
-
-  init() {
-    if (this.MediaGalleryHtml) {
-      this.resizeWindow(1024);
-    }
   }
 
   actionOnMobile() {
