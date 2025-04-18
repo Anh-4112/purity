@@ -412,8 +412,9 @@ mark {
 .bg-custom {
   background: var(--bg-color-custom);
 }
-.bg-primary {
-  background-color: var(--color-primary);
+.bg-sale {
+  background-color: var(--sale-bg);
+  color: var(--sale-color);
 }
 .bg-secondary {
   background-color: var(--color-background-2);
@@ -725,6 +726,7 @@ a.hover-heading-color:hover {
 }
 :where(.rounded) {
   border-radius: var(--img-rounded);
+  clip-path: inset(0 0 0 0 round var(--img-rounded));
   overflow: hidden;
 }
 :where(.btn-rounded) {
@@ -785,6 +787,9 @@ a.hover-heading-color:hover {
 }
 :where(.gap) {
   gap: var(--row-gap, var(--gap)) var(--gap, 2rem);
+}
+.swiper:not([class*="initialized"]) .swiper-wrapper {
+  gap: var(--gap, 2rem);
 }
 .gap-no_gap {
   --gap: 0;
@@ -958,6 +963,9 @@ a.hover-heading-color:hover {
 .mb-5 {
   margin-bottom: 5px;
 }
+.mb-8 {
+  margin-bottom: 8px;
+}
 .mb-10 {
   margin-bottom: 1rem;
 }
@@ -1108,6 +1116,9 @@ body:not(.template-index) .transparent-logo {
   align-items: flex-end;
   justify-content: flex-end;
 }
+.lh-1 {
+  line-height: 1;
+}
 .lh-global {
   line-height: var(--body-line-height);
 }
@@ -1150,9 +1161,6 @@ body:not(.template-index) .transparent-logo {
 .col-w-custom {
   flex: 0 0 auto;
   width: var(--col-width, 50%);
-}
-.swiper:not([class*="initialized"]) .swiper-wrapper {
-  gap: var(--gap, 1rem);
 }
 .swiper:not([class*="initialized"]) .swiper-wrapper .swiper-slide {
   flex: 0 0 auto;
@@ -1491,25 +1499,25 @@ variants-dropdown .variant-input label.disable:after {
 }
 @media (min-width: 1025px) {
   .swiper:not([class*="initialized"])[data-desktop="8"] .swiper-slide {
-    width: calc((100% - (var(--gap) * 7)) / 8);
+    width: calc((100% - (var(--gap-desktop, var(--gap)) * 7)) / 8);
   }
   .swiper:not([class*="initialized"])[data-desktop="7"] .swiper-slide {
-    width: calc((100% - (var(--gap) * 6)) / 7);
+    width: calc((100% - (var(--gap-desktop, var(--gap)) * 6)) / 7);
   }
   .swiper:not([class*="initialized"])[data-desktop="6"] .swiper-slide {
-    width: calc((100% - (var(--gap) * 5)) / 6);
+    width: calc((100% - (var(--gap-desktop, var(--gap)) * 5)) / 6);
   }
   .swiper:not([class*="initialized"])[data-desktop="5"] .swiper-slide {
-    width: calc(100% / 5);
+    width: calc((100% - (var(--gap-desktop, var(--gap)) * 4)) / 5);
   }
   .swiper:not([class*="initialized"])[data-desktop="4"] .swiper-slide {
-    width: calc((100% - (var(--gap) * 3)) / 4);
+    width: calc((100% - (var(--gap-desktop, var(--gap)) * 3)) / 4);
   }
   .swiper:not([class*="initialized"])[data-desktop="3"] .swiper-slide {
-    width: calc((100% - (var(--gap) * 2)) / 3);
+    width: calc((100% - (var(--gap-desktop, var(--gap)) * 2)) / 3);
   }
   .swiper:not([class*="initialized"])[data-desktop="2"] .swiper-slide {
-    width: calc((100% - (var(--gap) * 1)) / 2);
+    width: calc((100% - (var(--gap-desktop, var(--gap)) * 1)) / 2);
   }
   .swiper:not([class*="initialized"])[data-desktop="1"] .swiper-slide {
     width: 100%;
@@ -1538,6 +1546,9 @@ variants-dropdown .variant-input label.disable:after {
   }
   :where(.gap) {
     gap: var(--row-gap, var(--gap)) var(--gap-desktop, var(--gap));
+  }
+  .swiper:not([class*="initialized"]) .swiper-wrapper {
+    gap: var(--gap-desktop, var(--gap));
   }
   .py-1025-20 {
     padding-block: 2rem;

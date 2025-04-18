@@ -19,7 +19,6 @@
     assign header_size = 'h3'
   endif
 -%}
-
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.speed }}s;
 {%- endcapture -%}
@@ -59,16 +58,12 @@
               {% endif %}
               aria-label="{{ 'sections.scrolling_text.alt' | t }}"
             >
-              {%- if image != blank  -%}
+              {%- if image != blank -%}
                 <div
                   class="scrolling-image image_scroll"
                   style="--image-width: {{ block_st.image_width }}px;--aspect-ratio: {{ image.aspect_ratio }}"
                 >
-                  {% render 'responsive-image',
-                    image: image,
-                    type: 'banner',
-                    image_alt: image_alt
-                  %}
+                  {% render 'responsive-image', image: image, type: 'banner', image_alt: image_alt %}
                 </div>
               {% else %}
                 <div
@@ -170,7 +165,7 @@
       "type": "checkbox",
       "id": "show_background_blur",
       "label": "t:sections.logo_list.settings.show_background_blur.label",
-      "default": true 
+      "default": true
     },
     {
       "type": "header",
