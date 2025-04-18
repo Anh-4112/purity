@@ -69,10 +69,10 @@
 
             if section_st.video_url.type == 'youtube'
               assign src_url = 'https://www.youtube.com/embed/' | append: video_id | append: '?autoplay=' | append: autoplay_val | append: '&mute=' | append: mute_val | append: '&playsinline=1'
-              assign iframe_class = 'js-youtube no-js-hidden'
+              assign iframe_class = 'js-youtube no-js-hidden w-full h-full'
             else
               assign src_url = 'https://player.vimeo.com/video/' | append: video_id | append: '?autoplay=' | append: autoplay_val | append: '&muted=' | append: mute_val
-              assign iframe_class = 'vimeo-video js-vimeo no-js-hidden bg-dark'
+              assign iframe_class = 'vimeo-video js-vimeo no-js-hidden bg-dark w-full h-full'
             endif
           %}
 

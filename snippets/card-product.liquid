@@ -113,13 +113,13 @@
                           {%- if p_media.host == 'youtube' -%}
                             <iframe
                               src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1&mute=1&loop=0"
-                              class="js-youtube"
+                              class="js-youtube w-full h-full"
                             ></iframe>
                           {%- else -%}
                             {{
                               p_media
                               | external_video_url: autoplay: true
-                              | external_video_tag: class: video_class, loading: 'lazy'
+                              | external_video_tag: class: 'w-full h-full', loading: 'lazy'
                             }}
                           {%- endif -%}
                         </template>
@@ -238,7 +238,7 @@
                         id="{{ product_form_id }}-submit"
                         type="submit"
                         name="add"
-                        class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                        class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
                         aria-haspopup="dialog"
                         aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
                         aria-live="polite"

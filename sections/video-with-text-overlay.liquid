@@ -67,11 +67,11 @@
                 if section_st.video_url.type == 'youtube'
                   assign video_base_url = 'https://www.youtube.com/embed/'
                   assign video_params = 'controls=0&autoplay=1&mute=1&playsinline=1&loop=1&playlist=' | append: video_id | append: '&rel=0'
-                  assign video_class = 'js-youtube'
+                  assign video_class = 'js-youtube w-full h-full'
                 else
                   assign video_base_url = 'https://player.vimeo.com/video/'
                   assign video_params = 'controls=0&background=1&autoplay=1&muted=1&loop=1'
-                  assign video_class = 'js-vimeo vimeo-video'
+                  assign video_class = 'js-vimeo vimeo-video w-full h-full'
                 endif
               %}
               <iframe
