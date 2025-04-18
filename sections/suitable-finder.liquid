@@ -1,3 +1,4 @@
+<script type="module" src="{{ 'section-vertical-product-tabs.js' | asset_url }}" defer="defer"></script>
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -122,7 +123,7 @@
         {%- endif -%}
       </div>
     {%- endif -%}
-    <product-tabs
+    <suitable-finder
       data-size-dot="{{ size_dot_range_slider }}"
     >
       <div class="product-tabs__header flex column align-center type-{{ section_st.media_type }}">
@@ -142,10 +143,13 @@
                   assign collection_title = collections[block_st.collection].title
                 endif
                 assign image = block_st.collection_image | default: block_st.collection.image
+                assign collection_media = collections[block_st.collection].featured_image
                 if image.alt != blank
                   assign alt_text = image.alt
                 elsif collection_title != blank
                   assign alt_text = collection_title
+                elsif collection_media != blank
+                  assign alt_text = collection_media.alt
                 else
                   assign alt_text = 'sections.collection_list.sample_name' | t
                 endif
@@ -156,7 +160,8 @@
                 {{ block.shopify_attributes }}
               >
                 <div class="product-tabs__header-image">
-                  {%- if image != blank -%}
+                  {%- if image != blank or collection_media -%}
+                    {% if image != blank %}
                     {% render 'responsive-image',
                       type: 'other',
                       image: image,
@@ -166,6 +171,17 @@
                       column_mobile: section_st.items_per_row_mobile,
                       padding: column_gap_slide
                     %}
+                  {% else %}
+                    {% render 'responsive-image',
+                      type: 'other',
+                      image: collection_media,
+                      image_alt: alt_text,
+                      container: section_width,
+                      column: items_per_row,
+                      column_mobile: section_st.items_per_row_mobile,
+                      padding: column_gap_slide
+                    %}
+                  {% endif %}
                   {%- else -%}
                     {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
                   {%- endif -%}
@@ -183,10 +199,13 @@
                 assign collection_title = collections[block_st.collection].title
               endif
               assign image = block_st.collection_image | default: block_st.collection.image
+              assign collection_media = collections[block_st.collection].featured_image
               if image.alt != blank
-                assign alt_text = image.alt
+              assign alt_text = image.alt
               elsif collection_title != blank
                 assign alt_text = collection_title
+              elsif collection_media != blank
+                assign alt_text = collection_media.alt
               else
                 assign alt_text = 'sections.collection_list.sample_name' | t
               endif
@@ -200,16 +219,28 @@
                 {{ block.shopify_attributes }}
               >
                 <div class="product-tabs__header-image hidden-mobile">
-                  {%- if image != blank -%}
-                    {% render 'responsive-image',
-                      type: 'other',
-                      image: image,
-                      image_alt: alt_text,
-                      container: section_width,
-                      column: items_per_row,
-                      column_mobile: section_st.items_per_row_mobile,
-                      padding: column_gap_slide
-                    %}
+                  {%- if image != blank or collection_media != blank -%}
+                    {% if image != blank %}
+                      {% render 'responsive-image',
+                        type: 'other',
+                        image: image,
+                        image_alt: alt_text,
+                        container: section_width,
+                        column: items_per_row,
+                        column_mobile: section_st.items_per_row_mobile,
+                        padding: column_gap_slide
+                      %}
+                    {% else %}
+                      {% render 'responsive-image',
+                        type: 'other',
+                        image: collection_media,
+                        image_alt: alt_text,
+                        container: section_width,
+                        column: items_per_row,
+                        column_mobile: section_st.items_per_row_mobile,
+                        padding: column_gap_slide
+                      %}
+                    {% endif %}
                   {%- else -%}
                     {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
                   {%- endif -%}
@@ -324,7 +355,7 @@
           </div>
         {%- endif -%}
       {%- endfor -%}
-    </product-tabs>
+    </suitable-finder>
   </div>
 </div>
 
