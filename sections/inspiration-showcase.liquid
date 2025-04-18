@@ -31,7 +31,7 @@
   endif
 -%}
 {%- capture style -%}
-    --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+    --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--max-width: {{ section_st.content_max_width }}%;
 {%- endcapture -%}
 {%- capture sizes -%}
   {% if section_st.full_width -%}
@@ -42,9 +42,6 @@
   {%- endif %}
 {%- endcapture -%}
 {% style %}
-  inspiration-showcase {
-    display: flex;
-  }
   .inspiration-showcase__block {
     width: 10rem;
   }
@@ -64,8 +61,8 @@
   class="section section-case color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
 >
-  <div class="{{ section_width }}">
-    <inspiration-showcase class="content-center {{ column_gap_slide }} mb-30">
+  <div class="{{ section_width }} flex column content-center">
+    <inspiration-showcase class="content-center {{ column_gap_slide }} flex mb-30">
       {%- for block in section.blocks -%}
         {%- liquid
           assign block_st = block.settings
@@ -156,7 +153,7 @@
         </div>
       {%- endfor -%}
     </inspiration-showcase>
-    <div class="inspiration-showcase__text text-center">
+    <div class="inspiration-showcase__text text-center max-w-custom">
       <div class="text-content {{ text_content_size }}">
         {{ text }}
       </div>
@@ -205,10 +202,14 @@
       "default": "default-color-scheme"
     },
     {
-      "type": "textarea",
+      "type": "header",
+      "content": "t:sections.all.content_header.label"
+    },
+    {
+      "type": "richtext",
       "id": "text",
       "label": "t:sections.all.text.label",
-      "default": "Add a short description for this section."
+      "default": "<p>Add a short description for this section.</p>"
     },
     {
       "type": "select",
@@ -229,6 +230,16 @@
       ],
       "default": "medium",
       "label": "t:sections.scrolling_text.settings.text_size.label"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 40,
+      "max": 100,
+      "unit": "%",
+      "default": 70,
+      "label": "t:sections.rich-text.settings.max_width.label",
+      "info": "t:sections.rich-text.settings.max_width.info"
     },
     {
       "type": "header",
