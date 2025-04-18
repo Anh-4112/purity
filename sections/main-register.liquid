@@ -186,14 +186,30 @@
     setupFormValidation({
       formSelector: 'form[action*="/account"]',
       fields: {
-        'customer[first_name]': (value) => (!value ? '{{ 'customer.validate.first_name' | t }}' : ''),
-        'customer[last_name]': (value) => (!value ? '{{ 'customer.validate.last_name' | t }}' : ''),
-        'customer[email]': (value) =>
-          !value
-            ? '{{ 'customer.validate.email' | t }}'
-            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-            ? '{{ 'customer.validate.email_invalid' | t }}'
-            : '',
+        'customer[first_name]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ 'customer.validate.first_name' | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
+        'customer[last_name]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ 'customer.validate.last_name' | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
+        'customer[email]': (value) => {
+          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          return !value
+            ? '{{ "customer.validate.email" | t }}'
+            : !emailRegex.test(value)
+            ? '{{ "customer.validate.email_invalid" | t }}'
+            : '';
+        },
         'customer[password]': (value) =>
           !value ? '{{ 'customer.validate.password' | t }}' : value.length < 6 ? '{{ 'customer.validate.min_password' | t }}' : '',
       },
