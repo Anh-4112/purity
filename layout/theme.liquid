@@ -27,11 +27,23 @@
     {% endif %}
 
     {% render 'meta-tags' %}
+    {%- unless settings.body_font.system? -%}
+      {% comment %}theme-check-disable AssetPreload{% endcomment %}
+      <link rel="preload" as="font" href="{{ settings.body_font | font_url }}" type="font/woff2" crossorigin>
+      {% comment %}theme-check-enable AssetPreload{% endcomment %}
+    {%- endunless -%}
+    {%- unless settings.heading_font.system? -%}
+      {% comment %}theme-check-disable AssetPreload{% endcomment %}
+      <link rel="preload" as="font" href="{{ settings.heading_font | font_url }}" type="font/woff2" crossorigin>
+      {% comment %}theme-check-enable AssetPreload{% endcomment %}
+    {%- endunless -%}
     {% liquid
       assign scheme_classes = ''
       assign body_font_bold = settings.body_font | font_modify: 'weight', 'bold'
       assign body_font_italic = settings.body_font | font_modify: 'style', 'italic'
       assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+      assign heading_font_regular = settings.heading_font | font_modify: 'weight', 'normal'
+      assign heading_font_medium = settings.heading_font | font_modify: 'weight', '500'
     %}
 
     {% style %}
@@ -40,6 +52,13 @@
       {{ body_font_italic | font_face: font_display: 'swap' }}
       {{ body_font_bold_italic | font_face: font_display: 'swap' }}
       {{ settings.heading_font | font_face: font_display: 'swap' }}
+      {% if settings.heading_font.weight != settings.subheading_weight == 'default' %}
+        {% if settings.subheading_weight == '400' %}
+          {{ heading_font_regular | font_face: font_display: 'swap' }}
+        {% elsif settings.subheading_weight == '500' %}
+          {{ heading_font_medium | font_face: font_display: 'swap' }}
+        {% endif %}
+      {% endif %}
       {% for scheme in settings.color_schemes -%}
         {% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
         {% if forloop.index == 1 -%}
@@ -93,19 +112,18 @@
         --heading-font-style: {{ theme_st.heading_font.style }};
         --heading-weight: {{ theme_st.heading_font.weight }};
         --heading-text-transform: {{ theme_st.heading_text_transform }};
-        --subheading-weight: {{ theme_st.subheading_weight }};
+        --subheading-weight:{% if theme_st.subheading_weight != 'default' %}{{ theme_st.subheading_weight }}{% else %}{{ theme_st.heading_font.weight }}{% endif %};
         --heading-letter-spacing: {{ theme_st.heading_letter_spacing | divided_by: 100 }}em;
 
         --menu-font: {% if theme_st.menu_font == 'menu_body_font' %}{{ theme_st.body_font.family }}{% else %}{{ theme_st.heading_font.family }}{% endif %}, {{ theme_st.body_font.fallback_families }};
-        --medium-font-weight: {% if theme_st.heading_font.weight > '400' %}600{% else %}{{ theme_st.heading_font.weight }}{% endif %};
-        --menu-weight: {{ theme_st.menu_weight }};
+        --menu-weight: {% if theme_st.menu_font == 'menu_body_font' %}{{ theme_st.body_font.weight }}{% else %}{{ theme_st.heading_font.weight }}{% endif %};
 
         --heading-font-scale: {{ theme_st.heading_font_size_scale | divided_by: 100.0 }};
 
         --btn-font: {% if theme_st.button_font == 'button_body_font' %}{{ theme_st.body_font.family }}{% else %}{{ theme_st.heading_font.family }}{% endif %}, {{ theme_st.body_font.fallback_families }};
+        --btn-weight: {% if theme_st.button_font == 'button_body_font' %}{{ theme_st.body_font.weight }}{% else %}{{ theme_st.heading_font.weight }}{% endif %};
         --btn-text-transform: {{ theme_st.button_text_transform }};
         --btn-radius: {{ theme_st.rounded_button }}px;
-        --btn-font-weight:{% if theme_st.button_font == 'button_body_font' %}var(--subheading-weight,var(--body-font-weight)){% else %}var(--heading-weight){% endif %};
         --btn-padding-y: 1.5rem;
         --btn-padding-x: 3rem;
         --btn-font-size: {% if theme_st.button_text_transform == 'uppercase' %}calc(var(--body-font-size, 1.4rem) - 2px){% else %}var(--body-font-size, 1.4rem){% endif %};
@@ -225,16 +243,6 @@
     <noscript><link rel="stylesheet" href="{{ 'theme.css' | asset_url }}"></noscript>
     <link rel="stylesheet" href="{{ 'accesibility.css' | asset_url }}" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="{{ 'accesibility.css' | asset_url }}"></noscript>
-    {%- unless settings.body_font.system? -%}
-      {% comment %}theme-check-disable AssetPreload{% endcomment %}
-      <link rel="preload" as="font" href="{{ settings.body_font | font_url }}" type="font/woff2" crossorigin>
-      {% comment %}theme-check-enable AssetPreload{% endcomment %}
-    {%- endunless -%}
-    {%- unless settings.heading_font.system? -%}
-      {% comment %}theme-check-disable AssetPreload{% endcomment %}
-      <link rel="preload" as="font" href="{{ settings.heading_font | font_url }}" type="font/woff2" crossorigin>
-      {% comment %}theme-check-enable AssetPreload{% endcomment %}
-    {%- endunless -%}
 
     <script>
       if (Shopify.designMode) {
