@@ -217,12 +217,14 @@
     setupFormValidation({
       formSelector: 'form[action*="/account/login"]',
       fields: {
-        'customer[email]': (value) =>
-          !value
+        'customer[email]': (value) => {
+          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          return !value
             ? '{{ "customer.validate.email" | t }}'
-            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            : !emailRegex.test(value)
             ? '{{ "customer.validate.email_invalid" | t }}'
-            : '',
+            : '';
+        },
         'customer[password]': (value) =>
           !value
             ? '{{ "customer.validate.password" | t }}'

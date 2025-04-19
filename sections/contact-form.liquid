@@ -164,6 +164,8 @@
                 <option value="" disabled selected>{{ 'templates.contact.subject.name' | t }}</option>
                 <option value="product">{{ 'templates.contact.subject.product' | t }}</option>
                 <option value="order">{{ 'templates.contact.subject.order' | t }}</option>
+                <option value="press">{{ 'templates.contact.subject.press' | t }}</option>
+                <option value="other">{{ 'templates.contact.subject.other' | t }}</option>
               </select>
               <label for="ContactFormSubject-{{ section.id }}" class="visually-hidden">
                 {{ 'templates.contact.subject.name' | t }}
@@ -211,15 +213,31 @@
     setupFormValidation({
       formSelector: 'form[id^="ContactForm-"]',
       fields: {
-        'contact[name]': (value) => (!value ? '{{ "customer.validate.name" | t }}' : ''),
-        'contact[email]': (value) =>
-          !value
+        'contact[name]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ "customer.validate.name" | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
+        'contact[email]': (value) => {
+          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          return !value
             ? '{{ "customer.validate.email" | t }}'
-            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            : !emailRegex.test(value)
             ? '{{ "customer.validate.email_invalid" | t }}'
-            : '',
+            : '';
+        },
         'contact[subject]': (value) => (!value ? '{{ "customer.validate.subject" | t }}' : ''),
-        'contact[body]': (value) => (!value ? '{{ "customer.validate.message" | t }}' : ''),
+        'contact[body]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ "customer.validate.message" | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
       },
     });
   });

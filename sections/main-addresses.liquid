@@ -461,9 +461,30 @@
     setupFormValidation({
       formSelector: 'form#Newaddress_form',
       fields: {
-        'address[first_name]': (value) => (!value ? '{{ 'customer.validate.first_name' | t }}' : ''),
-        'address[last_name]': (value) => (!value ? '{{ 'customer.validate.last_name' | t }}' : ''),
-        'address[address1]': (value) => (!value ? '{{ 'customer.validate.address_1' | t }}' : ''),
+        'address[first_name]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ 'customer.validate.first_name' | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
+        'address[last_name]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ 'customer.validate.last_name' | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
+        'address[address1]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ 'customer.validate.address_1' | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
         'address[city]': (value) => (!value ? '{{ 'customer.validate.city' | t }}' : ''),
         'address[country]': (value) => (!value ? '{{ 'customer.validate.country' | t }}' : ''),
         'address[zip]': (value) => (!value ? '{{ 'customer.validate.postal' | t }}' : ''),
@@ -472,9 +493,30 @@
     setupFormValidation({
       formSelector: 'form.edit_addressform',
       fields: {
-        'address[first_name]': (value) => (!value ? '{{ 'customer.validate.first_name' | t }}' : ''),
-        'address[last_name]': (value) => (!value ? '{{ 'customer.validate.last_name' | t }}' : ''),
-        'address[address1]': (value) => (!value ? '{{ 'customer.validate.address_1' | t }}' : ''),
+    'address[first_name]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ 'customer.validate.first_name' | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
+        'address[last_name]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ 'customer.validate.last_name' | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
+        'address[address1]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ 'customer.validate.address_1' | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
         'address[city]': (value) => (!value ? '{{ 'customer.validate.city' | t }}' : ''),
         'address[country]': (value) => (!value ? '{{ 'customer.validate.country' | t }}' : ''),
         'address[zip]': (value) => (!value ? '{{ 'customer.validate.postal' | t }}' : ''),
