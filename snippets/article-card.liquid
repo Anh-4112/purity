@@ -1,22 +1,24 @@
 {%- if article and article != empty -%}
   <div class="article-card-wrapper item-load {{ class }}">
     <div class="card article-card">
-      {%- if show_image == true and article.image -%}
-        <div
-          class="banner__media rounded article_post-image"
-          {% if media_aspect_ratio != 'adapt' %}
-            style="--aspect-ratio:{{ media_aspect_ratio }}"
-          {% else %}
-            style="--aspect-ratio:{{ article.image.aspect_ratio }}"
-          {% endif %}
-        >
+      <div class="rounded article_post-image mb-20 hover-effect">
+        {%- if show_image == true and article.image -%}
           {%- liquid
             assign alt = article.title | escape
             if article.image.alt != blank
               assign alt = article.image.alt | escape
             endif
           -%}
-          <a href="{{ article.url }}" class="remove-underline" aria-label="{{ article.title | escape }}">
+          <a
+            href="{{ article.url }}"
+            class="remove-underline rounded"
+            aria-label="{{ article.title | escape }}"
+            {% if media_aspect_ratio != 'adapt' %}
+              style="--aspect-ratio:{{ media_aspect_ratio }}"
+            {% else %}
+              style="--aspect-ratio:{{ article.image.aspect_ratio }}"
+            {% endif %}
+          >
             {% render 'responsive-image',
               type: 'blog',
               class: 'blog__img',
@@ -28,17 +30,17 @@
               padding: padding
             %}
           </a>
-        </div>
-      {%- endif -%}
+        {%- endif -%}
+      </div>
       <div class="card__content">
         {%- if show_tags or show_cate -%}
-          <ul class="list-unstyle p-0 m-0">
+          <ul class="list-unstyle p-0 m-0 mb-10">
             {%- if show_cate -%}
               {% assign blog_name = article.handle | split: '/' | first %}
               {% if blog_name != blank %}
-                <li class="blog-meta-tag blog-cate inline-flex align-center">
+                <li class="blog-meta-tag blog-cate inline-flex align-center me-5">
                   <a
-                    class="post-tags blog-cate"
+                    class="post-tags blog-cate inline-block bg-primary color-white  btn-rounded fs-13 px-15 py-4"
                     href="{{ blog.url }}"
                     aria-label="blog category"
                   >
@@ -62,14 +64,14 @@
             {% endif %}
           </ul>
         {%- endif -%}
-        <div class="card__heading{% if sec_settings.columns_desktop > 3 %} h5{% else %} h4{% endif %}">
+        <h4 class="capitalize mb-5 card__heading{% if sec_settings.columns_desktop > 3 %} h5{% else %} h4{% endif %}">
           <a href="{{ article.url }}" class="heading-color remove-underline">
             {{ article.title | escape }}
           </a>
-        </div>
+        </h4>
         {%- if show_excerpt -%}
           {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
-            <p class="article-card__excerpt rte-width rte">
+            <p class="article-card__excerpt rte-width rte mb-15">
               {%- if article.excerpt.size > 0 -%}
                 {{ article.excerpt | strip_html | truncatewords: 30 }}
               {%- else -%}
@@ -78,26 +80,26 @@
             </p>
           {%- endif -%}
         {%- endif -%}
-        <div class="article-card__info">
+        <ul class="article-card__info fs-13 grey-color capitalize list-unstyled flex align-center gap-15">
           {%- if show_date -%}
-            <span class="post-date">
+            <li class="post-date">
               {{- article.published_at | date: '%d %b %Y' -}}
-            </span>
+            </li>
           {%- endif -%}
           {%- if show_author -%}
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <svg width="5" height="5" viewBox="0 0 10 10" fill="none">
               <use href="#icon-dot"></use>
             </svg>
-            <span class="post-author">
+            <li class="post-author">
               {{ 'blogs.article.by_html' | t: author: article.author -}}
-            </span>
+            </li>
           {%- endif -%}
           {%- if show_comment_count and blog.comments_enabled? -%}
-            <span class="blog-comments">
+            <li class="blog-comments">
               {{ 'blogs.article.comments' | t: count: article.comments_count -}}
-            </span>
+            </li>
           {%- endif -%}
-        </div>
+        </ul>
       </div>
     </div>
   </div>

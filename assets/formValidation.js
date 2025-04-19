@@ -52,7 +52,7 @@ export class FormValidator {
     let errorEl = parentElement.querySelector(".form-error-message");
     if (!errorEl) {
       errorEl = document.createElement("div");
-      errorEl.className = "form-error-message warning mt-10";
+      errorEl.className = "form-error-message error text-sm mt-5";
       parentElement.appendChild(errorEl);
     }
 
