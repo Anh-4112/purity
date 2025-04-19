@@ -18,13 +18,13 @@ class TestimonialsSlide extends SlideSection {
     }
     this.thumbsSwiper = new Swiper(thumbsContainer, {
       slidesPerView: 1,
-      spaceBetween: 10,
+      spaceBetween: 60,
       watchSlidesProgress: true,
       grabCursor: true,
       allowTouchMove: true,
       slideActiveClass: 'swiper-slide-thumb-active',
       breakpoints: {
-        576: {
+        768: {
           slidesPerView: "auto"
         }
       },

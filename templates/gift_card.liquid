@@ -1,5 +1,7 @@
 {% layout none %}
-
+{% liquid
+  assign theme_st = settings
+%}
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}">
   <head>
@@ -13,8 +15,7 @@
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {%- endif -%}
-
-    {%- unless settings.type_header_font.system? -%}
+    {%- unless theme_st.heading_font.system? and theme_st.body_font.system? -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     {%- endunless -%}
 
@@ -26,82 +27,250 @@
 
     {{ content_for_header }}
 
-    {%- liquid
-      assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
-      assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
+    {% render 'meta-tags' %}
+    {%- unless settings.body_font.system? -%}
+      {% comment %}theme-check-disable AssetPreload{% endcomment %}
+      <link rel="preload" as="font" href="{{ settings.body_font | font_url }}" type="font/woff2" crossorigin>
+      {% comment %}theme-check-enable AssetPreload{% endcomment %}
+    {%- endunless -%}
+    {%- unless settings.heading_font.system? -%}
+      {% comment %}theme-check-disable AssetPreload{% endcomment %}
+      <link rel="preload" as="font" href="{{ settings.heading_font | font_url }}" type="font/woff2" crossorigin>
+      {% comment %}theme-check-enable AssetPreload{% endcomment %}
+    {%- endunless -%}
+    {% liquid
+      assign scheme_classes = ''
+      assign body_font_bold = settings.body_font | font_modify: 'weight', 'bold'
+      assign body_font_italic = settings.body_font | font_modify: 'style', 'italic'
       assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+      assign heading_font_regular = settings.heading_font | font_modify: 'weight', 'normal'
+      assign heading_font_medium = settings.heading_font | font_modify: 'weight', '500'
     %}
 
     {% style %}
-      {{ settings.type_body_font | font_face: font_display: 'swap' }}
+      {{ settings.body_font | font_face: font_display: 'swap' }}
       {{ body_font_bold | font_face: font_display: 'swap' }}
       {{ body_font_italic | font_face: font_display: 'swap' }}
       {{ body_font_bold_italic | font_face: font_display: 'swap' }}
-      {{ settings.type_header_font | font_face: font_display: 'swap' }}
-
-      :root {
-        --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
-        --font-body-style: {{ settings.type_body_font.style }};
-        --font-body_weight: {{ settings.type_body_font.weight }};
-
-        --font-heading-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
-        --font-heading-style: {{ settings.type_header_font.style }};
-        --font-heading-weight: {{ settings.type_header_font.weight }};
-
-        --font-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
-        --font-heading-scale: {{ settings.heading_scale | times: 1.0 | divided_by: settings.body_scale }};
-
-        {% assign scheme = settings.color_schemes | first %}
-        --color-background: {{ scheme.settings.background.red }},{{ scheme.settings.background.green }},{{ scheme.settings.background.blue }};
-        --color-background: {{ scheme.settings.background_2 }};
-        {% if scheme.settings.background_gradient != empty -%}
-          --gradient-background: {{ scheme.settings.background_gradient }};
-        {%- else -%}
-          --gradient-background: {{ scheme.settings.background }};
+      {{ settings.heading_font | font_face: font_display: 'swap' }}
+      {% if settings.heading_font.weight != settings.subheading_weight == 'default' %}
+        {% if settings.subheading_weight == '400' %}
+          {{ heading_font_regular | font_face: font_display: 'swap' }}
+        {% elsif settings.subheading_weight == '500' %}
+          {{ heading_font_medium | font_face: font_display: 'swap' }}
+        {% endif %}
+      {% endif %}
+      {% for scheme in settings.color_schemes -%}
+        {% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
+        {% if forloop.index == 1 -%}
+          :root,
         {%- endif %}
-        --color-foreground: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
-        --color-button: {{ scheme.settings.button.red }},{{ scheme.settings.button.green }},{{ scheme.settings.button.blue }};
-        --color-button-label: {{ scheme.settings.button_label.red }},{{ scheme.settings.button_label.green }},{{ scheme.settings.button_label.blue }};
-        --color-secondary-button-label: {{ scheme.settings.secondary_button_label.red }},{{ scheme.settings.secondary_button_label.green }},{{ scheme.settings.secondary_button_label.blue }};
-        --color-shadow: {{ scheme.settings.shadow.red }},{{ scheme.settings.shadow.green }},{{ scheme.settings.shadow.blue }};
+        .color-{{ scheme.id }}{
+          --color-background: {{ scheme.settings.background }};
+          --color-background-2: {{ scheme.settings.background_2 }};
+          {% if scheme.settings.background_gradient != empty %}
+          --gradient-background: {{ scheme.settings.background_gradient }};
+          {% else %}
+          --gradient-background: {{ scheme.settings.background }};
+          {% endif %}
+          --color-primary: {{ scheme.settings.color_general_accent }};
+          --color-primary-rgb: {{ scheme.settings.color_general_accent.red }}, {{ scheme.settings.primary_color.green }}, {{ scheme.settings.primary_color.blue }};
+          --color-text: {{ scheme.settings.text_color }};
+          --color-text-rgb: {{ scheme.settings.text_color.red }}, {{ scheme.settings.text_color.green }}, {{ scheme.settings.text_color.blue }};
+          --color-heading: {{ scheme.settings.heading_color }};
+          --color-heading-rgb:{{ scheme.settings.heading_color.red }}, {{ scheme.settings.heading_color.green }}, {{ scheme.settings.heading_color.blue }};
+          --color-border: {{ scheme.settings.border_color }};
+          /* Button primary */
+          --btn-primary-color: {{ scheme.settings.btn_primary_color }};
+          --btn-primary-hover-color: {{ scheme.settings.btn_primary_hover_color }};
+          --btn-primary-bg-color: {{ scheme.settings.btn_primary_background }};
+          --btn-primary-hover-bg-color: {{ scheme.settings.btn_primary_hover_background }};
+          /* Button outline */
+          --btn-outline-color: {{ scheme.settings.btn_outline_color }};
+          --btn-outline-border-color: {{ scheme.settings.btn_outline_border_color }};
+          /* Button link */
+          --btn-link border-animation-color: {{ scheme.settings.btn_outline_color }};
+          --btn-link border-animation-hover-color: {{ scheme.settings.btn_outline_color }};
+          --input-color: var(--color-text);
+          --input-placeholder-color: rgba(var(--color-heading-rgb), 0.55);
+          --input-bg: rgba({{ scheme.settings.background.red }}, {{ scheme.settings.background.green }}, {{ scheme.settings.background.blue }}, 0.6);
+        }
+      {% endfor %}
+      {{ scheme_classes | prepend: 'body' }} {
+        color: var(--color-text);
+        background-color: var(--color-background);
+      }
+      :root {
+        --body-font-size: {{ theme_st.base_size }}px;
+        --body-font-family: {{ theme_st.body_font.family }}, {{ theme_st.body_font.fallback_families }};
+        --body-font-style: {{ theme_st.body_font.style }};
+        --body-font-weight: {{ theme_st.body_font.weight }};
+        --body-font-weight-bold: {{ theme_st.body_font.weight | plus: 300 | at_most: 1000 }};
+        --body-line-height: 1.625;
+        --img-rounded: {{ theme_st.rounded_image }}px;
 
-        {% assign badge_scheme_id = settings.sold_out_badge_color_scheme | append: '' %}
-        {% assign badge_scheme = settings.color_schemes[badge_scheme_id] %}
-        --color-soldout-badge: {{ badge_scheme.settings.background.red }},{{ badge_scheme.settings.background.green }},{{ badge_scheme.settings.background.blue }};
-        --color-soldout-badge-label: {{ badge_scheme.settings.text.red }},{{ badge_scheme.settings.text.green }},{{ badge_scheme.settings.text.blue }};
+        --heading-font: {{ theme_st.heading_font.family }}, {{ theme_st.heading_font.fallback_families }};
+        --heading-font-style: {{ theme_st.heading_font.style }};
+        --heading-weight: {{ theme_st.heading_font.weight }};
+        --heading-text-transform: {{ theme_st.heading_text_transform }};
+        --subheading-weight:{% if theme_st.subheading_weight != 'default' %}{{ theme_st.subheading_weight }}{% else %}{{ theme_st.heading_font.weight }}{% endif %};
+        --heading-letter-spacing: {{ theme_st.heading_letter_spacing | divided_by: 100 }}em;
 
-        --page-width: {{ settings.page_width | divided_by: 10 }}rem;
-        --page-width-margin: {% if settings.page_width == '1600' %}2{% else %}0{% endif %}rem;
+        --menu-font: {% if theme_st.menu_font == 'menu_body_font' %}{{ theme_st.body_font.family }}{% else %}{{ theme_st.heading_font.family }}{% endif %}, {{ theme_st.body_font.fallback_families }};
+        --menu-weight: {% if theme_st.menu_font == 'menu_body_font' %}{{ theme_st.body_font.weight }}{% else %}{{ theme_st.heading_font.weight }}{% endif %};
 
-        --buttons-radius: {{ settings.buttons_radius }}px;
-        --buttons-border-width: {% if settings.buttons_border_opacity > 0 %}{{ settings.buttons_border_thickness }}{% else %}0{% endif %}px;
-        --buttons-border-opacity: {{ settings.buttons_border_opacity | divided_by: 100.0 }};
-        --buttons-shadow-opacity: {{ settings.buttons_shadow_opacity | divided_by: 100.0 }};
-        --buttons-shadow-horizontal-offset: {{ settings.buttons_shadow_horizontal_offset }}px;
-        --buttons-shadow-vertical-offset: {{ settings.buttons_shadow_vertical_offset }}px;
-        --buttons-shadow-blur-radius: {{ settings.buttons_shadow_blur }}px;
-        --buttons-border-offset: {% if settings.buttons_radius > 0 or settings.buttons_shadow_opacity > 0 %}0.3{% else %}0{% endif %}px;
+        --heading-font-scale: {{ theme_st.heading_font_size_scale | divided_by: 100.0 }};
 
-        --inputs-radius: {{ settings.inputs_radius }}px;
-        --input-border-width: {{ settings.inputs_border_thickness }}px;
-        --inputs-border-opacity: {{ settings.inputs_border_opacity | divided_by: 100.0 }};
-        --inputs-shadow-opacity: {{ settings.inputs_shadow_opacity | divided_by: 100.0 }};
-        --inputs-shadow-horizontal-offset: {{ settings.inputs_shadow_horizontal_offset }}px;
-        --inputs-shadow-vertical-offset: {{ settings.inputs_shadow_vertical_offset }}px;
-        --inputs-shadow-blur-radius: {{ settings.inputs_shadow_blur }}px;
+        --btn-font: {% if theme_st.button_font == 'button_body_font' %}{{ theme_st.body_font.family }}{% else %}{{ theme_st.heading_font.family }}{% endif %}, {{ theme_st.body_font.fallback_families }};
+        --btn-weight: {% if theme_st.button_font == 'button_body_font' %}{{ theme_st.body_font.weight }}{% else %}{{ theme_st.heading_font.weight }}{% endif %};
+        --btn-text-transform: {{ theme_st.button_text_transform }};
+        --btn-radius: {{ theme_st.rounded_button }}px;
+        --btn-padding-y: 1.5rem;
+        --btn-padding-x: 3rem;
+        --btn-font-size: {% if theme_st.button_text_transform == 'uppercase' %}calc(var(--body-font-size, 1.4rem) - 2px){% else %}var(--body-font-size, 1.4rem){% endif %};
+        --shopify-accelerated-checkout-button-border-radius: var(--btn-radius);
+        --input-padding: 0 2.5rem;
+        --inputs-border-width: 1px;
+        --input-border-color: var(--border-color);
+        --input-bg: rgb(var(--color-white));
+        --input-color: rgb(var(--color-heading-hsl));
+        --input-font-size: var(--body-font-size);
+        --input-placeholder-color: rgb(var(--color-text-hsl));--input-border-radius: {{ theme_st.rounded_input }}px;
+        --input-height: 5.2rem;
+        --shopify-accelerated-checkout-button-block-size: var(--input-height);
+        --rate-color: #FF9C05;
+        --page-width: {{ theme_st.page_width | divided_by: 10 }}rem;
+        --page-width-margin: {% if theme_st.page_width == '1600' %}2{% else %}0{% endif %}rem;
+
+        --logo-width: {{ theme_st.logo_width }}px;
+        --bs-gutter-x: 2.4rem;
+        --bs-gutter-y: 0;
+        --color-white: 255, 255, 255;
+        --color-dark: #000;
+        --color-grey: rgba(var(--color-text-rgb), 0.6);
+        --sale-bg: {{ theme_st.sale_background }};
+         --sale-color: {{ theme_st.sale_color }};
+        --color-grey-light: rgba(var(--color-text-rgb), 0.2);
+        --responsive-rate: ((100vw - 575px) / (1410 - 575));
+
+        --transition: all 0.4s;
+        --duration-short: 0.2s;
+        --duration-long: 0.5s;
+        --transition-drawer: all var(--timming, 0.35s) var(--timing-function, cubic-bezier(.5, -.03, .34, .83));
+        --overlay-bg: rgba(0, 0, 0, 0.60);
+        --responsive-ratio: 0.7;
+        --gap: 2rem;
+        --accent-color-second: #f5f5f5;
+        --section-spacing: 6rem;
+
+        --product-spacing-top: 2rem;
+        --product-name-size: 1.6rem;
+        --product-price-size: 1.6rem;
+        --product-item-spacing: 4rem;
+        --shadow: 0px 5px 30px 0px rgba(0, 0, 0, 0.05);
+        --header-spacing-bottom: 3rem;
+        --swiper-navigation-color: var(--color-dark);
+        --swiper-navigation-sides-offset: 20px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html {
+        font-size: 62.5%;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        height: 100%;
+        vertical-align: baseline;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        min-height: 100vh;
+        margin: 0;
+        font-size: var(--body-font-size, 1.4rem);
+        font-family: var(--body-font-family);
+        font-style: var(--body-font-style);
+        font-weight: var(--body-font-weight);
+        line-height: var(--body-line-height, 1.625);
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-size-adjust: 100%;
+        text-rendering: optimizeSpeed;
+        overflow-wrap: break-word;
+        display: flex;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+      }
+      #MainContent{
+        -webkit-flex-grow: 1;
+        flex-grow: 1;
+      }
+      @media (min-width: 1025px) {
+        :root{
+          --btn-padding-y: 1.7rem;
+          --btn-padding-x: 3.6rem;
+          --input-height: 5.6rem;
+          --header-spacing-bottom: 4rem;
+        }
       }
     {% endstyle %}
+    {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+    {% if theme_st.rtl %}{{ 'rtl.css' | asset_url | stylesheet_tag: preload: true }}{% endif %}
+    <script defer="defer" src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+    <script defer="defer" src="{{ 'motion.js' | asset_url }}"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "theme": "{{ 'theme.js' | asset_url }}",
+          "global": "{{ 'global.js' | asset_url }}",
+          "module-slide": "{{ 'module-slide.js' | asset_url }}",
+          "module-addToCart": "{{ 'module-add-to-cart.js' | asset_url }}",
+          "module-lazyLoad": "{{ 'module-lazyload.js' | asset_url }}",
+          "module-safariElementPatch": "{{ 'safari-element-patch.js' | asset_url }}"
+        }
+      }
+    </script>
+    <script type="module" src="{{ 'theme.js' | asset_url }}"></script>
+    {{ content_for_header }}
+    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ 'theme.css' | asset_url }}"></noscript>
+    <link rel="stylesheet" href="{{ 'accesibility.css' | asset_url }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ 'accesibility.css' | asset_url }}"></noscript>
 
-    {%- unless settings.type_body_font.system? -%}
-      {% comment %}theme-check-disable AssetPreload{% endcomment %}
-      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
-      {% comment %}theme-check-enable AssetPreload{% endcomment %}
-    {%- endunless -%}
-    {%- unless settings.type_header_font.system? -%}
-      {% comment %}theme-check-disable AssetPreload{% endcomment %}
-      <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
-      {% comment %}theme-check-enable AssetPreload{% endcomment %}
-    {%- endunless -%}
+    <script>
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
+    </script>
+    <link
+      rel="stylesheet"
+      href="{{ 'component-deferred-media.css' | asset_url }}"
+      media="print"
+      onload="this.media='all'"
+    >
+    {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
+    <link
+      id="ModelViewerStyle"
+      rel="stylesheet"
+      href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
+      media="print"
+      onload="this.media='all'"
+    >
+    <link
+      id="ModelViewerOverride"
+      rel="stylesheet"
+      href="{{ 'component-model-viewer-ui.css' | asset_url }}"
+      media="print"
+      onload="this.media='all'"
+    >
   </head>
 
   <body class="gradient gift-card">

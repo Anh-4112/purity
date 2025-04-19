@@ -79,7 +79,7 @@
   data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
   data-menu-trigger="{{ section_st.menu_trigger }}"
   data-dropdowns-animation="{{ dropdowns_animation }}"
-  class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}"
+  class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}{% if request.page_type != 'index' %} border-bottom{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -519,7 +519,7 @@
                   </span>
                   <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
                   {%- if cart != empty -%}
-                    <div class="cart-count rounded-50 inline-flex content-center absolute bg-primary fs-10">
+                    <div class="cart-count rounded-50 inline-flex content-center absolute bg-sale fs-10">
                       {%- if cart.item_count < 100 -%}
                         <span class="count">{{ cart.item_count }}</span>
                       {%- else -%}
@@ -989,7 +989,7 @@
 {% schema %}
 {
   "name": "t:sections.header.name",
-  "class": "site-header sticky z-10 top-0",
+  "class": "site-header sticky z-10",
   "settings": [
     {
       "type": "header",

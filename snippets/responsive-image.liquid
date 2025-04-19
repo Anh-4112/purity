@@ -105,9 +105,13 @@
   {% if image_mobile != blank %}
     <picture class="image-picture{{ class }}">
       {%- liquid
-        assign srcset_mobile = image_mobile | image_url: width: image_mobile.width | image_tag: widths: '720, 480, 360', alt: image_alt | split: 'srcset="' | last
+        assign srcset_mobile = image_mobile | image_url: width: 720 | image_tag: widths: '720, 480, 360', alt: image_alt | split: 'srcset="' | last
         unless srcset_mobile contains 'src='
-          echo '<source media="(max-width: 767px)" data-srcset="' | append: srcset_mobile
+          if fetchpriority == 'high'
+            echo '<source media="(max-width: 767px)" srcset="' | append: srcset_mobile
+          else
+            echo '<source media="(max-width: 767px)" data-srcset="' | append: srcset_mobile
+          endif
         endunless
         if image == blank
           assign image = image_mobile
@@ -175,7 +179,7 @@
   {% if image_mobile != blank %}
     <picture class="image-picture{{ class }}">
       {%- liquid
-        assign srcset_mobile = image_mobile | image_url: width: image_mobile.width | image_tag: widths: '720, 480, 360', alt: image_alt | split: 'srcset="' | last
+        assign srcset_mobile = image_mobile | image_url: width: 720 | image_tag: widths: '720, 480, 360', alt: image_alt | split: 'srcset="' | last
         unless srcset_mobile contains 'src='
           echo '<source media="(max-width: 767px)" srcset="' | append: srcset_mobile
         endunless

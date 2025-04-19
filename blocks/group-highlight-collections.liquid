@@ -6,12 +6,16 @@
   assign show_navigation = section_st.show_navigation
 
   assign column_gap_slide = 0
-  if section_st.column_gap_block == 'large'
+  assign column_gap_mb = 0
+  if section_st.column_gap == 'large'
     assign column_gap_slide = 30
-  elsif section_st.column_gap_block == 'medium'
+    assign column_gap_mb = 20
+  elsif section_st.column_gap == 'medium'
     assign column_gap_slide = 20
-  elsif section_st.column_gap_block == 'small'
+    assign column_gap_mb = 10
+  elsif section_st.column_gap == 'small'
     assign column_gap_slide = 10
+    assign column_gap_mb = 5
   endif
 
   assign items_per_row_mobile = section_st.items_per_row_mobile
@@ -30,7 +34,7 @@
 
 {%- capture col_style -%}
   --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};{{- -}}
-  {% if column_gap_slide < 15 %}--col-gap: {{ column_gap_slide }}px;{% else %}--col-gap: 15px;--col-gap-desktop: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
+  --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}{{- -}}
 {%- endcapture -%}
 
 {% if section.blocks.size > 0 %}

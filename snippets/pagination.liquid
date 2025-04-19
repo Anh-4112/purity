@@ -82,6 +82,12 @@
               assign number_page = section_st.maximum_posts_to_show | times: 1
               assign count = blog.articles_count
             endif
+            if t == 'list-collections'
+              assign count = collections.size
+            endif
+            if t == 'collection' and collection.handle
+              assign count = collection.products_count
+            endif
             assign amount = number_page | times: cur_page
             if cur_page == paginate_size or amount > count
               assign amount = count

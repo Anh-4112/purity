@@ -69,10 +69,10 @@
 
             if section_st.video_url.type == 'youtube'
               assign src_url = 'https://www.youtube.com/embed/' | append: video_id | append: '?autoplay=' | append: autoplay_val | append: '&mute=' | append: mute_val | append: '&playsinline=1'
-              assign iframe_class = 'js-youtube no-js-hidden'
+              assign iframe_class = 'js-youtube no-js-hidden w-full h-full'
             else
               assign src_url = 'https://player.vimeo.com/video/' | append: video_id | append: '?autoplay=' | append: autoplay_val | append: '&muted=' | append: mute_val
-              assign iframe_class = 'vimeo-video js-vimeo no-js-hidden bg-dark'
+              assign iframe_class = 'vimeo-video js-vimeo no-js-hidden bg-dark w-full h-full'
             endif
           %}
 
@@ -103,7 +103,10 @@
       {% liquid
         assign poster = section_st.video_poster | default: section_st.video_local.preview_image
       %}
-      <div class="video-thumbnail absolute banner__media overflow-hidden{{rounded}}">
+      <div
+        class="video-thumbnail absolute banner__media overflow-hidden{{rounded}}"
+        style="{% if section_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ aspect_ratio }}{% else %}--aspect-ratio: 16/9;{% endif %}"
+      >
         {%- if poster != null -%}
           {%- liquid
             assign image_alt_default = 'general.image.image_alt_default' | t
@@ -116,14 +119,14 @@
         {%- if section_st.autoplay == blank -%}
           <div class="deferred-media__poster-button absolute z-3 flex content-center wh-55">
             <button
-              class="btn p-0 btn-primary w-full h-full rounded-50 border-0 flex content-center pointer shadow transition hover-effect button-hover-zoom"
+              class="btn p-0 btn-white w-full h-full rounded-50 border-0 flex content-center pointer shadow transition hover-effect button-hover-zoom"
               type="button"
               aria-label="{{ 'sections.video.alt_text' | t }}"
             >
               <svg
                 aria-hidden="true"
                 focusable="false"
-                class="icon icon-play"
+                class="icon icon-play color-dark"
                 viewBox="0 0 10 14"
               >
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M1.48177 0.814643C0.81532 0.448245 0 0.930414 0 1.69094V12.2081C0 12.991 0.858787 13.4702 1.52503 13.0592L10.5398 7.49813C11.1918 7.09588 11.1679 6.13985 10.4965 5.77075L1.48177 0.814643Z" fill="currentColor"></path>
@@ -137,6 +140,7 @@
           section_st.video_local
           | video_tag: image_size: '1100x', autoplay: true, controls: true, muted: true, alt: alt, class: rounded
         }}
+        <span class="focus-video absolute inset-0 pointer-none"></span>
       </template>
       <noscript>
         {% liquid
@@ -151,6 +155,7 @@
           section_st.video_local
           | video_tag: image_size: '1100x', autoplay: autoplay, controls: true, muted: muted, alt: alt, class: rounded
         }}
+        <span class="focus-video absolute inset-0 pointer-none"></span>
       </noscript>
       {%- if section_st.autoplay -%}
         </video-local>
