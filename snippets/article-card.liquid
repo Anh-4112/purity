@@ -2,33 +2,33 @@
   <div class="article-card-wrapper item-load {{ class }}">
     <div class="card article-card">
       {%- if show_image == true and article.image -%}
-        <div
-          class="banner__media rounded article_post-image mb-20"
+        {%- liquid
+          assign alt = article.title | escape
+          if article.image.alt != blank
+            assign alt = article.image.alt | escape
+          endif
+        -%}
+        <a
+          href="{{ article.url }}"
+          class="remove-underline banner__media rounded article_post-image mb-20"
+          aria-label="{{ article.title | escape }}"
           {% if media_aspect_ratio != 'adapt' %}
             style="--aspect-ratio:{{ media_aspect_ratio }}"
           {% else %}
             style="--aspect-ratio:{{ article.image.aspect_ratio }}"
           {% endif %}
         >
-          {%- liquid
-            assign alt = article.title | escape
-            if article.image.alt != blank
-              assign alt = article.image.alt | escape
-            endif
-          -%}
-          <a href="{{ article.url }}" class="remove-underline" aria-label="{{ article.title | escape }}">
-            {% render 'responsive-image',
-              type: 'blog',
-              class: 'blog__img',
-              image: article.image,
-              image_alt: alt,
-              container: container,
-              column: column,
-              column_mobile: column_mobile,
-              padding: padding
-            %}
-          </a>
-        </div>
+          {% render 'responsive-image',
+            type: 'blog',
+            class: 'blog__img',
+            image: article.image,
+            image_alt: alt,
+            container: container,
+            column: column,
+            column_mobile: column_mobile,
+            padding: padding
+          %}
+        </a>
       {%- endif -%}
       <div class="card__content">
         {%- if show_tags or show_cate -%}
