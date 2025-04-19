@@ -49,9 +49,9 @@
     assign data_free_scroll = 'true'
   endif
 
-  assign items_per_row_tablet = items_per_row
-  if items_per_row > 3
-    assign items_per_row_tablet = items_per_row | minus: 1
+  assign items_per_row_tablet = 3
+  if items_per_row < 3
+    assign items_per_row_tablet = items_per_row
   endif
 
   assign center_slide = false
@@ -227,7 +227,7 @@
                     </div>
                   {% endif %}
                 </div>
-                <div class="shopable-video__product">
+                <div class="shopable-video__product border rounded p-10 mt-10">
                   {% render 'card-product',
                     card_product: product,
                     section_id: section.id,
@@ -239,10 +239,10 @@
                     disable_hover_image: true,
                     show_quick_add: true,
                     disable_color_swatches: true,
-                    style_layout: ' flex gap-10 border rounded mt-10 p-10 align-center',
+                    style_layout: ' flex gap-10 align-center',
                     image_class: ' flex-auto w-custom',
                     image_rounded: ' rounded-10',
-                    info_class: ' flex-1 mt-0'
+                    info_class: ' flex-1 mt-0 col-remaining'
                   %}
                 </div>
               </shopable-item>
@@ -361,13 +361,12 @@
       >
         <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
         <div
-          class="modal-popup-inner transition max-w-custom m-auto invisible fixed inset-0 z-15 w-full"
+          class="modal-popup-inner h-content transition max-w-custom m-auto invisible-1025 fixed inset-0 z-15 w-full"
           style="--max-width: 80rem;"
         >
           <div class="modal-nav">
             {%- render 'swiper-navigation' -%}
           </div>
-
           <button
             is="button-close-model"
             class="modal__close pointer btn-reset wh-40 wh-1025-50 bg-white blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow "
@@ -378,7 +377,7 @@
             </svg>
           </button>
           <slide-section
-            id="swiper-modal-shopable-slide-video"
+            id="swiper-modal-shopable-slide-video w-full"
             class="swiper swiper-modal-shopable-video"
             data-section-id="modal-shopable-_slide-video"
             data-effect="slide"
@@ -391,13 +390,13 @@
           >
             <div class="swiper-wrapper">
               {% for block in section.blocks %}
-                <div class="swiper-slide">
+                <div class="swiper-slide w-full">
                   <div
-                    class="drawer__body drawer__body-item h-full overflow-y-auto custom-scrollbar bg-white rounded"
+                    class="drawer__body drawer__body-item w-full h-full overflow-y-auto custom-scrollbar bg-white rounded"
                     id="Product-{{ block.id }}"
                   >
                     <div
-                      class="flex flex-cols wrap relative modal-shopable_content"
+                      class="flex flex-cols wrap relative modal-shopable_content w-full"
                       style="--gap: 0px; --col-desktop: 2;--col-tablet: 1; --col-number: 1;"
                     >
                       {% liquid
@@ -463,6 +462,7 @@
                               autoplay
                               poster="{{ poster }}"
                               data-src="{{ source_url }}"
+                              class="z-1"
                             ></video>
                           {% else %}
                             {% if poster_image != blank %}
@@ -504,8 +504,17 @@
                         <button
                           class="btn-shopable__action-mobile btn"
                           style="--btn-padding-y: 1rem;--btn-padding-x: 2rem;"
+                          name="{{ 'products.product.shop_now' | t }}"
                         >
-                          {{ 'products.product.shop_now' | t }}
+                          <svg
+                            width="16"
+                            height="16"
+                            class="hidden-1025 hidden-on-load transition-short"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                          >
+                            <use href="#icon-cart" />
+                          </svg>
                         </button>
                       </div>
                       <div

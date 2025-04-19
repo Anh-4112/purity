@@ -356,17 +356,6 @@ mark {
     display: none;
   }
 }
-@media screen and (max-width: 1024.98px) {
-  .overflow-visible-mb {
-    overflow: visible;
-  }
-  .overflow-hidden-mb {
-    overflow: hidden;
-  }
-  .overflow-x-scroll-mb {
-    overflow-x: scroll;
-  }
-}
 :where(
     [style*="--aspect-ratio"]
       > :is(
@@ -1194,6 +1183,10 @@ body:not(.template-index) .transparent-logo {
   flex: 0 0 auto;
   width: var(--col-width, 50%);
 }
+.col-remaining {
+  flex: 0 0 calc(100% - var(--col-width, var(--width)) - var(--gap, 2rem));
+  width: calc(100% - var(--col-width, var(--width)) - var(--gap, 2rem));
+}
 .swiper:not([class*="initialized"]) .swiper-wrapper .swiper-slide {
   flex: 0 0 auto;
 }
@@ -1303,6 +1296,24 @@ body:not(.template-index) .transparent-logo {
     --gap: 3px;
     --width: 3px;
     --height: 3px;
+  }
+  .overflow-visible-mb {
+    overflow: visible;
+  }
+  .overflow-hidden-mb {
+    overflow: hidden;
+  }
+  .overflow-x-scroll-mb {
+    overflow-x: scroll;
+  }
+  :where(.modal-popup-inner) {
+    transform: translateY(100%);
+    -webkit-transform: translateY(100%);
+    will-change: transform;
+    bottom: 0;
+    max-height: calc(100vh - 60px);
+    top: auto;
+    --transition: 0.3s;
   }
 }
 .shopify-payment-button__more-options.shopify-payment-button__skeleton {
