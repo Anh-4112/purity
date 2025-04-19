@@ -1,13 +1,24 @@
-<<<<<<< HEAD
 .swiper-slide-center .video-item--ratio {
-=======
-.video-item--ratio {
->>>>>>> 83f4f71 ([Style] Shopable video)
   transition: var(--transition-drawer);
 }
 .center-slide .video-item--ratio {
   transform: scaleY(1);
   -webkit-transform: scaleY(1);
+}
+.block-product__buttons:before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 60%;
+  transform: translateY(-100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 100%);
+}
+.modal-shopable-video .img-placeholder {
+  border-radius: 0;
+  clip-path: unset;
 }
 .mute-button svg,
 .play-button svg {
@@ -25,19 +36,16 @@
   border-radius: 50%;
   background-color: #0000004d;
 }
-
 .mute-button.active .mute-close,
 .mute-open,
 .play-button.active .icon-play,
 .play-button .icon-pause {
   display: none;
 }
-
 .mute-button.active .mute-open,
 .play-button.active .icon-pause {
   display: block;
 }
-
 .sticky-video {
   width: 15rem;
   position: fixed;
@@ -47,7 +55,11 @@
   transform: translateX(100%);
   transition: var(--transition-popup);
 }
-
 .sticky-video.active {
   transform: translateX(-3rem);
+}
+@media screen and (min-width: 1025px) {
+  .modal-nav {
+    --swiper-navigation-sides-offset: -100px;
+  }
 }

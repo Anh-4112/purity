@@ -239,7 +239,7 @@
       endif
     -%}
     <variant-input
-      class="product-variants-js flex column wrap gap-25 pt-25 border-top"
+      class="product-variants-js flex column wrap{% if type != 'shopable' %} gap-25 pt-25 border-top{% else %} gap-15{% endif %}"
       data-section-id="{{ section.id }}"
       {% if type == 'shopable' %}
         data-block-id="{{ block_id }}"
