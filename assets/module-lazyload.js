@@ -32,6 +32,15 @@ export class LazyLoadEventHover {
     const lazyImage = document.querySelectorAll(".image-lazy-load");
     lazyImage.forEach((entry) => {
       const imgElement = entry;
+      const pictureElement = imgElement.closest("picture");
+      if (pictureElement) {
+        const sourceElement = pictureElement.querySelector("source");
+        const imgSourceSrcset = sourceElement.dataset.srcset;
+        if (imgSourceSrcset) {
+          sourceElement.setAttribute("srcset", imgSourceSrcset);
+          sourceElement.removeAttribute("data-srcset");
+        }
+      }
       const imgSrcset = imgElement.dataset.srcset;
       if (imgSrcset) {
         imgElement.setAttribute("srcset", imgSrcset);
@@ -134,8 +143,16 @@ export class LazyLoader {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const imgElement = entry.target;
+            const pictureElement = imgElement.closest("picture");
+            if (pictureElement) {
+              const sourceElement = pictureElement.querySelector("source");
+              const imgSourceSrcset = sourceElement.dataset.srcset;
+              if (imgSourceSrcset) {
+                sourceElement.setAttribute("srcset", imgSourceSrcset);
+                sourceElement.removeAttribute("data-srcset");
+              }
+            }
             const imgSrcset = imgElement.dataset.srcset;
-
             if (imgSrcset) {
               imgElement.setAttribute("srcset", imgSrcset);
               imgElement.removeAttribute("data-srcset");

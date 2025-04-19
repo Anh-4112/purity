@@ -270,6 +270,24 @@
                 {%- endif -%}
               </div>
             {%- endif -%}
+            {%- if variant_swatch and type == 'bought_together' -%}
+              <card-bought-together class="bought-together">
+                <input
+                  id="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
+                  name="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
+                  type="checkbox"
+                  data-price="{{ card_product.price }}"
+                  value="{{ card_product.id }}"
+                  class="bought-together-checkbox"
+                  checked
+                >
+                <label
+                  for="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
+                >
+                  <span class="hidden">{{- card_product.title -}}</span>
+                </label>
+              </card-bought-together>
+            {%- endif -%}
           </div>
         {%- endif -%}
         <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}">
@@ -319,13 +337,17 @@
               {%- render 'price', scope: 'item', product: card_product -%}
             </div>
           {% endif %}
-          {%- if product_enable_color_swatches and disable_color_swatches != true -%}
-            {%- if bundle_swatch -%}
+          {%- if variant_swatch -%}
+            {%- if type == 'bundle' -%}
               {%- render 'variant-swatches', scope: 'bundle', product: card_product -%}
             {%- else -%}
+              {%- render 'variant-swatches', scope: 'variant_swatch', product: card_product -%}
+            {% endif %}
+          {%- else -%}
+            {%- if product_enable_color_swatches and disable_color_swatches != true -%}
               {%- render 'variant-swatches', scope: 'item', product: card_product -%}
-            {%- endif -%}
-          {% endif %}
+            {% endif %}
+          {%- endif -%}
           {%- if bundle_swatch and enable_quick_add -%}
             <product-form class="quick-add">
               {%- form 'product',
@@ -377,23 +399,6 @@
         </div>
       </div>
     </div>
-    {%- unless card_product.has_only_default_variant -%}
-      <script type="application/json" class="productItemVariantsQty">
-        [
-        {%- for variant in card_product.variants -%}
-          {%- assign op = variant.option1 | replace: '"', '\"' -%}
-          {%- liquid
-              assign option = '"option":"' | append: op | append: '"'
-              assign quantity = '"qty":' | append: variant.inventory_quantity
-              assign available = '"available":' | append: variant.available
-              assign mamagement = '"mamagement":"' | append: variant.inventory_management | append: '"'
-          -%}
-          { {{ option }},{{ quantity }},{{ available }},{{ mamagement }}}
-          {%- unless forloop.last -%},{%- endunless forloop.last -%}
-        {%- endfor -%}
-        ]
-      </script>
-    {%- endunless -%}
   </div>
 {% else %}
   <div class="product-item{{ class }} {{ product_style }}">
