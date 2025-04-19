@@ -28,15 +28,19 @@
       calc(45rem + (900 - 800) * var(--responsive-rate)),
       90rem);
 }
-.blog-tag a {
-  --heading-weight: 500;
-  --btn-font-size: 1.4rem;
-  --btn-padding-y: 0.8rem;
-  --btn-padding-x: 1.5em;
+.btn-tag a {
+  padding: 0.8rem 1.5em;
   border: var(--border-height, 1px) solid var(--color-border);
+  border-radius: var(--btn-radius);
   display: block;
+  position: relative;
+  z-index: 1;
   text-transform: capitalize;
+  overflow: hidden;
 }
+/* .btn-tag a:hover{
+  color: rgb(var(--color-white));
+} */
 .post-meta li:not(:first-child):before {
   content: "";
   display: inline-block;
