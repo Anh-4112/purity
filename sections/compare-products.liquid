@@ -24,7 +24,7 @@
     assign show_size = section_st.show_size
     assign show_highlights = section_st.show_highlights
     assign show_availability = section_st.show_availability
-    assign option_name_size = 'Color'
+    assign option_name_size = 'Size'
     if section_st.size_trigger != blank
       assign option_name_size = section_st.size_trigger | split: ','
     endif
@@ -244,6 +244,11 @@
               </div>
             </div>
             {%- for items in product.metafields.custom.compare_items.value -%}
+              {%- liquid
+                if items.id == product.id
+                  continue
+                endif
+              -%}
               <div class="compare-field">
                 {%- liquid
                   assign p_media = items.featured_media
@@ -372,6 +377,11 @@
                 {%- render 'price', scope: 'item', product: product -%}
               </div>
               {%- for items in product.metafields.custom.compare_items.value -%}
+                {%- liquid
+                  if items.id == product.id
+                    continue
+                  endif
+                -%}
                 <div class="compare-field">
                   {%- render 'price', scope: 'item', product: items -%}
                 </div>
@@ -386,6 +396,11 @@
                 -%}
               </div>
               {%- for items in product.metafields.custom.compare_items.value -%}
+                {%- liquid
+                  if items.id == product.id
+                    continue
+                  endif
+                -%}
                 <div class="compare-field">
                   {%- liquid
                     render 'review', review_star: true, product: items
@@ -404,6 +419,11 @@
                 {% endif %}
               </div>
               {%- for items in product.metafields.custom.compare_items.value -%}
+                {%- liquid
+                  if items.id == product.id
+                    continue
+                  endif
+                -%}
                 <div class="compare-field">
                   {%- if items.vendor -%}
                     {{ items.vendor }}
@@ -441,6 +461,11 @@
                 {% endif %}
               </div>
               {%- for items in product.metafields.custom.compare_items.value -%}
+                {%- liquid
+                  if items.id == product.id
+                    continue
+                  endif
+                -%}
                 <div class="compare-field">
                   {%- if items.has_only_default_variant -%}
                     <span>-</span>
@@ -509,6 +534,11 @@
                 {% endif %}
               </div>
               {%- for items in product.metafields.custom.compare_items.value -%}
+                {%- liquid
+                  if items.id == product.id
+                    continue
+                  endif
+                -%}
                 <div class="compare-field">
                   {%- if items.has_only_default_variant -%}
                     <span>-</span>
@@ -560,6 +590,11 @@
                 {% endif %}
               </div>
               {%- for items in product.metafields.custom.compare_items.value -%}
+                {%- liquid
+                  if items.id == product.id
+                    continue
+                  endif
+                -%}
                 <div class="compare-field">
                   {%- if items.metafields.custom.ingredient_highlights -%}
                     {{ items.metafields.custom.ingredient_highlights }}
@@ -586,6 +621,11 @@
                 {% endif %}
               </div>
               {%- for items in product.metafields.custom.compare_items.value -%}
+                {%- liquid
+                  if items.id == product.id
+                    continue
+                  endif
+                -%}
                 <div class="compare-field">
                   {%- if items.available -%}
                     <svg width="12" height="10" fill="none">

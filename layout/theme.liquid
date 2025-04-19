@@ -213,6 +213,7 @@
           "module-slide": "{{ 'module-slide.js' | asset_url }}",
           "module-addToCart": "{{ 'module-add-to-cart.js' | asset_url }}",
           "module-lazyLoad": "{{ 'module-lazyload.js' | asset_url }}",
+          "module-variantSwatch": "{{ 'module-variant-swatch.js' | asset_url }}",
           "module-safariElementPatch": "{{ 'safari-element-patch.js' | asset_url }}"
         }
       }
@@ -284,6 +285,13 @@
       <li id="a11y-new-window-message">{{ 'accessibility.link_messages.new_window' | t }}</li>
     </ul>
     <script>
+      {%- liquid
+        assign theme_st = settings
+        assign money_format = shop.money_format
+        if theme_st.currency_code_enabled
+          assign money_format = shop.money_with_currency_format | strip_html
+        endif
+      -%}
       window.themeGlobalVariables = {
         settings: {
           money_format: {{ shop.money_format | json }},
@@ -294,6 +302,7 @@
         quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
         no_shipping: `{{ 'sections.cart.no_shipping' | t }}`,
         shipping_rate: `{{ 'sections.cart.shipping_rate' | t }}`,
+        money_format: {{ money_format | json }},
       };
       window.shopUrl = '{{ request.origin }}';
       window.routes = {
