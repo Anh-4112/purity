@@ -271,8 +271,7 @@
             %}
             <div
               {{ block.shopify_attributes }}
-              class="blog-post-related py-60 mt-20 bg-custom"
-              style="--bg-color-custom: {{ block_st.background_color }};"
+              class="blog-post-related py-60 mt-20s color-{{ block_st.color_scheme_related }}"
             >
               <div class="border-0">
                 <div class="relate__header text-center mb-40">
@@ -785,6 +784,13 @@
       "limit": 1,
       "settings": [
         {
+          "type": "color_scheme",
+          "id": "color_scheme_related",
+          "label": "t:sections.all.colors.label",
+          "info": "t:sections.all.colors.info",
+          "default": "default-color-scheme"
+        },
+        {
           "type": "text",
           "id": "related_heading",
           "label": "t:sections.all.content_setting.heading.label",
@@ -794,11 +800,6 @@
           "type": "richtext",
           "id": "related_description",
           "label": "t:sections.all.content_setting.description.label"
-        },
-        {
-          "type": "color",
-          "id": "background_color",
-          "label": "t:sections.image-with-text.settings.background_color"
         },
         {
           "type": "select",
