@@ -391,14 +391,8 @@ blockquote {
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
-.mt-0 {
-  margin-top: 0;
-}
 .mt-3 {
   margin-top: 3px;
-}
-.mt-5 {
-  margin-top: 5px;
 }
 .mt-6 {
   margin-top: 6px;
@@ -1432,6 +1426,28 @@ modal-popup :is(.modal-overlay) {
   .hover-effect:hover .border-animation {
     background-size: 100% var(--height, 1px);
     background-position: left bottom;
+  }
+  :is(.border-animation):hover {
+    animation: 1s infinite borderAnimation;
+  }
+  @keyframes borderAnimation {
+    0% {
+      background-size: 100% 1px;
+      background-position: right 100%;
+    }
+    33% {
+      background-size: 0% 1px;
+      background-position: right 100%;
+    }
+
+    66% {
+      background-size: 0% 1px;
+      background-position: left 100%;
+    }
+    100% {
+      background-size: 100% 1px;
+      background-position: left 100%;
+    }
   }
   /* Navigation desktop */
   .submenu {

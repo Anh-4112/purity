@@ -1,7 +1,6 @@
 {{ 'section-shopable-video.css' | asset_url | stylesheet_tag }}
-{{ 'main-product.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="{{ 'main-product.css' | asset_url }}" media="print" onload="this.media='all'">1
 <script type="module" src="{{ 'section-shopable-video.js' | asset_url }}" defer="defer"></script>
-
 {%- liquid
   assign theme_st = settings
   assign section_st = section.settings
@@ -62,8 +61,7 @@
   endif
 -%}
 {%- capture style -%}
-      --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
-      {% if heading_size == 'large' %}--font-size: 40;{% endif %}
+      --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--width: 5rem;
 {%- endcapture -%}
 
 <div
@@ -109,7 +107,7 @@
         data-autoplay-video="{{ autoplay_video }}"
       >
         {% if show_navigation %}
-          {%- render 'swiper-navigation' -%}
+          {%- render 'swiper-navigation', show_on_hover: true -%}
         {% endif %}
         <div class="swiper-wrapper">
           {%- for block in section.blocks -%}
@@ -241,7 +239,10 @@
                     disable_hover_image: true,
                     show_quick_add: true,
                     disable_color_swatches: true,
-                    type: 'list'
+                    style_layout: ' flex gap-10 border rounded mt-10 p-10 align-center',
+                    image_class: ' flex-auto w-custom',
+                    image_rounded: ' rounded-10',
+                    info_class: ' flex-1 mt-0'
                   %}
                 </div>
               </shopable-item>
@@ -562,7 +563,7 @@
                           href="{{ card_product.url }}"
                         >
                           {% if card_product.title != blank %}
-                          {{- card_product.title -}}
+                            {{- card_product.title -}}
                           {% else %}
                             {{ 'onboarding.product_title' | t }}
                           {% endif %}

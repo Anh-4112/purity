@@ -1,54 +1,51 @@
-.shopable-video__product .product-item__inner,
-.shopable-video__product .product-item__wrapper{
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.video-item--ratio {
+  transform: scaleY(0.8);
+  -webkit-transform: scaleY(0.8);
+  transition: var(--transition-drawer);
 }
-
-.shopable-video__product .product-item__inner .product__inner,
-.shopable-video__product .product-item__inner .product-item__media{
-  flex: 0 0 5rem;
+.center-slide .video-item--ratio {
+  transform: scaleY(1);
+  -webkit-transform: scaleY(1);
 }
-
 .mute-button svg,
-.play-button svg
-{
+.play-button svg {
   width: 1.2rem;
   height: 1.2rem;
 }
 .mute-button svg path,
-.play-button svg path{
+.play-button svg path {
   fill: #ffffff;
 }
 .mute-button,
-.play-button{
-    width: 4.2rem;
-    height: 4.2rem;
-    border-radius: 50%;
-    background-color: #0000004D;
+.play-button {
+  width: 4.2rem;
+  height: 4.2rem;
+  border-radius: 50%;
+  background-color: #0000004d;
 }
 
 .mute-button.active .mute-close,
-.mute-open,.play-button.active .icon-play,
+.mute-open,
+.play-button.active .icon-play,
 .play-button .icon-pause {
-    display: none;
+  display: none;
 }
 
-.mute-button.active .mute-open ,
+.mute-button.active .mute-open,
 .play-button.active .icon-pause {
-    display: block;
+  display: block;
 }
 
-.sticky-video{
+.sticky-video {
   width: 15rem;
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
-  --transition-popup: transform .4s cubic-bezier(.7,0,.2,1);
+  --transition-popup: transform 0.4s cubic-bezier(0.7, 0, 0.2, 1);
   transform: translateX(100%);
   transition: var(--transition-popup);
 }
 
-.sticky-video.active{
+.sticky-video.active {
   transform: translateX(-3rem);
 }
