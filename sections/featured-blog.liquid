@@ -8,9 +8,7 @@
     assign section_width = 'fluid_container'
   endif
   assign heading_size = section_st.heading_size
-  assign text_alignment = section_st.text_alignmen
-  assign show_pagination = section_st.show_pagination
-  assign show_navigation = section_st.show_navigation
+  assign text_alignment = section_st.text_alignment
 
   assign header_size = ''
   if heading_size == 'small'
@@ -34,11 +32,8 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
-{%- capture col_style -%}
-  --col-desktop: 1 ;--col-number:1 ;--col-tablet: 1;
-{%- endcapture -%}
 <div
-  class="section color-{{ section_st.color_scheme }} gradient section__blog-post"
+  class="section color-{{ section_st.color_scheme }} gradient section__blog-featured"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -59,95 +54,70 @@
       </div>
     {%- endif -%}
 
-    <slide-section
-      class="swiper"
-      data-section-id="{{ section.id }}"
-      data-autoplay="false"
-      data-effect="slide"
-      data-loop="false"
-      data-speed="500"
-      data-mobile="1"
-      data-desktop="1"
-      data-tablet="1"
-      style="{{ col_style | strip | strip_newlines }}"
-    >
-      {% if show_navigation %}
-        {%- render 'swiper-navigation' -%}
-      {% endif %}
-      <div class="swiper-wrapper">
-        {%- if section_st.blog != blank and section_st.blog.articles_count > 0 -%}
-          {%- for article in section_st.blog.articles limit: section_st.items_to_show -%}
-            {%
-              render 'article-card',
-              blog: section_st.blog,
-              article: article,
-              media_aspect_ratio: aspect_ratio,
-              show_image: true,
-              show_date: section_st.show_date,
-              show_author: section_st.show_author,
-              show_excerpt: section_st.show_excerpt,
-              show_cate: section_st.show_category,
-              show_tags: section_st.show_tags,
-              container: section_width,
-              column: 1,
-              column_mobile: 1,
-              class: ' swiper-slide',
-              featured-blog: ' flex',
-              is_featured_blog: true,
-              background_color: section_st.background_color,
-              button_label = section_st.button_label,
-              indexFor: forloop.index
-            %}
-          {%- endfor -%}
-        {%- else -%}
-          {% for i in (0..section_st.items_to_show) %}
-            <div class="blog-placeholder swiper-slide">
-              <div class="article_post-image placeholder banner__media rounded relative overflow-hidden">
-                <a
-                  class="block"
-                  role="link"
-                  aria-disabled="true"
-                  aria-label="{{ 'sections.featured_blog.onboarding_title' | t }}"
-                  style=" {%- if aspect_ratio == "adapt" -%}--aspect-ratio: 4/3;{% else %}--aspect-ratio: {{ aspect_ratio }};{% endif %}"
-                >
-                  {%- render 'placeholder-render', type: 'blog', index: forloop.index -%}
-                </a>
-              </div>
-              <div class="card__content mt-15">
-                <div class="card__heading{% if section_st.columns_desktop < 3 %} h4{% else %} h5{% endif %}">
-                  <a
-                    role="link"
-                    aria-label="{{ 'sections.featured_blog.onboarding_title' | t }}"
-                    aria-disabled="true"
-                    class="heading-color"
-                  >
-                    {{ 'sections.featured_blog.onboarding_title' | t }}
-                  </a>
-                </div>
-                <p class="rte-width rte mt-0">
-                  {{ 'sections.featured_blog.onboarding_content' | t }}
-                </p>
-              </div>
+    <div class="article-wrapper w-full">
+      {%- if section_st.blog != blank -%}
+        {% render 'article-card',
+          article: section_st.blog,
+          media_aspect_ratio: aspect_ratio,
+          show_image: true,
+          show_date: section_st.show_date,
+          show_author: section_st.show_author,
+          show_excerpt: section_st.show_excerpt,
+          show_cate: section_st.show_category,
+          show_tags: section_st.show_tags,
+          container: section_width,
+          column: 1,
+          column_mobile: 1,
+          class: ' w-full',
+          featured-blog: ' flex',
+          is_featured_blog: true,
+          background_color: section_st.background_color,
+          button_label: section_st.button_label,
+          button_type: section_st.button_type
+        %}
+      {%- else -%}
+        <div class="blog-placeholder flex">
+          <div
+            class="article_post-image placeholder banner__media rounded relative overflow-hidden w-custom"
+            style="--width: 70%;"
+          >
+            <a
+              role="link"
+              aria-disabled="true"
+              aria-label="{{ 'sections.featured_blog.onboarding_title' | t }}"
+              style="{%- if aspect_ratio == "adapt" -%}--aspect-ratio: 4/3;{% else %}--aspect-ratio: {{ aspect_ratio }};{% endif %}"
+            >
+              {%- render 'placeholder-render', class: 'w-full h-full', type: 'banner' -%}
+            </a>
+          </div>
+          <div
+            class="card__content mt-15 w-custom"
+            style="--width: 30%;"
+          >
+            <div class="card__heading{% if section_st.columns_desktop < 3 %} h4{% else %} h5{% endif %}">
+              <a
+                role="link"
+                aria-label="{{ 'sections.featured_blog.onboarding_title' | t }}"
+                aria-disabled="true"
+                class="heading-color"
+              >
+                {{ 'sections.featured_blog.onboarding_title' | t }}
+              </a>
             </div>
-          {% endfor %}
-        {%- endif -%}
-      </div>
-      {%- if show_pagination -%}
-        <div
-          class="swiper-pagination"
-        ></div>
-      {% endif %}
-    </slide-section>
+            <p class="rte-width rte mt-0">
+              {{ 'sections.featured_blog.onboarding_content' | t }}
+            </p>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
   </div>
 </div>
 {% schema %}
 {
-  "name": "t:sections.blog-posts.name",
+  "name": "t:sections.featured-blog.name",
   "tag": "section",
   "class": "section section-blog-posts",
-  "disabled_on": {
-    "groups": ["header", "footer", "custom.overlay"]
-  },
   "settings": [
     {
       "type": "header",
@@ -185,9 +155,8 @@
       "content": "t:sections.all.content_header.label"
     },
     {
-      "type": "textarea",
+      "type": "text",
       "id": "title",
-      "default": "Blog posts",
       "label": "t:sections.all.content_setting.heading.label"
     },
     {
@@ -240,7 +209,7 @@
       "content": "t:sections.blog-posts.settings.blog-post.label"
     },
     {
-      "type": "blog",
+      "type": "article",
       "id": "blog",
       "label": "t:sections.blog-posts.settings.blog.label"
     },
@@ -299,26 +268,40 @@
       "label": "t:sections.all.blog_setting.show_excerpt"
     },
     {
-      "type": "header",
-      "content": "t:sections.all.carousel.header"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_navigation",
-      "default": false,
-      "label": "t:sections.all.carousel.show_navigation.label"
-    },
-    {
       "type": "color",
       "id": "background_color",
       "label": "t:sections.image-with-text.settings.background_color",
       "default": "#F2EFE6"
     },
     {
+      "type": "header",
+      "content": "t:sections.all.content_setting.button_label-block.label"
+    },
+    {
       "type": "text",
       "id": "button_label",
       "default": "Button label",
       "label": "t:sections.all.content_setting.first_button_label.label"
+    },
+    {
+      "type": "select",
+      "id": "button_type",
+      "label": "t:sections.all.content_setting.button_type.label",
+      "default": "primary",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:sections.all.content_setting.button_type.primary.label"
+        },
+        {
+          "value": "outline",
+          "label": "t:sections.all.content_setting.button_type.outline.label"
+        },
+        {
+          "value": "link",
+          "label": "t:sections.all.content_setting.button_type.link.label"
+        }
+      ]
     },
     {
       "type": "header",
@@ -343,11 +326,6 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
-    }
-  ],
-  "presets": [
-    {
-      "name": "t:sections.blog-posts.name"
     }
   ]
 }

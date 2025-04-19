@@ -122,8 +122,8 @@
           {%- endif -%}
         {%- endif -%}
 
-        {%- if button_label != blank  and is_featured_blog == true  != blank%}
-          <div class="mt-20 text-center">
+        {%- if is_featured_blog -%}
+          <div class="flex wrap gap-10 text-center">
             {% assign button_link = article.url %}
             <a
               {% if button_link == blank %}
@@ -132,11 +132,12 @@
                 href="{{ button_link | default: "#" }}"
               {% endif %}
               aria-label="{{ button_label }}"
-              class="heading-style text-size border-animation pointer"
+              class="btn-{{ button_type }}{% if button_type == "link" %} align-self-center{% else %} btn w-custom max-w-100{% endif %}"
             >
               {{ button_label }}
             </a>
           </div>
+        {%- endif -%}
       </div>
     </div>
   </div>
