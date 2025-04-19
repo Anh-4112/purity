@@ -26,7 +26,7 @@
     <div class="single-post-breadcrumbs">
       {%- render 'breadcrumbs' -%}
     </div>
-    <div class="flex column gap-20 gap-lg-40">
+    <div class="flex column gap-20 gap-1025-40">
       {%- for block in section.blocks -%}
         {% assign block_st = block.settings %}
         {%- case block.type -%}
@@ -299,6 +299,7 @@
                       data-mobile="1"
                       class="round-on-top swiper"
                     >
+
                       <div class="swiper-wrapper">
                         {%- for article in blog.articles limit: 8 -%}
                           {%- liquid
@@ -319,6 +320,7 @@
                           %}
                         {%- endfor -%}
                       </div>
+                      <div class="swiper-pagination"></div>
                     </slide-section>
                   {%- else -%}
                     <p>{{ 'blogs.article.empty' | t }}</p>
@@ -328,7 +330,7 @@
             </div>
         {%- endcase -%}
       {%- endfor -%}
-      <div class="container-min single__post-content-inner mt-20">
+      <div class="container-min single__post-content-inner mt-30">
         {%- if blog.comments_enabled? -%}
           <div class="article-template__comment-wrapper ">
             <div id="comments" class="page-width--narrow">
@@ -406,7 +408,7 @@
                       tabindex="-1"
                       autofocus
                     >
-                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="flex-auto">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto">
                         <use href="#icon-error"></use>
                       </svg>
                       {{ 'templates.contact.form.error_heading' | t }}
@@ -433,8 +435,8 @@
                     </ul>
                   {%- elsif form.posted_successfully? -%}
                     <div class="form-status form__message success mb-15" role="status">
-                      <div class="form-status" tabindex="-1" autofocus>
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <div class="form-status flex  align-center gap-10" tabindex="-1" autofocus>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                           <use href="#icon-success">
                         </svg>
                         {{ post_message | t }}

@@ -46,15 +46,13 @@ th {
   padding: 11px 12px;
 }
 blockquote {
-  background-color: var(--accent-color-second);
   font-size: clamp(1.6rem, 2.5vw, 2rem);
   font-weight: var(--heading-weight);
   color: var(--color-heading);
-  letter-spacing: var(--heading-letter-spacing);
-  padding: clamp(2rem, 3vw, 4rem);
-  line-height: 1.5;
-  border-radius: var(--img-rounded);
-  overflow: hidden;
+  padding: clamp(2rem, 2.5vw, 2rem);
+  padding-bottom: 0;
+  line-height: 1.6;
+  text-align: center;
 }
 .pointer {
   cursor: pointer;
@@ -1369,7 +1367,7 @@ modal-popup :is(.modal-overlay) {
     visibility: visible;
     pointer-events: auto;
   }
-  .gap-lg-40{
+  .gap-1025-40{
     gap: 4rem;
   }
   .pb-1025-30 {
@@ -1479,6 +1477,7 @@ modal-popup :is(.modal-overlay) {
   :where(
       .btn,
       .btn-hover,
+      .blog-tag a,
       .shopify-payment-button__button--unbranded,
       body .jdgm-write-rev-link,
       body .jdgm-write-rev-link.jdgm-write-rev-link,
@@ -1501,6 +1500,7 @@ modal-popup :is(.modal-overlay) {
   :where(
       .btn,
       .btn-hover,
+      .blog-tag a,
       .shopify-payment-button__button--unbranded,
       body .jdgm-write-rev-link,
       body .jdgm-write-rev-link.jdgm-write-rev-link,
@@ -2104,7 +2104,7 @@ html:not(.open-nav, .open-canvas) mobile-navigation-bar {
 }
 .pagination__item--current {
   --btn-color: var(--btn-primary-color);
-    background-color: var(--btn-primary-hover-color);
-    border-color: var(--btn-primary-hover-color);
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
     color: var(--btn-color);
 }
