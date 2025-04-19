@@ -9,8 +9,7 @@
   assign cart_empty_button_label = theme_st.cart_empty_button_label
   assign cart_empty_button_link = theme_st.cart_empty_button_link
   assign cart_empty_free_shipping_message = theme_st.cart_empty_free_shipping_message
-  assign free_minimum_amount = theme_st.free_minimum_amount | times: 100 | default: 0
-  assign currency_code_enabled = theme_st.currency_code_enabled
+  assign free_minimum_amount = theme_st.free_minimum_amount
   assign free_shipping_message = theme_st.free_shipping_message
   assign select_product_gift_wrap = theme_st.select_product_gift_wrap
   assign enable_product_recommendations = theme_st.enable_product_recommendations
@@ -154,60 +153,36 @@
               </div>
             {%- endif -%}
             {%- if show_free_shipping_message and free_minimum_amount and cart_empty_free_shipping_message -%}
-              {% liquid
-                assign free_shipping_amount = free_minimum_amount | money
-                if currency_code_enabled
-                  assign free_shipping_amount = free_minimum_amount | money_with_currency
-                endif
-              %}
               <div class="cart-drawer__empty-message text-center mt-10 mt-1025-20 heading-color">
-                {%- capture free_amount -%}
-                  <span>{{ free_shipping_amount }}</span>
-                {%- endcapture -%}
-                {{ cart_empty_free_shipping_message | replace: '[amount]', free_amount }}
+                <free-ship-progress-bar
+                  data-fe-amount="{{ free_minimum_amount }}"
+                  data-empty-unavailable="{{ cart_empty_free_shipping_message }}"
+                >
+                </free-ship-progress-bar>
               </div>
             {%- endif -%}
           </div>
         </div>
       {%- else -%}
-        {% liquid
-          assign total_price = cart.total_price | times: 1
-        %}
+        {% assign total_price = cart.total_price | times: 1 %}
         {%- if show_free_shipping_message and free_minimum_amount -%}
-          <div class="free-shipping-bar drawer-spacing">
-            {% liquid
-              assign free_shipping_amount = free_minimum_amount | minus: total_price | money
-              if currency_code_enabled
-                assign free_shipping_amount = free_minimum_amount | minus: total_price | money_with_currency
-              endif
-              assign progress = total_price | times: 100 | divided_by: free_minimum_amount | round: 2
-              if progress > 100
-                assign progress = 100
-              endif
-            %}
-            {%- if free_shipping_message -%}
-              <div class="progress-bar-message text-center heading-style">
-                {%- if progress < 100 -%}
-                  {%- capture free_amount -%}
-                  <span>{{ free_shipping_amount }}</span>
-                  {%- endcapture -%}
-                  {{ free_shipping_message | replace: '[amount]', free_amount }}
-                {%- else -%}
-                  {% assign progress = 100 %}
-                  {{ 'sections.cart.free_shipping_avaiable' | t }}
-                {%- endif -%}
-              </div>
-            {%- endif -%}
+          <free-ship-progress-bar
+            data-fe-unavailable="{% if free_shipping_message != blank %}{{ free_shipping_message }}{% else %}{{ 'sections.cart.free_shipping_html' | t }}{% endif %}"
+            data-fe-available="{{ 'sections.cart.free_shipping_available' | t }}"
+            class="free-shipping-bar drawer-spacing"
+          >
+            <div class="progress-bar-message text-center heading-style"></div>
             <div
               class="progress-bar rounded-10 h-custom bg-grey mt-10 relative"
               style="--height: 6px;"
             >
               <div
                 class="progress rounded-10 h-custom absolute left-0 inset-y-0 transition"
-                style="--width: {{ progress }}%"
+                data-total-order="{{ total_price }}"
+                data-fe-amount="{{ free_minimum_amount }}"
               ></div>
             </div>
-          </div>
+          </free-ship-progress-bar>
         {%- endif -%}
         <div class="cart-drawer-inner overflow-y-auto custom-scrollbar grow-1 flex column">
           <cart-items class="block drawer-spacing grow-1 mb-10 pt-12">
