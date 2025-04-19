@@ -161,46 +161,41 @@
                   assign image_alt = 'general.image.image_alt_default' | t
                 endif
               -%}
-              {% case block.type %}
-                {% when 'image_effect' %}
-                  {% if image != blank %}
-                    {% render 'responsive-image',
-                      type: 'banner',
-                      container: section_st.section_width,
-                      image: image,
-                      image_alt: image_alt
-                    %}
-                  {% else %}
-                    {%- render 'placeholder-render', type: 'product' -%}
-                  {% endif %}
-              {% endcase %}
+              {% if image != blank %}
+                {% render 'responsive-image',
+                  type: 'banner',
+                  container: section_st.section_width,
+                  image: image,
+                  image_alt: image_alt
+                %}
+              {% else %}
+                {%- render 'placeholder-render', type: 'product' -%}
+              {% endif %}
             </div>
           {% endfor %}
         </media-effect>
       </div>
-      <div class="information-text__wrapper">
+      <content-effect class="information-text__wrapper block">
         <div class="information-text__content">
-          {% for block in section.blocks %}
+          {% assign content_effect_blocks = section.blocks | where: "type", "information" %}
+          {% for block in content_effect_blocks %}
             {% assign block_st = block.settings %}
-            {% case block.type %}
-              {% when 'information' %}
-                <div
-                  class="block__information_text"
-                  {{ block.shopify_attributes }}
-                >
-                    <div class="subheading_weight lh-normal flex {% if block_st.highlight_text_icon != 'none' %}gap-10{% endif %} {% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-10 px-15 btn-rounded{% endif %}" style="--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};">
-                        {% if block_st.highlight_text_icon != 'none' %}
-                            {% render 'icon_svg_list', icon: block_st.highlight_text_icon %}
-                          {% endif %}
-                          {{ block_st.highlight_text | escape }}
-                    </div>
+            <div
+              class="block__information_text"
+              {{ block.shopify_attributes }}
+            >
+                <div class="subheading_weight lh-normal flex {% if block_st.highlight_text_icon != 'none' %}gap-10{% endif %} {% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-10 px-15 btn-rounded{% endif %}" style="--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};">
+                    {% if block_st.highlight_text_icon != 'none' %}
+                        {% render 'icon_svg_list', icon: block_st.highlight_text_icon %}
+                      {% endif %}
+                      {{ block_st.highlight_text | escape }}
                 </div>
-            {% endcase %}
+            </div>
           {% endfor %}
         </div>
-      </div>
+      </content-effect>
       {% if section_st.button_label != blank %}
-        <div class="button-block">
+        <div class="button-block flex justify-content-center">
           <a
             {% if section_st.button_link == blank %}
               role="link" aria-disabled="true"
@@ -208,7 +203,7 @@
               href="{{ section_st.button_link | default: "#" }}"
             {% endif %}
             aria-label="{{ section_st.button_label }}"
-            class="btn btn-{{ section_st.button_type }}{% if section_st.button_type == "link" %} align-self-center{% else %} w-custom max-w-100{% endif %}"
+            class="text-center mt-30 btn btn-{{ section_st.button_type }}{% if section_st.button_type == "link" %} align-self-center{% else %} w-custom max-w-100{% endif %}"
             {% if section_st.button_type != 'link' %}
               style="--width: 20rem;"
             {% endif %}
