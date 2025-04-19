@@ -181,15 +181,31 @@
     setupFormValidation({
       formSelector: 'form#contact_faq',
       fields: {
-        'contact[name]': (value) => (!value ? '{{ "customer.validate.name" | t }}' : ''),
-        'contact[email]': (value) =>
-          !value
+        'contact[name]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ "customer.validate.name" | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
+        'contact[email]': (value) => {
+          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          return !value
             ? '{{ "customer.validate.email" | t }}'
-            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            : !emailRegex.test(value)
             ? '{{ "customer.validate.email_invalid" | t }}'
-            : '',
+            : '';
+        },
         'contact[subject]': (value) => (!value ? '{{ "customer.validate.subject" | t }}' : ''),
-        'contact[body]': (value) => (!value ? '{{ "customer.validate.message" | t }}' : ''),
+        'contact[body]': (value) => {
+          const invalidChars = /<.*?>|javascript:/i;
+          return !value
+            ? '{{ "customer.validate.message" | t }}'
+            : invalidChars.test(value)
+            ? '{{ "customer.validate.invalid" | t }}'
+            : '';
+        },
       },
     });
   });
