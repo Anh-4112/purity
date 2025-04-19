@@ -46,7 +46,7 @@ export class FormValidator {
     let errorEl = input.nextElementSibling;
     if (!errorEl || !errorEl.classList.contains("form-error-message")) {
       errorEl = document.createElement("div");
-      errorEl.className = "form-error-message text-sm text-red-500 mt-5 fs-13";
+      errorEl.className = "form-error-message error text-sm mt-5";
       input.parentNode.insertBefore(errorEl, input.nextSibling);
     }
     return errorEl;

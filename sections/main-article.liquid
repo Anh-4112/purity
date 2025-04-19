@@ -34,7 +34,7 @@
             <div {{ block.shopify_attributes }} class="container-min single__post-header page-title">
               {% if block_st.show_category %}
                 <a
-                  class="blog-category inline-block bg-primary color-white  rounded-pill fs-13 px-15 py-4"
+                  class="blog-category inline-block bg-primary color-white  btn-rounded fs-13 px-15 py-4"
                   href="{{ blog.url }}"
                   aria-label="{{ blog.title }}"
                 >
@@ -44,7 +44,7 @@
               <h1 class="article-template__title my-5" itemprop="headline">
                 {{ article.title | escape }}
               </h1>
-              <ul class="article-card__info post-meta list-unstyled flex wrap capitalize medium-weight fs-14 grey-color">
+              <ul class="article-card__info post-meta list-unstyled flex wrap capitalize medium-weight fs-small grey-color">
                 {%- if block_st.show_date -%}
                   <li
                     class="post-date"
@@ -139,7 +139,7 @@
                     <span class="heading-style">{{ 'blogs.article.tags' | t }}:</span>
                     <ul class="flex wrap align-center list-unstyled gap-10">
                       {% for tag in article.tags limit: 8 %}
-                        <li class="transition badge fs-13">
+                        <li class="transition fs-small text-color btn-tag p-0 medium-weight">
                           {{- tag | link_to_tag: tag -}}
                         </li>
                       {% endfor %}
@@ -155,7 +155,7 @@
                       <ul class="list-social flex list-unstyled gap-10 lh-1">
                         <li class="list-social__item">
                           <a
-                            class="btn-sharing w-40 h-40 inline-flex content-center pointer"
+                            class="btn-sharing w-40 h-40 inline-flex content-center hover-icon-zoom pointer"
                             role="link"
                             aria-label="{{ 'blogs.article.share' | t }}"
                             data-name="twitter"
@@ -169,7 +169,7 @@
                         </li>
                         <li class="list-social__item">
                           <a
-                            class="btn-sharing w-40 h-40 inline-flex content-center pointer"
+                            class="btn-sharing w-40 h-40 inline-flex content-center hover-icon-zoom pointer"
                             role="link"
                             aria-label="{{ 'blogs.article.share' | t }}"
                             data-name="facebook"
@@ -183,7 +183,7 @@
                         </li>
                         <li class="list-social__item lh-1">
                           <a
-                            class="btn-sharing w-40 h-40 inline-flex content-center pointer"
+                            class="btn-sharing w-40 h-40 inline-flex content-center hover-icon-zoom pointer"
                             role="link"
                             aria-label="{{ 'blogs.article.share' | t }}"
                             data-name="pinterest"
@@ -349,7 +349,7 @@
                   {% paginate article.comments by 5 %}
                     <div class="article-template__comments">
                       {%- if comment.status == 'pending' and comment.content -%}
-                        <article id="{{ comment.id }}" class="article-template__comments-comment flex mb-30 pb-30">
+                        <article id="{{ comment.id }}" class="article-template__comments-comment flex mb-20 pb-20 pb-1025-30 mb-1025-30 border-bottom-dashed last-0">
                           {{ comment.content }}
                           <footer class="right">
                             <span class="circle-divider capitalize block">
@@ -360,7 +360,7 @@
                       {%- endif -%}
 
                       {%- for comment in article.comments -%}
-                        <article id="{{ comment.id }}" class="article-template__comments-comment flex mb-30 pb-30">
+                        <article id="{{ comment.id }}" class="article-template__comments-comment flex mb-20 pb-20 pb-1025-30 mb-1025-30 border-bottom-dashed last-0">
                           <div class="comment-content">
                             <div class="comment-content mb-10">
                               {{ comment.content }}
@@ -427,7 +427,7 @@
                       {%- endfor -%}
                     </ul>
                   {%- elsif form.posted_successfully? -%}
-                    <div class="form-status form__message success" role="status">
+                    <div class="form-status form__message success mb-15" role="status">
                       <div class="form-status" tabindex="-1" autofocus>
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                           <use href="#icon-success">
@@ -546,23 +546,15 @@
                   <div class="comment-action text-center mt-30">
                     <button
                       type="submit"
-                      class="comment-form__button btn btn-primary mw-250"
+                      class="comment-form__button btn btn-primary mw-250 relative"
                       name="commit"
                       id="Subscribe-{{ section.id }}"
                       aria-label="{{ 'subscribe.button_label' | t }}"
                     >
-                      <span class="hidden-on-load">
+                      <span class="hidden-on-load transition-short">
                         {{ 'blogs.article.post' | t }}
                       </span>
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 14 14"
-                        fill="none"
-                        class="spin opacity-0 pointer-none icon-load absolute"
-                      >
-                        <use href="#icon-load"></use>
-                      </svg>
+                      {%- render 'loader' -%}
                     </button>
                   </div>
                 {% endform %}
