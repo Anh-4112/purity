@@ -547,6 +547,7 @@ mark {
 :where(
     .btn:not(.btn-link),
     .btn-hover,
+    .btn-tag a,
     body .jdgm-write-rev-link,
     body .jdgm-write-rev-link.jdgm-write-rev-link,
     input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
@@ -1214,6 +1215,12 @@ body:not(.template-index) .transparent-logo {
 @media (min-width: 576px) {
   :is(.grid-cols, .flex-cols) {
     --col: var(--col-tablet, var(--col-desktop));
+  }
+  .flex-sm-row {
+    flex-direction: row;
+  }
+  .mw-250{
+    min-width: 250px;
   }
 }
 .reveal_on_scroll {

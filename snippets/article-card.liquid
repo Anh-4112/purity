@@ -1,13 +1,17 @@
 {%- if article and article != empty -%}
-  <div class="article-card-wrapper item-load {{ class }}">
-    <div class="card article-card">
+  <div
+    class="article-card-wrapper item-load {{ class }}"
+  >
+    <div
+      class="card article-card{{ featured-blog }}{% if is_featured_blog %} rounded{% endif %}"
+    >
       {%- if show_image == true and article.image -%}
         <div
-          class="banner__media rounded article_post-image"
+          class="banner__media{% if is_featured_blog == false %} rounded{% endif %} article_post-image{% if is_featured_blog %} w-custom{% endif %}"
           {% if media_aspect_ratio != 'adapt' %}
-            style="--aspect-ratio:{{ media_aspect_ratio }}"
+            style="--aspect-ratio:{{ media_aspect_ratio }}; {% if is_featured_blog %}--width: 70%;{% endif %}"
           {% else %}
-            style="--aspect-ratio:{{ article.image.aspect_ratio }}"
+            style="--aspect-ratio:{{ article.image.aspect_ratio }}; {% if is_featured_blog %}--width: 70%;{% endif %}"
           {% endif %}
         >
           {%- liquid
@@ -19,7 +23,7 @@
           <a href="{{ article.url }}" class="remove-underline" aria-label="{{ article.title | escape }}">
             {% render 'responsive-image',
               type: 'blog',
-              class: 'blog__img',
+              class: 'blog__img w-full h-full object-fit-cover',
               image: article.image,
               image_alt: alt,
               container: container,
@@ -30,15 +34,20 @@
           </a>
         </div>
       {%- endif -%}
-      <div class="card__content">
+      <div
+        class="card__content{% if is_featured_blog %} bg-secondary flex-1{% endif %}"
+        {% if is_featured_blog %}
+          style="--color-background-2: {{ background_color }};"
+        {% endif %}
+      >
         {%- if show_tags or show_cate -%}
-          <ul class="list-unstyle p-0 m-0">
+          <ul class="list-unstyle p-0 m-0 mb-10">
             {%- if show_cate -%}
               {% assign blog_name = article.handle | split: '/' | first %}
               {% if blog_name != blank %}
-                <li class="blog-meta-tag blog-cate inline-flex align-center">
+                <li class="blog-meta-tag blog-cate inline-flex align-center me-5">
                   <a
-                    class="post-tags blog-cate"
+                    class="post-tags blog-cate inline-block bg-primary color-white btn-rounded fs-13 px-15 py-4"
                     href="{{ blog.url }}"
                     aria-label="blog category"
                   >
@@ -63,11 +72,45 @@
           </ul>
         {%- endif -%}
         <div class="card__heading{% if sec_settings.columns_desktop > 3 %} h5{% else %} h4{% endif %}">
-          <a href="{{ article.url }}" class="heading-color remove-underline">
+          <a
+            href="{{ article.url }}"
+            class="heading-color remove-underline"
+          >
             {{ article.title | escape }}
           </a>
         </div>
-        {%- if show_excerpt -%}
+        {%- if show_excerpt and is_featured_blog != true -%}
+          {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
+            <p class="article-card__excerpt rte-width rte mb-15">
+              {%- if article.excerpt.size > 0 -%}
+                {{ article.excerpt | strip_html | truncatewords: 30 }}
+              {%- else -%}
+                {{ article.content | strip_html | truncatewords: 30 }}
+              {%- endif -%}
+            </p>
+          {%- endif -%}
+        {%- endif -%}
+        <<ul class="article-card__info fs-13 grey-color capitalize list-unstyled flex align-center gap-15">
+          {%- if show_date -%}
+            <li class="post-date">
+              {{- article.published_at | date: '%d %b %Y' -}}
+            </li>
+          {%- endif -%}
+          {%- if show_author -%}
+            <svg width="5" height="5" viewBox="0 0 10 10" fill="none">
+              <use href="#icon-dot"></use>
+            </svg>
+            <li class="post-author">
+              {{ 'blogs.article.by_html' | t: author: article.author -}}
+            </li>
+          {%- endif -%}
+          {%- if show_comment_count and blog.comments_enabled? -%}
+            <li class="blog-comments">
+              {{ 'blogs.article.comments' | t: count: article.comments_count -}}
+            </li>
+          {%- endif -%}
+        </ul>
+        {%- if show_excerpt and is_featured_blog == true -%}
           {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
             <p class="article-card__excerpt rte-width rte">
               {%- if article.excerpt.size > 0 -%}
@@ -78,26 +121,23 @@
             </p>
           {%- endif -%}
         {%- endif -%}
-        <div class="article-card__info">
-          {%- if show_date -%}
-            <span class="post-date">
-              {{- article.published_at | date: '%d %b %Y' -}}
-            </span>
-          {%- endif -%}
-          {%- if show_author -%}
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <use href="#icon-dot"></use>
-            </svg>
-            <span class="post-author">
-              {{ 'blogs.article.by_html' | t: author: article.author -}}
-            </span>
-          {%- endif -%}
-          {%- if show_comment_count and blog.comments_enabled? -%}
-            <span class="blog-comments">
-              {{ 'blogs.article.comments' | t: count: article.comments_count -}}
-            </span>
-          {%- endif -%}
-        </div>
+
+        {%- if is_featured_blog -%}
+          <div class="flex wrap gap-10 text-center">
+            {% assign button_link = article.url %}
+            <a
+              {% if button_link == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ button_link | default: "#" }}"
+              {% endif %}
+              aria-label="{{ button_label }}"
+              class="btn-{{ button_type }}{% if button_type == "link" %} align-self-center{% else %} btn w-custom max-w-100{% endif %}"
+            >
+              {{ button_label }}
+            </a>
+          </div>
+        {%- endif -%}
       </div>
     </div>
   </div>
