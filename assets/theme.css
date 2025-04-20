@@ -721,6 +721,16 @@ blockquote {
     transform: translateY(calc(-100% + 60px));
     -webkit-transform: translateY(calc(-100% + 60px));
   }
+  .modal-popup-inner {
+    max-width: unset;
+    max-height: 75vh;
+    margin: unset;
+    top: auto;
+  }
+  .modal.active .modal-popup-inner {
+    pointer-events: auto;
+    transform: translateX(0) translateY(0);
+  }
 }
 .modal-overlay {
   background: #0006;
@@ -770,20 +780,6 @@ modal-popup :is(.modal-overlay) {
 }
 .details-header-menu[open]:not(.detail-open) .slideIn-animate {
   animation: slideOut var(--transition)
-    var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83)) forwards;
-}
-.modal-popup-inner {
-  transform: scale(0.8);
-  max-height: 80vh;
-  transition: 0.2s;
-}
-.modal.active .modal-popup-inner {
-  transform: scale(1);
-  opacity: 1;
-  visibility: visible;
-}
-.remove-after:not(.active) .modal-popup-inner {
-  animation: zoomOut var(--transition)
     var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83)) forwards;
 }
 .remove-after:not(.active) .modal-inner .shopify-block,
@@ -1255,6 +1251,19 @@ modal-popup :is(.modal-overlay) {
     visibility: visible;
     pointer-events: auto;
   }
+  .modal-popup-inner {
+    transform: scale(0.8);
+    max-height: 80vh;
+    transition: 0.2s;
+  }
+  .modal.active .modal-popup-inner {
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
+  }
+  .remove-after:not(.active) .modal-popup-inner {
+    animation: zoomOut var(--transition)
+      var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83)) forwards;
   .gap-1025-40{
     gap: 4rem;
   }

@@ -356,17 +356,6 @@ mark {
     display: none;
   }
 }
-@media screen and (max-width: 1024.98px) {
-  .overflow-visible-mb {
-    overflow: visible;
-  }
-  .overflow-hidden-mb {
-    overflow: hidden;
-  }
-  .overflow-x-scroll-mb {
-    overflow-x: scroll;
-  }
-}
 :where(
     [style*="--aspect-ratio"]
       > :is(
@@ -771,26 +760,31 @@ a.hover-heading-color:hover {
 }
 .flex-cols {
   --col: var(--col-number);
+  --gap-custom: var(--gap);
   gap: var(--gap);
 }
 .grid-cols {
   --col: var(--col-number);
+  --gap-custom: var(--gap);
   grid-template-columns: repeat(
     var(--col),
-    calc((100% - var(--gap, 0px) * calc(var(--col) - 1)) / var(--col))
+    calc((100% - var(--gap-custom, 0px) * calc(var(--col) - 1)) / var(--col))
   );
 }
 .flex-cols > * {
+  --gap-custom: var(--gap);
   flex: 0 0 auto;
-  width: calc((100% - var(--gap, 0px) * calc(var(--col) - 1)) / var(--col));
+  width: calc(
+    (100% - var(--gap-custom, 0px) * calc(var(--col) - 1)) / var(--col)
+  );
 }
 .cols {
-  margin-left: calc(-0.5 * var(--gap, var(--bs-gutter-x)));
-  margin-right: calc(-0.5 * var(--gap, var(--bs-gutter-x)));
+  margin-left: calc(-0.5 * var(--gap-custom, var(--bs-gutter-x)));
+  margin-right: calc(-0.5 * var(--gap-custom, var(--bs-gutter-x)));
 }
 .cols > * {
-  padding-inline-start: calc(var(--gap, var(--bs-gutter-x)) * 0.5);
-  padding-inline-end: calc(var(--gap, var(--bs-gutter-x)) * 0.5);
+  padding-inline-start: calc(var(--gap-custom, var(--bs-gutter-x)) * 0.5);
+  padding-inline-end: calc(var(--gap-custom, var(--bs-gutter-x)) * 0.5);
 }
 .gap-no_gap {
   --col-gap: 0px !important;
@@ -1190,6 +1184,10 @@ body:not(.template-index) .transparent-logo {
   flex: 0 0 auto;
   width: var(--col-width, 50%);
 }
+.col-remaining {
+  flex: 0 0 calc(100% - var(--col-width, var(--width)) - var(--gap, 2rem));
+  width: calc(100% - var(--col-width, var(--width)) - var(--gap, 2rem));
+}
 .swiper:not([class*="initialized"]) .swiper-wrapper .swiper-slide {
   flex: 0 0 auto;
 }
@@ -1305,6 +1303,24 @@ body:not(.template-index) .transparent-logo {
     --gap: 3px;
     --width: 3px;
     --height: 3px;
+  }
+  .overflow-visible-mb {
+    overflow: visible;
+  }
+  .overflow-hidden-mb {
+    overflow: hidden;
+  }
+  .overflow-x-scroll-mb {
+    overflow-x: scroll;
+  }
+  :where(.modal-popup-inner) {
+    transform: translateY(100%);
+    -webkit-transform: translateY(100%);
+    will-change: transform;
+    bottom: 0;
+    max-height: calc(100vh - 60px);
+    top: auto;
+    --transition: 0.3s;
   }
 }
 .shopify-payment-button__more-options.shopify-payment-button__skeleton {
@@ -1457,13 +1473,11 @@ variants-dropdown .variant-input label.disable:after {
     flex: 0 0 calc(100% - var(--col-width) - var(--gap, 2rem));
     width: calc(100% - var(--col-width) - var(--gap, 2rem));
   }
-<<<<<<< HEAD
   .mb-md-5 {
     margin-bottom: 0.5rem;
-=======
+  }
   .border-bottom-md-0 {
     border-bottom: 0;
->>>>>>> 83f4f71 ([Style] Shopable video)
   }
   .ms-md-30 {
     margin-inline-start: 3rem;
@@ -1593,8 +1607,9 @@ variants-dropdown .variant-input label.disable:after {
   .swiper:not([class*="initialized"])[data-desktop="1"] .swiper-slide {
     width: 100%;
   }
-  :is(.grid-cols, .flex-cols) {
+  :is(.grid-cols, .flex-cols, .cols) {
     --col: var(--col-desktop, var(--col-number));
+    --gap-custom: var(--gap-desktop, var(--gap));
   }
   .hidden-1025 {
     display: none;
