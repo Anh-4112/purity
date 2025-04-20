@@ -234,7 +234,8 @@
           "module-addToCart": "{{ 'module-add-to-cart.js' | asset_url }}",
           "module-lazyLoad": "{{ 'module-lazyload.js' | asset_url }}",
           "module-variantSwatch": "{{ 'module-variant-swatch.js' | asset_url }}",
-          "module-safariElementPatch": "{{ 'safari-element-patch.js' | asset_url }}"
+          "module-safariElementPatch": "{{ 'safari-element-patch.js' | asset_url }}",
+          "module-photoSwipeLightbox": "{{ 'photoswipe-lightbox.min.js' | asset_url }}"
         }
       }
     </script>
@@ -331,6 +332,9 @@
         login_successful: ` {{ 'customer.login_page.login_successful' | t }}`,
         login_invalid: ` {{ 'customer.login_page.login_invalid' | t }}`,
       };
+      window.importJs = {
+        pswpModule: "{{ 'photoswipe.min.js' | asset_url }}"
+      }
     </script>
   </body>
 </html>

@@ -1115,20 +1115,6 @@ class VideoProductGallery extends VideoLocal {
 }
 customElements.define("video-product-gallery", VideoProductGallery);
 
-class VideoLocalLightbox extends VideoLocal {
-  constructor() {
-    super();
-    this.init();
-  }
-
-  init() {
-    setTimeout(() => {
-      this.loadContent();
-    }, 100);
-  }
-}
-customElements.define("video-local-lightbox", VideoLocalLightbox);
-
 class AnnouncementBar extends HTMLElement {
   constructor() {
     super();
@@ -2301,19 +2287,23 @@ CustomElement.observeAndPatchCustomElements({
 });
 class SocialShare extends HTMLElement {
   constructor() {
-      super();
-      this.init();
+    super();
+    this.init();
   }
   init() {
-      this.querySelectorAll('.blog-sharing .btn-sharing').forEach(share => {
-          share.addEventListener("click", event => {
-              event.preventDefault();
-              const target = event.currentTarget;
-              const social = target.getAttribute('data-social');
-              const nameSocial = target.getAttribute('data-name');
-              window.open(social,nameSocial,'height=500,width=500');
-          }, false);
-      });
+    this.querySelectorAll(".blog-sharing .btn-sharing").forEach((share) => {
+      share.addEventListener(
+        "click",
+        (event) => {
+          event.preventDefault();
+          const target = event.currentTarget;
+          const social = target.getAttribute("data-social");
+          const nameSocial = target.getAttribute("data-name");
+          window.open(social, nameSocial, "height=500,width=500");
+        },
+        false
+      );
+    });
   }
 }
 customElements.define("social-share", SocialShare);
