@@ -21,6 +21,7 @@
   {% if desktop_layout == 'two_columns' %} --col-number: 2;{% else %}--col-number: 1;{% endif %}
 {%- endcapture -%}
 <script type="module" src="{{ 'media-gallery.js' | asset_url }}"></script>
+{{ 'photoswipe.css' | asset_url | stylesheet_tag }}
 <div class="block__media-gallery sticky top-20">
   <media-gallery
     class="media-gallery block"
