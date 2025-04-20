@@ -23,11 +23,387 @@
   <div
     class="product-item product__item-js{{ class }}"
   >
-    <div class="product-item__wrapper">
-      <div class="product-item__inner relative{{ style_layout }}{% if theme_st.product_show_quick_add_mobile == true %} show_quick_add-mb{% endif %}">
-        {%- if disable_image != true -%}
+    <div class="product-item__inner relative{{ style_layout }}{% if theme_st.product_show_quick_add_mobile == true %} show_quick_add-mb{% endif %}">
+      {%- if disable_image != true -%}
+        {%- liquid
+          assign p_media = card_product.featured_media
+          assign ratio = '3/4'
+          if product_image_ratio != 'adapt'
+            case product_image_ratio
+              when 'square'
+                assign ratio = '1/1'
+              when 'landscape'
+                assign ratio = '4/3'
+              when 'portrait'
+                assign ratio = '3/4'
+            endcase
+          else
+            if p_media.media_type == 'model'
+              assign ratio = '3/4'
+            else
+              assign ratio = p_media.aspect_ratio
+            endif
+          endif
+          if p_media.media_type == 'video' or p_media.media_type == 'external_video'
+            assign type_video = true
+          endif
+        -%}
+        <div
+          class="product__inner relative block rounded overflow-hidden{{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect"
+          {% if type == 'list' or type == 'bundle' %}
+            style="--width: 8rem;"
+          {% endif %}
+        >
+          <a
+            class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
+            draggable="false"
+            href="{{ card_product.url }}"
+            aria-label="{{ card_product.title }}"
+          >
+            {%- if p_media -%}
+              <div
+                class="product__media animation-swatches{{ image_rounded }}"
+                style="--aspect-ratio: {{ ratio }};"
+              >
+                {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
+                {% if type_video and product_show_video_featured and disable_show_video != true %}
+                  {% if p_media.media_type == 'video' %}
+                    <video-product class="product__img featured-image product__img_video lazy-video-item">
+                      {% render 'responsive-image',
+                        type: 'product',
+                        class: 'product__img video-thumbnail',
+                        image: p_media.preview_image,
+                        image_alt: alt_features,
+                        container: container,
+                        column: column,
+                        column_mobile: column_mobile,
+                        padding: padding,
+                        sizes: sizes
+                      %}
+                      <template class="video-template max-w-100">
+                        {{
+                          p_media
+                          | media_tag: image_size: '2048x', autoplay: true, controls: true, loop: true, preload: 'none'
+                        }}
+                      </template>
+                    </video-product>
+                  {% elsif p_media.media_type == 'external_video' %}
+                    {% liquid
+                      assign video_id = p_media.external_id
+                    %}
+                    <video-product class="product__img featured-image product__img_video lazy-video-item">
+                      {% render 'responsive-image',
+                        type: 'product',
+                        class: 'product__img video-thumbnail',
+                        image: p_media.preview_image,
+                        image_alt: alt_features,
+                        container: container,
+                        column: column,
+                        column_mobile: column_mobile,
+                        padding: padding,
+                        sizes: sizes
+                      %}
+                      <template class="video-template">
+                        {%- if p_media.host == 'youtube' -%}
+                          <iframe
+                            src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1&mute=1&loop=0"
+                            class="js-youtube w-full h-full"
+                          ></iframe>
+                        {%- else -%}
+                          {{
+                            p_media
+                            | external_video_url: autoplay: true
+                            | external_video_tag: class: 'w-full h-full', loading: 'lazy'
+                          }}
+                        {%- endif -%}
+                      </template>
+                    </video-product>
+                  {% endif %}
+                  {%- liquid
+                    if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true
+                      assign alt_features = card_product.media[1].alt | default: card_product.title | escape
+                      assign media_hover = card_product.media[1]
+                      if media_hover.media_type == 'video' or media_hover.media_type == 'external_video' or media_hover.media_type == 'model'
+                        assign media_hover = card_product.media[1].preview_image
+                      endif
+                      render 'responsive-image', type: 'product', class: 'product__hover-img transition invisible absolute inset-0 hidden', image: media_hover, image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding, sizes: sizes, disable_lazy_loading: disable_lazy_loading
+                    endif
+                  -%}
+                {% else %}
+                  {% render 'responsive-image',
+                    type: 'product',
+                    class: 'product__img featured-image',
+                    image: p_media,
+                    image_alt: alt_features,
+                    container: container,
+                    column: column,
+                    column_mobile: column_mobile,
+                    padding: padding,
+                    sizes: sizes,
+                    disable_lazy_loading: disable_lazy_loading,
+                    motion: true
+                  %}
+                  {%- liquid
+                    if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true
+                      assign alt_features = card_product.media[1].alt | default: card_product.title | escape
+                      assign media_hover = card_product.media[1]
+                      if media_hover.media_type == 'video' or media_hover.media_type == 'external_video' or media_hover.media_type == 'model'
+                        assign media_hover = card_product.media[1].preview_image
+                      endif
+                      render 'responsive-image', type: 'product', class: 'product__hover-img transition invisible absolute inset-0', image: media_hover, image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding, sizes: sizes, disable_lazy_loading: disable_lazy_loading
+                    endif
+                  -%}
+                {% endif %}
+              </div>
+            {%- else -%}
+              {%- liquid
+                assign ratio = '3/4'
+                if product_image_ratio != 'adapt'
+                  case product_image_ratio
+                    when 'square'
+                      assign ratio = '1/1'
+                    when 'landscape'
+                      assign ratio = '4/3'
+                    when 'portrait'
+                      assign ratio = '3/4'
+                  endcase
+                endif
+              -%}
+              <div
+                class="product__media rounded"
+                style="--aspect-ratio: {{ ratio }};"
+              >
+                {% render 'placeholder-render' %}
+              </div>
+            {%- endif -%}
+            {%- if disable_badge != true -%}
+              {% render 'product-badges', scope: 'item', card_product: card_product %}
+            {%- endif -%}
+          </a>
+          {%- if product_enable_quickview
+            and disable_quickview != true
+            and card_product.metafields.custom.external_affiliate == blank
+          -%}
+            {%- liquid
+              assign qty_rules = false
+              if card_product.selected_or_first_available_variant.quantity_rule.template > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1
+                assign qty_rules = true
+              endif
+            -%}
+            <div class="quick__shop-action absolute inset-x-15 bottom-15 z-2 overflow-hidden">
+              {%- if card_product.variants.size > 1 or qty_rules -%}
+                <button
+                  type="button"
+                  is="button-quick-view"
+                  class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                  data-url="{{ shop.url }}/products/{{ card_product.handle }}"
+                  aria-label="{{ 'products.product.quickview' | t }}"
+                >
+                  <span class="product-quickview-btn hidden-on-load transition-short d-none block-1025">
+                    {{ 'products.product.quickview' | t }}
+                  </span>
+                  {%- render 'loader' -%}
+                  <svg
+                    width="16"
+                    height="16"
+                    class="hidden-1025 hidden-on-load transition-short"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
+                    <use href="#icon-cart" />
+                  </svg>
+                </button>
+              {%- else -%}
+                <product-form class="quick-add">
+                  {%- form 'product',
+                    card_product,
+                    id: product_form_id,
+                    class: 'form',
+                    novalidate: 'novalidate',
+                    data-type: 'add-to-cart-form'
+                  -%}
+                    <input
+                      type="hidden"
+                      name="id"
+                      value="{{ card_product.selected_or_first_available_variant.id }}"
+                      disabled
+                    >
+                    <button
+                      id="{{ product_form_id }}-submit"
+                      type="submit"
+                      name="add"
+                      class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                      aria-haspopup="dialog"
+                      aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
+                      aria-live="polite"
+                      data-sold-out-message="true"
+                      {% if card_product.selected_or_first_available_variant.available == false %}
+                        disabled
+                      {% endif %}
+                    >
+                      <span class="product-addtocart-btn hidden-on-load transition-short d-none block-1025">
+                        {%- if card_product.selected_or_first_available_variant.available -%}
+                          {{ 'products.product.add_to_cart' | t }}
+                        {%- else -%}
+                          {{ 'products.product.sold_out' | t }}
+                        {%- endif -%}
+                      </span>
+                      {%- render 'loader' -%}
+                      <svg
+                        width="16"
+                        height="16"
+                        class="hidden-1025 hidden-on-load transition-short"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                      >
+                        <use href="#icon-cart" />
+                      </svg>
+                    </button>
+                  {%- endform -%}
+                </product-form>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+          {%- if variant_swatch and type == 'bought_together' -%}
+            <card-bought-together class="bought-together">
+              <input
+                id="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
+                name="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
+                type="checkbox"
+                data-price="{{ card_product.price }}"
+                value="{{ card_product.id }}"
+                class="bought-together-checkbox"
+                checked
+              >
+              <label
+                for="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
+              >
+                <span class="hidden">{{- card_product.title -}}</span>
+              </label>
+            </card-bought-together>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+      <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}">
+        {% if product_show_tag and disable_tag != true and card_product.tags != blank %}
+          <div class="product__tag grey-color mb-8 fs-13 lh-normal">
+            <ul
+              class="list-unstyled flex wrap gap{% if settings.product_alignment == 'center' %} justify-center{% endif %}"
+              style="--gap: 6px;"
+            >
+              {% for tags in card_product.tags %}
+                <li>
+                  <a
+                    class="product__tag-inner inline-flex align-center lh-1 px-15 py-7 btn-rounded btn-hover overflow-hidden border grey-color relative"
+                    href="/collections/all/{{ tags | handleize }}"
+                  >
+                    {{- tags -}}
+                  </a>
+                </li>
+                {% liquid
+                  if forloop.index == 2
+                    break
+                  endif
+                %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        {% if product_show_vendor and disable_vendor != true and card_product.vendor != blank %}
+          <div class="product__vendor grey-color fs-small">
+            {{- card_product.vendor | link_to_vendor -}}
+          </div>
+        {% endif %}
+        <a
+          aria-label="{{ card_product.title }}"
+          class="product__name heading-style block"
+          href="{{ card_product.url }}"
+        >
+          {{- card_product.title -}}
+        </a>
+        {%- if product_show_rate and disable_rate != true -%}
           {%- liquid
-            assign p_media = card_product.featured_media
+            render 'review', review_star: true, product: card_product, scope: 'item'
+          -%}
+        {%- endif -%}
+        {% if disable_price != true %}
+          <div class="product__price heading-color mt-5">
+            {%- render 'price', scope: 'item', product: card_product -%}
+          </div>
+        {% endif %}
+        {%- if variant_swatch -%}
+          {%- if type == 'bundle' -%}
+            {%- render 'variant-swatches', scope: 'bundle', product: card_product -%}
+          {%- else -%}
+            {%- render 'variant-swatches', scope: 'variant_swatch', product: card_product -%}
+          {% endif %}
+        {%- else -%}
+          {%- if product_enable_color_swatches and disable_color_swatches != true -%}
+            {%- render 'variant-swatches', scope: 'item', product: card_product -%}
+          {% endif %}
+        {%- endif -%}
+        {%- if bundle_swatch and enable_quick_add -%}
+          <product-form class="quick-add">
+            {%- form 'product',
+              card_product,
+              id: product_form_id,
+              class: 'form',
+              novalidate: 'novalidate',
+              data-type: 'add-to-cart-form'
+            -%}
+              <input
+                type="hidden"
+                name="id"
+                value="{{ card_product.selected_or_first_available_variant.id }}"
+                disabled
+              >
+              <button
+                id="{{ product_form_id }}-submit"
+                type="submit"
+                name="add"
+                class="add-cart-bundle loading-smooth btn-reset text-size heading-style text-center transition pointer"
+                aria-haspopup="dialog"
+                aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
+                aria-live="polite"
+                data-sold-out-message="true"
+                {% if card_product.selected_or_first_available_variant.available == false %}
+                  disabled
+                {% endif %}
+              >
+                <span class="product-addtocart-btn hidden-on-load border-animation hidden block-1025">
+                  {%- if card_product.selected_or_first_available_variant.available -%}
+                    {{ 'products.product.add_to_cart' | t }}
+                  {%- else -%}
+                    {{ 'products.product.sold_out' | t }}
+                  {%- endif -%}
+                </span>
+                {%- render 'loader' -%}
+                {% if product_show_quick_add_mobile %}
+                  <div class="w-44 h-44 hidden-1025 border flex content-center rounded-50 hidden-on-load transition-short">
+                    <svg width="16" height="16" class=" icon-cart" viewBox="0 0 16 16" fill="none">
+                      <path d="M4.98547 1.40039H11.0071C13.8506 1.40039 14.1349 2.75445 14.3273 4.40657L15.08 10.7936C15.3225 12.8886 14.6869 14.6003 11.7598 14.6003H4.24114C1.30561 14.6003 0.670002 12.8886 0.920902 10.7936L1.67361 4.40657C1.8576 2.75445 2.14195 1.40039 4.98547 1.40039Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M5.59961 4.55147C5.59961 6.15156 6.93711 6.7998 7.99961 6.7998C9.06211 6.7998 10.3996 6.15156 10.3996 4.55147" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              </button>
+            {%- endform -%}
+          </product-form>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="product-item{{ class }} {{ product_style }}">
+    <div class="product-item__inner relative {{ style_layout }}">
+      <div class="product-item__media w-custom">
+        <a
+          role="link"
+          aria-disabled="true"
+          title="{{ 'onboarding.product_title' | t }}"
+          aria-label="{{ 'onboarding.product_title' | t }}"
+        >
+          {%- liquid
             assign ratio = '3/4'
             if product_image_ratio != 'adapt'
               case product_image_ratio
@@ -38,417 +414,32 @@
                 when 'portrait'
                   assign ratio = '3/4'
               endcase
-            else
-              if p_media.media_type == 'model'
-                assign ratio = '3/4'
-              else
-                assign ratio = p_media.aspect_ratio
-              endif
-            endif
-            if p_media.media_type == 'video' or p_media.media_type == 'external_video'
-              assign type_video = true
             endif
           -%}
           <div
-            class="product__inner relative block rounded overflow-hidden{{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect"
-            {% if type == 'list' or type == 'bundle' %}
-              style="--width: 8rem;"
-            {% endif %}
+            class="product-item__media--ratio rounded w-custom"
+            style="--aspect-ratio: {{ ratio }};"
           >
-            <a
-              class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
-              draggable="false"
-              href="{{ card_product.url }}"
-              aria-label="{{ card_product.title }}"
-            >
-              {%- if p_media -%}
-                <div
-                  class="product__media animation-swatches{{ image_rounded }}"
-                  style="--aspect-ratio: {{ ratio }};"
-                >
-                  {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
-                  {% if type_video and product_show_video_featured and disable_show_video != true %}
-                    {% if p_media.media_type == 'video' %}
-                      <video-product class="product__img featured-image product__img_video lazy-video-item">
-                        {% render 'responsive-image',
-                          type: 'product',
-                          class: 'product__img video-thumbnail',
-                          image: p_media.preview_image,
-                          image_alt: alt_features,
-                          container: container,
-                          column: column,
-                          column_mobile: column_mobile,
-                          padding: padding,
-                          sizes: sizes
-                        %}
-                        <template class="video-template max-w-100">
-                          {{
-                            p_media
-                            | media_tag:
-                              image_size: '2048x',
-                              autoplay: true,
-                              controls: true,
-                              loop: true,
-                              preload: 'none'
-                          }}
-                        </template>
-                      </video-product>
-                    {% elsif p_media.media_type == 'external_video' %}
-                      {% liquid
-                        assign video_id = p_media.external_id
-                      %}
-                      <video-product class="product__img featured-image product__img_video lazy-video-item">
-                        {% render 'responsive-image',
-                          type: 'product',
-                          class: 'product__img video-thumbnail',
-                          image: p_media.preview_image,
-                          image_alt: alt_features,
-                          container: container,
-                          column: column,
-                          column_mobile: column_mobile,
-                          padding: padding,
-                          sizes: sizes
-                        %}
-                        <template class="video-template">
-                          {%- if p_media.host == 'youtube' -%}
-                            <iframe
-                              src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1&mute=1&loop=0"
-                              class="js-youtube w-full h-full"
-                            ></iframe>
-                          {%- else -%}
-                            {{
-                              p_media
-                              | external_video_url: autoplay: true
-                              | external_video_tag: class: 'w-full h-full', loading: 'lazy'
-                            }}
-                          {%- endif -%}
-                        </template>
-                      </video-product>
-                    {% endif %}
-                    {%- liquid
-                      if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true
-                        assign alt_features = card_product.media[1].alt | default: card_product.title | escape
-                        assign media_hover = card_product.media[1]
-                        if media_hover.media_type == 'video' or media_hover.media_type == 'external_video' or media_hover.media_type == 'model'
-                          assign media_hover = card_product.media[1].preview_image
-                        endif
-                        render 'responsive-image', type: 'product', class: 'product__hover-img transition invisible absolute inset-0 hidden', image: media_hover, image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding, sizes: sizes, disable_lazy_loading: disable_lazy_loading
-                      endif
-                    -%}
-                  {% else %}
-                    {% render 'responsive-image',
-                      type: 'product',
-                      class: 'product__img featured-image',
-                      image: p_media,
-                      image_alt: alt_features,
-                      container: container,
-                      column: column,
-                      column_mobile: column_mobile,
-                      padding: padding,
-                      sizes: sizes,
-                      disable_lazy_loading: disable_lazy_loading,
-                      motion: true
-                    %}
-                    {%- liquid
-                      if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true
-                        assign alt_features = card_product.media[1].alt | default: card_product.title | escape
-                        assign media_hover = card_product.media[1]
-                        if media_hover.media_type == 'video' or media_hover.media_type == 'external_video' or media_hover.media_type == 'model'
-                          assign media_hover = card_product.media[1].preview_image
-                        endif
-                        render 'responsive-image', type: 'product', class: 'product__hover-img transition invisible absolute inset-0', image: media_hover, image_alt: alt_features, container: container, column: column, column_mobile: column_mobile, padding: padding, sizes: sizes, disable_lazy_loading: disable_lazy_loading
-                      endif
-                    -%}
-                  {% endif %}
-                </div>
-              {%- else -%}
-                {%- liquid
-                  assign ratio = '3/4'
-                  if product_image_ratio != 'adapt'
-                    case product_image_ratio
-                      when 'square'
-                        assign ratio = '1/1'
-                      when 'landscape'
-                        assign ratio = '4/3'
-                      when 'portrait'
-                        assign ratio = '3/4'
-                    endcase
-                  endif
-                -%}
-                <div
-                  class="product__media rounded"
-                  style="--aspect-ratio: {{ ratio }};"
-                >
-                  {% render 'placeholder-render' %}
-                </div>
-              {%- endif -%}
-              {%- if disable_badge != true -%}
-                {% render 'product-badges', scope: 'item', card_product: card_product %}
-              {%- endif -%}
-            </a>
-            {%- if product_enable_quickview
-              and disable_quickview != true
-              and card_product.metafields.custom.external_affiliate == blank
-            -%}
-              {%- liquid
-                assign qty_rules = false
-                if card_product.selected_or_first_available_variant.quantity_rule.template > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1
-                  assign qty_rules = true
-                endif
-              -%}
-              <div class="quick__shop-action absolute inset-x-15 bottom-15 z-2 overflow-hidden">
-                {%- if card_product.variants.size > 1 or qty_rules -%}
-                  <button
-                    type="button"
-                    is="button-quick-view"
-                    class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
-                    data-url="{{ shop.url }}/products/{{ card_product.handle }}"
-                    aria-label="{{ 'products.product.quickview' | t }}"
-                  >
-                    <span class="product-quickview-btn hidden-on-load transition-short d-none block-1025">
-                      {{ 'products.product.quickview' | t }}
-                    </span>
-                    {%- render 'loader' -%}
-                    <svg
-                      width="16"
-                      height="16"
-                      class="hidden-1025 hidden-on-load transition-short"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                    >
-                      <use href="#icon-cart" />
-                    </svg>
-                  </button>
-                {%- else -%}
-                  <product-form class="quick-add">
-                    {%- form 'product',
-                      card_product,
-                      id: product_form_id,
-                      class: 'form',
-                      novalidate: 'novalidate',
-                      data-type: 'add-to-cart-form'
-                    -%}
-                      <input
-                        type="hidden"
-                        name="id"
-                        value="{{ card_product.selected_or_first_available_variant.id }}"
-                        disabled
-                      >
-                      <button
-                        id="{{ product_form_id }}-submit"
-                        type="submit"
-                        name="add"
-                        class="btn btn__quick-shop shadow button-quickview w-full btn-white invisible-1025 flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
-                        aria-haspopup="dialog"
-                        aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
-                        aria-live="polite"
-                        data-sold-out-message="true"
-                        {% if card_product.selected_or_first_available_variant.available == false %}
-                          disabled
-                        {% endif %}
-                      >
-                        <span class="product-addtocart-btn hidden-on-load transition-short d-none block-1025">
-                          {%- if card_product.selected_or_first_available_variant.available -%}
-                            {{ 'products.product.add_to_cart' | t }}
-                          {%- else -%}
-                            {{ 'products.product.sold_out' | t }}
-                          {%- endif -%}
-                        </span>
-                        {%- render 'loader' -%}
-                        <svg
-                          width="16"
-                          height="16"
-                          class="hidden-1025 hidden-on-load transition-short"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                        >
-                          <use href="#icon-cart" />
-                        </svg>
-                      </button>
-                    {%- endform -%}
-                  </product-form>
-                {%- endif -%}
-              </div>
-            {%- endif -%}
-            {%- if variant_swatch and type == 'bought_together' -%}
-              <card-bought-together class="bought-together">
-                <input
-                  id="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
-                  name="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
-                  type="checkbox"
-                  data-price="{{ card_product.price }}"
-                  value="{{ card_product.id }}"
-                  class="bought-together-checkbox"
-                  checked
-                >
-                <label
-                  for="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
-                >
-                  <span class="hidden">{{- card_product.title -}}</span>
-                </label>
-              </card-bought-together>
-            {%- endif -%}
+            {%- render 'placeholder-render', type: 'product', index: indexFor -%}
           </div>
-        {%- endif -%}
-        <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}">
-          {% if product_show_tag and disable_tag != true and card_product.tags != blank %}
-            <div class="product__tag grey-color mb-8 fs-13 lh-normal">
-              <ul
-                class="list-unstyled flex wrap gap{% if settings.product_alignment == 'center' %} justify-center{% endif %}"
-                style="--gap: 6px;"
-              >
-                {% for tags in card_product.tags %}
-                  <li>
-                    <a
-                      class="product__tag-inner inline-flex align-center lh-1 px-15 py-7 btn-rounded btn-hover overflow-hidden border grey-color relative"
-                      href="/collections/all/{{ tags | handleize }}"
-                    >
-                      {{- tags -}}
-                    </a>
-                  </li>
-                  {% liquid
-                    if forloop.index == 2
-                      break
-                    endif
-                  %}
-                {% endfor %}
-              </ul>
-            </div>
-          {% endif %}
-          {% if product_show_vendor and disable_vendor != true and card_product.vendor != blank %}
-            <div class="product__vendor grey-color fs-small">
-              {{- card_product.vendor | link_to_vendor -}}
-            </div>
-          {% endif %}
-          <a
-            aria-label="{{ card_product.title }}"
-            class="product__name heading-style block"
-            href="{{ card_product.url }}"
-          >
-            {{- card_product.title -}}
-          </a>
-          {%- if product_show_rate and disable_rate != true -%}
-            {%- liquid
-              render 'review', review_star: true, product: card_product, scope: 'item'
-            -%}
-          {%- endif -%}
-          {% if disable_price != true %}
-            <div class="product__price heading-color mt-5">
-              {%- render 'price', scope: 'item', product: card_product -%}
-            </div>
-          {% endif %}
-          {%- if variant_swatch -%}
-            {%- if type == 'bundle' -%}
-              {%- render 'variant-swatches', scope: 'bundle', product: card_product -%}
-            {%- else -%}
-              {%- render 'variant-swatches', scope: 'variant_swatch', product: card_product -%}
-            {% endif %}
-          {%- else -%}
-            {%- if product_enable_color_swatches and disable_color_swatches != true -%}
-              {%- render 'variant-swatches', scope: 'item', product: card_product -%}
-            {% endif %}
-          {%- endif -%}
-          {%- if bundle_swatch and enable_quick_add -%}
-            <product-form class="quick-add">
-              {%- form 'product',
-                card_product,
-                id: product_form_id,
-                class: 'form',
-                novalidate: 'novalidate',
-                data-type: 'add-to-cart-form'
-              -%}
-                <input
-                  type="hidden"
-                  name="id"
-                  value="{{ card_product.selected_or_first_available_variant.id }}"
-                  disabled
-                >
-                <button
-                  id="{{ product_form_id }}-submit"
-                  type="submit"
-                  name="add"
-                  class="add-cart-bundle loading-smooth btn-reset text-size heading-style text-center transition pointer"
-                  aria-haspopup="dialog"
-                  aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
-                  aria-live="polite"
-                  data-sold-out-message="true"
-                  {% if card_product.selected_or_first_available_variant.available == false %}
-                    disabled
-                  {% endif %}
-                >
-                  <span class="product-addtocart-btn hidden-on-load border-animation hidden block-1025">
-                    {%- if card_product.selected_or_first_available_variant.available -%}
-                      {{ 'products.product.add_to_cart' | t }}
-                    {%- else -%}
-                      {{ 'products.product.sold_out' | t }}
-                    {%- endif -%}
-                  </span>
-                  {%- render 'loader' -%}
-                  {% if product_show_quick_add_mobile %}
-                    <div class="w-44 h-44 hidden-1025 border flex content-center rounded-50 hidden-on-load transition-short">
-                      <svg width="16" height="16" class=" icon-cart" viewBox="0 0 16 16" fill="none">
-                        <path d="M4.98547 1.40039H11.0071C13.8506 1.40039 14.1349 2.75445 14.3273 4.40657L15.08 10.7936C15.3225 12.8886 14.6869 14.6003 11.7598 14.6003H4.24114C1.30561 14.6003 0.670002 12.8886 0.920902 10.7936L1.67361 4.40657C1.8576 2.75445 2.14195 1.40039 4.98547 1.40039Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M5.59961 4.55147C5.59961 6.15156 6.93711 6.7998 7.99961 6.7998C9.06211 6.7998 10.3996 6.15156 10.3996 4.55147" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </div>
-                  {% endif %}
-                </button>
-              {%- endform -%}
-            </product-form>
-          {%- endif -%}
-        </div>
+        </a>
       </div>
-    </div>
-  </div>
-{% else %}
-  <div class="product-item{{ class }} {{ product_style }}">
-    <div class="product-item__wrapper">
-      <div class="product-item__inner relative {{ style_layout }}">
-        <div class="product-item__media w-custom">
-          <a
-            role="link"
-            aria-disabled="true"
-            title="{{ 'onboarding.product_title' | t }}"
-            aria-label="{{ 'onboarding.product_title' | t }}"
-          >
-            {%- liquid
-              assign ratio = '3/4'
-              if product_image_ratio != 'adapt'
-                case product_image_ratio
-                  when 'square'
-                    assign ratio = '1/1'
-                  when 'landscape'
-                    assign ratio = '4/3'
-                  when 'portrait'
-                    assign ratio = '3/4'
-                endcase
-              endif
-            -%}
-            <div
-              class="product-item__media--ratio rounded w-custom"
-              style="--aspect-ratio: {{ ratio }};"
-            >
-              {%- render 'placeholder-render', type: 'product', index: indexFor -%}
-            </div>
-          </a>
-        </div>
-        <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}">
-          <a
-            draggable="false"
-            aria-disabled="true"
-            role="link"
-            class="product-item__name heading-style"
-            title="{{ 'onboarding.product_title' | t }}"
-            aria-label="{{ 'onboarding.product_title' | t }}"
-          >
-            {{ 'onboarding.product_title' | t }}
-          </a>
-          <div
-            class="product-item__price mt-5 flex justify-{{ product_alignment }}"
-            style="--font-size: {{ settings.price_size }}"
-          >
-            {%- render 'price', scope: 'item' -%}
-          </div>
+      <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}">
+        <a
+          draggable="false"
+          aria-disabled="true"
+          role="link"
+          class="product-item__name heading-style"
+          title="{{ 'onboarding.product_title' | t }}"
+          aria-label="{{ 'onboarding.product_title' | t }}"
+        >
+          {{ 'onboarding.product_title' | t }}
+        </a>
+        <div
+          class="product-item__price mt-5 flex justify-{{ product_alignment }}"
+          style="--font-size: {{ settings.price_size }}"
+        >
+          {%- render 'price', scope: 'item' -%}
         </div>
       </div>
     </div>

@@ -361,7 +361,7 @@
       >
         <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
         <div
-          class="modal-popup-inner h-content transition max-w-custom m-auto invisible-1025 fixed inset-0 z-15 w-full"
+          class="modal-popup-inner h-content transition max-w-custom m-auto invisible-1025 fixed inset-0 z-20 w-full"
           style="--max-width: 80rem;"
         >
           <div class="modal-nav">
@@ -369,7 +369,7 @@
           </div>
           <button
             is="button-close-model"
-            class="modal__close pointer btn-reset wh-40 wh-1025-50 bg-white blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow "
+            class="modal__close pointer btn-reset wh-40 wh-1025-50 bg-white blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow heading-color"
             aria-label="Close"
           >
             <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
@@ -392,7 +392,7 @@
               {% for block in section.blocks %}
                 <div class="swiper-slide w-full">
                   <div
-                    class="drawer__body drawer__body-item w-full h-full overflow-y-auto custom-scrollbar bg-white rounded"
+                    class="drawer__body drawer__body-shopable-video w-full h-full overflow-y-auto custom-scrollbar bg-white rounded"
                     id="Product-{{ block.id }}"
                   >
                     <div
@@ -487,7 +487,10 @@
                           {% render 'placeholder-render', type: 'collection' %}
                         </div>
                       {% endif %}
-                      <div class="popup-information__mobile hidden-1025 flex align-center space-between absolute bottom-15 right-15 left-15">
+                      <div
+                        class="popup-information__mobile hidden-1025 shadow rounded-10 overflow-hidden flex align-center space-between absolute bottom-20 right-20 left-20 pe-20"
+                        style="--width: 7.5rem;"
+                      >
                         {% render 'card-product',
                           card_product: card_product,
                           section_id: section.id,
@@ -499,17 +502,20 @@
                           disable_hover_image: true,
                           show_quick_add: true,
                           disable_color_swatches: true,
-                          type: 'list'
+                          class: ' z-2',
+                          style_layout: ' flex',
+                          image_class: ' flex-auto w-custom w-full-1025',
+                          image_rounded: '',
+                          info_class: ' flex-1 mt-0 px-20 py-15 align-self-center'
                         %}
                         <button
-                          class="btn-shopable__action-mobile btn"
-                          style="--btn-padding-y: 1rem;--btn-padding-x: 2rem;"
+                          class="btn-shopable__action-mobile btn__quick-shop bg-white btn-reset shadow z-2 flex"
                           name="{{ 'products.product.shop_now' | t }}"
                         >
                           <svg
                             width="16"
                             height="16"
-                            class="hidden-1025 hidden-on-load transition-short"
+                            class="hidden-1025 hidden-on-load transition-short heading-color"
                             viewBox="0 0 16 16"
                             fill="none"
                           >
@@ -518,7 +524,7 @@
                         </button>
                       </div>
                       <div
-                        class="popup-information block-1025 hidden relative"
+                        class="popup-information block-1025 hidden transition relative-1025 absolute inset-0 bg-white z-2"
                         style="--padding-inline-desktop: 3rem;--padding-block: 2.4rem;"
                       >
                         <div class="flex column absolute inset-0 w-full h-full">
@@ -669,6 +675,7 @@
                             {%- if card_product.metafields.custom.external_affiliate == blank -%}
                               <div class="product-detail__buy-buttons">
                                 {%- render 'buy-buttons',
+                                  type: 'shopable',
                                   product: card_product,
                                   section_id: block.id,
                                   product_form_id: product_form_id
