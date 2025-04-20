@@ -38,6 +38,12 @@
   {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
+  {% style %}
+    .compare-field {
+      flex: 0 0 auto;
+      width: 20%;
+    }
+  {% endstyle %}
   <div
     class="section color-{{ section_st.color_scheme }} section__compare-products gradient"
     style="{{ style | strip | strip_newlines }}"
@@ -64,68 +70,141 @@
           {%- endif -%}
         </div>
       {%- endif -%}
-      <div class="compare-products__wrapper">
-        <div class="compare-table-field">
-          <div class="compare-row flex flex-nowrap compare-row-basic">
-            <div class="compare-field">
-              {{ 'products.product.product_compare' | t }}
+
+      <div class="compare-table-products overflow-auto">
+        <div class="compare-row flex flex-nowrap compare-row-basic">
+          <div class="compare-field field-heading sticky left-0 bg-white z-1">
+            {{ 'products.product.product_compare' | t }}
+          </div>
+          <div class="compare-field current-product">
+            {%- liquid
+              assign p_media = product.featured_media
+              assign ratio = '3/4'
+              if product_image_ratio != 'adapt'
+                case product_image_ratio
+                  when 'square'
+                    assign ratio = '1/1'
+                  when 'landscape'
+                    assign ratio = '4/3'
+                  when 'portrait'
+                    assign ratio = '3/4'
+                endcase
+              else
+                if p_media.media_type == 'model'
+                  assign ratio = '3/4'
+                else
+                  assign ratio = p_media.aspect_ratio
+                endif
+              endif
+              if p_media.media_type == 'video' or p_media.media_type == 'external_video'
+                assign type_video = true
+              endif
+            -%}
+            <div class="product__inner hover-effect">
+              <a
+                class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
+                draggable="false"
+                href="{{ product.url }}"
+                aria-label="{{ product.title }}"
+              >
+                {%- if p_media -%}
+                  <div
+                    class="product__media animation-swatches"
+                    style="--aspect-ratio: {{ ratio }};"
+                  >
+                    {%- assign alt_features = p_media.alt | default: product.title | escape -%}
+                    {% if type_video and product_show_video_featured and product != true %}
+                      {% if p_media.media_type == 'video' %}
+                        <video-product class="product__img featured-image product__img_video lazy-video-item">
+                          {% render 'responsive-image',
+                            type: 'product',
+                            class: 'product__img video-thumbnail',
+                            image: p_media.preview_image,
+                            image_alt: alt_features
+                          %}
+                          <template class="video-template max-w-100">
+                            {{
+                              p_media
+                              | media_tag:
+                                image_size: '2048x',
+                                autoplay: true,
+                                controls: true,
+                                loop: true,
+                                preload: 'none'
+                            }}
+                          </template>
+                        </video-product>
+                      {% elsif p_media.media_type == 'external_video' %}
+                        {% liquid
+                          assign video_id = p_media.external_id
+                        %}
+                        <video-product class="product__img featured-image product__img_video lazy-video-item">
+                          {% render 'responsive-image',
+                            type: 'product',
+                            class: 'product__img video-thumbnail',
+                            image: p_media.preview_image,
+                            image_alt: alt_features
+                          %}
+                          <template class="video-template">
+                            {%- if p_media.host == 'youtube' -%}
+                              <iframe
+                                src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1&mute=1&loop=0"
+                                class="js-youtube w-full h-full"
+                              ></iframe>
+                            {%- else -%}
+                              {{
+                                p_media
+                                | external_video_url: autoplay: true
+                                | external_video_tag: class: '', loading: 'lazy'
+                              }}
+                            {%- endif -%}
+                          </template>
+                        </video-product>
+                      {% endif %}
+                    {% else %}
+                      {% render 'responsive-image',
+                        type: 'product',
+                        class: 'product__img featured-image',
+                        image: p_media,
+                        image_alt: alt_features,
+                        motion: true
+                      %}
+                    {% endif %}
+                  </div>
+                {%- else -%}
+                  {%- liquid
+                    assign ratio = '3/4'
+                    if product_image_ratio != 'adapt'
+                      case product_image_ratio
+                        when 'square'
+                          assign ratio = '1/1'
+                        when 'landscape'
+                          assign ratio = '4/3'
+                        when 'portrait'
+                          assign ratio = '3/4'
+                      endcase
+                    endif
+                  -%}
+                  <div
+                    class="product__media rounded"
+                    style="--aspect-ratio: {{ ratio }};"
+                  >
+                    {% render 'placeholder-render' %}
+                  </div>
+                {%- endif -%}
+                {% render 'product-badges', scope: 'item', card_product: product %}
+              </a>
             </div>
           </div>
-          {%- if show_price -%}
-            <div class="compare-row flex flex-nowrap compare-row-price">
-              <div class="compare-field">
-                {{ 'products.product.price.label' | t }}
-              </div>
-            </div>
-          {%- endif -%}
-          {%- if show_ratings -%}
-            <div class="compare-row flex flex-nowrap compare-row-review">
-              <div class="compare-field">
-                {{ 'products.product.ratings' | t }}
-              </div>
-            </div>
-          {%- endif -%}
-          {%- if show_vendor -%}
-            <div class="compare-row flex flex-nowrap compare-row-vendor">
-              <div class="compare-field">
-                {{ 'products.product.vendor' | t }}
-              </div>
-            </div>
-          {%- endif -%}
-          {%- if show_color -%}
-            <div class="compare-row flex flex-nowrap compare-row-color">
-              <div class="compare-field">
-                {{ 'products.product.color' | t }}
-              </div>
-            </div>
-          {%- endif -%}
-          {%- if show_size -%}
-            <div class="compare-row flex flex-nowrap compare-row-size">
-              <div class="compare-field">
-                {{ 'products.product.size' | t }}
-              </div>
-            </div>
-          {%- endif -%}
-          {%- if show_highlights -%}
-            <div class="compare-row flex flex-nowrap compare-row-highlights">
-              <div class="compare-field">
-                {{ 'products.product.highlights' | t }}
-              </div>
-            </div>
-          {%- endif -%}
-          {%- if show_availability -%}
-            <div class="compare-row flex flex-nowrap compare-row-availability">
-              <div class="compare-field">
-                {{ 'products.product.availability' | t }}
-              </div>
-            </div>
-          {%- endif -%}
-        </div>
-        <div class="compare-table-products">
-          <div class="compare-row flex flex-nowrap compare-row-basic">
-            <div class="compare-field current-product">
+          {%- for items in product.metafields.custom.compare_items.value -%}
+            {%- liquid
+              if items.id == product.id
+                continue
+              endif
+            -%}
+            <div class="compare-field">
               {%- liquid
-                assign p_media = product.featured_media
+                assign p_media = items.featured_media
                 assign ratio = '3/4'
                 if product_image_ratio != 'adapt'
                   case product_image_ratio
@@ -151,16 +230,16 @@
                 <a
                   class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
                   draggable="false"
-                  href="{{ product.url }}"
-                  aria-label="{{ product.title }}"
+                  href="{{ items.url }}"
+                  aria-label="{{ items.title }}"
                 >
                   {%- if p_media -%}
                     <div
                       class="product__media animation-swatches"
                       style="--aspect-ratio: {{ ratio }};"
                     >
-                      {%- assign alt_features = p_media.alt | default: product.title | escape -%}
-                      {% if type_video and product_show_video_featured and product != true %}
+                      {%- assign alt_features = p_media.alt | default: items.title | escape -%}
+                      {% if type_video and product_show_video_featured and items != true %}
                         {% if p_media.media_type == 'video' %}
                           <video-product class="product__img featured-image product__img_video lazy-video-item">
                             {% render 'responsive-image',
@@ -239,9 +318,41 @@
                       {% render 'placeholder-render' %}
                     </div>
                   {%- endif -%}
-                  {% render 'product-badges', scope: 'item', card_product: product %}
+                  {% render 'product-badges', scope: 'item', card_product: items %}
                 </a>
               </div>
+            </div>
+          {%- endfor -%}
+        </div>
+        {%- if show_price -%}
+          <div class="compare-row flex flex-nowrap compare-row-price">
+            <div class="compare-field field-heading sticky left-0 bg-white z-1">
+              {{ 'products.product.price.label' | t }}
+            </div>
+            <div class="compare-field current-product">
+              {%- render 'price', scope: 'item', product: product -%}
+            </div>
+            {%- for items in product.metafields.custom.compare_items.value -%}
+              {%- liquid
+                if items.id == product.id
+                  continue
+                endif
+              -%}
+              <div class="compare-field">
+                {%- render 'price', scope: 'item', product: items -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        {%- if show_ratings -%}
+          <div class="compare-row flex flex-nowrap compare-row-review">
+            <div class="compare-field field-heading sticky left-0 bg-white z-1">
+              {{ 'products.product.ratings' | t }}
+            </div>
+            <div class="compare-field current-product">
+              {%- liquid
+                render 'review', review_star: true, product: product
+              -%}
             </div>
             {%- for items in product.metafields.custom.compare_items.value -%}
               {%- liquid
@@ -251,196 +362,80 @@
               -%}
               <div class="compare-field">
                 {%- liquid
-                  assign p_media = items.featured_media
-                  assign ratio = '3/4'
-                  if product_image_ratio != 'adapt'
-                    case product_image_ratio
-                      when 'square'
-                        assign ratio = '1/1'
-                      when 'landscape'
-                        assign ratio = '4/3'
-                      when 'portrait'
-                        assign ratio = '3/4'
-                    endcase
-                  else
-                    if p_media.media_type == 'model'
-                      assign ratio = '3/4'
-                    else
-                      assign ratio = p_media.aspect_ratio
-                    endif
-                  endif
-                  if p_media.media_type == 'video' or p_media.media_type == 'external_video'
-                    assign type_video = true
-                  endif
+                  render 'review', review_star: true, product: items
                 -%}
-                <div class="product__inner hover-effect">
-                  <a
-                    class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
-                    draggable="false"
-                    href="{{ items.url }}"
-                    aria-label="{{ items.title }}"
-                  >
-                    {%- if p_media -%}
-                      <div
-                        class="product__media animation-swatches"
-                        style="--aspect-ratio: {{ ratio }};"
-                      >
-                        {%- assign alt_features = p_media.alt | default: items.title | escape -%}
-                        {% if type_video and product_show_video_featured and items != true %}
-                          {% if p_media.media_type == 'video' %}
-                            <video-product class="product__img featured-image product__img_video lazy-video-item">
-                              {% render 'responsive-image',
-                                type: 'product',
-                                class: 'product__img video-thumbnail',
-                                image: p_media.preview_image,
-                                image_alt: alt_features
-                              %}
-                              <template class="video-template max-w-100">
-                                {{
-                                  p_media
-                                  | media_tag:
-                                    image_size: '2048x',
-                                    autoplay: true,
-                                    controls: true,
-                                    loop: true,
-                                    preload: 'none'
-                                }}
-                              </template>
-                            </video-product>
-                          {% elsif p_media.media_type == 'external_video' %}
-                            {% liquid
-                              assign video_id = p_media.external_id
-                            %}
-                            <video-product class="product__img featured-image product__img_video lazy-video-item">
-                              {% render 'responsive-image',
-                                type: 'product',
-                                class: 'product__img video-thumbnail',
-                                image: p_media.preview_image,
-                                image_alt: alt_features
-                              %}
-                              <template class="video-template">
-                                {%- if p_media.host == 'youtube' -%}
-                                  <iframe
-                                    src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1&mute=1&loop=0"
-                                    class="js-youtube w-full h-full"
-                                  ></iframe>
-                                {%- else -%}
-                                  {{
-                                    p_media
-                                    | external_video_url: autoplay: true
-                                    | external_video_tag: class: '', loading: 'lazy'
-                                  }}
-                                {%- endif -%}
-                              </template>
-                            </video-product>
-                          {% endif %}
-                        {% else %}
-                          {% render 'responsive-image',
-                            type: 'product',
-                            class: 'product__img featured-image',
-                            image: p_media,
-                            image_alt: alt_features,
-                            motion: true
-                          %}
-                        {% endif %}
-                      </div>
-                    {%- else -%}
-                      {%- liquid
-                        assign ratio = '3/4'
-                        if product_image_ratio != 'adapt'
-                          case product_image_ratio
-                            when 'square'
-                              assign ratio = '1/1'
-                            when 'landscape'
-                              assign ratio = '4/3'
-                            when 'portrait'
-                              assign ratio = '3/4'
-                          endcase
-                        endif
-                      -%}
-                      <div
-                        class="product__media rounded"
-                        style="--aspect-ratio: {{ ratio }};"
-                      >
-                        {% render 'placeholder-render' %}
-                      </div>
-                    {%- endif -%}
-                    {% render 'product-badges', scope: 'item', card_product: items %}
-                  </a>
-                </div>
               </div>
             {%- endfor -%}
           </div>
-          {%- if show_price -%}
-            <div class="compare-row flex flex-nowrap compare-row-price">
-              <div class="compare-field current-product">
-                {%- render 'price', scope: 'item', product: product -%}
-              </div>
-              {%- for items in product.metafields.custom.compare_items.value -%}
-                {%- liquid
-                  if items.id == product.id
-                    continue
-                  endif
-                -%}
-                <div class="compare-field">
-                  {%- render 'price', scope: 'item', product: items -%}
-                </div>
-              {%- endfor -%}
+        {%- endif -%}
+        {%- if show_vendor -%}
+          <div class="compare-row flex flex-nowrap compare-row-vendor">
+            <div class="compare-field field-heading sticky left-0 bg-white z-1">
+              {{ 'products.product.vendor' | t }}
             </div>
-          {%- endif -%}
-          {%- if show_ratings -%}
-            <div class="compare-row flex flex-nowrap compare-row-review">
-              <div class="compare-field current-product">
-                {%- liquid
-                  render 'review', review_star: true, product: product
-                -%}
-              </div>
-              {%- for items in product.metafields.custom.compare_items.value -%}
-                {%- liquid
-                  if items.id == product.id
-                    continue
-                  endif
-                -%}
-                <div class="compare-field">
-                  {%- liquid
-                    render 'review', review_star: true, product: items
-                  -%}
-                </div>
-              {%- endfor -%}
+            <div class="compare-field current-product">
+              {%- if product.vendor -%}
+                {{ product.vendor }}
+              {%- else -%}
+                -
+              {% endif %}
             </div>
-          {%- endif -%}
-          {%- if show_vendor -%}
-            <div class="compare-row flex flex-nowrap compare-row-vendor">
-              <div class="compare-field current-product">
-                {%- if product.vendor -%}
-                  {{ product.vendor }}
+            {%- for items in product.metafields.custom.compare_items.value -%}
+              {%- liquid
+                if items.id == product.id
+                  continue
+                endif
+              -%}
+              <div class="compare-field">
+                {%- if items.vendor -%}
+                  {{ items.vendor }}
                 {%- else -%}
                   -
                 {% endif %}
               </div>
-              {%- for items in product.metafields.custom.compare_items.value -%}
-                {%- liquid
-                  if items.id == product.id
-                    continue
-                  endif
-                -%}
-                <div class="compare-field">
-                  {%- if items.vendor -%}
-                    {{ items.vendor }}
-                  {%- else -%}
-                    -
-                  {% endif %}
-                </div>
-              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        {%- if show_color -%}
+          <div class="compare-row flex flex-nowrap compare-row-color">
+            <div class="compare-field field-heading sticky left-0 bg-white z-1">
+              {{ 'products.product.color' | t }}
             </div>
-          {%- endif -%}
-          {%- if show_color -%}
-            <div class="compare-row flex flex-nowrap compare-row-color">
-              <div class="compare-field current-product">
-                {%- if product.has_only_default_variant -%}
+            <div class="compare-field current-product">
+              {%- if product.has_only_default_variant -%}
+                <span>-</span>
+              {%- else -%}
+                {%- for option in product.options_with_values -%}
+                  {%- liquid
+                    assign is_color_option = false
+                    for colorItem in option_name_color
+                      if option.name == colorItem
+                        assign is_color_option = true
+                      endif
+                    endfor
+                  -%}
+                  {%- if is_color_option -%}
+                    {%- for value in option.values -%}
+                      <span class="color-content uppercase-first-letter">
+                        {{- value -}}
+                        {%- if forloop.last != true %}, {% endif %}
+                      </span>
+                    {%- endfor -%}
+                  {% endif %}
+                {%- endfor -%}
+              {% endif %}
+            </div>
+            {%- for items in product.metafields.custom.compare_items.value -%}
+              {%- liquid
+                if items.id == product.id
+                  continue
+                endif
+              -%}
+              <div class="compare-field">
+                {%- if items.has_only_default_variant -%}
                   <span>-</span>
                 {%- else -%}
-                  {%- for option in product.options_with_values -%}
+                  {%- for option in items.options_with_values -%}
                     {%- liquid
                       assign is_color_option = false
                       for colorItem in option_name_color
@@ -460,48 +455,65 @@
                   {%- endfor -%}
                 {% endif %}
               </div>
-              {%- for items in product.metafields.custom.compare_items.value -%}
-                {%- liquid
-                  if items.id == product.id
-                    continue
-                  endif
-                -%}
-                <div class="compare-field">
-                  {%- if items.has_only_default_variant -%}
-                    <span>-</span>
-                  {%- else -%}
-                    {%- for option in items.options_with_values -%}
-                      {%- liquid
-                        assign is_color_option = false
-                        for colorItem in option_name_color
-                          if option.name == colorItem
-                            assign is_color_option = true
-                          endif
-                        endfor
-                      -%}
-                      {%- if is_color_option -%}
-                        {%- for value in option.values -%}
-                          <span class="color-content uppercase-first-letter">
-                            {{- value -}}
-                            {%- if forloop.last != true %}, {% endif %}
-                          </span>
-                        {%- endfor -%}
-                      {% endif %}
-                    {%- endfor -%}
-                  {% endif %}
-                </div>
-              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        {%- if show_size -%}
+          <div class="compare-row flex flex-nowrap compare-row-size">
+            <div class="compare-field field-heading sticky left-0 bg-white z-1">
+              {{ 'products.product.size' | t }}
             </div>
-          {%- endif -%}
-          {%- if show_size -%}
-            <div class="compare-row flex flex-nowrap compare-row-size">
-              <div class="compare-field current-product">
-                {%- if product.has_only_default_variant -%}
+            <div class="compare-field current-product">
+              {%- if product.has_only_default_variant -%}
+                <span>-</span>
+              {%- else -%}
+                {%- liquid
+                  assign size_option = false
+                  for option in product.options_with_values
+                    for sizeItem in option_name_size
+                      if option.name == sizeItem
+                        assign size_option = true
+                      endif
+                    endfor
+                  endfor
+                -%}
+                {%- if size_option -%}
+                  {%- for option in product.options_with_values -%}
+                    {%- liquid
+                      assign is_size_option = false
+                      for sizeItem in option_name_size
+                        if option.name == sizeItem
+                          assign is_size_option = true
+                        endif
+                      endfor
+                    -%}
+                    {%- if is_size_option -%}
+                      {%- for value in option.values -%}
+                        <span class="size-content uppercase-first-letter">
+                          {{- value -}}
+                          {%- if forloop.last != true %}, {% endif %}
+                        </span>
+                      {%- endfor -%}
+                    {% endif %}
+                  {%- endfor -%}
+                {%- else -%}
+                  <span>-</span>
+                {% endif %}
+              {% endif %}
+            </div>
+            {%- for items in product.metafields.custom.compare_items.value -%}
+              {%- liquid
+                if items.id == product.id
+                  continue
+                endif
+              -%}
+              <div class="compare-field">
+                {%- if items.has_only_default_variant -%}
                   <span>-</span>
                 {%- else -%}
                   {%- liquid
                     assign size_option = false
-                    for option in product.options_with_values
+                    for option in items.options_with_values
                       for sizeItem in option_name_size
                         if option.name == sizeItem
                           assign size_option = true
@@ -510,7 +522,7 @@
                     endfor
                   -%}
                   {%- if size_option -%}
-                    {%- for option in product.options_with_values -%}
+                    {%- for option in items.options_with_values -%}
                       {%- liquid
                         assign is_size_option = false
                         for sizeItem in option_name_size
@@ -533,82 +545,63 @@
                   {% endif %}
                 {% endif %}
               </div>
-              {%- for items in product.metafields.custom.compare_items.value -%}
-                {%- liquid
-                  if items.id == product.id
-                    continue
-                  endif
-                -%}
-                <div class="compare-field">
-                  {%- if items.has_only_default_variant -%}
-                    <span>-</span>
-                  {%- else -%}
-                    {%- liquid
-                      assign size_option = false
-                      for option in items.options_with_values
-                        for sizeItem in option_name_size
-                          if option.name == sizeItem
-                            assign size_option = true
-                          endif
-                        endfor
-                      endfor
-                    -%}
-                    {%- if size_option -%}
-                      {%- for option in items.options_with_values -%}
-                        {%- liquid
-                          assign is_size_option = false
-                          for sizeItem in option_name_size
-                            if option.name == sizeItem
-                              assign is_size_option = true
-                            endif
-                          endfor
-                        -%}
-                        {%- if is_size_option -%}
-                          {%- for value in option.values -%}
-                            <span class="size-content uppercase-first-letter">
-                              {{- value -}}
-                              {%- if forloop.last != true %}, {% endif %}
-                            </span>
-                          {%- endfor -%}
-                        {% endif %}
-                      {%- endfor -%}
-                    {%- else -%}
-                      <span>-</span>
-                    {% endif %}
-                  {% endif %}
-                </div>
-              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        {%- if show_highlights -%}
+          <div class="compare-row flex flex-nowrap compare-row-highlights">
+            <div class="compare-field field-heading sticky left-0 bg-white z-1">
+              {{ 'products.product.highlights' | t }}
             </div>
-          {%- endif -%}
-          {%- if show_highlights -%}
-            <div class="compare-row flex flex-nowrap compare-row-highlights">
-              <div class="compare-field current-product">
-                {%- if product.metafields.custom.ingredient_highlights -%}
-                  {{ product.metafields.custom.ingredient_highlights }}
+            <div class="compare-field current-product">
+              {%- if product.metafields.custom.ingredient_highlights -%}
+                {{ product.metafields.custom.ingredient_highlights }}
+              {%- else -%}
+                <span>-</span>
+              {% endif %}
+            </div>
+            {%- for items in product.metafields.custom.compare_items.value -%}
+              {%- liquid
+                if items.id == product.id
+                  continue
+                endif
+              -%}
+              <div class="compare-field">
+                {%- if items.metafields.custom.ingredient_highlights -%}
+                  {{ items.metafields.custom.ingredient_highlights }}
                 {%- else -%}
                   <span>-</span>
                 {% endif %}
               </div>
-              {%- for items in product.metafields.custom.compare_items.value -%}
-                {%- liquid
-                  if items.id == product.id
-                    continue
-                  endif
-                -%}
-                <div class="compare-field">
-                  {%- if items.metafields.custom.ingredient_highlights -%}
-                    {{ items.metafields.custom.ingredient_highlights }}
-                  {%- else -%}
-                    <span>-</span>
-                  {% endif %}
-                </div>
-              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        {%- if show_availability -%}
+          <div class="compare-row flex flex-nowrap compare-row-availability">
+            <div class="compare-field field-heading sticky left-0 bg-white z-1">
+              {{ 'products.product.availability' | t }}
             </div>
-          {%- endif -%}
-          {%- if show_availability -%}
-            <div class="compare-row flex flex-nowrap compare-row-availability">
-              <div class="compare-field current-product">
-                {%- if product.available -%}
+            <div class="compare-field current-product">
+              {%- if product.available -%}
+                <svg width="12" height="10" fill="none">
+                  <path fill="#008A00" d="M10.86.86 4 7.718l-2.86-2.86a.69.69 0 0 0-.484-.187.617.617 0 0 0-.453.187.661.661 0 0 0-.203.485c0 .177.068.328.203.453L3.531 9.14A.636.636 0 0 0 4 9.328a.636.636 0 0 0 .469-.187l7.328-7.344A.594.594 0 0 0 12 1.344a.661.661 0 0 0-.203-.485.636.636 0 0 0-.469-.187.67.67 0 0 0-.469.187Z"/>
+                </svg>
+                {{ 'products.product.instock' | t }}
+              {%- else -%}
+                <svg width="10" height="10" fill="none">
+                  <path fill="#907341" d="M.531 1.797a.594.594 0 0 1-.203-.453c0-.188.068-.35.203-.485A.636.636 0 0 1 1 .672c.188 0 .344.062.469.187L5 4.391 8.531.859A.636.636 0 0 1 9 .672c.188 0 .344.062.469.187a.661.661 0 0 1 .203.485.594.594 0 0 1-.203.453L5.938 5.328l3.53 3.531a.661.661 0 0 1 .204.485.594.594 0 0 1-.203.453A.611.611 0 0 1 9 10a.611.611 0 0 1-.469-.203L5 6.28 1.469 9.797A.611.611 0 0 1 1 10a.611.611 0 0 1-.469-.203.594.594 0 0 1-.203-.453c0-.188.068-.35.203-.485l3.531-3.53-3.53-3.532Z"/>
+                </svg>
+                {{ 'products.product.unavailable' | t }}
+              {% endif %}
+            </div>
+            {%- for items in product.metafields.custom.compare_items.value -%}
+              {%- liquid
+                if items.id == product.id
+                  continue
+                endif
+              -%}
+              <div class="compare-field">
+                {%- if items.available -%}
                   <svg width="12" height="10" fill="none">
                     <path fill="#008A00" d="M10.86.86 4 7.718l-2.86-2.86a.69.69 0 0 0-.484-.187.617.617 0 0 0-.453.187.661.661 0 0 0-.203.485c0 .177.068.328.203.453L3.531 9.14A.636.636 0 0 0 4 9.328a.636.636 0 0 0 .469-.187l7.328-7.344A.594.594 0 0 0 12 1.344a.661.661 0 0 0-.203-.485.636.636 0 0 0-.469-.187.67.67 0 0 0-.469.187Z"/>
                   </svg>
@@ -620,29 +613,9 @@
                   {{ 'products.product.unavailable' | t }}
                 {% endif %}
               </div>
-              {%- for items in product.metafields.custom.compare_items.value -%}
-                {%- liquid
-                  if items.id == product.id
-                    continue
-                  endif
-                -%}
-                <div class="compare-field">
-                  {%- if items.available -%}
-                    <svg width="12" height="10" fill="none">
-                      <path fill="#008A00" d="M10.86.86 4 7.718l-2.86-2.86a.69.69 0 0 0-.484-.187.617.617 0 0 0-.453.187.661.661 0 0 0-.203.485c0 .177.068.328.203.453L3.531 9.14A.636.636 0 0 0 4 9.328a.636.636 0 0 0 .469-.187l7.328-7.344A.594.594 0 0 0 12 1.344a.661.661 0 0 0-.203-.485.636.636 0 0 0-.469-.187.67.67 0 0 0-.469.187Z"/>
-                    </svg>
-                    {{ 'products.product.instock' | t }}
-                  {%- else -%}
-                    <svg width="10" height="10" fill="none">
-                      <path fill="#907341" d="M.531 1.797a.594.594 0 0 1-.203-.453c0-.188.068-.35.203-.485A.636.636 0 0 1 1 .672c.188 0 .344.062.469.187L5 4.391 8.531.859A.636.636 0 0 1 9 .672c.188 0 .344.062.469.187a.661.661 0 0 1 .203.485.594.594 0 0 1-.203.453L5.938 5.328l3.53 3.531a.661.661 0 0 1 .204.485.594.594 0 0 1-.203.453A.611.611 0 0 1 9 10a.611.611 0 0 1-.469-.203L5 6.28 1.469 9.797A.611.611 0 0 1 1 10a.611.611 0 0 1-.469-.203.594.594 0 0 1-.203-.453c0-.188.068-.35.203-.485l3.531-3.53-3.53-3.532Z"/>
-                    </svg>
-                    {{ 'products.product.unavailable' | t }}
-                  {% endif %}
-                </div>
-              {%- endfor -%}
-            </div>
-          {%- endif -%}
-        </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
       </div>
     </div>
   </div>

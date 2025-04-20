@@ -6,7 +6,7 @@
 {%- if closest.product != blank -%}
   {%- if closest.product.metafields.custom.media_lightbox.value -%}
     <slide-section
-      class="swiper hover-action"
+      class="swiper"
       data-section-id="{{ section.id }}"
       data-effect="slide"
       data-speed="500"
@@ -14,18 +14,19 @@
       data-mobile="1"
       data-tablet="1"
       data-spacing="10"
+      style="--swiper-navigation-size: 3.6rem;"
     >
       {% if show_navigation %}
-        {%- render 'swiper-navigation', show_on_hover: true -%}
+        {%- render 'swiper-navigation' -%}
       {% endif %}
       <div class="swiper-wrapper">
         {%- for media in closest.product.metafields.custom.media_lightbox.value -%}
           <div class="swiper-slide">
             {%- assign image_alt = media.alt | default: closest.product.title | escape -%}
             <div class="media-lightbox-item">
-              <video-local-lightbox tabindex="0">
+              <video-local-lightbox tabindex="0" class="block fs-0 rounded-10">
                 <div class="video-thumbnail">
-                  {% render 'responsive-image', type: 'banner', image: media, image_alt: image_alt %}
+                  {% render 'responsive-image', type: 'banner', image: media, image_alt: image_alt, class="rounded-10" %}
                 </div>
                 {% if media.media_type == 'video' -%}
                   <template>
@@ -46,7 +47,6 @@
           </div>
         {%- endfor -%}
       </div>
-
       {%- if show_pagination -%}
         <div
           class="swiper-pagination"

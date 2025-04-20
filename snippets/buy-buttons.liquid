@@ -93,7 +93,7 @@
                 id="ProductSubmitButton-{{ section.id }}"
                 type="submit"
                 name="add"
-                class="btn btn-outline w-full relative product_submit_button product-form__submit word-wrap relative"
+                class="btn{% if type == 'shopable' %} btn-primary w-full{% else %} btn-outline{% endif %} w-full relative product_submit_button product-form__submit word-wrap relative"
                 {% if product.selected_or_first_available_variant.available == false %}
                   disabled
                 {% endif %}
@@ -130,7 +130,7 @@
       <button
         type="submit"
         name="add"
-        class="product_buy_now_button product-form__submit btn btn-primary disabled"
+        class="product_buy_now_button product-form__submit btn btn-primary disabled{% if type == 'shopable' %} w-full{% endif %}"
         disabled
       >
         {{ 'products.product.sold_out' | t }}
