@@ -603,9 +603,9 @@ button[disabled],
 }
 .btn-active.active,
 input[type="radio"]:checked + .text-swatch-label.pill {
-  background: var(--color-primary);
-  color: rgb(var(--color-white));
-  border-color: var(--color-primary);
+  background: var(--btn-primary-bg-color);
+  color: var(--btn-primary-color);
+  border-color: var(--btn-primary-bg-color);
 }
 .btn-link {
   --bg-size: 100%;
@@ -736,15 +736,18 @@ a.hover-heading-color:hover {
 }
 :where(.btn-rounded) {
   border-radius: var(--btn-radius);
+  clip-path: inset(0 0 0 0 round var(--btn-radius));
 }
 :where(.rounded-50) {
   border-radius: 50%;
 }
-.rounded-3 {
+.rounded-style .rounded-3 {
   border-radius: 3px;
+  clip-path: inset(0 0 0 0 round 3px);
 }
-:where(.rounded-10) {
+.rounded-style :where(.rounded-10) {
   border-radius: 10px;
+  clip-path: inset(0 0 0 0 round 10px);
 }
 .border-0 {
   border: 0;
@@ -791,6 +794,9 @@ a.hover-heading-color:hover {
 }
 .row-gap-0 {
   row-gap: 0;
+}
+.row-gap-20 {
+  row-gap: 2rem;
 }
 .row-gap-30 {
   row-gap: 3rem;
@@ -901,6 +907,9 @@ a.hover-heading-color:hover {
 }
 .p-10 {
   padding: 1rem;
+}
+.p-20 {
+  padding: 2rem;
 }
 .pt-25 {
   padding-block-start: 2.5rem;

@@ -258,7 +258,8 @@
     {% endif %}
     {% if sticky and section.blocks[0].settings.local_video != blank %}
       <shopable-item
-        class="sticky-video block right-0 rounded pointer transition-drawer"
+        class="sticky-video block right-0 pointer transition-drawer fixed z-10 transition-drawer w-custom"
+        style="--width: 15rem"
         data-product="Product-{{ section.blocks[0].id }}"
       >
         {% liquid
@@ -293,65 +294,66 @@
             assign video_alt = 'accessibility.video' | t
           endif
         %}
-        <div class="relative">
-          {% if poster_image != blank or local_video != blank %}
-            <video-local
-              class="video-item--ratio rounded block"
-              style="--aspect-ratio: {{ video_ratio }};"
-            >
-              {% if local_video != blank %}
-                {%- liquid
-                  assign source = local_video.sources
-                  assign source_url = ''
-                  for s in source
-                    if s.format == 'mp4'
-                      assign source_url = s.url
-                      break
-                    endif
-                  endfor
-                  assign poster = local_video.preview_image | image_url: width: 500
-                  if poster_image != blank
-                    assign poster = poster_image | image_url: width: 500
+        {% if poster_image != blank or local_video != blank %}
+          <video-local
+            class="video-item--ratio rounded block"
+            style="--aspect-ratio: {{ video_ratio }};"
+          >
+            {% if local_video != blank %}
+              {%- liquid
+                assign source = local_video.sources
+                assign source_url = ''
+                for s in source
+                  if s.format == 'mp4'
+                    assign source_url = s.url
+                    break
                   endif
-                -%}
-                <video
-                  preload="auto"
-                  loop
-                  muted
-                  playsinline
-                  autoplay
-                  poster="{{ poster }}"
-                  data-src="{{ source_url }}"
-                ></video>
+                endfor
+                assign poster = local_video.preview_image | image_url: width: 500
+                if poster_image != blank
+                  assign poster = poster_image | image_url: width: 500
+                endif
+              -%}
+              <video
+                preload="auto"
+                loop
+                muted
+                playsinline
+                autoplay
+                poster="{{ poster }}"
+                data-src="{{ source_url }}"
+              ></video>
+            {% else %}
+              {% if poster_image != blank %}
+                {% render 'responsive-image',
+                  type: 'banner',
+                  container: section_st.section_width,
+                  image: poster_image,
+                  image_alt: image_alt,
+                  padding: column_gap_slide,
+                  column: items_per_row
+                %}
               {% else %}
-                {% if poster_image != blank %}
-                  {% render 'responsive-image',
-                    type: 'banner',
-                    container: section_st.section_width,
-                    image: poster_image,
-                    image_alt: image_alt,
-                    padding: column_gap_slide,
-                    column: items_per_row
-                  %}
-                {% else %}
-                  {% render 'placeholder-render', type: 'collection' %}
-                {% endif %}
+                {% render 'placeholder-render', type: 'collection' %}
               {% endif %}
-            </video-local>
-          {% else %}
-            <div
-              class="video-item--ratio"
-              style="--aspect-ratio: {{ video_ratio }};"
-            >
-              {% render 'placeholder-render', type: 'collection' %}
-            </div>
-          {% endif %}
-          <icon-close class="shopable-sticky__close pointer-none border inline-flex mx-auto rounded-50 overflow-hidden absolute top-0 inset-x-0 w-50 h-50 content-center heading-color bg-white">
-            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-              <use href="#icon-close" />
-            </svg>
-          </icon-close>
-        </div>
+            {% endif %}
+          </video-local>
+        {% else %}
+          <div
+            class="video-item--ratio"
+            style="--aspect-ratio: {{ video_ratio }};"
+          >
+            {% render 'placeholder-render', type: 'collection' %}
+          </div>
+        {% endif %}
+        <icon-close
+          class="shopable-sticky__close pointer-none inline-flex rounded-50 overflow-hidden absolute top-0 right-0 w-custom h-custom content-center color-white bg-dark"
+          style="--width: 2.8rem;--height: 2.8rem"
+        >
+          <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+            <use href="#icon-close" />
+          </svg>
+        </icon-close>
       </shopable-item>
     {% endif %}
     <template>
@@ -369,7 +371,7 @@
           </div>
           <button
             is="button-close-model"
-            class="modal__close pointer btn-reset wh-40 wh-1025-50 bg-white blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow heading-color"
+            class="modal__close pointer btn-hover overflow-hidden btn-reset wh-40 wh-1025-50 bg-white blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow heading-color"
             aria-label="Close"
           >
             <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
@@ -504,7 +506,7 @@
                           disable_color_swatches: true,
                           class: ' z-2',
                           style_layout: ' flex',
-                          image_class: ' flex-auto w-custom w-full-1025',
+                          image_class: ' flex-auto w-custom rounded-10 w-full-1025',
                           image_rounded: '',
                           info_class: ' flex-1 mt-0 px-20 py-15 align-self-center'
                         %}

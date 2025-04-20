@@ -212,9 +212,6 @@ blockquote {
 .p-15 {
   padding: 1.5rem;
 }
-.p-20 {
-  padding: 2rem;
-}
 .p-40 {
   padding: 4rem;
 }
@@ -660,9 +657,6 @@ blockquote {
 }
 .row-gap-custom {
   row-gap: var(--row-gap, 0);
-}
-.row-gap-20 {
-  row-gap: 2rem;
 }
 .rounded-0 {
   border-radius: 0;
@@ -1387,14 +1381,14 @@ modal-popup :is(.modal-overlay) {
     --btn-color: var(--btn-primary-hover-color);
     color: var(--btn-color);
   }
-  :where(.btn-outline):hover {
+  :where(.btn-outline, .text-swatch-label.btn-hover):hover {
     --btn-color: var(--btn-primary-color);
   }
   .btn-text {
     transition: color 0.5s cubic-bezier(0.3, 1, 0.3, 1);
     transition-delay: 0.1s;
   }
-  :where(.btn-outline):after {
+  :where(.btn-outline, .text-swatch-label.btn-hover):after {
     background-color: var(--btn-primary-bg-color);
   }
   :where(
@@ -1513,7 +1507,7 @@ modal-popup :is(.modal-overlay) {
     transform: scale(1.1);
     color: var(--color-heading);
   }
-  .blur:hover {
+  .blur:not(.btn-hover):hover {
     --opacity: 1;
   }
   .collection-list__content-inner:hover .collection-list__icon {
