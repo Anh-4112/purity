@@ -1,6 +1,10 @@
 {%- liquid
   if scope != 'detail'
-    assign target = product.variants[0]
+    if first_available_variant
+      assign target = product.selected_or_first_available_variant
+    else
+      assign target = product.variants[0]
+    endif
   else
     assign target = product.selected_or_first_available_variant
   endif

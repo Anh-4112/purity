@@ -59,7 +59,17 @@
         ></iframe>
 
       {%- else -%}
-        {{ video_local | video_tag: autoplay: autoplay, controls: true, muted: muted, poster: poster, loop: loop, class: 'focus-inset' }}
+        {{
+          video_local
+          | video_tag:
+            autoplay: autoplay,
+            controls: true,
+            muted: muted,
+            poster: poster,
+            loop: loop,
+            class: 'focus-inset'
+        }}
+        <span class="focus-video absolute inset-0 pointer-none"></span>
       {%- endif -%}
     </div>
   </video-section>

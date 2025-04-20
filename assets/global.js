@@ -1,6 +1,51 @@
 export var root = document.getElementsByTagName("html")[0];
 export var body = document.getElementsByTagName("body")[0];
 
+export function formatMoney(cents, format) {
+  if (typeof cents == "string") {
+    cents = cents.replace(".", "");
+  }
+  var value = "";
+  var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+  var formatString = format || this.money_format;
+
+  function defaultOption(opt, def) {
+    return typeof opt == "undefined" ? def : opt;
+  }
+
+  function formatWithDelimiters(number, precision, thousands, decimal) {
+    precision = defaultOption(precision, 2);
+    thousands = defaultOption(thousands, ",");
+    decimal = defaultOption(decimal, ".");
+    if (isNaN(number) || number == null) {
+      return 0;
+    }
+
+    number = (number / 100.0).toFixed(precision);
+
+    var parts = number.split("."),
+      dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1" + thousands),
+      cents = parts[1] ? decimal + parts[1] : "";
+    return dollars + cents;
+  }
+
+  switch (formatString.match(placeholderRegex)[1]) {
+    case "amount":
+      value = formatWithDelimiters(cents, 2);
+      break;
+    case "amount_no_decimals":
+      value = formatWithDelimiters(cents, 0);
+      break;
+    case "amount_with_comma_separator":
+      value = formatWithDelimiters(cents, 2, ".", ",");
+      break;
+    case "amount_no_decimals_with_comma_separator":
+      value = formatWithDelimiters(cents, 0, ".", ",");
+      break;
+  }
+  return formatString.replace(placeholderRegex, value);
+}
+
 let subscribers = {};
 
 export function subscribe(eventName, callback) {
@@ -364,3 +409,76 @@ class AlertNotify {
   }
 }
 export const notifier = new AlertNotify();
+export const currency_rate = Shopify.currency.rate;
+
+export class FSProgressBar {
+  constructor(selector) {
+    document
+      .querySelectorAll(selector)
+      .forEach((selector) => this.init(selector));
+  }
+
+  init(_this) {
+    let progress = _this.querySelector(".progress");
+    if (!progress) {
+      progress = _this;
+    }
+    const rate = Number(Shopify.currency.rate);
+    const min = progress?.dataset.feAmount
+      ? Number(progress?.dataset.feAmount)
+      : 0;
+    if (!min || !rate) return;
+    let orderTotal = progress?.dataset.totalOrder
+      ? Number(progress?.dataset.totalOrder)
+      : 0;
+    const min_by_currency = min * rate * 100;
+    if (orderTotal == 0) {
+      this.setProgressBarTitle(_this, 0, min_by_currency);
+    } else {
+      orderTotal = orderTotal;
+      if ((orderTotal / min_by_currency) * 100 > 100) {
+        this.setProgressBar(_this, 100);
+      } else {
+        this.setProgressBar(_this, (orderTotal / min_by_currency) * 100);
+      }
+      this.setProgressBarTitle(_this, orderTotal, min_by_currency);
+    }
+  }
+
+  setProgressBar(_this, progress) {
+    _this
+      .querySelector(".progress")
+      .style.setProperty("--width", progress + "%");
+  }
+
+  setProgressBarTitle(_this, orderTotal = 0, min_by_currency = 0) {
+    let emptyUnavailable = _this.dataset.emptyUnavailable;
+    let feUnAvailable = _this.dataset.feUnavailable;
+    const feAvailable = _this.dataset.feAvailable;
+    if (orderTotal == 0) {
+      _this.innerHTML = emptyUnavailable.replace(
+        "[amount]",
+        formatMoney(min_by_currency, themeGlobalVariables.settings.money_format)
+      );
+    } else {
+      if (orderTotal >= min_by_currency) {
+        _this.querySelector(".progress-bar-message").innerHTML = feAvailable;
+        _this.classList.add("free-shipping");
+      } else {
+        _this.classList.remove("free-shipping");
+        feUnAvailable = feUnAvailable.replace(
+          "[amount]",
+          '<span class="price">[amount]</strong>'
+        );
+        _this.querySelector(".progress-bar-message").innerHTML =
+          feUnAvailable.replace(
+            "[amount]",
+            formatMoney(
+              min_by_currency - orderTotal,
+              themeGlobalVariables.settings.money_format
+            )
+          );
+      }
+    }
+  }
+}

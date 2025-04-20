@@ -1,4 +1,3 @@
-import { SlideSection } from "module-slide";
 import { LazyLoader } from "module-lazyLoad";
 
 document.addEventListener("DOMContentLoaded", function () {
