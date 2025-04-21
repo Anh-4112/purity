@@ -17,7 +17,6 @@
   assign change_slide_every = section_st.change_slide_every
   assign reveal_slide = section_st.reveal_slide
   assign rating_color = section_st.rating_color
-  assign media_width = section_st.media_width
 
   assign header_size = ''
   if heading_size == 'small'
@@ -44,13 +43,13 @@
   endif
 
   assign items_per_row_tablet = items_per_row
-  if items_per_row > 3
+  if items_per_row > 2
     assign items_per_row_tablet = items_per_row | minus: 1
   endif
 -%}
 {%- capture style -%}
       --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
-      {% if heading_size == 'large' %}--font-size: 40;{% endif %}--rate-color: {{ rating_color }};--col-width: {{ media_width }}%
+      {% if heading_size == 'large' %}--font-size: 40;{% endif %}--rate-color: {{ rating_color }};
 {%- endcapture -%}
 {% style %}
   .image-comparison {
@@ -102,6 +101,32 @@
   .handle:active {
     cursor: grabbing;
   }
+  .media-top {
+    border-top-left-radius: var(--img-rounded);
+    border-top-right-radius: var(--img-rounded);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .media-left {
+    border-top-left-radius: var(--img-rounded);
+    border-top-right-radius: 0;
+    border-bottom-left-radius: var(--img-rounded);
+    border-bottom-right-radius: 0;
+  }
+  .rounded-bottom {
+    border-bottom-left-radius: var(--img-rounded);
+    border-bottom-right-radius: var(--img-rounded);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  @media screen and (max-width: 1024.98px) {
+    .media-left {
+      border-top-left-radius: var(--img-rounded);
+      border-top-right-radius: var(--img-rounded);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
 {% endstyle %}
 <div
   class="section color-{{ section_st.color_scheme }} gradient {% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
@@ -130,14 +155,9 @@
       </div>
     {%- endif -%}
     {%- if section.blocks.size > 0 -%}
-      <svg hidden>
-        <symbol id="icon-tick">
-          <path d="M13.5742 0.824219C13.7435 0.667969 13.9388 0.589844 14.1602 0.589844C14.3945 0.589844 14.5898 0.667969 14.7461 0.824219C14.9154 0.99349 15 1.19531 15 1.42969C15 1.65104 14.9154 1.83984 14.7461 1.99609L5.58594 11.1758C5.42969 11.332 5.23438 11.4102 5 11.4102C4.76562 11.4102 4.57031 11.332 4.41406 11.1758L0.253906 6.99609C0.0846354 6.83984 0 6.65104 0 6.42969C0 6.19531 0.0846354 5.99349 0.253906 5.82422C0.410156 5.66797 0.598958 5.58984 0.820313 5.58984C1.05469 5.58984 1.25651 5.66797 1.42578 5.82422L5 9.39844L13.5742 0.824219Z" fill="black"/>
-        </symbol>
-      </svg>
       <slide-section
-        id="swiper-{{ section.id }}{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
-        class="swiper"
+        id="swiper-{{ section.id }}"
+        class="swiper {% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
         data-section-id="{{ section.id }}"
         data-autoplay="{{ slide_auto_change }}"
         data-autoplay-speed="{{ change_slide_every | times: 1000 }}"
@@ -195,9 +215,9 @@
             {% case block.type %}
               {% when 'testimonial' %}
                 <div class="swiper-slide" {{ block.shopify_attributes }}>
-                  <div class="testimonial-wrapper flex overflow-hidden {% if image_desktop_position == 'top' %}column flex-wrap{% endif %}">
+                  <div class="testimonial-wrapper flex overflow-hidden column {% if image_desktop_position == 'top' %} flex-wrap{% else %} flex-1025-row{% endif %}">
                     <div
-                      class="testimonial-media relative rounded {% if image_desktop_position == 'left' %}col-md-w-custom{% else %}w-full{% endif %}"
+                      class="testimonial-media relative {% if image_desktop_position == 'left' %} col-1025-w-custom media-left{% else %} w-full radius-bottom-0 media-top{% endif %}"
                       style="--aspect-ratio: {{ ratio }}"
                     >
                       {% if video != blank %}
@@ -235,8 +255,8 @@
                         {% render 'placeholder-render', type: 'blog' %}
                       {% endif %}
                     </div>
-                    <div class="testimonial_info flex align-center align-seft-center{% if image_desktop_position == 'left' %} col-md-remaining{% else %} w-full{% endif %}">
-                      <div class="pt-25 pb-30{% if image_desktop_position == 'left'%} px-30{% endif %} w-full">
+                    <div class="testimonial_info flex align-center align-seft-center w-full{% if image_desktop_position == 'left' %} col-1025-remaining{% endif %}">
+                      <div class="p-20 p-1025-30 w-full bg-secondary  rounded-bottom-mb {% if image_desktop_position == 'left' %} rounded-1025-right {% else %} rounded-bottom{% endif %}">
                         <div class="testimonials-rating mb-2 relative">
                           <div class="relative inline-flex">
                             <svg width="78" height="14" fill="none">
@@ -244,19 +264,19 @@
                             </svg>
                             <div class="absolute inset-0 z-1 rate-color inline-flex gap-custom" style="--gap: 2">
                               {%- for i in (1..rating_star) -%}
-                                <svg width="14" height="14" fill="none" class="rate-color">
+                                <svg width="14" height="14" fill="none" viewBox="0 0 12 12" class="rate-color">
                                   <use href="#icon-rate"></use>
                                 </svg>
                               {%- endfor -%}
                             </div>
                           </div>
                         </div>
-                        <div class="testimonials-group flex flex-wrap gap-10">
+                        <div class="testimonials-group flex flex-wrap gap-15">
                           <span class="heading-style">
                             {{ author_name }}
                           </span>
                           {% if show_verified_buyer -%}
-                            <span class="dark-grey flex gap-5 align-center fs-small">
+                            <span class="dark-grey flex gap-5 align-center fs-small-2">
                               <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
                                 <use href="#icon-tick"></use>
                               </svg>
@@ -264,10 +284,10 @@
                             </span>
                           {%- endif %}
                         </div>
-                        <div class="testimonials-quote my-15 mx-0 rich__text-m0">
+                        <div class="testimonials-quote mt-20 pb-25 mx-0 rich__text-m0 border-bottom">
                           {{ quote }}
                         </div>
-                        <div class="testimonial-product pt-30 mt-22">
+                        <div class="testimonial-product pt-25">
                           {% render 'card-product',
                             card_product: product,
                             section_id: section.id,
@@ -288,9 +308,9 @@
                 </div>
               {% when 'image_comparison' %}
                 <div class="swiper-slide slide-image-comparison" {{ block.shopify_attributes }}>
-                  <div class="testimonial-wrapper flex overflow-hidden {% if image_desktop_position == 'top' %}column flex-wrap{% endif %}">
+                  <div class="testimonial-wrapper flex overflow-hidden column{% if image_desktop_position == 'top' %} flex-wrap{% else %} flex-1025-row{% endif %}">
                     <div
-                      class="testimonial-media relative rounded {% if image_desktop_position == 'left' %}col-md-w-custom{% else %}w-full{% endif %}"
+                      class="testimonial-media relative w-full{% if image_desktop_position == 'left' %} col-1025-w-custom media-left{% else %} radius-bottom-0 media-top{% endif %}"
                       style="--aspect-ratio: {{ ratio }}"
                     >
                       <image-comparison class="block">
@@ -340,8 +360,8 @@
                         </div>
                       </image-comparison>
                     </div>
-                    <div class="testimonial_info flex align-center align-seft-center{% if image_desktop_position == 'left' %} col-md-remaining{% else %} w-full{% endif %}">
-                      <div class="pt-25 pb-30{% if image_desktop_position == 'left'%} px-30{% endif %} w-full">
+                    <div class="testimonial_info flex align-center align-seft-center w-full{% if image_desktop_position == 'left' %} col-1025-remaining{% endif %}">
+                      <div class="p-20 p-1025-30 w-full bg-secondary  rounded-bottom-mb {% if image_desktop_position == 'left' %} rounded-1025-right {% else %} rounded-bottom{% endif %}">
                         <div class="testimonials-rating mb-2 relative">
                           <div class="relative inline-flex">
                             <svg width="78" height="14" fill="none">
@@ -349,19 +369,19 @@
                             </svg>
                             <div class="absolute inset-0 z-1 rate-color inline-flex gap-custom" style="--gap: 2">
                               {%- for i in (1..rating_star) -%}
-                                <svg width="14" height="14" fill="none" class="rate-color">
+                                <svg width="14" height="14" fill="none" viewBox="0 0 12 12" class="rate-color">
                                   <use href="#icon-rate"></use>
                                 </svg>
                               {%- endfor -%}
                             </div>
                           </div>
                         </div>
-                        <div class="testimonials-group flex flex-wrap gap-10">
+                        <div class="testimonials-group flex flex-wrap gap-15">
                           <span class="heading-style">
                             {{ author_name }}
                           </span>
                           {% if show_verified_buyer -%}
-                            <span class="dark-grey flex gap-5 align-center fs-small">
+                            <span class="dark-grey flex gap-5 align-center fs-small-2">
                               <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
                                 <use href="#icon-tick"></use>
                               </svg>
@@ -369,10 +389,10 @@
                             </span>
                           {%- endif %}
                         </div>
-                        <div class="testimonials-quote my-15 mx-0 rich__text-m0">
+                        <div class="testimonials-quote mt-20 pb-25 mx-0 rich__text-m0 border-bottom">
                           {{ quote }}
                         </div>
-                        <div class="testimonial-product pt-30 mt-22">
+                        <div class="testimonial-product pt-25">
                           {% render 'card-product',
                             card_product: product,
                             section_id: section.id,
@@ -552,17 +572,6 @@
       "label": "t:sections.all.image.aspect_ratio.label"
     },
     {
-      "type": "range",
-      "id": "media_width",
-      "label": "t:sections.product_testimonials.settings.width.label",
-      "min": 30,
-      "max": 50,
-      "step": 1,
-      "default": 30,
-      "unit": "%",
-      "info": "t:sections.product_testimonials.settings.width.info"
-    },
-    {
       "type": "checkbox",
       "id": "show_verified_buyer",
       "default": true,
@@ -714,7 +723,8 @@
         {
           "type": "video",
           "id": "video_local",
-          "label": "t:sections.video.settings.video_local.label"
+          "label": "t:sections.video.settings.video_local.label",
+          "info": "t:sections.all.svg.custom_svg.info"
         },
         {
           "type": "header",
