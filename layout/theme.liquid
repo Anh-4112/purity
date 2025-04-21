@@ -73,7 +73,7 @@
           --gradient-background: {{ scheme.settings.background }};
           {% endif %}
           --color-primary: {{ scheme.settings.color_general_accent }};
-          --color-primary-rgb: {{ scheme.settings.color_general_accent.red }}, {{ scheme.settings.primary_color.green }}, {{ scheme.settings.primary_color.blue }};
+          --color-primary-rgb: {{ scheme.settings.color_general_accent.red }}, {{ scheme.settings.color_general_accent.green }}, {{ scheme.settings.color_general_accent.blue }};
           --color-text: {{ scheme.settings.text_color }};
           --color-text-rgb: {{ scheme.settings.text_color.red }}, {{ scheme.settings.text_color.green }}, {{ scheme.settings.text_color.blue }};
           --color-heading: {{ scheme.settings.heading_color }};
@@ -92,7 +92,6 @@
           --btn-link-hover-color: {{ scheme.settings.btn_outline_color }};
           --input-color: var(--color-text);
           --input-placeholder-color: rgba(var(--color-heading-rgb), 0.55);
-          --input-bg: rgba({{ scheme.settings.background.red }}, {{ scheme.settings.background.green }}, {{ scheme.settings.background.blue }}, 0.6);
         }
       {% endfor %}
       {{ scheme_classes | prepend: 'body' }} {
@@ -147,7 +146,7 @@
         --color-white: 255, 255, 255;
         --color-dark: #000;
         --color-grey: rgba(var(--color-text-rgb), 0.6);
-        --sale-bg: {{ theme_st.sale_background }};
+        --sale-bg-rgb: {{ theme_st.sale_background.red }}, {{ theme_st.sale_background.green }}, {{ theme_st.sale_background.blue }};;
         --sale-color: {{ theme_st.sale_color }};
         --color-grey-light: rgba(var(--color-text-rgb), 0.2);
         --responsive-rate: ((100vw - 575px) / (1410 - 575));

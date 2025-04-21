@@ -5,6 +5,9 @@
   assign product_list_limit = block.settings.product_list_limit
   assign products_per_row = block.settings.products_per_row
 -%}
+{%- capture style -%}
+  --gap: 1rem; --gap-desktop: 1rem;
+{%- endcapture -%}
 {% if product.metafields.custom.external_affiliate == blank %}
   <product-recommendations
     {{ block.shopify_attributes }}
@@ -12,13 +15,22 @@
     style="--position-arrow: static;--swiper-navigation-size: 20px;--padding: 0;"
   >
     {%- if recommendations.performed and recommendations.products_count > 0 -%}
-      {%- if block_heading != blank -%}
-        <h2 class="recommendations-heading h6 mb-20">
-          {{- block_heading -}}
-        </h2>
+      {% if block_heading != blank %}
+        <div class="flex gap-10 align-center space-between mb-20">
+          <div class="recommendations-heading h6">
+            {{ block_heading }}
+          </div>
+          {% if show_navigation %}
+            {%- render 'swiper-navigation',
+              navigation_custom: true,
+              type: 'custom_nav',
+              class-custom: 'flex align-center gap-5'
+            -%}
+          {% endif %}
+        </div>
       {% endif %}
       <slide-section
-        class="swiper{% if block_heading == blank %} mt-30{% endif %}"
+        class="swiper"
         data-section-id="{{ section.id }}"
         data-effect="slide"
         data-speed="500"
@@ -28,6 +40,7 @@
         data-mobile="1"
         data-tablet="1"
         data-spacing="10"
+        style="{{ style | strip | strip_newlines }}"
       >
         <div class="swiper-wrapper" style="--width: 8rem;">
           {%- for product in recommendations.products limit: product_list_limit %}
@@ -50,12 +63,14 @@
             %}
           {%- endfor -%}
         </div>
-        {% if show_navigation %}
-          {%- render 'swiper-navigation',
-            navigation_custom: true,
-            type: 'custom_nav',
-            class-custom: 'flex align-center gap-5'
-          -%}
+        {% if block_heading == blank -%}
+          {% if show_navigation %}
+            {%- render 'swiper-navigation',
+              navigation_custom: true,
+              type: 'custom_nav',
+              class-custom: 'flex content-center gap-5 mt-custom'
+            -%}
+          {% endif %}
         {% endif %}
       </slide-section>
     {% endif %}
@@ -64,6 +79,7 @@
 {% schema %}
 {
   "name": "t:sections.all.product_setting.complementary_products.name",
+  "class": "mb-custom",
   "settings": [
     {
       "type": "paragraph",

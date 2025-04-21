@@ -21,151 +21,172 @@
   {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
+  {% style %}
+    @media (min-width: 768px) {
+      .bought-together-list .product-item {
+        flex: 0 0 auto;
+        width: calc((100% - 108px) / 3);
+      }
+    }
+    .bought-together-list .icon-plus:first-child {
+      display: none;
+    }
+  {% endstyle %}
   <div
     class="section color-{{ section_st.color_scheme }} section__bought-together-products gradient"
     style="{{ style | strip | strip_newlines }}"
   >
     <div class="{{ section_width }}">
       <div
-        class="bought-together-products__wrapper"
+        class="bought-together-products__wrapper flex gap wrap"
+        style="--col-width: clamp(27rem, 17vw, 42rem);--gap-desktop: 5rem;--gap: 2rem;"
         data-price="{{ product.selected_or_first_available_variant.price }}"
       >
-        <div class="box-total">
-          {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
-            <div
-              class="section-header text-{{ text_alignment }}"
-            >
-              {%- if section_st.subheading != blank -%}
-                <div class="section-subheading">
-                  {{ section_st.subheading }}
-                </div>
-              {%- endif -%}
-              {%- if section_st.heading != blank -%}
-                <h2 class="section-heading {{ header_size }}">
-                  {{ section_st.heading }}
-                </h2>
-              {%- endif -%}
-              {%- if section_st.description != blank -%}
-                <div class="section-description">
-                  {{ section_st.description }}
-                </div>
-              {%- endif -%}
-            </div>
-          {%- endif -%}
-          <div class="w-full sf-prod__block info-bought-together">
-            <product-form class="bought-together-products-form">
-              <form
-                method="post"
-                action="/cart/add"
-                accept-charset="UTF-8"
-                enctype="multipart/form-data"
-                novalidate="novalidate"
-                data-type="add-to-cart-form"
+        <div class="box-total col-1025-w-custom w-full">
+          <div class="sticky top-30 rounded border p-30 text-{{ text_alignment }}">
+            {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
+              <div
+                class="section-header"
               >
-                <input type="hidden" name="form_type" value="product">
-                <input type="hidden" name="utf8" value="✓">
-                <div class="bought-together-products-list">
-                  <div class="variant-select current-product">
-                    <input
-                      type="hidden"
-                      name="items[][id]"
-                      value="{{ product.selected_or_first_available_variant.id }}"
-                    >
-                    <input type="hidden" name="items[][quantity]" class="quantity" value="1">
+                {%- if section_st.subheading != blank -%}
+                  <div class="section-subheading">
+                    {{ section_st.subheading }}
                   </div>
-                  {%- for items in product.metafields.custom.frequently_bought_together.value -%}
-                    {%- liquid
-                      assign product_available = items.variants | where: 'available'
-                      assign loop_index = forloop.index
-                    -%}
-                    {% if items != blank and items.id != product.id %}
-                      <div class="variant-select" product-id="{{ items.id }}">
-                        {%- if items.variants.size > 1 -%}
-                          {% for variant in product_available %}
-                            {%- liquid
-                              assign selected = false
-                              assign quantity = variant.inventory_quantity
+                {%- endif -%}
+                {%- if section_st.heading != blank -%}
+                  <h2 class="section-heading {{ header_size }}">
+                    {{ section_st.heading }}
+                  </h2>
+                {%- endif -%}
+                {%- if section_st.description != blank -%}
+                  <div class="section-description">
+                    {{ section_st.description }}
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+            <div class="w-full sf-prod__block info-bought-together">
+              <product-form class="bought-together-products-form">
+                <form
+                  method="post"
+                  action="/cart/add"
+                  accept-charset="UTF-8"
+                  enctype="multipart/form-data"
+                  novalidate="novalidate"
+                  data-type="add-to-cart-form"
+                >
+                  <input type="hidden" name="form_type" value="product">
+                  <input type="hidden" name="utf8" value="✓">
+                  <div class="bought-together-products-list">
+                    <div class="variant-select current-product">
+                      <input
+                        type="hidden"
+                        name="items[][id]"
+                        value="{{ product.selected_or_first_available_variant.id }}"
+                      >
+                      <input type="hidden" name="items[][quantity]" class="quantity" value="1">
+                    </div>
+                    {%- for items in product.metafields.custom.frequently_bought_together.value -%}
+                      {%- liquid
+                        assign product_available = items.variants | where: 'available'
+                        assign loop_index = forloop.index
+                      -%}
+                      {% if items != blank and items.id != product.id %}
+                        <div class="variant-select" product-id="{{ items.id }}">
+                          {%- if items.variants.size > 1 -%}
+                            {% for variant in product_available %}
+                              {%- liquid
+                                assign selected = false
+                                assign quantity = variant.inventory_quantity
+                              -%}
+                              {% if quantity < 1 and variant.available == false %}
+                                {% continue %}
+                              {% else %}
+                                {% assign selected = true %}
+                                {% assign show_button_add_all = true %}
+                              {% endif %}
+                              <input
+                                type="hidden"
+                                name="items[][id]"
+                                data-index="{{ loop_index }}"
+                                value="{{ variant.id }}"
+                              >
+                              <input type="hidden" name="items[][quantity]" class="quantity" value="1">
+                              {% if selected %}
+                                {% break %}
+                              {% endif %}
+                            {% endfor %}
+                          {%- else -%}
+                            {%- if items.selected_or_first_available_variant.inventory_quantity > 0
+                              or items.selected_or_first_available_variant.available == true
                             -%}
-                            {% if quantity < 1 and variant.available == false %}
-                              {% continue %}
-                            {% else %}
-                              {% assign selected = true %}
                               {% assign show_button_add_all = true %}
+                              <input
+                                type="hidden"
+                                name="items[][id]"
+                                data-index="{{ loop_index }}"
+                                value="{{ product.selected_or_first_available_variant.id }}"
+                              >
+                              <input type="hidden" name="items[][quantity]" class="quantity" value="1">
                             {% endif %}
-                            <input
-                              type="hidden"
-                              name="items[][id]"
-                              data-index="{{ loop_index }}"
-                              value="{{ variant.id }}"
-                            >
-                            <input type="hidden" name="items[][quantity]" class="quantity" value="1">
-                            {% if selected %}
-                              {% break %}
-                            {% endif %}
-                          {% endfor %}
-                        {%- else -%}
-                          {%- if items.selected_or_first_available_variant.inventory_quantity > 0
-                            or items.selected_or_first_available_variant.available == true
-                          -%}
-                            {% assign show_button_add_all = true %}
-                            <input
-                              type="hidden"
-                              name="items[][id]"
-                              data-index="{{ loop_index }}"
-                              value="{{ product.selected_or_first_available_variant.id }}"
-                            >
-                            <input type="hidden" name="items[][quantity]" class="quantity" value="1">
                           {% endif %}
-                        {% endif %}
-                      </div>
+                        </div>
+                      {% endif %}
+                    {%- endfor -%}
+                  </div>
+                  {%- if show_button_add_all -%}
+                    <button
+                      type="submit"
+                      name="add"
+                      class="btn btn-primary w-full relative product_submit_button product-form__submit word-wrap relative"
+                      aria-label="{{ 'products.product.add_all_to_cart' | t }}"
+                    >
+                      <span class="btn-label hidden-on-load transition-short">
+                        {{- 'products.product.add_all_to_cart' | t -}}
+                      </span>
+                      {%- render 'loader' -%}
+                    </button>
+                  {% endif %}
+                </form>
+                <div class="total-price mt-20 heading-style">
+                  {%- liquid
+                    assign price = product.selected_or_first_available_variant.price
+                  -%}
+                  {%- for items in product.metafields.custom.frequently_bought_together.value -%}
+                    {% if items != blank and items.id != product.id %}
+                      {%- liquid
+                        assign product_available = items.variants | where: 'available'
+                        assign current_variant = items.selected_or_first_available_variant
+                        assign price = current_variant.price | plus: price
+                      -%}
                     {% endif %}
                   {%- endfor -%}
-                </div>
-                {%- if show_button_add_all -%}
-                  <button
-                    type="submit"
-                    name="add"
-                    class="btn btn-outline w-full relative product_submit_button product-form__submit word-wrap relative"
-                    aria-label="{{ 'products.product.add_all_to_cart' | t }}"
+                  <span>
+                    {{- 'products.product.total_price' | t -}}
+                    :</span
                   >
-                    <span class="btn-label hidden-on-load transition-short">
-                      {{- 'products.product.add_all_to_cart' | t -}}
-                    </span>
-                    {%- render 'loader' -%}
-                  </button>
-                {% endif %}
-              </form>
-              <div class="total-price">
-                {%- liquid
-                  assign price = product.selected_or_first_available_variant.price
-                -%}
-                {%- for items in product.metafields.custom.frequently_bought_together.value -%}
-                  {% if items != blank and items.id != product.id %}
-                    {%- liquid
-                      assign product_available = items.variants | where: 'available'
-                      assign current_variant = items.selected_or_first_available_variant
-                      assign price = current_variant.price | plus: price
-                    -%}
-                  {% endif %}
-                {%- endfor -%}
-                <span>
-                  {{- 'products.product.add_all_to_cart' | t -}}
-                  :</span
-                >
-                <span class="price">
-                  {%- if settings.currency_code_enabled %}
-                    {{ price | money_with_currency }}
-                  {% else %}
-                    {{ price | money }}
-                  {% endif -%}
-                </span>
-              </div>
-            </product-form>
+                  <span class="price">
+                    {%- if settings.currency_code_enabled %}
+                      {{ price | money_with_currency }}
+                    {% else %}
+                      {{ price | money }}
+                    {% endif -%}
+                  </span>
+                </div>
+              </product-form>
+            </div>
           </div>
         </div>
-        <div class="bought-together-list">
+        <div class="bought-together-list flex wrap gap-20 col-1025-remaining w-full">
           {%- for items in product.metafields.custom.frequently_bought_together.value -%}
             {% if items != blank and items.id != product.id %}
+              {%- unless forloop.first -%}
+                <div class="icon-plus flex align-center">
+                  <svg width="14" height="14" fill="none">
+                    <path fill="#111" d="M1.16 8.001a.838.838 0 0 1-.586-.234.862.862 0 0 1-.234-.606c0-.221.078-.41.234-.566a.805.805 0 0 1 .586-.254h5v-5c0-.235.078-.43.235-.586A.827.827 0 0 1 7 .5c.234 0 .43.085.586.254.17.156.254.351.254.586v5h5c.221 0 .41.084.566.254.17.156.254.345.254.566a.827.827 0 0 1-.254.606.772.772 0 0 1-.566.234h-5v5a.826.826 0 0 1-.254.605.795.795 0 0 1-.586.235.862.862 0 0 1-.605-.235.862.862 0 0 1-.235-.605v-5h-5Z"/>
+                  </svg>
+                </div>
+              {%- endunless -%}
               {%- render 'card-product',
                 card_product: items,
                 section_id: section.id,

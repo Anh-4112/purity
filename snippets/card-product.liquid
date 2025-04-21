@@ -267,16 +267,19 @@
             {%- endif -%}
           {%- endif -%}
           {%- if variant_swatch and type == 'bought_together' -%}
-            <card-bought-together class="bought-together">
+            <card-bought-together class="bought-together absolute inset-0">
               <input
                 id="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
                 name="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
                 type="checkbox"
                 data-price="{{ card_product.price }}"
                 value="{{ card_product.id }}"
-                class="bought-together-checkbox"
+                class="bought-together-checkbox opacity-0 absolute inset-0 m-0 w-full h-full z-1 pointer"
                 checked
               >
+              <span
+                class="checkmark relative rounded-50 pointer-none inline-flex absolute right-15 bottom-15"
+              ></span>
               <label
                 for="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
               >
@@ -409,7 +412,7 @@
               <button
                 type="button"
                 is="button-quick-view"
-                class="pointer btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                class="pointer relative btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
                 style="--width: 4.4rem; --height: 4.4rem;"
                 data-url="{{ shop.url }}/products/{{ card_product.handle }}"
                 aria-label="{{ 'products.product.quickview' | t }}"
@@ -444,7 +447,7 @@
                     id="{{ product_form_id }}-submit"
                     type="submit"
                     name="add"
-                    class="pointer btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                    class="pointer relative btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
                     style="--width: 4.4rem; --height: 4.4rem;"
                     aria-haspopup="dialog"
                     aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
