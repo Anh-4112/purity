@@ -1,0 +1,167 @@
+{%- liquid
+  assign block_st = block.settings
+  assign items_per_row = block_st.items_per_row
+  assign show_pagination = block_st.show_pagination
+  assign show_navigation = block_st.show_navigation
+  assign items_per_row_mobile = section_st.items_per_row_mobile
+
+  assign items_per_row_tablet = items_per_row
+  if items_per_row > 3
+    assign items_per_row_tablet = items_per_row | minus: 1
+  endif
+
+  assign column_gap_slide = 0
+  if block_st.column_gap == 'large'
+    assign column_gap_slide = 30
+  elsif block_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif block_st.column_gap == 'small'
+    assign column_gap_slide = 10
+  endif
+-%}
+{%- style -%}
+  #shopify-block-{{ block.id }} {
+    --col-width: {{ block_st.width }};
+  }
+{%- endstyle -%}
+<slide-section
+  class="swiper"
+  data-section-id="{{ block.id }}"
+  data-autoplay="false"
+  data-effect="slide"
+  data-loop="false"
+  data-speed="500"
+  data-spacing="{{ column_gap_slide }}"
+  data-mobile="{{ items_per_row_mobile }}"
+  data-desktop="{{ items_per_row }}"
+  data-tablet="{{ items_per_row_tablet }}"
+>
+  {% if show_navigation %}
+    {%- render 'swiper-navigation' -%}
+  {% endif %}
+  <div class="swiper-wrapper">
+    {% content_for 'blocks' %}
+  </div>
+  {%- if show_pagination -%}
+    <div
+      class="swiper-pagination"
+    ></div>
+  {% endif %}
+</slide-section>
+
+{%- style -%}
+  #shopify-block-{{ block.id }} {
+    --col-width: {{ block_st.width }};
+  }
+{%- endstyle -%}
+{% schema %}
+{
+  "name": "t:sections.shopable-image.blocks.lookbook.name",
+  "class": "w-full col-md-w-custom col-md-w-custom-50",
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "_products"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:sections.all.width.label",
+      "default": "50%",
+      "options": [
+        {
+          "value": "50%",
+          "label": "t:sections.footer.settings.width.options__5"
+        },
+        {
+          "value": "66.666%",
+          "label": "t:sections.footer.settings.width.options__6"
+        },
+        {
+          "value": "75%",
+          "label": "t:sections.footer.settings.width.options__7"
+        },
+        {
+          "value": "86%",
+          "label": "t:sections.footer.settings.width.options__8"
+        },
+        {
+          "value": "100%",
+          "label": "t:sections.footer.settings.width.options__9"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.carousel.header"
+    },
+    {
+      "type": "range",
+      "id": "items_per_row",
+      "label": "t:sections.all.columns_desktop.label",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "column_gap",
+      "options": [
+        {
+          "value": "no_gap",
+          "label": "t:sections.all.padding.column_gap.no_gap"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.all.padding.column_gap.small"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.all.padding.column_gap.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.all.padding.column_gap.large"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.all.padding.column_gap.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "default": false,
+      "label": "t:sections.all.carousel.show_navigation.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "default": false,
+      "label": "t:sections.all.carousel.show_pagination.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.mobile_options.label"
+    },
+    {
+      "type": "range",
+      "id": "items_per_row_mobile",
+      "label": "t:sections.all.items.items_per_row_mobile",
+      "min": 1,
+      "max": 2,
+      "step": 0.5,
+      "default": 1.5
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.shopable-image.blocks.lookbook.name"
+    }
+  ]
+}
+{% endschema %}
