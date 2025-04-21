@@ -12,7 +12,6 @@
     assign text_alignment = section_st.text_alignment
     assign desktop_content_position = section_st.desktop_content_position
     assign content_alignment = section_st.content_alignment
-    assign content_alignment_mobile = section_st.content_alignment_mobile
     assign header_size = ''
     if heading_size == 'small'
       assign header_size = 'h3'
@@ -33,7 +32,7 @@
     }
     .h-gallery-small {
       --item-height-mb: 100px;
-      --item-height-mb-active: 100px;
+      --item-height-mb-active: 350px;
       --item-height: 400px;
     }
     .h-gallery-medium {
@@ -54,8 +53,8 @@
       overflow: hidden;
       -webkit-transform: translateY(20px);
       transform: translateY(20px);
-      -webkit-transition: all 400ms ease;
-      transition: all 400ms ease;
+      transition: 0.4s;
+      -webkit-transition: 0.4s;
     }
     .info-gallery__card.active .sec__content-inner {
       opacity: 1;
@@ -130,9 +129,9 @@
               </div>
               {%- if info_gallery.subheading or info_gallery.heading or info_gallery.description -%}
                 <div class="info-gallery__info absolute inset-0 flex">
-                  <div class="sec__content w-full flex {{ desktop_content_position }} text-{{ content_alignment_mobile }} text-md-{{ content_alignment }} p-30 p-1025-40 relative z-2">
+                  <div class="sec__content w-full flex {{ desktop_content_position }} text-md-{{ content_alignment }} p-30 p-1025-40 relative z-2">
                     {% assign animate_delay = 25 %}
-                    <div class="sec__content-inner prose max-w-100">
+                    <div class="prose max-w-100">
                       {%- if info_gallery.subheading -%}
                         <div class="sec__content-inner sec__content-subheading">
                           {% assign animate_delay = animate_delay | plus: 5 %}
@@ -361,30 +360,6 @@
     {
       "type": "select",
       "id": "content_alignment",
-      "options": [
-        {
-          "value": "start",
-          "label": "t:sections.all.text_alignment.options__1.label"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.all.text_alignment.options__2.label"
-        },
-        {
-          "value": "end",
-          "label": "t:sections.all.text_alignment.options__3.label"
-        }
-      ],
-      "default": "start",
-      "label": "t:sections.all.text_alignment.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.all.mobile_options.mobile_layout.label"
-    },
-    {
-      "type": "select",
-      "id": "content_alignment_mobile",
       "options": [
         {
           "value": "start",

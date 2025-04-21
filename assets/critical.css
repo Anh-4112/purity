@@ -286,6 +286,41 @@ mark {
   color: var(--color-heading);
   background-color: transparent;
 }
+/* Style the checkmark/indicator */
+.checkmark:before {
+  content: "";
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background-color: rgb(var(--color-white));
+  position: relative;
+  top: 2px;
+  transition: var(--bls-transition);
+}
+.checkmark:after {
+  content: "";
+  position: absolute;
+  opacity: 0;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 10px;
+  border: solid rgb(var(--color-white));
+  border-width: 0 1px 1px 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition: var(--transition);
+}
+/* Show the checkmark when checked */
+input[type="checkbox"]:checked + .checkmark:after {
+  opacity: 1;
+}
+
+input[type="checkbox"]:checked + .checkmark:before {
+  background-color: var(--color-dark);
+  border-color: var(--color-dark);
+}
 .ratio-dot:after {
   content: "";
   position: absolute;
@@ -1491,6 +1526,9 @@ variants-dropdown .variant-input label.disable:after {
   }
   .border-bottom-md-0 {
     border-bottom: 0;
+  }
+  .me-md-20 {
+    margin-inline-end: 2rem;
   }
   .ms-md-30 {
     margin-inline-start: 3rem;

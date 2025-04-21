@@ -267,16 +267,19 @@
             {%- endif -%}
           {%- endif -%}
           {%- if variant_swatch and type == 'bought_together' -%}
-            <card-bought-together class="bought-together">
+            <card-bought-together class="bought-together absolute inset-0">
               <input
                 id="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
                 name="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
                 type="checkbox"
                 data-price="{{ card_product.price }}"
                 value="{{ card_product.id }}"
-                class="bought-together-checkbox"
+                class="bought-together-checkbox opacity-0 absolute inset-0 m-0 w-full h-full z-1 pointer"
                 checked
               >
+              <span
+                class="checkmark relative rounded-50 pointer-none inline-flex absolute right-15 bottom-15"
+              ></span>
               <label
                 for="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
               >
