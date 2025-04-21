@@ -131,7 +131,7 @@ summary::-webkit-details-marker {
   ) {
   color: inherit;
 }
-:is(.rte, announcement-bar, .tax-note) a {
+:is(.rte, announcement-bar, .tax-note, .product__tax) a {
   text-decoration: underline;
   text-underline-offset: 2px;
   font-weight: var(--heading-weight);
@@ -646,7 +646,8 @@ input[type="radio"]:checked + .text-swatch-label.pill {
   font-weight: var(--heading-weight, 600);
 }
 :where(.heading-color, .hover-heading-color:hover, [aria-current="true"]),
-a.hover-heading-color:hover {
+a.hover-heading-color:hover,
+.product__tax a {
   color: var(--color-heading);
 }
 :where(.text-color) {
@@ -814,6 +815,9 @@ a.hover-heading-color:hover {
 .swiper:not([class*="initialized"]) .swiper-wrapper {
   gap: var(--gap, 2rem);
 }
+.gap-custom {
+  gap: calc(var(--gap, 15) * 1px);
+}
 .gap-no_gap {
   --gap: 0;
 }
@@ -918,6 +922,9 @@ a.hover-heading-color:hover {
 .p-20 {
   padding: 2rem;
 }
+.p-30 {
+  padding: 3rem;
+}
 .p-custom {
   padding: var(--padding);
 }
@@ -1008,7 +1015,7 @@ a.hover-heading-color:hover {
   margin-bottom: 1rem;
 }
 .mt-custom {
-  margin-top: var(--space-top);
+  margin-top: calc(var(--space-bottom) * 1px);
 }
 .mb-15 {
   margin-bottom: 1.5rem;
@@ -1043,6 +1050,9 @@ a.hover-heading-color:hover {
 .my-25 {
   margin-top: 2.5rem;
   margin-bottom: 2.5rem;
+}
+.my-custom {
+  margin-block: calc(var(--space-bottom) * 1px);
 }
 .overflow-hidden {
   overflow: hidden;
@@ -1210,23 +1220,8 @@ body:not(.template-index) .transparent-logo {
 .swiper:not([class*="initialized"]) .swiper-wrapper .swiper-slide {
   flex: 0 0 auto;
 }
-.swiper:not([class*="initialized"])[data-mobile="6"] .swiper-slide {
-  width: calc((100% - (var(--gap) * 5)) / 6);
-}
-.swiper:not([class*="initialized"])[data-mobile="5"] .swiper-slide {
-  width: calc((100% - (var(--gap) * 4)) / 5);
-}
-.swiper:not([class*="initialized"])[data-mobile="4"] .swiper-slide {
-  width: calc((100% - (var(--gap) * 3)) / 4);
-}
-.swiper:not([class*="initialized"])[data-mobile="3"] .swiper-slide {
-  width: calc((100% - (var(--gap) * 2)) / 3);
-}
-.swiper:not([class*="initialized"])[data-mobile="2"] .swiper-slide {
-  width: calc((100% - (var(--gap) * 1)) / 2);
-}
-.swiper:not([class*="initialized"])[data-mobile="1.5"] .swiper-slide {
-  width: calc((100% - (var(--gap) * 1)) / 1.5);
+.swiper:not([class*="initialized"]) .swiper-slide {
+  width: calc((100% - (var(--gap) * (var(--item-mb) - 1))) / var(--item-mb));
 }
 .swiper:not([class*="initialized"])[data-mobile="1"] .swiper-slide {
   width: 100%;
@@ -1488,8 +1483,8 @@ variants-dropdown .variant-input label.disable:after {
     width: var(--col-width, 50%);
   }
   .col-md-remaining {
-    flex: 0 0 calc(100% - var(--col-width) - var(--gap, 2rem));
-    width: calc(100% - var(--col-width) - var(--gap, 2rem));
+    flex: 0 0 calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
+    width: calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
   }
   .mb-md-5 {
     margin-bottom: 0.5rem;
@@ -1554,20 +1549,10 @@ variants-dropdown .variant-input label.disable:after {
   .column-md {
     flex-direction: column;
   }
-  .swiper:not([class*="initialized"])[data-tablet="6"] .swiper-slide {
-    width: calc((100% - (var(--gap) * 5)) / 6);
-  }
-  .swiper:not([class*="initialized"])[data-tablet="5"] .swiper-slide {
-    width: calc((100% - (var(--gap) * 4)) / 5);
-  }
-  .swiper:not([class*="initialized"])[data-tablet="4"] .swiper-slide {
-    width: calc((100% - (var(--gap) * 3)) / 4);
-  }
-  .swiper:not([class*="initialized"])[data-tablet="3"] .swiper-slide {
-    width: calc((100% - (var(--gap) * 2)) / 3);
-  }
-  .swiper:not([class*="initialized"])[data-tablet="2"] .swiper-slide {
-    width: calc((100% - (var(--gap) * 1)) / 2);
+  .swiper:not([class*="initialized"]) .swiper-slide {
+    width: calc(
+      (100% - (var(--gap) * (var(--item-tablet) - 1))) / var(--item-tablet)
+    );
   }
   .swiper:not([class*="initialized"])[data-tablet="1"] .swiper-slide {
     width: 100%;
@@ -1601,26 +1586,10 @@ variants-dropdown .variant-input label.disable:after {
   }
 }
 @media (min-width: 1025px) {
-  .swiper:not([class*="initialized"])[data-desktop="8"] .swiper-slide {
-    width: calc((100% - (var(--gap-desktop, var(--gap)) * 7)) / 8);
-  }
-  .swiper:not([class*="initialized"])[data-desktop="7"] .swiper-slide {
-    width: calc((100% - (var(--gap-desktop, var(--gap)) * 6)) / 7);
-  }
-  .swiper:not([class*="initialized"])[data-desktop="6"] .swiper-slide {
-    width: calc((100% - (var(--gap-desktop, var(--gap)) * 5)) / 6);
-  }
-  .swiper:not([class*="initialized"])[data-desktop="5"] .swiper-slide {
-    width: calc((100% - (var(--gap-desktop, var(--gap)) * 4)) / 5);
-  }
-  .swiper:not([class*="initialized"])[data-desktop="4"] .swiper-slide {
-    width: calc((100% - (var(--gap-desktop, var(--gap)) * 3)) / 4);
-  }
-  .swiper:not([class*="initialized"])[data-desktop="3"] .swiper-slide {
-    width: calc((100% - (var(--gap-desktop, var(--gap)) * 2)) / 3);
-  }
-  .swiper:not([class*="initialized"])[data-desktop="2"] .swiper-slide {
-    width: calc((100% - (var(--gap-desktop, var(--gap)) * 1)) / 2);
+  .swiper:not([class*="initialized"]) .swiper-slide {
+    width: calc(
+      (100% - (var(--gap) * (var(--item-desktop) - 1))) / var(--item-desktop)
+    );
   }
   .swiper:not([class*="initialized"])[data-desktop="1"] .swiper-slide {
     width: 100%;
@@ -1653,6 +1622,9 @@ variants-dropdown .variant-input label.disable:after {
   }
   .swiper:not([class*="initialized"]) .swiper-wrapper {
     gap: var(--gap-desktop, var(--gap));
+  }
+  .p-1025-40 {
+    padding: 4rem;
   }
   .py-1025-20 {
     padding-block: 2rem;

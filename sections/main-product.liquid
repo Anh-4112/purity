@@ -46,7 +46,10 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div class="main-product flex wrap gap{% if media_position == 'right' %} row-reverse-md{% endif %}">
+    <div
+      class="main-product flex wrap gap{% if media_position == 'right' %} row-reverse-md{% endif %}"
+      style="--gap: var(--bs-gutter-x); --gap-desktop: 8rem;"
+    >
       {% if product.media.size > 0 %}
         <div class="product-detail__media w-full col-md-w-custom">
           {% render 'media-gallery',

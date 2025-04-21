@@ -17,7 +17,7 @@
       assign rating_integer = product.metafields.reviews.rating.value.rating | floor
     %}
 
-    <div class="product-rating{% if scope != 'item' %} flex align-center lh-normal wrap gap-5{% endif %}">
+    <div class="product-rating{% if scope != 'item' %} flex align-center lh-normal wrap gap-5 mb-custom{% endif %}">
       {% if scope != 'item' %}
         <div
           class="rating relative me-3"
@@ -27,7 +27,7 @@
           <span
             aria-hidden="true"
             class="star-rating inline-flex align-center gap"
-            style="--gap: 1px;--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"
+            style="--gap: 1px; --gap-desktop: 1px;--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"
           >
             {%- for i in (1..5) -%}
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -35,7 +35,7 @@
               </svg>
             {%- endfor -%}
           </span>
-          <div class="absolute inset-0 z-1 inline-flex align-center gap" style="--gap: 1px">
+          <div class="absolute inset-0 z-1 inline-flex align-center gap" style="--gap: 1px; --gap-desktop: 1px;">
             {%- for i in (1..rating_integer) -%}
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="rate-color">
                 <use href="#icon-rate"></use>
