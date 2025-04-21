@@ -2317,3 +2317,49 @@ class SocialShare extends HTMLElement {
   }
 }
 customElements.define("social-share", SocialShare);
+
+class SpinningTextElement extends HTMLElement {
+  connectedCallback() {
+    this.render();
+    this.observe();
+  }
+
+  render() {
+    const text = this.dataset.text || '';
+    const speed = this.dataset.speed || 8;
+    const direction = this.dataset.direction || 'normal';
+    const circle = this.querySelector('.spinning-text__circle');
+    const content = this.querySelector('.spinning-text__content');
+
+    if (!circle || !content) return;
+
+    const size = parseFloat(this.dataset.width || 130); // fallback nếu thiếu
+    const radius = size / 2;
+
+    circle.style.animation = `spinning-text__rotate ${speed}s linear infinite`;
+    circle.style.animationDirection = direction;
+    content.innerHTML = '';
+
+    text.split('').forEach((char, i, arr) => {
+      const span = document.createElement('span');
+      span.textContent = char;
+      span.style.left = '50%';
+      span.style.transformOrigin = `0 ${radius}px`;
+      span.style.transform = `rotate(${(i * 360) / arr.length}deg)`;
+      content.appendChild(span);
+    });
+  }
+
+  observe() {
+    const observer = new MutationObserver(() => this.render());
+    observer.observe(this, { attributes: true });
+  }
+}
+
+customElements.define('spinning-text', SpinningTextElement);
+
+window.SpinningTextComponent = {
+  load: () => {
+    document.querySelectorAll('spinning-text').forEach(el => el.load?.());
+  },
+};

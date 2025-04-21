@@ -1,0 +1,126 @@
+{%- liquid
+  assign section_st = section.settings
+  assign block_st = block.settings
+  assign content_alignment = section_st.text_alignment
+%}
+<div
+  class="mb-custom flex justify-content-{{ content_alignment }}"
+  style="--space-bottom: {{ block_st.spacing_bottom }};"
+>
+  <spinning-text
+    class="flex justify-center align-center relative w-custom h-custom"
+    data-width="{{ block_st.width }}"
+    data-text="{{ block_st.circle_text }}"
+    data-speed="{{ block_st.spin_speed }}"
+    data-direction="{{ block_st.spin_direction }}"
+    style="--width: {{ block_st.width }}px; --height: {{ block_st.width }}px;"
+  >
+    <svg
+      class="spinning-text__logo absolute"
+      width="42"
+      height="42"
+      viewBox="0 0 42 42"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M0.416016 21.0004C10.7077 21.0004 20.9993 10.7087 20.9993 0.416992C20.9993 10.7087 31.291 21.0004 41.5827 21.0004C31.291 21.0004 20.9993 31.2921 20.9993 41.5839C20.9993 31.2921 10.7077 21.0004 0.416016 21.0004Z" fill="black"/>
+    </svg>
+    <div class="spinning-text__circle absolute w-full h-full">
+      <p class="spinning-text__content absolute w-full h-full"></p>
+    </div>
+  </spinning-text>
+</div>
+<script>
+  window.SpinningTextComponent?.load?.();
+</script>
+<style>
+  spinning-text .spinning-text__circle {
+    font-size: 17px;
+    color: #000;
+    animation-name: spinning-text__rotate;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  .spinning-text__logo {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  @keyframes spinning-text__rotate {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  spinning-text .spinning-text__content span {
+    position: absolute;
+    left: 50%;
+    transform-origin: 0 calc(var({{block_st.width}}) / 2); /* quan trọng */
+    font-size: 1em;
+  }
+</style>
+{% schema %}
+{
+  "name": "t:sections.rich-text.settings.rotating_text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "circle_text",
+      "label": "t:sections.all.text.label",
+      "default": "Some text - Animated circle text -"
+    },
+    {
+      "type": "select",
+      "id": "spin_direction",
+      "label": "t:sections.scrolling_text.settings.direction.label",
+      "default": "normal",
+      "options": [
+        {
+          "value": "reverse",
+          "label": "t:sections.scrolling_text.settings.direction.left.label"
+        },
+        {
+          "value": "normal",
+          "label": "t:sections.scrolling_text.settings.direction.right.label"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "spin_speed",
+      "label": "t:sections.scrolling_text.settings.speed.label",
+      "default": 15,
+      "min": 5,
+      "max": 50,
+      "step": 1,
+      "unit": "s"
+    },
+    {
+      "type": "range",
+      "id": "width",
+      "min": 50,
+      "max": 200,
+      "step": 5,
+      "label": "t:sections.all.width.label",
+      "default": 130,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.spacing_bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.rich-text.settings.rotating_text"
+    }
+  ]
+}
+{% endschema %}
