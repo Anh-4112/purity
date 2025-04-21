@@ -49,7 +49,7 @@ class ButtonQuickView extends HTMLButtonElement {
         document.querySelector(".quickview-product").innerHTML =
           html.querySelector(".quickview-product").innerHTML;
       })
-      .finally(() => {
+      .finally(async () => {
         this.classList.remove("loading");
         this.removeAttribute("aria-disabled");
         NextSkyTheme.eventModal(
@@ -59,6 +59,8 @@ class ButtonQuickView extends HTMLButtonElement {
           "delay"
         );
         new LazyLoader(".image-lazy-load");
+        await (import(importJs.mediaLightboxGallery),
+        import(importJs.countdownTimer));
       })
       .catch((e) => {
         console.error(e);
