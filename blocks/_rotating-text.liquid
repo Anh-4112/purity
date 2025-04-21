@@ -1,3 +1,5 @@
+<script type="module" src="{{ 'circular-text.js' | asset_url }}"></script>
+{{ 'circular-text.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   assign block_st = block.settings
@@ -8,58 +10,20 @@
   style="--space-bottom: {{ block_st.spacing_bottom }};"
 >
   <spinning-text
-    class="flex justify-center align-center relative w-custom h-custom"
-    data-width="{{ block_st.width }}"
-    data-text="{{ block_st.circle_text }}"
+    class="flex justify-center align-center relative"
+    data-text="{{ block_st.circle_text | escape }}"
     data-speed="{{ block_st.spin_speed }}"
     data-direction="{{ block_st.spin_direction }}"
-    style="--width: {{ block_st.width }}px; --height: {{ block_st.width }}px;"
   >
-    <svg
-      class="spinning-text__logo absolute"
-      width="42"
-      height="42"
-      viewBox="0 0 42 42"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M0.416016 21.0004C10.7077 21.0004 20.9993 10.7087 20.9993 0.416992C20.9993 10.7087 31.291 21.0004 41.5827 21.0004C31.291 21.0004 20.9993 31.2921 20.9993 41.5839C20.9993 31.2921 10.7077 21.0004 0.416016 21.0004Z" fill="black"/>
-    </svg>
+    {% render 'icon_svg_list', icon: block_st.icon_svg, custom_width: 40, custom_height: 40 %}
     <div class="spinning-text__circle absolute w-full h-full">
-      <p class="spinning-text__content absolute w-full h-full"></p>
+      <p class="spinning-text__content absolute w-full h-full{% if block_st.uppercase %} uppercase{% endif %}"></p>
     </div>
   </spinning-text>
 </div>
 <script>
   window.SpinningTextComponent?.load?.();
 </script>
-<style>
-  spinning-text .spinning-text__circle {
-    font-size: 17px;
-    color: #000;
-    animation-name: spinning-text__rotate;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-  }
-  .spinning-text__logo {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  @keyframes spinning-text__rotate {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  spinning-text .spinning-text__content span {
-    position: absolute;
-    left: 50%;
-    transform-origin: 0 calc(var({{block_st.width}}) / 2); /* quan trọng */
-    font-size: 1em;
-  }
-</style>
 {% schema %}
 {
   "name": "t:sections.rich-text.settings.rotating_text",
@@ -68,7 +32,50 @@
       "type": "text",
       "id": "circle_text",
       "label": "t:sections.all.text.label",
-      "default": "Some text - Animated circle text -"
+      "default": "Circular text"
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "default": false,
+      "label": "t:settings_schema.typography.settings.heading.text_transform.uppercase"
+    },
+    {
+      "type": "select",
+      "id": "icon_svg",
+      "label": "t:sections.all.svg.label",
+      "info": "t:sections.all.svg.custom_svg.info",
+      "default": "circular-text",
+      "options": [
+        {
+          "value": "leaf",
+          "label": "t:sections.all.icon.leaf.label"
+        },
+        {
+          "value": "cruelty",
+          "label": "t:sections.all.icon.cruelty.label"
+        },
+        {
+          "value": "paraben",
+          "label": "t:sections.all.icon.paraben.label"
+        },
+        {
+          "value": "check_badge",
+          "label": "t:sections.all.icon.check_badge.label"
+        },
+        {
+          "value": "free_shipping",
+          "label": "t:sections.all.icon.free_shipping.label"
+        },
+        {
+          "value": "message_communications",
+          "label": "t:sections.all.icon.message_communications.label"
+        },
+        {
+          "value": "circular-text",
+          "label": "t:sections.all.icon.circular-text.label"
+        }
+      ]
     },
     {
       "type": "select",
@@ -95,16 +102,6 @@
       "max": 50,
       "step": 1,
       "unit": "s"
-    },
-    {
-      "type": "range",
-      "id": "width",
-      "min": 50,
-      "max": 200,
-      "step": 5,
-      "label": "t:sections.all.width.label",
-      "default": 130,
-      "unit": "px"
     },
     {
       "type": "range",

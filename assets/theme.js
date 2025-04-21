@@ -2318,48 +2318,32 @@ class SocialShare extends HTMLElement {
 }
 customElements.define("social-share", SocialShare);
 
-class SpinningTextElement extends HTMLElement {
+class SelectContact extends HTMLElement {
+  constructor() {
+    super();
+  }
+
   connectedCallback() {
-    this.render();
-    this.observe();
-  }
-
-  render() {
-    const text = this.dataset.text || '';
-    const speed = this.dataset.speed || 8;
-    const direction = this.dataset.direction || 'normal';
-    const circle = this.querySelector('.spinning-text__circle');
-    const content = this.querySelector('.spinning-text__content');
-
-    if (!circle || !content) return;
-
-    const size = parseFloat(this.dataset.width || 130); // fallback nếu thiếu
-    const radius = size / 2;
-
-    circle.style.animation = `spinning-text__rotate ${speed}s linear infinite`;
-    circle.style.animationDirection = direction;
-    content.innerHTML = '';
-
-    text.split('').forEach((char, i, arr) => {
-      const span = document.createElement('span');
-      span.textContent = char;
-      span.style.left = '50%';
-      span.style.transformOrigin = `0 ${radius}px`;
-      span.style.transform = `rotate(${(i * 360) / arr.length}deg)`;
-      content.appendChild(span);
-    });
-  }
-
-  observe() {
-    const observer = new MutationObserver(() => this.render());
-    observer.observe(this, { attributes: true });
+    // Lấy giá trị 'text' từ attribute của component
+    const text = this.getAttribute('text');
+    
+    // Nếu có giá trị 'text', chia nó thành các phần tử và thêm vào thẻ select
+    if (text) {
+      const options = text.split(',').map(item => item.trim());
+      
+      // Lấy thẻ select có id tương ứng
+      const selectElement = document.querySelector('.contact-form-subject');  // id sẽ thay đổi theo Liquid
+      
+      // Thêm các <option> vào select
+      options.forEach(optionText => {
+        const option = document.createElement('option');
+        option.value = optionText.toLowerCase();
+        option.textContent = optionText.charAt(0).toUpperCase() + optionText.slice(1);  // Viết hoa chữ cái đầu
+        selectElement.appendChild(option);
+      });
+    }
   }
 }
 
-customElements.define('spinning-text', SpinningTextElement);
-
-window.SpinningTextComponent = {
-  load: () => {
-    document.querySelectorAll('spinning-text').forEach(el => el.load?.());
-  },
-};
+// Định nghĩa custom element 'select-contact'
+customElements.define('select-contact', SelectContact);

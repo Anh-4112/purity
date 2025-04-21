@@ -157,15 +157,12 @@
             <div class="field relative w-full flex wrap transition">
               <select
                 id="ContactFormSubject-{{ section.id }}"
-                class="field__input w-full"
+                class="field__input w-full contact-form-subject"
                 name="contact[subject]"
                 required
               >
                 <option value="" disabled selected>{{ 'templates.contact.subject.name' | t }}</option>
-                <option value="product">{{ 'templates.contact.subject.product' | t }}</option>
-                <option value="order">{{ 'templates.contact.subject.order' | t }}</option>
-                <option value="press">{{ 'templates.contact.subject.press' | t }}</option>
-                <option value="other">{{ 'templates.contact.subject.other' | t }}</option>
+                <select-contact text="{{ section_st.option_select }}"></select-contact>
               </select>
               <label for="ContactFormSubject-{{ section.id }}" class="visually-hidden">
                 {{ 'templates.contact.subject.name' | t }}
@@ -346,6 +343,12 @@
       "id": "button_label",
       "label": "t:sections.all.content_setting.button_label.label",
       "default": "Send message"
+    },
+    {
+      "type": "text",
+      "id": "option_select",
+      "label": "t:sections.contact-form.settings.option",
+      "default": "Product, Order, Press, Other"
     },
     {
       "type": "header",
