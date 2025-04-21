@@ -1,11 +1,28 @@
+{% if block.settings.tags != blank %}
+{% assign tags = block.settings.tags | split: ',' %}
+<div class="block-tags">
+    {% for tag in tags %}
+        <span class="tag">
+            {% if block.settings.show_verify_icon %}
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+                    <use href="#icon-tick"></use>
+                  </svg>
+            {% endif %}
+            {{ tag | escape }}
+        </span>
+    {% endfor %}
+</div>
+{% endif %}
 {% schema %}
 {
   "name": "t:sections.shopable-image.blocks.tags.name",
   "settings": [
     {
       "type": "textarea",
-      "id": "tag",
-      "label": "t:sections.shopable-image.blocks.tags.name"
+      "id": "tags",
+      "label": "t:sections.shopable-image.blocks.tags.name",
+      "info": "t:sections.shopable-image.blocks.tags.info",
+      "default": "Targeted, Glow-Boosting, Effective"
     },
     {
       "type": "checkbox",
