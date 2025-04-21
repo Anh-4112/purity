@@ -391,8 +391,8 @@ mark {
 .fs-13 {
   font-size: 1.3rem;
 }
-.primary-color {
-  color: var(--color-primary);
+.sale-color {
+  color: rgb(var(--sale-bg-rgb));
 }
 .bg-white {
   background-color: rgba(var(--color-white), var(--opacity, 1));
@@ -405,7 +405,7 @@ mark {
   background: var(--bg-color-custom);
 }
 .bg-sale {
-  background-color: var(--sale-bg);
+  background-color: rgba(var(--sale-bg-rgb), var(--opacity, 1));
   color: var(--sale-color);
 }
 .bg-secondary {
@@ -745,6 +745,10 @@ a.hover-heading-color:hover {
   border-radius: 3px;
   clip-path: inset(0 0 0 0 round 3px);
 }
+.rounded-style :where(.rounded-5) {
+  border-radius: 5px;
+  clip-path: inset(0 0 0 0 round 5px);
+}
 .rounded-style :where(.rounded-10) {
   border-radius: 10px;
   clip-path: inset(0 0 0 0 round 10px);
@@ -754,6 +758,9 @@ a.hover-heading-color:hover {
 }
 :where(.border) {
   border: var(--border-height, 1px) solid var(--color-border);
+}
+:where(.border-dashed) {
+  border: var(--border-height, 1px) dashed var(--color-border);
 }
 :where(.border-top) {
   border-top: 1px solid var(--color-border);
@@ -910,6 +917,9 @@ a.hover-heading-color:hover {
 }
 .p-20 {
   padding: 2rem;
+}
+.p-custom {
+  padding: var(--padding);
 }
 .pt-25 {
   padding-block-start: 2.5rem;
