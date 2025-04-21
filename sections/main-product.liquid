@@ -12,7 +12,6 @@
   else
     assign section_width = 'fluid_container'
   endif
-  assign first_3d_model = product.media | where: 'media_type', 'model' | first
   if product.selected_or_first_available_variant.featured_media
     assign seo_media = product.selected_or_first_available_variant.featured_media
   else
@@ -22,24 +21,6 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--col-width: {{ desktop_media_width }}%;
 {%- endcapture -%}
-{{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
-{%- if first_3d_model -%}
-  {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
-  <link
-    id="ModelViewerStyle"
-    rel="stylesheet"
-    href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
-    media="print"
-    onload="this.media='all'"
-  >
-  <link
-    id="ModelViewerOverride"
-    rel="stylesheet"
-    href="{{ 'component-model-viewer-ui.css' | asset_url }}"
-    media="print"
-    onload="this.media='all'"
-  >
-{% endif %}
 <section
   id="Product-{{ section.id }}"
   class="section sec__main-product media-width-{{ desktop_media_width }}"
@@ -92,12 +73,6 @@
       ]
     </script>
   {%- endunless -%}
-  {%- if first_3d_model -%}
-    <script type="application/json" id="ProductJSON-{{ product.id }}">
-      {{ product.media | where: 'media_type', 'model' | json }}
-    </script>
-    <script src="{{ 'product-model.js' | asset_url }}" defer></script>
-  {% endif %}
   <script type="application/ld+json">
     {
       "@context": "http://schema.org/",
@@ -147,8 +122,15 @@
     <sticky-add-cart class="sticky-add-cart fixed bottom-0 inset-x-0 bg-white z-5">
       <div class="{{ section_width }}">
         <div class="sticky-add-cart__inner flex gap-10">
+          {%- liquid
+            if product.selected_or_first_available_variant.featured_media
+              assign card_product = product.selected_or_first_available_variant
+            else
+              assign card_product = product
+            endif
+          -%}
           {% render 'card-product',
-            card_product: product.selected_or_first_available_variant,
+            card_product: card_product,
             section_id: section.id,
             disable_hover_image: true,
             disable_show_video: true,
