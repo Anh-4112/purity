@@ -6,33 +6,34 @@
       class="card article-card{{ featured-blog }}{% if is_featured_blog %} rounded{% endif %}"
     >
       {%- if show_image == true and article.image -%}
-        <div
-          class="banner__media{% if is_featured_blog == false %} rounded{% endif %} article_post-image{% if is_featured_blog %} w-custom{% endif %}"
+        {%- liquid
+          assign alt = article.title | escape
+          if article.image.alt != blank
+            assign alt = article.image.alt | escape
+          endif
+        -%}
+        <a
+          class="{% if is_featured_blog == false %} rounded{% endif %} article_post-image{% if is_featured_blog %} w-custom{% endif %}"
+          href="{{ article.url }}"
+          class="remove-underline"
+          aria-label="{{ article.title | escape }}"
           {% if media_aspect_ratio != 'adapt' %}
             style="--aspect-ratio:{{ media_aspect_ratio }}; {% if is_featured_blog %}--width: 70%;{% endif %}"
           {% else %}
             style="--aspect-ratio:{{ article.image.aspect_ratio }}; {% if is_featured_blog %}--width: 70%;{% endif %}"
           {% endif %}
         >
-          {%- liquid
-            assign alt = article.title | escape
-            if article.image.alt != blank
-              assign alt = article.image.alt | escape
-            endif
-          -%}
-          <a href="{{ article.url }}" class="remove-underline" aria-label="{{ article.title | escape }}">
-            {% render 'responsive-image',
-              type: 'blog',
-              class: 'blog__img w-full h-full object-fit-cover',
-              image: article.image,
-              image_alt: alt,
-              container: container,
-              column: column,
-              column_mobile: column_mobile,
-              padding: padding
-            %}
-          </a>
-        </div>
+          {% render 'responsive-image',
+            type: 'blog',
+            class: 'blog__img w-full h-full object-fit-cover',
+            image: article.image,
+            image_alt: alt,
+            container: container,
+            column: column,
+            column_mobile: column_mobile,
+            padding: padding
+          %}
+        </a>
       {%- endif -%}
       <div
         class="card__content{% if is_featured_blog %} bg-secondary flex-1{% endif %}"
@@ -90,7 +91,7 @@
             </p>
           {%- endif -%}
         {%- endif -%}
-        <<ul class="article-card__info fs-13 grey-color capitalize list-unstyled flex align-center gap-15">
+        <ul class="article-card__info fs-13 grey-color capitalize list-unstyled flex align-center gap-15">
           {%- if show_date -%}
             <li class="post-date">
               {{- article.published_at | date: '%d %b %Y' -}}
