@@ -93,7 +93,7 @@
     {% if section.blocks.size > 0 %}
       <shopable-video
         id="swiper-{{ section.id }}"
-        class="swiper swiper-shopable-video {% if center_slide %}swiper-slide-center{% endif %}"
+        class="hover-action swiper swiper-shopable-video {% if center_slide %}swiper-slide-center{% endif %}"
         data-section-id="{{ section.id }}"
         data-autoplay="{{ slide_auto_change }}"
         data-autoplay-speed="{{ change_slide_every | times: 1000 }}"
@@ -116,6 +116,7 @@
               assign product = block_st.product
               assign local_video = block_st.local_video
               assign poster_image = block_st.poster_image
+              assign block_st_first = section.blocks.first.settings
               assign video_ratio = '3/4'
               if section_st.video_ratio != 'adapt'
                 case section_st.video_ratio
@@ -127,10 +128,10 @@
                     assign video_ratio = '3/4'
                 endcase
               else
-                if poster_image != blank
-                  assign video_ratio = poster_image.aspect_ratio
-                elsif local_video != blank
-                  assign video_ratio = local_video.aspect_ratio
+                if block_st_first.poster_image != blank
+                  assign video_ratio = block_st_first.poster_image.aspect_ratio
+                elsif block_st_first.local_video != blank
+                  assign video_ratio = block_st_first.local_video.aspect_ratio
                 endif
               endif
 
@@ -205,11 +206,17 @@
                     </div>
                   {% endif %}
                   {% if autoplay_video == false or local_video != blank %}
+                    {% liquid
+                      assign active = ''
+                      if autoplay_video and forloop.index == 1 and center_slide == false
+                        assign active = 'active'
+                      endif
+                    %}
                     <div class="flex column align-center absolute z-1 bottom-15 right-15 gap-10">
-                      {% if autoplay_video == false and local_video != blank %}
+                      {% if local_video != blank %}
                         <button
                           aria-label="{{ 'accessibility.play_button.video' | t }}"
-                          class="play-button pointer border-0 inline-flex align-center justify-content-center"
+                          class="play-button pointer border-0 inline-flex align-center justify-content-center {{ active }}"
                         >
                           {% render 'icon-play' %}
                           {% render 'icon-pause' %}
@@ -406,6 +413,7 @@
                         assign card_product = block_st.product
                         assign local_video = block_st.local_video
                         assign poster_image = block_st.poster_image
+                        assign block_st_first = section.blocks.first.settings
                         assign video_ratio = '3/4'
                         if section_st.video_ratio != 'adapt'
                           case section_st.video_ratio
@@ -417,10 +425,10 @@
                               assign video_ratio = '3/4'
                           endcase
                         else
-                          if poster_image != blank
-                            assign video_ratio = poster_image.aspect_ratio
-                          elsif local_video != blank
-                            assign video_ratio = local_video.aspect_ratio
+                          if block_st_first.poster_image != blank
+                            assign video_ratio = block_st_first.poster_image.aspect_ratio
+                          elsif block_st_first.local_video != blank
+                            assign video_ratio = block_st_first.local_video.aspect_ratio
                           endif
                         endif
 
@@ -490,7 +498,7 @@
                         </div>
                       {% endif %}
                       <div
-                        class="popup-information__mobile hidden-1025 shadow rounded-10 overflow-hidden flex align-center space-between absolute bottom-20 right-20 left-20 pe-20"
+                        class="popup-information__mobile z-2 hidden-1025 shadow rounded-10 overflow-hidden flex align-center space-between absolute bottom-20 right-20 left-20 pe-20"
                         style="--width: 7.5rem;"
                       >
                         {% render 'card-product',
@@ -526,65 +534,69 @@
                         </button>
                       </div>
                       <div
-                        class="popup-information block-1025 hidden transition relative-1025 absolute inset-0 bg-white z-2"
+                        class="popup-information transition-drawer relative-1025 absolute inset-0 bg-white z-2"
                         style="--padding-inline-desktop: 3rem;--padding-block: 2.4rem;"
                       >
                         <div class="flex column absolute inset-0 w-full h-full">
                           <div class="grow-1 drawer-spacing overflow-x-hidden overflow-auto custom-scrollbar">
-                            <slide-section
-                              class="swiper mb-20"
-                              data-section-id="{{ block.id }}"
-                              data-autoplay="false"
-                              data-effect="slide"
-                              data-loop="false"
-                              data-speed="500"
-                              data-spacing="10"
-                              data-mobile="2"
-                              data-desktop="2"
-                              data-tablet="2"
-                              data-pagination="custom"
-                            >
-                              <div class="swiper-wrapper">
-                                {% for media in card_product.media %}
-                                  {%- liquid
-                                    assign ratio = '3/4'
-                                    if product_image_ratio != 'adapt'
-                                      case product_image_ratio
-                                        when 'square'
-                                          assign ratio = '1/1'
-                                        when 'landscape'
-                                          assign ratio = '4/3'
-                                        when 'portrait'
-                                          assign ratio = '3/4'
-                                      endcase
-                                    else
-                                      assign ratio = media.aspect_ratio
-                                    endif
-                                  -%}
-                                  <div class="swiper-slide">
-                                    <div
-                                      class="product__media rounded"
-                                      style="--aspect-ratio: {{ ratio }};"
-                                    >
-                                      {%- assign alt_features = media.alt | default: card_product.title | escape -%}
-                                      {% render 'responsive-image',
-                                        type: 'product',
-                                        image: media,
-                                        image_alt: alt_features
-                                      %}
+                            {% if card_product != blank %}
+                              <slide-section
+                                class="swiper mb-20"
+                                data-section-id="{{ block.id }}"
+                                data-autoplay="false"
+                                data-effect="slide"
+                                data-loop="false"
+                                data-speed="500"
+                                data-spacing="10"
+                                data-mobile="2"
+                                data-desktop="2"
+                                data-tablet="2"
+                                data-pagination="custom"
+                              >
+                                <div class="swiper-wrapper">
+                                  {% for media in card_product.media %}
+                                    {%- liquid
+                                      assign ratio = '3/4'
+                                      if product_image_ratio != 'adapt'
+                                        case product_image_ratio
+                                          when 'square'
+                                            assign ratio = '1/1'
+                                          when 'landscape'
+                                            assign ratio = '4/3'
+                                          when 'portrait'
+                                            assign ratio = '3/4'
+                                        endcase
+                                      else
+                                        assign ratio = media.aspect_ratio
+                                      endif
+                                    -%}
+                                    <div class="swiper-slide">
+                                      <div
+                                        class="product__media rounded"
+                                        style="--aspect-ratio: {{ ratio }};"
+                                      >
+                                        {%- assign alt_features = media.alt | default: card_product.title | escape -%}
+                                        {% render 'responsive-image',
+                                          type: 'product',
+                                          image: media,
+                                          image_alt: alt_features
+                                        %}
+                                      </div>
                                     </div>
-                                  </div>
-                                {% endfor %}
-                              </div>
-                              <div
-                                class="swiper-pagination absolute bg-white blur shadow fs-small heading-color lh-normal rounded"
-                              ></div>
-                            </slide-section>
+                                  {% endfor %}
+                                </div>
+                                <div
+                                  class="swiper-pagination absolute bg-white blur shadow fs-small heading-color lh-normal rounded"
+                                ></div>
+                              </slide-section>
+                            {% endif %}
                             <div class="product-information flex column gap-15">
                               <div class="product-infor-header flex column gap-5">
-                                <div class="block-product__badges">
-                                  {% render 'product-badges', card_product: card_product, type: 'price_badges' %}
-                                </div>
+                                {% if card_product != blank %}
+                                  <div class="block-product__badges">
+                                    {% render 'product-badges', card_product: card_product, type: 'price_badges' %}
+                                  </div>
+                                {% endif %}
                                 <a
                                   aria-label="{{ card_product.title }}"
                                   class="heading-style block h3 no-underline"
@@ -596,7 +608,9 @@
                                     {{ 'onboarding.product_title' | t }}
                                   {% endif %}
                                 </a>
-                                {% render 'review', review_star: true, product: card_product %}
+                                {% if card_product != blank %}
+                                  {% render 'review', review_star: true, product: card_product %}
+                                {% endif %}
                               </div>
                               <div class="block-product__price">
                                 <div class="price">
@@ -639,15 +653,17 @@
                                   {%- endif -%}
                                 </div>
                               </div>
-                              <div class="block-product__variant-picker">
-                                {%- render 'variant-swatches',
-                                  product: card_product,
-                                  scope: 'detail',
-                                  type: 'shopable',
-                                  is_dropdown: false,
-                                  block_id: block.id
-                                -%}
-                              </div>
+                              {% if card_product != blank %}
+                                <div class="block-product__variant-picker">
+                                  {%- render 'variant-swatches',
+                                    product: card_product,
+                                    scope: 'detail',
+                                    type: 'shopable',
+                                    is_dropdown: false,
+                                    block_id: block.id
+                                  -%}
+                                </div>
+                              {% endif %}
                               <a
                                 {% if card_product == blank %}
                                   role="link" aria-disabled="true"
@@ -818,7 +834,7 @@
       "options": [
         {
           "value": "adapt",
-          "label": "t:sections.all.image.aspect_ratio.adapt"
+          "label": "t:sections.shopable_video.settings.ratio.adapt.label"
         },
         {
           "value": "square",
@@ -840,7 +856,7 @@
       "type": "checkbox",
       "id": "autoplay",
       "label": "t:sections.video.settings.autoplay.label",
-      "info": "t:sections.video.settings.autoplay.info",
+      "info": "t:sections.shopable_video.settings.video.auto_play.info",
       "default": false
     },
     {
