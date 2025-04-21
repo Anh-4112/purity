@@ -42,17 +42,17 @@
   {%- endif %}
 {%- endcapture -%}
 {% style %}
-  .inspiration-showcase__block {
+  .multimedia_with_text__block {
     width: 7.6rem;
   }
-  .inspiration-showcase__block.active {
+  .multimedia_with_text__block.active {
     width: 15rem;
   }
   @media screen and (min-width: 768px) {
-    .inspiration-showcase__block {
+    .multimedia_with_text__block {
       width: 10rem;
     }
-    .inspiration-showcase__block.active {
+    .multimedia_with_text__block.active {
       width: 18rem;
     }
   }
@@ -62,7 +62,7 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }} flex column content-center">
-    <inspiration-showcase class="content-center {{ column_gap_slide }} flex mb-30">
+    <multimedia_with_text class="content-center {{ column_gap_slide }} flex mb-30">
       {%- for block in section.blocks -%}
         {%- liquid
           assign block_st = block.settings
@@ -109,9 +109,9 @@
             assign media_type = 'rounded-50'
           endif
         -%}
-        <div class="inspiration-showcase__block {{ active_class }}">
+        <div class="multimedia_with_text__block {{ active_class }}">
           <div
-            class="inspiration-showcase__media {{ media_type }} rounded video-section"
+            class="multimedia_with_text__media {{ media_type }} rounded video-section"
             style="--aspect-ratio: {{ ratio }};{% if section_st.media_type == 'oval' %}--img-rounded: 100px;{% endif %}"
           >
             {%- if video != blank -%}
@@ -152,8 +152,8 @@
           </div>
         </div>
       {%- endfor -%}
-    </inspiration-showcase>
-    <div class="inspiration-showcase__text text-center max-w-custom">
+    </multimedia_with_text>
+    <div class="multimedia_with_text__text text-center max-w-custom">
       <div class="text-content {{ text_content_size }}">
         {{ text }}
       </div>
@@ -162,9 +162,9 @@
 </div>
 {% schema %}
 {
-  "name": "t:sections.inspiration-showcase.name",
+  "name": "t:sections.multimedia_with_text.name",
   "tag": "section",
-  "class": "section section-inspiration-showcase",
+  "class": "section section-multimedia_with_text",
   "disabled_on": {
     "groups": ["header", "footer", "custom.overlay"]
   },
@@ -243,7 +243,7 @@
     },
     {
       "type": "header",
-      "content": "t:sections.inspiration-showcase.blocks.settings.header"
+      "content": "t:sections.multimedia_with_text.blocks.settings.header"
     },
     {
       "type": "select",
@@ -251,19 +251,19 @@
       "options": [
         {
           "value": "default",
-          "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__3.label"
+          "label": "t:sections.multimedia_with_text.blocks.settings.media_style.options__3.label"
         },
         {
           "value": "rounded",
-          "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__1.label"
+          "label": "t:sections.multimedia_with_text.blocks.settings.media_style.options__1.label"
         },
         {
           "value": "oval",
-          "label": "t:sections.inspiration-showcase.blocks.settings.media_style.options__2.label"
+          "label": "t:sections.multimedia_with_text.blocks.settings.media_style.options__2.label"
         }
       ],
       "default": "oval",
-      "label": "t:sections.inspiration-showcase.blocks.settings.media_style.label"
+      "label": "t:sections.multimedia_with_text.blocks.settings.media_style.label"
     },
     {
       "type": "select",
@@ -341,7 +341,7 @@
   "blocks": [
     {
       "type": "media",
-      "name": "t:sections.inspiration-showcase.blocks.name",
+      "name": "t:sections.multimedia_with_text.blocks.name",
       "settings": [
         {
           "type": "image_picker",
@@ -358,7 +358,7 @@
   ],
   "presets": [
     {
-      "name": "t:sections.inspiration-showcase.name",
+      "name": "t:sections.multimedia_with_text.name",
       "blocks": [
         {
           "type": "media"

@@ -1,0 +1,36 @@
+{% if product and product != empty %}
+  <div class="product-item product__item-js">
+    <div class="product-item__inner">
+      <div class="product__inner">
+        <a
+          class="product-image"
+          draggable="false"
+          href="{{ product.url }}"
+          aria-label="{{ product.title }}"
+        >
+          {%- liquid
+            assign p_media = product.selected_or_first_available_variant.featured_media
+            assign alt_features = p_media.alt | default: product.title | escape
+          -%}
+          {%- if p_media -%}
+            <div class="product__media">
+              {% render 'responsive-image',
+                type: 'product',
+                class: 'product__img featured-image',
+                image: p_media,
+                image_alt: alt_features,
+                disable_lazy_loading: true
+              %}
+            </div>
+          {%- endif -%}
+          {% render 'product-badges', scope: 'item', card_product: product.selected_or_first_available_variant %}
+        </a>
+      </div>
+      <div class="product__information">
+        <div class="product__price heading-color mt-5">
+          {%- render 'price', scope: 'item', first_available_variant: true, product: product -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

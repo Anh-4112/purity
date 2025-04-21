@@ -1,17 +1,18 @@
 import { initSlide, SlideSection } from "module-slide";
 import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
 import { CustomElement } from "module-safariElementPatch";
-import { ProductForm } from "module-addToCart";
+import "module-addToCart";
+import "module-variantSwatch";
 import * as NextSkyTheme from "global";
 
 LazyLoadEventHover.run();
 new LazyLoader(".image-lazy-load");
+new NextSkyTheme.FSProgressBar("free-ship-progress-bar");
 
 document.addEventListener("shopify:section:load", function () {
   new LazyLoader(".image-lazy-load");
+  new NextSkyTheme.FSProgressBar("free-ship-progress-bar");
 });
-
-const delegate = new NextSkyTheme.eventDelegate();
 
 try {
   document.querySelector(":focus-visible");
@@ -179,52 +180,6 @@ Shopify.CountryProvinceSelector.prototype = {
       selector.appendChild(opt);
     }
   },
-};
-
-Shopify.formatMoney = function (cents, format) {
-  if (typeof cents == "string") {
-    cents = cents.replace(".", "");
-  }
-  var value = "";
-  var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
-  var formatString = format || this.money_format;
-  function defaultOption(opt, def) {
-    return typeof opt == "undefined" ? def : opt;
-  }
-
-  function formatWithDelimiters(number, precision, thousands, decimal) {
-    precision = defaultOption(precision, 2);
-    thousands = defaultOption(thousands, ",");
-    decimal = defaultOption(decimal, ".");
-
-    if (isNaN(number) || number == null) {
-      return 0;
-    }
-
-    number = (number / 100.0).toFixed(precision);
-
-    var parts = number.split("."),
-      dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1" + thousands),
-      cents = parts[1] ? decimal + parts[1] : "";
-
-    return dollars + cents;
-  }
-
-  switch (formatString.match(placeholderRegex)[1]) {
-    case "amount":
-      value = formatWithDelimiters(cents, 2);
-      break;
-    case "amount_no_decimals":
-      value = formatWithDelimiters(cents, 0);
-      break;
-    case "amount_with_comma_separator":
-      value = formatWithDelimiters(cents, 2, ".", ",");
-      break;
-    case "amount_no_decimals_with_comma_separator":
-      value = formatWithDelimiters(cents, 0, ".", ",");
-      break;
-  }
-  return formatString.replace(placeholderRegex, value);
 };
 
 class BackToTop extends HTMLElement {
@@ -996,6 +951,16 @@ class QuantityInput extends HTMLElement {
       : this.input.stepDown();
     if (previousValue !== this.input.value)
       this.input.dispatchEvent(this.changeEvent);
+
+    const main_product = this.closest(".sec__main-product");
+    if (main_product) {
+      main_product.querySelector("quantity-input input").value =
+        this.input.value;
+      const sticky = main_product.querySelector(".sticky-add-cart");
+      if (sticky) {
+        sticky.querySelector("quantity-input input").value = this.input.value;
+      }
+    }
   }
 
   validateQtyRules() {
@@ -1009,6 +974,15 @@ class QuantityInput extends HTMLElement {
       const max = parseInt(this.input.max);
       const buttonPlus = this.querySelector(".quantity__button[name='plus']");
       buttonPlus.classList.toggle("disabled", value >= max);
+    }
+    const main_product = this.closest(".sec__main-product");
+    if (main_product) {
+      main_product.querySelector("quantity-input input").value =
+        this.input.value;
+      const sticky = main_product.querySelector(".sticky-add-cart");
+      if (sticky) {
+        sticky.querySelector("quantity-input input").value = this.input.value;
+      }
     }
   }
 }
@@ -1159,325 +1133,6 @@ class VideoProductGallery extends VideoLocal {
   }
 }
 customElements.define("video-product-gallery", VideoProductGallery);
-
-class VideoLocalLightbox extends VideoLocal {
-  constructor() {
-    super();
-    this.init();
-  }
-
-  init() {
-    setTimeout(() => {
-      this.loadContent();
-    }, 100);
-  }
-}
-customElements.define("video-local-lightbox", VideoLocalLightbox);
-
-class VariantInput extends HTMLElement {
-  constructor() {
-    super(),
-      (this.show_more = this.querySelector(".number-showmore")),
-      (this.size_chart = this.querySelector(".open-size-chart")),
-      (this.event_target = null),
-      (this.swatch = this.querySelector(
-        ".product-card-swatch-js .variant-input"
-      )),
-      delegate.on(
-        "click",
-        '.product-card-swatch-js .variant-input [type="radio"]',
-        this.onSwatchClick.bind(this)
-      ),
-      delegate.on(
-        "keydown",
-        '.product-card-swatch-js .variant-input [type="radio"]',
-        function (event) {
-          if (event.key === "Enter") {
-            this.onSwatchClick(event);
-          }
-        }.bind(this)
-      );
-  }
-
-  get sectionId() {
-    return this.hasAttribute("data-section-id")
-      ? this.getAttribute("data-section-id")
-      : this.getAttribute("data-section-id");
-  }
-
-  get blockId() {
-    return this.hasAttribute("data-block-id")
-      ? this.getAttribute("data-block-id")
-      : this.getAttribute("data-block-id");
-  }
-
-  get productUrl() {
-    return this.hasAttribute("data-product-url")
-      ? this.getAttribute("data-product-url")
-      : this.getAttribute("data-product-url");
-  }
-
-  connectedCallback() {
-    if (this.show_more) {
-      this.show_more.addEventListener(
-        "click",
-        this.onShowMoreClicked.bind(this)
-      );
-    }
-    if (this.size_chart) {
-      this.size_chart.addEventListener(
-        "click",
-        this.onShowSizeChartClicked.bind(this)
-      );
-    }
-    this.querySelectorAll('.product-card-swatch-js [type="radio"]').forEach(
-      (input) => {
-        input.addEventListener("change", this.onSwatchChanged.bind(this));
-      }
-    );
-
-    this.querySelectorAll('.product-card-variant-js [type="radio"]').forEach(
-      (input) => {
-        input.addEventListener("change", this.onVariantChange.bind(this));
-      }
-    );
-  }
-
-  async onSwatchChanged(event) {
-    event.preventDefault();
-    const target = event.target;
-    if (target.hasAttribute("value")) {
-      this.querySelectorAll("li.variant-input").forEach((variant) => {
-        variant.classList.remove("active");
-      });
-      target.closest(".variant-input").classList.add("active");
-      this.querySelectorAll(".product-variants-option").forEach((v) => {
-        v.classList.remove("active");
-      });
-
-      if (target.hasAttribute("data-value-media")) {
-        const newMedia = JSON.parse(target.getAttribute("data-value-media"));
-        const currentImage =
-          this.closest(".product__item-js").querySelector(".featured-image");
-        const newImage = this.createResponsiveImage(
-          newMedia,
-          currentImage.className,
-          currentImage.sizes
-        );
-
-        const secondaryImage = this.closest(".product__item-js").querySelector(
-          ".product__hover-img"
-        );
-        if (secondaryImage) {
-          secondaryImage.classList.remove("hidden");
-        }
-
-        if (currentImage.src !== newImage.src) {
-          await Motion.animate(
-            currentImage,
-            { opacity: [1, 0] },
-            { duration: 0.1, easing: "ease-in", fill: "forwards" }
-          ).finished;
-          await new Promise((resolve) =>
-            newImage.complete ? resolve() : (newImage.onload = resolve)
-          );
-          currentImage.replaceWith(newImage);
-          Motion.animate(
-            newImage,
-            { opacity: [0, 1] },
-            { duration: 0.1, easing: "ease-in" }
-          );
-        }
-      }
-    }
-  }
-
-  async onVariantChange(event) {
-    event.preventDefault();
-    this.event_target = event.target;
-    const selectedValues = Array.from(
-      this.querySelectorAll('input[type="radio"]:checked')
-    ).map((radio) => radio.value);
-    const requestUrl = this.createRequestUrl(this.productUrl, selectedValues);
-    this.fetchProductInfo({
-      requestUrl,
-      onSuccess: this.updateProductInfo,
-    });
-  }
-
-  createRequestUrl(baseUrl, optionValues) {
-    const queryParams = [`section_id=${this.sectionId}`];
-    if (optionValues.length > 0) {
-      queryParams.push(`option_values=${optionValues.join(",")}`);
-    }
-    return `${baseUrl}?${queryParams.join("&")}`;
-  }
-
-  fetchProductInfo({ requestUrl, onSuccess }) {
-    this.abortController?.abort();
-    this.abortController = new AbortController();
-
-    fetch(requestUrl, { signal: this.abortController.signal })
-      .then((response) => response.text())
-      .then((responseText) => {
-        const parsedHTML = new DOMParser().parseFromString(
-          responseText,
-          "text/html"
-        );
-        onSuccess(parsedHTML, this.sectionId, this.event_target, this.blockId);
-      })
-      .catch((error) => console.error("Error:", error));
-  }
-
-  updateProductInfo(parsedHTML, sectionId, eventTarget, blockId) {
-    const template = parsedHTML.querySelector("template");
-    let queryParsed, queryDocument;
-    if (template && blockId) {
-      const content = document.createElement("div");
-      content.appendChild(template.content.firstElementChild.cloneNode(true));
-      queryParsed = content.querySelector(`#Product-${blockId}`);
-      queryDocument = document.querySelector(`#Product-${blockId}`);
-    } else {
-      queryParsed = parsedHTML.getElementById(`Product-${sectionId}`);
-      queryDocument = document.getElementById(`Product-${sectionId}`);
-      const selectedVariant = queryParsed.querySelector(
-        ".productVariantSelected"
-      )?.textContent;
-      if (selectedVariant) {
-        const variant = JSON.parse(selectedVariant);
-        if (variant.id) {
-          const newUrl = new URL(window.location.href);
-          newUrl.searchParams.set("variant", variant.id);
-          window.history.replaceState(
-            { path: newUrl.toString() },
-            "",
-            newUrl.toString()
-          );
-        }
-      }
-    }
-    const updateContent = (blockClass) => {
-      const source = queryParsed.querySelector(`.${blockClass}`);
-      const destination = queryDocument.querySelector(`.${blockClass}`);
-      if (source && destination) {
-        destination.innerHTML = source.innerHTML;
-        if (blockClass == "block-product__variant-picker") {
-          destination
-            .querySelector(`input[value="${eventTarget.value}"]:checked`)
-            .focus({ focusVisible: true });
-        }
-      }
-    };
-
-    const blocksToUpdate = [
-      "block__media-gallery",
-      "block-product__badges",
-      "block-product__price",
-      "block-product__variant-picker",
-      "block-product__inventory",
-      "block-product__buttons",
-      "block-product__pickup",
-    ];
-    blocksToUpdate.forEach(updateContent);
-    new LazyLoader(".image-lazy-load");
-  }
-
-  createResponsiveImage(media, classNames, responsiveSizes) {
-    return NextSkyTheme.createMediaImageElement(
-      media,
-      [720, 660, 550, 480, 330, 240, 185],
-      {
-        class: classNames,
-        sizes: responsiveSizes,
-      }
-    );
-  }
-
-  onSwatchClick(event) {
-    const variant = event.target.closest(".variant-input");
-    if (
-      variant.querySelector('[type="radio"]').checked &&
-      variant.classList.contains("active")
-    ) {
-      window.location.href = variant
-        .querySelector('[type="radio"]')
-        .getAttribute("data-href");
-    }
-  }
-
-  onShowMoreClicked(event) {
-    const swatch_hidden = event.target
-      .closest(".swatch-color")
-      .querySelectorAll("li.hidden");
-    swatch_hidden.forEach((swatch) => {
-      swatch.classList.remove("hidden");
-    });
-    this.show_more.closest("li").remove();
-  }
-
-  onShowSizeChartClicked(event) {
-    event.preventDefault();
-    const size_chart = event.target
-      .closest(".product-variants-info")
-      .querySelector("template");
-    if (size_chart) {
-      const content = document.createElement("div");
-      content.appendChild(size_chart.content.firstElementChild.cloneNode(true));
-      NextSkyTheme.body.appendChild(content.querySelector("size-chart-popup"));
-    }
-    setTimeout(
-      () =>
-        NextSkyTheme.eventModal(
-          document.querySelector("size-chart-popup"),
-          "open",
-          true
-        ),
-      100
-    );
-  }
-}
-customElements.define("variant-input", VariantInput);
-
-class VariantsDropdown extends HTMLElement {
-  constructor() {
-    super(),
-      (this.variants = this.closest(".product-variants-option")),
-      this.init();
-  }
-
-  init() {
-    if (this.variants) {
-      this.variants
-        .querySelector(".variants__option-dropdown")
-        .addEventListener("click", this.onShowDropdownClicked.bind(this));
-    }
-    document.addEventListener("click", this.handleClickOutside.bind(this));
-  }
-
-  onShowDropdownClicked(event) {
-    if (this.closest(".product-variants-option").classList.contains("active")) {
-      this.closest(".product-variants-option").classList.remove("active");
-    } else {
-      this.closest(".product-variants-js")
-        .querySelectorAll(".product-variants-option.active")
-        .forEach((element) => {
-          element.classList.remove("active");
-        });
-      this.closest(".product-variants-option").classList.add("active");
-    }
-  }
-
-  handleClickOutside(event) {
-    if (!event.target.closest(".product-variants-option")) {
-      document
-        .querySelectorAll(".product-variants-option.active")
-        .forEach((element) => {
-          element.classList.remove("active");
-        });
-    }
-  }
-}
-customElements.define("variants-dropdown", VariantsDropdown);
 
 class AnnouncementBar extends HTMLElement {
   constructor() {
@@ -1666,6 +1321,20 @@ class CartDrawer extends HTMLElement {
             sectionElement.querySelector(".cart-count").innerHTML;
         }
       }
+      if (index === 2) {
+        const progress = this.getSectionDOM(
+          parsedState.sections[section.id],
+          ".progress"
+        );
+        if (sectionElement.querySelector(".progress")) {
+          sectionElement
+            .querySelector(".progress")
+            .setAttribute(
+              "data-total-order",
+              progress.getAttribute("data-total-order")
+            );
+        }
+      }
     });
   }
 
@@ -1776,7 +1445,7 @@ class CartEstimate extends HTMLElement {
     message.innerHTML = `<p>${addressText}</p>`;
 
     rates.forEach((rate) => {
-      message.innerHTML += `<p>${rate.name}: ${Shopify.formatMoney(
+      message.innerHTML += `<p>${rate.name}: ${NextSkyTheme.formatMoney(
         rate.price,
         themeGlobalVariables.settings.money_format
       )}</p>`;
@@ -1820,6 +1489,7 @@ class CartEstimate extends HTMLElement {
           .closest(".drawer__cart-shipping")
           .classList.remove("active");
       }
+      this.cartActionAddons.focus();
     } else {
       this.classList.add("open");
       if (this.cartActionAddons) {
@@ -1888,6 +1558,7 @@ class CartNote extends HTMLElement {
           .closest(".drawer__cart-note")
           .classList.remove("active");
       }
+      this.cartActionAddons.focus();
     } else {
       this.classList.add("open");
       if (this.cartActionAddons) {
@@ -2303,58 +1974,58 @@ var BlsCustomer = (function () {
       this.toggleForm(), this.deleteAddresses(), this.addAddresses();
     },
     toggleForm: function () {
-      const e = document.querySelector('.add-address');
-      const c = document.querySelector('.cancel-add');
+      const e = document.querySelector(".add-address");
+      const c = document.querySelector(".cancel-add");
       if (e !== null && c !== null) {
-        e.addEventListener('click', () => {
-          if (e.getAttribute('aria-expanded') === 'false') {
-            e.setAttribute('aria-expanded', 'true');
-            e.closest('.bls-customer__address').classList.add('active');
+        e.addEventListener("click", () => {
+          if (e.getAttribute("aria-expanded") === "false") {
+            e.setAttribute("aria-expanded", "true");
+            e.closest(".bls-customer__address").classList.add("active");
           } else {
-            e.setAttribute('aria-expanded', 'false');
-            e.closest('.bls-customer__address').classList.remove('active');
+            e.setAttribute("aria-expanded", "false");
+            e.closest(".bls-customer__address").classList.remove("active");
           }
         });
-        c.addEventListener('click', () => {
+        c.addEventListener("click", () => {
           if (
-            c.closest('.bls-customer__address').classList.contains('active')
+            c.closest(".bls-customer__address").classList.contains("active")
           ) {
-            e.closest('.bls-customer__address').classList.remove('active');
-            e.closest('.add-address').setAttribute('aria-expanded', 'false');
+            e.closest(".bls-customer__address").classList.remove("active");
+            e.closest(".add-address").setAttribute("aria-expanded", "false");
           }
         });
       }
     },
     deleteAddresses: function () {
-      const btn = document.querySelectorAll('.address-delete');
+      const btn = document.querySelectorAll(".address-delete");
       btn.forEach((e) => {
-        e.addEventListener('click', () => {
+        e.addEventListener("click", () => {
           const id = e?.dataset.formId;
           const msg = e?.dataset.confirmMessage;
-          if (confirm(msg || 'Are you sure you wish to delete this address?')) {
-            Shopify.postLink('/account/addresses/' + id, {
-              parameters: { _method: 'delete' },
+          if (confirm(msg || "Are you sure you wish to delete this address?")) {
+            Shopify.postLink("/account/addresses/" + id, {
+              parameters: { _method: "delete" },
             });
           }
         });
       });
     },
     addAddresses: function () {
-      if (Shopify && document.getElementById('AddressCountryNew')) {
+      if (Shopify && document.getElementById("AddressCountryNew")) {
         new Shopify.CountryProvinceSelector(
-          'AddressCountryNew',
-          'AddressProvinceNew',
+          "AddressCountryNew",
+          "AddressProvinceNew",
           {
-            hideElement: 'AddressProvinceNewContainer',
+            hideElement: "AddressProvinceNewContainer",
           }
         );
       }
-      const edit = document.querySelectorAll('.edit-country-option');
+      const edit = document.querySelectorAll(".edit-country-option");
       edit.forEach((e) => {
         const formId = e?.dataset.formId;
-        const editCountry = 'AddressCountry_' + formId;
-        const editProvince = 'AddressProvince_' + formId;
-        const editContainer = 'AddressProvinceContainer_' + formId;
+        const editCountry = "AddressCountry_" + formId;
+        const editProvince = "AddressProvince_" + formId;
+        const editContainer = "AddressProvinceContainer_" + formId;
         new Shopify.CountryProvinceSelector(editCountry, editProvince, {
           hideElement: editContainer,
         });
@@ -2633,7 +2304,6 @@ CustomElement.observeAndPatchCustomElements({
     classElement: AskQuestion,
   },
 });
-
 class NewsletterPopup extends HTMLElement {
   constructor() {
     super();
@@ -2716,3 +2386,25 @@ class NewsletterPopup extends HTMLElement {
 }
 
 customElements.define("newsletter-popup", NewsletterPopup);
+class SocialShare extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    this.querySelectorAll(".blog-sharing .btn-sharing").forEach((share) => {
+      share.addEventListener(
+        "click",
+        (event) => {
+          event.preventDefault();
+          const target = event.currentTarget;
+          const social = target.getAttribute("data-social");
+          const nameSocial = target.getAttribute("data-name");
+          window.open(social, nameSocial, "height=500,width=500");
+        },
+        false
+      );
+    });
+  }
+}
+customElements.define("social-share", SocialShare);

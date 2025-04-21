@@ -6,7 +6,7 @@ export class ProductForm extends HTMLElement {
     this.form = this.querySelector("form");
     this.cart = document.querySelector("cart-drawer");
     this.quickView = document.querySelector("quickview-drawer");
-    this.shopifyShopableVideo = document.querySelector('.modal-shopable-video');
+    this.shopifyShopableVideo = document.querySelector(".modal-shopable-video");
     if (this.form) {
       if (this.form.querySelector("[name=id]")) {
         this.form.querySelector("[name=id]").disabled = false;
@@ -96,6 +96,7 @@ export class ProductForm extends HTMLElement {
         console.error(e);
       })
       .finally(() => {
+        new NextSkyTheme.FSProgressBar("free-ship-progress-bar");
         this.submitButton.classList.remove("loading");
         if (!this.error) this.submitButton.removeAttribute("aria-disabled");
       });
@@ -184,22 +185,17 @@ export class ProductForm extends HTMLElement {
               return;
             }
             if (index === 2) {
-              const progress_message = this.getSectionDOM(
-                parsedState.sections[section.id],
-                ".progress-bar-message"
-              );
               const progress = this.getSectionDOM(
                 parsedState.sections[section.id],
                 ".progress"
               );
-              if (sectionElement.querySelector(".progress-bar-message")) {
-                sectionElement.querySelector(
-                  ".progress-bar-message"
-                ).innerHTML = progress_message.innerHTML;
-              }
               if (sectionElement.querySelector(".progress")) {
-                sectionElement.querySelector(".progress").style.width =
-                  progress.style.width;
+                sectionElement
+                  .querySelector(".progress")
+                  .setAttribute(
+                    "data-total-order",
+                    progress.getAttribute("data-total-order")
+                  );
               }
             } else {
               sectionElement.innerHTML = this.cart.getSectionInnerHTML(
@@ -229,6 +225,7 @@ export class ProductForm extends HTMLElement {
         errors.textContent = window.cartStrings.error;
       })
       .finally(() => {
+        new NextSkyTheme.FSProgressBar("free-ship-progress-bar");
         this.addLoading(line, false);
         const lineItem =
           document.getElementById(`CartItem-${line}`) ||
@@ -413,23 +410,12 @@ class CartGiftWrap extends HTMLElement {
               return;
             }
             if (index === 2) {
-              const progress_message = this.getSectionDOM(
-                parsedState.sections[section.id],
-                ".progress-bar-message"
-              );
-              const progress = this.getSectionDOM(
-                parsedState.sections[section.id],
-                ".progress"
-              );
-              if (sectionElement.querySelector(".progress-bar-message")) {
-                sectionElement.querySelector(
-                  ".progress-bar-message"
-                ).innerHTML = progress_message.innerHTML;
-              }
-              if (sectionElement.querySelector(".progress")) {
-                sectionElement.querySelector(".progress").style.width =
-                  progress.style.width;
-              }
+              sectionElement
+                .querySelector(".progress")
+                .setAttribute(
+                  "data-total-order",
+                  progress.getAttribute("data-total-order")
+                );
             } else {
               sectionElement.innerHTML = this.cart.getSectionInnerHTML(
                 parsedState.sections[section.id],
@@ -458,6 +444,7 @@ class CartGiftWrap extends HTMLElement {
           errors.textContent = window.cartStrings.error;
         })
         .finally(() => {
+          new NextSkyTheme.FSProgressBar("free-ship-progress-bar");
           this.cartActionId.classList.remove("loading");
           this.handleGiftWrapToggle();
         });

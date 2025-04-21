@@ -24,6 +24,7 @@
   {% if product.has_only_default_variant == false and has_color == true -%}
     <variant-input
       class="product-variants-js block mt-10"
+      handle="{{ product.handle }}"
       {{ block.shopify_attributes }}
     >
       <fieldset class="product-card-swatch-js product-variants__input m-0 p-0 border-0 relative">
@@ -117,6 +118,7 @@
               {% endif %}
             >
               {% for option in product.options_with_values %}
+                {{ option | json }}
                 {{ option.name }}:
                 {% liquid
                   if option.name == product.options[0]
@@ -139,6 +141,91 @@
       </variant-radios-bundle>
     {%- endif -%}
   {%- endif -%}
+{% elsif scope == 'variant_swatch' %}
+  {%- if product.variants.size > 1 -%}
+    {% liquid
+      assign quantity_variant = 0
+      for variant in product.variants
+        assign quantity = variant.inventory_quantity
+        if quantity > 0 and variant.available != false
+          assign quantity_variant = quantity_variant | plus: 1
+        elsif variant.available == true
+          assign quantity_variant = quantity_variant | plus: 1
+        endif
+      endfor
+    %}
+    {%- if quantity_variant > 1 -%}
+      <variant-swatch-select
+        section-id="{{ section.id }}"
+        handle="{{ product.handle }}"
+      >
+        <label class="field__label visually-hidden" for="VariantSwatchSelect-{{ section.id }}-{{ product.id }}">
+          {{ 'templates.bundle.form.name' | t -}}
+        </label>
+        <select
+          id="VariantSwatchSelect-{{ section.id }}-{{ product.id }}"
+          name="VariantSwatchSelect-{{ section.id }}-{{ product.id }}"
+          class="border-0 h-auto max-w-100 fs-small lh-global"
+        >
+          {% liquid
+            assign color_option = ''
+            for option in product.options
+              if option contains color_swatch_trigger
+                assign color_option = option
+              endif
+            endfor
+          %}
+          {% for variant in product.variants %}
+            {% assign quantity = variant.inventory_quantity %}
+            {%- if show_available == false and quantity < 1 and variant.available == false -%}
+              {% continue %}
+            {%- endif -%}
+            {% liquid
+              assign color_value = ''
+              if color_option == product.options[0]
+                assign color_value = variant.option1
+              elsif color_option == product.options[1]
+                assign color_value = variant.option2
+              elsif color_option == product.options[2]
+                assign color_value = variant.option3
+              endif
+            %}
+            {% assign color_option = '' %}
+            {% for option in product.options_with_values %}
+              {% assign color_option = option.name %}
+            {% endfor %}
+            <option
+              class="swatch-option"
+              value="{{ variant.id }}"
+              data-product-url="{{ product.url }}?variant={{ variant.id }}"
+              data-price="{{ variant.price }}"
+              {% if variant.id == product.selected_or_first_available_variant.id %}
+                selected
+              {% endif %}
+            >
+              {% for option in product.options_with_values %}
+                {{ option.name }}:
+                {% liquid
+                  if option.name == product.options[0]
+                    assign option_value = variant.option1
+                  elsif option.name == product.options[1]
+                    assign option_value = variant.option2
+                  elsif option.name == product.options[2]
+                    assign option_value = variant.option3
+                  endif
+                %}
+                {{ option_value -}}
+                {%- unless forloop.last %} / {% endunless -%}
+              {% endfor %}
+            </option>
+          {% endfor %}
+        </select>
+        <script type="application/json">
+          {{ product.variants | json }}
+        </script>
+      </variant-swatch-select>
+    {%- endif -%}
+  {%- endif -%}
 {% else %}
   {%- unless product.has_only_default_variant -%}
     {%- liquid
@@ -153,7 +240,7 @@
       endif
     -%}
     <variant-input
-      class="product-variants-js flex column wrap gap-25 pt-25 border-top"
+      class="product-variants-js flex column wrap{% if type != 'shopable' %} gap-25 pt-25 border-top{% else %} gap-15{% endif %}"
       data-section-id="{{ section.id }}"
       {% if type == 'shopable' %}
         data-block-id="{{ block_id }}"
@@ -205,7 +292,7 @@
                     >
                       <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
                       <div
-                        class="modal-popup-inner transition rounded max-w-custom m-auto invisible fixed inset-0 z-15 bg-white w-full"
+                        class="modal-popup-inner transition rounded max-w-custom m-auto invisible-1025 fixed inset-0 z-15 bg-white w-full"
                         style="--max-width: 80rem;"
                       >
                         <div class="modal__header drawer__header drawer-spacing border-bottom flex gap-10 space-between">
