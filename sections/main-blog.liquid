@@ -62,18 +62,18 @@
   <div class="{{ section_width }}">
     {%- if blog.articles.size > 0 -%}
       {%- paginate blog.articles by section_st.maximum_posts_to_show -%}
-        <div class="section-header text-{{ section_st.text_alignment }}{% if section_st.text_alignment != 'center' %} flex wrap{% endif %}{% if section_st.text_alignment == 'right' %} row-reverse{% endif %}">
+        <div class="section-header text-center">
           {%- if section_st.title != blank -%}
             <h2 class="heading-letter-spacing cart__title">
               {{ section_st.title }}
             </h2>
           {%- endif -%}
           {%- if section_st.show_all_tags -%}
-            <ul class="blog-tags-list flex wrap justify-content-{{ section_st.text_alignment }}">
+            <ul class="blog-tags-list  list-unstyled inline-flex gap-10 lh-1 overflow-auto max-w-100 whitespace-nowrap">
               <li class="post-tags">
                 <a
                   href="{{ blog.url }}"
-                  class="blog-tag-list {{ active }}"
+                  class="btn btn-outline heading-style capitalize border text-color inline-block blog-tag-list {{ active }}"
                   aria-label="{{ 'blogs.article.label_all' | t }}"
                 >
                   {{- 'blogs.article.label_all' | t -}}
@@ -83,7 +83,7 @@
                 <li class="post-tags">
                   <a
                     href="{{ blog.url }}/tagged/{{ tag | handle }}"
-                    class="blog-tag-list{% if current_tags contains tag %} active{% endif %}"
+                    class="btn btn-outline heading-style capitalize border text-color inline-block blog-tag-list{% if current_tags contains tag %} active{% endif %}"
                     aria-label="{{ 'blogs.article.tags' | t }}"
                   >
                     {{- tag -}}
@@ -122,20 +122,20 @@
               {%- for block in section.blocks -%}
                 <div
                   {{ block.shopify_attributes }}
-                  class="blog-subscribe flex column"
+                  class="blog-subscribe flex column justify-center p-30 p-1025-40 text-center rounded"
                   id="blocks blog-subscribe-{{ block.id }}"
                 >
                   {% if block.settings.form_title != blank or block.settings.form_description != blank %}
-                    <div class="section-header">
+                    <div class="mb-30">
                       {% if block.settings.show_email_icon %}
                         <svg width="46" height="45" fill="none">
                           <use href="#icon-email-newletter" />
                         </svg>
                       {% endif %}
                       {% if block.settings.form_title != blank %}
-                        <h2 class="subscribe-title">
+                        <h3 class="subscribe-title mt-15 mb-10">
                           {{ block.settings.form_title }}
-                        </h2>
+                        </h3>
                       {% endif %}
                       {% if block.settings.form_description != blank %}
                         <div class="short-des">
@@ -146,47 +146,49 @@
                   {% endif %}
                   {% form 'customer', class: 'subscribe-form', novalidate: 'novalidate' %}
                     <input type="hidden" name="contact[tags]" value="subscribe">
-                    <div class="subscribe-form__field-wrapper">
-                      <div class="field relative w-full flex transition">
-                        <div class="relative">
-                          <input
-                            id="subscribeForm--{{ block.id }}"
-                            type="email"
-                            name="contact[email]"
-                            class="field__input w-full"
-                            value="{{ form.email }}"
-                            aria-required="true"
-                            autocorrect="off"
-                            autocapitalize="off"
-                            autocomplete="email"
-                            {% if form.errors %}
-                              autofocus
-                              aria-invalid="true"
-                              aria-describedby="subscribe-error--{{ section.id }}"
-                            {% elsif form.posted_successfully? %}
-                              aria-describedby="subscribe-success--{{ section.id }}"
-                            {% endif %}
-                            placeholder="{{ 'subscribe.label' | t }}"
-                            required
+                    <div class="subscribe-form__field-wrapper flex flex column gap-10">
+                      <div class="field relative w-full transition">
+                        <div class="input-group flex gap-10 mb-15">
+                          <div class="relative flex-1">
+                            <input
+                              id="subscribeForm--{{ block.id }}"
+                              type="email"
+                              name="contact[email]"
+                              class="field__input w-full"
+                              value="{{ form.email }}"
+                              aria-required="true"
+                              autocorrect="off"
+                              autocapitalize="off"
+                              autocomplete="email"
+                              {% if form.errors %}
+                                autofocus
+                                aria-invalid="true"
+                                aria-describedby="subscribe-error--{{ section.id }}"
+                              {% elsif form.posted_successfully? %}
+                                aria-describedby="subscribe-success--{{ section.id }}"
+                              {% endif %}
+                              placeholder="{{ 'subscribe.label' | t }}"
+                              required
+                            >
+                            <label class="visually-hidden" for="subscribeForm--{{ block.id }}">
+                              {{- 'subscribe.label' | t -}}
+                            </label>
+                          </div>
+                          <button
+                            type="submit"
+                            class="subscriber-form__button btn p-0 btn-primary btn-hover wh-55"
+                            name="commit"
+                            id="Subscribe-{{ section.id }}"
+                            aria-label="{{ 'subscribe.button_label' | t }}"
                           >
-                          <label class="visually-hidden" for="subscribeForm--{{ block.id }}">
-                            {{- 'subscribe.label' | t -}}
-                          </label>
+                            <svg class="hidden-on-load" width="6" height="11" fill="none">
+                              <use href="#icon-next" />
+                            </svg>
+                            {%- render 'loader' -%}
+                          </button>
                         </div>
-                        <button
-                          type="submit"
-                          class="subscriber-form__button btn p-0 btn-primary btn-hover wh-55"
-                          name="commit"
-                          id="Subscribe-{{ section.id }}"
-                          aria-label="{{ 'subscribe.button_label' | t }}"
-                        >
-                          <svg class="hidden-on-load" width="6" height="11" fill="none">
-                            <use href="#icon-next" />
-                          </svg>
-                          {%- render 'loader' -%}
-                        </button>
                         {%- if block.settings.note != blank -%}
-                          <div class="footer__block-note rich__text-m0 fs-small-1">
+                          <div class="footer__block-note rich__text-m0 fs-small fst-italic">
                             {{ block.settings.note }}
                           </div>
                         {%- endif -%}
