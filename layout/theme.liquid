@@ -311,6 +311,18 @@
         login_successful: ` {{ 'customer.login_page.login_successful' | t }}`,
         login_invalid: ` {{ 'customer.login_page.login_invalid' | t }}`,
       };
+      window.message = {
+        newsletter: {
+          success: `{{ 'newsletter.success' | t }}`,
+          error: `{{ 'newsletter.error' | t }}`
+        },
+      }
+    </script>
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
       window.importJs = {
         pswpModule: "{{ 'photoswipe.min.js' | asset_url }}",
         mediaGallery: "{{ 'media-gallery.js' | asset_url }}",

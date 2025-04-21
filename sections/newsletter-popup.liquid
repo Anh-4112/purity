@@ -1,0 +1,238 @@
+{% liquid
+  assign section_st = section.settings
+  assign enable_on_homepage = section_st.enable_on_homepage
+  assign banner_image = section_st.newsletter_banner
+  assign show_page = ''
+  if enable_on_homepage
+    if request.page_type == 'index'
+      assign show_page = 'show-on-homepage'
+    endif
+  else
+    assign show_page = 'show-all-page'
+  endif
+  if request.design_mode
+    assign show_page = ''
+  endif
+  assign heading = section_st.newsletter_heading
+  assign short_desc = section_st.newsletter_sub_title
+  assign email_placeholder = section_st.newsletter_email_placeholder
+  assign button_label = section_st.newsletter_button_label
+%}
+
+<newsletter-popup data-enable="{{ show_page }}" data-section-id="{{ section.id }}">
+  <template>
+    <div class="newsletter-popup">
+      <modal-popup
+        class="modal active-modal-js modal-newsletter-popup"
+        role="dialog"
+      >
+        <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
+        <div
+          class="modal-popup-inner transition rounded max-w-custom m-auto invisible fixed inset-0 z-15 w-full"
+          style="--max-width: 80rem;"
+        >
+          <button
+            is="button-close-model"
+            class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
+            aria-label="Close"
+          >
+            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
+              <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
+            </svg>
+          </button>
+          <div
+            class="drawer__body drawer__body-item rte h-full overflow-y-auto custom-scrollbar bg-white"
+          >
+            <div class="flex wrap gap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}" style="--col-width: {% if banner_image != blank %}{{ section_st.desktop_image_width }}{% else %}0{% endif %}%;">
+              {% if banner_image != blank %}
+              <div class="image-with-text__media-item w-full col-1025-w-custom">
+                <div
+                  class="image-with-text__media banner__media h-full"
+                  style="--aspect-ratio: {{ banner_image.aspect_ratio }}";
+                >
+                  {%- liquid
+                    assign alt = 'general.image.image_alt_default' | t
+                    if banner_image.alt
+                      assign alt = banner_image.alt | escape
+                    endif
+                  -%}
+                  {%- if banner_image != blank -%}
+                    {% render 'responsive-image',
+                      type: 'other',
+                      image: banner_image,
+                      image_alt: alt
+                    %}
+                  {% endif %}
+                </div>
+              </div>
+              {% endif %}
+              <div class="w-full col-1025-remaining">
+                {%- if heading != blank or short_desc != blank -%}
+                  <div class="section-header">
+                    {%- if heading != blank -%}
+                      <h2
+                        class="section-heading"
+                      >
+                        {{ heading }}
+                      </h2>
+                    {%- endif -%}
+                    {%- if short_desc != blank -%}
+                      <div
+                        class="section-description"
+                      >
+                        {{ short_desc }}
+                      </div>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+                <div
+                  class="newsletter__form-container flex column"
+                >
+                  {%- assign newsletter_popup_id = 'NewsletterForm--' | append: section.id -%}
+                  {%- form 'customer', class: 'newsletter__form flex', id: newsletter_popup_id -%}
+                    <input type="hidden" name="contact[tags]" value="newsletter">
+                    <div class="flex gap-10 wrap w-full">
+                      <input
+                        id="NewsletterForm--{{ section.id }}"
+                        type="email"
+                        required
+                        name="contact[email]"
+                        autocomplete="email"
+                        aria-required="true"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        value="{% if customer %}{{ customer.email }}{% endif %}"
+                        placeholder="{% if email_placeholder != blank %}{{ email_placeholder }}{% else %}{{ 'newsletter.label' | t }}{% endif %}"
+                        pattern=".+\.[a-zA-Z]{2,6}"
+                      >
+                      <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
+                        {{ 'newsletter.label' | t }}
+                      </label>
+                      <button
+                        type="submit"
+                        name="commit"
+                        class="btn btn-primary newsletter__button"
+                        aria-label="{%- if button_label != blank -%}{{ button_label }} {%- else -%} {{ 'subscribe.button_label' | t }} {% endif %}"
+                      >
+                        <span class="hidden-on-load">
+                          {%- if button_label != blank -%}
+                            {{ button_label }}
+                          {%- else -%}
+                            {{ 'newsletter.button_label' | t }}
+                          {% endif -%}
+                        </span>
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 14 14"
+                          fill="none"
+                          class="spin opacity-0 pointer-none icon-load absolute"
+                        >
+                          <use href="#icon-load"></use>
+                        </svg>
+                      </button>
+                    </div>
+                  {%- endform -%}
+                </div>
+                <div
+                  class="newsletter-action pointer"
+                  tabindex="0"
+                >
+                  <span class="heading-color">{{ 'newsletter_popup.do_not_show_again' | t }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </modal-popup>
+    </div>
+  </template>
+</newsletter-popup>
+
+{% schema %}
+{
+  "name": "t:sections.newsletter_popup.name",
+  "tag": "section",
+  "class": "overlay-section overlay-newsletter",
+  "limit": 1,
+  "enabled_on": {
+    "groups": [
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.newsletter_popup.header.heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_on_homepage",
+      "label": "t:sections.newsletter_popup.settings.show_on_homepage",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "newsletter_banner",
+      "label": "t:sections.newsletter_popup.settings.banner_image"
+    },
+    {
+      "type": "range",
+      "id": "desktop_image_width",
+      "min": 30,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 40,
+      "label": "t:sections.all.image.width",
+      "info": "t:sections.all.image.info_width"
+    },
+    {
+      "type": "select",
+      "id": "image_desktop_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.all.image.desktop_position.left"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.all.image.desktop_position.right"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.all.image.desktop_position.label",
+      "info": "t:sections.all.image.desktop_position.info"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "t:sections.newsletter_popup.settings.heading",
+      "default": "Newsletter heading"
+    },
+    {
+      "type": "richtext",
+      "id": "newsletter_sub_title",
+      "label": "t:sections.newsletter_popup.settings.short_description",
+      "default": "<p>Newsletter description</p>"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_email_placeholder",
+      "label": "t:sections.newsletter_popup.settings.email_placeholder",
+      "default": "Email placeholder"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button_label",
+      "label": "t:sections.newsletter_popup.settings.button_label",
+      "default": "Button label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.newsletter_popup.name"
+    }
+  ]
+}
+{% endschema %}
