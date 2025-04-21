@@ -7,9 +7,11 @@ import * as NextSkyTheme from "global";
 
 LazyLoadEventHover.run();
 new LazyLoader(".image-lazy-load");
+new NextSkyTheme.FSProgressBar("free-ship-progress-bar");
 
 document.addEventListener("shopify:section:load", function () {
   new LazyLoader(".image-lazy-load");
+  new NextSkyTheme.FSProgressBar("free-ship-progress-bar");
 });
 
 try {
@@ -178,52 +180,6 @@ Shopify.CountryProvinceSelector.prototype = {
       selector.appendChild(opt);
     }
   },
-};
-
-Shopify.formatMoney = function (cents, format) {
-  if (typeof cents == "string") {
-    cents = cents.replace(".", "");
-  }
-  var value = "";
-  var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
-  var formatString = format || this.money_format;
-  function defaultOption(opt, def) {
-    return typeof opt == "undefined" ? def : opt;
-  }
-
-  function formatWithDelimiters(number, precision, thousands, decimal) {
-    precision = defaultOption(precision, 2);
-    thousands = defaultOption(thousands, ",");
-    decimal = defaultOption(decimal, ".");
-
-    if (isNaN(number) || number == null) {
-      return 0;
-    }
-
-    number = (number / 100.0).toFixed(precision);
-
-    var parts = number.split("."),
-      dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1" + thousands),
-      cents = parts[1] ? decimal + parts[1] : "";
-
-    return dollars + cents;
-  }
-
-  switch (formatString.match(placeholderRegex)[1]) {
-    case "amount":
-      value = formatWithDelimiters(cents, 2);
-      break;
-    case "amount_no_decimals":
-      value = formatWithDelimiters(cents, 0);
-      break;
-    case "amount_with_comma_separator":
-      value = formatWithDelimiters(cents, 2, ".", ",");
-      break;
-    case "amount_no_decimals_with_comma_separator":
-      value = formatWithDelimiters(cents, 0, ".", ",");
-      break;
-  }
-  return formatString.replace(placeholderRegex, value);
 };
 
 class BackToTop extends HTMLElement {
@@ -1159,20 +1115,6 @@ class VideoProductGallery extends VideoLocal {
 }
 customElements.define("video-product-gallery", VideoProductGallery);
 
-class VideoLocalLightbox extends VideoLocal {
-  constructor() {
-    super();
-    this.init();
-  }
-
-  init() {
-    setTimeout(() => {
-      this.loadContent();
-    }, 100);
-  }
-}
-customElements.define("video-local-lightbox", VideoLocalLightbox);
-
 class AnnouncementBar extends HTMLElement {
   constructor() {
     super();
@@ -1360,6 +1302,20 @@ class CartDrawer extends HTMLElement {
             sectionElement.querySelector(".cart-count").innerHTML;
         }
       }
+      if (index === 2) {
+        const progress = this.getSectionDOM(
+          parsedState.sections[section.id],
+          ".progress"
+        );
+        if (sectionElement.querySelector(".progress")) {
+          sectionElement
+            .querySelector(".progress")
+            .setAttribute(
+              "data-total-order",
+              progress.getAttribute("data-total-order")
+            );
+        }
+      }
     });
   }
 
@@ -1470,7 +1426,7 @@ class CartEstimate extends HTMLElement {
     message.innerHTML = `<p>${addressText}</p>`;
 
     rates.forEach((rate) => {
-      message.innerHTML += `<p>${rate.name}: ${Shopify.formatMoney(
+      message.innerHTML += `<p>${rate.name}: ${NextSkyTheme.formatMoney(
         rate.price,
         themeGlobalVariables.settings.money_format
       )}</p>`;
@@ -1514,6 +1470,7 @@ class CartEstimate extends HTMLElement {
           .closest(".drawer__cart-shipping")
           .classList.remove("active");
       }
+      this.cartActionAddons.focus();
     } else {
       this.classList.add("open");
       if (this.cartActionAddons) {
@@ -1582,6 +1539,7 @@ class CartNote extends HTMLElement {
           .closest(".drawer__cart-note")
           .classList.remove("active");
       }
+      this.cartActionAddons.focus();
     } else {
       this.classList.add("open");
       if (this.cartActionAddons) {
@@ -1997,58 +1955,58 @@ var BlsCustomer = (function () {
       this.toggleForm(), this.deleteAddresses(), this.addAddresses();
     },
     toggleForm: function () {
-      const e = document.querySelector('.add-address');
-      const c = document.querySelector('.cancel-add');
+      const e = document.querySelector(".add-address");
+      const c = document.querySelector(".cancel-add");
       if (e !== null && c !== null) {
-        e.addEventListener('click', () => {
-          if (e.getAttribute('aria-expanded') === 'false') {
-            e.setAttribute('aria-expanded', 'true');
-            e.closest('.bls-customer__address').classList.add('active');
+        e.addEventListener("click", () => {
+          if (e.getAttribute("aria-expanded") === "false") {
+            e.setAttribute("aria-expanded", "true");
+            e.closest(".bls-customer__address").classList.add("active");
           } else {
-            e.setAttribute('aria-expanded', 'false');
-            e.closest('.bls-customer__address').classList.remove('active');
+            e.setAttribute("aria-expanded", "false");
+            e.closest(".bls-customer__address").classList.remove("active");
           }
         });
-        c.addEventListener('click', () => {
+        c.addEventListener("click", () => {
           if (
-            c.closest('.bls-customer__address').classList.contains('active')
+            c.closest(".bls-customer__address").classList.contains("active")
           ) {
-            e.closest('.bls-customer__address').classList.remove('active');
-            e.closest('.add-address').setAttribute('aria-expanded', 'false');
+            e.closest(".bls-customer__address").classList.remove("active");
+            e.closest(".add-address").setAttribute("aria-expanded", "false");
           }
         });
       }
     },
     deleteAddresses: function () {
-      const btn = document.querySelectorAll('.address-delete');
+      const btn = document.querySelectorAll(".address-delete");
       btn.forEach((e) => {
-        e.addEventListener('click', () => {
+        e.addEventListener("click", () => {
           const id = e?.dataset.formId;
           const msg = e?.dataset.confirmMessage;
-          if (confirm(msg || 'Are you sure you wish to delete this address?')) {
-            Shopify.postLink('/account/addresses/' + id, {
-              parameters: { _method: 'delete' },
+          if (confirm(msg || "Are you sure you wish to delete this address?")) {
+            Shopify.postLink("/account/addresses/" + id, {
+              parameters: { _method: "delete" },
             });
           }
         });
       });
     },
     addAddresses: function () {
-      if (Shopify && document.getElementById('AddressCountryNew')) {
+      if (Shopify && document.getElementById("AddressCountryNew")) {
         new Shopify.CountryProvinceSelector(
-          'AddressCountryNew',
-          'AddressProvinceNew',
+          "AddressCountryNew",
+          "AddressProvinceNew",
           {
-            hideElement: 'AddressProvinceNewContainer',
+            hideElement: "AddressProvinceNewContainer",
           }
         );
       }
-      const edit = document.querySelectorAll('.edit-country-option');
+      const edit = document.querySelectorAll(".edit-country-option");
       edit.forEach((e) => {
         const formId = e?.dataset.formId;
-        const editCountry = 'AddressCountry_' + formId;
-        const editProvince = 'AddressProvince_' + formId;
-        const editContainer = 'AddressProvinceContainer_' + formId;
+        const editCountry = "AddressCountry_" + formId;
+        const editProvince = "AddressProvince_" + formId;
+        const editContainer = "AddressProvinceContainer_" + formId;
         new Shopify.CountryProvinceSelector(editCountry, editProvince, {
           hideElement: editContainer,
         });
@@ -2327,3 +2285,25 @@ CustomElement.observeAndPatchCustomElements({
     classElement: AskQuestion,
   },
 });
+class SocialShare extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    this.querySelectorAll(".blog-sharing .btn-sharing").forEach((share) => {
+      share.addEventListener(
+        "click",
+        (event) => {
+          event.preventDefault();
+          const target = event.currentTarget;
+          const social = target.getAttribute("data-social");
+          const nameSocial = target.getAttribute("data-name");
+          window.open(social, nameSocial, "height=500,width=500");
+        },
+        false
+      );
+    });
+  }
+}
+customElements.define("social-share", SocialShare);

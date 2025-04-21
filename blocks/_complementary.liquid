@@ -9,6 +9,7 @@
   <product-recommendations
     {{ block.shopify_attributes }}
     data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&intent=complementary&limit={{ product_list_limit }}"
+    style="--position-arrow: static;--swiper-navigation-size: 20px;--padding: 0;"
   >
     {%- if recommendations.performed and recommendations.products_count > 0 -%}
       {%- if block_heading != blank -%}
@@ -17,7 +18,7 @@
         </h2>
       {% endif %}
       <slide-section
-        class="swiper hover-action{% if block_heading == blank %} mt-30{% endif %}"
+        class="swiper{% if block_heading == blank %} mt-30{% endif %}"
         data-section-id="{{ section.id }}"
         data-effect="slide"
         data-speed="500"
@@ -26,9 +27,9 @@
         data-desktop="1"
         data-mobile="1"
         data-tablet="1"
-        data-spacing="20"
+        data-spacing="10"
       >
-        <div class="swiper-wrapper">
+        <div class="swiper-wrapper" style="--width: 8rem;">
           {%- for product in recommendations.products limit: product_list_limit %}
             {% render 'card-product',
               card_product: product,
@@ -40,12 +41,21 @@
               disable_rate: true,
               disable_tag: true,
               disable_color_swatches: true,
-              class: ' swiper-slide'
+              class: ' swiper-slide bg-secondary rounded-10 p-20',
+              style_layout: ' flex gap-10 align-center',
+              image_class: ' flex-auto w-custom rounded-10',
+              image_rounded: ' rounded-10',
+              info_class: ' flex-1 mt-0',
+              type: 'action_beside'
             %}
           {%- endfor -%}
         </div>
         {% if show_navigation %}
-          {%- render 'swiper-navigation', show_on_hover: true, navigation_custom: true -%}
+          {%- render 'swiper-navigation',
+            navigation_custom: true,
+            type: 'custom_nav',
+            class-custom: 'flex align-center gap-5'
+          -%}
         {% endif %}
       </slide-section>
     {% endif %}

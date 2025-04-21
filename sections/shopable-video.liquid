@@ -1,5 +1,5 @@
 {{ 'section-shopable-video.css' | asset_url | stylesheet_tag }}
-<link rel="stylesheet" href="{{ 'main-product.css' | asset_url }}" media="print" onload="this.media='all'">1
+<link rel="stylesheet" href="{{ 'main-product.css' | asset_url }}" media="print" onload="this.media='all'">
 <script type="module" src="{{ 'section-shopable-video.js' | asset_url }}" defer="defer"></script>
 {%- liquid
   assign theme_st = settings
@@ -49,9 +49,9 @@
     assign data_free_scroll = 'true'
   endif
 
-  assign items_per_row_tablet = items_per_row
-  if items_per_row > 3
-    assign items_per_row_tablet = items_per_row | minus: 1
+  assign items_per_row_tablet = 3
+  if items_per_row < 3
+    assign items_per_row_tablet = items_per_row
   endif
 
   assign center_slide = false
@@ -227,7 +227,7 @@
                     </div>
                   {% endif %}
                 </div>
-                <div class="shopable-video__product">
+                <div class="shopable-video__product border rounded p-10 mt-10">
                   {% render 'card-product',
                     card_product: product,
                     section_id: section.id,
@@ -239,10 +239,10 @@
                     disable_hover_image: true,
                     show_quick_add: true,
                     disable_color_swatches: true,
-                    style_layout: ' flex gap-10 border rounded mt-10 p-10 align-center',
+                    style_layout: ' flex gap-10 align-center',
                     image_class: ' flex-auto w-custom',
                     image_rounded: ' rounded-10',
-                    info_class: ' flex-1 mt-0'
+                    info_class: ' flex-1 mt-0 col-remaining'
                   %}
                 </div>
               </shopable-item>
@@ -258,7 +258,8 @@
     {% endif %}
     {% if sticky and section.blocks[0].settings.local_video != blank %}
       <shopable-item
-        class="sticky-video block right-0 rounded pointer transition-drawer"
+        class="sticky-video block right-0 pointer transition-drawer fixed z-10 transition-drawer w-custom"
+        style="--width: 15rem"
         data-product="Product-{{ section.blocks[0].id }}"
       >
         {% liquid
@@ -293,65 +294,66 @@
             assign video_alt = 'accessibility.video' | t
           endif
         %}
-        <div class="relative">
-          {% if poster_image != blank or local_video != blank %}
-            <video-local
-              class="video-item--ratio rounded block"
-              style="--aspect-ratio: {{ video_ratio }};"
-            >
-              {% if local_video != blank %}
-                {%- liquid
-                  assign source = local_video.sources
-                  assign source_url = ''
-                  for s in source
-                    if s.format == 'mp4'
-                      assign source_url = s.url
-                      break
-                    endif
-                  endfor
-                  assign poster = local_video.preview_image | image_url: width: 500
-                  if poster_image != blank
-                    assign poster = poster_image | image_url: width: 500
+        {% if poster_image != blank or local_video != blank %}
+          <video-local
+            class="video-item--ratio rounded block"
+            style="--aspect-ratio: {{ video_ratio }};"
+          >
+            {% if local_video != blank %}
+              {%- liquid
+                assign source = local_video.sources
+                assign source_url = ''
+                for s in source
+                  if s.format == 'mp4'
+                    assign source_url = s.url
+                    break
                   endif
-                -%}
-                <video
-                  preload="auto"
-                  loop
-                  muted
-                  playsinline
-                  autoplay
-                  poster="{{ poster }}"
-                  data-src="{{ source_url }}"
-                ></video>
+                endfor
+                assign poster = local_video.preview_image | image_url: width: 500
+                if poster_image != blank
+                  assign poster = poster_image | image_url: width: 500
+                endif
+              -%}
+              <video
+                preload="auto"
+                loop
+                muted
+                playsinline
+                autoplay
+                poster="{{ poster }}"
+                data-src="{{ source_url }}"
+              ></video>
+            {% else %}
+              {% if poster_image != blank %}
+                {% render 'responsive-image',
+                  type: 'banner',
+                  container: section_st.section_width,
+                  image: poster_image,
+                  image_alt: image_alt,
+                  padding: column_gap_slide,
+                  column: items_per_row
+                %}
               {% else %}
-                {% if poster_image != blank %}
-                  {% render 'responsive-image',
-                    type: 'banner',
-                    container: section_st.section_width,
-                    image: poster_image,
-                    image_alt: image_alt,
-                    padding: column_gap_slide,
-                    column: items_per_row
-                  %}
-                {% else %}
-                  {% render 'placeholder-render', type: 'collection' %}
-                {% endif %}
+                {% render 'placeholder-render', type: 'collection' %}
               {% endif %}
-            </video-local>
-          {% else %}
-            <div
-              class="video-item--ratio"
-              style="--aspect-ratio: {{ video_ratio }};"
-            >
-              {% render 'placeholder-render', type: 'collection' %}
-            </div>
-          {% endif %}
-          <icon-close class="shopable-sticky__close pointer-none border inline-flex mx-auto rounded-50 overflow-hidden absolute top-0 inset-x-0 w-50 h-50 content-center heading-color bg-white">
-            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-              <use href="#icon-close" />
-            </svg>
-          </icon-close>
-        </div>
+            {% endif %}
+          </video-local>
+        {% else %}
+          <div
+            class="video-item--ratio"
+            style="--aspect-ratio: {{ video_ratio }};"
+          >
+            {% render 'placeholder-render', type: 'collection' %}
+          </div>
+        {% endif %}
+        <icon-close
+          class="shopable-sticky__close pointer-none inline-flex rounded-50 overflow-hidden absolute top-0 right-0 w-custom h-custom content-center color-white bg-dark"
+          style="--width: 2.8rem;--height: 2.8rem"
+        >
+          <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+            <use href="#icon-close" />
+          </svg>
+        </icon-close>
       </shopable-item>
     {% endif %}
     <template>
@@ -361,23 +363,23 @@
       >
         <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
         <div
-          class="modal-popup-inner transition rounded max-w-custom m-auto invisible fixed inset-0 z-15 w-full"
+          class="modal-popup-inner h-content transition max-w-custom m-auto invisible-1025 fixed inset-0 z-20 w-full"
           style="--max-width: 80rem;"
         >
+          <div class="modal-nav">
+            {%- render 'swiper-navigation' -%}
+          </div>
           <button
             is="button-close-model"
-            class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
+            class="modal__close pointer btn-hover overflow-hidden btn-reset wh-40 wh-1025-50 bg-white blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow heading-color"
             aria-label="Close"
           >
             <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
               <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
             </svg>
           </button>
-          <div class="modal-nav">
-            {%- render 'swiper-navigation' -%}
-          </div>
           <slide-section
-            id="swiper-modal-shopable-slide-video"
+            id="swiper-modal-shopable-slide-video w-full"
             class="swiper swiper-modal-shopable-video"
             data-section-id="modal-shopable-_slide-video"
             data-effect="slide"
@@ -390,13 +392,13 @@
           >
             <div class="swiper-wrapper">
               {% for block in section.blocks %}
-                <div class="swiper-slide">
+                <div class="swiper-slide w-full">
                   <div
-                    class="drawer__body drawer__body-item h-full overflow-y-auto custom-scrollbar bg-white"
+                    class="drawer__body drawer__body-shopable-video w-full h-full overflow-y-auto custom-scrollbar bg-white rounded"
                     id="Product-{{ block.id }}"
                   >
                     <div
-                      class="flex flex-cols wrap relative modal-shopable_content"
+                      class="flex flex-cols wrap relative modal-shopable_content w-full"
                       style="--gap: 0px; --col-desktop: 2;--col-tablet: 1; --col-number: 1;"
                     >
                       {% liquid
@@ -436,7 +438,7 @@
                       %}
                       {% if poster_image != blank or local_video != blank %}
                         <video-local
-                          class="video-item--ratio block"
+                          class="video-item--ratio block w-full h-full"
                           style="--aspect-ratio: {{ video_ratio }};"
                         >
                           {% if local_video != blank %}
@@ -457,11 +459,12 @@
                             <video
                               preload="auto"
                               loop
-                              muted
                               playsinline
+                              controls
                               autoplay
                               poster="{{ poster }}"
                               data-src="{{ source_url }}"
+                              class="z-1"
                             ></video>
                           {% else %}
                             {% if poster_image != blank %}
@@ -486,7 +489,10 @@
                           {% render 'placeholder-render', type: 'collection' %}
                         </div>
                       {% endif %}
-                      <div class="popup-information__mobile hidden-1025 flex align-center space-between absolute bottom-15 right-15 left-15">
+                      <div
+                        class="popup-information__mobile hidden-1025 shadow rounded-10 overflow-hidden flex align-center space-between absolute bottom-20 right-20 left-20 pe-20"
+                        style="--width: 7.5rem;"
+                      >
                         {% render 'card-product',
                           card_product: card_product,
                           section_id: section.id,
@@ -498,151 +504,180 @@
                           disable_hover_image: true,
                           show_quick_add: true,
                           disable_color_swatches: true,
-                          type: 'list'
+                          class: ' z-2',
+                          style_layout: ' flex',
+                          image_class: ' flex-auto w-custom rounded-10 w-full-1025',
+                          image_rounded: '',
+                          info_class: ' flex-1 mt-0 px-20 py-15 align-self-center'
                         %}
                         <button
-                          class="btn-shopable__action-mobile btn"
-                          style="--btn-padding-y: 1rem;--btn-padding-x: 2rem;"
+                          class="btn-shopable__action-mobile btn__quick-shop bg-white btn-reset shadow z-2 flex"
+                          name="{{ 'products.product.shop_now' | t }}"
                         >
-                          {{ 'products.product.shop_now' | t }}
+                          <svg
+                            width="16"
+                            height="16"
+                            class="hidden-1025 hidden-on-load transition-short heading-color"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                          >
+                            <use href="#icon-cart" />
+                          </svg>
                         </button>
                       </div>
                       <div
-                        class="popup-information block-1025 hidden relative"
+                        class="popup-information block-1025 hidden transition relative-1025 absolute inset-0 bg-white z-2"
                         style="--padding-inline-desktop: 3rem;--padding-block: 2.4rem;"
                       >
-                        <div class="absolute inset-0 w-full h-full overflow-x-hidden overflow-auto custom-scrollbar drawer-spacing">
-                          <slide-section
-                            class="swiper mb-20"
-                            data-section-id="{{ block.id }}"
-                            data-autoplay="false"
-                            data-effect="slide"
-                            data-loop="false"
-                            data-speed="500"
-                            data-spacing="10"
-                            data-mobile="2"
-                            data-desktop="2"
-                            data-tablet="2"
-                          >
-                            {%- render 'swiper-navigation' -%}
-                            <div class="swiper-wrapper">
-                              {% for media in card_product.media %}
-                                {%- liquid
-                                  assign ratio = '3/4'
-                                  if product_image_ratio != 'adapt'
-                                    case product_image_ratio
-                                      when 'square'
-                                        assign ratio = '1/1'
-                                      when 'landscape'
-                                        assign ratio = '4/3'
-                                      when 'portrait'
-                                        assign ratio = '3/4'
-                                    endcase
-                                  else
-                                    assign ratio = media.aspect_ratio
-                                  endif
-                                -%}
-                                <div class="swiper-slide">
-                                  <div
-                                    class="product__media rounded"
-                                    style="--aspect-ratio: {{ ratio }};"
-                                  >
-                                    {%- assign alt_features = media.alt | default: card_product.title | escape -%}
-                                    {% render 'responsive-image',
-                                      type: 'product',
-                                      image: media,
-                                      image_alt: alt_features
-                                    %}
-                                  </div>
-                                </div>
-                              {% endfor %}
-                            </div>
-                          </slide-section>
-                          <div class="block-product__badges">
-                            {% render 'product-badges', card_product: card_product, type: 'price_badges' %}
-                          </div>
-                          <a
-                            aria-label="{{ card_product.title }}"
-                            class="product__name heading-style block h3 no-underline"
-                            href="{{ card_product.url }}"
-                          >
-                            {% if card_product.title != blank %}
-                              {{- card_product.title -}}
-                            {% else %}
-                              {{ 'onboarding.product_title' | t }}
-                            {% endif %}
-                          </a>
-                          {% render 'review', review_star: true, product: card_product %}
-                          <div class="block-product__price">
-                            <div class="price">
-                              {%- render 'price',
-                                scope: 'detail',
-                                product: card_product,
-                                price_class: 'price--large'
-                              -%}
-                              {%- if cart.tax_included or shop.shipping_policy.body != blank -%}
-                                <div class="product__tax caption rte mt-5 fs-small">
-                                  {%- if cart.tax_included -%}
-                                    {{ 'products.product.include_taxes' | t }}
-                                  {%- endif -%}
-                                  {%- if shop.shipping_policy.body != blank -%}
-                                    {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                                  {%- endif -%}
-                                </div>
-                              {%- endif -%}
-                              {%- if card_product != blank -%}
-                                <div>
-                                  {%- assign product_form_installment_id = 'product-form-installment-'
-                                    | append: section.blocks[0].id
+                        <div class="flex column absolute inset-0 w-full h-full">
+                          <div class="grow-1 drawer-spacing overflow-x-hidden overflow-auto custom-scrollbar">
+                            <slide-section
+                              class="swiper mb-20"
+                              data-section-id="{{ block.id }}"
+                              data-autoplay="false"
+                              data-effect="slide"
+                              data-loop="false"
+                              data-speed="500"
+                              data-spacing="10"
+                              data-mobile="2"
+                              data-desktop="2"
+                              data-tablet="2"
+                              data-pagination="custom"
+                            >
+                              <div class="swiper-wrapper">
+                                {% for media in card_product.media %}
+                                  {%- liquid
+                                    assign ratio = '3/4'
+                                    if product_image_ratio != 'adapt'
+                                      case product_image_ratio
+                                        when 'square'
+                                          assign ratio = '1/1'
+                                        when 'landscape'
+                                          assign ratio = '4/3'
+                                        when 'portrait'
+                                          assign ratio = '3/4'
+                                      endcase
+                                    else
+                                      assign ratio = media.aspect_ratio
+                                    endif
                                   -%}
-                                  {%- form 'product',
-                                    card_product,
-                                    id: product_form_installment_id,
-                                    class: 'installment caption-large'
-                                  -%}
-                                    <input
-                                      type="hidden"
-                                      name="id"
-                                      value="{{ card_product.selected_or_first_available_variant.id }}"
+                                  <div class="swiper-slide">
+                                    <div
+                                      class="product__media rounded"
+                                      style="--aspect-ratio: {{ ratio }};"
                                     >
-                                    {{ form | payment_terms }}
-                                  {%- endform -%}
+                                      {%- assign alt_features = media.alt | default: card_product.title | escape -%}
+                                      {% render 'responsive-image',
+                                        type: 'product',
+                                        image: media,
+                                        image_alt: alt_features
+                                      %}
+                                    </div>
+                                  </div>
+                                {% endfor %}
+                              </div>
+                              <div
+                                class="swiper-pagination absolute bg-white blur shadow fs-small heading-color lh-normal rounded"
+                              ></div>
+                            </slide-section>
+                            <div class="product-information flex column gap-15">
+                              <div class="product-infor-header flex column gap-5">
+                                <div class="block-product__badges">
+                                  {% render 'product-badges', card_product: card_product, type: 'price_badges' %}
                                 </div>
-                              {%- endif -%}
+                                <a
+                                  aria-label="{{ card_product.title }}"
+                                  class="heading-style block h3 no-underline"
+                                  href="{{ card_product.url }}"
+                                >
+                                  {% if card_product.title != blank %}
+                                    {{- card_product.title -}}
+                                  {% else %}
+                                    {{ 'onboarding.product_title' | t }}
+                                  {% endif %}
+                                </a>
+                                {% render 'review', review_star: true, product: card_product %}
+                              </div>
+                              <div class="block-product__price">
+                                <div class="price">
+                                  {%- render 'price',
+                                    scope: 'detail',
+                                    product: card_product,
+                                    price_class: 'price--large'
+                                  -%}
+                                  {%- if cart.tax_included or shop.shipping_policy.body != blank -%}
+                                    <div class="product__tax caption rte mt-5 fs-small">
+                                      {%- if cart.tax_included -%}
+                                        {{ 'products.product.include_taxes' | t }}
+                                      {%- endif -%}
+                                      {%- if shop.shipping_policy.body != blank -%}
+                                        {{
+                                          'products.product.shipping_policy_html'
+                                          | t: link: shop.shipping_policy.url
+                                        }}
+                                      {%- endif -%}
+                                    </div>
+                                  {%- endif -%}
+                                  {%- if card_product != blank -%}
+                                    <div>
+                                      {%- assign product_form_installment_id = 'product-form-installment-'
+                                        | append: section.blocks[0].id
+                                      -%}
+                                      {%- form 'product',
+                                        card_product,
+                                        id: product_form_installment_id,
+                                        class: 'installment caption-large'
+                                      -%}
+                                        <input
+                                          type="hidden"
+                                          name="id"
+                                          value="{{ card_product.selected_or_first_available_variant.id }}"
+                                        >
+                                        {{ form | payment_terms }}
+                                      {%- endform -%}
+                                    </div>
+                                  {%- endif -%}
+                                </div>
+                              </div>
+                              <div class="block-product__variant-picker">
+                                {%- render 'variant-swatches',
+                                  product: card_product,
+                                  scope: 'detail',
+                                  type: 'shopable',
+                                  is_dropdown: false,
+                                  block_id: block.id
+                                -%}
+                              </div>
+                              <a
+                                {% if card_product == blank %}
+                                  role="link" aria-disabled="true"
+                                {% else %}
+                                  href="{{ card_product.url }}"
+                                {% endif %}
+                                aria-label="{{ 'products.product.view_full_details' | t }}"
+                                class="product-singe__view-all-button heading_weight heading-color inline-flex align-center gap-5 no-underline lh-normal"
+                              >
+                                {{ 'products.product.view_full_details' | t }}
+                                {% if settings.rtl %}
+                                  <svg width="12" height="9" fill="none">
+                                    <path fill="#111" d="M4.717 8.783c.152.14.334.211.545.211.199 0 .369-.07.51-.21A.724.724 0 0 0 6 8.255a.688.688 0 0 0-.229-.527L2.555 4.494 5.77 1.277A.688.688 0 0 0 6 .75a.688.688 0 0 0-.229-.527.669.669 0 0 0-.51-.229.744.744 0 0 0-.544.229L.973 3.967a.744.744 0 0 0-.229.545c0 .199.076.369.229.51l3.744 3.761Zm5.256 0c.14.14.316.211.527.211.21 0 .387-.07.527-.21a.724.724 0 0 0 .229-.528.688.688 0 0 0-.229-.527L7.811 4.494l3.216-3.217a.688.688 0 0 0 .229-.527.688.688 0 0 0-.229-.527.688.688 0 0 0-.527-.229.688.688 0 0 0-.527.229L6.229 3.967A.744.744 0 0 0 6 4.512c0 .199.076.369.229.51l3.744 3.761Z"/>
+                                  </svg>
+                                {% else %}
+                                  <svg width="12" height="9" fill="none">
+                                    <path fill="currentColor" d="M7.283 8.783a.776.776 0 0 1-.545.211c-.199 0-.369-.07-.51-.21A.724.724 0 0 1 6 8.255c0-.211.076-.387.229-.527l3.216-3.235L6.23 1.277A.688.688 0 0 1 6 .75c0-.21.076-.387.229-.527a.669.669 0 0 1 .51-.229c.21 0 .392.076.544.229l3.744 3.744a.744.744 0 0 1 .229.545c0 .199-.076.369-.229.51L7.283 8.782Zm-5.256 0a.715.715 0 0 1-.527.211.715.715 0 0 1-.527-.21.724.724 0 0 1-.229-.528c0-.211.076-.387.229-.527l3.216-3.235L.973 1.277A.688.688 0 0 1 .744.75C.744.54.82.363.973.223A.688.688 0 0 1 1.5-.006c.21 0 .387.076.527.229l3.744 3.744A.744.744 0 0 1 6 4.512c0 .199-.076.369-.229.51L2.027 8.782Z"/>
+                                  </svg>
+                                {% endif %}
+                              </a>
                             </div>
                           </div>
-                          <div class="block-product__variant-picker">
-                            {%- render 'variant-swatches',
-                              product: card_product,
-                              scope: 'detail',
-                              type: 'shopable',
-                              block_id: block.id
-                            -%}
-                          </div>
-                          <a
-                            {% if card_product == blank %}
-                              role="link" aria-disabled="true"
-                            {% else %}
-                              href="{{ card_product.url }}"
-                            {% endif %}
-                            aria-label="{{ 'products.product.view_full_details' | t }}"
-                            class="mt-25 product-singe__view-all-button heading_weight heading-color inline-flex align-center gap-5 no-underline lh-normal"
+                          <div
+                            class="block-product__buttons border-top drawer-spacing sticky inset-x-0"
+                            style="--padding-inline-desktop: 3rem;--padding-block: 1.5rem;--padding-block-desktop: 1.5rem;"
                           >
-                            {{ 'products.product.view_full_details' | t }}
-                            {% if settings.rtl %}
-                              <svg width="12" height="9" fill="none">
-                                <path fill="#111" d="M4.717 8.783c.152.14.334.211.545.211.199 0 .369-.07.51-.21A.724.724 0 0 0 6 8.255a.688.688 0 0 0-.229-.527L2.555 4.494 5.77 1.277A.688.688 0 0 0 6 .75a.688.688 0 0 0-.229-.527.669.669 0 0 0-.51-.229.744.744 0 0 0-.544.229L.973 3.967a.744.744 0 0 0-.229.545c0 .199.076.369.229.51l3.744 3.761Zm5.256 0c.14.14.316.211.527.211.21 0 .387-.07.527-.21a.724.724 0 0 0 .229-.528.688.688 0 0 0-.229-.527L7.811 4.494l3.216-3.217a.688.688 0 0 0 .229-.527.688.688 0 0 0-.229-.527.688.688 0 0 0-.527-.229.688.688 0 0 0-.527.229L6.229 3.967A.744.744 0 0 0 6 4.512c0 .199.076.369.229.51l3.744 3.761Z"/>
-                              </svg>
-                            {% else %}
-                              <svg width="12" height="9" fill="none">
-                                <path fill="currentColor" d="M7.283 8.783a.776.776 0 0 1-.545.211c-.199 0-.369-.07-.51-.21A.724.724 0 0 1 6 8.255c0-.211.076-.387.229-.527l3.216-3.235L6.23 1.277A.688.688 0 0 1 6 .75c0-.21.076-.387.229-.527a.669.669 0 0 1 .51-.229c.21 0 .392.076.544.229l3.744 3.744a.744.744 0 0 1 .229.545c0 .199-.076.369-.229.51L7.283 8.782Zm-5.256 0a.715.715 0 0 1-.527.211.715.715 0 0 1-.527-.21.724.724 0 0 1-.229-.528c0-.211.076-.387.229-.527l3.216-3.235L.973 1.277A.688.688 0 0 1 .744.75C.744.54.82.363.973.223A.688.688 0 0 1 1.5-.006c.21 0 .387.076.527.229l3.744 3.744A.744.744 0 0 1 6 4.512c0 .199-.076.369-.229.51L2.027 8.782Z"/>
-                              </svg>
-                            {% endif %}
-                          </a>
-                          <div class="block-product__buttons">
                             {%- if card_product.metafields.custom.external_affiliate == blank -%}
                               <div class="product-detail__buy-buttons">
                                 {%- render 'buy-buttons',
+                                  type: 'shopable',
                                   product: card_product,
                                   section_id: block.id,
                                   product_form_id: product_form_id
@@ -666,7 +701,6 @@
                 </div>
               {% endfor %}
             </div>
-            <div class="swiper-scrollbar"></div>
           </slide-section>
         </div>
       </modal-popup>

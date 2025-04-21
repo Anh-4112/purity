@@ -1,3 +1,4 @@
+import { LazyLoader } from "module-lazyLoad";
 import * as NextSkyTheme from "global";
 
 const delegate = new NextSkyTheme.eventDelegate();
@@ -126,7 +127,7 @@ class VariantInput extends HTMLElement {
   fetchProductInfo({ requestUrl, onSuccess }) {
     this.abortController?.abort();
     this.abortController = new AbortController();
-
+    const _this = this;
     fetch(requestUrl, { signal: this.abortController.signal })
       .then((response) => response.text())
       .then((responseText) => {
@@ -134,12 +135,18 @@ class VariantInput extends HTMLElement {
           responseText,
           "text/html"
         );
-        onSuccess(parsedHTML, this.sectionId, this.event_target, this.blockId);
+        onSuccess(
+          parsedHTML,
+          this.sectionId,
+          this.event_target,
+          this.blockId,
+          _this
+        );
       })
       .catch((error) => console.error("Error:", error));
   }
 
-  updateProductInfo(parsedHTML, sectionId, eventTarget, blockId) {
+  updateProductInfo(parsedHTML, sectionId, eventTarget, blockId, _this) {
     const template = parsedHTML.querySelector("template");
     let queryParsed, queryDocument;
     if (template && blockId) {
@@ -163,6 +170,20 @@ class VariantInput extends HTMLElement {
             "",
             newUrl.toString()
           );
+          const stickyAddCart = queryDocument.querySelector("sticky-add-cart");
+          if (stickyAddCart) {
+            _this.updateStickyAddCart(stickyAddCart, queryParsed, variant);
+          }
+
+          const bought_together = document.querySelector(
+            `.bought-together-products-list`
+          );
+          if (bought_together) {
+            const current_product =
+              bought_together.querySelector(`.current-product`);
+            current_product.querySelector(`input[name="items[][id]"]`).value =
+              variant.id;
+          }
         }
       }
     }
@@ -172,9 +193,11 @@ class VariantInput extends HTMLElement {
       if (source && destination) {
         destination.innerHTML = source.innerHTML;
         if (blockClass == "block-product__variant-picker") {
-          destination
-            .querySelector(`input[value="${eventTarget.value}"]:checked`)
-            .focus({ focusVisible: true });
+          if (eventTarget) {
+            destination
+              .querySelector(`input[value="${eventTarget.value}"]:checked`)
+              .focus({ focusVisible: true });
+          }
         }
       }
     };
@@ -187,6 +210,7 @@ class VariantInput extends HTMLElement {
       "block-product__inventory",
       "block-product__buttons",
       "block-product__pickup",
+      "sticky-sticky__buy-buttons",
     ];
     blocksToUpdate.forEach(updateContent);
     new LazyLoader(".image-lazy-load");
@@ -214,7 +238,7 @@ class VariantInput extends HTMLElement {
 
         const currentBadges = currentProduct.querySelector(".product__badges");
         const newBadges = html.querySelector(".product__badges");
-        if (currentPrice && newBadges) {
+        if (currentBadges && newBadges) {
           currentBadges.replaceWith(newBadges);
         }
 
@@ -238,6 +262,90 @@ class VariantInput extends HTMLElement {
       .catch((e) => {
         console.error("Error updating price:", e);
       });
+  }
+
+  async updateStickyAddCart(stickyAddCart, queryParsed, variant) {
+    if (stickyAddCart.querySelector("select")) {
+      stickyAddCart.querySelector("select").value = variant.id;
+    }
+    const newStickyAddCart = queryParsed.querySelector("sticky-add-cart");
+    const currentPrice = stickyAddCart.querySelector(".product__price");
+    const newPrice = newStickyAddCart.querySelector(".product__price");
+    if (currentPrice && newPrice) {
+      currentPrice.replaceWith(newPrice);
+    }
+
+    const currentBadges = stickyAddCart.querySelector(".product__badges");
+    const newBadges = newStickyAddCart.querySelector(".product__badges");
+    if (currentBadges && newBadges) {
+      currentBadges.replaceWith(newBadges);
+    }
+
+    const currentImage = stickyAddCart.querySelector(".featured-image");
+    const newImage = newStickyAddCart.querySelector(".featured-image");
+    if (currentImage && newImage && currentImage.src !== newImage.src) {
+      await Motion.animate(
+        currentImage,
+        { opacity: [1, 0] },
+        { duration: 0.1, easing: "ease-in", fill: "forwards" }
+      ).finished;
+      await new Promise((resolve) =>
+        newImage.complete ? resolve() : (newImage.onload = resolve)
+      );
+      currentImage.replaceWith(newImage);
+      Motion.animate(
+        newImage,
+        { opacity: [0, 1] },
+        { duration: 0.1, easing: "ease-in" }
+      );
+    }
+  }
+
+  updateBoughtTogether(currentSection) {
+    let total_price = Number(currentSection.getAttribute("data-price"));
+    currentSection
+      .querySelectorAll(".bought-together-checkbox[type='checkbox']")
+      .forEach((item) => {
+        const product = item.closest(".product__item-js");
+        const variant_select = product.querySelector(
+          "variant-swatch-select select"
+        );
+        const productId = item.value;
+        let value_option = "";
+        if (variant_select) {
+          value_option = variant_select.value;
+        }
+        let price = item.getAttribute("data-price");
+        if (variant_select) {
+          price =
+            variant_select.options[variant_select.selectedIndex].getAttribute(
+              "data-price"
+            );
+        }
+        const variant = currentSection.querySelector(
+          `[product-id="${productId}"]`
+        );
+        if (item.checked) {
+          total_price = total_price + Number(price);
+          if (value_option) {
+            variant.querySelector(`input[name="items[][id]"]`).value =
+              value_option;
+          }
+          variant.querySelectorAll("input").forEach((input) => {
+            input.disabled = false;
+          });
+        } else {
+          variant.querySelectorAll("input").forEach((input) => {
+            input.disabled = true;
+          });
+        }
+      });
+    currentSection.querySelector(
+      ".bought-together-products-form .total-price .price"
+    ).innerHTML = NextSkyTheme.formatMoney(
+      total_price,
+      cartStrings.money_format
+    );
   }
 
   onSwatchClick(event) {
@@ -331,6 +439,12 @@ class VariantSwatchSelect extends VariantInput {
     super();
   }
 
+  get sectionId() {
+    return this.hasAttribute("section-id")
+      ? this.getAttribute("section-id")
+      : this.getAttribute("section-id");
+  }
+
   connectedCallback() {
     this.querySelector("select").addEventListener(
       "change",
@@ -342,7 +456,15 @@ class VariantSwatchSelect extends VariantInput {
     e.preventDefault();
     const currentTarget = e.currentTarget;
     if (currentTarget.value) {
-      const currentProduct = this.closest(".product__item-js");
+      const productUrl =
+        currentTarget.options[currentTarget.selectedIndex].getAttribute(
+          "data-product-url"
+        );
+      let currentProduct = this.closest(".product__item-js");
+      if (this.closest("sticky-add-cart")) {
+        this.onVariantChange(productUrl);
+        return;
+      }
       currentProduct
         .querySelectorAll(`a[href^="/products/${this.getAttribute("handle")}"`)
         .forEach((link) => {
@@ -350,12 +472,7 @@ class VariantSwatchSelect extends VariantInput {
           url.searchParams.set("variant", currentTarget.value);
           link.href = `${url.pathname}${url.search}${url.hash}`;
         });
-      const productUrl =
-        currentTarget.options[currentTarget.selectedIndex].getAttribute(
-          "data-product-url"
-        );
       this.createResponsiveProduct(productUrl, currentProduct);
-
       if (currentProduct.closest(".bought-together-products__wrapper")) {
         this.boughtTogetherProducts(
           currentProduct,
@@ -365,59 +482,25 @@ class VariantSwatchSelect extends VariantInput {
     }
   }
 
+  createRequestUrl(baseUrl) {
+    const queryParams = [`section_id=${this.sectionId}`];
+    return `${baseUrl}&${queryParams.join("&")}`;
+  }
+
+  onVariantChange(productUrl) {
+    const requestUrl = this.createRequestUrl(productUrl);
+    this.fetchProductInfo({
+      requestUrl,
+      onSuccess: this.updateProductInfo,
+    });
+  }
+
   boughtTogetherProducts(currentProduct, currentSection) {
     const checkbox = currentProduct.querySelector(".bought-together-checkbox");
     if (!checkbox.checked) {
       return;
     }
     this.updateBoughtTogether(currentSection);
-  }
-
-  updateBoughtTogether(currentSection) {
-    let total_price = Number(currentSection.getAttribute("data-price"));
-    currentSection
-      .querySelectorAll(".bought-together-checkbox[type='checkbox']")
-      .forEach((item) => {
-        const product = item.closest(".product__item-js");
-        const variant_select = product.querySelector(
-          "variant-swatch-select select"
-        );
-        const productId = item.value;
-        let value_option = "";
-        if (variant_select) {
-          value_option = variant_select.value;
-        }
-        let price = item.getAttribute("data-price");
-        if (variant_select) {
-          price =
-            variant_select.options[variant_select.selectedIndex].getAttribute(
-              "data-price"
-            );
-        }
-        const variant = currentSection.querySelector(
-          `[product-id="${productId}"]`
-        );
-        if (item.checked) {
-          total_price = total_price + Number(price);
-          if (value_option) {
-            variant.querySelector(`input[name="items[][id]"]`).value =
-              value_option;
-          }
-          variant.querySelectorAll("input").forEach((input) => {
-            input.disabled = false;
-          });
-        } else {
-          variant.querySelectorAll("input").forEach((input) => {
-            input.disabled = true;
-          });
-        }
-      });
-    currentSection.querySelector(
-      ".bought-together-products-form .total-price .price"
-    ).innerHTML = NextSkyTheme.formatMoney(
-      total_price,
-      cartStrings.money_format
-    );
   }
 }
 customElements.define("variant-swatch-select", VariantSwatchSelect);

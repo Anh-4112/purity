@@ -1,4 +1,6 @@
 import { SlideSection } from "module-slide";
+import PhotoSwipeLightbox from "module-photoSwipeLightbox";
+import { CustomElement } from "module-safariElementPatch";
 
 class MediaGallery extends SlideSection {
   constructor() {
@@ -97,3 +99,108 @@ class QuickViewGallery extends GridGallery {
 if (!customElements.get("quick-view-gallery")) {
   customElements.define("quick-view-gallery", QuickViewGallery);
 }
+
+class MediaZoomButton extends HTMLButtonElement {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  init() {
+    this.addEventListener("click", this.onButtonClick);
+  }
+
+  get gallery() {
+    return this.closest("media-gallery");
+  }
+
+  onButtonClick() {
+    if (this.closest(".pswp__item")) {
+      return;
+    }
+    const lightbox = new PhotoSwipeLightbox({
+      bgOpacity: 1,
+      pswpModule: () => import(importJs.pswpModule),
+      allowPanToNext: false,
+      allowMouseDrag: true,
+      wheelToZoom: false,
+      returnFocus: true,
+      zoom: false,
+    });
+    lightbox.on("contentLoad", (event) => {
+      const { content } = event;
+
+      if (
+        content.type === "video" ||
+        content.type === "external_video" ||
+        content.type === "model"
+      ) {
+        event.preventDefault();
+        content.element = document.createElement("div");
+        content.element.className = "pswp__video-container";
+        content.element.appendChild(content.data.domElement.cloneNode(true));
+      }
+    });
+
+    lightbox.init();
+
+    const index = this.closest(".media-gallery__image").getAttribute(
+      "data-position"
+    );
+    const items = this.gallery.querySelectorAll("[media-gallery]");
+    const itemsToShow = Array.from(items).filter(
+      (element) => element.clientWidth > 0
+    );
+
+    let dataSource = itemsToShow.map((media) => {
+      const image = media.querySelector("img");
+
+      if (media.getAttribute("media-gallery") === "image") {
+        return {
+          thumbnailElement: image,
+          src: image.src,
+          srcset: image.srcset,
+          msrc: image.currentSrc || image.src,
+          width: parseInt(image.getAttribute("width")),
+          height: parseInt(image.getAttribute("height")),
+          alt: image.alt,
+          thumbCropped: true,
+        };
+      }
+
+      if (
+        media.getAttribute("media-gallery") === "video" ||
+        media.getAttribute("media-gallery") === "external_video" ||
+        media.getAttribute("media-gallery") === "model"
+      ) {
+        const video = media;
+        return {
+          thumbnailElement: image,
+          domElement: video,
+          type:
+            media.getAttribute("media-gallery") === "video" ||
+            media.getAttribute("media-gallery") === "external_video"
+              ? media.getAttribute("media-gallery")
+              : "image",
+          src: image ? image.src : "",
+          srcset: image ? image.srcset : "",
+          msrc: image ? image.src : "",
+          width: image ? parseInt(image.getAttribute("width")) : 800,
+          height: image ? parseInt(image.getAttribute("height")) : 800,
+          alt: image ? image.alt : "",
+          thumbCropped: true,
+        };
+      }
+    });
+    lightbox.loadAndOpen(index - 1, dataSource);
+  }
+}
+customElements.define("media-zoom-button", MediaZoomButton, {
+  extends: "button",
+});
+CustomElement.observeAndPatchCustomElements({
+  "media-zoom-button": {
+    tagElement: "button",
+    classElement: MediaZoomButton,
+  },
+});

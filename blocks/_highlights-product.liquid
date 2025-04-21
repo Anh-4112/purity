@@ -1,17 +1,23 @@
 {%- if closest.product != blank -%}
   {%- if closest.product.metafields.custom.highlights.value -%}
-    <ul>
+    <ul
+      class="list-unstyled flex wrap gap-15 row-gap-20 flex-cols p-20 rounded bg-secondary"
+      style="--col-number: 2;--col-desktop: 4;"
+    >
       {%- for highlights in closest.product.metafields.custom.highlights.value -%}
-        <li>
+        <li class="flex column fs-small">
           {% assign image_alt = highlights.title | default: closest.product.title | escape %}
           {%- if highlights.icon -%}
-            <div class="highlights-icon">
-              {% render 'responsive-image', type: 'other', image: highlights.icon, image_alt: image_alt %}
-            </div>
+            {% render 'responsive-image',
+              type: 'other',
+              image: highlights.icon,
+              image_alt: image_alt,
+              class: 'rounded'
+            %}
           {% endif %}
           {%- if highlights.title -%}
-            <div class="highlights-text">
-              <span>{{ highlights.title }}</span>
+            <div class="highlights-text heading-color text-center mt-10">
+              {{ highlights.title }}
             </div>
           {% endif %}
         </li>
