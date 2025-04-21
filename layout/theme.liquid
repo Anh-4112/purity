@@ -250,27 +250,6 @@
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
-    <link
-      rel="stylesheet"
-      href="{{ 'component-deferred-media.css' | asset_url }}"
-      media="print"
-      onload="this.media='all'"
-    >
-    {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
-    <link
-      id="ModelViewerStyle"
-      rel="stylesheet"
-      href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
-      media="print"
-      onload="this.media='all'"
-    >
-    <link
-      id="ModelViewerOverride"
-      rel="stylesheet"
-      href="{{ 'component-model-viewer-ui.css' | asset_url }}"
-      media="print"
-      onload="this.media='all'"
-    >
   </head>
 
   <body class="{{ theme_st.animation_hover_effect }}{% if template.name == 'index' %} template-index{% endif %}{% if theme_st.rounded_image > 10 %} rounded-style{% endif %}">
@@ -331,8 +310,24 @@
         login_successful: ` {{ 'customer.login_page.login_successful' | t }}`,
         login_invalid: ` {{ 'customer.login_page.login_invalid' | t }}`,
       };
+      window.message = {
+        newsletter: {
+          success: `{{ 'newsletter.success' | t }}`,
+          error: `{{ 'newsletter.error' | t }}`
+        },
+      }
+    </script>
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
       window.importJs = {
-        pswpModule: "{{ 'photoswipe.min.js' | asset_url }}"
+        pswpModule: "{{ 'photoswipe.min.js' | asset_url }}",
+        mediaGallery: "{{ 'media-gallery.js' | asset_url }}",
+        productModel: "{{ 'product-model.js' | asset_url }}",
+        mediaLightboxGallery: "{{ 'media-lightbox-gallery.js' | asset_url }}",
+        countdownTimer: "{{ 'countdown-timer.js' | asset_url }}",
       }
     </script>
   </body>

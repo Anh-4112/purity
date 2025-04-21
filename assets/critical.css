@@ -1361,7 +1361,7 @@ body:not(.template-index) .transparent-logo {
   .overflow-x-scroll-mb {
     overflow-x: scroll;
   }
-  :where(.modal-popup-inner, .popup-information) {
+  :where(.modal-popup-inner) {
     transform: translateY(100%);
     -webkit-transform: translateY(100%);
     will-change: transform;
@@ -1758,7 +1758,7 @@ th {
   }
 }
 @media (min-width: 1025px) {
-  .modal-inner {
+  .modal-inner:not(.modal-inner-offer) {
     transform: translateX(var(--slide-out, -100%)) translateY(0);
     -webkit-transform: translateX(var(--slide-out, -100%)) translateY(0);
     top: 0;
