@@ -32,24 +32,120 @@ class ShopableVideo extends SlideSection {
   }
 
   updateCenterSlideClass() {
+    const autoplayVideo = this.dataset.autoplayVideo === "true";
     if (!this || !this.swiper) return;
+    
+    if (!this._animations) {
+      this._animations = new Map();
+    }
+    
+    this._animations.forEach(animation => {
+      if (animation && typeof animation.cancel === 'function') {
+        animation.cancel();
+      }
+    });
+    this._animations.clear();
+    
+    let videoHeight;
     const allSlides = Array.from(this.querySelectorAll(".swiper-slide"));
     const previousCenterSlide = this.querySelector(".swiper-slide.center-slide");
+    
+    if (!this._maxSlideHeight) {
+      let maxHeight = 0;
+      allSlides.forEach(slide => {
+        const slideHeight = slide.scrollHeight;
+        if (slideHeight > maxHeight) {
+          maxHeight = slideHeight;
+        }
+      });
+      
+      this._maxSlideHeight = maxHeight > 0 ? maxHeight : 500;
+    }
+    
     allSlides.forEach((slide) => {
       slide.classList.remove("center-slide");
     });
+    
     const slidesPerView = parseInt(this.swiper.params.slidesPerView);
     if (typeof slidesPerView === "number" && slidesPerView % 2 !== 0) {
       const centerIndex = Math.floor(slidesPerView / 2) + this.swiper.activeIndex;
       if (centerIndex >= 0 && centerIndex < allSlides.length) {
         allSlides[centerIndex].classList.add("center-slide");
         const newCenterSlide = allSlides[centerIndex];
+        const buttonPlay = newCenterSlide.querySelector(".play-button");
+        if (buttonPlay && autoplayVideo) {
+          buttonPlay.classList.add("active");
+        }
+        const video = newCenterSlide.querySelector("video-local");
+          
+        if (video) {
+          if (!this._originalVideoHeight) {
+            this._originalVideoHeight = video.offsetHeight || 300;
+          }
+          videoHeight = this._originalVideoHeight;
+          
+          if (!this._lastSlideChangeTime) {
+            this._lastSlideChangeTime = Date.now();
+            this._isRapidSwiping = false;
+          } else {
+            const timeSinceLastChange = Date.now() - this._lastSlideChangeTime;
+            this._lastSlideChangeTime = Date.now();
+            this._isRapidSwiping = timeSinceLastChange < 300;
+          }
+          
+          if (!this._containerInitialized) {
+            const swiperWrapper = this.querySelector('.swiper-wrapper');
+            if (swiperWrapper) {
+              swiperWrapper.style.minHeight = (this._maxSlideHeight + 10) + 'px';
+              this._containerInitialized = true;
+            }
+          }
+          
+          const centerVideoInner = newCenterSlide.querySelector(".video-item--ratio");
+          if (centerVideoInner) {
+            this._setVideoEffectWithMargin(centerVideoInner, videoHeight, 0);
+          }
+          
+          allSlides.forEach((slide) => {
+            if (!slide.classList.contains("center-slide")) {
+              const nonCenterVideoInner = slide.querySelector(".video-item--ratio");
+              const buttonPlay = slide.querySelector(".play-button");
+              if (buttonPlay && autoplayVideo) {
+                buttonPlay.classList.remove("active");
+              }
+              if (nonCenterVideoInner && videoHeight) {
+                const targetHeight = videoHeight - 50;
+                const marginTop = Math.max(0, (videoHeight - targetHeight) / 2);
+                this._setVideoEffectWithMargin(nonCenterVideoInner, targetHeight, marginTop);
+              }
+            }
+          });
+        }
+          
         if (newCenterSlide !== previousCenterSlide) {
           this.dispatchEvent(new CustomEvent("center-slide-updated", {
             detail: { centerSlide: newCenterSlide }
           }));
         }
       }
+    }
+  }
+  
+  _setVideoEffectWithMargin(element, targetHeight, marginTop) {
+    if (!element._hasSetupTransition) {
+      element.style.transition = this._isRapidSwiping ? 
+        'height 0.15s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.15s cubic-bezier(0.4, 0, 0.2, 1)' : 
+        'height 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      
+      element._hasSetupTransition = true;
+      
+      requestAnimationFrame(() => {
+        element.style.height = `${targetHeight}px`;
+        element.style.marginTop = `${marginTop}px`;
+      });
+    } else {
+      element.style.height = `${targetHeight}px`;
+      element.style.marginTop = `${marginTop}px`;
     }
   }
 
@@ -172,11 +268,10 @@ class ShopableItem extends HTMLElement {
         if (!currentItem) return;
         const popupInfo = currentItem.querySelector(".popup-information");
         if (!popupInfo) return;
-        if (popupInfo.classList.contains("hidden")) {
-          popupInfo.classList.remove("hidden");
-          popupInfo.classList.add("active");
+        if (popupInfo.classList.contains("active")) {
+          popupInfo.classList.remove("active");
         } else {
-          this.hidePopupInformation(popupInfo);
+          popupInfo.classList.add("active");
         }
       }
     });
@@ -184,7 +279,6 @@ class ShopableItem extends HTMLElement {
 
   hidePopupInformation(popupInfo) {
     popupInfo.classList.remove("active");
-    popupInfo.classList.add("hidden");
   }
 
   setupCloseButton() {
@@ -228,7 +322,7 @@ class ShopableItem extends HTMLElement {
     
     const firstSections = Array.from(
       mainElement.querySelectorAll("section")
-    ).slice(0, 2);
+    ).slice(0, 1);
     const allStickyVideos = document.querySelectorAll(".sticky-video");
     if (allStickyVideos.length === 0) return;
     const firstStickyVideo = allStickyVideos[0];
@@ -422,6 +516,7 @@ class ShopableItem extends HTMLElement {
     );
   
     if (nextButton && prevButton && swiperContainer.swiper.navigation) {
+      const _self = this;
       nextButton.setAttribute("tabindex", "0");
       prevButton.setAttribute("tabindex", "0");
       swiperContainer.swiper.navigation.nextEl = nextButton;
@@ -429,78 +524,15 @@ class ShopableItem extends HTMLElement {
       nextButton.addEventListener("click", (e) => {
         e.preventDefault();
         swiperContainer.swiper.slideNext();
-        setTimeout(() => nextButton.focus(), 10);
+        _self.closeAllPopupInformation(modalPopup);
       });
       prevButton.addEventListener("click", (e) => {
         e.preventDefault();
         swiperContainer.swiper.slidePrev();
-        setTimeout(() => prevButton.focus(), 10);
-      });
-      modalPopup.addEventListener("keydown", (e) => {
-        const isVariantInputFocused = document.activeElement && 
-          (document.activeElement.tagName.toLowerCase() === 'variant-input' ||
-           document.activeElement.closest('variant-input'));
-        if (!isVariantInputFocused) {
-          if (e.key === "ArrowLeft") {
-            e.preventDefault();
-            prevButton.click();
-          } else if (e.key === "ArrowRight") {
-            e.preventDefault();
-            nextButton.click();
-          } else if (e.key === "Escape") {
-            NextSkyTheme.eventModal(modalPopup, "close", true);
-          }
-        }
+        _self.closeAllPopupInformation(modalPopup);
       });
     }
     modalPopup.removeAttribute("data-loading");
-    setTimeout(() => this.setFocusInModal(modalPopup), 100);
-  }
-  
-  setFocusInModal(modalPopup) {
-    if (!modalPopup) return;
-    if (!modalPopup.hasAttribute("tabindex")) {
-      modalPopup.setAttribute("tabindex", "-1");
-    }
-    const focusableElements = modalPopup.querySelectorAll(
-      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), .swiper-button-next, .swiper-button-prev'
-    );
-    if (focusableElements.length > 0) {
-      focusableElements[0].focus();
-    } else {
-      modalPopup.focus();
-    }
-    if (typeof NextSkyTheme.trapFocus === "function") {
-      NextSkyTheme.trapFocus(modalPopup);
-    } else {
-      this.setupSimpleFocusTrap(modalPopup, focusableElements);
-    }
-  }
-  
-  setupSimpleFocusTrap(modalPopup, focusableElements) {
-    if (!focusableElements || focusableElements.length === 0) return;
-    const firstFocusableElement = focusableElements[0];
-    const lastFocusableElement = focusableElements[focusableElements.length - 1];
-    if (modalPopup._tabKeydownHandler) {
-      modalPopup.removeEventListener("keydown", modalPopup._tabKeydownHandler);
-    }
-    const tabKeydownHandler = (e) => {
-      if (e.key === 'Tab') {
-        if (e.shiftKey && document.activeElement === firstFocusableElement) {
-          e.preventDefault();
-          lastFocusableElement.focus();
-        }
-        else if (!e.shiftKey && document.activeElement === lastFocusableElement) {
-          e.preventDefault();
-          firstFocusableElement.focus();
-        }
-      }
-    };
-    modalPopup._tabKeydownHandler = tabKeydownHandler;
-    modalPopup.addEventListener("keydown", tabKeydownHandler);
-    modalPopup.addEventListener("modal:close", () => {
-      modalPopup.removeEventListener("keydown", tabKeydownHandler);
-    }, { once: true });
   }
   
   onShowPopupModal(event) {
@@ -508,7 +540,6 @@ class ShopableItem extends HTMLElement {
     const clickedItem = this;
     const productId = clickedItem.getAttribute("data-product");
     if (!productId) return;
-    const previouslyFocusedElement = document.activeElement;
     let modalPopup = document.querySelector("modal-popup");
     if (!modalPopup) {
       const shopable_video = this.closest(".section-shopable-video")
@@ -527,14 +558,6 @@ class ShopableItem extends HTMLElement {
     if (modalPopup) {
       modalPopup.setAttribute("data-loading", "true");
       modalPopup.setAttribute("data-current", productId);
-      modalPopup._previouslyFocusedElement = previouslyFocusedElement;
-      modalPopup.addEventListener("modal:close", () => {
-        if (modalPopup._previouslyFocusedElement) {
-          setTimeout(() => {
-            modalPopup._previouslyFocusedElement.focus();
-          }, 10);
-        }
-      }, { once: true });
       NextSkyTheme.eventModal(modalPopup, "open", true);
       const swiperContainer = modalPopup.querySelector("slide-section");
       if (swiperContainer) {
@@ -547,9 +570,17 @@ class ShopableItem extends HTMLElement {
         }
       } else {
         modalPopup.removeAttribute("data-loading");
-        setTimeout(() => this.setFocusInModal(modalPopup), 100);
       }
     }
+  }
+
+  closeAllPopupInformation(modalPopup) {
+    const popupInfo = modalPopup.querySelectorAll(".popup-information");
+    popupInfo.forEach((info) => {
+      if (info.classList.contains("active")) {
+        info.classList.remove("active");
+      }
+    });
   }
 }
 customElements.define("shopable-item", ShopableItem);

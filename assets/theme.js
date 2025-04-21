@@ -951,6 +951,16 @@ class QuantityInput extends HTMLElement {
       : this.input.stepDown();
     if (previousValue !== this.input.value)
       this.input.dispatchEvent(this.changeEvent);
+
+    const main_product = this.closest(".sec__main-product");
+    if (main_product) {
+      main_product.querySelector("quantity-input input").value =
+        this.input.value;
+      const sticky = main_product.querySelector(".sticky-add-cart");
+      if (sticky) {
+        sticky.querySelector("quantity-input input").value = this.input.value;
+      }
+    }
   }
 
   validateQtyRules() {
@@ -964,6 +974,15 @@ class QuantityInput extends HTMLElement {
       const max = parseInt(this.input.max);
       const buttonPlus = this.querySelector(".quantity__button[name='plus']");
       buttonPlus.classList.toggle("disabled", value >= max);
+    }
+    const main_product = this.closest(".sec__main-product");
+    if (main_product) {
+      main_product.querySelector("quantity-input input").value =
+        this.input.value;
+      const sticky = main_product.querySelector(".sticky-add-cart");
+      if (sticky) {
+        sticky.querySelector("quantity-input input").value = this.input.value;
+      }
     }
   }
 }
@@ -1114,20 +1133,6 @@ class VideoProductGallery extends VideoLocal {
   }
 }
 customElements.define("video-product-gallery", VideoProductGallery);
-
-class VideoLocalLightbox extends VideoLocal {
-  constructor() {
-    super();
-    this.init();
-  }
-
-  init() {
-    setTimeout(() => {
-      this.loadContent();
-    }, 100);
-  }
-}
-customElements.define("video-local-lightbox", VideoLocalLightbox);
 
 class AnnouncementBar extends HTMLElement {
   constructor() {
@@ -2299,21 +2304,107 @@ CustomElement.observeAndPatchCustomElements({
     classElement: AskQuestion,
   },
 });
+class NewsletterPopup extends HTMLElement {
+  constructor() {
+    super();
+    this.enable = this.dataset.enable;
+    this.initialized = false;
+  }
+
+  connectedCallback() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => this.init());
+    } else {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => this.init());
+      } else {
+        setTimeout(() => this.init(), 100);
+      }
+    }
+  }
+
+  init() {
+    if (this.initialized) return;
+    this.initialized = true;
+
+    const urlChecked = this.checkUrlParameters();
+    if (urlChecked) {
+      return;
+    }
+    
+    const getCookie = NextSkyTheme.getCookie("newsletter_popup");
+    if ((this.enable === "show-on-homepage" || this.enable === "show-all-page") && getCookie === null) {
+      this.createPopup();
+    }
+  }
+
+  createPopup() {
+    const template = this.querySelector("template");
+    if (!template) return;
+
+    const content = document.createElement("div");
+    content.appendChild(template.content.firstElementChild.cloneNode(true));
+    
+    const wrapper = NextSkyTheme.body.appendChild(content.querySelector("modal-popup"));
+    
+    setTimeout(() => {
+      NextSkyTheme.eventModal(wrapper, "open", true);
+    }, 3000);
+    
+    this.initNotShow(wrapper);
+  }
+
+  checkUrlParameters() {
+    const urlInfo = window.location.href;
+    const newURL = location.href.split("?")[0];
+    
+    if (urlInfo.indexOf('customer_posted=true') >= 1) {
+      NextSkyTheme.setCookie("newsletter_popup", "true", 1);
+      NextSkyTheme.notifier.show(message.newsletter.success, 'success', 4000);
+      window.history.pushState('object', document.title, newURL);
+      return true;
+    }
+    
+    if (urlInfo.indexOf('contact%5Btags%5D=newsletter&form_type=customer') >= 1) {
+      NextSkyTheme.notifier.show(message.newsletter.error, 'error', 4000);
+      window.history.pushState('object', document.title, newURL);
+      return false;
+    }
+    
+    return false;
+  }
+
+  initNotShow(modal) {
+    const notShow = modal?.querySelector(".newsletter-action");
+    if (!notShow) return;
+    
+    notShow.addEventListener("click", () => {
+      NextSkyTheme.setCookie("newsletter_popup", "true", 1);
+      NextSkyTheme.eventModal(modal, "close", true);
+    });
+  }
+}
+
+customElements.define("newsletter-popup", NewsletterPopup);
 class SocialShare extends HTMLElement {
   constructor() {
-      super();
-      this.init();
+    super();
+    this.init();
   }
   init() {
-      this.querySelectorAll('.blog-sharing .btn-sharing').forEach(share => {
-          share.addEventListener("click", event => {
-              event.preventDefault();
-              const target = event.currentTarget;
-              const social = target.getAttribute('data-social');
-              const nameSocial = target.getAttribute('data-name');
-              window.open(social,nameSocial,'height=500,width=500');
-          }, false);
-      });
+    this.querySelectorAll(".blog-sharing .btn-sharing").forEach((share) => {
+      share.addEventListener(
+        "click",
+        (event) => {
+          event.preventDefault();
+          const target = event.currentTarget;
+          const social = target.getAttribute("data-social");
+          const nameSocial = target.getAttribute("data-name");
+          window.open(social, nameSocial, "height=500,width=500");
+        },
+        false
+      );
+    });
   }
 }
 customElements.define("social-share", SocialShare);

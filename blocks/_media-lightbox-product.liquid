@@ -5,8 +5,9 @@
 -%}
 {%- if closest.product != blank -%}
   {%- if closest.product.metafields.custom.media_lightbox.value -%}
+    <script type="module" src="{{ 'media-lightbox-gallery.js' | asset_url }}"></script>
     <slide-section
-      class="swiper"
+      class="swiper media-lightbox-slide"
       data-section-id="{{ section.id }}"
       data-effect="slide"
       data-speed="500"
@@ -24,7 +25,12 @@
           <div class="swiper-slide">
             {%- assign image_alt = media.alt | default: closest.product.title | escape -%}
             <div class="media-lightbox-item">
-              <video-local-lightbox tabindex="0" class="block fs-0 rounded-10">
+              <video-local-lightbox
+                tabindex="0"
+                class="block fs-0 rounded-10"
+                data-position="{{ forloop.index }}"
+                media-gallery="{% if media.media_type == 'video' -%}video{% else %}image{% endif %}"
+              >
                 <div class="video-thumbnail">
                   {% render 'responsive-image', type: 'banner', image: media, image_alt: image_alt, class="rounded-10" %}
                 </div>
@@ -58,6 +64,7 @@
 {% schema %}
 {
   "name": "t:sections.all.product_setting.media_lightbox.name",
+  "class": "block-product__media-lightbox my-25 slideIn-animate",
   "settings": [
     {
       "type": "header",
