@@ -951,6 +951,16 @@ class QuantityInput extends HTMLElement {
       : this.input.stepDown();
     if (previousValue !== this.input.value)
       this.input.dispatchEvent(this.changeEvent);
+
+    const main_product = this.closest(".sec__main-product");
+    if (main_product) {
+      main_product.querySelector("quantity-input input").value =
+        this.input.value;
+      const sticky = main_product.querySelector(".sticky-add-cart");
+      if (sticky) {
+        sticky.querySelector("quantity-input input").value = this.input.value;
+      }
+    }
   }
 
   validateQtyRules() {
@@ -964,6 +974,15 @@ class QuantityInput extends HTMLElement {
       const max = parseInt(this.input.max);
       const buttonPlus = this.querySelector(".quantity__button[name='plus']");
       buttonPlus.classList.toggle("disabled", value >= max);
+    }
+    const main_product = this.closest(".sec__main-product");
+    if (main_product) {
+      main_product.querySelector("quantity-input input").value =
+        this.input.value;
+      const sticky = main_product.querySelector(".sticky-add-cart");
+      if (sticky) {
+        sticky.querySelector("quantity-input input").value = this.input.value;
+      }
     }
   }
 }

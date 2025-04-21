@@ -31,11 +31,12 @@ class ButtonQuickView extends HTMLButtonElement {
     );
   }
 
-  onClick(e) {
+  async onClick(e) {
     e.preventDefault();
     if (this.dataset.url) {
       this.setAttribute("aria-disabled", true);
       this.classList.add("loading");
+      await (import(importJs.mediaGallery), import(importJs.productModel));
       this.fetchUrl();
     }
   }
