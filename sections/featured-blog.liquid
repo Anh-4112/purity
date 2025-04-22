@@ -77,10 +77,9 @@
           vertical_alignment: section_st.vertical_alignment
         %}
       {%- else -%}
-        <div class="blog-placeholder flex">
+        <div class="blog-placeholder flex-1025 wrap gap rounded"  style="--col-width: 66%;--gap: 0px;">
           <div
-            class="article_post-image placeholder banner__media rounded relative overflow-hidden w-custom"
-            style="--width: 66%;"
+            class="article_post-image placeholder banner__media relative overflow-hidden col-1025-w-custom"
           >
             <a
               role="link"
@@ -92,8 +91,7 @@
             </a>
           </div>
           <div
-            class="card__content bg-secondary flex column w-custom p-30 text-{{ section_st.content_alignment }} align-{{ section_st.content_alignment }} justify-content-{{ section_st.vertical_alignment }}"
-            style="--width: 34%;"
+            class="card__content col-1025-remaining bg-secondary flex column w-custom p-30  p-1025-50 text-{{ section_st.content_alignment }} align-{{ section_st.content_alignment }} justify-content-{{ section_st.vertical_alignment }}"
           >
             {%- if section_st.show_category -%}
               <p
@@ -103,7 +101,7 @@
                 {{- 'blogs.article.blog' | t -}}
               </p>
             {%- endif -%}
-            <div class="card__heading mb-10{% if section_st.columns_desktop < 3 %} h4{% else %} h5{% endif %}">
+            <div class="card__heading mb-10{% if section_st.columns_desktop < 3 %} h4{% else %} h2{% endif %}">
               <a
                 role="link"
                 aria-label="{{ 'sections.featured_blog.onboarding_title' | t }}"
@@ -129,7 +127,7 @@
               {%- endif -%}
             </ul>
             {%- if section_st.show_excerpt -%}
-              <p class="rte-width rte mt-0 mb-40">
+              <p class="rte-width rte mt-0 mb-35">
                 {{- 'blogs.article.description' | t -}}
               </p>
             {%- endif -%}
