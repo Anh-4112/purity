@@ -48,7 +48,10 @@
             <label class="visually-hidden" for="Quantity-{{ section.id }}">
               {{- 'products.product.quantity.label' | t -}}
             </label>
-            <quantity-input id="Quantity-Form-{{ section.id }}" class="input-rounded quantity flex input-style px-0">
+            <quantity-input
+              id="Quantity-Form-{{ section.id }}"
+              class="input-rounded quantity flex input-style px-0{{ class_quantity }}"
+            >
               <button
                 class="quantity__button flex align-center btn-reset ps-20 pe-10 pointer"
                 name="minus"
@@ -63,7 +66,7 @@
               </button>
               <input
                 class="quantity__input w-custom text-center border-0"
-                style="--input-padding: 0;--width: 3.8rem;--input-border-radius: 0;--input-bg: transparent;--input-height: auto;"
+                style="--input-padding: 0;--width: 4.7rem;--input-border-radius: 0;--input-bg: transparent;--input-height: auto;"
                 type="number"
                 name="quantity"
                 id="Quantity-{{ section.id }}"
@@ -93,7 +96,7 @@
                 id="ProductSubmitButton-{{ section.id }}"
                 type="submit"
                 name="add"
-                class="btn{% if type == 'shopable' %} btn-primary w-full{% else %} btn-outline{% endif %} w-full relative product_submit_button product-form__submit word-wrap relative"
+                class="btn{{ class_btn }}{% if type == 'primary' %} btn-primary{% else %} btn-outline{% endif %} w-full relative product_submit_button product-form__submit word-wrap relative"
                 {% if product.selected_or_first_available_variant.available == false %}
                   disabled
                 {% endif %}
@@ -130,7 +133,7 @@
       <button
         type="submit"
         name="add"
-        class="product_buy_now_button product-form__submit btn btn-primary disabled{% if type == 'shopable' %} w-full{% endif %}"
+        class="{{ class_btn }}product_buy_now_button product-form__submit btn btn-primary disabled{% if type == 'primary' %} w-full{% endif %}"
         disabled
       >
         {{ 'products.product.sold_out' | t }}
