@@ -1,0 +1,25 @@
+spinning-text .spinning-text__circle {
+  font-size: 17px;
+  color: #000;
+  animation-name: spinning-text__rotate;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.spinning-text__logo {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spinning-text__rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+spinning-text .spinning-text__content span {
+  position: absolute;
+  left: 50%;
+  transform-origin: 0 calc(var({{block_st.width}}) / 2); /* quan trọng */
+  font-size: 1em;
+}

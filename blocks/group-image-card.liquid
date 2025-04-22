@@ -51,46 +51,47 @@
 -%}
 
 <div
-    class="flex wrap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
-    id="{{ forloop.index }}"
-  >
-    <div class="image-with-text__media-item w-full w-1025-50-percent">
-      <div
-        class="image-with-text__media banner__media {{ radius_image_class }} h-full"
-        style="--aspect-ratio: {{ ratio }}";
-      >
-        {%- liquid
-          assign alt = 'general.image.image_alt_default' | t
-          if block_st.image.alt
-            assign alt = block_st.image.alt | escape
-          endif
-        -%}
-        {%- if block_st.image != blank -%}
-          {% render 'responsive-image',
-            type: 'other',
-            container: section_width,
-            image: block_st.image,
-            image_alt: alt,
-            padding: column_gap_slide
-          %}
-        {% else %}
-          {% render 'placeholder-render',type: 'collection-6', class: "img-placeholder h-full w-full" %}
-        {% endif %}
-      </div>
-    </div>
-    <div class="w-full w-1025-50-percent flex text-{{ section_st.content_alignment }}">
-      {% if has_custom_background %}
-        <div
-          class="image-with-text__wrapper w-full flex bg-custom {{ radius_content_class }}"
-          style="--bg-color-custom: {{ section_st.background_color }};"
-        >
+  class="flex wrap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
+  id="{{ forloop.index }}"
+>
+  <div class="image-with-text__media-item w-full w-1025-50-percent">
+    <div
+      class="image-with-text__media banner__media {{ radius_image_class }} h-full"
+      style="--aspect-ratio: {{ ratio }}"
+      ;
+    >
+      {%- liquid
+        assign alt = 'general.image.image_alt_default' | t
+        if block_st.image.alt
+          assign alt = block_st.image.alt | escape
+        endif
+      -%}
+      {%- if block_st.image != blank -%}
+        {% render 'responsive-image',
+          type: 'other',
+          container: section_width,
+          image: block_st.image,
+          image_alt: alt,
+          padding: column_gap_slide
+        %}
+      {% else %}
+        {% render 'placeholder-render', type: 'collection-6', class: 'img-placeholder h-full w-full' %}
       {% endif %}
-      <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }} text-{{ section_st.text_alignment_mobile }} text-md-{{ section_st.text_alignment }}">
-        {% content_for 'blocks' %}
-      </div>
-      {% if has_custom_background %}</div>{% endif %}
     </div>
   </div>
+  <div class="w-full w-1025-50-percent flex text-{{ section_st.content_alignment }}">
+    {% if has_custom_background %}
+      <div
+        class="image-with-text__wrapper w-full flex bg-custom {{ radius_content_class }}"
+        style="--bg-color-custom: {{ section_st.background_color }};"
+      >
+    {% endif %}
+    <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }} text-{{ section_st.text_alignment_mobile }} text-md-{{ section_st.text_alignment }}">
+      {% content_for 'blocks' %}
+    </div>
+    {% if has_custom_background %}</div>{% endif %}
+  </div>
+</div>
 
 {% schema %}
 {
@@ -128,7 +129,7 @@
       "name": "t:sections.image_card.blocks.group_name",
       "blocks": [
         {
-            "type": "highlight-text"
+          "type": "highlight-text"
         },
         {
           "type": "heading"
