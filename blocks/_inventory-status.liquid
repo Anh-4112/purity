@@ -16,11 +16,40 @@
     width: 13px;
     height: 13px;
     border-radius: 50%;
-    box-shadow: inset 0 0 0 var(--shadow-position, 4px) rgb(var(--color-white, #fff));
-    background: var(--color-text);
+    box-shadow: inset 0 0 0 var(--shadow-position, 4px) var(--color-text);
+    background: rgb(var(--color-white));
     position: absolute;
     inset: 0;
     margin: auto;
+  }
+
+  .dot-animation:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: block;
+    -webkit-animation: ripple_animate 1s ease infinite;
+    animation: ripple_animate 1s ease infinite;
+    border-radius: 50%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background-color: var(--color-text);
+    z-index: -1;
+  }
+  @keyframes ripple_animate {
+    0% {
+      opacity: 0.5;
+      -webkit-transform: scale(0.5);
+      transform: scale(0.5);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
   }
 {% endstyle %}
 {% if product.metafields.custom.external_affiliate == blank %}
@@ -41,25 +70,25 @@
         {%- if product_qty <= inventory_threshold -%}
           {%- if product_qty > 0 -%}
             <div class="message flex gap-10 text-color" style="--color-text: {{ settings.sale_background }}">
-              <span class="dot-animation"></span>
+              <span class="dot-animation relative"></span>
               {{ 'products.product.inventory_status.low_stock' | t: count: product_qty }}
             </div>
           {%- else -%}
             {%- if product_available -%}
               <div class="message flex gap-10 text-color" style="--color-text: {{ settings.pre_order_background }}">
-                <span class="dot-animation"></span>
+                <span class="dot-animation relative"></span>
                 {{ 'products.product.inventory_status.pre_order' | t }}
               </div>
             {%- else -%}
               <div class="message flex gap-10 text-color" style="--color-text: {{ settings.sale_background }}">
-                <span class="dot-animation"></span>
+                <span class="dot-animation relative"></span>
                 {{ 'products.product.inventory_status.sold_out' | t }}
               </div>
             {%- endif -%}
           {%- endif -%}
         {%- else -%}
-          <div class="message flex gap-10 success-color" style="--color-text: #14854E">
-            <span class="dot-animation"></span>
+          <div class="message flex gap-10 text-color" style="--color-text: #14854E">
+            <span class="dot-animation relative"></span>
             {{ 'products.product.inventory_status.available' | t }}
           </div>
         {%- endif -%}

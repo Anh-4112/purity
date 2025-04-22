@@ -33,12 +33,13 @@
         assign video_id = featured_media.external_id
       %}
       <div
-        class="hover-action media-gallery__external-video rounded{{ class }}"
+        class="hover-action media-gallery__external-video rounded-10{{ class }}"
         {% if thumbnail != true %}
           data-position="{{ media_position }}"
           media-gallery="{{ featured_media.media_type }}"
+        {% else %}
+          style="--aspect-ratio: {{ ratio }}"
         {% endif %}
-        style="--aspect-ratio: {{ ratio }}"
       >
         {% if thumbnail == true %}
           {% render 'responsive-image', type: 'product', image: featured_media, image_alt: image_alt %}
@@ -47,14 +48,15 @@
             {% if enable_video_autoplay %}
               auto-play
             {% endif %}
+            style="--aspect-ratio: {{ ratio }}"
           >
-            <div class="video-thumbnail banner__media overflow-hidden rounded">
+            <div class="video-thumbnail banner__media overflow-hidden rounded w-full h-full">
               {% render 'responsive-image',
                 type: 'product',
                 image: featured_media.preview_image,
                 image_alt: image_alt,
                 motion: false,
-                class: 'rounded-10'
+                class: 'rounded-10 w-full h-full'
               %}
               {% if enable_video_autoplay == blank %}
                 <div class="deferred-media__poster-button absolute z-3 flex content-center wh-55">
@@ -136,13 +138,13 @@
               auto-play
             {% endif %}
           >
-            <div class="video-thumbnail banner__media overflow-hidden rounded">
+            <div class="video-thumbnail banner__media overflow-hidden rounded w-full h-full">
               {% render 'responsive-image',
                 type: 'product',
                 image: featured_media.preview_image,
                 image_alt: image_alt,
                 motion: false,
-                class: 'rounded-10'
+                class: 'rounded-10 w-full h-full'
               %}
               {% if enable_video_autoplay == blank %}
                 <div class="deferred-media__poster-button absolute z-3 flex content-center wh-55">
@@ -286,12 +288,13 @@
           assign video_id = image.external_id
         %}
         <div
-          class="hover-action media-gallery__external-video rounded{{ class }}"
+          class="hover-action media-gallery__external-video rounded-10{{ class }}"
           {% if thumbnail != true %}
             data-position="{{ media_position }}"
             media-gallery="{{ image.media_type }}"
+          {% else %}
+            style="--aspect-ratio: {{ ratio }}"
           {% endif %}
-          style="--aspect-ratio: {{ ratio }}"
         >
           {% if thumbnail == true %}
             {% render 'responsive-image', type: 'product', image: image, image_alt: image_alt %}
@@ -299,15 +302,16 @@
             <video-product-gallery
               {% if enable_video_autoplay %}
                 auto-play
-              {% endif %}
+              {% endif -%}
+              style="--aspect-ratio: {{ ratio }}"
             >
-              <div class="video-thumbnail banner__media overflow-hidden rounded">
+              <div class="video-thumbnail banner__media overflow-hidden rounded w-full h-full">
                 {% render 'responsive-image',
                   type: 'product',
                   image: image.preview_image,
                   image_alt: image_alt,
                   motion: false,
-                  class: 'rounded-10'
+                  class: 'rounded-10 w-full h-full'
                 %}
                 {% if enable_video_autoplay == blank %}
                   <div class="deferred-media__poster-button absolute z-3 flex content-center wh-55">
@@ -358,8 +362,9 @@
           {% if thumbnail != true %}
             data-position="{{ media_position }}"
             media-gallery="{{ image.media_type }}"
+          {% else %}
+            style="--aspect-ratio: {{ ratio }}"
           {% endif %}
-          style="--aspect-ratio: {{ ratio }}"
         >
           {%- liquid
             assign source = image.sources
@@ -388,14 +393,15 @@
               {% if enable_video_autoplay %}
                 auto-play
               {% endif %}
+              style="--aspect-ratio: {{ ratio }}"
             >
-              <div class="video-thumbnail banner__media overflow-hidden rounded">
+              <div class="video-thumbnail banner__media overflow-hidden rounded w-full h-full">
                 {% render 'responsive-image',
                   type: 'product',
                   image: image.preview_image,
                   image_alt: image_alt,
                   motion: false,
-                  class: 'rounded-10'
+                  class: 'rounded-10 w-full h-full'
                 %}
                 {% if enable_video_autoplay == blank %}
                   <div class="deferred-media__poster-button absolute z-3 flex content-center wh-55">
