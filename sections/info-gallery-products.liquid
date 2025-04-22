@@ -12,17 +12,73 @@
     assign text_alignment = section_st.text_alignment
     assign desktop_content_position = section_st.desktop_content_position
     assign content_alignment = section_st.content_alignment
-    assign content_alignment_mobile = section_st.content_alignment_mobile
     assign header_size = ''
     if heading_size == 'small'
       assign header_size = 'h3'
     elsif heading_size == 'large'
       assign header_size = 'h1'
     endif
+    assign image_height = section_st.image_height
   -%}
   {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
+  {% style %}
+    .info-gallery__list {
+      --transition: all 0.6s ease;
+    }
+    :is(.h-gallery-small, .h-gallery-medium, .h-gallery-large) {
+      min-height: var(--item-height-mb);
+    }
+    .h-gallery-small {
+      --item-height-mb: 100px;
+      --item-height-mb-active: 350px;
+      --item-height: 400px;
+    }
+    .h-gallery-medium {
+      --item-height-mb: 120px;
+      --item-height-mb-active: 400px;
+      --item-height: 500px;
+    }
+    .h-gallery-large {
+      --item-height-mb: 150px;
+      --item-height-mb-active: 500px;
+      --item-height: 600px;
+    }
+    .sec__content-inner {
+      opacity: 0;
+      position: relative;
+      z-index: 5;
+      white-space: nowrap;
+      overflow: hidden;
+      -webkit-transform: translateY(20px);
+      transform: translateY(20px);
+      transition: 0.4s;
+      -webkit-transition: 0.4s;
+    }
+    .info-gallery__card.active .sec__content-inner {
+      opacity: 1;
+      -webkit-transform: translate(0);
+      transform: translate(0);
+    }
+    @media screen and (max-width: 767.98px) {
+      .info-gallery__card.active :is(.h-gallery-small, .h-gallery-medium, .h-gallery-large) {
+        min-height: var(--item-height-mb-active);
+      }
+    }
+    @media screen and (min-width: 768px) {
+      :is(.h-gallery-small, .h-gallery-medium, .h-gallery-large) {
+        min-height: var(--item-height);
+      }
+      .info-gallery__card.active {
+        flex: max(calc(var(--flex-gallery) - 1), 1.5);
+      }
+      .sec__content-inner {
+        -webkit-transform: translateX(-20px) translateY(0);
+        transform: translateX(-20px) translateY(0);
+      }
+    }
+  {% endstyle %}
   <div
     class="section color-{{ section_st.color_scheme }} section__info-gallery-product gradient"
     style="{{ style | strip | strip_newlines }}"
@@ -51,15 +107,22 @@
       {%- endif -%}
       <div class="info-gallery__wrapper">
         <ul
-          class="info-gallery__list"
+          class="info-gallery__list list-unstyled flex column flex-md-row gap-5"
           role="list"
           style="--flex-gallery: {{ product.metafields.custom.info_gallery.value.count }}"
         >
           {%- for info_gallery in product.metafields.custom.info_gallery.value -%}
-            <li class="info-gallery__card{% if forloop.index == 1 %} active{% endif %}">
+            <li class="info-gallery__card flex-1 transition relative{% if forloop.index == 2 %} active{% endif %}">
               {%- assign image_alt = info_gallery.image.alt | default: product.title | escape -%}
-              <div class="info-gallery__media">
-                {% render 'responsive-image', type: 'banner', image: info_gallery.image, image_alt: image_alt %}
+              <div
+                class="info-gallery__media h-gallery-{{ image_height }} rounded transition"
+              >
+                {% render 'responsive-image',
+                  type: 'banner',
+                  image: info_gallery.image,
+                  image_alt: image_alt,
+                  class: 'absolute inset-0 w-full h-full object-fit-cover'
+                %}
                 {%- if info_gallery.highlights_text -%}
                   <div class="info-gallery__label">
                     <span>{{ info_gallery.highlights_text }}</span>
@@ -67,36 +130,36 @@
                 {% endif %}
               </div>
               {%- if info_gallery.subheading or info_gallery.heading or info_gallery.description -%}
-                <div class="info-gallery__info">
-                  <div class="sec__content w-full {{ desktop_content_position }} text-{{ content_alignment_mobile }} text-md-{{ content_alignment }} container relative z-2">
+                <div class="info-gallery__info absolute inset-0 flex">
+                  <div class="sec__content w-full flex {{ desktop_content_position }} text-md-{{ content_alignment }} p-30 p-1025-40 relative z-2">
                     {% assign animate_delay = 25 %}
-                    <div class="sec__content-inner prose max-w-100">
+                    <div class="prose max-w-100">
                       {%- if info_gallery.subheading -%}
-                        <div class="sec__content-subheading">
+                        <div class="sec__content-inner sec__content-subheading">
                           {% assign animate_delay = animate_delay | plus: 5 %}
                           <motion-effect
                             data-animate="fade-up"
                             data-animate-delay="{{ animate_delay }}"
-                            class="block"
+                            class="block h7 subheading_weight mb-10"
                           >
                             {{ info_gallery.subheading }}
                           </motion-effect>
                         </div>
                       {%- endif -%}
                       {%- if info_gallery.heading -%}
-                        <div class="sec__content-heading mb-10 {{ heading_size }}">
+                        <div class="sec__content-inner sec__content-heading mb-10 {{ heading_size }}">
                           {% assign animate_delay = animate_delay | plus: 5 %}
                           <motion-effect
                             data-animate="fade-up"
                             data-animate-delay="{{ animate_delay }}"
-                            class="block"
+                            class="block h2"
                           >
                             {{ info_gallery.heading }}
                           </motion-effect>
                         </div>
                       {%- endif -%}
                       {%- if info_gallery.description -%}
-                        <div class="sec__content-des">
+                        <div class="sec__content-inner sec__content-des mt-15">
                           {% assign animate_delay = animate_delay | plus: 5 %}
                           <motion-effect
                             data-animate="fade-up"
@@ -216,6 +279,30 @@
     },
     {
       "type": "header",
+      "content": "t:sections.all.image.label"
+    },
+    {
+      "type": "select",
+      "id": "image_height",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:sections.slideshow.settings.slide_height.small"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.slideshow.settings.slide_height.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.slideshow.settings.slide_height.large"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.scrolling_text.settings.blocks.image.image_height.label"
+    },
+    {
+      "type": "header",
       "content": "t:sections.all.content_setting.label"
     },
     {
@@ -275,30 +362,6 @@
     {
       "type": "select",
       "id": "content_alignment",
-      "options": [
-        {
-          "value": "start",
-          "label": "t:sections.all.text_alignment.options__1.label"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.all.text_alignment.options__2.label"
-        },
-        {
-          "value": "end",
-          "label": "t:sections.all.text_alignment.options__3.label"
-        }
-      ],
-      "default": "start",
-      "label": "t:sections.all.text_alignment.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.all.mobile_options.mobile_layout.label"
-    },
-    {
-      "type": "select",
-      "id": "content_alignment_mobile",
       "options": [
         {
           "value": "start",
