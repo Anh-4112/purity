@@ -84,7 +84,7 @@
           </h2>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description">
+          <div class="section-description mt-15">
             {{ section_st.description }}
           </div>
         {%- endif -%}
@@ -247,7 +247,7 @@
                     show_quick_add: true,
                     disable_color_swatches: true,
                     style_layout: ' flex gap-10 align-center',
-                    image_class: ' flex-auto w-custom',
+                    image_class: ' flex-auto w-custom rounded-10',
                     image_rounded: ' rounded-10',
                     info_class: ' flex-1 mt-0 col-remaining'
                   %}
@@ -515,7 +515,7 @@
                           class: ' z-2',
                           style_layout: ' flex',
                           image_class: ' flex-auto w-custom rounded-10 w-full-1025',
-                          image_rounded: '',
+                          image_rounded: ' rounded-10',
                           info_class: ' flex-1 mt-0 px-20 py-15 align-self-center'
                         %}
                         <button
@@ -694,7 +694,7 @@
                             {%- if card_product.metafields.custom.external_affiliate == blank -%}
                               <div class="product-detail__buy-buttons">
                                 {%- render 'buy-buttons',
-                                  type: 'shopable',
+                                  type: 'primary',
                                   product: card_product,
                                   section_id: block.id,
                                   product_form_id: product_form_id

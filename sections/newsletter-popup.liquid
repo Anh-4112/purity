@@ -43,28 +43,28 @@
           <div
             class="drawer__body drawer__body-item rte h-full overflow-y-auto custom-scrollbar bg-white"
           >
-            <div class="flex wrap gap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}" style="--col-width: {% if banner_image != blank %}{{ section_st.desktop_image_width }}{% else %}0{% endif %}%;">
+            <div
+              class="flex wrap gap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
+              style="--col-width: {% if banner_image != blank %}{{ section_st.desktop_image_width }}{% else %}0{% endif %}%;"
+            >
               {% if banner_image != blank %}
-              <div class="image-with-text__media-item w-full col-1025-w-custom">
-                <div
-                  class="image-with-text__media banner__media h-full"
-                  style="--aspect-ratio: {{ banner_image.aspect_ratio }}";
-                >
-                  {%- liquid
-                    assign alt = 'general.image.image_alt_default' | t
-                    if banner_image.alt
-                      assign alt = banner_image.alt | escape
-                    endif
-                  -%}
-                  {%- if banner_image != blank -%}
-                    {% render 'responsive-image',
-                      type: 'other',
-                      image: banner_image,
-                      image_alt: alt
-                    %}
-                  {% endif %}
+                <div class="image-with-text__media-item w-full col-1025-w-custom">
+                  <div
+                    class="image-with-text__media banner__media h-full"
+                    style="--aspect-ratio: {{ banner_image.aspect_ratio }}"
+                    ;
+                  >
+                    {%- liquid
+                      assign alt = 'general.image.image_alt_default' | t
+                      if banner_image.alt
+                        assign alt = banner_image.alt | escape
+                      endif
+                    -%}
+                    {%- if banner_image != blank -%}
+                      {% render 'responsive-image', type: 'other', image: banner_image, image_alt: alt %}
+                    {% endif %}
+                  </div>
                 </div>
-              </div>
               {% endif %}
               <div class="w-full col-1025-remaining">
                 {%- if heading != blank or short_desc != blank -%}
@@ -78,7 +78,7 @@
                     {%- endif -%}
                     {%- if short_desc != blank -%}
                       <div
-                        class="section-description"
+                        class="section-description mt-15"
                       >
                         {{ short_desc }}
                       </div>
@@ -156,9 +156,7 @@
   "class": "overlay-section overlay-newsletter",
   "limit": 1,
   "enabled_on": {
-    "groups": [
-      "custom.overlay"
-    ]
+    "groups": ["custom.overlay"]
   },
   "settings": [
     {

@@ -1,4 +1,5 @@
 {{ 'main-product.css' | asset_url | stylesheet_tag }}
+{{ 'judgeme-review.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   assign enable_sticky_desktop = section_st.enable_sticky_desktop
@@ -122,9 +123,12 @@
   </script>
   {% if enable_sticky_desktop %}
     {%- assign product_form_id = 'sticky-addcart-form-' | append: section.id -%}
-    <sticky-add-cart class="sticky-add-cart fixed bottom-0 inset-x-0 bg-white z-5">
+    <sticky-add-cart class="sticky-add-cart fixed bottom-0 inset-x-0 bg-white z-5 shadow">
       <div class="{{ section_width }}">
-        <div class="sticky-add-cart__inner flex gap-10">
+        <div
+          class="sticky-add-cart__inner flex gap-10 space-between align-center py-10"
+          style="--width: 7rem;--height: 7rem;"
+        >
           {%- liquid
             if product.selected_or_first_available_variant.featured_media
               assign card_product = product.selected_or_first_available_variant
@@ -142,14 +146,32 @@
             disable_rate: true,
             disable_tag: true,
             disable_quickview: true,
-            disable_color_swatches: true
+            disable_color_swatches: true,
+            class: ' sticky-add-cart hidden block-1025',
+            style_layout: ' flex gap-10 align-center',
+            info_class: ' mt-0',
+            image_class: ' flex-auto w-custom',
+            image_rounded: ' rounded-50 w-custom h-custom'
           %}
-          <div class="sticky__item-info">
-            <div class="product-sticky__variant-picker">
-              {%- render 'variant-swatches', scope: 'variant_swatch', product: product, show_available: true -%}
-            </div>
-            <div class="sticky-sticky__buy-buttons w-full">
-              {%- render 'buy-buttons', product: product, section_id: section.id, product_form_id: product_form_id -%}
+          <div class="sticky__item-info flex gap-10 w-full w-1025-auto">
+            {%- render 'variant-swatches',
+              scope: 'variant_swatch',
+              product: product,
+              show_available: true,
+              select_type: 'default'
+            -%}
+            <div
+              class="sticky-sticky__buy-buttons w-full w-1025-auto"
+              style="--min-width: 20.2rem;--btn-padding-x: 20px;"
+            >
+              {%- render 'buy-buttons',
+                product: product,
+                section_id: section.id,
+                product_form_id: product_form_id,
+                type: 'primary',
+                class_btn: ' min-w-1025-custom text-center',
+                class_quantity: ' d-none flex-1025'
+              -%}
             </div>
           </div>
         </div>
