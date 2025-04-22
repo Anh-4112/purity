@@ -55,14 +55,18 @@
           {% endif %}
         >
           <a
-            class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
+            class="product-image focus-inset block{% if type_video and product_show_video_featured %} video-pause{% endif %}{% if type == 'bought_together' %} h-full{% endif %}"
             draggable="false"
-            href="{{ card_product.url }}"
+            {% if type == 'bought_together' %}
+              tabindex="-1"
+            {% else %}
+              href="{{ card_product.url }}"
+            {% endif %}
             aria-label="{{ card_product.title }}"
           >
             {%- if p_media -%}
               <div
-                class="product__media animation-swatches{{ image_rounded }}"
+                class="product__media animation-swatches{{ image_rounded }}{% if type == 'bought_together' %} h-full{% endif %}"
                 style="--aspect-ratio: {{ ratio }};"
               >
                 {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
@@ -274,14 +278,16 @@
                 type="checkbox"
                 data-price="{{ card_product.price }}"
                 value="{{ card_product.id }}"
-                class="bought-together-checkbox opacity-0 absolute inset-0 m-0 w-full h-full z-1 pointer"
+                class="bought-together-checkbox opacity-0 absolute inset-0 m-0 w-full h-full z-1 pointer m-0"
                 checked
               >
               <span
-                class="checkmark relative rounded-50 pointer-none inline-flex absolute right-15 bottom-15"
+                class="checkmark relative rounded-50 pointer-none inline-flex absolute left-15 top-15"
               ></span>
               <label
                 for="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
+                class="bought-together-label absolute inset-0 bg-white transition pointer-none"
+                style=" --opacity: 0.5;"
               >
                 <span class="hidden">{{- card_product.title -}}</span>
               </label>

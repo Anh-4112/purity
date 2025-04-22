@@ -22,10 +22,37 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
   {% style %}
-    @media (min-width: 768px) {
+    .bought-together-list .product-item {
+      --input-height: 4rem;
+    }
+    input[type='checkbox']:checked ~ .bought-together-label {
+      opacity: 0;
+    }
+    @media (min-width: 1025px) {
       .bought-together-list .product-item {
+        --input-height: 5.2rem;
         flex: 0 0 auto;
         width: calc((100% - 108px) / 3);
+      }
+    }
+    @media (max-width: 1024.98px) {
+      .bought-together-list {
+        align-items: center;
+        gap: 10px;
+      }
+      .bought-together-list .product-item__inner {
+        background-color: var(--color-background-2);
+        border-radius: var(--img-rounded);
+        overflow: hidden;
+      }
+      .bought-together-list .product__inner {
+        --img-rounded: 0;
+      }
+      .bought-together-list .product__information {
+        margin: 0;
+        padding: 2rem 2rem 2rem 0;
+        width: calc(100% - 130px);
+        flex: 0 0 auto;
       }
     }
     .bought-together-list .icon-plus:first-child {
@@ -44,10 +71,27 @@
       >
         <div class="box-total col-1025-w-custom w-full">
           <div class="sticky top-30 rounded border p-30 text-{{ text_alignment }}">
-            {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
+            {%- if section_st.heading != blank
+              or section_st.description != blank
+              or section_st.subheading != blank
+              or section_st.highlight_text != blank
+            -%}
               <div
                 class="section-header"
               >
+                {% if section_st.highlight_text != blank %}
+                  <div
+                    class="highlight_text subheading_weight inline-flex content-center gap-5 text-color bg-custom py-5 px-15 btn-rounded fs-small-1 mb-15"
+                    style="--color-text: {{ section_st.text_color }};--bg-color-custom: {{ section_st.background_color }};"
+                  >
+                    {%- if section_st.highlight_text_icon == 'star' -%}
+                      {%- render 'icon-star' -%}
+                    {%- elsif section_st.highlight_text_icon == 'dot' -%}
+                      {%- render 'icon-dot' -%}
+                    {%- endif -%}
+                    {{ section_st.highlight_text | escape }}
+                  </div>
+                {% endif %}
                 {%- if section_st.subheading != blank -%}
                   <div class="section-subheading">
                     {{ section_st.subheading }}
@@ -59,7 +103,7 @@
                   </h2>
                 {%- endif -%}
                 {%- if section_st.description != blank -%}
-                  <div class="section-description">
+                  <div class="section-description mt-15">
                     {{ section_st.description }}
                   </div>
                 {%- endif -%}
@@ -177,7 +221,10 @@
             </div>
           </div>
         </div>
-        <div class="bought-together-list flex wrap gap-20 col-1025-remaining w-full">
+        <div
+          class="bought-together-list flex column flex-1025-row wrap gap-20 col-1025-remaining w-full"
+          style="--width: 11rem;"
+        >
           {%- for items in product.metafields.custom.frequently_bought_together.value -%}
             {% if items != blank and items.id != product.id %}
               {%- unless forloop.first -%}
@@ -201,7 +248,11 @@
                 indexFor: forloop.index,
                 type: 'bought_together',
                 select_type: 'default',
-                select_class: ' mt-15'
+                select_class: ' mt-10 mt-1025-15 w-1025-full max-w-100',
+                class: ' w-full w-1025-auto',
+                style_layout: ' flex gap-20 block-1025 w-full w-1025-auto',
+                image_class: ' flex-auto w-custom w-full-1025',
+                info_class: ' flex-1'
               -%}
             {% endif %}
           {%- endfor -%}
@@ -246,6 +297,48 @@
       "label": "t:sections.all.colors.label",
       "info": "t:sections.all.colors.info",
       "default": "default-color-scheme"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_setting.highlight_text.label"
+    },
+    {
+      "type": "text",
+      "id": "highlight_text",
+      "default": "Highlight text",
+      "label": "t:sections.all.content_setting.subheading.label"
+    },
+    {
+      "type": "select",
+      "id": "highlight_text_icon",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__1.label"
+        },
+        {
+          "value": "star",
+          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__2.label"
+        },
+        {
+          "value": "dot",
+          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__3.label"
+        }
+      ],
+      "default": "star",
+      "label": "t:sections.all.content_setting.highlight_text.settings.icons.label"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.image-with-text.settings.background_color",
+      "default": "#D0473E"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.image-with-text.settings.text_color",
+      "default": "#ffffff"
     },
     {
       "type": "header",
