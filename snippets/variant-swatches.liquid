@@ -165,7 +165,7 @@
         <select
           id="VariantSwatchSelect-{{ section.id }}-{{ product.id }}"
           name="VariantSwatchSelect-{{ section.id }}-{{ product.id }}"
-          class="border-0 h-auto max-w-100 fs-small lh-global"
+          class="{% if select_type == 'default' %} fs-small-1{% else %} border-0 h-auto max-w-100 fs-small lh-global{% endif %}"
         >
           {% liquid
             assign color_option = ''

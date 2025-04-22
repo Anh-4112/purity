@@ -340,7 +340,7 @@
           {%- if type == 'bundle' -%}
             {%- render 'variant-swatches', scope: 'bundle', product: card_product -%}
           {%- else -%}
-            {%- render 'variant-swatches', scope: 'variant_swatch', product: card_product -%}
+            {%- render 'variant-swatches', scope: 'variant_swatch', product: card_product, select_type: select_type -%}
           {% endif %}
         {%- else -%}
           {%- if product_enable_color_swatches and disable_color_swatches != true -%}
