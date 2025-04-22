@@ -1,0 +1,309 @@
+{% liquid
+  assign theme_st = settings
+  assign product_enable_color_swatches = theme_st.product_enable_color_swatches
+  assign color_swatch_trigger = theme_st.color_swatch_trigger
+  if color_swatch_trigger != blank and product_enable_color_swatches != false
+    assign option_name = color_swatch_trigger | split: ','
+  else
+    assign option_name = 'Color'
+  endif
+  assign color_swatch_custom = theme_st.color_swatch_custom
+  assign color_swatch_shape = theme_st.color_swatch_shape
+%}
+<facet-filters-form>
+  <form id="FacetFiltersForm">
+    {%- if results.terms -%}
+      <input type="hidden" name="q" value="{{ results.terms | escape }}">
+      <input name="options[prefix]" type="hidden" value="last">
+    {%- endif -%}
+    {%- for filter in results.filters -%}
+      {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+      {% case filter.type %}
+        {% when 'boolean', 'list' %}
+          <action-filter>
+            <details class="collapsible-row" is="collapsible-row" open>
+              <summary class="collapsible-row__summary">
+                <span class="inline-flex">
+                  {{- filter.label | escape }}
+                  <span class="facets__selected{% if filter.active_values.size == 0 %} hidden{% else %} inline-flex{% endif %}">
+                    {{ filter.active_values.size -}}
+                  </span>
+                </span>
+              </summary>
+              <div
+                id="Facet-{{ forloop.index }}-{{ section.id }}"
+                class="collapsible-row__content filter-attribute"
+              >
+                {%- liquid
+                  assign is_color_option = false
+                  for cl in option_name
+                    if filter.label == cl
+                      assign is_color_option = true
+                    endif
+                  endfor
+                -%}
+                <ul
+                  class="facets__list"
+                  role="list"
+                >
+                  {%- for value in filter.values -%}
+                    {%- if is_color_option == false -%}
+                      <li class="facets__item{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
+                        <input
+                          type="checkbox"
+                          name="{{ value.param_name }}"
+                          value="{{ value.value }}"
+                          id="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}"
+                          {% if value.active %}
+                            checked
+                          {% endif %}
+                          {% if value.count == 0 and value.active == false %}
+                            disabled
+                          {% endif %}
+                        >
+                        <label for="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}">
+                          {{- value.label | escape }}
+                          <span class="count nowrap">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- else -%}
+                      <li class="facets__item">
+                        <div class="facet-checkbox">
+                          <input
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            id="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}"
+                            {% if value.active %}
+                              checked
+                            {% endif %}
+                            {% if value.count == 0 and value.active == false %}
+                              disabled
+                            {% endif %}
+                          >
+                          {%- liquid
+                            assign swatch_color = value.label
+                            assign is_swatch_image = false
+                            assign swatch_image = ''
+                            if color_swatch_custom != blank and product_enable_color_swatches
+                              assign string_value = color_swatch_custom
+                              assign pairs = string_value | split: ','
+                              for pair in pairs
+                                assign key_and_value = pair | split: ':'
+                                assign key = key_and_value[0] | strip
+                                assign v = key_and_value[1] | strip
+                                if key == value.label
+                                  if v contains '.png' or v contains '.jpg' or v contains '.webp'
+                                    assign image_url = v | file_img_url: 'medium'
+                                    assign swatch_image = 'url(' | append: image_url | append: ')'
+                                    assign is_swatch_image = true
+                                  else
+                                    assign swatch_color = v
+                                  endif
+                                endif
+                              endfor
+                            endif
+                          -%}
+                          <label
+                            class="color-swatch-label{% if is_swatch_image %} swatch-image{% endif %} filter-swatch"
+                            for="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}"
+                            style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }};{% endif %}{% if color_swatch_shape == 'round' %}--radius: 50%;{% else %}--radius: 3px;{% endif %}"
+                          >
+                            <span class="visually-hidden">{{ value.label }}</span>
+                          </label>
+                        </div>
+                      </li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              </div>
+            </details>
+          </action-filter>
+        {%- when 'price_range' -%}
+          {% liquid
+            assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND' | split: ','
+            assign uses_comma_decimals = false
+            if currencies_using_comma_decimals contains cart.currency.iso_code
+              assign uses_comma_decimals = true
+            endif
+          %}
+          <action-filter>
+            <details class="collapsible-row" is="collapsible-row" open>
+              <summary class="collapsible-row__summary">
+                <span>
+                  {{- filter.label | escape }}
+                </span>
+              </summary>
+              <div
+                id="Facet-{{ forloop.index }}-{{ section.id }}"
+                class="collapsible-row__content filter-attribute"
+              >
+                <div>
+                  {%- assign max_price_amount = filter.range_max | money | strip_html | escape -%}
+                  <span class="facets__selected">
+                    {{- 'products.facets.max_price' | t: price: max_price_amount -}}
+                  </span>
+                </div>
+                {% liquid
+                  if filter.max_value.value
+                    if uses_comma_decimals
+                      assign max_price = filter.range_max | money_without_currency | replace: ',', '.'
+                    else
+                      assign max_price = filter.range_max | money_without_currency | replace: ',', ''
+                    endif
+                  else
+                    assign max_price = filter.range_max | money_without_currency | replace: ',', ''
+                  endif
+                  if filter.min_value.value
+                    if uses_comma_decimals
+                      assign min_price = filter.min_value.value | money_without_currency | replace: ',', ''
+                    else
+                      assign min_price = filter.min_value.value | money_without_currency | replace: ',', ''
+                    endif
+                  else
+                    assign min_price = 0
+                  endif
+                -%}
+                <price-range class="facets__price">
+                  <div>
+                    <span class="field-currency">
+                      {{- cart.currency.symbol -}}
+                    </span>
+                    <input
+                      class="field__input"
+                      name="{{ filter.min_value.param_name }}"
+                      id="Filter-{{ filter.label | escape }}-GTE"
+                      placeholder="{{ min_price }}"
+                      type="number"
+                      min="0"
+                      {% if uses_comma_decimals %}
+                        {%- assign input_max_of_min = filter.range_max
+                          | money_without_currency
+                          | replace: '.', ''
+                          | replace: ',', '.'
+                        -%}
+                        max="{{ input_max_of_min }}"
+                      {% else %}
+                        {% assign input_max_of_min = filter.range_max | money_without_currency | replace: ',', '' %}
+                        max="{{ input_max_of_min }}"
+                      {% endif %}
+                    >
+                    <label class="field__label visually-hidden" for="Filter-{{ filter.label | escape }}-GTE">
+                      {{- 'products.facets.from' | t -}}
+                    </label>
+                  </div>
+                  <div class="seperactor">
+                    <svg
+                      width="9"
+                      height="2"
+                      viewBox="0 0 9 2"
+                      fill="none"
+                    >
+                      <use href="#icon-minus"></use>
+                    </svg>
+                  </div>
+                  <div class="field">
+                    <span class="field-currency">
+                      {{- cart.currency.symbol -}}
+                    </span>
+                    <input
+                      class="field__input"
+                      name="{{ filter.max_value.param_name }}"
+                      id="Filter-{{ filter.label | escape }}-LTE"
+                      placeholder="{{ max_price }}"
+                      type="number"
+                      min="0"
+                      {% if uses_comma_decimals %}
+                        max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                      {% else %}
+                        max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      {% endif %}
+                    >
+                    <label class="field__label visually-hidden" for="Filter-{{ filter.label | escape }}-LTE">
+                      {{- 'products.facets.to' | t -}}
+                    </label>
+                  </div>
+                </price-range>
+
+                {% liquid
+                  assign min_price = min_price | times: 1
+                  assign max_price = max_price | times: 1
+                  assign range_max = filter.range_max | money_without_currency | replace: ',', ''
+                  assign range_from = filter.range_max | divided_by: 100
+                  assign from = min_price | times: 100 | divided_by: range_from | round: 2
+                  assign to = max_price | times: 100 | divided_by: range_max | round: 2
+                -%}
+                <price-range-drag
+                  class="block"
+                  data-range-max="{{ range_from }}"
+                  style="--range-from: {{ from }}%; --range-to: {{ to }}%"
+                >
+                  <input
+                    id="Filter-range-{{ filter.label | escape }}-GTE"
+                    type="range"
+                    value="{{ min_price }}"
+                    class="range-slider"
+                    tabindex="-1"
+                    aria-label="from"
+                    min="0"
+                    {% if uses_comma_decimals %}
+                      max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                    {% else %}
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                    {% endif %}
+                  >
+                  <label
+                    class="field__label visually-hidden"
+                    for="Filter-range-{{ filter.label | escape }}-GTE"
+                  >
+                    {{- 'products.facets.from' | t -}}
+                  </label>
+
+                  <input
+                    id="Filter-range-{{ filter.label | escape }}-LTE"
+                    type="range"
+                    value="{{ range_from }}"
+                    min="0"
+                    class="range-slider range-slider-max"
+                    tabindex="-1"
+                    aria-label="to"
+                    {% if uses_comma_decimals %}
+                      max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                    {% else %}
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                    {% endif %}
+                  >
+                  <label
+                    class="field__label visually-hidden"
+                    for="Filter-range-{{ filter.label | escape }}-LTE"
+                  >
+                    {{- 'products.facets.to' | t -}}
+                  </label>
+                </price-range-drag>
+              </div>
+            </details>
+          </action-filter>
+      {%- endcase -%}
+    {%- endfor -%}
+    {% if filter_type == 'drawer' %}
+      <div class="filter-action-bottom">
+        <facet-remove-canvas class="active-facets__button-wrapper">
+          <a
+            href="{{ results_url }}"
+            class="active-facets__button-remove"
+          >
+            <span>{{ 'products.facets.clear_all' | t }}</span>
+          </a>
+        </facet-remove-canvas>
+        <facet-apply-canvas
+          tabindex="0"
+        >
+          <span>{{ 'products.facets.apply' | t }}</span>
+        </facet-apply-canvas>
+      </div>
+    {% endif %}
+    {% if results.current_vendor or results.current_type %}
+      <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+    {% endif %}
+  </form>
+</facet-filters-form>

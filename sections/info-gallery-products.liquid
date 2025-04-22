@@ -123,9 +123,11 @@
                   image_alt: image_alt,
                   class: 'absolute inset-0 w-full h-full object-fit-cover'
                 %}
-                <div class="info-gallery__label">
-                  <span>{{ 'general.content.info.step_html' | t: index: forloop.index }}</span>
-                </div>
+                {%- if info_gallery.highlights_text -%}
+                  <div class="info-gallery__label">
+                    <span>{{ info_gallery.highlights_text }}</span>
+                  </div>
+                {% endif %}
               </div>
               {%- if info_gallery.subheading or info_gallery.heading or info_gallery.description -%}
                 <div class="info-gallery__info absolute inset-0 flex">
@@ -140,11 +142,11 @@
                             data-animate-delay="{{ animate_delay }}"
                             class="block h7 subheading_weight mb-10"
                           >
-                            {{ 'general.content.subheading' | t }}
+                            {{ info_gallery.subheading }}
                           </motion-effect>
                         </div>
                       {%- endif -%}
-                      {%- if info_gallery.subheading -%}
+                      {%- if info_gallery.heading -%}
                         <div class="sec__content-inner sec__content-heading mb-10 {{ heading_size }}">
                           {% assign animate_delay = animate_delay | plus: 5 %}
                           <motion-effect
@@ -152,7 +154,7 @@
                             data-animate-delay="{{ animate_delay }}"
                             class="block h2"
                           >
-                            {{ 'general.content.heading' | t }}
+                            {{ info_gallery.heading }}
                           </motion-effect>
                         </div>
                       {%- endif -%}
@@ -164,7 +166,7 @@
                             data-animate-delay="{{ animate_delay }}"
                             class="block"
                           >
-                            {{ 'general.content.description' | t }}
+                            {{ info_gallery.description | metafield_tag }}
                           </motion-effect>
                         </div>
                       {%- endif -%}
