@@ -1,4 +1,6 @@
-{{ 'blog.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign theme_st = settings
+-%}
 {%- if article and article != empty -%}
   <div
     class="article-card-wrapper item-load {{ class }}"
@@ -6,7 +8,7 @@
     <div
       class="card article-card{{ featured-blog }}{% if is_featured_blog %} custom-blog-featured block flex-1025 wrap gap rounded{% endif %}" {% if is_featured_blog %} style="--col-width: 66%;--gap: 0px;"{% endif %}
     >
-      <div class="{% if is_featured_blog %} col-1025-w-custom m-0  w-custom{% else %}article_post-image mb-20{% endif %}">
+      <div class="{% if is_featured_blog %} col-1025-w-custom {% else %}article_post-image mb-20{% endif %}">
         {%- if show_image == true and article.image -%}
           {%- liquid
             assign alt = article.title | escape
@@ -39,19 +41,20 @@
         {%- endif -%}
       </div>
       <div
-        class="card__content{% if is_featured_blog %} col-1025-remaining flex column p-30 p-xl-50 justify-content-end bg-secondary flex-1{% endif %}"
+        class="card__content{% if is_featured_blog %} col-1025-remaining flex column p-30 p-1025-50 justify-content-end bg-secondary{% endif %}"
         {% if is_featured_blog %}
           style="--color-background-2: {{ background_color }};"
         {% endif %}
       >
         {%- if show_tags or show_cate -%}
-          <ul class="list-unstyle p-0 m-0 mb-10 flex wrap gap-5">
+          <ul class="list-unstyle p-0 m-0 mb-10 inline-flex wrap gap-5">
             {%- if show_cate -%}
               {% assign blog_name = article.handle | split: '/' | first %}
               {% if blog_name != blank %}
                 <li class="blog-meta-tag blog-cate inline-flex align-center">
                   <a
-                    class="post-tags blog-cate inline-block bg-primary color-white btn-rounded fs-13 px-15 py-4"
+                    class="post-tags blog-cate inline-block product__badges-sale btn-rounded fs-13 px-15 py-4"
+                     style="--badges-bg: {{ theme_st.sale_background }}; --badges-color: {{ theme_st.sale_color }}"
                     href="{{ blog.url }}"
                     aria-label="blog category"
                   >
@@ -75,7 +78,7 @@
             {% endif %}
           </ul>
         {%- endif -%}
-        <div class="card__heading mb-10{% if sec_settings.columns_desktop > 3 %} h5{% else %} h4{% endif %}">
+        <div class="card__heading mb-10 {% if is_featured_blog %}h2{% else %}h4{% endif %}">
           <a
             href="{{ article.url }}"
             class="heading-color remove-underline"
@@ -94,7 +97,7 @@
             </p>
           {%- endif -%}
         {%- endif -%}
-        <ul class="article-card__info fs-13 mb-20 grey-color capitalize list-unstyled flex align-center gap-15">
+        <ul class="article-card__info fs-13 mb-20 grey-color capitalize list-unstyled inline-flex align-center gap-15">
           {%- if show_date -%}
             <li class="post-date">
               {{- article.published_at | date: '%d %b %Y' -}}

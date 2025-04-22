@@ -1,3 +1,4 @@
+{{ 'blog.css' | asset_url | stylesheet_tag }}
 {% liquid
   assign section_st = section.settings
   assign aspect_ratio = '1/1'
@@ -69,7 +70,7 @@
             </h2>
           {%- endif -%}
           {%- if section_st.show_all_tags -%}
-            <ul class="blog-tags-list  list-unstyled inline-flex gap-10 lh-1 overflow-auto max-w-100 whitespace-nowrap">
+            <ul class="blog-tags-list  list-unstyled inline-flex wrap gap-10 lh-1 whitespace-nowrap">
               <li class="post-tags">
                 <a
                   href="{{ blog.url }}"
@@ -188,7 +189,7 @@
                           </button>
                         </div>
                         {%- if block.settings.note != blank -%}
-                          <div class="footer__block-note rich__text-m0 fs-small fst-italic">
+                          <div class="footer__block-note rich__text-m0 fs-small">
                             {{ block.settings.note }}
                           </div>
                         {%- endif -%}
