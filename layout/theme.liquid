@@ -297,6 +297,8 @@
         no_shipping: `{{ 'sections.cart.no_shipping' | t }}`,
         shipping_rate: `{{ 'sections.cart.shipping_rate' | t }}`,
         money_format: {{ money_format | json }},
+        added_to_bundle: `{{ 'products.product.added_to_bundle' | t }}`,
+        add_to_bundle: `{{ 'products.product.add_to_bundle' | t }}`
       };
       window.shopUrl = '{{ request.origin }}';
       window.routes = {
@@ -308,8 +310,8 @@
         search_url: '{{ routes.search_url }}'
       };
       window.variantStrings = {
-        login_successful: ` {{ 'customer.login_page.login_successful' | t }}`,
-        login_invalid: ` {{ 'customer.login_page.login_invalid' | t }}`,
+        login_successful: `{{ 'customer.login_page.login_successful' | t }}`,
+        login_invalid: `{{ 'customer.login_page.login_invalid' | t }}`,
       };
       window.message = {
         newsletter: {

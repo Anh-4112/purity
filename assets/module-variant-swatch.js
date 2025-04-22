@@ -479,6 +479,7 @@ class VariantSwatchSelect extends VariantInput {
           currentProduct.closest(".bought-together-products__wrapper")
         );
       }
+      this.updateProductFormBundle(currentProduct, currentTarget.value);
     }
   }
 
@@ -501,6 +502,16 @@ class VariantSwatchSelect extends VariantInput {
       return;
     }
     this.updateBoughtTogether(currentSection);
+  }
+  
+  updateProductFormBundle(currentProduct,value) {
+    const productFormBundle = currentProduct.querySelector("product-form-bundle");
+    if (productFormBundle) {
+      const id = productFormBundle.querySelector("input[name=id]");
+      if (id) {
+        id.value = value;
+      }
+    }
   }
 }
 customElements.define("variant-swatch-select", VariantSwatchSelect);
