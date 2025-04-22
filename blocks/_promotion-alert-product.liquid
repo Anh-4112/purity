@@ -2,14 +2,18 @@
   {%- liquid
     assign heading = block.settings.heading
     assign description = block.settings.description
+    assign color = block.settings.text_color
   -%}
   {% if heading or description %}
-    <div class="promotion_alert">
+    <div
+      class="promotion_alert p-20 border-dashed text-center bg-sale rounded border-dashed"
+      style="--color-text: {{ color }};--opacity: 0.06;--color-border: {{ color }};--sale-bg-rgb: {{ block.settings.text_color.red }}, {{ block.settings.text_color.green }}, {{ block.settings.text_color.blue }}"
+    >
       {% if heading %}
-        <div class="heading">{{ heading }}</div>
+        <div class="heading h7 text-color">{{ heading }}</div>
       {% endif %}
       {% if description %}
-        <div class="description">{{ description }}</div>
+        <div class="description text-color">{{ description }}</div>
       {% endif %}
     </div>
   {% endif %}
@@ -17,8 +21,14 @@
 {% schema %}
 {
   "name": "t:sections.all.product_setting.promotion_alert.name",
-  "class": "block-product__promotion-alert my-25 slideIn-animate",
+  "class": "block-product__promotion-alert my-custom slideIn-animate",
   "settings": [
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.all.product_setting.promotion_alert.text_color.label",
+      "default": "#14854E"
+    },
     {
       "type": "text",
       "id": "heading",

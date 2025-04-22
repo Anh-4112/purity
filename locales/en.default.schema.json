@@ -218,6 +218,8 @@
         "enable_color_swatches": "Enable color swatches",
         "show_vendor": "Show vendor",
         "show_tag": "Show tag",
+        "show_countdown": "Show countdown",
+        "show_scrolling_text": "Show scrolling text",
         "show_rate": {
           "label": "Show rate",
           "info": "To display a rating, add a product rating app. [Learn more](https://help.shopify.com/en/manual/products/product-reviews/installation)"
@@ -822,6 +824,9 @@
         "message_communications": {
           "label": "Message communications"
         },
+        "circular-text": {
+          "label": "Circular text"
+        },
         "beauty": {
           "label": "Face"
         },
@@ -1042,6 +1047,9 @@
           "description": {
             "label": "Description"
           },
+          "text_color": {
+            "label": "Text color"
+          }
         },
         "icon_with_text": {
           "name": "Icon with text",
@@ -1518,7 +1526,8 @@
         "max_width": {
           "label": "Max width",
           "info": "Max width is automatically optimized for mobile.",
-        }
+        },
+        "rotating_text":"Circular text"
       },
     },
     "recently-viewed-products": {
@@ -1531,15 +1540,15 @@
       "name": "Compare products",
       "settings": {
         "header": {
-          "label": "Compare setting"
+          "label": "Compare settings"
         },
-        "show_price": "Show price",
-        "show_ratings": "Show ratings",
-        "show_vendor": "Show vendor",
-        "show_color": "Show color",
-        "show_size": "Show size",
-        "show_highlights": "Show highlights",
-        "show_availability": "Show availability",
+        "show_price": "Price",
+        "show_ratings": "Ratings",
+        "show_vendor": "Vendor",
+        "show_color": "Color",
+        "show_size": "Size",
+        "show_highlights": "Highlights",
+        "show_availability": "Availability",
       },
     },
     "bought-together-products": {
@@ -1737,7 +1746,7 @@
         },
       }
     },
-    "main-collection-product-grid": {
+    "main-collection": {
       "name": "Product grid",
       "settings": {
         "items_per_page": {
@@ -1786,10 +1795,19 @@
         "enable_tags": {
           "label": "Enable filtering",
           "info": "Customize filters with the Search & Discovery app. [Learn more](https:\/\/help.shopify.com\/manual\/online-store\/search-and-discovery\/filters)"
-        }
+        },
+        
       },
       "blocks": {
-        "name": "Promotion",
+        "promotion": {
+          "name": "Promotion",
+          "promotion_position": {
+            "label": "Promotion position"
+          }
+        },
+        "steps": {
+          "name": "Shop by step",
+        }
       }
     },
     "main-article": {
@@ -2072,7 +2090,8 @@
       "settings": {
         "name": "Name",
         "email_placeholder": "Email",
-        "message": "Message"
+        "message": "Message",
+        "option": "Option",
       },
       "block": {
         "text_block": {
@@ -2500,6 +2519,41 @@
     },
     "offers-popup":{
       "name": "Offers popup"
+    },
+    "shopable-image": {
+      "name": "Shopable image",
+      "blocks": {
+        "tags": {
+          "name": "Tags",
+          "info": "Define the name of tags. Separate by a comma. Eg. Tag 1,Tag 2",
+          "settings": {
+            "show_verify_icon":{
+              "label": "Show verify icon"
+            }
+          }
+        },
+        "lookbook": {
+          "name": "Lookbook",
+          "settings": {
+            "products": {
+              "label": "Products",
+              "position_top": "Vertical position",
+              "position_left": "Horizontal position",
+              "products": {
+                "otpion__1": {
+                  "label": "Product 1"
+                },
+                "otpion__2": {
+                  "label": "Product 2"
+                },
+                "otpion__3": {
+                  "label": "Product 3"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

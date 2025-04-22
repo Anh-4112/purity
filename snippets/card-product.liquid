@@ -5,6 +5,8 @@
   assign product_enable_color_swatches = theme_st.product_enable_color_swatches
   assign product_show_vendor = theme_st.product_show_vendor
   assign product_show_tag = theme_st.product_show_tag
+  assign product_show_countdown = theme_st.product_show_countdown
+  assign product_show_scrolling_text = theme_st.product_show_scrolling_text
   assign product_show_rate = theme_st.product_show_rate
   assign product_show_image_hover = theme_st.product_show_image_hover
   assign product_image_ratio = theme_st.product_image_ratio
@@ -55,14 +57,18 @@
           {% endif %}
         >
           <a
-            class="product-image focus-inset{% if type_video and product_show_video_featured %} video-pause{% endif %}"
+            class="product-image focus-inset block{% if type_video and product_show_video_featured %} video-pause{% endif %}{% if type == 'bought_together' %} h-full{% endif %}"
             draggable="false"
-            href="{{ card_product.url }}"
+            {% if type == 'bought_together' %}
+              tabindex="-1"
+            {% else %}
+              href="{{ card_product.url }}"
+            {% endif %}
             aria-label="{{ card_product.title }}"
           >
             {%- if p_media -%}
               <div
-                class="product__media animation-swatches{{ image_rounded }}"
+                class="product__media animation-swatches{{ image_rounded }}{% if type == 'bought_together' %} h-full{% endif %}"
                 style="--aspect-ratio: {{ ratio }};"
               >
                 {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
@@ -176,6 +182,47 @@
                 {% render 'placeholder-render' %}
               </div>
             {%- endif -%}
+            {%- if disable_countdown != true
+              and card_product.metafields.custom.promotion_countdown
+              and product_show_countdown
+            -%}
+              <lazy-load-template>
+                <template>
+                  <div class="product__countdown">
+                    <countdown-timer
+                      data-deadline="{{ card_product.metafields.custom.promotion_countdown }}"
+                      data-days="{{ 'products.product.countdown.format.days' | t }}"
+                      data-hours="{{ 'products.product.countdown.format.hours' | t }}"
+                      data-mins="{{ 'products.product.countdown.format.mins' | t }}"
+                      data-secs="{{ 'products.product.countdown.format.secs' | t }}"
+                    >
+                    </countdown-timer>
+                  </div>
+                </template>
+              </lazy-load-template>
+            {%- endif -%}
+            {%- if disable_scrolling_text != true
+              and card_product.metafields.custom.highlights_scrolling_text
+              and product_show_scrolling_text
+            -%}
+              <lazy-load-template>
+                <template>
+                  <div class="product_scrolling marquee flex">
+                    {%- for i in (0..4) -%}
+                      <div class="flex animation-marquee">
+                        {%- for i in (0..2) -%}
+                          <div class="flex gap align-center whitespace-nowrap rich__text-m0 lh-normal fs-small">
+                            <span class="content-badges-scrolling">
+                              {{- card_product.metafields.custom.highlights_scrolling_text -}}
+                            </span>
+                          </div>
+                        {%- endfor -%}
+                      </div>
+                    {%- endfor -%}
+                  </div>
+                </template>
+              </lazy-load-template>
+            {%- endif -%}
             {%- if disable_badge != true -%}
               {% render 'product-badges', scope: 'item', card_product: card_product %}
             {%- endif -%}
@@ -267,18 +314,23 @@
             {%- endif -%}
           {%- endif -%}
           {%- if variant_swatch and type == 'bought_together' -%}
-            <card-bought-together class="bought-together">
+            <card-bought-together class="bought-together absolute inset-0">
               <input
                 id="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
                 name="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
                 type="checkbox"
                 data-price="{{ card_product.price }}"
                 value="{{ card_product.id }}"
-                class="bought-together-checkbox"
+                class="bought-together-checkbox opacity-0 absolute inset-0 m-0 w-full h-full z-1 pointer m-0"
                 checked
               >
+              <span
+                class="checkmark relative rounded-50 pointer-none inline-flex absolute left-15 top-15"
+              ></span>
               <label
                 for="BoughtTogether-{{ section.id }}-{{ card_product.id }}"
+                class="bought-together-label absolute inset-0 bg-white transition pointer-none"
+                style=" --opacity: 0.5;"
               >
                 <span class="hidden">{{- card_product.title -}}</span>
               </label>
@@ -337,7 +389,12 @@
           {%- if type == 'bundle' -%}
             {%- render 'variant-swatches', scope: 'bundle', product: card_product -%}
           {%- else -%}
-            {%- render 'variant-swatches', scope: 'variant_swatch', product: card_product -%}
+            {%- render 'variant-swatches',
+              scope: 'variant_swatch',
+              product: card_product,
+              select_type: select_type,
+              select_class: select_class
+            -%}
           {% endif %}
         {%- else -%}
           {%- if product_enable_color_swatches and disable_color_swatches != true -%}
@@ -409,7 +466,7 @@
               <button
                 type="button"
                 is="button-quick-view"
-                class="pointer btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                class="pointer relative btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
                 style="--width: 4.4rem; --height: 4.4rem;"
                 data-url="{{ shop.url }}/products/{{ card_product.handle }}"
                 aria-label="{{ 'products.product.quickview' | t }}"
@@ -444,7 +501,7 @@
                     id="{{ product_form_id }}-submit"
                     type="submit"
                     name="add"
-                    class="pointer btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                    class="pointer relative btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
                     style="--width: 4.4rem; --height: 4.4rem;"
                     aria-haspopup="dialog"
                     aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"

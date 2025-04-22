@@ -1,8 +1,8 @@
 {%- form 'contact', id: 'ContactForm', class: 'isolate field' -%}
-  <div class="contact__fields">
-    <div class="field">
+  <div class="contact__fields flex gap-20 mb-20">
+    <div class="field flex-1">
       <input
-        class="field__input"
+        class="field__input w-full"
         autocomplete="name"
         type="text"
         id="Ask-name"
@@ -15,12 +15,12 @@
         {{ 'templates.contact.form.name' | t -}}
       </label>
     </div>
-    <div class="field">
+    <div class="field flex-1">
       <input
         autocomplete="email"
         type="email"
         id="Ask-email"
-        class="field__input"
+        class="field__input w-full"
         name="contact[email]"
         spellcheck="false"
         autocapitalize="off"
@@ -48,7 +48,7 @@
       </small>
     {%- endif -%}
   </div>
-  <div class="field">
+  <div class="field mb-20">
     <input
       type="tel"
       id="Ask-phone"
@@ -82,7 +82,7 @@
     </label>
   </div>
   <div class="contact__button">
-    <button type="submit" class="button w-full btn-primary">
+    <button type="submit" class="btn mt-20 mt-1025-30 w-full btn-primary">
       {{ 'templates.contact.form.send' | t }}
     </button>
   </div>

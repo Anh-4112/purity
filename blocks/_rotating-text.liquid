@@ -1,0 +1,123 @@
+<script type="module" src="{{ 'circular-text.js' | asset_url }}"></script>
+{{ 'circular-text.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign section_st = section.settings
+  assign block_st = block.settings
+  assign content_alignment = section_st.text_alignment
+%}
+<div
+  class="mb-custom flex justify-content-{{ content_alignment }}"
+  style="--space-bottom: {{ block_st.spacing_bottom }};"
+>
+  <spinning-text
+    class="flex justify-center align-center relative"
+    data-text="{{ block_st.circle_text | escape }}"
+    data-speed="{{ block_st.spin_speed }}"
+    data-direction="{{ block_st.spin_direction }}"
+  >
+    {% render 'icon_svg_list', icon: block_st.icon_svg, custom_width: 40, custom_height: 40 %}
+    <div class="spinning-text__circle absolute w-full h-full">
+      <p class="spinning-text__content absolute w-full h-full{% if block_st.uppercase %} uppercase{% endif %}"></p>
+    </div>
+  </spinning-text>
+</div>
+<script>
+  window.SpinningTextComponent?.load?.();
+</script>
+{% schema %}
+{
+  "name": "t:sections.rich-text.settings.rotating_text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "circle_text",
+      "label": "t:sections.all.text.label",
+      "default": "Circular text"
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "default": false,
+      "label": "t:settings_schema.typography.settings.heading.text_transform.uppercase"
+    },
+    {
+      "type": "select",
+      "id": "icon_svg",
+      "label": "t:sections.all.svg.label",
+      "info": "t:sections.all.svg.custom_svg.info",
+      "default": "circular-text",
+      "options": [
+        {
+          "value": "leaf",
+          "label": "t:sections.all.icon.leaf.label"
+        },
+        {
+          "value": "cruelty",
+          "label": "t:sections.all.icon.cruelty.label"
+        },
+        {
+          "value": "paraben",
+          "label": "t:sections.all.icon.paraben.label"
+        },
+        {
+          "value": "check_badge",
+          "label": "t:sections.all.icon.check_badge.label"
+        },
+        {
+          "value": "free_shipping",
+          "label": "t:sections.all.icon.free_shipping.label"
+        },
+        {
+          "value": "message_communications",
+          "label": "t:sections.all.icon.message_communications.label"
+        },
+        {
+          "value": "circular-text",
+          "label": "t:sections.all.icon.circular-text.label"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "spin_direction",
+      "label": "t:sections.scrolling_text.settings.direction.label",
+      "default": "normal",
+      "options": [
+        {
+          "value": "reverse",
+          "label": "t:sections.scrolling_text.settings.direction.left.label"
+        },
+        {
+          "value": "normal",
+          "label": "t:sections.scrolling_text.settings.direction.right.label"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "spin_speed",
+      "label": "t:sections.scrolling_text.settings.speed.label",
+      "default": 15,
+      "min": 5,
+      "max": 50,
+      "step": 1,
+      "unit": "s"
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.spacing_bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.rich-text.settings.rotating_text"
+    }
+  ]
+}
+{% endschema %}

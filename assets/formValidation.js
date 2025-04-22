@@ -99,3 +99,28 @@ export function setupFormValidation({
     });
   });
 }
+
+class SelectContact extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    const text = this.getAttribute('text');
+    
+    if (text) {
+      const options = text.split(',').map(item => item.trim());
+      
+      const selectElement = document.querySelector('.contact-form-subject');  // id sẽ thay đổi theo Liquid
+      
+      options.forEach(optionText => {
+        const option = document.createElement('option');
+        option.value = optionText.toLowerCase();
+        option.textContent = optionText.charAt(0).toUpperCase() + optionText.slice(1);  // Viết hoa chữ cái đầu
+        selectElement.appendChild(option);
+      });
+    }
+  }
+}
+
+customElements.define('select-contact', SelectContact);

@@ -58,6 +58,9 @@
 -%}
 {%- capture style -%} --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}--image-collection-width: {{ image_collection_width }}px;--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
+{%- capture col_style -%}
+  --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }};  --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};
+{%- endcapture -%}
 {% style %}
   range-slider span {
     position: absolute;
@@ -100,7 +103,7 @@
           </h2>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description">
+          <div class="section-description mt-15">
             {{ section_st.description }}
           </div>
         {%- endif -%}
@@ -314,6 +317,7 @@
               data-desktop="{{ items_per_row }}"
               data-tablet="{{ items_per_row_tablet }}"
               data-free-scroll="{{ data_free_scroll }}"
+              style="{{ col_style | strip | strip_newlines }}"
             >
               {% if show_navigation %}
                 {%- render 'swiper-navigation' -%}
@@ -358,6 +362,7 @@
               data-desktop="{{ items_per_row }}"
               data-tablet="{{ items_per_row_tablet }}"
               data-free-scroll="{{ data_free_scroll }}"
+              style="{{ col_style | strip | strip_newlines }}"
             >
               {% if show_navigation %}
                 {%- render 'swiper-navigation' -%}

@@ -1,7 +1,0 @@
-{%- liquid
-  assign template = template | split: '.' | first
--%}
-{%- case template -%}
-  {%- when 'product' -%}
-    <script type="module" src="{{ 'main-product.js' | asset_url }}"></script>
-{%- endcase -%}

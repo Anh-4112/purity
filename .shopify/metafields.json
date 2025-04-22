@@ -1,26 +1,45 @@
 {
   "article": [],
-  "blog": [
-    {
-      "key": "image",
-      "namespace": "custom",
-      "name": "Image",
-      "description": "",
-      "type": {
-        "name": "file_reference",
-        "category": "REFERENCE"
-      }
-    }
-  ],
+  "blog": [],
   "brand": [],
   "collection": [
     {
-      "key": "sub_collections",
-      "namespace": "custom",
-      "name": "Sub Collections",
-      "description": null,
+      "key": "collections",
+      "namespace": "ecomposer",
+      "name": "Define sub collections for current collection",
+      "description": "Set the sub collection for curernt collection.",
       "type": {
         "name": "list.collection_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "size_chart",
+      "namespace": "custom",
+      "name": "Size chart",
+      "description": "",
+      "type": {
+        "name": "multi_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "subcollection",
+      "namespace": "bls",
+      "name": "subcollection",
+      "description": "",
+      "type": {
+        "name": "list.collection_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "collection_empty",
+      "namespace": "custom",
+      "name": "Collection Empty",
+      "description": "",
+      "type": {
+        "name": "metaobject_reference",
         "category": "REFERENCE"
       }
     }
@@ -73,156 +92,6 @@
       }
     },
     {
-      "key": "countdown_timer",
-      "namespace": "custom",
-      "name": "Countdown Timer",
-      "description": null,
-      "type": {
-        "name": "date_time",
-        "category": "DATE_TIME"
-      }
-    },
-    {
-      "key": "custom_product_badge",
-      "namespace": "custom",
-      "name": "Custom product badge",
-      "description": null,
-      "type": {
-        "name": "single_line_text_field",
-        "category": "TEXT"
-      }
-    },
-    {
-      "key": "product_grouped",
-      "namespace": "custom",
-      "name": "Product grouped",
-      "description": null,
-      "type": {
-        "name": "list.product_reference",
-        "category": "REFERENCE"
-      }
-    },
-    {
-      "key": "bought_together",
-      "namespace": "custom",
-      "name": "Product Bought Together",
-      "description": null,
-      "type": {
-        "name": "list.product_reference",
-        "category": "REFERENCE"
-      }
-    },
-    {
-      "key": "short_description",
-      "namespace": "custom",
-      "name": "Short Description",
-      "description": null,
-      "type": {
-        "name": "multi_line_text_field",
-        "category": "TEXT"
-      }
-    },
-    {
-      "key": "product_grouped",
-      "namespace": "bls",
-      "name": "group",
-      "description": "",
-      "type": {
-        "name": "list.product_reference",
-        "category": "REFERENCE"
-      }
-    },
-    {
-      "key": "video",
-      "namespace": "custom",
-      "name": "video",
-      "description": "",
-      "type": {
-        "name": "file_reference",
-        "category": "REFERENCE"
-      }
-    },
-    {
-      "key": "color-pattern",
-      "namespace": "shopify",
-      "name": "Color",
-      "description": "Defines the primary color or pattern, such as blue or striped",
-      "type": {
-        "name": "list.metaobject_reference",
-        "category": "REFERENCE"
-      }
-    },
-    {
-      "key": "ext",
-      "namespace": "custom",
-      "name": "Ex",
-      "description": "",
-      "type": {
-        "name": "mixed_reference",
-        "category": "REFERENCE"
-      }
-    },
-    {
-      "key": "model_size",
-      "namespace": "custom",
-      "name": "Model size",
-      "description": "",
-      "type": {
-        "name": "metaobject_reference",
-        "category": "REFERENCE"
-      }
-    },
-    {
-      "key": "product_set",
-      "namespace": "custom",
-      "name": "Product set",
-      "description": "",
-      "type": {
-        "name": "list.metaobject_reference",
-        "category": "REFERENCE"
-      }
-    },
-    {
-      "key": "dev",
-      "namespace": "custom",
-      "name": "dev",
-      "description": "",
-      "type": {
-        "name": "multi_line_text_field",
-        "category": "TEXT"
-      }
-    },
-    {
-      "key": "use_variants_image_group",
-      "namespace": "custom",
-      "name": "Use variants image group",
-      "description": "",
-      "type": {
-        "name": "boolean",
-        "category": "TRUE_FALSE"
-      }
-    },
-    {
-      "key": "age-group",
-      "namespace": "shopify",
-      "name": "Age group",
-      "description": "Defines the target age range for a product, such as adults or kids",
-      "type": {
-        "name": "list.metaobject_reference",
-        "category": "REFERENCE"
-      }
-    },
-    {
-      "key": "bought_together",
-      "namespace": "bls",
-      "name": "bls.bought_together",
-      "description": "",
-      "type": {
-        "name": "list.product_reference",
-        "category": "REFERENCE"
-      }
-    },
-    {
       "key": "rating",
       "namespace": "reviews",
       "name": "Product rating",
@@ -241,19 +110,248 @@
         "name": "number_integer",
         "category": "NUMBER"
       }
+    },
+    {
+      "key": "countdown",
+      "namespace": "ecomposer",
+      "name": "EComposer product countdown end at",
+      "description": "Set date and time countdown end at",
+      "type": {
+        "name": "date_time",
+        "category": "DATE_TIME"
+      }
+    },
+    {
+      "key": "countdown_from",
+      "namespace": "ecomposer",
+      "name": "EComposer product countdown start at",
+      "description": "Set date and time countdown start at",
+      "type": {
+        "name": "date_time",
+        "category": "DATE_TIME"
+      }
+    },
+    {
+      "key": "size_chart",
+      "namespace": "custom",
+      "name": "Size chart",
+      "description": "Guide your style",
+      "type": {
+        "name": "multi_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "external_affiliate",
+      "namespace": "custom",
+      "name": "External/Affiliate",
+      "description": "",
+      "type": {
+        "name": "mixed_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "countdown_timer",
+      "namespace": "custom",
+      "name": "Countdown timer",
+      "description": "",
+      "type": {
+        "name": "date_time",
+        "category": "DATE_TIME"
+      }
+    },
+    {
+      "key": "short_description",
+      "namespace": "custom",
+      "name": "Short description",
+      "description": "",
+      "type": {
+        "name": "multi_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "test_metafield",
+      "namespace": "custom",
+      "name": "Test metafield",
+      "description": "",
+      "type": {
+        "name": "single_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "custom_product_badge",
+      "namespace": "custom",
+      "name": "Custom product badge",
+      "description": "",
+      "type": {
+        "name": "single_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "product_grouped",
+      "namespace": "custom",
+      "name": "product_grouped",
+      "description": "",
+      "type": {
+        "name": "list.product_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "more_colors",
+      "namespace": "custom",
+      "name": "more_colors",
+      "description": "",
+      "type": {
+        "name": "list.product_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "bought_together",
+      "namespace": "custom",
+      "name": "bought_together",
+      "description": "bought_together",
+      "type": {
+        "name": "list.product_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "color-pattern",
+      "namespace": "shopify",
+      "name": "Color",
+      "description": "Defines the primary color or pattern, such as blue or striped",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "pants-length-type",
+      "namespace": "shopify",
+      "name": "Pants length type",
+      "description": "Used to defines the length of pants, such as cropped or long",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "fabric",
+      "namespace": "shopify",
+      "name": "Fabric",
+      "description": "Identifies the type of fabric used in a product, for example, cotton or denim",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "test_video",
+      "namespace": "custom",
+      "name": "test video",
+      "description": "",
+      "type": {
+        "name": "list.file_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "highlights",
+      "namespace": "custom",
+      "name": "Highlights",
+      "description": "",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "key_features",
+      "namespace": "custom",
+      "name": "Key features",
+      "description": "",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "test_1",
+      "namespace": "custom",
+      "name": "test 1",
+      "description": "",
+      "type": {
+        "name": "rich_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "media_lightbox",
+      "namespace": "custom",
+      "name": "media lightbox",
+      "description": "",
+      "type": {
+        "name": "list.file_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "info_gallery",
+      "namespace": "custom",
+      "name": "info gallery",
+      "description": "",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "compare_items",
+      "namespace": "custom",
+      "name": "compare items",
+      "description": "",
+      "type": {
+        "name": "list.product_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "ingredient_highlights",
+      "namespace": "custom",
+      "name": "ingredient highlights",
+      "description": "",
+      "type": {
+        "name": "multi_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "promotion_countdown",
+      "namespace": "custom",
+      "name": "Promotion countdown",
+      "description": "",
+      "type": {
+        "name": "date_time",
+        "category": "DATE_TIME"
+      }
+    },
+    {
+      "key": "frequently_bought_together",
+      "namespace": "custom",
+      "name": "frequently bought together",
+      "description": "",
+      "type": {
+        "name": "list.product_reference",
+        "category": "REFERENCE"
+      }
     }
   ],
   "variant": [],
-  "shop": [
-    {
-      "key": "data",
-      "namespace": "joy_loyalty_avada",
-      "name": "joy_loyalty_avada",
-      "description": null,
-      "type": {
-        "name": "json",
-        "category": "JSON"
-      }
-    }
-  ]
+  "shop": []
 }
