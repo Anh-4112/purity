@@ -23,7 +23,7 @@
   <div
     class="product-item product__item-js{{ class }}"
   >
-    <div class="product-item__inner relative{{ style_layout }}{% if theme_st.product_show_quick_add_mobile == true %} show_quick_add-mb{% endif %}{{ align }}">
+    <div class="product-item__inner relative{{ style_layout }}{% if theme_st.product_show_quick_add_mobile == true %} show_quick_add-mb{% endif %}">
       {%- if disable_image != true -%}
         {%- liquid
           assign p_media = card_product.featured_media
@@ -52,9 +52,6 @@
           class="product__inner relative block rounded overflow-hidden{{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect"
           {% if type == 'list' or type == 'bundle' %}
             style="--width: 8rem;"
-          {% endif %}
-          {% if type == 'testimonials' %}
-            style="--width: 5.5rem;"
           {% endif %}
         >
           <a
@@ -478,7 +475,7 @@
   </div>
 {% else %}
   <div class="product-item{{ class }} {{ product_style }}">
-    <div class="product-item__inner relative {{ style_layout }}{{ align }}">
+    <div class="product-item__inner relative {{ style_layout }}">
       <div class="product-item__media w-custom">
         <a
           role="link"
