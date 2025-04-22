@@ -54,7 +54,7 @@
       </div>
     {%- endif -%}
 
-    <div class="article-wrapper w-full">
+    <div class="article-wrapper">
       {%- if section_st.blog != blank -%}
         {% render 'article-card',
           article: section_st.blog,
@@ -68,8 +68,6 @@
           container: section_width,
           column: 1,
           column_mobile: 1,
-          class: ' w-full',
-          featured-blog: ' flex',
           is_featured_blog: true,
           background_color: section_st.background_color,
           button_label: section_st.button_label,
@@ -81,7 +79,7 @@
         <div class="blog-placeholder flex">
           <div
             class="article_post-image placeholder banner__media rounded relative overflow-hidden w-custom"
-            style="--width: 70%;"
+            style="--width: 66%;"
           >
             <a
               role="link"
@@ -93,8 +91,8 @@
             </a>
           </div>
           <div
-            class="card__content mt-15 w-custom"
-            style="--width: 30%;"
+            class="card__content mt-15 w-custom p-30"
+            style="--width: 34%;"
           >
             <div class="card__heading{% if section_st.columns_desktop < 3 %} h4{% else %} h5{% endif %}">
               <a
