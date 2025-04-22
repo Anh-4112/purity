@@ -227,6 +227,14 @@ export function eventModal(
     removeTrapFocus(modal_element);
     if (focus_item && document.getElementById(focus_item)) {
       trapFocus(document.getElementById(focus_item));
+      if (focus_item == "FacetsDrawer") {
+        document
+          .getElementById(focus_item)
+          .parentNode.parentNode.insertBefore(
+            modal_element,
+            modal_element.parentNode.nextElementSibling
+          );
+      }
     }
   }
 }
@@ -455,7 +463,7 @@ export class FSProgressBar {
     let emptyUnavailable = _this.dataset.emptyUnavailable;
     let feUnAvailable = _this.dataset.feUnavailable;
     const feAvailable = _this.dataset.feAvailable;
-    if (orderTotal == 0) {
+    if (orderTotal == 0 && emptyUnavailable) {
       _this.innerHTML = emptyUnavailable.replace(
         "[amount]",
         formatMoney(min_by_currency, themeGlobalVariables.settings.money_format)
