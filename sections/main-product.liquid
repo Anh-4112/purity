@@ -22,6 +22,7 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--col-width: {{ desktop_media_width }}%;
 {%- endcapture -%}
+<script type="module" src="{{ 'main-product.js' | asset_url }}"></script>
 <section
   id="Product-{{ section.id }}"
   class="section sec__main-product media-width-{{ desktop_media_width }}"
@@ -145,6 +146,8 @@
             disable_badge: true,
             disable_rate: true,
             disable_tag: true,
+            disable_countdown: true,
+            disable_scrolling_text: true,
             disable_quickview: true,
             disable_color_swatches: true,
             class: ' sticky-add-cart hidden block-1025',

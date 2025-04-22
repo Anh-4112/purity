@@ -67,7 +67,7 @@
   class="section-main-collection"
   style="{{ style | strip | strip_newlines }}"
 >
-  <div class="{{ section_width }} {{ filter_layout }}-filter-layout">
+  <div id="ProductsGridContainer" class="{{ section_width }} {{ filter_layout }}-filter-layout">
     {%- paginate collection.products by products_to_show -%}
       {%- if enable_filtering and filter_layout == 'vertical' -%}
         <div class="collection__sidebar">
@@ -149,7 +149,7 @@
                 class="button"
                 aria-label="{{ 'products.facets.filter' | t }}"
               >
-                <span class="ms-8 heading-color">{{ 'products.facets.filter' | t }}</span>
+                <span class="ms-8 heading-color">{{ 'products.facets.filter_button' | t }}</span>
               </button>
               <facet-drawer
                 id="{{ section.id }}"
@@ -196,7 +196,7 @@
               class="collection-count"
               role="status"
             >
-              <span id="ProductCountDesktop">
+              <span>
                 {%- if collection.results_count -%}
                   {{
                     'sections.collection_template.results_with_count'
@@ -333,7 +333,7 @@
             </div>
           {% endif %}
         </div>
-        <div class="collection__gird">
+        <div id="CollectionGird" class="collection__gird">
           {%- if collection.products.size == 0 -%}
             <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
               <div class="title-wrapper text-center">
@@ -450,17 +450,15 @@
                       padding: column_gap_grid,
                       indexFor: forloop.index
                     %}
-
                   {%- else -%}
-                    {%
-                      render render 'card-product',
+                    {% render 'card-product',
                       card_product: product,
                       section_id: section.id,
                       container: section_width,
                       column: items_per_row,
                       column_mobile: 2,
                       padding: column_gap_grid,
-                      indexFor: forloop.index,
+                      indexFor: forloop.index
                     %}
                   {%- endif -%}
                 {%- endfor -%}
@@ -550,15 +548,17 @@
               {%- endif -%}
             </div>
             {%- liquid
-              assign products_count = products_to_show
-              if products_to_show > collection.products_count
-                assign products_count = collection.products_count
+              assign paginate_size = paginate.parts.size | times: 1
+              assign cur_page = paginate.current_page | times: 1
+              assign amount_products = products_to_show | times: cur_page
+              if cur_page == paginate_size or amount_products > all_product
+                assign amount_products = all_product
               endif
               assign collection_products_count = collection.products_count | times: 1.0
             -%}
             {%- case pagination_type -%}
               {%- when 'button' -%}
-                <loadmore-button-collection
+                <loadmore-button
                   data-all-products="{{ all_product }}"
                   data-limit="{{ products_to_show }}"
                   data-url="?page={{ paginate.current_page | plus: 1 }}"
@@ -567,13 +567,13 @@
                     <p class="counting_product">
                       {{-
                         'sections.collection_template.product_count.one'
-                        | t: count: products_count, product_count: collection.products_count
+                        | t: count: amount_products, product_count: collection.products_count
                       -}}
                     </p>
                     <div class="progress">
                       <span
                         class="current"
-                        style="width: {{ products_count | divided_by: collection_products_count | times: 100 }}%"
+                        style="width: {{ amount_products | divided_by: collection_products_count | times: 100 }}%"
                       ></span>
                     </div>
                   </div>
@@ -582,7 +582,7 @@
                       <span class="hidden-on-load">{{ 'sections.collection_template.load_more' | t }}</span>
                     </button>
                   {% endif %}
-                </loadmore-button-collection>
+                </loadmore-button>
               {%- when 'infinity' -%}
                 <loadmore-infinity
                   data-all-products="{{ all_product }}"
@@ -594,13 +594,13 @@
                     <p class="counting_product">
                       {{-
                         'sections.collection_template.product_count'
-                        | t: count: products_count, product_count: collection.products_count
+                        | t: count: amount_products, product_count: collection.products_count
                       -}}
                     </p>
                     <div class="progress">
                       <span
                         class="current"
-                        style="width: {{ products_count | divided_by: collection_products_count | times: 100 }}%"
+                        style="width: {{ amount_products | divided_by: collection_products_count | times: 100 }}%"
                       ></span>
                     </div>
                   </div>
@@ -619,6 +619,7 @@
         </div>
       </div>
     {%- endpaginate -%}
+    <script type="module" src="{{ 'facets.js' | asset_url }}"></script>
   </div>
 </div>
 {% schema %}

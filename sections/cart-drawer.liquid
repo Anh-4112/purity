@@ -467,7 +467,7 @@
                           {% liquid
                             assign hidden = false
                             for item_cart in cart.items
-                              if item_cart.product_id == product.id
+                              if item_cart.product_id == item.id
                                 assign hidden = true
                               endif
                             endfor
@@ -482,6 +482,8 @@
                               disable_badge: true,
                               disable_rate: true,
                               disable_tag: true,
+                              disable_countdown: true,
+                              disable_scrolling_text: true,
                               disable_color_swatches: true,
                               class: ' swiper-slide mini-cart',
                               style_layout: ' flex gap-10 block-1025',

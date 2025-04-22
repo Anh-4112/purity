@@ -11,7 +11,7 @@
   assign color_swatch_shape = theme_st.color_swatch_shape
 %}
 <facet-filters-form>
-  <form id="FacetFiltersForm">
+  <form id="{% if filter_layout == 'drawer' %}FacetFiltersFormDrawer{% else %}FacetFiltersForm{% endif %}">
     {%- if results.terms -%}
       <input type="hidden" name="q" value="{{ results.terms | escape }}">
       <input name="options[prefix]" type="hidden" value="last">
@@ -20,7 +20,10 @@
       {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
       {% case filter.type %}
         {% when 'boolean', 'list' %}
-          <action-filter>
+          <action-filter
+            class="js-filter"
+            data-index="{{ forloop.index }}{% if filter_layout == 'drawer' %}-drawer{% endif %}"
+          >
             <details class="collapsible-row" is="collapsible-row" open>
               <summary class="collapsible-row__summary">
                 <span class="inline-flex">
@@ -53,7 +56,7 @@
                           type="checkbox"
                           name="{{ value.param_name }}"
                           value="{{ value.value }}"
-                          id="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}"
+                          id="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}"
                           {% if value.active %}
                             checked
                           {% endif %}
@@ -61,7 +64,7 @@
                             disabled
                           {% endif %}
                         >
-                        <label for="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}">
+                        <label for="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}">
                           {{- value.label | escape }}
                           <span class="count nowrap">({{ value.count }})</span>
                         </label>
@@ -73,7 +76,7 @@
                             type="checkbox"
                             name="{{ value.param_name }}"
                             value="{{ value.value }}"
-                            id="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}"
+                            id="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}"
                             {% if value.active %}
                               checked
                             {% endif %}
@@ -106,7 +109,7 @@
                           -%}
                           <label
                             class="color-swatch-label{% if is_swatch_image %} swatch-image{% endif %} filter-swatch"
-                            for="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}"
+                            for="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}"
                             style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }};{% endif %}{% if color_swatch_shape == 'round' %}--radius: 50%;{% else %}--radius: 3px;{% endif %}"
                           >
                             <span class="visually-hidden">{{ value.label }}</span>
@@ -127,7 +130,7 @@
               assign uses_comma_decimals = true
             endif
           %}
-          <action-filter>
+          <action-filter class="js-filter" data-index="{{ forloop.index }}">
             <details class="collapsible-row" is="collapsible-row" open>
               <summary class="collapsible-row__summary">
                 <span>
@@ -135,7 +138,7 @@
                 </span>
               </summary>
               <div
-                id="Facet-{{ forloop.index }}-{{ section.id }}"
+                id="Facet-{{ forloop.index }}-{{ filter_layout }}-{{ section.id }}"
                 class="collapsible-row__content filter-attribute"
               >
                 <div>
@@ -172,7 +175,7 @@
                     <input
                       class="field__input"
                       name="{{ filter.min_value.param_name }}"
-                      id="Filter-{{ filter.label | escape }}-GTE"
+                      id="Filter-{{ filter.label | escape }}-{{ filter_layout }}-GTE"
                       placeholder="{{ min_price }}"
                       type="number"
                       min="0"
@@ -188,7 +191,10 @@
                         max="{{ input_max_of_min }}"
                       {% endif %}
                     >
-                    <label class="field__label visually-hidden" for="Filter-{{ filter.label | escape }}-GTE">
+                    <label
+                      class="field__label visually-hidden"
+                      for="Filter-{{ filter.label | escape }}-{{ filter_layout }}-GTE"
+                    >
                       {{- 'products.facets.from' | t -}}
                     </label>
                   </div>
@@ -209,7 +215,7 @@
                     <input
                       class="field__input"
                       name="{{ filter.max_value.param_name }}"
-                      id="Filter-{{ filter.label | escape }}-LTE"
+                      id="Filter-{{ filter.label | escape }}-{{ filter_layout }}-LTE"
                       placeholder="{{ max_price }}"
                       type="number"
                       min="0"
@@ -219,7 +225,10 @@
                         max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                       {% endif %}
                     >
-                    <label class="field__label visually-hidden" for="Filter-{{ filter.label | escape }}-LTE">
+                    <label
+                      class="field__label visually-hidden"
+                      for="Filter-{{ filter.label | escape }}-{{ filter_layout }}-LTE"
+                    >
                       {{- 'products.facets.to' | t -}}
                     </label>
                   </div>
@@ -239,7 +248,7 @@
                   style="--range-from: {{ from }}%; --range-to: {{ to }}%"
                 >
                   <input
-                    id="Filter-range-{{ filter.label | escape }}-GTE"
+                    id="Filter-range-{{ filter.label | escape }}-{{ filter_layout }}-GTE"
                     type="range"
                     value="{{ min_price }}"
                     class="range-slider"
@@ -254,13 +263,13 @@
                   >
                   <label
                     class="field__label visually-hidden"
-                    for="Filter-range-{{ filter.label | escape }}-GTE"
+                    for="Filter-range-{{ filter.label | escape }}-{{ filter_layout }}-GTE"
                   >
                     {{- 'products.facets.from' | t -}}
                   </label>
 
                   <input
-                    id="Filter-range-{{ filter.label | escape }}-LTE"
+                    id="Filter-range-{{ filter.label | escape }}-{{ filter_layout }}-LTE"
                     type="range"
                     value="{{ range_from }}"
                     min="0"
@@ -275,7 +284,7 @@
                   >
                   <label
                     class="field__label visually-hidden"
-                    for="Filter-range-{{ filter.label | escape }}-LTE"
+                    for="Filter-range-{{ filter.label | escape }}-{{ filter_layout }}-LTE"
                   >
                     {{- 'products.facets.to' | t -}}
                   </label>
@@ -285,16 +294,8 @@
           </action-filter>
       {%- endcase -%}
     {%- endfor -%}
-    {% if filter_type == 'drawer' %}
+    {% if filter_layout == 'drawer' %}
       <div class="filter-action-bottom">
-        <facet-remove-canvas class="active-facets__button-wrapper">
-          <a
-            href="{{ results_url }}"
-            class="active-facets__button-remove"
-          >
-            <span>{{ 'products.facets.clear_all' | t }}</span>
-          </a>
-        </facet-remove-canvas>
         <facet-apply-canvas
           tabindex="0"
         >

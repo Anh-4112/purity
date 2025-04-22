@@ -142,7 +142,7 @@ class ActionSearch extends HTMLElement {
   getSearchResults(searchTerm, predictiveSearch) {
     const query = `${routes.predictive_search_url}?q=${encodeURIComponent(
       searchTerm
-    )}&section_id=${predictiveSearch}&resources[type]=product,page,article,collection,query`;
+    )}&section_id=${predictiveSearch}&resources[limit]=10&resources[limit_scope]=each`;
     fetch(query)
       .then((response) => {
         if (!response.ok) {

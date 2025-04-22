@@ -5,6 +5,8 @@
   assign product_enable_color_swatches = theme_st.product_enable_color_swatches
   assign product_show_vendor = theme_st.product_show_vendor
   assign product_show_tag = theme_st.product_show_tag
+  assign product_show_countdown = theme_st.product_show_countdown
+  assign product_show_scrolling_text = theme_st.product_show_scrolling_text
   assign product_show_rate = theme_st.product_show_rate
   assign product_show_image_hover = theme_st.product_show_image_hover
   assign product_image_ratio = theme_st.product_image_ratio
@@ -179,6 +181,47 @@
               >
                 {% render 'placeholder-render' %}
               </div>
+            {%- endif -%}
+            {%- if disable_countdown != true
+              and card_product.metafields.custom.promotion_countdown
+              and product_show_countdown
+            -%}
+              <lazy-load-template>
+                <template>
+                  <div class="product__countdown">
+                    <countdown-timer
+                      data-deadline="{{ card_product.metafields.custom.promotion_countdown }}"
+                      data-days="{{ 'products.product.countdown.format.days' | t }}"
+                      data-hours="{{ 'products.product.countdown.format.hours' | t }}"
+                      data-mins="{{ 'products.product.countdown.format.mins' | t }}"
+                      data-secs="{{ 'products.product.countdown.format.secs' | t }}"
+                    >
+                    </countdown-timer>
+                  </div>
+                </template>
+              </lazy-load-template>
+            {%- endif -%}
+            {%- if disable_scrolling_text != true
+              and card_product.metafields.custom.highlights_scrolling_text
+              and product_show_scrolling_text
+            -%}
+              <lazy-load-template>
+                <template>
+                  <div class="product_scrolling marquee flex">
+                    {%- for i in (0..4) -%}
+                      <div class="flex animation-marquee">
+                        {%- for i in (0..2) -%}
+                          <div class="flex gap align-center whitespace-nowrap rich__text-m0 lh-normal fs-small">
+                            <span class="content-badges-scrolling">
+                              {{- card_product.metafields.custom.highlights_scrolling_text -}}
+                            </span>
+                          </div>
+                        {%- endfor -%}
+                      </div>
+                    {%- endfor -%}
+                  </div>
+                </template>
+              </lazy-load-template>
             {%- endif -%}
             {%- if disable_badge != true -%}
               {% render 'product-badges', scope: 'item', card_product: card_product %}
