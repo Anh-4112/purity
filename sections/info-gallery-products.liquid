@@ -60,9 +60,11 @@
               {%- assign image_alt = info_gallery.image.alt | default: product.title | escape -%}
               <div class="info-gallery__media">
                 {% render 'responsive-image', type: 'banner', image: info_gallery.image, image_alt: image_alt %}
-                <div class="info-gallery__label">
-                  <span>{{ 'general.content.info.step_html' | t: index: forloop.index }}</span>
-                </div>
+                {%- if info_gallery.highlights_text -%}
+                  <div class="info-gallery__label">
+                    <span>{{ info_gallery.highlights_text }}</span>
+                  </div>
+                {% endif %}
               </div>
               {%- if info_gallery.subheading or info_gallery.heading or info_gallery.description -%}
                 <div class="info-gallery__info">
@@ -77,11 +79,11 @@
                             data-animate-delay="{{ animate_delay }}"
                             class="block"
                           >
-                            {{ 'general.content.subheading' | t }}
+                            {{ info_gallery.subheading }}
                           </motion-effect>
                         </div>
                       {%- endif -%}
-                      {%- if info_gallery.subheading -%}
+                      {%- if info_gallery.heading -%}
                         <div class="sec__content-heading mb-10 {{ heading_size }}">
                           {% assign animate_delay = animate_delay | plus: 5 %}
                           <motion-effect
@@ -89,7 +91,7 @@
                             data-animate-delay="{{ animate_delay }}"
                             class="block"
                           >
-                            {{ 'general.content.heading' | t }}
+                            {{ info_gallery.heading }}
                           </motion-effect>
                         </div>
                       {%- endif -%}
@@ -101,7 +103,7 @@
                             data-animate-delay="{{ animate_delay }}"
                             class="block"
                           >
-                            {{ 'general.content.description' | t }}
+                            {{ info_gallery.description | metafield_tag }}
                           </motion-effect>
                         </div>
                       {%- endif -%}
