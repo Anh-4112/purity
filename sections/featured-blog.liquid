@@ -73,7 +73,9 @@
           is_featured_blog: true,
           background_color: section_st.background_color,
           button_label: section_st.button_label,
-          button_type: section_st.button_type
+          button_type: section_st.button_type,
+          content_alignment: section_st.content_alignment,
+          vertical_alignment: section_st.vertical_alignment
         %}
       {%- else -%}
         <div class="blog-placeholder flex">
@@ -236,6 +238,46 @@
       ],
       "default": "adapt",
       "label": "t:sections.all.image.aspect_ratio.label"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "start",
+      "label": "t:sections.all.text_alignment.label"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.top"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.middle"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.bottom"
+        }
+      ],
+      "default": "start",
+      "label": "t:sections.image-with-text.settings.vertical_alignment"
     },
     {
       "type": "checkbox",
