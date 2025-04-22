@@ -1,6 +1,5 @@
 {{ 'blog.css' | asset_url | stylesheet_tag }}
 {% liquid
-  assign theme_st = settings
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
@@ -35,8 +34,7 @@
             <div {{ block.shopify_attributes }} class="container-min single__post-header page-title">
               {% if block_st.show_category %}
                 <a
-                  class="blog-category inline-block product__badges-sale  btn-rounded fs-13 px-15 py-4"
-                   style="--badges-bg: {{ theme_st.sale_background }}; --badges-color: {{ theme_st.sale_color }}"
+                  class="blog-category inline-block bg-sale btn-rounded fs-13 px-15 py-4"
                   href="{{ blog.url }}"
                   aria-label="{{ blog.title }}"
                 >
