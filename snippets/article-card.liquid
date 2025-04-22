@@ -3,7 +3,7 @@
 -%}
 {%- if article and article != empty -%}
   <div
-    class="article-card-wrapper item-load{{ class }}"
+    class="article-card-wrapper item-load{{ class }}{% if is_featured_blog %} gradient color-{{ color_scheme }}{% endif %}"
   >
     <div
       class="card article-card{{ featured-blog }}{% if is_featured_blog %} custom-blog-featured flex-1025 wrap gap rounded{% endif %}"
@@ -45,9 +45,6 @@
       </div>
       <div
         class="card__content{% if is_featured_blog %} col-1025-remaining flex column p-30 p-1025-50 bg-secondary text-{{ content_alignment }} align-{{ content_alignment }} justify-content-{{ vertical_alignment }}{% endif %}"
-        {% if is_featured_blog %}
-          style="--color-background-2: {{ background_color }};"
-        {% endif %}
       >
         {%- if show_tags or show_cate -%}
           <ul class="list-unstyle p-0 m-0 mb-10 inline-flex wrap gap-5{% if is_featured_blog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
