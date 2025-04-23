@@ -97,7 +97,7 @@
       {%- else -%}
         {%- render 'placeholder-render', type: 'lifestyle-1', class: 'img-placeholder h-full w-full' -%}
       {% endif %}
-      {% if block_st.content_position == 'bellow' and block_st.vertical_position != 'none' %}
+      {% if block_st.content_position == 'bellow' and block_st.show_badge == true %}
         <div
           class="block__highlight_text w-content absolute{% if block_st.vertical_position == 'top' %} top-15{% else %} bottom-15{% endif %} left-15 fs-small subheading_weight lh-global text-color bg-custom flex align-center gap-5{% if has_custom_background %} py-6 px-15 btn-rounded{% endif %}"
           style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
@@ -115,7 +115,7 @@
       {% endif %}
     </div>
     <div
-      class="group__block--content w-full z-3 flex {% if block_st.content_position == 'overlay' %} {{ block_st.desktop_content_position }} p-30 text-{{ block_st.text_alignment }}{% else %}{% if block_st.vertical_position != 'none' %} mt-20{% else %} mt-40{% endif %} justify-content-{{ block_st.text_alignment }}{% endif %}"
+      class="group__block--content w-full z-3 flex{% if block_st.content_position == 'overlay' %} {{ block_st.desktop_content_position }} p-30 text-{{ block_st.text_alignment }}{% else %} mt-20 justify-content-{{ block_st.text_alignment }}{% endif %}"
     >
       <div
         class="banner__box flex column align-{{ block_st.text_alignment }} max-w-100{% if block_st.content_position == 'bellow' %} text-{{ block_st.text_alignment }} {% endif %}"
@@ -286,6 +286,12 @@
       "content": "t:sections.multi_content.blocks.bellow_image"
     },
     {
+      "type": "checkbox",
+      "id": "show_badge",
+      "default": true,
+      "label": "t:settings_schema.badges.settings.show_badge.label",
+    },
+    {
       "type": "text",
       "id": "badge",
       "default": "Highlight text",
@@ -295,10 +301,6 @@
       "type": "select",
       "id": "highlight_text_icon",
       "options": [
-        {
-          "value": "none",
-          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__1.label"
-        },
         {
           "value": "star",
           "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__2.label"
@@ -334,10 +336,6 @@
         {
           "value": "bottom",
           "label": "t:sections.all.padding.padding_bottom"
-        },
-        {
-          "value": "none",
-          "label": "t:sections.all.desktop_content_position.group.none.label",
         }
       ],
       "default": "bottom",
