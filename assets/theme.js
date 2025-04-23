@@ -2284,3 +2284,29 @@ class LazyLoadTemplate extends HTMLElement {
   }
 }
 customElements.define("lazy-load-template", LazyLoadTemplate);
+
+class ScrollingEffect extends HTMLElement {
+  constructor() {
+    super(),
+      this.contents.forEach((element) => {
+        const content =
+          element.querySelector(".block__heading") ||
+          element.querySelector(".block__description") ||
+          element.querySelector(".block__buttons");
+        Motion.scroll(
+          Motion.animate(content, {
+            opacity: [0, 0, 1, 1, 1, 0, 0],
+          }),
+          {
+            target: content,
+            offsets: ["33vh", "66vh"],
+          }
+        );
+      });
+  }
+
+  get contents() {
+    return Array.from(this.children);
+  }
+}
+customElements.define("scrolling-effect", ScrollingEffect);
