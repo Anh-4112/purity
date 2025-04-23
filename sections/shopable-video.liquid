@@ -33,12 +33,16 @@
   endif
 
   assign column_gap_slide = 0
+  assign column_gap_mb = 0
   if section_st.column_gap == 'large'
     assign column_gap_slide = 30
+    assign column_gap_mb = 20
   elsif section_st.column_gap == 'medium'
     assign column_gap_slide = 20
+    assign column_gap_mb = 10
   elsif section_st.column_gap == 'small'
     assign column_gap_slide = 10
+    assign column_gap_mb = 5
   endif
 
   assign items_per_row_mobile = section_st.items_per_row_mobile
@@ -61,7 +65,7 @@
   endif
 -%}
 {%- capture style -%}
-      --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--width: 5rem;
+      --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--width: 5rem;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
 
 <div
