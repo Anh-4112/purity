@@ -281,9 +281,9 @@ class SiteHeader extends HTMLElement {
     if (header) {
       if (this.dataStickyType === "always") {
         if (positionScrollY > headerHeight) {
-          header.classList.add("section-header-sticky");
+          header.classList.add("section-header-sticky", "animate");
         } else {
-          header.classList.remove("section-header-sticky");
+          header.classList.remove("section-header-sticky", "animate");
         }
       } else {
         if (positionScrollY > 0) {
@@ -293,6 +293,7 @@ class SiteHeader extends HTMLElement {
               header.classList.add("header-sticky-hidden");
             } else {
               header.classList.remove("header-sticky-hidden");
+              header.classList.add("animate");
             }
             header.classList.add("section-header-sticky");
             this.check = positionScrollY;
@@ -303,7 +304,8 @@ class SiteHeader extends HTMLElement {
         } else {
           header.classList.remove(
             "header-sticky-hidden",
-            "section-header-sticky"
+            "section-header-sticky",
+            "animate"
           );
         }
       }
@@ -862,54 +864,6 @@ class ProgressBar extends HTMLElement {
 }
 customElements.define("progress-bar", ProgressBar);
 
-class InventoryProgressBar extends ProgressBar {
-  constructor() {
-    super();
-    const orders = this.dataset.order;
-    const available = this.dataset.available;
-    this.init(orders, available);
-  }
-  init(orders, available) {
-    const handleIntersection = (entries, observer) => {
-      if (!entries[0].isIntersecting) return;
-      observer.unobserve(this);
-      const min = Number(this.dataset.feAmount);
-      const threshold = Number(this.dataset.threshold);
-      if (threshold > orders) {
-        if (orders > 0) {
-          this.classList.add("notify", "low_stock");
-          this.classList.remove("instock", "pre_order", "outstock");
-        } else {
-          if (available == false || available == "false") {
-            this.classList.add("notify", "outstock");
-            this.classList.remove("instock", "pre_order", "low_stock");
-          } else {
-            this.classList.remove("notify", "instock", "low_stock", "outstock");
-            this.classList.add("pre_order");
-          }
-        }
-      } else {
-        this.classList.remove("notify", "pre_order", "low_stock", "outstock");
-        this.classList.add("instock");
-      }
-      if (!min) return;
-      if (orders === undefined) return;
-      const order = Number(orders);
-      if (order === undefined) return;
-      if ((order / min) * 100 > 100) {
-        this.setProgressBar(100);
-      } else {
-        this.setProgressBar((order / min) * 100);
-      }
-    };
-
-    new IntersectionObserver(handleIntersection.bind(this), {
-      rootMargin: "0px 0px 400px 0px",
-    }).observe(this);
-  }
-}
-customElements.define("inventory-progress-bar", InventoryProgressBar);
-
 class QuantityInput extends HTMLElement {
   constructor() {
     super();
@@ -951,6 +905,16 @@ class QuantityInput extends HTMLElement {
       : this.input.stepDown();
     if (previousValue !== this.input.value)
       this.input.dispatchEvent(this.changeEvent);
+
+    const main_product = this.closest(".sec__main-product");
+    if (main_product) {
+      main_product.querySelector("quantity-input input").value =
+        this.input.value;
+      const sticky = main_product.querySelector(".sticky-add-cart");
+      if (sticky) {
+        sticky.querySelector("quantity-input input").value = this.input.value;
+      }
+    }
   }
 
   validateQtyRules() {
@@ -964,6 +928,15 @@ class QuantityInput extends HTMLElement {
       const max = parseInt(this.input.max);
       const buttonPlus = this.querySelector(".quantity__button[name='plus']");
       buttonPlus.classList.toggle("disabled", value >= max);
+    }
+    const main_product = this.closest(".sec__main-product");
+    if (main_product) {
+      main_product.querySelector("quantity-input input").value =
+        this.input.value;
+      const sticky = main_product.querySelector(".sticky-add-cart");
+      if (sticky) {
+        sticky.querySelector("quantity-input input").value = this.input.value;
+      }
     }
   }
 }
@@ -1204,140 +1177,6 @@ class AnnouncementBar extends HTMLElement {
 }
 customElements.define("announcement-bar", AnnouncementBar);
 
-class CartDrawer extends HTMLElement {
-  constructor() {
-    super();
-  }
-
-  get cartActionId() {
-    return document.getElementById("cart-icon-bubble") || null;
-  }
-
-  get sectionId() {
-    return this.hasAttribute("data-section-id")
-      ? this.getAttribute("data-section-id")
-      : this.getAttribute("data-section-id");
-  }
-
-  get formAction() {
-    return Array.from(this.querySelectorAll("form .btn"));
-  }
-
-  get cartViewId() {
-    return document.getElementById("cart-icon-bubble") || null;
-  }
-
-  connectedCallback() {
-    if (this.cartActionId) {
-      this.cartActionId.addEventListener(
-        "click",
-        this.onShowCartDrawer.bind(this)
-      );
-    }
-    this.formAction.forEach((action) => {
-      action.addEventListener("click", (event) => {
-        action.classList.add("loading");
-      });
-    });
-  }
-
-  getSectionsToRender() {
-    return [
-      {
-        id: this.sectionId,
-        section: this.sectionId,
-        selector: ".drawer__header-cart",
-      },
-      {
-        id: "cart-icon-bubble",
-        section: "cart-icon-bubble",
-      },
-      {
-        id: this.sectionId,
-        section: this.sectionId,
-        selector: ".free-shipping-bar",
-      },
-      {
-        id: this.sectionId,
-        section: this.sectionId,
-        selector: ".cart-drawer__form",
-      },
-      {
-        id: this.sectionId,
-        section: this.sectionId,
-        selector: ".drawer__footer-bottom-total",
-      },
-    ];
-  }
-
-  renderContents(parsedState) {
-    if (this.querySelector(".drawer__inner-empty")) {
-      const drawerBody = this.getSectionDOM(
-        parsedState.sections[this.sectionId],
-        ".drawer__body"
-      );
-      this.querySelector(".drawer__body").innerHTML = drawerBody.innerHTML;
-      return;
-    }
-
-    this.getSectionsToRender().forEach((section, index) => {
-      const sectionElement = section.selector
-        ? document.querySelector(section.selector)
-        : document.getElementById(section.id);
-      if (!sectionElement) {
-        return;
-      }
-      sectionElement.innerHTML = this.getSectionInnerHTML(
-        parsedState.sections[section.id],
-        section.selector
-      );
-      if (index === 1) {
-        const nav_bar_id = document.querySelector("#cart-icon-bubble");
-        if (
-          nav_bar_id &&
-          nav_bar_id.querySelector(".cart-count") &&
-          sectionElement.querySelector(".cart-count")
-        ) {
-          nav_bar_id.querySelector(".cart-count").innerHTML =
-            sectionElement.querySelector(".cart-count").innerHTML;
-        }
-      }
-      if (index === 2) {
-        const progress = this.getSectionDOM(
-          parsedState.sections[section.id],
-          ".progress"
-        );
-        if (sectionElement.querySelector(".progress")) {
-          sectionElement
-            .querySelector(".progress")
-            .setAttribute(
-              "data-total-order",
-              progress.getAttribute("data-total-order")
-            );
-        }
-      }
-    });
-  }
-
-  getSectionInnerHTML(html, selector = ".shopify-section") {
-    return new DOMParser()
-      .parseFromString(html, "text/html")
-      .querySelector(selector).innerHTML;
-  }
-
-  getSectionDOM(html, selector = ".shopify-section") {
-    return new DOMParser()
-      .parseFromString(html, "text/html")
-      .querySelector(selector);
-  }
-
-  onShowCartDrawer(event) {
-    event.preventDefault();
-    NextSkyTheme.eventModal(this, "open", false, "delay");
-  }
-}
-customElements.define("cart-drawer", CartDrawer);
-
 class CartEstimate extends HTMLElement {
   constructor() {
     super();
@@ -1571,6 +1410,23 @@ class CartNote extends HTMLElement {
 
 if (!customElements.get("cart-note-element")) {
   customElements.define("cart-note-element", CartNote);
+}
+
+class MainCartNote extends CartNote {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    this.querySelector(".cart-note").addEventListener(
+      "change",
+      this.noteUpdate.bind(this)
+    );
+  }
+}
+
+if (!customElements.get("main-cart-note")) {
+  customElements.define("main-cart-note", MainCartNote);
 }
 
 class MiniCartUpSell extends HTMLElement {
@@ -2285,6 +2141,95 @@ CustomElement.observeAndPatchCustomElements({
     classElement: AskQuestion,
   },
 });
+class NewsletterPopup extends HTMLElement {
+  constructor() {
+    super();
+    this.enable = this.dataset.enable;
+    this.initialized = false;
+  }
+
+  connectedCallback() {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => this.init());
+    } else {
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(() => this.init());
+      } else {
+        setTimeout(() => this.init(), 100);
+      }
+    }
+  }
+
+  init() {
+    if (this.initialized) return;
+    this.initialized = true;
+
+    const urlChecked = this.checkUrlParameters();
+    if (urlChecked) {
+      return;
+    }
+
+    const getCookie = NextSkyTheme.getCookie("newsletter_popup");
+    if (
+      (this.enable === "show-on-homepage" || this.enable === "show-all-page") &&
+      getCookie === null
+    ) {
+      this.createPopup();
+    }
+  }
+
+  createPopup() {
+    const template = this.querySelector("template");
+    if (!template) return;
+
+    const content = document.createElement("div");
+    content.appendChild(template.content.firstElementChild.cloneNode(true));
+
+    const wrapper = NextSkyTheme.body.appendChild(
+      content.querySelector("modal-popup")
+    );
+
+    setTimeout(() => {
+      NextSkyTheme.eventModal(wrapper, "open", true);
+    }, 3000);
+
+    this.initNotShow(wrapper);
+  }
+
+  checkUrlParameters() {
+    const urlInfo = window.location.href;
+    const newURL = location.href.split("?")[0];
+
+    if (urlInfo.indexOf("customer_posted=true") >= 1) {
+      NextSkyTheme.setCookie("newsletter_popup", "true", 1);
+      NextSkyTheme.notifier.show(message.newsletter.success, "success", 4000);
+      window.history.pushState("object", document.title, newURL);
+      return true;
+    }
+
+    if (
+      urlInfo.indexOf("contact%5Btags%5D=newsletter&form_type=customer") >= 1
+    ) {
+      NextSkyTheme.notifier.show(message.newsletter.error, "error", 4000);
+      window.history.pushState("object", document.title, newURL);
+      return false;
+    }
+
+    return false;
+  }
+
+  initNotShow(modal) {
+    const notShow = modal?.querySelector(".newsletter-action");
+    if (!notShow) return;
+
+    notShow.addEventListener("click", () => {
+      NextSkyTheme.setCookie("newsletter_popup", "true", 1);
+      NextSkyTheme.eventModal(modal, "close", true);
+    });
+  }
+}
+
+customElements.define("newsletter-popup", NewsletterPopup);
 class SocialShare extends HTMLElement {
   constructor() {
     super();
@@ -2307,3 +2252,35 @@ class SocialShare extends HTMLElement {
   }
 }
 customElements.define("social-share", SocialShare);
+
+class LazyLoadTemplate extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  init() {
+    if (this.querySelector("template")) {
+      const handleIntersection = async (entries, observer) => {
+        if (!entries[0].isIntersecting) return;
+        observer.unobserve(this);
+        const content = document.createElement("div");
+        content.appendChild(
+          this.querySelector("template").content.firstElementChild.cloneNode(
+            true
+          )
+        );
+        const html = content.querySelector(".product__countdown")
+          ? content.querySelector(".product__countdown")
+          : content.querySelector(".product_scrolling");
+        await import(importJs.countdownTimer);
+        this.parentNode.insertBefore(html, this.nextSibling);
+        this.remove();
+      };
+      new IntersectionObserver(handleIntersection.bind(this), {
+        rootMargin: "0px 0px 200px 0px",
+      }).observe(this);
+    }
+  }
+}
+customElements.define("lazy-load-template", LazyLoadTemplate);

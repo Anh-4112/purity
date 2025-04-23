@@ -14,12 +14,29 @@
     data-secs="{{ 'sections.countdown.format.secs' | t }}"
     data-message="{{ block.settings.message }}"
   >
+    <div class="countdown-container lh-normal flex relative content-center">
+      <span class="days_timer countdown-item">00</span>
+      <span class="timer-announcementbar-text">{{ 'sections.countdown.format.days' | t }}</span>
+    </div>
+    <div class="countdown-container lh-normal flex relative content-center">
+      <span class="hours_timer countdown-item">00</span>
+      <span class="timer-announcementbar-text">{{ 'sections.countdown.format.hours' | t }}</span>
+    </div>
+    <div class="countdown-container lh-normal flex relative content-center">
+      <span class="minutes_timer countdown-item">00</span>
+      <span class="timer-announcementbar-text">{{ 'sections.countdown.format.mins' | t }}</span>
+    </div>
+    <div class="countdown-container lh-normal flex relative content-center">
+      <span class="seconds_timer countdown-item">00</span>
+      <span class="timer-announcementbar-text">{{ 'sections.countdown.format.secs' | t }}</span>
+    </div>
   </countdown-timer>
 </div>
 
 {% schema %}
 {
   "name": "t:sections.image-with-text-overlay.countdown",
+  "class": "mb-custom",
   "settings": [
     {
       "type": "text",

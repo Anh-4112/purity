@@ -38,6 +38,15 @@ function initSlide(_this) {
   if (direction == "vertical") {
     _this.style.maxHeight = _this.offsetHeight + "px";
   }
+  let nextEl = _this.querySelector(".swiper-button-next");
+  let prevEl = _this.querySelector(".swiper-button-prev");
+  let paginationSwiper = _this.querySelector(".swiper-pagination");
+  const swiperControls = _this.closest(".swiper__controls-group");
+  if (swiperControls) {
+    nextEl = swiperControls.querySelector(".swiper-button-next");
+    prevEl = swiperControls.querySelector(".swiper-button-prev");
+    paginationSwiper = swiperControls.querySelector(".swiper-pagination");
+  }
   new Swiper(_this, {
     slidesPerView: freeMode ? "auto" : autoItem ? "auto" : itemMobile,
     spaceBetween: freeMode ? spacing : spacing >= 10 ? 10 : spacing,
@@ -56,12 +65,12 @@ function initSlide(_this) {
       fill: "row",
     },
     navigation: {
-      nextEl: _this.querySelector(".swiper-button-next"),
-      prevEl: _this.querySelector(".swiper-button-prev"),
+      nextEl: nextEl,
+      prevEl: prevEl,
     },
     pagination: {
       clickable: true,
-      el: _this.querySelector(".swiper-pagination"),
+      el: paginationSwiper,
       type: pagination ? pagination : "bullets",
       renderCustom: function (swiper, current, total) {
         return current + "/" + total;

@@ -1,6 +1,630 @@
+{%- liquid
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+  assign items_per_row = section_st.items_per_row
+  assign pagination_type = section_st.pagination_type
+  assign filter_layout = section_st.filter_layout
+  assign products_to_show = section_st.products_to_show
+  assign enable_sorting = section_st.enable_sorting
+  assign show_product_counts = section_st.show_product_counts
+  assign enable_filtering = section_st.enable_filtering
+  assign show_promotion = false
+  assign show_step = false
+  for block in section.blocks
+    case block.type
+      when 'promotion'
+        if block.settings.image != blank
+          assign products_to_show = products_to_show | minus: 1
+          assign show_promotion = true
+        endif
+      when 'steps'
+        if block.settings.image != blank
+          assign show_step = true
+        endif
+    endcase
+  endfor
+  assign all_product = collection.products_count
+  if all_product <= products_to_show
+    assign products_to_show = all_product
+  endif
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+  if collection.url
+    assign results_url = collection.url
+  else
+    assign terms = collection.terms | escape
+    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+  endif
+  assign column_gap_grid = 0
+  if section_st.column_gap == 'large'
+    assign column_gap_grid = 30
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_grid = 20
+  elsif section_st.column_gap == 'small'
+    assign column_gap_grid = 10
+  endif
+  assign index_promotion = 1
+  assign total_active_values = 0
+  for filter in collection.filters
+    assign total_active_values = total_active_values | plus: filter.active_values.size
+    if filter.type == 'price_range'
+      if filter.min_value.value != null or filter.max_value.value != null
+        assign total_active_values = total_active_values | plus: 1
+      endif
+    endif
+  endfor
+-%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+{%- endcapture -%}
+<div
+  id="Collection-{{ section.id }}"
+  class="section-main-collection"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div id="ProductsGridContainer" class="{{ section_width }} {{ filter_layout }}-filter-layout">
+    {%- paginate collection.products by products_to_show -%}
+      {%- if enable_filtering and filter_layout == 'vertical' -%}
+        <div class="collection__sidebar">
+          {% render 'facets',
+            results: collection,
+            filter_layout: 'vertical',
+            paginate: paginate,
+            results_url: results_url
+          %}
+        </div>
+      {%- endif -%}
+      <div class="collection__results-gird">
+        {%- if show_step -%}
+          <div class="collection-steps">
+            <slide-section
+              class="swiper"
+              data-section-id="{{ section.id }}"
+              data-autoplay="false"
+              data-effect="slide"
+              data-loop="false"
+              data-speed="500"
+              data-spacing="{{ column_gap_grid }}"
+              data-mobile="1.3"
+              data-desktop="3"
+              data-tablet="2"
+            >
+              {%- render 'swiper-navigation', show_on_hover: true -%}
+              <div class="swiper-wrapper">
+                {%- for block in section.blocks -%}
+                  {%- liquid
+                    assign block_st = block.settings
+                    assign image = block_st.image
+                    assign heading = block_st.heading
+                    assign description = block_st.description
+                  -%}
+                  {%- if block.type == 'steps' and image != blank -%}
+                    <div class="swiper-slide">
+                      <div class="product__promotion-banner">
+                        <div class="banner__media">
+                          {%- liquid
+                            assign banner_alt = 'sections.collection_template.promotion_banner' | t
+                            assign banner_alt = heading | default: banner_alt
+                            assign banner_alt = image.alt | default: banner_alt
+                          -%}
+                          {% render 'responsive-image',
+                            type: 'product',
+                            image: image,
+                            image_alt: banner_alt,
+                            container: section_width,
+                            column: items_per_row,
+                            column_mobile: 2,
+                            padding: column_gap_grid,
+                            motion: true
+                          %}
+                        </div>
+                        {%- if heading != blank or description != blank -%}
+                          <div class="promotion-information">
+                            {%- if heading != blank -%}
+                              <h2>{{ heading }}</h2>
+                            {%- endif -%}
+                            {%- if description != blank -%}
+                              <p class="description">{{ description }}</p>
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </slide-section>
+          </div>
+        {%- endif -%}
+        <div class="facets-toolbar">
+          {%- if enable_filtering -%}
+            <div class="facet-drawer">
+              <button
+                id="FacetsDrawer"
+                class="button"
+                aria-label="{{ 'products.facets.filter' | t }}"
+              >
+                <span class="ms-8 heading-color">{{ 'products.facets.filter_button' | t }}</span>
+              </button>
+              <facet-drawer
+                id="{{ section.id }}"
+                class="modal pointer-none active-modal-js"
+                data-focus-item="FacetsDrawer"
+              >
+                <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
+                <div class="modal-inner drawer drawer-left fixed">
+                  <div class="drawer__body">
+                    <div class="drawer__header">
+                      <div class="drawer__heading h5">{{ 'products.facets.filter' | t }}</div>
+                      <button
+                        type="button"
+                        is="button-close-model"
+                        class="modal__close pointer hover-icon-zoom heading-color btn-reset w-30 h-full inline-flex align-center flex-end"
+                        aria-label="Close"
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 14 14"
+                          fill="none"
+                          class="transition-short will-change icon-zoom"
+                        >
+                          <use href="#icon-close"></use>
+                        </svg>
+                      </button>
+                    </div>
+                    <div class="drawer__inner">
+                      {% render 'facets',
+                        results: collection,
+                        filter_layout: 'drawer',
+                        paginate: paginate,
+                        results_url: results_url
+                      %}
+                    </div>
+                  </div>
+                </div>
+              </facet-drawer>
+            </div>
+          {%- endif -%}
+          {%- if show_product_counts -%}
+            <div
+              class="collection-count"
+              role="status"
+            >
+              <span>
+                {%- if collection.results_count -%}
+                  {{
+                    'sections.collection_template.results_with_count'
+                    | t: terms: collection.terms, count: collection.results_count
+                  }}
+                {%- elsif collection.products_count == collection.all_products_count -%}
+                  {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
+                {%- else -%}
+                  {{
+                    'products.facets.product_count'
+                    | t: product_count: collection.products_count, count: collection.all_products_count
+                  }}
+                {%- endif -%}
+              </span>
+            </div>
+          {%- endif -%}
+          {% if enable_sorting %}
+            <facet-filters-form class="facets facets-vertical-sort">
+              <form class="facets-vertical-form" id="FacetSortForm">
+                {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                <div class="select-custom facet-filters__sort">
+                  <select-sorter class="select-selected">
+                    <label>
+                      {{- 'products.facets.sort_by_label' | t }}
+                    </label>
+                    <span class="inline-block-1025">
+                      {%- for option in collection.sort_options -%}
+                        {% if option.value == sort_by %}{{ option.name | escape }}{% endif %}
+                      {%- endfor -%}
+                    </span>
+                    <svg
+                      class="icon-down transition active-rotated text-color"
+                      width="8"
+                      height="5"
+                      viewBox="0 0 8 5"
+                    >
+                      <use href="#icon-arrow-down"></use>
+                    </svg>
+                  </select-sorter>
+                  <div
+                    class="select-custom__content facet-filters__sort"
+                    id="SortBy"
+                  >
+                    <div class="facet-filters__select">
+                      {%- for option in collection.sort_options -%}
+                        <filter-sort
+                          class="block transition text-color py-3"
+                          value="{{ option.value | escape }}"
+                          {% if option.value == sort_by %}
+                            selected="selected"
+                          {% endif %}
+                        >
+                          {{ option.name | escape }}
+                        </filter-sort>
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                </div>
+                <select
+                  name="sort_by"
+                  class="facet-filters__select hidden"
+                  aria-label="{{ 'products.facets.sort_button' | t }}"
+                  aria-describedby="a11y-refresh-page-message"
+                >
+                  {%- for option in collection.sort_options -%}
+                    <option
+                      value="{{ option.value | escape }}"
+                      {% if option.value == sort_by %}
+                        selected="selected"
+                      {% endif %}
+                    >
+                      {{ option.name | escape }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </form>
+            </facet-filters-form>
+          {% endif %}
+        </div>
+        <div class="facets-filters-active">
+          {% if current_tags.size > 0 or total_active_values > 0 %}
+            <div class="filters-count active-facets">
+              {%- for filter in collection.filters -%}
+                {%- for value in filter.active_values -%}
+                  <div class="facet-remove">
+                    <facet-remove>
+                      <a href="{{ value.url_to_remove }}">
+                        {{ value.label | escape }}
+                        <span class="active-facets__button-inner">
+                          <svg width="9" height="10" viewBox="0 0 9 10" fill="none">
+                            <use href="#icon-close"></use>
+                          </svg>
+                          <span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+                        </span>
+                      </a>
+                    </facet-remove>
+                  </div>
+                {%- endfor -%}
+                {% if filter.type == 'price_range' %}
+                  {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+                    <div class="facet-remove">
+                      <facet-remove>
+                        <a href="{{ filter.url_to_remove }}">
+                          {%- if filter.min_value.value -%}
+                            {{ filter.min_value.value | money }}
+                          {%- else -%}
+                            {{ 0 | money }}
+                          {%- endif -%}
+                          -
+                          {%- if filter.max_value.value -%}
+                            {{ filter.max_value.value | money }}
+                          {%- else -%}
+                            {{ filter.range_max | money }}
+                          {%- endif -%}
+                          <span class="active-facets__button-inner">
+                            <svg width="9" height="10" viewBox="0 0 9 10" fill="none">
+                              <use href="#icon-close"></use>
+                            </svg>
+                            <span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+                          </span>
+                        </a>
+                      </facet-remove>
+                    </div>
+                  {%- endif -%}
+                {% endif %}
+              {%- endfor -%}
+              <div class="facet-remove facet-clear-all">
+                <facet-remove class="active-facets__button-wrapper">
+                  <a href="{{ results_url }}">
+                    <span>{{ 'products.facets.clear_all' | t }}</span>
+                  </a>
+                </facet-remove>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+        <div id="CollectionGird" class="collection__gird">
+          {%- if collection.products.size == 0 -%}
+            <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
+              <div class="title-wrapper text-center">
+                <h2 class="title title--primary">
+                  {{ 'sections.collection_template.no_products_found' | t -}}
+                  <br>
+                  {{
+                    'sections.collection_template.use_fewer_filters_html'
+                    | t: link: results_url, class: 'heading-color remove-underline border-animation'
+                  }}
+                </h2>
+                <a
+                  href="{{ routes.all_products_collection_url }}"
+                  aria-label="{{- 'general.continue_shopping' | t -}}"
+                >
+                  {{- 'general.continue_shopping' | t -}}
+                </a>
+              </div>
+            </div>
+          {%- else -%}
+            <div
+              class="collection grid-cols"
+              id="product-grid"
+              data-id="{{ section.id }}"
+            >
+              {%- if collection.products.size > 0 -%}
+                {%- for product in collection.products -%}
+                  {%- assign index = forloop.index0 -%}
+                  {%- if show_promotion -%}
+                    {%- for block in section.blocks -%}
+                      {%- liquid
+                        assign block_st = block.settings
+                        assign image = block_st.image
+                        assign subheading = block_st.subheading
+                        assign heading = block_st.heading
+                        assign description = block_st.description
+                        assign button_label = block_st.button_label
+                        assign promotion_link = block_st.promotion_link
+                        assign promotion_position = block_st.promotion_position | minus: index_promotion
+                      -%}
+                      {%- if block.type == 'promotion' and image != blank and promotion_position == index -%}
+                        {%- assign index_promotion = index_promotion | plus: 1 -%}
+                        <div
+                          {{ block.shopify_attributes }}
+                          class="product-item product-item-promotion"
+                        >
+                          <div class="product__promotion-banner relative">
+                            <div class="banner__media">
+                              {%- liquid
+                                assign banner_alt = 'sections.collection_template.promotion_banner' | t
+                                assign banner_alt = heading | default: banner_alt
+                                assign banner_alt = image.alt | default: banner_alt
+                              -%}
+                              <a
+                                {% if promotion_link == blank %}
+                                  role="link" aria-disabled="true"
+                                {% else %}
+                                  href="{{ promotion_link }}"
+                                {% endif %}
+                                aria-label="{{ banner_alt }}"
+                                class="block"
+                              >
+                                {% render 'responsive-image',
+                                  type: 'product',
+                                  image: image,
+                                  image_alt: banner_alt,
+                                  container: section_width,
+                                  column: items_per_row,
+                                  column_mobile: 2,
+                                  padding: column_gap_grid,
+                                  motion: true
+                                %}
+                              </a>
+                            </div>
+                            {%- if subheading != blank or heading != blank or button_label != blank -%}
+                              <div class="promotion-information">
+                                <div class="banner__box">
+                                  {%- if subheading != blank -%}
+                                    <div class="suheading">{{ subheading }}</div>
+                                  {%- endif -%}
+                                  {%- if heading != blank -%}
+                                    <h2>
+                                      {{ heading }}
+                                    </h2>
+                                  {%- endif -%}
+                                  {%- if description != blank -%}
+                                    <p class="description">{{ description }}</p>
+                                  {%- endif -%}
+                                  {%- if button_label != blank -%}
+                                    <a
+                                      {% if promotion_link == blank %}
+                                        role="link" aria-disabled="true"
+                                      {% else %}
+                                        href="{{ promotion_link }}"
+                                        aria-label="{{ banner_alt }}"
+                                      {% endif %}
+                                    >
+                                      {{ button_label }}
+                                    </a>
+                                  {%- endif -%}
+                                </div>
+                              </div>
+                            {%- endif -%}
+                          </div>
+                        </div>
+                      {%- endif -%}
+                    {%- endfor -%}
+                    {% render 'card-product',
+                      card_product: product,
+                      section_id: section.id,
+                      container: section_width,
+                      column: items_per_row,
+                      column_mobile: 2,
+                      padding: column_gap_grid,
+                      indexFor: forloop.index
+                    %}
+                  {%- else -%}
+                    {% render 'card-product',
+                      card_product: product,
+                      section_id: section.id,
+                      container: section_width,
+                      column: items_per_row,
+                      column_mobile: 2,
+                      padding: column_gap_grid,
+                      indexFor: forloop.index
+                    %}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- if show_promotion -%}
+                  {%- for block in section.blocks -%}
+                    {%- liquid
+                      assign block_st = block.settings
+                      assign image = block_st.image
+                      assign subheading = block_st.subheading
+                      assign heading = block_st.heading
+                      assign description = block_st.description
+                      assign button_label = block_st.button_label
+                      assign promotion_link = block_st.promotion_link
+                      assign promotion_position = block_st.promotion_position | minus: index_promotion
+                    -%}
+                    {%- if block.type == 'promotion' and image != blank and promotion_position >= products_to_show -%}
+                      <div
+                        {{ block.shopify_attributes }}
+                        class="product-item product-item-promotion"
+                      >
+                        <div class="product__promotion-banner relative">
+                          <div class="banner__media">
+                            {%- liquid
+                              assign banner_alt = 'sections.collection_template.promotion_banner' | t
+                              assign banner_alt = heading | default: banner_alt
+                              assign banner_alt = image.alt | default: banner_alt
+                            -%}
+                            <a
+                              {% if promotion_link == blank %}
+                                role="link" aria-disabled="true"
+                              {% else %}
+                                href="{{ promotion_link }}"
+                              {% endif %}
+                              aria-label="{{ banner_alt }}"
+                              class="block"
+                            >
+                              {% render 'responsive-image',
+                                type: 'product',
+                                image: image,
+                                image_alt: banner_alt,
+                                container: section_width,
+                                column: items_per_row,
+                                column_mobile: 2,
+                                padding: column_gap_grid,
+                                motion: true
+                              %}
+                            </a>
+                          </div>
+                          {%- if subheading != blank or heading != blank or button_label != blank -%}
+                            <div class="promotion-information">
+                              <div class="banner__box">
+                                {%- if subheading != blank -%}
+                                  <div class="suheading">{{ subheading }}</div>
+                                {%- endif -%}
+                                {%- if heading != blank -%}
+                                  <h2>
+                                    {{ heading }}
+                                  </h2>
+                                {%- endif -%}
+                                {%- if description != blank -%}
+                                  <p class="description">{{ description }}</p>
+                                {%- endif -%}
+                                {%- if button_label != blank -%}
+                                  <a
+                                    {% if promotion_link == blank %}
+                                      role="link" aria-disabled="true"
+                                    {% else %}
+                                      href="{{ promotion_link }}"
+                                      aria-label="{{ banner_alt }}"
+                                    {% endif %}
+                                  >
+                                    {{ button_label }}
+                                  </a>
+                                {%- endif -%}
+                              </div>
+                            </div>
+                          {%- endif -%}
+                        </div>
+                      </div>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+              {%- else -%}
+                {% for i in (0..products_to_show) %}
+                  {% render 'card-product', section_id: section.id %}
+                {% endfor %}
+              {%- endif -%}
+            </div>
+            {%- liquid
+              assign paginate_size = paginate.parts.size | times: 1
+              assign cur_page = paginate.current_page | times: 1
+              assign amount_products = products_to_show | times: cur_page
+              if cur_page == paginate_size or amount_products > all_product
+                assign amount_products = all_product
+              endif
+              assign collection_products_count = collection.products_count | times: 1.0
+            -%}
+            {%- case pagination_type -%}
+              {%- when 'button' -%}
+                <loadmore-button
+                  data-all-products="{{ all_product }}"
+                  data-limit="{{ products_to_show }}"
+                  data-url="?page={{ paginate.current_page | plus: 1 }}"
+                >
+                  <div class="paginate-progress">
+                    <p class="counting_product">
+                      {{-
+                        'sections.collection_template.product_count.one'
+                        | t: count: amount_products, product_count: collection.products_count
+                      -}}
+                    </p>
+                    <div class="progress">
+                      <span
+                        class="current"
+                        style="width: {{ amount_products | divided_by: collection_products_count | times: 100 }}%"
+                      ></span>
+                    </div>
+                  </div>
+                  {% if all_product > products_to_show %}
+                    <button class="button" aria-label="{{ 'sections.collection_template.load_more' | t }}">
+                      <span class="hidden-on-load">{{ 'sections.collection_template.load_more' | t }}</span>
+                    </button>
+                  {% endif %}
+                </loadmore-button>
+              {%- when 'infinity' -%}
+                <loadmore-infinity
+                  data-all-products="{{ all_product }}"
+                  data-limit="{{ products_to_show }}"
+                  data-url="?page={{ paginate.current_page | plus: 1 }}"
+                  class="block text-center mt-80"
+                >
+                  <div class="paginate-progress">
+                    <p class="counting_product">
+                      {{-
+                        'sections.collection_template.product_count'
+                        | t: count: amount_products, product_count: collection.products_count
+                      -}}
+                    </p>
+                    <div class="progress">
+                      <span
+                        class="current"
+                        style="width: {{ amount_products | divided_by: collection_products_count | times: 100 }}%"
+                      ></span>
+                    </div>
+                  </div>
+                  {% if all_product > products_to_show %}
+                    <button class="button" aria-label="{{ 'sections.collection_template.load_more' | t }}">
+                      <span class="hidden-on-load">{{ 'sections.collection_template.load_more' | t }}</span>
+                    </button>
+                  {% endif %}
+                </loadmore-infinity>
+              {%- else -%}
+                {%- if paginate.pages > 1 -%}
+                  {% render 'pagination', paginate: paginate, anchor: '' %}
+                {%- endif -%}
+            {%- endcase -%}
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endpaginate -%}
+    <script type="module" src="{{ 'facets.js' | asset_url }}"></script>
+  </div>
+</div>
 {% schema %}
 {
-  "name": "t:sections.main-collection-product-grid.name",
+  "name": "t:sections.main-collection.name",
   "class": "section",
   "settings": [
     {
@@ -29,21 +653,21 @@
     },
     {
       "type": "range",
-      "id": "items_to_show",
+      "id": "products_to_show",
       "min": 4,
       "max": 24,
       "step": 1,
       "default": 16,
-      "label": "t:sections.main-collection-product-grid.settings.items_per_page.label"
+      "label": "t:sections.main-collection.settings.items_per_page.label"
     },
     {
       "type": "range",
-      "id": "columns_desktop",
+      "id": "items_per_row",
       "min": 2,
       "max": 5,
       "step": 1,
       "default": 4,
-      "label": "t:sections.main-collection-product-grid.settings.columns_desktop.label"
+      "label": "t:sections.main-collection.settings.columns_desktop.label"
     },
     {
       "type": "select",
@@ -91,46 +715,42 @@
     },
     {
       "type": "header",
-      "content": "t:sections.main-collection-product-grid.settings.header__1.content"
+      "content": "t:sections.main-collection.settings.header__1.content"
     },
     {
       "type": "checkbox",
       "id": "enable_sorting",
       "default": true,
-      "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
+      "label": "t:sections.main-collection.settings.enable_sorting.label"
     },
     {
       "type": "checkbox",
       "id": "enable_filtering",
       "default": true,
-      "label": "t:sections.main-collection-product-grid.settings.enable_filtering.label",
-      "info": "t:sections.main-collection-product-grid.settings.enable_filtering.info"
+      "label": "t:sections.main-collection.settings.enable_filtering.label",
+      "info": "t:sections.main-collection.settings.enable_filtering.info"
     },
     {
       "type": "checkbox",
       "id": "show_product_counts",
       "default": true,
-      "label": "t:sections.main-collection-product-grid.settings.show_product_counts.label"
+      "label": "t:sections.main-collection.settings.show_product_counts.label"
     },
     {
       "type": "select",
       "id": "filter_layout",
       "options": [
         {
-          "value": "horizontal",
-          "label": "t:sections.main-collection-product-grid.settings.filter_type.options__1.label"
-        },
-        {
           "value": "vertical",
-          "label": "t:sections.main-collection-product-grid.settings.filter_type.options__2.label"
+          "label": "t:sections.main-collection.settings.filter_type.options__2.label"
         },
         {
           "value": "drawer",
-          "label": "t:sections.main-collection-product-grid.settings.filter_type.options__3.label"
+          "label": "t:sections.main-collection.settings.filter_type.options__3.label"
         }
       ],
-      "default": "horizontal",
-      "label": "t:sections.main-collection-product-grid.settings.filter_type.label"
+      "default": "vertical",
+      "label": "t:sections.main-collection.settings.filter_type.label"
     },
     {
       "type": "header",
@@ -160,7 +780,8 @@
   "blocks": [
     {
       "type": "promotion",
-      "name": "t:sections.main-collection-product-grid.blocks.name",
+      "limit": 3,
+      "name": "t:sections.main-collection.blocks.promotion.name",
       "settings": [
         {
           "type": "image_picker",
@@ -195,6 +816,37 @@
           "type": "url",
           "id": "promotion_link",
           "label": "t:sections.all.content_setting.link.label"
+        },
+        {
+          "type": "range",
+          "id": "promotion_position",
+          "min": 1,
+          "max": 24,
+          "step": 1,
+          "default": 7,
+          "label": "t:sections.main-collection.blocks.promotion.promotion_position.label"
+        }
+      ]
+    },
+    {
+      "type": "steps",
+      "limit": 5,
+      "name": "t:sections.main-collection.blocks.steps.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.all.content_setting.image.label"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.all.content_setting.heading.label"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "t:sections.all.content_setting.description.label"
         }
       ]
     }

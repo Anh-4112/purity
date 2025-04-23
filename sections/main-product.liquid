@@ -1,4 +1,5 @@
 {{ 'main-product.css' | asset_url | stylesheet_tag }}
+{{ 'judgeme-review.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   assign enable_sticky_desktop = section_st.enable_sticky_desktop
@@ -12,7 +13,6 @@
   else
     assign section_width = 'fluid_container'
   endif
-  assign first_3d_model = product.media | where: 'media_type', 'model' | first
   if product.selected_or_first_available_variant.featured_media
     assign seo_media = product.selected_or_first_available_variant.featured_media
   else
@@ -22,31 +22,17 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--col-width: {{ desktop_media_width }}%;
 {%- endcapture -%}
-{{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
-{%- if first_3d_model -%}
-  {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
-  <link
-    id="ModelViewerStyle"
-    rel="stylesheet"
-    href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
-    media="print"
-    onload="this.media='all'"
-  >
-  <link
-    id="ModelViewerOverride"
-    rel="stylesheet"
-    href="{{ 'component-model-viewer-ui.css' | asset_url }}"
-    media="print"
-    onload="this.media='all'"
-  >
-{% endif %}
+<script type="module" src="{{ 'main-product.js' | asset_url }}"></script>
 <section
   id="Product-{{ section.id }}"
   class="section sec__main-product media-width-{{ desktop_media_width }}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div class="main-product flex wrap gap{% if media_position == 'right' %} row-reverse-md{% endif %}">
+    <div
+      class="main-product flex wrap gap{% if media_position == 'right' %} row-reverse-md{% endif %}"
+      style="--gap: var(--bs-gutter-x); --gap-desktop: 8rem;"
+    >
       {% if product.media.size > 0 %}
         <div class="product-detail__media w-full col-md-w-custom">
           {% render 'media-gallery',
@@ -92,12 +78,6 @@
       ]
     </script>
   {%- endunless -%}
-  {%- if first_3d_model -%}
-    <script type="application/json" id="ProductJSON-{{ product.id }}">
-      {{ product.media | where: 'media_type', 'model' | json }}
-    </script>
-    <script src="{{ 'product-model.js' | asset_url }}" defer></script>
-  {% endif %}
   <script type="application/ld+json">
     {
       "@context": "http://schema.org/",
@@ -144,11 +124,21 @@
   </script>
   {% if enable_sticky_desktop %}
     {%- assign product_form_id = 'sticky-addcart-form-' | append: section.id -%}
-    <sticky-add-cart class="sticky-add-cart fixed bottom-0 inset-x-0 bg-white z-5">
+    <sticky-add-cart class="sticky-add-cart fixed bottom-0 inset-x-0 bg-white z-5 shadow">
       <div class="{{ section_width }}">
-        <div class="sticky-add-cart__inner flex gap-10">
+        <div
+          class="sticky-add-cart__inner flex gap-10 space-between align-center py-10"
+          style="--width: 7rem;--height: 7rem;"
+        >
+          {%- liquid
+            if product.selected_or_first_available_variant.featured_media
+              assign card_product = product.selected_or_first_available_variant
+            else
+              assign card_product = product
+            endif
+          -%}
           {% render 'card-product',
-            card_product: product.selected_or_first_available_variant,
+            card_product: card_product,
             section_id: section.id,
             disable_hover_image: true,
             disable_show_video: true,
@@ -156,15 +146,35 @@
             disable_badge: true,
             disable_rate: true,
             disable_tag: true,
+            disable_countdown: true,
+            disable_scrolling_text: true,
             disable_quickview: true,
-            disable_color_swatches: true
+            disable_color_swatches: true,
+            class: ' sticky-add-cart hidden block-1025',
+            style_layout: ' flex gap-10 align-center',
+            info_class: ' mt-0',
+            image_class: ' flex-auto w-custom',
+            image_rounded: ' rounded-50 w-custom h-custom'
           %}
-          <div class="sticky__item-info">
-            <div class="product-sticky__variant-picker">
-              {%- render 'variant-swatches', scope: 'variant_swatch', product: product, show_available: true -%}
-            </div>
-            <div class="sticky-sticky__buy-buttons w-full">
-              {%- render 'buy-buttons', product: product, section_id: section.id, product_form_id: product_form_id -%}
+          <div class="sticky__item-info flex gap-10 w-full w-1025-auto">
+            {%- render 'variant-swatches',
+              scope: 'variant_swatch',
+              product: product,
+              show_available: true,
+              select_type: 'default'
+            -%}
+            <div
+              class="sticky-sticky__buy-buttons w-full w-1025-auto"
+              style="--min-width: 20.2rem;--btn-padding-x: 20px;"
+            >
+              {%- render 'buy-buttons',
+                product: product,
+                section_id: section.id,
+                product_form_id: product_form_id,
+                type: 'primary',
+                class_btn: ' min-w-1025-custom text-center',
+                class_quantity: ' d-none flex-1025'
+              -%}
             </div>
           </div>
         </div>

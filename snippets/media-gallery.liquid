@@ -8,7 +8,6 @@
   elsif desktop_layout == 'stack'
     assign layout = 'stack'
   endif
-
   if type_section == 'featured'
     assign layout = 'thumbnail'
     assign desktop_layout = 'thumbnail_left'
@@ -16,12 +15,31 @@
   if type_section == 'quick_view'
     assign layout = 'quick_view'
   endif
+  assign first_3d_model = product.media | where: 'media_type', 'model' | first
 %}
 {%- capture col -%}
   {% if desktop_layout == 'two_columns' %} --col-number: 2;{% else %}--col-number: 1;{% endif %}
 {%- endcapture -%}
 <script type="module" src="{{ 'media-gallery.js' | asset_url }}"></script>
 {{ 'photoswipe.css' | asset_url | stylesheet_tag }}
+{{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+{%- if first_3d_model -%}
+  {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
+  <link
+    id="ModelViewerStyle"
+    rel="stylesheet"
+    href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
+    media="print"
+    onload="this.media='all'"
+  >
+  <link
+    id="ModelViewerOverride"
+    rel="stylesheet"
+    href="{{ 'component-model-viewer-ui.css' | asset_url }}"
+    media="print"
+    onload="this.media='all'"
+  >
+{% endif %}
 <div class="block__media-gallery sticky top-20">
   <media-gallery
     class="media-gallery block"
@@ -46,7 +64,7 @@
                 %}
               </div>
               <div
-                class="swiper-pagination absolute fs-small lh-normal"
+                class="swiper-pagination absolute bg-white blur shadow fs-small heading-color lh-normal rounded"
               ></div>
             </div>
           </div>
@@ -59,6 +77,7 @@
               data-mobile="5"
               data-desktop="5"
               data-tablet="5"
+              style="--gap-desktop: 10px;--gap: 10px;--item-desktop: 5;--item-tablet: 5;--item-mb: 5"
             >
               <div class="swiper-wrapper">
                 {% render 'product-media',
@@ -119,3 +138,9 @@
     </div>
   </media-gallery>
 </div>
+{%- if first_3d_model -%}
+  <script type="application/json" id="ProductJSON-{{ product.id }}">
+    {{ product.media | where: 'media_type', 'model' | json }}
+  </script>
+  <script src="{{ 'product-model.js' | asset_url }}" defer></script>
+{% endif %}

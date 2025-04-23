@@ -4,24 +4,52 @@
     assign heading = block.settings.heading
     assign description = block.settings.description
   -%}
-  <div class="countdown_timer">
+  {% style %}
+    @media (min-width: 768px) {
+      .countdown_timer-product countdown-timer {
+        --font-size: 22;
+        --min-width: 6.5rem;
+      }
+    }
+  {% endstyle %}
+  <div
+    class="countdown_timer-product p-20 border-dashed text-center bg-sale rounded border-dashed mb-custom"
+    style="--opacity: 0.06;--color-border: rgb(var(--sale-bg-rgb));--bg-color-custom: rgb(var(--sale-bg-rgb));--font-size: 2rem;--padding: 1.4rem 1rem;--min-width: 6rem;"
+  >
     {% if heading or description %}
-      <div class="promotion_countdown">
+      <div class="promotion_countdown mb-20 sale-color">
         {% if heading %}
-          <div class="heading">{{ heading }}</div>
+          <div class="heading h6 sale-color">{{ heading }}</div>
         {% endif %}
         {% if description %}
-          <div class="description">{{ description }}</div>
+          <div class="description sale-color">{{ description }}</div>
         {% endif %}
       </div>
     {% endif %}
     <countdown-timer
+      class="flex justify-center wrap gap-10"
       data-deadline="{{ product.metafields.custom.promotion_countdown }}"
       data-days="{{ 'sections.countdown.format.days' | t }}"
       data-hours="{{ 'sections.countdown.format.hours' | t }}"
       data-mins="{{ 'sections.countdown.format.mins' | t }}"
       data-secs="{{ 'sections.countdown.format.secs' | t }}"
     >
+      <div class="countdown-container lh-normal flex relative content-center">
+        <span class="days_timer countdown-item">00</span>
+        <span class="timer-announcementbar-text">{{ 'sections.countdown.format.days' | t }}</span>
+      </div>
+      <div class="countdown-container lh-normal flex relative content-center">
+        <span class="hours_timer countdown-item">00</span>
+        <span class="timer-announcementbar-text">{{ 'sections.countdown.format.hours' | t }}</span>
+      </div>
+      <div class="countdown-container lh-normal flex relative content-center">
+        <span class="minutes_timer countdown-item">00</span>
+        <span class="timer-announcementbar-text">{{ 'sections.countdown.format.mins' | t }}</span>
+      </div>
+      <div class="countdown-container lh-normal flex relative content-center">
+        <span class="seconds_timer countdown-item">00</span>
+        <span class="timer-announcementbar-text">{{ 'sections.countdown.format.secs' | t }}</span>
+      </div>
     </countdown-timer>
   </div>
 {%- endif -%}

@@ -2,23 +2,49 @@
   assign items_to_show = block.settings.items_to_show
   assign show_navigation = block.settings.show_navigation
   assign show_pagination = block.settings.show_pagination
+
+  assign items_per_row_tablet = items_to_show
+  assign items_per_row_mb =
+  assign class_custom = ''
+  if items_to_show > 3
+    assign items_per_row_tablet = items_to_show | minus: 1
+    assign items_per_row_mb = items_to_show | minus: 1.5
+    assign class_custom = 'hidden block-md'
+  else
+    assign items_per_row_tablet = items_to_show
+    assign items_per_row_mb = items_per_row_tablet
+  endif
 -%}
+{%- capture style -%}
+  --swiper-navigation-size: 3.6rem;--gap: 1rem; --gap-desktop: 1rem;--item-desktop: {{ items_to_show }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mb }};
+{%- endcapture -%}
+{% style %}
+  @media screen and (max-width: 767.98px) {
+    .free-scroll {
+      padding-inline: var(--bs-gutter-x, 1.5rem);
+      margin-inline: calc(var(--bs-gutter-x, 1.5rem) * -1);
+    }
+  }
+{% endstyle %}
 {%- if closest.product != blank -%}
   {%- if closest.product.metafields.custom.media_lightbox.value -%}
     <script type="module" src="{{ 'media-lightbox-gallery.js' | asset_url }}"></script>
+    {% if items_to_show > 3 %}
+      <div class="free-scroll overflow-hidden">
+    {% endif %}
     <slide-section
-      class="swiper media-lightbox-slide"
+      class="swiper media-lightbox-slide{% if items_to_show > 3 %} overflow-visible-mb{% endif %}"
       data-section-id="{{ section.id }}"
       data-effect="slide"
       data-speed="500"
       data-desktop="{{ items_to_show }}"
-      data-mobile="1"
-      data-tablet="1"
+      data-mobile="{{ items_per_row_mb }}"
+      data-tablet="{{ items_per_row_tablet }}"
       data-spacing="10"
-      style="--swiper-navigation-size: 3.6rem;"
+      style="{{ style | strip | strip_newlines }}"
     >
       {% if show_navigation %}
-        {%- render 'swiper-navigation' -%}
+        {%- render 'swiper-navigation', class-custom: class_custom -%}
       {% endif %}
       <div class="swiper-wrapper">
         {%- for media in closest.product.metafields.custom.media_lightbox.value -%}
@@ -59,12 +85,15 @@
         ></div>
       {% endif %}
     </slide-section>
+    {% if items_to_show > 3 %}
+      </div>
+    {% endif %}
   {% endif %}
 {% endif %}
 {% schema %}
 {
   "name": "t:sections.all.product_setting.media_lightbox.name",
-  "class": "block-product__media-lightbox my-25 slideIn-animate",
+  "class": "block-product__media-lightbox my-custom slideIn-animate",
   "settings": [
     {
       "type": "header",
@@ -73,9 +102,9 @@
     {
       "type": "range",
       "id": "items_to_show",
-      "label": "t:sections.all.items_to_show.label",
+      "label": "t:sections.all.columns_desktop.label",
       "min": 3,
-      "max": 6,
+      "max": 5,
       "step": 1,
       "default": 5
     },

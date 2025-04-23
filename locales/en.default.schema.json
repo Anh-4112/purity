@@ -218,6 +218,8 @@
         "enable_color_swatches": "Enable color swatches",
         "show_vendor": "Show vendor",
         "show_tag": "Show tag",
+        "show_countdown": "Show countdown",
+        "show_scrolling_text": "Show scrolling text",
         "show_rate": {
           "label": "Show rate",
           "info": "To display a rating, add a product rating app. [Learn more](https://help.shopify.com/en/manual/products/product-reviews/installation)"
@@ -685,7 +687,10 @@
               },
               "options__3": {
                 "label": "Dot"
-              }
+              },
+              "options__4": {
+                "label": "Discount"
+              },
             }
           }
         },
@@ -779,7 +784,7 @@
           "right": "Right",
           "bottom": "Bottom",
           "left": "Left",
-          "info": "Image first is the default mobile layout."
+          "info": "The image will always be at the top in the mobile layout.."
         },
         "desktop_image_width": {
           "label": "Desktop image width",
@@ -818,6 +823,9 @@
         },
         "message_communications": {
           "label": "Message communications"
+        },
+        "circular-text": {
+          "label": "Circular text"
         },
         "beauty": {
           "label": "Face"
@@ -1039,6 +1047,9 @@
           "description": {
             "label": "Description"
           },
+          "text_color": {
+            "label": "Text color"
+          }
         },
         "icon_with_text": {
           "name": "Icon with text",
@@ -1515,7 +1526,8 @@
         "max_width": {
           "label": "Max width",
           "info": "Max width is automatically optimized for mobile.",
-        }
+        },
+        "rotating_text":"Circular text"
       },
     },
     "recently-viewed-products": {
@@ -1528,15 +1540,15 @@
       "name": "Compare products",
       "settings": {
         "header": {
-          "label": "Compare setting"
+          "label": "Compare settings"
         },
-        "show_price": "Show price",
-        "show_ratings": "Show ratings",
-        "show_vendor": "Show vendor",
-        "show_color": "Show color",
-        "show_size": "Show size",
-        "show_highlights": "Show highlights",
-        "show_availability": "Show availability",
+        "show_price": "Price",
+        "show_ratings": "Ratings",
+        "show_vendor": "Vendor",
+        "show_color": "Color",
+        "show_size": "Size",
+        "show_highlights": "Highlights",
+        "show_availability": "Availability",
       },
     },
     "bought-together-products": {
@@ -1734,7 +1746,7 @@
         },
       }
     },
-    "main-collection-product-grid": {
+    "main-collection": {
       "name": "Product grid",
       "settings": {
         "items_per_page": {
@@ -1783,10 +1795,19 @@
         "enable_tags": {
           "label": "Enable filtering",
           "info": "Customize filters with the Search & Discovery app. [Learn more](https:\/\/help.shopify.com\/manual\/online-store\/search-and-discovery\/filters)"
-        }
+        },
+        
       },
       "blocks": {
-        "name": "Promotion",
+        "promotion": {
+          "name": "Promotion",
+          "promotion_position": {
+            "label": "Promotion position"
+          }
+        },
+        "steps": {
+          "name": "Shop by step",
+        }
       }
     },
     "main-article": {
@@ -2035,6 +2056,10 @@
       "name": "Main cart",
       "settings": {
         "enable_cart_note": "Enable cart note",
+      },
+      "block": {
+        "icon_with_text": "Icon with text",
+        "trust_badges": "Trust badges"
       }
     },
     "main-collection-banner": {
@@ -2069,7 +2094,8 @@
       "settings": {
         "name": "Name",
         "email_placeholder": "Email",
-        "message": "Message"
+        "message": "Message",
+        "option": "Option",
       },
       "block": {
         "text_block": {
@@ -2308,6 +2334,16 @@
         },
         "enable_sticky": {
           "label" : "Enable video sticky"
+        },
+        "ratio": {
+          "adapt": {
+            "label": "Adapt to first video"
+          }
+        },
+        "video": {
+          "auto_play": {
+            "info": "Video will autoplay when this block is active or visible on screen"
+          }
         }
       },
       "blocks": {
@@ -2418,13 +2454,13 @@
           "media": {
             "label": "Media settings",
             "before_after_image": {
-              "label": "Before after image"
+              "label": "Before after images"
             },
             "before_image": {
-              "label": "Before image"
+              "label": "Before"
             },
             "after_image": {
-              "label": "After image"
+              "label": "After"
             }
           },
           "information": {
@@ -2456,6 +2492,22 @@
         }
       }
     },
+    "newsletter_popup": {
+      "name": "Newsletter popup",
+      "header": {
+        "heading": "General settings"
+      },
+      "settings": {
+        "show_newsletter": "Enable newsletter popup",
+        "show_on_homepage": "Only show on home page",
+        "heading": "Heading",
+        "short_description": "Description",
+        "email_placeholder": "Email placeholder",
+        "button_label": "Button label",
+        "banner_image": "Banner image",
+        "enable_social_icon": "Enable social icon"
+      }
+    },
     "featured-blog": {
       "name": "Featured blog"
     },
@@ -2466,6 +2518,44 @@
       "blocks": {
         "button": {
           "info": "[title] and [collection] are the variable names that will be automatically replaced. You must not change them, but you can change their position in the text."
+        }
+      }
+    },
+    "offers-popup":{
+      "name": "Offers popup"
+    },
+    "shopable-image": {
+      "name": "Shopable image",
+      "blocks": {
+        "tags": {
+          "name": "Tags",
+          "info": "Define the name of tags. Separate by a comma. Eg. Tag 1,Tag 2",
+          "settings": {
+            "show_verify_icon":{
+              "label": "Show verify icon"
+            }
+          }
+        },
+        "lookbook": {
+          "name": "Lookbook",
+          "settings": {
+            "products": {
+              "label": "Products",
+              "position_top": "Vertical position",
+              "position_left": "Horizontal position",
+              "products": {
+                "otpion__1": {
+                  "label": "Product 1"
+                },
+                "otpion__2": {
+                  "label": "Product 2"
+                },
+                "otpion__3": {
+                  "label": "Product 3"
+                }
+              }
+            }
+          }
         }
       }
     }

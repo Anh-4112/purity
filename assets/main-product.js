@@ -76,7 +76,50 @@ class StickyAddCart extends HTMLElement {
     super();
     this.init();
   }
-  init() {}
+  init() {
+    const _this = this;
+    this.main = document.querySelector(".main-product-section");
+    if (!this.main) return;
+    const primaryBtn = this.main.querySelector(".product-detail__buy-buttons");
+    const footer = document.querySelector("footer");
+    if (!primaryBtn) return;
+    var isVisible = true;
+    window.addEventListener("scroll", function () {
+      var buttonRect = primaryBtn.getBoundingClientRect();
+      var viewportHeight = window.innerHeight;
+      if (footer) {
+        var footerRect = footer.getBoundingClientRect();
+        if (footerRect.top < window.innerHeight - 100) {
+          _this.classList.remove("show-sticky-cart");
+          isVisible = true;
+        } else {
+          if (
+            !isVisible &&
+            buttonRect.top < viewportHeight &&
+            buttonRect.bottom > 0
+          ) {
+            isVisible = true;
+            _this.classList.remove("show-sticky-cart");
+          } else if (isVisible && buttonRect.bottom <= 0) {
+            isVisible = false;
+            _this.classList.add("show-sticky-cart");
+          }
+        }
+      } else {
+        if (
+          !isVisible &&
+          buttonRect.top < viewportHeight &&
+          buttonRect.bottom > 0
+        ) {
+          isVisible = true;
+          _this.classList.remove("show-sticky-cart");
+        } else if (isVisible && buttonRect.bottom <= 0) {
+          isVisible = false;
+          _this.classList.add("show-sticky-cart");
+        }
+      }
+    });
+  }
 }
 customElements.define("sticky-add-cart", StickyAddCart);
 
