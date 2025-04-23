@@ -531,6 +531,12 @@ class ShopableItem extends HTMLElement {
         swiperContainer.swiper.slidePrev();
         _self.updateCurrentSlideId(modalPopup, swiperContainer);
       });
+      if (!swiperContainer._hasSlideChangeHandler) {
+        swiperContainer.swiper.on("slideChange", () => {
+          _self.updateCurrentSlideId(modalPopup, swiperContainer);
+        });
+        swiperContainer._hasSlideChangeHandler = true;
+      }
     }
     modalPopup.removeAttribute("data-loading");
   }
