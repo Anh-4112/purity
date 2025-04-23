@@ -1177,140 +1177,6 @@ class AnnouncementBar extends HTMLElement {
 }
 customElements.define("announcement-bar", AnnouncementBar);
 
-class CartDrawer extends HTMLElement {
-  constructor() {
-    super();
-  }
-
-  get cartActionId() {
-    return document.getElementById("cart-icon-bubble") || null;
-  }
-
-  get sectionId() {
-    return this.hasAttribute("data-section-id")
-      ? this.getAttribute("data-section-id")
-      : this.getAttribute("data-section-id");
-  }
-
-  get formAction() {
-    return Array.from(this.querySelectorAll("form .btn"));
-  }
-
-  get cartViewId() {
-    return document.getElementById("cart-icon-bubble") || null;
-  }
-
-  connectedCallback() {
-    if (this.cartActionId) {
-      this.cartActionId.addEventListener(
-        "click",
-        this.onShowCartDrawer.bind(this)
-      );
-    }
-    this.formAction.forEach((action) => {
-      action.addEventListener("click", (event) => {
-        action.classList.add("loading");
-      });
-    });
-  }
-
-  getSectionsToRender() {
-    return [
-      {
-        id: this.sectionId,
-        section: this.sectionId,
-        selector: ".drawer__header-cart",
-      },
-      {
-        id: "cart-icon-bubble",
-        section: "cart-icon-bubble",
-      },
-      {
-        id: this.sectionId,
-        section: this.sectionId,
-        selector: ".free-shipping-bar",
-      },
-      {
-        id: this.sectionId,
-        section: this.sectionId,
-        selector: ".cart-drawer__form",
-      },
-      {
-        id: this.sectionId,
-        section: this.sectionId,
-        selector: ".drawer__footer-bottom-total",
-      },
-    ];
-  }
-
-  renderContents(parsedState) {
-    if (this.querySelector(".drawer__inner-empty")) {
-      const drawerBody = this.getSectionDOM(
-        parsedState.sections[this.sectionId],
-        ".drawer__body"
-      );
-      this.querySelector(".drawer__body").innerHTML = drawerBody.innerHTML;
-      return;
-    }
-
-    this.getSectionsToRender().forEach((section, index) => {
-      const sectionElement = section.selector
-        ? document.querySelector(section.selector)
-        : document.getElementById(section.id);
-      if (!sectionElement) {
-        return;
-      }
-      sectionElement.innerHTML = this.getSectionInnerHTML(
-        parsedState.sections[section.id],
-        section.selector
-      );
-      if (index === 1) {
-        const nav_bar_id = document.querySelector("#cart-icon-bubble");
-        if (
-          nav_bar_id &&
-          nav_bar_id.querySelector(".cart-count") &&
-          sectionElement.querySelector(".cart-count")
-        ) {
-          nav_bar_id.querySelector(".cart-count").innerHTML =
-            sectionElement.querySelector(".cart-count").innerHTML;
-        }
-      }
-      if (index === 2) {
-        const progress = this.getSectionDOM(
-          parsedState.sections[section.id],
-          ".progress"
-        );
-        if (sectionElement.querySelector(".progress")) {
-          sectionElement
-            .querySelector(".progress")
-            .setAttribute(
-              "data-total-order",
-              progress.getAttribute("data-total-order")
-            );
-        }
-      }
-    });
-  }
-
-  getSectionInnerHTML(html, selector = ".shopify-section") {
-    return new DOMParser()
-      .parseFromString(html, "text/html")
-      .querySelector(selector).innerHTML;
-  }
-
-  getSectionDOM(html, selector = ".shopify-section") {
-    return new DOMParser()
-      .parseFromString(html, "text/html")
-      .querySelector(selector);
-  }
-
-  onShowCartDrawer(event) {
-    event.preventDefault();
-    NextSkyTheme.eventModal(this, "open", false, "delay");
-  }
-}
-customElements.define("cart-drawer", CartDrawer);
-
 class CartEstimate extends HTMLElement {
   constructor() {
     super();
@@ -1544,6 +1410,23 @@ class CartNote extends HTMLElement {
 
 if (!customElements.get("cart-note-element")) {
   customElements.define("cart-note-element", CartNote);
+}
+
+class MainCartNote extends CartNote {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    this.querySelector(".cart-note").addEventListener(
+      "change",
+      this.noteUpdate.bind(this)
+    );
+  }
+}
+
+if (!customElements.get("main-cart-note")) {
+  customElements.define("main-cart-note", MainCartNote);
 }
 
 class MiniCartUpSell extends HTMLElement {
