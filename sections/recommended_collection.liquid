@@ -34,12 +34,19 @@
       assign radius_image_class = 'rounded-1025-right rounded-top-mb'
       assign radius_content_class = 'rounded-1025-left rounded-bottom-mb'
     endif
+    if section_st.section_width == 'full_width'
+      assign radius_image_class = ''
+      assign radius_content_class = ''
+    endif
   else
     assign radius_image_class = 'rounded'
     assign radius_content_class = 'rounded'
   endif
   if has_custom_background
     assign padding_content_class = 'p-30'
+    if section_st.section_width == 'full_width'
+      assign padding_content_class = 'px-gutter-x px-1025-35 py-30'
+    endif
   else
     if column_gap_slide != 0
       assign padding_content_class = ''
@@ -144,11 +151,21 @@
   </select-options>
 {% endcapture %}
 {% style %}
-  .ps_screen {
-    padding-inline-start: calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2);
-  }
-  .pe_screen {
-    padding-inline-end: calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2);
+  @media (min-width: 1025px) {
+    .ps_screen {
+      padding-inline-start: clamp(
+        calc(5vw + var(--bs-gutter-x)),
+        calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2),
+        calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2)
+      );
+    }
+    .pe_screen {
+      padding-inline-end: clamp(
+        calc(5vw + var(--bs-gutter-x)),
+        calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2),
+        calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2)
+      );
+    }
   }
 {% endstyle %}
 <div

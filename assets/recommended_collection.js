@@ -5,7 +5,7 @@ class SectionSelected extends HTMLElement {
     this.titleSelectText = this.querySelector(".title-select__text");
     this.titleList = this.querySelector(".title-list");
     this.titleItems = this.querySelectorAll(".title-item");
-
+    console.log(this.titleItems);
     this.collectionSelect = this.querySelector(".collection-select");
     this.collectionSelectText = this.querySelector(".collection-select__text");
     this.collectionList = this.querySelector(".collection-list");
