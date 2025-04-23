@@ -30,15 +30,6 @@
     assign column_gap_slide = 10
   endif
 
-  assign post_text_alignment = ''
-  if section_st.content_alignment == 'left'
-    assign post_text_alignment = 'flex-start'
-  elsif section_st.content_alignment == 'center'
-    assign post_text_alignment = 'justify-content-center'
-  else
-    assign post_text_alignment = 'flex-end'
-  endif
-
   assign text_alignment = section_st.text_alignment
   assign heading_size = section_st.heading_size
 
@@ -248,8 +239,7 @@
               customClass: scroll_animation,
               indexFor: forloop.index,
               isPageBlog: true,
-              content_alignment: section_st.content_alignment,
-              class: post_text_alignment
+              content_alignment: section_st.content_alignment
             %}
           {%- endfor -%}
         </div>
