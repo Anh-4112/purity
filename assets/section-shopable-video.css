@@ -104,12 +104,22 @@
     border-radius: var(--img-rounded) var(--img-rounded) 0 0;
     clip-path: inset(0 0 0 0 round var(--img-rounded) var(--img-rounded) 0 0);
   }
-  .popup-information{
+  .popup-information {
     opacity: 0;
     visibility: hidden;
+    transform: translateY(100%);
+    -webkit-transform: translateY(100%);
   }
-  .popup-information.active{
+  .popup-information.active {
     opacity: 1;
     visibility: visible;
+  }
+  .modal-shopable-video
+    :is(.video-item--ratio, .video-local)[style*="--aspect-ratio"]:before {
+    padding-top: clamp(
+      100px,
+      calc(100% / (0 + var(--aspect-ratio, 16 / 9))),
+      85vh
+    );
   }
 }

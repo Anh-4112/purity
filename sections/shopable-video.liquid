@@ -45,7 +45,7 @@
     assign column_gap_mb = 5
   endif
 
-  assign items_per_row_mobile = section_st.items_per_row_mobile
+  assign items_per_row_mobile = 1.5
   assign data_free_scroll = 'false'
   if items_per_row_mobile > 1 and items_per_row_mobile < 2
     assign data_free_scroll = 'true'
@@ -95,9 +95,12 @@
       </div>
     {%- endif -%}
     {% if section.blocks.size > 0 %}
+      {% if data_free_scroll == 'true' %}
+        <div class="free-scroll">
+      {% endif %}
       <shopable-video
         id="swiper-{{ section.id }}"
-        class="hover-action swiper swiper-shopable-video {% if center_slide %}swiper-slide-center{% endif %}"
+        class="hover-action swiper swiper-shopable-video {% if center_slide %}swiper-slide-center{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
         data-section-id="{{ section.id }}"
         data-autoplay="{{ slide_auto_change }}"
         data-autoplay-speed="{{ change_slide_every | times: 1000 }}"
@@ -266,6 +269,9 @@
           ></div>
         {% endif %}
       </shopable-video>
+      {% if data_free_scroll == 'true' %}
+        </div>
+      {% endif %}
     {% endif %}
     {% if sticky and section.blocks[0].settings.local_video != blank %}
       <shopable-item
