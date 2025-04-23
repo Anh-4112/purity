@@ -35,12 +35,16 @@
   endif
 
   assign column_gap_slide = 0
+  assign column_gap_mb = 0
   if section_st.column_gap == 'large'
     assign column_gap_slide = 30
+    assign column_gap_mb = 20
   elsif section_st.column_gap == 'medium'
     assign column_gap_slide = 20
+    assign column_gap_mb = 10
   elsif section_st.column_gap == 'small'
     assign column_gap_slide = 10
+    assign column_gap_mb = 5
   endif
 -%}
 {%- capture style -%}
@@ -48,7 +52,7 @@
 {%- endcapture -%}
 {%- capture col_style -%}
   --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};
-  {% if column_gap_slide < 20 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
+  --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
 {%- endcapture -%}
 <div
   class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
@@ -65,7 +69,7 @@
               </h2>
             {%- endif -%}
             {%- if section_st.description != blank -%}
-              <div class="section-description">
+              <div class="section-description mt-15">
                 {{ section_st.description }}
               </div>
             {%- endif -%}

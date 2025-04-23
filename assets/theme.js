@@ -281,9 +281,9 @@ class SiteHeader extends HTMLElement {
     if (header) {
       if (this.dataStickyType === "always") {
         if (positionScrollY > headerHeight) {
-          header.classList.add("section-header-sticky");
+          header.classList.add("section-header-sticky", "animate");
         } else {
-          header.classList.remove("section-header-sticky");
+          header.classList.remove("section-header-sticky", "animate");
         }
       } else {
         if (positionScrollY > 0) {
@@ -293,6 +293,7 @@ class SiteHeader extends HTMLElement {
               header.classList.add("header-sticky-hidden");
             } else {
               header.classList.remove("header-sticky-hidden");
+              header.classList.add("animate");
             }
             header.classList.add("section-header-sticky");
             this.check = positionScrollY;
@@ -303,7 +304,8 @@ class SiteHeader extends HTMLElement {
         } else {
           header.classList.remove(
             "header-sticky-hidden",
-            "section-header-sticky"
+            "section-header-sticky",
+            "animate"
           );
         }
       }
@@ -861,54 +863,6 @@ class ProgressBar extends HTMLElement {
   }
 }
 customElements.define("progress-bar", ProgressBar);
-
-class InventoryProgressBar extends ProgressBar {
-  constructor() {
-    super();
-    const orders = this.dataset.order;
-    const available = this.dataset.available;
-    this.init(orders, available);
-  }
-  init(orders, available) {
-    const handleIntersection = (entries, observer) => {
-      if (!entries[0].isIntersecting) return;
-      observer.unobserve(this);
-      const min = Number(this.dataset.feAmount);
-      const threshold = Number(this.dataset.threshold);
-      if (threshold > orders) {
-        if (orders > 0) {
-          this.classList.add("notify", "low_stock");
-          this.classList.remove("instock", "pre_order", "outstock");
-        } else {
-          if (available == false || available == "false") {
-            this.classList.add("notify", "outstock");
-            this.classList.remove("instock", "pre_order", "low_stock");
-          } else {
-            this.classList.remove("notify", "instock", "low_stock", "outstock");
-            this.classList.add("pre_order");
-          }
-        }
-      } else {
-        this.classList.remove("notify", "pre_order", "low_stock", "outstock");
-        this.classList.add("instock");
-      }
-      if (!min) return;
-      if (orders === undefined) return;
-      const order = Number(orders);
-      if (order === undefined) return;
-      if ((order / min) * 100 > 100) {
-        this.setProgressBar(100);
-      } else {
-        this.setProgressBar((order / min) * 100);
-      }
-    };
-
-    new IntersectionObserver(handleIntersection.bind(this), {
-      rootMargin: "0px 0px 400px 0px",
-    }).observe(this);
-  }
-}
-customElements.define("inventory-progress-bar", InventoryProgressBar);
 
 class QuantityInput extends HTMLElement {
   constructor() {
@@ -2312,10 +2266,10 @@ class NewsletterPopup extends HTMLElement {
   }
 
   connectedCallback() {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => this.init());
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => this.init());
     } else {
-      if ('requestIdleCallback' in window) {
+      if ("requestIdleCallback" in window) {
         requestIdleCallback(() => this.init());
       } else {
         setTimeout(() => this.init(), 100);
@@ -2331,9 +2285,12 @@ class NewsletterPopup extends HTMLElement {
     if (urlChecked) {
       return;
     }
-    
+
     const getCookie = NextSkyTheme.getCookie("newsletter_popup");
-    if ((this.enable === "show-on-homepage" || this.enable === "show-all-page") && getCookie === null) {
+    if (
+      (this.enable === "show-on-homepage" || this.enable === "show-all-page") &&
+      getCookie === null
+    ) {
       this.createPopup();
     }
   }
@@ -2344,40 +2301,44 @@ class NewsletterPopup extends HTMLElement {
 
     const content = document.createElement("div");
     content.appendChild(template.content.firstElementChild.cloneNode(true));
-    
-    const wrapper = NextSkyTheme.body.appendChild(content.querySelector("modal-popup"));
-    
+
+    const wrapper = NextSkyTheme.body.appendChild(
+      content.querySelector("modal-popup")
+    );
+
     setTimeout(() => {
       NextSkyTheme.eventModal(wrapper, "open", true);
     }, 3000);
-    
+
     this.initNotShow(wrapper);
   }
 
   checkUrlParameters() {
     const urlInfo = window.location.href;
     const newURL = location.href.split("?")[0];
-    
-    if (urlInfo.indexOf('customer_posted=true') >= 1) {
+
+    if (urlInfo.indexOf("customer_posted=true") >= 1) {
       NextSkyTheme.setCookie("newsletter_popup", "true", 1);
-      NextSkyTheme.notifier.show(message.newsletter.success, 'success', 4000);
-      window.history.pushState('object', document.title, newURL);
+      NextSkyTheme.notifier.show(message.newsletter.success, "success", 4000);
+      window.history.pushState("object", document.title, newURL);
       return true;
     }
-    
-    if (urlInfo.indexOf('contact%5Btags%5D=newsletter&form_type=customer') >= 1) {
-      NextSkyTheme.notifier.show(message.newsletter.error, 'error', 4000);
-      window.history.pushState('object', document.title, newURL);
+
+    if (
+      urlInfo.indexOf("contact%5Btags%5D=newsletter&form_type=customer") >= 1
+    ) {
+      NextSkyTheme.notifier.show(message.newsletter.error, "error", 4000);
+      window.history.pushState("object", document.title, newURL);
       return false;
     }
-    
+
     return false;
   }
 
   initNotShow(modal) {
     const notShow = modal?.querySelector(".newsletter-action");
     if (!notShow) return;
-    
+
     notShow.addEventListener("click", () => {
       NextSkyTheme.setCookie("newsletter_popup", "true", 1);
       NextSkyTheme.eventModal(modal, "close", true);
@@ -2408,3 +2369,35 @@ class SocialShare extends HTMLElement {
   }
 }
 customElements.define("social-share", SocialShare);
+
+class LazyLoadTemplate extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  init() {
+    if (this.querySelector("template")) {
+      const handleIntersection = async (entries, observer) => {
+        if (!entries[0].isIntersecting) return;
+        observer.unobserve(this);
+        const content = document.createElement("div");
+        content.appendChild(
+          this.querySelector("template").content.firstElementChild.cloneNode(
+            true
+          )
+        );
+        const html = content.querySelector(".product__countdown")
+          ? content.querySelector(".product__countdown")
+          : content.querySelector(".product_scrolling");
+        await import(importJs.countdownTimer);
+        this.parentNode.insertBefore(html, this.nextSibling);
+        this.remove();
+      };
+      new IntersectionObserver(handleIntersection.bind(this), {
+        rootMargin: "0px 0px 200px 0px",
+      }).observe(this);
+    }
+  }
+}
+customElements.define("lazy-load-template", LazyLoadTemplate);

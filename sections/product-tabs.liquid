@@ -51,6 +51,9 @@
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
+{%- capture col_style -%}
+  --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};
+{%- endcapture -%}
 {%- style -%}
   @media (max-width: 1024.98px) {
     .vertical-tab .product-tabs__header-title {
@@ -111,7 +114,7 @@
               </h2>
             {%- endif -%}
             {%- if section_st.description != blank -%}
-              <div class="section-description">
+              <div class="section-description mt-15">
                 {{ section_st.description }}
               </div>
             {%- endif -%}
@@ -178,7 +181,6 @@
             {%- if collection.products.size > 0 -%}
               <div
                 class="product-tabs__content-item product-tabs__content-item-{{ block.id }}{% if forloop.first %} active{% else %} hidden{% endif %}"
-                style="--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;"
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
               >
@@ -195,6 +197,7 @@
                   data-tablet="{{ items_per_row_tablet }}"
                   data-free-scroll="{{ data_free_scroll }}"
                   data-slide-tab="true"
+                  style="{{ col_style | strip | strip_newlines }}"
                 >
                   {% if show_navigation %}
                     {%- render 'swiper-navigation', show_on_hover: true -%}
@@ -224,7 +227,6 @@
             {%- else -%}
               <div
                 class="product-tabs__content-item product-tabs__content-item-{{ block.id }}{% if forloop.first %} active{% else %} hidden{% endif %}"
-                style="--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;"
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
               >
@@ -240,6 +242,7 @@
                   data-desktop="{{ items_per_row }}"
                   data-tablet="{{ items_per_row_tablet }}"
                   data-free-scroll="{{ data_free_scroll }}"
+                  style="{{ col_style | strip | strip_newlines }}"
                 >
                   {% if show_navigation %}
                     {%- render 'swiper-navigation', show_on_hover: true -%}

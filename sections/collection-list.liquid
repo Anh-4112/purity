@@ -48,7 +48,7 @@
   {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 {%- capture col_style -%}
-  --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};{{- -}}
+  --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};{{- -}}
   {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
 {%- endcapture -%}
 
@@ -67,7 +67,7 @@
           </h2>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description">
+          <div class="section-description mt-15">
             {{ section_st.description }}
           </div>
         {%- endif -%}

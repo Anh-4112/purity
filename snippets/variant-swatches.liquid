@@ -79,7 +79,7 @@
         <select
           id="VariantSwatchSelect-{{ section.id }}-{{ product.id }}"
           name="VariantSwatchSelect-{{ section.id }}-{{ product.id }}"
-          class="border-0 h-auto max-w-100 fs-small lh-global"
+          class="{% if select_type == 'default' %} fs-small-1{% else %} border-0 h-auto max-w-100 fs-small lh-global{% endif %}{{ select_class }}"
         >
           {% liquid
             assign color_option = ''
@@ -154,7 +154,7 @@
       endif
     -%}
     <variant-input
-      class="product-variants-js flex column wrap{% if type != 'shopable' %} gap-25 pt-25 border-top{% else %} gap-15{% endif %}"
+      class="product-variants-js flex column wrap{% if type != 'shopable' %} gap-25{% else %} gap-15{% endif %}"
       data-section-id="{{ section.id }}"
       {% if type == 'shopable' %}
         data-block-id="{{ block_id }}"
@@ -206,7 +206,7 @@
                     >
                       <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
                       <div
-                        class="modal-popup-inner transition rounded max-w-custom m-auto invisible-1025 fixed inset-0 z-15 bg-white w-full"
+                        class="modal-popup-inner h-content transition rounded max-w-custom m-auto invisible-1025 fixed inset-0 z-15 bg-white w-full"
                         style="--max-width: 80rem;"
                       >
                         <div class="modal__header drawer__header drawer-spacing border-bottom flex gap-10 space-between">

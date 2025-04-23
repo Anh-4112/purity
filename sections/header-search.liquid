@@ -5,14 +5,18 @@
   assign predictive_search_enabled = theme_st.predictive_search_enabled
   assign search_product_recommended = theme_st.search_product_recommended
   assign show_search_vendor = theme_st.show_search_vendor
+  assign show_search_price = theme_st.show_search_price
   assign logo_img = theme_st.logo
   assign logo_width = theme_st.logo_width
   if show_search_vendor
     assign show_search_vendor = false
+  else
+    assign show_search_vendor = true
   endif
-  assign show_search_price = theme_st.show_search_price
   if show_search_price
     assign show_search_price = false
+  else
+    assign show_search_price = true
   endif
 %}
 {% style %}
@@ -150,7 +154,7 @@
             >
             <label class="visually-hidden" for="Search-In-Modal"> {{ 'general.search.search' | t }}</label>
             <div
-              class="search__action-right inline-flex align-center inset-y-0 right-28 absolute"
+              class="search__action-right inline-flex align-center inset-y-0 right-28 absolute pointer-none"
             >
               <span
                 class="icon-rotator bg-secondary opacity-0 w-custom h-custom inline-flex rounded-50 transition-short"
@@ -224,6 +228,8 @@
                               disable_badge: true,
                               disable_rate: true,
                               disable_tag: true,
+                              disable_countdown: true,
+                              disable_scrolling_text: true,
                               disable_price: show_search_price,
                               disable_vendor: show_search_vendor,
                               disable_color_swatches: true,
@@ -263,6 +269,8 @@
                                   disable_badge: true,
                                   disable_rate: true,
                                   disable_tag: true,
+                                  disable_countdown: true,
+                                  disable_scrolling_text: true,
                                   disable_price: show_search_price,
                                   disable_vendor: show_search_vendor,
                                   disable_color_swatches: true,
