@@ -3,7 +3,7 @@
     class="article-card-wrapper item-load {{ class }}{% if is_featured_blog %} gradient color-{{ color_scheme }}{% endif %}"
   >
     <div
-      class="card article-card{{ featured-blog }}{% if is_featured_blog %} custom-blog-featured flex-1025 wrap gap rounded{% endif %}"
+      class="card article-card{{ featured-blog }}{% if is_featured_blog %} custom-blog-featured flex-1025 wrap gap rounded{% else %} hover-effect{% endif %}"
       {% if is_featured_blog %}
         style="--col-width: 66%;--gap: 0px;"
       {% endif %}
@@ -17,7 +17,7 @@
             endif
           -%}
           <a
-            class="{% if is_featured_blog %} block h-full{% else %}hover-effect rounded block{% endif %}"
+            class="{% if is_featured_blog %} block h-full{% else %} rounded block{% endif %}"
             href="{{ article.url }}"
             class="remove-underline"
             aria-label="{{ article.title | escape }}"
