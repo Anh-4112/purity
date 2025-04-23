@@ -223,6 +223,18 @@ function initSlideMedia(_this, gallery, thumbnail) {
       swiper: thumbnail ? thumbnail : null,
     },
     on: {
+      slideChange: function () {
+        const currentSlide = this.slides[this.activeIndex];
+        if (currentSlide) {
+          if (gallery !== "thumbnail") {
+            if (currentSlide.classList.contains("media-gallery__model")) {
+              this.allowTouchMove = false;
+            } else {
+              this.allowTouchMove = true;
+            }
+          }
+        }
+      },
       slideChangeTransitionEnd: function () {
         if (autoplayVideo && !thumbnail) {
           const vimeoTag = document.createElement("script");

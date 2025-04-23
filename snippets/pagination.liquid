@@ -11,14 +11,14 @@
             <li class="w-50 pagination__item--next">
               <a
                 href="{{ paginate.previous.url }}{{ anchor }}"
-                class="pagination__item p-0 btn btn-outline w-full h-50  rounded-50  lh-1 medium-weight inline-flex align-center justify-content-center pagination__item--next pagination__item-arrow"
+                class="pagination__item p-0 btn btn-outline border w-full h-50  rounded-50  lh-1 medium-weight inline-flex align-center justify-content-center pagination__item--next pagination__item-arrow"
                 aria-label="{{ 'general.pagination.previous' | t }}"
               >
                 <svg width="10" height="8" fill="none">
                   <path fill="currentColor" d="M4.822 6.678a.563.563 0 0 1 0 .82.557.557 0 0 1-.41.164.587.587 0 0 1-.41-.164L1.09 4.572a.52.52 0 0 1-.178-.396c0-.164.06-.306.178-.424L4.002.84a.563.563 0 0 1 .82 0c.119.11.178.246.178.41 0 .164-.06.3-.178.41L2.32 4.162l2.502 2.516Zm4.088 0a.563.563 0 0 1 0 .82.557.557 0 0 1-.41.164.557.557 0 0 1-.41-.164L5.178 4.572A.52.52 0 0 1 5 4.176c0-.164.06-.306.178-.424L8.09.84A.535.535 0 0 1 8.5.662c.164 0 .3.06.41.178.119.11.178.246.178.41 0 .164-.06.3-.178.41L6.408 4.162 8.91 6.678Z"/>
                 </svg>
                 <span class="visually-hidden">
-                {{ 'general.pagination.previous' | t }}
+                  {{ 'general.pagination.previous' | t }}
                 </span>
               </a>
             </li>
@@ -28,7 +28,7 @@
               {%- if part.is_link -%}
                 <a
                   href="{{ part.url }}{{ anchor }}"
-                  class="pagination__item p-0 btn btn-outline w-full h-50 rounded-50  lh-1 medium-weight inline-flex align-center justify-content-center"
+                  class="pagination__item p-0 btn btn-outline border w-full h-50 rounded-50  lh-1 medium-weight inline-flex align-center justify-content-center"
                   aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
                 >
                   {{- part.title -}}
@@ -38,7 +38,7 @@
                   <a
                     role="link"
                     aria-disabled="true"
-                    class="pagination__item p-0 btn btn-outline w-full h-50 rounded-50 lh-1 medium-weight inline-flex align-center justify-content-center pagination__item--current"
+                    class="pagination__item p-0 btn btn-outline border w-full h-50 rounded-50 lh-1 medium-weight inline-flex align-center justify-content-center pagination__item--current"
                     aria-current="page"
                     aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
                   >
@@ -56,11 +56,11 @@
             <li class="pagination__item--prev w-50">
               <a
                 href="{{ paginate.next.url }}{{ anchor }}"
-                class="pagination__item p-0 btn btn-outline w-full h-50 rounded-50 lh-1 medium-weight inline-flex align-center justify-content-center pagination__item--prev pagination__item-arrow"
+                class="pagination__item p-0 btn btn-outline border w-full h-50 rounded-50 lh-1 medium-weight inline-flex align-center justify-content-center pagination__item--prev pagination__item-arrow"
                 aria-label="{{ 'general.pagination.next' | t }}"
               >
                 <span class="visually-hidden">
-                {{ 'general.pagination.next' | t }}
+                  {{ 'general.pagination.next' | t }}
                 </span>
                 <svg width="10" height="8" fill="none">
                   <path fill="currentColor" d="M5.998 7.498a.603.603 0 0 1-.424.164.54.54 0 0 1-.396-.164.563.563 0 0 1 0-.82L7.68 4.162 5.178 1.66A.535.535 0 0 1 5 1.25c0-.164.06-.3.178-.41a.52.52 0 0 1 .396-.178c.164 0 .306.06.424.178L8.91 3.752c.119.118.178.26.178.424a.52.52 0 0 1-.178.396L5.998 7.498Zm-4.088 0a.557.557 0 0 1-.41.164.557.557 0 0 1-.41-.164.563.563 0 0 1 0-.82l2.502-2.516L1.09 1.66a.535.535 0 0 1-.178-.41c0-.164.06-.3.178-.41A.535.535 0 0 1 1.5.662c.164 0 .3.06.41.178l2.912 2.912c.119.118.178.26.178.424a.52.52 0 0 1-.178.396L1.91 7.498Z"/>
@@ -79,7 +79,6 @@
             assign paginate_size = paginate.parts.size | times: 1
             assign cur_page = paginate.current_page | times: 1
             if t == 'blog'
-              assign number_page = section_st.maximum_posts_to_show | times: 1
               assign count = blog.articles_count
             endif
             if t == 'list-collections'
