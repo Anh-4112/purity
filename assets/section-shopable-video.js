@@ -524,12 +524,12 @@ class ShopableItem extends HTMLElement {
       nextButton.addEventListener("click", (e) => {
         e.preventDefault();
         swiperContainer.swiper.slideNext();
-        _self.closeAllPopupInformation(modalPopup);
+        _self.updateCurrentSlideId(modalPopup, swiperContainer);
       });
       prevButton.addEventListener("click", (e) => {
         e.preventDefault();
         swiperContainer.swiper.slidePrev();
-        _self.closeAllPopupInformation(modalPopup);
+        _self.updateCurrentSlideId(modalPopup, swiperContainer);
       });
     }
     modalPopup.removeAttribute("data-loading");
@@ -581,6 +581,34 @@ class ShopableItem extends HTMLElement {
         info.classList.remove("active");
       }
     });
+  }
+
+  updateCurrentSlideId(modalPopup, swiperContainer) {
+    if (!modalPopup || !swiperContainer || !swiperContainer.swiper) return;
+    
+    const activeIndex = swiperContainer.swiper.activeIndex;
+    const activeSlide = swiperContainer.swiper.slides[activeIndex];
+    
+    if (activeSlide) {
+      const productId = activeSlide.getAttribute("data-product-id") || activeSlide.querySelector("[data-product-id]")?.getAttribute("data-product-id");
+      
+      if (productId) {
+        modalPopup.setAttribute("data-current", productId);
+        this.closeAllPopupInformation(modalPopup);
+        const allSlides = swiperContainer.swiper.slides;
+      allSlides.forEach((slide, index) => {
+        const video = slide.querySelector("video");
+        
+        if (video) {
+          if (index === activeIndex) {
+            video.muted = false;
+          } else {
+            video.muted = true;
+          }
+        }
+      });
+      }
+    }
   }
 }
 customElements.define("shopable-item", ShopableItem);
