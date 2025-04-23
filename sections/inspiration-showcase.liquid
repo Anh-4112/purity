@@ -62,7 +62,7 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }} flex column content-center">
-    <multimedia_with_text class="content-center {{ column_gap_slide }} flex mb-30">
+    <inspiration-showcase class="content-center {{ column_gap_slide }} flex mb-30">
       {%- for block in section.blocks -%}
         {%- liquid
           assign block_st = block.settings
@@ -152,7 +152,7 @@
           </div>
         </div>
       {%- endfor -%}
-    </multimedia_with_text>
+    </inspiration-showcase>
     <div class="multimedia_with_text__text text-center max-w-custom">
       <div class="text-content {{ text_content_size }}">
         {{ text }}
@@ -351,7 +351,8 @@
         {
           "type": "video",
           "id": "video",
-          "label": "t:sections.all.video.label"
+          "label": "t:sections.all.video.label",
+          "info": "t:sections.all.svg.custom_svg.info"
         }
       ]
     }

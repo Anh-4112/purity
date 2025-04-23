@@ -11,7 +11,10 @@
 
   assign column_gap_slide = 0
   assign column_gap_mb = 0
-  if section_st.column_gap == 'large'
+  if section_st.column_gap == 'x_large'
+    assign column_gap_slide = 50
+    assign column_gap_mb = 20
+  elsif section_st.column_gap == 'large'
     assign column_gap_slide = 30
     assign column_gap_mb = 20
   elsif section_st.column_gap == 'medium'
@@ -218,6 +221,10 @@
         {
           "value": "large",
           "label": "t:sections.all.padding.column_gap.large"
+        },
+        {
+          "value": "x_large",
+          "label": "t:sections.all.padding.column_gap.x_large"
         }
       ],
       "default": "medium",
