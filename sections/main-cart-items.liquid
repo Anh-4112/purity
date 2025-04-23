@@ -95,15 +95,32 @@
                         assign block_st = block.settings
                         assign icon_svg = block_st.icon_svg
                         assign heading = block_st.heading
+                        assign icon_image = block_st.icon_image
+                        assign icon_size = block_st.icon_size
                       -%}
                       {%- if block.type == 'icon-with-text' -%}
                         <div class="icon-box__item">
                           <div
                             class="icon-box__icon w-custom h-auto flex heading-color"
-                            style="---width: {{ section_st.icon_size }}px; "
+                            style="---width: {{ icon_size }}px; "
                           >
                             {% if icon_svg != 'none' %}
-                              {% render 'icon_svg_list', icon: icon_svg %}
+                              {% render 'icon_svg_list',
+                                icon: icon_svg,
+                                custom_width: icon_size,
+                                custom_height: icon_size
+                              %}
+                            {% elsif icon_image != blank %}
+                              {%- liquid
+                                assign alt_default = 'accessibility.promotion_banner' | t
+                                assign alt = icon_image.alt | default: alt_default | escape
+                              -%}
+                              {% render 'responsive-image',
+                                type: 'other',
+                                image: icon_image,
+                                image_alt: alt,
+                                class: 'rounded-10'
+                              %}
                             {% endif %}
                           </div>
                           <div class="icon-box__content">
@@ -901,6 +918,11 @@
       "limit": 2,
       "settings": [
         {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "t:sections.all.image.label"
+        },
+        {
           "type": "select",
           "id": "icon_svg",
           "label": "t:sections.all.svg.label",
@@ -936,6 +958,16 @@
               "label": "t:sections.all.icon.message_communications.label"
             }
           ]
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "min": 30,
+          "max": 70,
+          "step": 1,
+          "unit": "px",
+          "default": 60,
+          "label": "t:sections.icon-box.settings.icon_settings.icon_size.label"
         },
         {
           "type": "richtext",
