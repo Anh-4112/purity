@@ -1,6 +1,6 @@
 {%- if article and article != empty -%}
   <div
-    class="article-card-wrapper item-load {{ class }}{% if is_featured_blog %} gradient color-{{ color_scheme }}{% endif %}"
+    class="article-card-wrapper item-load {{ class }}{% if is_featured_blog %} gradient color-{{ color_scheme }}{% endif %}{% if isPageBlog %} text-{{ content_alignment }}{% endif %}"
   >
     <div
       class="card article-card{{ featured-blog }}{% if is_featured_blog %} custom-blog-featured flex-1025 wrap gap rounded{% endif %}"

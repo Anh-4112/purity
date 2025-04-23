@@ -236,23 +236,21 @@
                 </div>
               {%- endfor -%}
             {%- endif -%}
-            <div class="blog-articles__article article text-{{ section_st.content_alignment }}">
-              {% render 'article-card',
-                article: article,
-                media_aspect_ratio: aspect_ratio,
-                show_image: true,
-                show_date: section_st.show_date,
-                show_author: section_st.show_author,
-                show_excerpt: section_st.show_excerpt,
-                show_cate: section_st.show_category,
-                show_tags: section_st.show_tags,
-                customClass: scroll_animation,
-                indexFor: forloop.index,
-                isPageBlog: true,
-                content_alignment: section_st.content_alignment,
-                class: post_text_alignment
-              %}
-            </div>
+            {% render 'article-card',
+              article: article,
+              media_aspect_ratio: aspect_ratio,
+              show_image: true,
+              show_date: section_st.show_date,
+              show_author: section_st.show_author,
+              show_excerpt: section_st.show_excerpt,
+              show_cate: section_st.show_category,
+              show_tags: section_st.show_tags,
+              customClass: scroll_animation,
+              indexFor: forloop.index,
+              isPageBlog: true,
+              content_alignment: section_st.content_alignment,
+              class: post_text_alignment
+            %}
           {%- endfor -%}
         </div>
         {%- if paginate.pages > 1 -%}
