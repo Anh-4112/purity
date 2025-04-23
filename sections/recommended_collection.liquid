@@ -3,7 +3,7 @@
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
-    assign section_width = 'full-width px-20'
+    assign section_width = 'full-width'
   else
     assign section_width = 'fluid_container'
   endif
@@ -78,15 +78,19 @@
   {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap: {{  column_gap_slide }}px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
 {%- endcapture -%}
 {% capture title_replace %}
-  <div class="title-select">
+  <select-options class="title-select relative px-15 pointer">
     {% if split_array.size > 0 %}
       {% liquid
         assign first_item = split_array[0]
         assign title_parts = first_item | split: '::'
         assign first_title = title_parts[0]
       %}
-      <span class="title-select__text">{{ first_title }}</span>
-      <div class="title-list">
+      <span class="title-select__text heading-style word-break select_option inline-flex align-center gap-20 border-bottom" style="--border-height: 2px; --color-border: var(--color-heading);">{{ first_title }}
+        <svg class="icon icon-down icon-rotate transition-short w-custom flex-auto" width="10" height="6" viewBox="0 0 10 6" style="--width: 1rem;">
+          <use href="#icon-arrow-down"></use>
+        </svg>
+       </span>
+      <custom-options class="title-list custom-scroll-bar">
         {% for item in split_array %}
           {% liquid
             assign title_parts = item | split: '::'
@@ -95,14 +99,14 @@
           %}
             <span class="title-item" data-block-id="{{ block_id }}">{{ title }}</span>
         {% endfor %}
-      </div>
+      </custom-options>
     {% else %}
-      <span class="title-select__text">{{ 'section-x.selected.title.default' | t }}</span>
+      <span class="title-select__text">{{ 'recommended_collection.selected.title.default' | t }}</span>
     {% endif %}
-  </div>
+  </select-options>
 {% endcapture %}
 {% capture replace_collection %}
-  <div class="collection-select">
+  <select-options class="collection-select relative px-15 pointer">
     {% if split_collection.size > 0 %}
       {% liquid
         assign first_item = split_collection[0]
@@ -112,8 +116,12 @@
         assign first_url = item_parts[2]
         assign url_default = first_url
       %}
-      <span class="collection-select__text" data-url="{{ first_url }}">{{ first_title }}</span>
-      <div class="collection-list">
+      <span class="collection-select__text heading-style word-break select_option inline-flex align-center gap-20 border-bottom" style="--border-height: 2px; --color-border: var(--color-heading);" data-url="{{ first_url }}">{{ first_title }}
+        <svg class="icon icon-down icon-rotate transition-short w-custom flex-auto" width="10" height="6" viewBox="0 0 10 6" style="--width: 1rem;">
+          <use href="#icon-arrow-down"></use>
+        </svg>
+      </span>
+      <custom-options class="collection-list custom-scroll-bar">
         {% for block_id in unique_block_ids %}
           <div class="collection-group" id="{{ block_id }}" {% if block_id != first_block_id %}style="display: none;"{% endif %}>
             {% for item in split_collection %}
@@ -129,71 +137,18 @@
             {% endfor %}
           </div>
         {% endfor %}
-      </div>
+      </custom-options>
     {% else %}
-      <span class="collection-select__text">{{ 'section-x.selected.collection.default' | t }}</span>
+      <span class="collection-select__text">{{ 'recommended_collection.selected.collection.default' | t }}</span>
     {% endif %}
-  </div>
+  </select-options>
 {% endcapture %}
 {% style %}
-  .title-select,
-  .collection-select {
-    position: relative;
-    cursor: pointer;
-    display: inline-block;
+  .ps_screen {
+    padding-inline-start: calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2);
   }
-
-  .title-select__text,
-  .collection-select__text {
-    display: inline-block;
-    font-weight: 600;
-    position: relative;
-    padding-right: 20px;
-  }
-
-  .title-select__text:after,
-  .collection-select__text:after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 5px solid currentColor;
-    transition: transform 0.3s ease;
-  }
-
-  .title-list,
-  .collection-list {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #fff;
-    border: 1px solid #e8e8e8;
-    border-radius: 4px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    min-width: 150px;
-    max-height: 200px;
-    overflow-y: auto;
-    margin-top: 5px;
-  }
-
-  .title-list.active,
-  .collection-list.active {
-    display: block;
-  }
-
-  .title-item,
-  .collection-item {
-    padding: 10px 15px;
-    display: block;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  .pe_screen {
+    padding-inline-end: calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2);
   }
 {% endstyle %}
 <div
@@ -239,7 +194,7 @@
             style="--bg-color-custom: {{ section_st.background_color }};"
           >
         {% endif %}
-        <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }}">
+        <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }}{% if section_width == 'full-width' %}{% if section_st.image_desktop_position == 'left' %} pe_screen{% else %} ps_screen{% endif %}{% endif %}">
           <section-selected class="block">
             {% for block in section.blocks %}
               {% liquid
@@ -335,13 +290,13 @@
     </div>
   </div>
 </div>
-<script src="{{ 'section-x.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'recommended_collection.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {
-  "name": "t:sections.section-x.name",
+  "name": "t:sections.recommended_collection.name",
   "tag": "section",
-  "class": "section section-x",
+  "class": "section recommended_collection",
   "disabled_on": {
     "groups": ["header", "footer", "custom.overlay"]
   },
@@ -367,7 +322,7 @@
           "label": "t:sections.all.layout.full_width"
         }
       ],
-      "default": "full_width",
+      "default": "fix_width",
       "label": "t:sections.all.layout.label"
     },
     {
@@ -662,7 +617,7 @@
           "id": "description",
           "default": "I have [title] skin and my top skin concern is [collection]",
           "label": "t:sections.all.content_setting.description.label",
-          "info": "t:sections.section-x.blocks.button.info"
+          "info": "t:sections.recommended_collection.blocks.button.info"
         },
         {
           "type": "select",
@@ -780,7 +735,7 @@
     {
       "type": "featured_collection",
       "name": "t:sections.collection-list.blocks.featured_collection.name",
-      "limit": 6,
+      "limit": 5,
       "settings": [
         {
           "type": "text",
@@ -790,7 +745,7 @@
         {
           "type": "collection_list",
           "id": "collection_list",
-          "limit": 8,
+          "limit": 5,
           "label": "t:sections.collection-list.blocks.featured_collection.settings.collection.label"
         }
       ]
@@ -798,7 +753,7 @@
   ],
   "presets": [
     {
-      "name": "t:sections.section-x.name",
+      "name": "t:sections.recommended_collection.name",
       "blocks": [
         {
           "type": "subheading"
