@@ -129,14 +129,14 @@ class SectionSelected extends HTMLElement {
 
   handleTitleToggle() {
     this.toggleDropdown(this.titleList);
-    if (this.collectionList.classList.contains("active")) {
+    if (this.collectionList?.classList.contains("active")) {
       this.closeDropdown(this.collectionList);
     }
   }
 
   handleCollectionToggle() {
     this.toggleDropdown(this.collectionList);
-    if (this.titleList.classList.contains("active")) {
+    if (this.titleList?.classList.contains("active")) {
       this.closeDropdown(this.titleList);
     }
   }
@@ -186,7 +186,7 @@ class SectionSelected extends HTMLElement {
   }
 
   toggleDropdown(dropdown) {
-    const isExpanded = dropdown.classList.toggle("active");
+    const isExpanded = dropdown?.classList.toggle("active");
 
     if (dropdown === this.titleList) {
       this.titleSelectText.setAttribute("aria-expanded", isExpanded);
