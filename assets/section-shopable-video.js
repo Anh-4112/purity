@@ -8,67 +8,102 @@ class ShopableVideo extends SlideSection {
   }
 
   connectedCallback() {
-    if (
-      this.classList.contains("swiper-slide-center")
-    ) {
+    if (this.classList.contains("swiper-slide-center")) {
       this.handleCenterSlides();
     }
   }
 
   handleCenterSlides() {
     if (!this) return;
+    if (window.innerWidth < 1025) return;
+
     const checkSwiper = setInterval(() => {
       if (this.swiper) {
         clearInterval(checkSwiper);
         this.updateCenterSlideClass();
         this.swiper.on("slideChange", () => {
-          this.updateCenterSlideClass();
+          if (window.innerWidth >= 1025) {
+            this.updateCenterSlideClass();
+          }
         });
         this.swiper.on("breakpoint", () => {
-          this.updateCenterSlideClass();
+          if (window.innerWidth >= 1025) {
+            this.updateCenterSlideClass();
+          }
         });
+
+        window.addEventListener("resize", this.handleResize.bind(this));
       }
     }, 100);
+  }
+
+  handleResize() {
+    if (window.innerWidth >= 1025) {
+      if (this.swiper) {
+        this.updateCenterSlideClass();
+      }
+    } else {
+      this.resetCenterSlideEffects();
+    }
+  }
+
+  resetCenterSlideEffects() {
+    if (!this || !this.swiper) return;
+    
+    const allSlides = Array.from(this.querySelectorAll(".swiper-slide"));
+    
+    allSlides.forEach((slide) => {
+      slide.classList.remove("center-slide");
+      const videoInner = slide.querySelector(".video-item--ratio");
+      if (videoInner) {
+        videoInner.style.height = '';
+        videoInner.style.marginTop = '';
+        videoInner._hasSetupTransition = false;
+      }
+    });
   }
 
   updateCenterSlideClass() {
     const autoplayVideo = this.dataset.autoplayVideo === "true";
     if (!this || !this.swiper) return;
-    
+
     if (!this._animations) {
       this._animations = new Map();
     }
-    
-    this._animations.forEach(animation => {
-      if (animation && typeof animation.cancel === 'function') {
+
+    this._animations.forEach((animation) => {
+      if (animation && typeof animation.cancel === "function") {
         animation.cancel();
       }
     });
     this._animations.clear();
-    
+
     let videoHeight;
     const allSlides = Array.from(this.querySelectorAll(".swiper-slide"));
-    const previousCenterSlide = this.querySelector(".swiper-slide.center-slide");
-    
+    const previousCenterSlide = this.querySelector(
+      ".swiper-slide.center-slide"
+    );
+
     if (!this._maxSlideHeight) {
       let maxHeight = 0;
-      allSlides.forEach(slide => {
+      allSlides.forEach((slide) => {
         const slideHeight = slide.scrollHeight;
         if (slideHeight > maxHeight) {
           maxHeight = slideHeight;
         }
       });
-      
+
       this._maxSlideHeight = maxHeight > 0 ? maxHeight : 500;
     }
-    
+
     allSlides.forEach((slide) => {
       slide.classList.remove("center-slide");
     });
-    
+
     const slidesPerView = parseInt(this.swiper.params.slidesPerView);
     if (typeof slidesPerView === "number" && slidesPerView % 2 !== 0) {
-      const centerIndex = Math.floor(slidesPerView / 2) + this.swiper.activeIndex;
+      const centerIndex =
+        Math.floor(slidesPerView / 2) + this.swiper.activeIndex;
       if (centerIndex >= 0 && centerIndex < allSlides.length) {
         allSlides[centerIndex].classList.add("center-slide");
         const newCenterSlide = allSlides[centerIndex];
@@ -77,13 +112,13 @@ class ShopableVideo extends SlideSection {
           buttonPlay.classList.add("active");
         }
         const video = newCenterSlide.querySelector("video-local");
-          
+
         if (video) {
           if (!this._originalVideoHeight) {
             this._originalVideoHeight = video.offsetHeight || 300;
           }
           videoHeight = this._originalVideoHeight;
-          
+
           if (!this._lastSlideChangeTime) {
             this._lastSlideChangeTime = Date.now();
             this._isRapidSwiping = false;
@@ -92,23 +127,25 @@ class ShopableVideo extends SlideSection {
             this._lastSlideChangeTime = Date.now();
             this._isRapidSwiping = timeSinceLastChange < 300;
           }
-          
+
           if (!this._containerInitialized) {
-            const swiperWrapper = this.querySelector('.swiper-wrapper');
+            const swiperWrapper = this.querySelector(".swiper-wrapper");
             if (swiperWrapper) {
-              swiperWrapper.style.minHeight = (this._maxSlideHeight + 10) + 'px';
+              swiperWrapper.style.minHeight = this._maxSlideHeight + 10 + "px";
               this._containerInitialized = true;
             }
           }
-          
-          const centerVideoInner = newCenterSlide.querySelector(".video-item--ratio");
+
+          const centerVideoInner =
+            newCenterSlide.querySelector(".video-item--ratio");
           if (centerVideoInner) {
             this._setVideoEffectWithMargin(centerVideoInner, videoHeight, 0);
           }
-          
+
           allSlides.forEach((slide) => {
             if (!slide.classList.contains("center-slide")) {
-              const nonCenterVideoInner = slide.querySelector(".video-item--ratio");
+              const nonCenterVideoInner =
+                slide.querySelector(".video-item--ratio");
               const buttonPlay = slide.querySelector(".play-button");
               if (buttonPlay && autoplayVideo) {
                 buttonPlay.classList.remove("active");
@@ -116,29 +153,35 @@ class ShopableVideo extends SlideSection {
               if (nonCenterVideoInner && videoHeight) {
                 const targetHeight = videoHeight - 50;
                 const marginTop = Math.max(0, (videoHeight - targetHeight) / 2);
-                this._setVideoEffectWithMargin(nonCenterVideoInner, targetHeight, marginTop);
+                this._setVideoEffectWithMargin(
+                  nonCenterVideoInner,
+                  targetHeight,
+                  marginTop
+                );
               }
             }
           });
         }
-          
+
         if (newCenterSlide !== previousCenterSlide) {
-          this.dispatchEvent(new CustomEvent("center-slide-updated", {
-            detail: { centerSlide: newCenterSlide }
-          }));
+          this.dispatchEvent(
+            new CustomEvent("center-slide-updated", {
+              detail: { centerSlide: newCenterSlide },
+            })
+          );
         }
       }
     }
   }
-  
+
   _setVideoEffectWithMargin(element, targetHeight, marginTop) {
     if (!element._hasSetupTransition) {
-      element.style.transition = this._isRapidSwiping ? 
-        'height 0.15s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.15s cubic-bezier(0.4, 0, 0.2, 1)' : 
-        'height 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-      
+      element.style.transition = this._isRapidSwiping
+        ? "height 0.15s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.15s cubic-bezier(0.4, 0, 0.2, 1)"
+        : "height 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+
       element._hasSetupTransition = true;
-      
+
       requestAnimationFrame(() => {
         element.style.height = `${targetHeight}px`;
         element.style.marginTop = `${marginTop}px`;
@@ -175,7 +218,7 @@ class ShopableVideo extends SlideSection {
       }
     });
   }
-  
+
   playCenterSlideVideo() {
     this.pauseAllVideos();
     const centerSlide = this.querySelector(".swiper-slide.center-slide");
@@ -248,8 +291,8 @@ class ShopableItem extends HTMLElement {
   }
 
   handleKeyDown(event) {
-    const isPlayButton = event.target.closest('.play-button');
-    const isMuteButton = event.target.closest('.mute-button');
+    const isPlayButton = event.target.closest(".play-button");
+    const isMuteButton = event.target.closest(".mute-button");
     if (event.key === "Enter" && !isPlayButton && !isMuteButton) {
       event.preventDefault();
       this.onShowPopupModal(event);
@@ -268,7 +311,9 @@ class ShopableItem extends HTMLElement {
         if (!currentItem) return;
         const popupInfo = currentItem.querySelector(".popup-information");
         const buttonCloseModal = modalPopup.querySelector(".modal__close");
-        const buttonCloseInformation = currentItem.querySelector('.modal__close-information');
+        const buttonCloseInformation = currentItem.querySelector(
+          ".modal__close-information"
+        );
         if (!popupInfo) return;
         if (buttonCloseInformation.classList.contains("hidden-important")) {
           buttonCloseInformation.classList.remove("hidden-important");
@@ -293,7 +338,7 @@ class ShopableItem extends HTMLElement {
         if (!currentItem) return;
         const popupInfo = currentItem.querySelector(".popup-information");
         const buttonCloseModal = modalPopup.querySelector(".modal__close");
-        
+
         if (popupInfo) {
           this.hidePopupInformation(popupInfo);
           closeInfoButton.classList.add("hidden-important");
@@ -308,7 +353,7 @@ class ShopableItem extends HTMLElement {
     popupInfo.dispatchEvent(
       new CustomEvent("popup-information:closed", {
         bubbles: true,
-        detail: { popupInfo }
+        detail: { popupInfo },
       })
     );
   }
@@ -351,7 +396,7 @@ class ShopableItem extends HTMLElement {
   setupScrollObserver() {
     const mainElement = document.querySelector("main");
     if (!mainElement) return;
-    
+
     const firstSections = Array.from(
       mainElement.querySelectorAll("section")
     ).slice(0, 1);
@@ -363,15 +408,17 @@ class ShopableItem extends HTMLElement {
       this.classList.remove("active");
       return;
     }
-    const shopableVideoSection = firstStickyVideo.closest(".section-shopable-video");
+    const shopableVideoSection = firstStickyVideo.closest(
+      ".section-shopable-video"
+    );
     if (!shopableVideoSection) return;
-    
+
     const options = {
       root: null,
       rootMargin: "0px",
       threshold: 0,
     };
-    
+
     const shopableVideoObserver = new IntersectionObserver((entries) => {
       if (this.getStickyHiddenCookie()) {
         return;
@@ -396,7 +443,7 @@ class ShopableItem extends HTMLElement {
         }
       });
     }, options);
-    
+
     const firstSectionsObserver = new IntersectionObserver((entries) => {
       if (this.getStickyHiddenCookie()) {
         return;
@@ -525,13 +572,13 @@ class ShopableItem extends HTMLElement {
       modalPopup.removeAttribute("data-loading");
       return;
     }
-    
+
     const clickedItem = document.querySelector(`[data-product="${productId}"]`);
     if (!clickedItem) {
       modalPopup.removeAttribute("data-loading");
       return;
     }
-    
+
     const position = clickedItem.getAttribute("data-position");
     if (position !== null && !isNaN(parseInt(position))) {
       const slideIndex = parseInt(position);
@@ -539,14 +586,34 @@ class ShopableItem extends HTMLElement {
     } else {
       swiperContainer.swiper.slideTo(0, 0, false);
     }
-    
+
     const nextButton = modalPopup.querySelector(
       ".modal-nav .swiper-button-next"
     );
     const prevButton = modalPopup.querySelector(
       ".modal-nav .swiper-button-prev"
     );
-  
+
+    const swiperPagination = modalPopup.querySelector(
+      ".modal-pagination .swiper-pagination"
+    );
+    if (swiperPagination) {
+      swiperContainer.swiper.params.pagination = {
+        ...swiperContainer.swiper.params.pagination,
+        el: swiperPagination,
+        clickable: true,
+        type: "custom",
+        renderCustom: function (swiper, current, total) {
+          return current + "/" + total;
+        },
+      };
+
+      swiperContainer.swiper.pagination.destroy();
+      swiperContainer.swiper.pagination.init();
+      swiperContainer.swiper.pagination.render();
+      swiperContainer.swiper.pagination.update();
+    }
+
     if (nextButton && prevButton && swiperContainer.swiper.navigation) {
       const _self = this;
       nextButton.setAttribute("tabindex", "0");
@@ -572,7 +639,7 @@ class ShopableItem extends HTMLElement {
     }
     modalPopup.removeAttribute("data-loading");
   }
-  
+
   onShowPopupModal(event) {
     event.preventDefault();
     const clickedItem = this;
@@ -580,8 +647,9 @@ class ShopableItem extends HTMLElement {
     if (!productId) return;
     let modalPopup = document.querySelector("modal-popup");
     if (!modalPopup) {
-      const shopable_video = this.closest(".section-shopable-video")
-        .querySelector("template");
+      const shopable_video = this.closest(
+        ".section-shopable-video"
+      ).querySelector("template");
       if (shopable_video) {
         const content = document.createElement("div");
         content.appendChild(
@@ -592,7 +660,7 @@ class ShopableItem extends HTMLElement {
         this.setupMobileActionButton(modalPopup);
       }
     }
-  
+
     if (modalPopup) {
       modalPopup.setAttribute("data-loading", "true");
       modalPopup.setAttribute("data-current", productId);
@@ -623,13 +691,17 @@ class ShopableItem extends HTMLElement {
 
   updateCurrentSlideId(modalPopup, swiperContainer) {
     if (!modalPopup || !swiperContainer || !swiperContainer.swiper) return;
-    
+
     const activeIndex = swiperContainer.swiper.activeIndex;
     const activeSlide = swiperContainer.swiper.slides[activeIndex];
-    
+
     if (activeSlide) {
-      const productId = activeSlide.getAttribute("data-product-id") || activeSlide.querySelector("[data-product-id]")?.getAttribute("data-product-id");
-      
+      const productId =
+        activeSlide.getAttribute("data-product-id") ||
+        activeSlide
+          .querySelector("[data-product-id]")
+          ?.getAttribute("data-product-id");
+
       if (productId) {
         const buttonCloseModal = modalPopup.querySelector(".modal__close");
         if (buttonCloseModal.classList.contains("hidden-important")) {
@@ -640,7 +712,9 @@ class ShopableItem extends HTMLElement {
         const allSlides = swiperContainer.swiper.slides;
         allSlides.forEach((slide, index) => {
           const video = slide.querySelector("video");
-          const buttonCloseInformation = slide.querySelector(".modal__close-information");
+          const buttonCloseInformation = slide.querySelector(
+            ".modal__close-information"
+          );
           if (buttonCloseInformation) {
             buttonCloseInformation.classList.add("hidden-important");
           }
