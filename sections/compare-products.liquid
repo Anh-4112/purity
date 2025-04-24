@@ -207,6 +207,13 @@
                 {% render 'product-badges', scope: 'item', card_product: product %}
               </a>
             </div>
+            <a
+              aria-label="{{ product.title }}"
+              class="product__name heading-style block"
+              href="{{ product.url }}"
+            >
+              {{- product.title -}}
+            </a>
           </div>
           {%- for items in product.metafields.custom.compare_items.value -%}
             {%- liquid
@@ -330,9 +337,15 @@
                       {% render 'placeholder-render' %}
                     </div>
                   {%- endif -%}
-                  {% render 'product-badges', scope: 'item', card_product: items %}
                 </a>
               </div>
+              <a
+                aria-label="{{ product.title }}"
+                class="product__name heading-style block"
+                href="{{ product.url }}"
+              >
+                {{- product.title -}}
+              </a>
             </div>
           {%- endfor -%}
         </div>

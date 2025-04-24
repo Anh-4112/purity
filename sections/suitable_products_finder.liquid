@@ -117,7 +117,7 @@
           class="product-tabs__header-image-mobile swiper hidden-md reveal_on_scroll mb-20"
           data-spacing="30"
           data-free-mode="true"
-          style="max-width: 100%;xwidth: 100%;"
+          style="max-width: 100%;max-width: 100%;"
         >
           <div class="swiper-wrapper">
             {%- for block in section.blocks -%}
@@ -147,7 +147,11 @@
                   when 'oval'
                     assign aspect_ratio = '2'
                   else
-                    assign aspect_ratio = image.aspect_ratio
+                    if image != blank
+                      assign aspect_ratio = image.aspect_ratio
+                    else
+                      assign aspect_ratio = '2'
+                    endif
                 endcase
               -%}
               <div
@@ -185,9 +189,15 @@
                       %}
                     {% endif %}
                   {%- else -%}
+                    {% liquid
+                      assign class_placeholder = 'img-placeholder h-full w-full rounded'
+                      if section_st.media_type == 'rounded'
+                        assign class_placeholder = 'img-placeholder h-full w-full rounded-50'
+                      endif
+                    %}
                     {% render 'placeholder-render',
                       type: 'collection',
-                      class: 'img-placeholder h-full w-full rounded'
+                      class: class_placeholder
                     %}
                   {%- endif -%}
                 </div>
@@ -223,7 +233,11 @@
                 when 'oval'
                   assign aspect_ratio = '2'
                 else
-                  assign aspect_ratio = image.aspect_ratio
+                  if image != blank
+                    assign aspect_ratio = image.aspect_ratio
+                  else
+                    assign aspect_ratio = '2'
+                  endif
               endcase
             -%}
             {%- if collection_title != blank -%}
@@ -264,9 +278,15 @@
                       %}
                     {% endif %}
                   {%- else -%}
+                    {% liquid
+                      assign class_placeholder = 'img-placeholder h-full w-full rounded'
+                      if section_st.media_type == 'rounded'
+                        assign class_placeholder = 'img-placeholder h-full w-full rounded-50'
+                      endif
+                    %}
                     {% render 'placeholder-render',
                       type: 'collection',
-                      class: 'img-placeholder h-full w-full rounded'
+                      class: class_placeholder
                     %}
                   {%- endif -%}
                 </div>

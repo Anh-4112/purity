@@ -1,3 +1,4 @@
+{{ 'banner.css' | asset_url | stylesheet_tag }}
 {% liquid
   assign section_st = section.settings
   assign block_st = block.settings
@@ -11,7 +12,8 @@
 
 <div class="group__text w-full h-full flex align-{{ block_st.vertical_alignment }} justify-content-{{ block_st.text_alignment }}">
   <div
-    class="color-{{ block.settings.color_scheme }} gradient flex wrap w-full{% if section_st.equal_height_adjustment %} h-full justify-content-{{ block_st.vertical_alignment }}{% endif %} text-{{ block_st.text_alignment }} justify-content-{{ block_st.text_alignment }} rounded"
+    class="color-{{ block.settings.color_scheme }} gradient flex wrap w-full{% if section_st.equal_height_adjustment %} h-full align-content-{{ block_st.vertical_alignment }} justify-content-{{ block_st.text_alignment }}{% else %} justify-content-{{ block_st.text_alignment }}{% endif %} text-{{ block_st.text_alignment }} rounded px-custom py-custom{% if block_st.padding_content_inline < 15 %} x-min-value{% endif %}"
+    style="--padding-inline: {{ block_st.padding_content_inline }};--padding-block: {{ block_st.padding_content_block }};"
   >
     {% content_for 'blocks' %}
   </div>
@@ -48,9 +50,6 @@
     },
     {
       "type": "_social-icon"
-    },
-    {
-      "type": "group-text"
     }
   ],
   "settings": [
@@ -148,6 +147,28 @@
       ],
       "default": "start",
       "label": "t:sections.all.text_alignment.label"
+    },
+    {
+      "type": "range",
+      "id": "padding_content_inline",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_inline.label",
+      "info": "t:sections.all.padding.padding_inline.info",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_content_block",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_block.label",
+      "info": "t:sections.all.padding.padding_block.info",
+      "default": 30
     }
   ],
   "presets": [
