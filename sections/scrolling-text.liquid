@@ -15,6 +15,8 @@
     assign header_size = 'h4'
   elsif heading_size == 'large'
     assign header_size = 'h2'
+  elsif heading_size == 'x-large'
+    assign header_size = 'fs-60'
   else
     assign header_size = 'h3'
   endif
@@ -34,6 +36,9 @@
       height: var(--width-mb);
     }
   }
+  .fs-60 {
+      font-size: clamp(4rem, calc(4rem + (60 - 40) * var(--responsive-rate)), 6rem);
+    }
 {% endstyle %}
 <div
   class="section__scrolling-text color-{{ section_st.color_scheme }} gradient section"
@@ -227,6 +232,10 @@
         {
           "value": "large",
           "label": "t:sections.all.content_header.heading_size.options__3.label"
+        },
+        {
+          "value": "x-large",
+          "label": "t:sections.all.content_header.heading_size.x_large.label"
         }
       ],
       "default": "medium",
@@ -323,6 +332,10 @@
             {
               "value": "beauty",
               "label": "t:sections.all.icon.beauty.label"
+            },
+            {
+              "value": "line",
+              "label": "t:sections.all.icon.line.label"
             },
             {
               "value": "leaf",

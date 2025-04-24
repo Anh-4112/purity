@@ -14,29 +14,37 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
+{% style %}
+  .faq-page .shopify-block details {
+    padding: 2.4rem 0;
+  }
+{% endstyle %}
 
 <section
-  class="section section__faq color-{{ section_st.color_scheme }} gradient"
+  class="section faq-page color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     <div
-      class="section__faqs-content w-full{% if show_faqs_message %} flex gap{% endif %}{% if desktop_content_position == 'right' %} flex-1025-row-reverse{% endif %}"
-      style="--gap: clamp(3rem, 5vw, 10rem);--gap: clamp(3rem, 5vw, 10rem);--col-width: 30%;"
+      class="section__faqs-content w-full{% if show_faqs_message %} flex gap column-reverse{% endif %}{% if desktop_content_position == 'right' %} flex-1025-row-reverse{% else %} flex-1025-row{% endif %}"
+      style="--gap: clamp(3rem, 5vw, 10rem);--gap: clamp(2rem, 4vw, 6rem);--col-width: 29.8%;"
     >
       {% if show_faqs_message %}
-        <div class="contact_form-field w-full col-1025-w-custom">
-          {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
+        <div class="contact_form-field w-full col-1025-w-custom bg-secondary p-20 p-1025-40 h-content rounded sticky-1025 top-20 transition">
+          {%- if section_st.heading != blank or section_st.description != blank or section_st.highlight_text != blank -%}
             <div
-              class="section-header text-{{ section_st.text_alignment }}"
+              class="text-{{ section_st.text_alignment }} mb-30"
             >
-              {%- if section_st.subheading != blank -%}
-                <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
-                  {{ section_st.subheading }}
+              {%- if section_st.highlight_text != blank -%}
+                <div
+                  class="section-subheading lh-1 mb-15 mb-md-10 py-10 px-15 btn-rounded inline-block bg-sale"
+                  style="--"
+                >
+                  {{ section_st.highlight_text }}
                 </div>
               {%- endif -%}
               {%- if section_st.heading != blank -%}
-                <h2 class="section-heading">{{ section_st.heading }}</h2>
+                <h2 class="section-heading mb-15">{{ section_st.heading }}</h2>
               {%- endif -%}
               {%- if section_st.description != blank -%}
                 <div
@@ -49,38 +57,46 @@
           {%- endif -%}
           {%- form 'contact', id: 'contact_faq', class: 'isolate field', novalidate: 'novalidate' -%}
             {%- if form.posted_successfully? -%}
-              <div class="form-status form-status form__message success" tabindex="-1" autofocus>
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <use href="#icon-success"></use>
-                </svg>
+              <div
+                class="form-status form-status form__message success mb-10 flex align-center gap-10 mb-10"
+                tabindex="-1"
+                autofocus
+              >
+                <div class="flex content-center">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <use href="#icon-success"></use>
+                  </svg>
+                </div>
                 {{ 'templates.contact.form.post_success' | t }}
               </div>
             {%- elsif form.errors -%}
-              <div class="form__message error">
+              <div class="form__message error mb-10">
                 <div
-                  class="inline-flex align-center form-status"
+                  class="flex align-center gap-10"
                   role="alert"
                   tabindex="-1"
                   autofocus
                 >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <use href="#icon-error"></use>
-                  </svg>
+                  <div class="flex content-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <use href="#icon-error"></use>
+                    </svg>
+                  </div>
                   {{ 'templates.contact.form.error_heading' | t }}
                 </div>
+                <ul class="list-unstyled w-custom" style="--width: calc(100% - 24px)">
+                  <li>
+                    <a
+                      href="#ContactForm-email"
+                      class="color-inherit"
+                      aria-label=" {{ form.errors.translated_fields.email }}"
+                    >
+                      {{ form.errors.translated_fields.email | capitalize }}
+                      {{ form.errors.messages.email }}
+                    </a>
+                  </li>
+                </ul>
               </div>
-              <ul role="list">
-                <li>
-                  <a
-                    href="#ContactForm-email"
-                    class="color-inherit"
-                    aria-label=" {{ form.errors.translated_fields.email }}"
-                  >
-                    {{ form.errors.translated_fields.email | capitalize }}
-                    {{ form.errors.messages.email }}
-                  </a>
-                </li>
-              </ul>
             {%- endif -%}
             <div
               class="contact__fields field grid-cols"
@@ -89,13 +105,13 @@
                 class="field relative w-full flex wrap transition"
               >
                 <input
-                  class="field__input w-full"
+                  class="field__input w-full mb-20"
                   autocomplete="name"
                   type="text"
                   id="ContactFormName-{{ section.id }}"
                   name="contact[name]"
                   value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
-                  placeholder="{{ section_st.name }}*"
+                  placeholder="{{ section_st.name }} *"
                 >
                 <label class="field__label visually-hidden" for="ContactFormName-{{ section.id }}">
                   {{ 'templates.contact.form.name' | t -}}
@@ -106,7 +122,7 @@
                   autocomplete="email"
                   type="email"
                   id="ContactFormEmail-{{ section.id }}"
-                  class="field__input w-full"
+                  class="field__input w-full mb-20"
                   name="contact[email]"
                   spellcheck="false"
                   autocapitalize="off"
@@ -117,7 +133,7 @@
                     aria-invalid="true"
                     aria-describedby="ContactForm-email-error"
                   {% endif %}
-                  placeholder="{{ section_st.email_placeholder }}*"
+                  placeholder="{{ section_st.email_placeholder }} *"
                   required
                 >
                 <label class="field__label visually-hidden" for="ContactFormEmail-{{ section.id }}">
@@ -125,14 +141,18 @@
                   <span class="required">*</span></label
                 >
                 {%- if form.errors contains 'email' -%}
-                  <small class="contact__field-error" id="ContactForm-email-error">
+                  <div class="contact__field-error error flex align-center mt-10" id="ContactForm-email-error">
                     <span class="visually-hidden">{{ 'accessibility.error' | t }}</span>
-                    <span class="form__message error">
-                      {%- render 'icon-error' -%}
+                    <div class="flex content-center">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <use href="#icon-error"></use>
+                      </svg>
+                    </div>
+                    <span class="form__message">
                       {{- form.errors.translated_fields.email | capitalize }}
                       {{ form.errors.messages.email -}}
                     </span>
-                  </small>
+                  </div>
                 {%- endif -%}
               </div>
             </div>
@@ -142,7 +162,7 @@
               <textarea
                 rows="10"
                 id="ContactFormMessage-{{ section.id }}"
-                class="text-area field__input w-full"
+                class="text-area field__input w-full mb-20 mb-md-30"
                 aria-required="true"
                 aria-invalid="true"
                 required
@@ -168,7 +188,7 @@
           {%- endform -%}
         </div>
       {% endif %}
-      <div class="faq-container w-full gap-60 flex column{% if show_faqs_message %} col-1025-remaining{% endif %}">
+      <div class="page-faq-container w-full gap-60 flex column{% if show_faqs_message %} col-1025-remaining{% endif %}">
         {% content_for 'blocks' %}
       </div>
     </div>
@@ -290,9 +310,9 @@
     },
     {
       "type": "text",
-      "id": "subheading",
-      "default": "Subheading text",
-      "label": "t:sections.all.content_setting.subheading.label"
+      "id": "highlight_text",
+      "default": "Contact Us",
+      "label": "t:sections.all.content_setting.highlight_text.label"
     },
     {
       "type": "text",
@@ -353,10 +373,6 @@
       "id": "button_label",
       "label": "t:sections.all.content_setting.button_label.label",
       "default": "Send message"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.all.padding.section_padding_heading"
     },
     {
       "type": "range",
