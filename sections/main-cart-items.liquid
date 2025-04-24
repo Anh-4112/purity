@@ -32,7 +32,7 @@
   endfor
 %}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--gap-desktop: 6rem;--col-width: 32%;
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--gap-desktop: 6rem;--col-width: 31.95%;
 {%- endcapture -%}
 <div
   class="page-cart section color-{{ section_st.color_scheme }} gradient{% if cart == empty %} is-empty{% endif %}"
@@ -144,7 +144,7 @@
                   <div class="cart-items">
                     {%- for item in cart.items -%}
                       <div
-                        class="cart-item product__item border-bottom pb-20 mb-20 pb-1025-30 mb-1025-30 last-0 loading_snippet"
+                        class="cart-item product__item border-bottom pb-20 mb-20 pb-1025-30 mb-1025-30 loading_snippet"
                         id="CartItem-{{ item.index | plus: 1 }}"
                       >
                         <div class="cart-item_inner">
@@ -155,7 +155,7 @@
                             >
                               <a
                                 href="{{ item.url_to_remove }}"
-                                class="button button--tertiary inline-flex align-center hover-icon-zoom relative me-5"
+                                class="button button--tertiary inline-flex align-center hover-icon-zoom relative me-10"
                                 aria-label="{{ 'sections.cart.remove_title' | t }}"
                               >
                                 <svg
@@ -195,11 +195,11 @@
                                     endif
                                   -%}
                                   <div
-                                    class="banner__media rounded"
+                                    class="banner__media hover-effect rounded-10"
                                   >
                                     <a
                                       href="{{ item.url }}"
-                                      class="cart-item__link"
+                                      class="cart-item__link product-image focus-inset block"
                                       style="--aspect-ratio: {{ ratio }}"
                                       tabindex="-1"
                                       aria-hidden="true"
@@ -220,7 +220,7 @@
                               <div class="cart-item-info flex-1">
                                 <a
                                   href="{{ item.url }}"
-                                  class="product__name h6  lh-normal"
+                                  class="product__name heading inline-block mb-5"
                                   aria-label="{{ item.product.title | escape }}"
                                 >
                                   {{- item.product.title | escape -}}
@@ -281,7 +281,7 @@
                                     </strong>
                                   </div>
                                 {%- else -%}
-                                  <div class="mt-10 d-none block-md">
+                                  <div class="mt-15 d-none block-md">
                                     {{ item.original_price | money }}
                                   </div>
                                 {%- endif -%}
@@ -520,10 +520,10 @@
                     endfor
                   %}
                   {%- if gift_wrap -%}
-                    <div class="cart__gift-wrap mb-15">
+                    <div class="cart__gift-wrap mb-20">
                       <details class="collapsible-row" is="collapsible-row">
                         <summary class="collapsible-row__summary">
-                          <h6 class="footer__block-heading fs-18 flex space-between align-center collapsible-heading relative">
+                          <h6 class="footer__block-heading fs-18 pe-10 flex space-between align-center collapsible-heading relative">
                             <span>{{- 'sections.cart.gift.title_order' | t -}}</span>
                             <span class="open-children-toggle transition">
                               <span class="icon_plus-animation heading-color"> </span>
@@ -618,7 +618,7 @@
                   <div class="cart__estimate-shipping">
                     <details class="collapsible-row" is="collapsible-row" open>
                       <summary class="collapsible-row__summary">
-                        <h6 class="footer__block-heading fs-18 flex space-between align-center collapsible-heading relative">
+                        <h6 class="footer__block-heading fs-18 pe-10 flex space-between align-center collapsible-heading relative">
                           <span>{{ 'sections.cart.shipping.estimate_shipping_title' | t }}</span>
                           <span class="open-children-toggle transition">
                             <span class="icon_plus-animation heading-color"> </span>
@@ -631,7 +631,7 @@
                             <div class="cart-addons-content">
                               <div class="field">
                                 <div data-address="root">
-                                  <div class="form-group mb-20">
+                                  <div class="form-group mb-15">
                                     <label for="address_country" class="block mb-5">
                                       {{- 'customer.addresses.country' | t -}}
                                     </label>
@@ -648,7 +648,7 @@
                                   </div>
                                   <div
                                     id="address_province_container"
-                                    class="address_province_container form-group mb-20"
+                                    class="address_province_container form-group mb-15"
                                   >
                                     <label for="address_province" class="block mb-5">
                                       {{- 'customer.addresses.province' | t -}}
@@ -676,9 +676,9 @@
                                   </div>
                                 </div>
                               </div>
-                              <div class="addon-actions">
+                              <div class="addon-actions mt-25">
                                 <button
-                                  class="estimate btn btn-outline mt-20 w-full"
+                                  class="estimate btn btn-outline w-full"
                                   data-action="shipping"
                                 >
                                   <span class="hidden-on-load transition-short">
@@ -758,7 +758,7 @@
                     <button
                       type="submit"
                       name="checkout"
-                      class="grow-1 btn btn-outline"
+                      class="grow-1 btn btn-primary"
                     >
                       <span class="hidden-on-load transition-short"> {{ 'sections.cart.checkout' | t }}</span>
                       {%- render 'loader' -%}
@@ -772,8 +772,8 @@
                   </div>
                 {%- endif -%}
                 {%- if shop.enabled_payment_types != empty -%}
-                  <div class="cart-block text-center mt-25">
-                    <p class="heading mb-10">
+                  <div class="cart-block text-center mt-30">
+                    <p class="heading-color mb-10">
                       {{ 'templates.cart.heading_payment' | t }}
                     </p>
                     <div class="content">
