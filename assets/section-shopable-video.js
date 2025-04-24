@@ -258,7 +258,7 @@ class ShopableItem extends HTMLElement {
 
   setupMobileActionButton(modalPopup) {
     modalPopup.addEventListener("click", (event) => {
-      const actionButton = event.target.closest(".btn-shopable__action-mobile");
+      const actionButton = event.target.closest(".popup-information__mobile");
       if (actionButton) {
         event.preventDefault();
         event.stopPropagation();
@@ -267,11 +267,37 @@ class ShopableItem extends HTMLElement {
         const currentItem = modalPopup.querySelector(`#${currentId}`);
         if (!currentItem) return;
         const popupInfo = currentItem.querySelector(".popup-information");
+        const buttonCloseModal = modalPopup.querySelector(".modal__close");
+        const buttonCloseInformation = currentItem.querySelector('.modal__close-information');
         if (!popupInfo) return;
+        if (buttonCloseInformation.classList.contains("hidden-important")) {
+          buttonCloseInformation.classList.remove("hidden-important");
+          buttonCloseModal.classList.add("hidden-important");
+        } else {
+          buttonCloseInformation.classList.add("hidden-important");
+          buttonCloseModal.classList.remove("hidden-important");
+        }
         if (popupInfo.classList.contains("active")) {
           popupInfo.classList.remove("active");
         } else {
           popupInfo.classList.add("active");
+        }
+      }
+      const closeInfoButton = event.target.closest(".modal__close-information");
+      if (closeInfoButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        const currentId = modalPopup.getAttribute("data-current");
+        if (!currentId) return;
+        const currentItem = modalPopup.querySelector(`#${currentId}`);
+        if (!currentItem) return;
+        const popupInfo = currentItem.querySelector(".popup-information");
+        const buttonCloseModal = modalPopup.querySelector(".modal__close");
+        
+        if (popupInfo) {
+          this.hidePopupInformation(popupInfo);
+          closeInfoButton.classList.add("hidden-important");
+          buttonCloseModal.classList.remove("hidden-important");
         }
       }
     });
@@ -279,6 +305,12 @@ class ShopableItem extends HTMLElement {
 
   hidePopupInformation(popupInfo) {
     popupInfo.classList.remove("active");
+    popupInfo.dispatchEvent(
+      new CustomEvent("popup-information:closed", {
+        bubbles: true,
+        detail: { popupInfo }
+      })
+    );
   }
 
   setupCloseButton() {
@@ -599,20 +631,27 @@ class ShopableItem extends HTMLElement {
       const productId = activeSlide.getAttribute("data-product-id") || activeSlide.querySelector("[data-product-id]")?.getAttribute("data-product-id");
       
       if (productId) {
+        const buttonCloseModal = modalPopup.querySelector(".modal__close");
+        if (buttonCloseModal.classList.contains("hidden-important")) {
+          buttonCloseModal.classList.remove("hidden-important");
+        }
         modalPopup.setAttribute("data-current", productId);
         this.closeAllPopupInformation(modalPopup);
         const allSlides = swiperContainer.swiper.slides;
-      allSlides.forEach((slide, index) => {
-        const video = slide.querySelector("video");
-        
-        if (video) {
-          if (index === activeIndex) {
-            video.muted = false;
-          } else {
-            video.muted = true;
+        allSlides.forEach((slide, index) => {
+          const video = slide.querySelector("video");
+          const buttonCloseInformation = slide.querySelector(".modal__close-information");
+          if (buttonCloseInformation) {
+            buttonCloseInformation.classList.add("hidden-important");
           }
-        }
-      });
+          if (video) {
+            if (index === activeIndex) {
+              video.muted = false;
+            } else {
+              video.muted = true;
+            }
+          }
+        });
       }
     }
   }
