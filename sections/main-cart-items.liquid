@@ -87,8 +87,8 @@
             </div>
           </free-ship-progress-bar>
         {%- endif -%}
-        <main-cart class="main-cart flex-wrap flex-1025 gap-40 justify-between{% if cart == empty %} is-empty{% endif %}" data-section-id="{{ section.id }}">
-          <div class="cart-left col-1025-remaining">
+        <main-cart class="main-cart flex-wrap flex-1025 gap-60 justify-between{% if cart == empty %} is-empty{% endif %}" data-section-id="{{ section.id }}">
+          <div class="cart-left mb-15 col-1025-remaining">
             <div class="sticky-1025  top-30">
               {% if cart != empty %}
                 {% if show_icon_with_text %}
@@ -144,11 +144,11 @@
                   <div class="cart-items">
                     {%- for item in cart.items -%}
                       <div
-                        class="cart-item product__item border-bottom pb-30 mb-30 last-0 loading_snippet"
+                        class="cart-item product__item border-bottom pb-20 mb-20 pb-1025-30 mb-1025-30 last-0 loading_snippet"
                         id="CartItem-{{ item.index | plus: 1 }}"
                       >
                         <div class="cart-item_inner">
-                          <div class="cart-item__details flex align-center gap-10">
+                          <div class="cart-item__details flex wrap flex-md-nowrap align-center gap-10 relative">
                             <main-cart-remove-button
                               id="Remove-{{ item.index | plus: 1 }}"
                               data-index="{{ item.index | plus: 1 }}"
@@ -176,7 +176,7 @@
                                 ></span>
                               </a>
                             </main-cart-remove-button>
-                            <div class="cart-item__product flex-1 flex align-center gap-20 w-custom max-w-100" style="--width: 40%;">
+                            <div class="cart-item__product flex align-center gap-20 me-20">
                               {% if item.image %}
                                 <div class="cart-item__media w-custom" style="--width: 9rem;">
                                   {%- liquid
@@ -196,11 +196,11 @@
                                   -%}
                                   <div
                                     class="banner__media rounded"
-                                    style="--aspect-ratio: {{ ratio }}"
                                   >
                                     <a
                                       href="{{ item.url }}"
                                       class="cart-item__link"
+                                      style="--aspect-ratio: {{ ratio }}"
                                       tabindex="-1"
                                       aria-hidden="true"
                                       aria-label="{{ item.image.alt | escape }}"
@@ -281,7 +281,7 @@
                                     </strong>
                                   </div>
                                 {%- else -%}
-                                  <div class="mt-10">
+                                  <div class="mt-10 d-none block-md">
                                     {{ item.original_price | money }}
                                   </div>
                                 {%- endif -%}
@@ -312,7 +312,7 @@
                               </div>
                             </div>
 
-                            <div class="cart-item__quantity">
+                            <div class="cart-item__quantity inline-flex flex-end">
                               <div class="cart-item__quantity-wrapper product-form__input product-form__quantity">
                                 <label class="visually-hidden" for="Quantity-{{ item.index | plus: 1 }}">
                                   {{ 'products.product.quantity.label' | t }}
@@ -388,8 +388,8 @@
                                 ></p>
                               </div>
                             </div>
-                            <div class="cart-item__totals w-custom max-w-100 text-end" style="--width: 20rem;">
-                              <div class="cart-item__price-wrapper">
+                            <div class="cart-item__totals text-end flex-1">
+                              <div class="cart-item__price-wrapper heading-style">
                                 {%- if item.original_line_price != item.final_line_price -%}
                                   <div class="cart-item__discounted-prices">
                                     <span class="visually-hidden">
@@ -499,7 +499,7 @@
                             {%- endfor -%}
                           {%- endif -%}
                         </div>
-                        <div class="swiper-pagination mt-20 hidden-1025"></div>
+                        <div class="swiper-pagination mt-20"></div>
                       </slide-section>
                     </div>
                   </product-recommendations>
@@ -507,9 +507,9 @@
               {%- endif -%}
             </div>
           </div>
-          <div class="cart-right col-1025-w-custom">
+          <div class="cart-right mb-15 col-1025-w-custom">
             <div class="sticky-1025 top-30">
-              <div class="cart-info bg-secondary rounded drawer-spacing">
+              <div class="cart-info bg-secondary rounded p-25 p-1025-40">
                 {%- if show_gift_wrap and select_product_gift_wrap != blank -%}
                   {% liquid
                     assign gift_wrap = false
@@ -525,14 +525,14 @@
                         <summary class="collapsible-row__summary">
                           <h6 class="footer__block-heading fs-18 flex space-between align-center collapsible-heading relative">
                             <span>{{- 'sections.cart.gift.title_order' | t -}}</span>
-                            <svg class="icon icon-down icon-rotate transition-short" width="10" height="6">
-                              <use href="#icon-arrow-down"></use>
-                            </svg>
+                            <span class="open-children-toggle transition">
+                              <span class="icon_plus-animation heading-color"> </span>
+                            </span>
                           </h6>
                         </summary>
-                        <div class="collapsible-row__content mt-10">
+                        <div class="collapsible-row__content mt-15">
                           <cart-gift-wrap-element>
-                            <div class="cart-addons-content-inner fs-small">
+                            <div class="cart-addons-content-inner fs-small-1">
                               <p class="heading-color">{{ 'sections.cart.gift.info_order' | t }}</p>
                               {%- if select_product_gift_wrap != blank -%}
                                 <ul class="drawer__gift-wrap-product list-unstyled grid gap-15 mt-20">
@@ -620,12 +620,12 @@
                       <summary class="collapsible-row__summary">
                         <h6 class="footer__block-heading fs-18 flex space-between align-center collapsible-heading relative">
                           <span>{{ 'sections.cart.shipping.estimate_shipping_title' | t }}</span>
-                          <svg class="icon icon-down icon-rotate transition-short" width="10" height="6">
-                            <use href="#icon-arrow-down"></use>
-                          </svg>
+                          <span class="open-children-toggle transition">
+                            <span class="icon_plus-animation heading-color"> </span>
+                          </span>
                         </h6>
                       </summary>
-                      <div class="collapsible-row__content mt-10">
+                      <div class="collapsible-row__content mt-15">
                         <cart-estimate-element>
                           <form>
                             <div class="cart-addons-content">
@@ -695,11 +695,11 @@
                     </details>
                   </div>
                 {%- endif -%}
-                <div class="totals flex wrap  align-center space-between lh-1 mb-10 h5 mt-25 pt-25 border-top">
+                <div class="totals flex wrap lh-normal align-center space-between mb-10 h5 mt-25 pt-25 border-top">
                   <span class="totals__subtotal"> {{ 'sections.cart.subtotal' | t }}:</span>
                   {{ cart.total_price | money_with_currency }}
                 </div>
-                <div class="js-contents mb-15">
+                <div class="js-contents mb-15 fs-small">
                   <div>
                     {%- if cart.cart_level_discount_applications.size > 0 -%}
                       <ul
@@ -738,10 +738,10 @@
                   </p>
                 </div>
                 {%- if show_cart_note -%}
-                  <main-cart-note class="cart__note block mb-10">
+                  <main-cart-note class="cart__note block mb-15">
                     <div class="cart__note-content block">
                       <textarea
-                        class="cart-note text-area field__input w-full"
+                        class="cart-note fs-small-1 text-area field__input w-full"
                         name="note"
                         placeholder="{{ 'sections.cart.note.instructions' | t }}"
                       >{{ cart.note }}</textarea>
@@ -791,7 +791,7 @@
                 {% endif %}
               </div>
               {% if trust_badges %}
-                <div class="trust-badges bg-secondary rounded drawer-spacing mt-30 flex column gap-25">
+                <div class="trust-badges bg-secondary rounded p-25 p-1025-40 mt-30 grid gap-25">
                   {%- for block in section.blocks -%}
                     {%- liquid
                       assign block_st = block.settings
@@ -971,12 +971,28 @@
               "label": "t:sections.all.icon.paraben.label"
             },
             {
+              "value": "account",
+              "label": "t:sections.all.icon.account.label"
+            },
+            {
               "value": "check_badge",
               "label": "t:sections.all.icon.check_badge.label"
             },
             {
               "value": "free_shipping",
               "label": "t:sections.all.icon.free_shipping.label"
+            },
+            {
+              "value": "privacy-protection",
+              "label": "t:sections.all.icon.privacy-protection.label"
+            },
+            {
+              "value": "secure-shopping",
+              "label": "t:sections.all.icon.secure-shopping.label"
+            },
+            {
+              "value": "guarantee",
+              "label": "t:sections.all.icon.guarantee.label"
             },
             {
               "value": "message_communications",
@@ -1036,12 +1052,28 @@
               "label": "t:sections.all.icon.paraben.label"
             },
             {
+              "value": "account",
+              "label": "t:sections.all.icon.account.label"
+            },
+            {
               "value": "check_badge",
               "label": "t:sections.all.icon.check_badge.label"
             },
             {
               "value": "free_shipping",
               "label": "t:sections.all.icon.free_shipping.label"
+            },
+            {
+              "value": "privacy-protection",
+              "label": "t:sections.all.icon.privacy-protection.label"
+            },
+            {
+              "value": "secure-shopping",
+              "label": "t:sections.all.icon.secure-shopping.label"
+            },
+            {
+              "value": "guarantee",
+              "label": "t:sections.all.icon.guarantee.label"
             },
             {
               "value": "message_communications",
