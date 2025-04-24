@@ -1,18 +1,24 @@
 {% liquid
   assign block_st = block.settings
 %}
+{% style %}
+  .group__faqs-content .shopify-block:first-of-type {
+    border-top: 1px solid var(--color-border);
+  }
+  .group__faqs-content .shopify-block:last-of-type .section__faq-items{
+    border-bottom: 0;
+  }
+{% endstyle %}
 <div
   class="group__faqs-content w-full"
 >
-  <div class="faq-container w-full{% if block_st.framed %} rounded border{% endif %} p-40">
-    <div>
+  <div class="w-full{% if block_st.framed %} rounded border  p-20 p-1025-40{% endif %}">
       <h2
-        class="heading-letter-spacing"
+        class="heading-letter-spacing mb-25"
         {{ block.shopify_attributes }}
       >
         <span>{{ block_st.heading }}</span>
       </h2>
-    </div>
     {% content_for 'blocks' %}
   </div>
 </div>

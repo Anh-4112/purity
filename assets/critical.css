@@ -381,6 +381,9 @@ input[type="checkbox"]:checked + .checkmark:before {
 .h-custom {
   height: var(--height);
 }
+.h-content {
+  height: fit-content;
+}
 .w-content {
   width: fit-content;
 }
@@ -1041,6 +1044,9 @@ a.hover-heading-color:hover,
 .mt-20 {
   margin-top: 2rem;
 }
+.mt-25 {
+  margin-top: 2.5rem;
+}
 .mt-30 {
   margin-top: 3rem;
 }
@@ -1049,6 +1055,10 @@ a.hover-heading-color:hover,
 }
 .mt-50 {
   margin-top: clamp(3.5rem, 4.3vw, 5rem);
+}
+.mt-60,
+.shopify-challenge__container {
+  margin-top: clamp(4rem, 4.5vw, 6rem);
 }
 .mt-0 {
   margin-top: 0;
@@ -1082,6 +1092,9 @@ a.hover-heading-color:hover,
 }
 .mb-40 {
   margin-bottom: 4rem;
+}
+.mb-50 {
+  margin-bottom: 5rem;
 }
 .mb-60 {
   margin-bottom: clamp(4rem, 4.5vw, 6rem);
@@ -1540,6 +1553,9 @@ variants-dropdown .variant-input label.disable:after {
   .mb-md-5 {
     margin-bottom: 0.5rem;
   }
+  .mb-md-30 {
+    margin-bottom: 3rem;
+  }
   .border-bottom-md-0 {
     border-bottom: 0;
   }
@@ -1661,6 +1677,9 @@ variants-dropdown .variant-input label.disable:after {
   .flex-1025 {
     display: flex;
   }
+  .flex-1025-row-reverse {
+    flex-direction: row-reverse;
+  }
   .absolute-1025 {
     position: absolute;
   }
@@ -1715,6 +1734,9 @@ variants-dropdown .variant-input label.disable:after {
   }
   .mt-1025-40 {
     margin-top: 4rem;
+  }
+  .mt-1025-60 {
+    margin-top: 6rem;
   }
   .wh-1025-50 {
     width: 5rem;
@@ -1821,4 +1843,16 @@ th {
     max-width: unset;
     border-radius: 0;
   }
+}
+.load-more-progress-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  border-radius: 1rem;
+  width: var(--percent);
+  background: var(--color-heading);
+  height: 100%;
+  transition: all 0.3s;
+  opacity: 1;
 }

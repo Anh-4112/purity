@@ -17,7 +17,7 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div class="section-header">
+    <div class="section_header">
       {% for block in section.blocks %}
         {%- liquid
           assign block_st = block.settings
@@ -32,13 +32,15 @@
               {% endif %}
             </h1>
           {% when 'description' %}
-            <div class="heading-description rte">
-              {%- if block_st.description != blank -%}
+            {%- if block_st.description != blank -%}
+              <div class="heading-description mt-15">
                 {{ block_st.description }}
-              {%- else -%}
+              </div>
+            {%- else -%}
+              <div class="heading-description mt-15 rte">
                 {{ page.content }}
-              {%- endif -%}
-            </div>
+              </div>
+            {%- endif -%}
         {% endcase %}
       {% endfor %}
     </div>
