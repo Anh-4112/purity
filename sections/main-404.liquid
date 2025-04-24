@@ -41,14 +41,14 @@
           </div>
         {%- when 'subheading' -%}
           <div
-            class="block__content-subheading subheading_weight heading mb-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }}"
+            class="block__content-subheading subheading_weight heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }}"
             style="--space-bottom: {{ block_st.spacing_bottom }};"
           >
             {{ block_st.subheading | escape }}
           </div>
         {%- when 'heading' -%}
           <div
-            class="block__content-heading mb-custom{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
+            class="block__content-heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
             style="--space-bottom: {{ block_st.spacing_bottom }};"
             {{ block.shopify_attributes }}
           >
@@ -56,7 +56,7 @@
           </div>
         {%- when 'description' -%}
           <div
-            class="block__content-des mb-custom fs-{{ block_st.description_size }}"
+            class="block__content-des mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }}"
             style="--space-bottom: {{ block_st.spacing_bottom }};"
             {{ block.shopify_attributes }}
           >
@@ -73,7 +73,7 @@
           %}
           {% if first_button_label != blank or block_st.second_button_label != blank %}
             <div
-              class="block__buttons mb-custom flex wrap text-center gap-15"
+              class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap text-center gap-15"
               style="--space-bottom: {{ block_st.spacing_bottom }};"
             >
               {% if first_button_label != blank %}

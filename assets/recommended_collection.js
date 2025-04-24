@@ -213,6 +213,7 @@ class SectionSelected extends HTMLElement {
   }
 
   closeDropdown(dropdown) {
+    if (!dropdown) return;
     dropdown.classList.remove("active");
     if (dropdown === this.titleList) {
       this.titleSelectText.setAttribute("aria-expanded", "false");
