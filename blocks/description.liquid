@@ -1,6 +1,15 @@
 {% assign block_st = block.settings %}
+{% style %}
+  .block__description ul {
+    margin: 0;
+    padding-inline-start: 15px;
+  }
+  .block__description ul li:not(:last-child) {
+    margin-bottom: 5px;
+  }
+{% endstyle %}
 <div
-  class="block__description mb-custom fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
+  class="block__description mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
@@ -42,7 +51,7 @@
       "type": "range",
       "id": "spacing_bottom",
       "min": 0,
-      "max": 50,
+      "max": 100,
       "step": 1,
       "unit": "px",
       "label": "t:sections.all.padding.spacing_bottom",

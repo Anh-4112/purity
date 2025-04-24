@@ -1,4 +1,5 @@
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
@@ -54,7 +55,7 @@
       </div>
     {%- endif -%}
 
-    <div class="article-wrapper w-full">
+    <div class="article-wrapper">
       {%- if section_st.blog != blank -%}
         {% render 'article-card',
           article: section_st.blog,
@@ -64,22 +65,21 @@
           show_author: section_st.show_author,
           show_excerpt: section_st.show_excerpt,
           show_cate: section_st.show_category,
+          color_scheme: section_st.color_scheme,
           show_tags: section_st.show_tags,
           container: section_width,
           column: 1,
           column_mobile: 1,
-          class: ' w-full',
-          featured-blog: ' flex',
           is_featured_blog: true,
-          background_color: section_st.background_color,
           button_label: section_st.button_label,
-          button_type: section_st.button_type
+          button_type: section_st.button_type,
+          content_alignment: section_st.content_alignment,
+          vertical_alignment: section_st.vertical_alignment
         %}
       {%- else -%}
-        <div class="blog-placeholder flex">
+        <div class="blog-placeholder flex-1025 wrap gap rounded"  style="--col-width: 66%;--gap: 0px;">
           <div
-            class="article_post-image placeholder banner__media rounded relative overflow-hidden w-custom"
-            style="--width: 70%;"
+            class="article_post-image placeholder banner__media relative overflow-hidden col-1025-w-custom"
           >
             <a
               role="link"
@@ -91,22 +91,61 @@
             </a>
           </div>
           <div
-            class="card__content mt-15 w-custom"
-            style="--width: 30%;"
+            class="card__content col-1025-remaining bg-secondary flex column w-custom p-30  p-1025-50 text-{{ section_st.content_alignment }} align-{{ section_st.content_alignment }} justify-content-{{ section_st.vertical_alignment }}"
           >
-            <div class="card__heading{% if section_st.columns_desktop < 3 %} h4{% else %} h5{% endif %}">
+            {%- if section_st.show_category -%}
+              <p
+                class="post-tags blog-cate mb-10 inline-block product__badges-sale btn-rounded fs-13 px-15 py-4"
+                style="--badges-bg: {{ theme_st.sale_background }}; --badges-color: {{ theme_st.sale_color }}"
+              >
+                {{- 'blogs.article.blog' | t -}}
+              </p>
+            {%- endif -%}
+            <div class="card__heading mb-10{% if section_st.columns_desktop < 3 %} h4{% else %} h2{% endif %}">
               <a
                 role="link"
                 aria-label="{{ 'sections.featured_blog.onboarding_title' | t }}"
                 aria-disabled="true"
                 class="heading-color"
               >
-                {{ 'sections.featured_blog.onboarding_title' | t }}
+                {{- 'blogs.article.featured' | t -}}
               </a>
             </div>
-            <p class="rte-width rte mt-0">
-              {{ 'sections.featured_blog.onboarding_content' | t }}
-            </p>
+            <ul class="article-card__info mb-20 fs-13 grey-color capitalize list-unstyled inline-flex align-center gap-15 text-{{ section_st.content_alignment }} justify-content-{{ section_st.content_alignment }}">
+              {%- if section_st.show_date -%}
+                <li class="post-date">
+                  {{- 'blogs.article.post_date' | t -}}
+                </li>
+              {%- endif -%}
+              {%- if section_st.show_author -%}
+                <svg width="5" height="5" viewBox="0 0 10 10" fill="none">
+                  <use href="#icon-dot"></use>
+                </svg>
+                <li class="post-author">
+                  {{- 'blogs.article.author' | t -}}
+                </li>
+              {%- endif -%}
+            </ul>
+            {%- if section_st.show_excerpt -%}
+              <p class="rte-width rte mt-0 mb-35">
+                {{- 'blogs.article.description' | t -}}
+              </p>
+            {%- endif -%}
+            <div class="flex wrap gap-10 text-center text-{{ section_st.content_alignment }} justify-content-{{ section_st.content_alignment }}">
+              {% assign button_link = article.url %}
+              <a
+                {% if button_link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ button_link | default: "#" }}"
+                {% endif %}
+                aria-label="{{ section_st.button_label }}"
+                class="text-center btn-{{ section_st.button_type }}{% if section_st.button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} "
+                style="--width: 20rem;"
+              >
+                {{ section_st.button_label }}
+              </a>
+            </div>
           </div>
         </div>
       {%- endif -%}
@@ -238,6 +277,46 @@
       "label": "t:sections.all.image.aspect_ratio.label"
     },
     {
+      "type": "select",
+      "id": "vertical_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.top"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.middle"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.bottom"
+        }
+      ],
+      "default": "start",
+      "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.label"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "start",
+      "label": "t:sections.all.text_alignment.label"
+    },
+    {
       "type": "checkbox",
       "id": "show_category",
       "default": true,
@@ -266,12 +345,6 @@
       "id": "show_excerpt",
       "default": true,
       "label": "t:sections.all.blog_setting.show_excerpt"
-    },
-    {
-      "type": "color",
-      "id": "background_color",
-      "label": "t:sections.image-with-text.settings.background_color",
-      "default": "#F2EFE6"
     },
     {
       "type": "header",

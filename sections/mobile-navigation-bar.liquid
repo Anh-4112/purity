@@ -14,14 +14,14 @@
     }
   {% endstyle %}
   {%- if show_homepage or show_shop or show_account or show_cart -%}
-    <mobile-navigation-bar class="bls__mobile-navigation-bar block hidden-md fixed bottom-0 inset-x-0 z-5 bg-white shadow px-20">
-      <ul class="flex space-between align-center list-unstyled">
+    <mobile-navigation-bar class="bls__mobile-navigation-bar opacity-0 amimate_show-hide transition-drawer block hidden-md fixed bottom-0 inset-x-0 z-5 bg-white shadow px-20 py-10 fs-12">
+      <ul class="flex content-center align-center list-unstyled text-center">
         {%- if show_homepage -%}
-          <li class="flex-1 text-center">
+          <li class="flex-1">
             <a
               href="{{ routes.root_url }}"
               id="homepage-icon-bubble"
-              class="flex column content-center gap-5{% if request.path == "/" %} active{% endif %}"
+              class="flex column content-center heading-color gap-5{% if request.path == "/" %} active{% endif %}"
             >
               {% render 'icon-home' %}
               <span class="block">{{ 'general.mobile_navbar.homepage' | t }}</span>
@@ -29,10 +29,10 @@
           </li>
         {%- endif -%}
         {%- if show_shop -%}
-          <li class="flex-1 text-center">
+          <li class="flex-1">
             <a
               href="{{ collections.all.url }}"
-              class="inline-flex column content-center gap-5{% if request.path == "/collections/all" %} active{% endif %}"
+              class="inline-flex column content-center heading-color gap-5{% if request.path == "/collections/all" %} active{% endif %}"
             >
               {% render 'icon-shop', custom_width: 24 %}
               <span class="block">{{ 'general.mobile_navbar.shop' | t }}</span>
@@ -40,15 +40,15 @@
           </li>
         {%- endif -%}
         {%- if show_account -%}
-          <li class="flex-1 text-center">
+          <li class="flex-1">
             <a
               href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-              class="inline-flex column content-center gap-5{% if request.path == "/account/login" or request.path == "/account" %} active{% endif %}"
+              class="inline-flex column content-center heading-color gap-5{% if request.path == "/account/login" or request.path == "/account" %} active{% endif %}"
               aria-label="{{ 'customer.account_fallback' | t }}"
             >
-              <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
-                <path d="M19.3393 18.2521C18.3715 16.6242 17.0592 15.2884 15.5189 14.3633C13.9785 13.4381 12.2576 12.9522 10.5089 12.9485C8.7602 12.9449 7.03773 13.4236 5.49425 14.3423C3.95078 15.2611 2.58998 16.6354 1.61673 18.2592" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
-                <circle cx="10.4999" cy="5.68052" r="3.92857" stroke="black" stroke-width="1.5"/>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18.8398 18.2499C17.872 16.622 16.5597 15.2862 15.0193 14.3611C13.479 13.4359 11.7581 12.95 10.0094 12.9463C8.26069 12.9427 6.53821 13.4214 4.99474 14.3401C3.45127 15.2589 2.09046 16.6332 1.11722 18.257" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="9.99888" cy="5.67857" r="3.92857" stroke="currentColor" stroke-width="1.5"/>
               </svg>
               <span class="block fs-small">
                 {%- liquid
@@ -63,27 +63,24 @@
           </li>
         {%- endif -%}
         {%- if show_cart -%}
-          <li class="flex-1 text-center">
+          <li class="flex-1">
             <a
               href="{{ routes.cart_url }}"
-              class="inline-flex column content-center gap-5 icon--cart-action relative{% if request.path == "/cart" %} active{% endif %}"
+              class="inline-flex column content-center heading-color gap-5 icon--cart-action relative{% if request.path == "/cart" %} active{% endif %}"
               id="cart-icon-bubble-mobile"
             >
               <span class="relative inline-flex">
                 {%- if settings.cart_icon == 'shopping_bag' -%}
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M6.23303 1.75H13.76C17.3144 1.75 17.6699 3.44257 17.9103 5.50772L18.8512 13.4916C19.1544 16.1102 18.3598 18.2499 14.7009 18.2499H5.30261C1.63321 18.2499 0.838693 16.1102 1.15232 13.4916L2.0932 5.50772C2.32319 3.44257 2.67862 1.75 6.23303 1.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 5.68958C7 7.6897 8.67188 8.5 10 8.5C11.3281 8.5 13 7.6897 13 5.68958" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <use href="#icon-cart" />
                   </svg>
                 {%- else -%}
-                  <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
-                    <path d="M0.878906 1.75L5.5448 13.6018C5.69245 13.9758 6.05667 14.2219 6.46026 14.2219H17.6525C18.125 14.2219 18.5384 13.8774 18.6172 13.4049L20.1036 4.75232C20.2119 4.15185 19.7492 3.60061 19.1389 3.60061H6.42089" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-                    <path d="M16.7734 16.75C16.7734 17.5781 16.0263 18.25 15.1055 18.25C14.1846 18.25 13.4375 17.5781 13.4375 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
-                    <path d="M10.5625 16.75C10.5625 17.5781 9.81539 18.25 8.89453 18.25C7.97367 18.25 7.22656 17.5781 7.22656 16.75" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <use href="#icon-cart" />
                   </svg>
                 {%- endif -%}
                 {%- if cart != empty -%}
-                  <div class="cart-count content-center absolute">
+                  <div class="cart-count content-center absolute bg-primary inline-flex align-center justify-content-center rounded-50 overflow-hidden fs-12">
                     {%- if cart.item_count < 100 -%}
                       <span aria-hidden="true">{{ cart.item_count }}</span>
                     {%- else -%}
@@ -92,7 +89,7 @@
                     <span class="visually-hidden">{{ 'sections.cart_count' | t: count: cart.item_count }}</span>
                   </div>
                 {%- else -%}
-                  <div class="cart-count content-center absolute">
+                  <div class="cart-count content-center absolute bg-primary inline-flex align-center justify-content-center rounded-50 overflow-hidden fs-12">
                     <span aria-hidden="true">0</span>
                   </div>
                 {%- endif -%}

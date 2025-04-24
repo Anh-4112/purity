@@ -1,3 +1,4 @@
+{{ 'blog.css' | asset_url | stylesheet_tag }}
 {% liquid
   assign section_st = section.settings
   assign aspect_ratio = '1/1'
@@ -29,13 +30,14 @@
     assign column_gap_slide = 10
   endif
 
-  assign post_text_alignment = ''
-  if section_st.text_alignment == 'left'
-    assign post_text_alignment = 'flex-start'
-  elsif section_st.text_alignment == 'center'
-    assign post_text_alignment = 'justify-content-center'
-  else
-    assign post_text_alignment = 'flex-end'
+  assign text_alignment = section_st.text_alignment
+  assign heading_size = section_st.heading_size
+
+  assign header_size = ''
+  if heading_size == 'small'
+    assign header_size = 'h3'
+  elsif heading_size == 'large'
+    assign header_size = 'h1'
   endif
 
   assign active = ''
@@ -51,7 +53,7 @@
 {%- endcapture -%}
 {%- capture col_style -%}
   --col-number: 1;--col-tablet: 2;--col-desktop: {{ section_st.post_per_row_desktop }};
-  {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
+  {% if column_gap_slide < 20 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 40px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
 {%- endcapture -%}
 
 <div
@@ -60,39 +62,48 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
+    {%- if section_st.title != blank or section_st.description != blank -%}
+      <div
+        class="section-header text-{{ text_alignment }}"
+      >
+        {%- if section_st.title != blank -%}
+          <h2 class="section-heading mb-10 {{ header_size }}">
+            {{ section_st.title }}
+          </h2>
+        {%- endif -%}
+        {%- if section_st.description != blank -%}
+          <div class="section-description">
+            {{ section_st.description }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
     {%- if blog.articles.size > 0 -%}
       {%- paginate blog.articles by section_st.maximum_posts_to_show -%}
-        <div class="section-header text-{{ section_st.text_alignment }}{% if section_st.text_alignment != 'center' %} flex wrap{% endif %}{% if section_st.text_alignment == 'right' %} row-reverse{% endif %}">
-          {%- if section_st.title != blank -%}
-            <h2 class="heading-letter-spacing cart__title">
-              {{ section_st.title }}
-            </h2>
-          {%- endif -%}
-          {%- if section_st.show_all_tags -%}
-            <ul class="blog-tags-list flex wrap justify-content-{{ section_st.text_alignment }}">
+        {%- if section_st.show_all_tags -%}
+          <ul class="blog-tags-list w-full flex justify-content-center list-unstyled inline-flex wrap gap-10 lh-1 whitespace-nowrap section-header pb-15">
+            <li class="post-tags">
+              <a
+                href="{{ blog.url }}"
+                class="btn btn-outline heading-style capitalize border text-color inline-block blog-tag-list {{ active }}"
+                aria-label="{{ 'blogs.article.label_all' | t }}"
+              >
+                {{- 'blogs.article.label_all' | t -}}
+              </a>
+            </li>
+            {%- for tag in blog.all_tags -%}
               <li class="post-tags">
                 <a
-                  href="{{ blog.url }}"
-                  class="blog-tag-list {{ active }}"
-                  aria-label="{{ 'blogs.article.label_all' | t }}"
+                  href="{{ blog.url }}/tagged/{{ tag | handle }}"
+                  class="btn btn-outline heading-style capitalize border text-color inline-block blog-tag-list{% if current_tags contains tag %} active{% endif %}"
+                  aria-label="{{ 'blogs.article.tags' | t }}"
                 >
-                  {{- 'blogs.article.label_all' | t -}}
+                  {{- tag -}}
                 </a>
               </li>
-              {%- for tag in blog.all_tags -%}
-                <li class="post-tags">
-                  <a
-                    href="{{ blog.url }}/tagged/{{ tag | handle }}"
-                    class="blog-tag-list{% if current_tags contains tag %} active{% endif %}"
-                    aria-label="{{ 'blogs.article.tags' | t }}"
-                  >
-                    {{- tag -}}
-                  </a>
-                </li>
-              {%- endfor -%}
-            </ul>
-          {%- endif -%}
-        </div>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
         <div
           class="grid-cols gap grid"
           style="{{ col_style | strip | strip_newlines }}"
@@ -122,20 +133,20 @@
               {%- for block in section.blocks -%}
                 <div
                   {{ block.shopify_attributes }}
-                  class="blog-subscribe flex column"
+                  class="blog-subscribe flex column justify-center p-30 p-1025-40 text-center rounded blog-subscribe bg-secondary"
                   id="blocks blog-subscribe-{{ block.id }}"
                 >
                   {% if block.settings.form_title != blank or block.settings.form_description != blank %}
-                    <div class="section-header">
+                    <div class="mb-30">
                       {% if block.settings.show_email_icon %}
                         <svg width="46" height="45" fill="none">
                           <use href="#icon-email-newletter" />
                         </svg>
                       {% endif %}
                       {% if block.settings.form_title != blank %}
-                        <h2 class="subscribe-title">
+                        <h3 class="subscribe-title mt-15 mb-10">
                           {{ block.settings.form_title }}
-                        </h2>
+                        </h3>
                       {% endif %}
                       {% if block.settings.form_description != blank %}
                         <div class="short-des">
@@ -146,47 +157,49 @@
                   {% endif %}
                   {% form 'customer', class: 'subscribe-form', novalidate: 'novalidate' %}
                     <input type="hidden" name="contact[tags]" value="subscribe">
-                    <div class="subscribe-form__field-wrapper">
-                      <div class="field relative w-full flex transition">
-                        <div class="relative">
-                          <input
-                            id="subscribeForm--{{ block.id }}"
-                            type="email"
-                            name="contact[email]"
-                            class="field__input w-full"
-                            value="{{ form.email }}"
-                            aria-required="true"
-                            autocorrect="off"
-                            autocapitalize="off"
-                            autocomplete="email"
-                            {% if form.errors %}
-                              autofocus
-                              aria-invalid="true"
-                              aria-describedby="subscribe-error--{{ section.id }}"
-                            {% elsif form.posted_successfully? %}
-                              aria-describedby="subscribe-success--{{ section.id }}"
-                            {% endif %}
-                            placeholder="{{ 'subscribe.label' | t }}"
-                            required
+                    <div class="subscribe-form__field-wrapper flex flex column gap-10">
+                      <div class="field relative w-full transition">
+                        <div class="input-group flex gap-10 mb-15">
+                          <div class="relative flex-1">
+                            <input
+                              id="subscribeForm--{{ block.id }}"
+                              type="email"
+                              name="contact[email]"
+                              class="field__input w-full"
+                              value="{{ form.email }}"
+                              aria-required="true"
+                              autocorrect="off"
+                              autocapitalize="off"
+                              autocomplete="email"
+                              {% if form.errors %}
+                                autofocus
+                                aria-invalid="true"
+                                aria-describedby="subscribe-error--{{ section.id }}"
+                              {% elsif form.posted_successfully? %}
+                                aria-describedby="subscribe-success--{{ section.id }}"
+                              {% endif %}
+                              placeholder="{{ 'subscribe.label' | t }}"
+                              required
+                            >
+                            <label class="visually-hidden" for="subscribeForm--{{ block.id }}">
+                              {{- 'subscribe.label' | t -}}
+                            </label>
+                          </div>
+                          <button
+                            type="submit"
+                            class="subscriber-form__button btn p-0 btn-primary btn-hover wh-55"
+                            name="commit"
+                            id="Subscribe-{{ section.id }}"
+                            aria-label="{{ 'subscribe.button_label' | t }}"
                           >
-                          <label class="visually-hidden" for="subscribeForm--{{ block.id }}">
-                            {{- 'subscribe.label' | t -}}
-                          </label>
+                            <svg class="hidden-on-load" width="6" height="11" fill="none">
+                              <use href="#icon-next" />
+                            </svg>
+                            {%- render 'loader' -%}
+                          </button>
                         </div>
-                        <button
-                          type="submit"
-                          class="subscriber-form__button btn p-0 btn-primary btn-hover wh-55"
-                          name="commit"
-                          id="Subscribe-{{ section.id }}"
-                          aria-label="{{ 'subscribe.button_label' | t }}"
-                        >
-                          <svg class="hidden-on-load" width="6" height="11" fill="none">
-                            <use href="#icon-next" />
-                          </svg>
-                          {%- render 'loader' -%}
-                        </button>
                         {%- if block.settings.note != blank -%}
-                          <div class="footer__block-note rich__text-m0 fs-small-1">
+                          <div class="footer__block-note rich__text-m0 fs-small">
                             {{ block.settings.note }}
                           </div>
                         {%- endif -%}
@@ -214,27 +227,26 @@
                 </div>
               {%- endfor -%}
             {%- endif -%}
-            <div class="blog-articles__article article text-{{ section_st.text_alignment }}">
-              {% render 'article-card',
-                article: article,
-                media_aspect_ratio: aspect_ratio,
-                show_image: true,
-                show_date: section_st.show_date,
-                show_author: section_st.show_author,
-                show_excerpt: section_st.show_excerpt,
-                show_cate: section_st.show_category,
-                show_tags: section_st.show_tags,
-                customClass: scroll_animation,
-                indexFor: forloop.index,
-                class: post_text_alignment
-              %}
-            </div>
+            {% render 'article-card',
+              article: article,
+              media_aspect_ratio: aspect_ratio,
+              show_image: true,
+              show_date: section_st.show_date,
+              show_author: section_st.show_author,
+              show_excerpt: section_st.show_excerpt,
+              show_cate: section_st.show_category,
+              show_tags: section_st.show_tags,
+              customClass: scroll_animation,
+              indexFor: forloop.index,
+              isPageBlog: true,
+              content_alignment: section_st.content_alignment
+            %}
           {%- endfor -%}
         </div>
         {%- if paginate.pages > 1 -%}
           {%- render 'pagination',
             paginate: paginate,
-            section_st: section.settings,
+            section_st: section_st,
             anchor: '',
             number_page: section_st.maximum_posts_to_show,
             pagination: pagination
@@ -306,6 +318,60 @@
       "id": "show_all_tags",
       "label": "t:sections.main-blog.settings.show_all_tags.label",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_header.label"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.all.content_setting.heading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.all.content_setting.description.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:sections.all.content_header.heading_size.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.all.content_header.heading_size.options__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.all.content_header.heading_size.options__3.label"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.all.content_header.heading_size.label"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "start",
+      "label": "t:sections.all.text_alignment.alignment"
     },
     {
       "type": "header",
@@ -399,10 +465,10 @@
     },
     {
       "type": "select",
-      "id": "text_alignment",
+      "id": "content_alignment",
       "options": [
         {
-          "value": "left",
+          "value": "start",
           "label": "t:sections.all.text_alignment.options__1.label"
         },
         {
@@ -410,12 +476,12 @@
           "label": "t:sections.all.text_alignment.options__2.label"
         },
         {
-          "value": "right",
+          "value": "end",
           "label": "t:sections.all.text_alignment.options__3.label"
         }
       ],
-      "default": "left",
-      "label": "t:sections.all.text_alignment.alignment"
+      "default": "start",
+      "label": "t:sections.all.text_alignment.label"
     },
     {
       "type": "checkbox",
@@ -441,7 +507,6 @@
       "default": true,
       "label": "t:sections.all.blog_setting.show_date"
     },
-
     {
       "type": "checkbox",
       "id": "show_excerpt",
@@ -501,10 +566,10 @@
           "default": "Newsletter"
         },
         {
-          "type": "textarea",
+          "type": "richtext",
           "id": "form_description",
           "label": "t:sections.all.content_setting.description.label",
-          "default": "Add a short description for this block."
+          "default": "<p>Add a short description for this block.</p>"
         },
         {
           "type": "richtext",

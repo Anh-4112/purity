@@ -45,8 +45,6 @@
   if items_per_row > 3
     assign items_per_row_tablet = items_per_row | minus: 1
   endif
-
-  assign product_alignment = settings.product_alignment
 -%}
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
@@ -111,7 +109,7 @@
             <div class="swiper-slide routine-builder__item">
               <div class="routine-builder__item-content">
                 {% if step_title != blank %}
-                  <span class="routine-builder__item-title fs-16 mb-20 medium-weight block text-{{ product_alignment }}">
+                  <span class="routine-builder__item-title heading-color mb-20 subheading_weight block text-center">
                     {{ step_title }}
                   </span>
                 {% endif %}
@@ -159,7 +157,7 @@
           <div class="routine-builder__item grid-card-item">
             <div class="routine-builder__item-content">
               {% if step_title != blank %}
-                <span class="routine-builder__item-title fs-16 mb-20 medium-weight block text-{{ product_alignment }}">
+                <span class="routine-builder__item-title heading-color mb-20 subheading_weight block text-center">
                   {{ step_title }}
                 </span>
               {% endif %}

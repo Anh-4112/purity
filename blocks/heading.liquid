@@ -1,6 +1,6 @@
 {% assign block_st = block.settings %}
 <div
-  class="block__heading mb-custom{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
+  class="block__heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
@@ -13,7 +13,7 @@
   "class": "w-full",
   "settings": [
     {
-      "type": "text",
+      "type": "textarea",
       "id": "heading",
       "default": "Talk about your brand",
       "label": "t:sections.all.content_setting.heading.label"
@@ -22,6 +22,10 @@
       "type": "select",
       "id": "heading_size",
       "options": [
+        {
+          "value": "h5",
+          "label": "t:sections.all.content_header.heading_size.xs_small.label"
+        },
         {
           "value": "h4",
           "label": "t:sections.all.content_header.heading_size.x_small.label"

@@ -5,7 +5,7 @@
   assign mobile_image = section_st.mobile_image | default: image
   assign image_height = section_st.image_height
   assign show_text_bellow_mobile = section_st.show_text_bellow_mobile
-
+  assign scrolling_effect = section_st.scrolling_effect
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -23,7 +23,6 @@
   {% if image != blank %}--aspect-ratio: {{ image.aspect_ratio }};{% else %}--aspect-ratio: 5/2;{% endif %}
   {%- if mobile_image != blank -%} --aspect-ratio-mb: {{ mobile_image.aspect_ratio }};{%- endif -%}{% if mobile_image == blank and section_st.image != blank %}--aspect-ratio-mb: {{ section_st.image.aspect_ratio }};{% endif %}
 {%- endcapture -%}
-
 <div
   class="section section__image-with-text-overlay color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
@@ -62,12 +61,20 @@
       <div
         class="banner__content media__content relative z-2{% if show_text_bellow_mobile == false %} flex{% else %} flex-md{% endif %} w-full {{ section_st.desktop_content_position }} text-{{ section_st.text_alignment_mobile }} text-md-{{ section_st.text_alignment }}"
       >
-        <div
-          class="banner__box max-w-custom image-with-text__text-item px-custom py-custom{% if section_st.padding_content_inline < 15 %} x-min-value{% endif %}{% if show_text_bellow_mobile and section_width == "full-width" %} padding-inline-gutter{% endif %}{% if show_text_bellow_mobile %} mt-40 mt-md-0{% endif %}"
-          style="--max-width: {{ section_st.max_width }}%;--padding-inline: {{ section_st.padding_content_inline }};--padding-block: {{ section_st.padding_content_block }};"
-        >
-          {% content_for 'blocks' %}
-        </div>
+        {%- if scrolling_effect -%}
+          <scrolling-effect class="banner__box max-w-custom image-with-text__text-item px-custom py-custom">
+        {%- else -%}
+          <div
+            class="banner__box max-w-custom image-with-text__text-item px-custom py-custom{% if section_st.padding_content_inline < 15 %} x-min-value{% endif %}{% if show_text_bellow_mobile and section_width == "full-width" %} padding-inline-gutter{% endif %}{% if show_text_bellow_mobile %} mt-40 mt-md-0{% endif %}"
+            style="--max-width: {{ section_st.max_width }}%;--padding-inline: {{ section_st.padding_content_inline }};--padding-block: {{ section_st.padding_content_block }};"
+          >
+        {%- endif -%}
+        {% content_for 'blocks' %}
+        {%- if scrolling_effect -%}
+          </scrolling-effect>
+        {%- else -%}
+          </div>
+        {%- endif -%}
       </div>
       <div
         class="overlay absolute inset-0 bg-dark{% if section_width != "full-width" %} rounded{% endif %}{% if show_text_bellow_mobile %} d-none block-md{% endif %}"
@@ -202,6 +209,11 @@
     {
       "type": "header",
       "content": "t:sections.all.content_setting.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "scrolling_effect",
+      "label": "t:sections.video.settings.scrolling_effect.label"
     },
     {
       "type": "select",

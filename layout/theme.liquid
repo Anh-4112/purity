@@ -252,7 +252,7 @@
     </script>
   </head>
 
-  <body class="{{ theme_st.animation_hover_effect }}{% if template.name == 'index' %} template-index{% endif %}{% if theme_st.rounded_image > 10 %} rounded-style{% endif %}">
+  <body class="{{ theme_st.animation_hover_effect }}{% if template.name == 'product' %} template-product{% endif %}{% if template.name == 'index' %} template-index{% endif %}{% if template.name == 'cart' %} template-cart{% endif %}{% if theme_st.rounded_image > 10 %} rounded-style{% endif %}">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
@@ -295,6 +295,8 @@
         no_shipping: `{{ 'sections.cart.no_shipping' | t }}`,
         shipping_rate: `{{ 'sections.cart.shipping_rate' | t }}`,
         money_format: {{ money_format | json }},
+        added_to_bundle: `{{ 'products.product.added_to_bundle' | t }}`,
+        add_to_bundle: `{{ 'products.product.add_to_bundle' | t }}`
       };
       window.shopUrl = '{{ request.origin }}';
       window.routes = {
@@ -306,8 +308,8 @@
         search_url: '{{ routes.search_url }}'
       };
       window.variantStrings = {
-        login_successful: ` {{ 'customer.login_page.login_successful' | t }}`,
-        login_invalid: ` {{ 'customer.login_page.login_invalid' | t }}`,
+        login_successful: `{{ 'customer.login_page.login_successful' | t }}`,
+        login_invalid: `{{ 'customer.login_page.login_invalid' | t }}`,
       };
       window.message = {
         newsletter: {

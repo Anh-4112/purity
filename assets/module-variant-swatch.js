@@ -106,6 +106,12 @@ class VariantInput extends HTMLElement {
   async onVariantChange(event) {
     event.preventDefault();
     this.event_target = event.target;
+    const option_dropdown = this.event_target.closest(
+      ".product-variants-option"
+    );
+    if (option_dropdown) {
+      option_dropdown.classList.remove("active");
+    }
     const selectedValues = Array.from(
       this.querySelectorAll('input[type="radio"]:checked')
     ).map((radio) => radio.value);
@@ -125,10 +131,8 @@ class VariantInput extends HTMLElement {
   }
 
   fetchProductInfo({ requestUrl, onSuccess }) {
-    this.abortController?.abort();
-    this.abortController = new AbortController();
     const _this = this;
-    fetch(requestUrl, { signal: this.abortController.signal })
+    fetch(requestUrl)
       .then((response) => response.text())
       .then((responseText) => {
         const parsedHTML = new DOMParser().parseFromString(
@@ -479,6 +483,7 @@ class VariantSwatchSelect extends VariantInput {
           currentProduct.closest(".bought-together-products__wrapper")
         );
       }
+      this.updateProductFormBundle(currentProduct, currentTarget.value);
     }
   }
 
@@ -501,6 +506,16 @@ class VariantSwatchSelect extends VariantInput {
       return;
     }
     this.updateBoughtTogether(currentSection);
+  }
+  
+  updateProductFormBundle(currentProduct,value) {
+    const productFormBundle = currentProduct.querySelector("product-form-bundle");
+    if (productFormBundle) {
+      const id = productFormBundle.querySelector("input[name=id]");
+      if (id) {
+        id.value = value;
+      }
+    }
   }
 }
 customElements.define("variant-swatch-select", VariantSwatchSelect);

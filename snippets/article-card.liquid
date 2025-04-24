@@ -1,29 +1,35 @@
 {%- if article and article != empty -%}
   <div
-    class="article-card-wrapper item-load {{ class }}"
+    class="article-card-wrapper item-load{% if is_featured_blog %} gradient color-{{ color_scheme }}{% endif %}"
   >
     <div
-      class="card article-card{{ featured-blog }}{% if is_featured_blog %} rounded{% endif %}"
+      class="card article-card {{ class }}{% if isPageBlog %} text-{{ content_alignment }}{% endif %}{{ featured-blog }}{% if is_featured_blog %} custom-blog-featured flex-1025 wrap gap rounded{% else %} hover-effect{% endif %}"
+      {% if is_featured_blog %}
+        style="--col-width: 66%;--gap: 0px;"
+      {% endif %}
     >
-      {%- if show_image == true and article.image -%}
-        <div
-          class="banner__media{% if is_featured_blog == false %} rounded{% endif %} article_post-image{% if is_featured_blog %} w-custom{% endif %}"
-          {% if media_aspect_ratio != 'adapt' %}
-            style="--aspect-ratio:{{ media_aspect_ratio }}; {% if is_featured_blog %}--width: 70%;{% endif %}"
-          {% else %}
-            style="--aspect-ratio:{{ article.image.aspect_ratio }}; {% if is_featured_blog %}--width: 70%;{% endif %}"
-          {% endif %}
-        >
+      <div class="{% if is_featured_blog %}col-1025-w-custom{% else %}article_post-image mb-20{% endif %}">
+        {%- if show_image == true and article.image -%}
           {%- liquid
             assign alt = article.title | escape
             if article.image.alt != blank
               assign alt = article.image.alt | escape
             endif
           -%}
-          <a href="{{ article.url }}" class="remove-underline" aria-label="{{ article.title | escape }}">
+          <a
+            class="{% if is_featured_blog %} block h-full{% else %} rounded block{% endif %}"
+            href="{{ article.url }}"
+            class="remove-underline"
+            aria-label="{{ article.title | escape }}"
+            {% if media_aspect_ratio != 'adapt' %}
+              style="--aspect-ratio:{{ media_aspect_ratio }};"
+            {% else %}
+              style="--aspect-ratio:{{ article.image.aspect_ratio }};"
+            {% endif %}
+          >
             {% render 'responsive-image',
               type: 'blog',
-              class: 'blog__img w-full h-full object-fit-cover',
+              class: 'blog__img w-full h-full object-fit-cover rounded',
               image: article.image,
               image_alt: alt,
               container: container,
@@ -32,22 +38,19 @@
               padding: padding
             %}
           </a>
-        </div>
-      {%- endif -%}
+        {%- endif -%}
+      </div>
       <div
-        class="card__content{% if is_featured_blog %} bg-secondary flex-1{% endif %}"
-        {% if is_featured_blog %}
-          style="--color-background-2: {{ background_color }};"
-        {% endif %}
+        class="card__content{% if is_featured_blog %} col-1025-remaining flex column p-30 p-1025-50 bg-secondary text-{{ content_alignment }} align-{{ content_alignment }} justify-content-{{ vertical_alignment }}{% endif %}"
       >
         {%- if show_tags or show_cate -%}
-          <ul class="list-unstyle p-0 m-0 mb-10">
+          <ul class="list-unstyle p-0 m-0 mb-10 flex wrap gap-5{% if is_featured_blog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}{% if isPageBlog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
             {%- if show_cate -%}
               {% assign blog_name = article.handle | split: '/' | first %}
               {% if blog_name != blank %}
-                <li class="blog-meta-tag blog-cate inline-flex align-center me-5">
+                <li class="blog-meta-tag blog-cate inline-flex align-center">
                   <a
-                    class="post-tags blog-cate inline-block bg-primary color-white btn-rounded fs-13 px-15 py-4"
+                    class="post-tags blog-cate inline-block bg-sale btn-rounded fs-13 px-15 py-4"
                     href="{{ blog.url }}"
                     aria-label="blog category"
                   >
@@ -59,7 +62,7 @@
             {% if show_tags %}
               {% if article.tags.size > 0 %}
                 {% for tag in article.tags limit: 5 %}
-                  <li class="blog-tag">
+                  <li class="blog-tag inline-flex align-center inline-block color-white btn-rounded fs-13 px-15 py-4 relative pointer-none">
                     {% if current_tags contains tag %}
                       {{ tag }}
                     {% else %}
@@ -71,10 +74,10 @@
             {% endif %}
           </ul>
         {%- endif -%}
-        <div class="card__heading{% if sec_settings.columns_desktop > 3 %} h5{% else %} h4{% endif %}">
+        <div class="card__heading lh-normal mb-10 {% if is_featured_blog %}h2{% else %}h4{% endif %}">
           <a
             href="{{ article.url }}"
-            class="heading-color remove-underline"
+            class="heading-color remove-underline border-animation"
           >
             {{ article.title | escape }}
           </a>
@@ -90,7 +93,7 @@
             </p>
           {%- endif -%}
         {%- endif -%}
-        <<ul class="article-card__info fs-13 grey-color capitalize list-unstyled flex align-center gap-15">
+        <ul class="article-card__info fs-13 grey-color capitalize list-unstyled inline-flex align-center gap-15{% if is_featured_blog %} mb-20 text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
           {%- if show_date -%}
             <li class="post-date">
               {{- article.published_at | date: '%d %b %Y' -}}
@@ -112,7 +115,7 @@
         </ul>
         {%- if show_excerpt and is_featured_blog == true -%}
           {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
-            <p class="article-card__excerpt rte-width rte">
+            <p class="article-card__excerpt rte-width rte mb-35 text-truncate">
               {%- if article.excerpt.size > 0 -%}
                 {{ article.excerpt | strip_html | truncatewords: 30 }}
               {%- else -%}
@@ -123,7 +126,7 @@
         {%- endif -%}
 
         {%- if is_featured_blog -%}
-          <div class="flex wrap gap-10 text-center">
+          <div class="flex wrap gap-10 text-center{% if is_featured_blog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
             {% assign button_link = article.url %}
             <a
               {% if button_link == blank %}
@@ -132,7 +135,8 @@
                 href="{{ button_link | default: "#" }}"
               {% endif %}
               aria-label="{{ button_label }}"
-              class="btn-{{ button_type }}{% if button_type == "link" %} align-self-center{% else %} btn w-custom max-w-100{% endif %}"
+              class="text-center btn-{{ button_type }}{% if button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %}"
+              style="--width: 20rem;"
             >
               {{ button_label }}
             </a>

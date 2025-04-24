@@ -10,13 +10,24 @@ export const BlsPasswordPopup = {
 
   showPassword() {
     const action = document.querySelector("#DialogHeading");
+  
     if (action !== null) {
       action.addEventListener("click", (e) => {
         e.preventDefault();
         this.getContentPassword();
       });
+  
+      action.addEventListener("keydown", (e) => {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          e.preventDefault();
+          this.getContentPassword();
+        }
+      });
+      action.setAttribute("tabindex", "0");
+      action.setAttribute("role", "button");
     }
   },
+  
 
   getContentPassword() {
     const rawContent = document.querySelector('.password-modal__content')?.innerHTML;
@@ -121,4 +132,3 @@ export const BlsPasswordPopup = {
     }
   },
 };
-

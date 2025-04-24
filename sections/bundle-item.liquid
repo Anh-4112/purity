@@ -1,0 +1,131 @@
+{%- liquid
+  assign selected_variant_id = request.params.variant
+  assign selected_variant = product.selected_variant
+  if selected_variant_id
+    for variant in product.variants
+      if variant.id == selected_variant_id
+        assign selected_variant = variant
+        break
+      endif
+    endfor
+  endif
+  assign money_price = selected_variant.price | money
+  if settings.currency_code_enabled
+    assign money_price = selected_variant.price | money_with_currency
+  endif
+-%}
+<div class="bundle-image">
+  {%- if selected_variant.featured_media != blank -%}
+    {%- assign image_alt = selected_variant.featured_media.alt | default: product.title | escape -%}
+    {% render 'responsive-image',
+      class: 'product__img video-thumbnail',
+      type: 'product',
+      image: selected_variant.featured_media,
+      image_alt: image_alt
+    %}
+  {%- elsif product.featured_media != blank -%}
+    {%- assign image_alt = product.featured_media.alt | default: product.title | escape -%}
+    {% render 'responsive-image',
+      class: 'product__img video-thumbnail',
+      type: 'product',
+      image: product.featured_media,
+      image_alt: image_alt
+    %}
+  {%- else -%}
+    {% render 'placeholder-render' %}
+  {%- endif -%}
+</div>
+<div class="bundle-content">
+  <div class="flex gap-10 align-center space-between">
+    <a
+      aria-label="{{ product.title }}"
+      class="product__name heading-style block"
+      href="{{ product.url }}"
+    >
+      {{- product.title -}}
+    </a>
+    <bundle-cart-remove-button data-variant-id="{{ selected_variant.id }}">
+      <button
+        type="button"
+        class="btn-reset inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
+        aria-label="Remove"
+      >
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+        >
+          <use href="#icon-close"></use>
+        </svg>
+        <span class="capitalize currentColor lh-1 visually-hidden">Remove</span>
+        <span
+          class="icon-rotator absolute top-0 right-0 rounded-50 opacity-0 w-custom h-custom"
+          style="--width: 1.5rem;--height: 1.5rem;"
+        ></span>
+      </button>
+    </bundle-cart-remove-button>
+  </div>
+  {% if selected_variant.title != 'Default Title' %}
+    <span class="text-muted">{{- selected_variant.title -}}</span>
+  {% endif %}
+  <div class="product__price heading-color mt-5" data-price="{{ selected_variant.price }}">
+    <div class="card-product-price relative">
+      <div class="price-regular">
+        <span class="visually-hidden visually-hidden--inline">
+          {{- 'products.product.price.regular_price' | t -}}
+        </span>
+        <span class="price heading-style">
+          {{ money_price }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <quantity-input-bundle
+    class="quantity cart-quantity input-rounded flex input-style px-0"
+    style="--input-height: 40px;"
+  >
+    <button
+      class="quantity__button flex align-center btn-reset ps-18 pe-10 pointer heading-color"
+      name="minus"
+      type="button"
+    >
+      <span class="visually-hidden border-0 p-0 text-center">
+        {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+      </span>
+      <svg width="10" height="2" viewBox="0 0 10 2" fill="none">
+        <use href="#icon-minus"></use>
+      </svg>
+    </button>
+    <input
+      class="quantity__input border-0 p-0 text-center w-custom fs-small"
+      type="number"
+      style="--width: 2.2rem;--input-height: 38px;"
+      data-variant-id="{{ selected_variant.id }}"
+      name="updates[]"
+      value="1"
+      min="1"
+      step="1"
+      aria-label="
+        {{
+          'products.product.quantity.decrease'
+          | t: product: product.title
+          | escape
+        }}
+      "
+    >
+    <button
+      class="quantity__button flex align-center btn-reset ps-10 pe-18 pointer heading-color"
+      name="plus"
+      type="button"
+    >
+      <span class="visually-hidden">
+        {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+      </span>
+      <svg width="10" height="10" viewBox="0 0 10 12" fill="none">
+        <use href="#icon-plus"></use>
+      </svg>
+    </button>
+  </quantity-input-bundle>
+</div>
