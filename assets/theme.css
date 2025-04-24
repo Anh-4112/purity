@@ -228,9 +228,6 @@ blockquote {
   padding-left: 5px;
   padding-right: 5px;
 }
-.px-gutter-x {
-  padding-inline: var(--bs-gutter-x);
-}
 .ps-0 {
   padding-inline-start: 0;
 }
@@ -291,9 +288,6 @@ blockquote {
 }
 .py-18 {
   padding-block: 1.8rem;
-}
-.py-30 {
-  padding-block: 3rem;
 }
 .py-40 {
   padding-block: 4rem;
@@ -825,18 +819,18 @@ modal-popup :is(.modal-overlay) {
     transform: translate3d(0, 100%, 0);
   }
   100% {
-      opacity: 1;
-      transform: translateZ(0);
+    opacity: 1;
+    transform: translateZ(0);
   }
 }
 @keyframes fadeOutDown {
   from {
-      opacity: 1;
+    opacity: 1;
   }
   to {
-      opacity: 0;
-      -webkit-transform: translate3d(0, 100%, 0);
-      transform: translate3d(0, 100%, 0);
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
   }
 }
 @media (min-width: 576px) {
@@ -1615,7 +1609,8 @@ modal-popup :is(.modal-overlay) {
     .detail-open > summary .icon-rotate,
     .details-normal[open] > summary .icon-rotate,
     .button-localization.opened > .icon-rotate,
-    .active > .rotate-animate .icon-rotate
+    .active > .rotate-animate .icon-rotate,
+    .select_option[aria-expanded="true"] > .icon-rotate
   ) {
   transform: rotate(180deg);
   -webkit-transform: rotate(180deg);
@@ -2028,10 +2023,10 @@ html:not(.open-nav, .open-canvas) mobile-navigation-bar {
   color: var(--btn-color);
 }
 /* Mobile navigation bar */
-.bls__mobile-navigation-bar{
-  animation: fadeOutDown .5s cubic-bezier(.7, 0, .2, 1) both;
+.bls__mobile-navigation-bar {
+  animation: fadeOutDown 0.5s cubic-bezier(0.7, 0, 0.2, 1) both;
 }
-.bls__mobile-navigation-bar.show{
-  animation: fadeInUp .5s cubic-bezier(.7,0,.2,1) both;
-  transition: transform .5s cubic-bezier(.7,0,.2,1);
+.bls__mobile-navigation-bar.show {
+  animation: fadeInUp 0.5s cubic-bezier(0.7, 0, 0.2, 1) both;
+  transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
 }

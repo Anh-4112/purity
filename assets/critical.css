@@ -800,7 +800,7 @@ a.hover-heading-color:hover,
   border-top: 1px solid var(--color-border);
 }
 :where(.border-bottom) {
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: var(--border-height, 1px) solid var(--color-border);
 }
 .flex-cols {
   --col: var(--col-number);
@@ -955,9 +955,6 @@ a.hover-heading-color:hover,
 .p-20 {
   padding: 2rem;
 }
-.p-30 {
-  padding: 3rem;
-}
 .p-custom {
   padding: var(--padding);
 }
@@ -985,6 +982,9 @@ a.hover-heading-color:hover,
 .px-20 {
   padding-inline: 2rem;
 }
+.px-gutter-x {
+  padding-inline: var(--bs-gutter-x);
+}
 .py-6 {
   padding-block: 0.6rem;
 }
@@ -1003,6 +1003,9 @@ a.hover-heading-color:hover,
 }
 .py-25 {
   padding-block: 2.5rem;
+}
+.py-30 {
+  padding-block: 3rem;
 }
 .p-30 {
   padding: 3rem;
@@ -1368,15 +1371,6 @@ body:not(.template-index) .transparent-logo {
     --width: 3px;
     --height: 3px;
   }
-  .overflow-visible-mb {
-    overflow: visible;
-  }
-  .overflow-hidden-mb {
-    overflow: hidden;
-  }
-  .overflow-x-scroll-mb {
-    overflow-x: scroll;
-  }
   :where(.modal-popup-inner) {
     transform: translateY(100%);
     -webkit-transform: translateY(100%);
@@ -1385,6 +1379,9 @@ body:not(.template-index) .transparent-logo {
     max-height: calc(100vh - 60px);
     top: auto;
     --transition: 0.3s;
+  }
+  [data-free-scroll="false"].reveal_on_scroll {
+    overflow: hidden;
   }
 }
 .shopify-payment-button__more-options.shopify-payment-button__skeleton {
@@ -1499,6 +1496,15 @@ variants-dropdown .variant-input label.disable:after {
   }
   .reveal_on_scroll .swiper-actions {
     display: none;
+  }
+  .overflow-visible-mb {
+    overflow: visible;
+  }
+  .overflow-hidden-mb {
+    overflow: hidden;
+  }
+  .overflow-x-scroll-mb {
+    overflow-x: scroll;
   }
 }
 @media (min-width: 768px) {
@@ -1642,7 +1648,8 @@ variants-dropdown .variant-input label.disable:after {
 @media (min-width: 1025px) {
   .swiper:not([class*="initialized"]) .swiper-slide {
     width: calc(
-      (100% - (var(--gap) * (var(--item-desktop) - 1))) / var(--item-desktop)
+      (100% - (var(--gap-desktop, var(--gap)) * (var(--item-desktop) - 1))) /
+        var(--item-desktop)
     );
   }
   .swiper:not([class*="initialized"])[data-desktop="1"] .swiper-slide {

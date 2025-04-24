@@ -33,15 +33,19 @@
   endif
 
   assign column_gap_slide = 0
+  assign column_gap_mb = 0
   if section_st.column_gap == 'large'
     assign column_gap_slide = 30
+    assign column_gap_mb = 20
   elsif section_st.column_gap == 'medium'
     assign column_gap_slide = 20
+    assign column_gap_mb = 10
   elsif section_st.column_gap == 'small'
     assign column_gap_slide = 10
+    assign column_gap_mb = 5
   endif
 
-  assign items_per_row_mobile = section_st.items_per_row_mobile
+  assign items_per_row_mobile = 1.5
   assign data_free_scroll = 'false'
   if items_per_row_mobile > 1 and items_per_row_mobile < 2
     assign data_free_scroll = 'true'
@@ -61,7 +65,7 @@
   endif
 -%}
 {%- capture style -%}
-      --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--width: 5rem;
+      --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--width: 5rem;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
 
 <div
@@ -91,9 +95,12 @@
       </div>
     {%- endif -%}
     {% if section.blocks.size > 0 %}
+      {% if data_free_scroll == 'true' %}
+        <div class="free-scroll">
+      {% endif %}
       <shopable-video
         id="swiper-{{ section.id }}"
-        class="hover-action swiper swiper-shopable-video {% if center_slide %}swiper-slide-center{% endif %}"
+        class="hover-action swiper swiper-shopable-video {% if center_slide %}swiper-slide-center{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
         data-section-id="{{ section.id }}"
         data-autoplay="{{ slide_auto_change }}"
         data-autoplay-speed="{{ change_slide_every | times: 1000 }}"
@@ -262,6 +269,9 @@
           ></div>
         {% endif %}
       </shopable-video>
+      {% if data_free_scroll == 'true' %}
+        </div>
+      {% endif %}
     {% endif %}
     {% if sticky and section.blocks[0].settings.local_video != blank %}
       <shopable-item
@@ -399,7 +409,7 @@
           >
             <div class="swiper-wrapper">
               {% for block in section.blocks %}
-                <div class="swiper-slide w-full">
+                <div class="swiper-slide w-full" data-product-id="Product-{{ block.id }}">
                   <div
                     class="drawer__body drawer__body-shopable-video w-full h-full overflow-y-auto custom-scrollbar bg-white rounded"
                     id="Product-{{ block.id }}"
@@ -551,8 +561,8 @@
                                 data-mobile="2"
                                 data-desktop="2"
                                 data-tablet="2"
-                                data-pagination="custom
-                                   style="--gap-desktop: 10px;--gap: 10px;--item-desktop: 2;--item-tablet: 2;--item-mb: 2"
+                                data-pagination="custom"
+                                style="--gap-desktop: 10px;--gap: 10px;--item-desktop: 2;--item-tablet: 2;--item-mb: 2"
                               >
                                 <div class="swiper-wrapper">
                                   {% for media in card_product.media %}
