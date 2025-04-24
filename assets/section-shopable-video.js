@@ -49,15 +49,15 @@ class ShopableVideo extends SlideSection {
 
   resetCenterSlideEffects() {
     if (!this || !this.swiper) return;
-    
+
     const allSlides = Array.from(this.querySelectorAll(".swiper-slide"));
-    
+
     allSlides.forEach((slide) => {
       slide.classList.remove("center-slide");
       const videoInner = slide.querySelector(".video-item--ratio");
       if (videoInner) {
-        videoInner.style.height = '';
-        videoInner.style.marginTop = '';
+        videoInner.style.height = "";
+        videoInner.style.marginTop = "";
         videoInner._hasSetupTransition = false;
       }
     });
@@ -327,6 +327,10 @@ class ShopableItem extends HTMLElement {
         } else {
           popupInfo.classList.add("active");
         }
+        const swiperContainer = modalPopup.querySelector("slide-section");
+        if (swiperContainer && swiperContainer.swiper) {
+          this.handleSwipeability(modalPopup, swiperContainer);
+        }
       }
       const closeInfoButton = event.target.closest(".modal__close-information");
       if (closeInfoButton) {
@@ -343,6 +347,10 @@ class ShopableItem extends HTMLElement {
           this.hidePopupInformation(popupInfo);
           closeInfoButton.classList.add("hidden-important");
           buttonCloseModal.classList.remove("hidden-important");
+          const swiperContainer = modalPopup.querySelector("slide-section");
+          if (swiperContainer && swiperContainer.swiper) {
+            this.handleSwipeability(modalPopup, swiperContainer);
+          }
         }
       }
     });
@@ -356,6 +364,13 @@ class ShopableItem extends HTMLElement {
         detail: { popupInfo },
       })
     );
+    const modalPopup = popupInfo.closest("modal-popup");
+    if (modalPopup) {
+      const swiperContainer = modalPopup.querySelector("slide-section");
+      if (swiperContainer && swiperContainer.swiper) {
+        this.handleSwipeability(modalPopup, swiperContainer);
+      }
+    }
   }
 
   setupCloseButton() {
@@ -637,7 +652,36 @@ class ShopableItem extends HTMLElement {
         swiperContainer._hasSlideChangeHandler = true;
       }
     }
+
     modalPopup.removeAttribute("data-loading");
+  }
+
+  handleSwipeability(modalPopup, swiperContainer) {
+    if (!modalPopup || !swiperContainer || !swiperContainer.swiper) return;
+    
+    const isLargeScreen = window.innerWidth >= 1025;
+    
+    const hasPopupInfo = modalPopup.querySelector('.popup-information') !== null;
+    
+    const hasActivePopupInfo = modalPopup.querySelector('.popup-information.active') !== null;
+    
+    if (isLargeScreen) {
+      if (hasPopupInfo) {
+        swiperContainer.swiper.allowTouchMove = false;
+        swiperContainer.swiper.unsetGrabCursor();
+      } else {
+        swiperContainer.swiper.allowTouchMove = true;
+        swiperContainer.swiper.setGrabCursor();
+      }
+    } else {
+      if (hasActivePopupInfo) {
+        swiperContainer.swiper.allowTouchMove = false;
+        swiperContainer.swiper.unsetGrabCursor();
+      } else {
+        swiperContainer.swiper.allowTouchMove = true;
+        swiperContainer.swiper.setGrabCursor();
+      }
+    }
   }
 
   onShowPopupModal(event) {
@@ -726,6 +770,7 @@ class ShopableItem extends HTMLElement {
             }
           }
         });
+        this.handleSwipeability(modalPopup, swiperContainer);
       }
     }
   }
