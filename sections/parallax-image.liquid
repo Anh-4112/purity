@@ -1,3 +1,4 @@
+{{ 'section-parallax-image.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -31,9 +32,10 @@
 <div
   class="section color-{{ section_st.color_scheme }}"
   style="{{ style | strip | strip_newlines }}"
+  
 >
   <div
-    class="{{ section_width }}"
+    class="{{ section_width }}" data-sticky-sections
   >
     {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div
@@ -56,17 +58,18 @@
         {%- endif -%}
       </div>
     {%- endif -%}
-
-    <parallax-image class="row-gap gap-{{ section_st.column_gap }} flex column flex-md-row wrap">
-      {% content_for 'blocks' %}
-    </parallax-image>
+    <sticky-section class="sticky-container block" data-sticky-sections>
+      <div class="section-sticky row-gap gap-{{ section_st.column_gap }} flex column flex-md-row wrap">
+        {% content_for 'blocks' %}
+      </div>
+    </sticky-section>
   </div>
 </div>
 
 {% schema %}
 {
   "name": "t:sections.parallax-image.name",
-  "class": "section section-image-card",
+  "class": "section section-parallax-image",
   "disabled_on": {
     "groups": ["header", "footer", "custom.overlay"]
   },
@@ -344,9 +347,6 @@
           "type": "group-image-parallax",
           "blocks": [
             {
-              "type": "highlight-text"
-            },
-            {
               "type": "heading"
             },
             {
@@ -361,9 +361,6 @@
           "type": "group-image-parallax",
           "blocks": [
             {
-              "type": "highlight-text"
-            },
-            {
               "type": "heading"
             },
             {
@@ -377,9 +374,6 @@
         {
           "type": "group-image-parallax",
           "blocks": [
-            {
-              "type": "highlight-text"
-            },
             {
               "type": "heading"
             },

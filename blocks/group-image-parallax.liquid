@@ -71,10 +71,10 @@
 {%- endcapture -%}
 
 <div
-  class="flex wrap gap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
+  class="parallax-wrapper flex wrap gap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %} h-full"
   style="{{ col_style | strip | strip_newlines }}"
 >
-  <div class="parallax-media w-full col-1025-w-custom">
+  <div class="parallax-media w-full col-1025-w-custom h-full">
     <div
       class="image-with-text__media banner__media {{ radius_image_class }} h-full"
       style="--aspect-ratio: {{ ratio }}"
@@ -99,10 +99,10 @@
       {% endif %}
     </div>
   </div>
-  <div class="w-full col-1025-remaining flex text-{{ section_st.content_alignment }}">
+  <div class="parallax-content w-full col-1025-remaining flex text-{{ section_st.content_alignment }}">
     {% if has_custom_background %}
       <div
-        class="parallax-content w-full flex bg-custom {{ radius_content_class }}"
+        class="w-full flex bg-custom {{ radius_content_class }}"
         style="--bg-color-custom: {{ section_st.background_color }};"
       >
     {% endif %}
@@ -116,7 +116,7 @@
 {% schema %}
 {
   "name": "t:sections.image_card.blocks.group_name",
-  "class": "blocks-group-image-card w-full",
+  "class": "blocks-group-parallax-image w-full h-full",
   "blocks": [
     {
       "type": "@app"
@@ -132,9 +132,6 @@
     },
     {
       "type": "button"
-    },
-    {
-      "type": "highlight-text"
     }
   ],
   "settings": [
@@ -148,9 +145,6 @@
     {
       "name": "t:sections.image_card.blocks.group_name",
       "blocks": [
-        {
-          "type": "highlight-text"
-        },
         {
           "type": "heading"
         },
