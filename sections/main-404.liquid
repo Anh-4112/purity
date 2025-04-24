@@ -1,6 +1,12 @@
 {%- liquid
   assign section_st = section.settings
-  assign section_width = section_st.section_width
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
