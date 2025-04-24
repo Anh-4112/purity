@@ -58,7 +58,9 @@
         assign ratio = '3/4'
     endcase
   else
-    if block_st.image != blank
+    if block_st.video_local != blank
+      assign ratio = block_st.video_local.aspect_ratio
+    elsif block_st.image != blank
       assign ratio = block_st.image.aspect_ratio
     else
       assign ratio = '3/4'
@@ -86,7 +88,30 @@
           assign alt = block_st.image.alt | escape
         endif
       -%}
-      {%- if block_st.image != blank -%}
+      {% if block_st.video_local != blank %}
+        {%- liquid
+          assign source = block_st.video_local.sources
+          assign source_url = ''
+          for s in source
+            if s.format == 'mp4'
+              assign source_url = s.url
+              break
+            endif
+          endfor
+          assign video_poster = block_st.video_local.preview_image | image_url: width: 1100
+        -%}
+        <video-local>
+          <video
+            loop="true"
+            data-src="{{ source_url }}"
+            poster="{{ video_poster }}"
+            playsinline="true"
+            autoplay
+            muted
+            class="h-full w-full object-fit-cover"
+          ></video>
+        </video-local>
+      {% elsif block_st.image != blank %}
         {% render 'responsive-image',
           type: 'other',
           container: section_width,
@@ -122,6 +147,9 @@
       "type": "@app"
     },
     {
+      "type": "_icon"
+    },
+    {
       "type": "heading"
     },
     {
@@ -139,6 +167,12 @@
       "type": "image_picker",
       "id": "image",
       "label": "t:sections.all.image.label"
+    },
+    {
+      "type": "video",
+      "id": "video_local",
+      "label": "t:sections.video.settings.video_local.label",
+      "info": "t:sections.all.svg.custom_svg.info"
     }
   ],
   "presets": [
