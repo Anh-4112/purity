@@ -91,3 +91,24 @@
 .zoom-in {
   cursor: zoom-in;
 }
+video-product-gallery iframe,
+.media-model :is(product-model, .shopify-model-viewer-ui) {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pswp model-viewer {
+  width: 100%;
+  height: 100%;
+}
+.pswp__video-container video-product-gallery[style*="--aspect-ratio"]:before {
+  padding-top: 0;
+}
+.pswp__video-container video-product-gallery[style*="--aspect-ratio"] > * {
+  position: static;
+}

@@ -23,7 +23,6 @@
   {% if image != blank %}--aspect-ratio: {{ image.aspect_ratio }};{% else %}--aspect-ratio: 5/2;{% endif %}
   {%- if mobile_image != blank -%} --aspect-ratio-mb: {{ mobile_image.aspect_ratio }};{%- endif -%}{% if mobile_image == blank and section_st.image != blank %}--aspect-ratio-mb: {{ section_st.image.aspect_ratio }};{% endif %}
 {%- endcapture -%}
-
 <div
   class="section section__image-with-text-overlay color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
