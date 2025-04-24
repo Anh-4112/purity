@@ -3,6 +3,10 @@
   assign block_st = block.settings
   assign image = block_st.image
   assign mobile_image = block_st.mobile_image | default: image
+  assign video = block_st.video
+  if block_st.background_color != 'rgba(0,0,0,0)' and block_st.background_color != 'transparent' and block_st.background_color != blank and block_st.background_color != blank and block_st.background_color != '#fff' and block_st.background_color != '#ffffff'
+    assign has_custom_background = true
+  endif
 %}
 
 {%- style -%}
@@ -16,12 +20,16 @@
     class="w-full color-{{ block_st.color_scheme }} gradient flex relative{% if section_st.equal_height_adjustment %} h-full{% else %} h-content{% endif %}{% if block_st.content_position != 'overlay' %} flex column{% endif %}"
     {% if block_st.content_position == 'overlay' %}
       style="
-        {% if block_st.image != blank or mobile_image != blank %}
-          --aspect-ratio: {{ block_st.image.aspect_ratio }};
-          --aspect-ratio-mb: {{ mobile_image.aspect_ratio }};
-        {% else %}
+        {%- if block_st.image != blank or mobile_image != blank or video != blank -%}
+         {%- if video != blank -%}
+            --aspect-ratio: {{ video.aspect_ratio }};
+         {%- else -%}
+            --aspect-ratio: {{ block_st.image.aspect_ratio }};
+            --aspect-ratio-mb: {{ mobile_image.aspect_ratio }};
+          {%- endif -%}
+        {%- else -%}
           --aspect-ratio: 3/2;
-        {% endif %}
+        {%- endif -%}
       "
     {% endif %}
   >
@@ -32,45 +40,85 @@
     {%- endif -%}
     <div
       class="banner rounded banner__media media{% if block_st.content_position == 'overlay' %} absolute inset-0 overlay-bg{% endif %}"
-      style="{%- if image != blank -%}--aspect-ratio: {{ image.aspect_ratio }};{%- else -%}--aspect-ratio: 1/1; {%- endif -%}{%- if mobile_image -%} --aspect-ratio-mb: {{ mobile_image.aspect_ratio }};{% endif %}--overlay-opacity: {{ block_st.overlay_opacity }}%;"
+      style="
+        --overlay-opacity: {{ block_st.overlay_opacity }}%;
+        {%- if block_st.image != blank or mobile_image != blank or video != blank -%}
+         {%- if video != blank -%}
+            --aspect-ratio: {{ video.aspect_ratio }};
+         {%- else -%}
+            --aspect-ratio: {{ block_st.image.aspect_ratio }};
+            --aspect-ratio-mb: {{ mobile_image.aspect_ratio }};
+          {%- endif -%}
+        {%- else -%}
+          --aspect-ratio: 3/2;
+        {%- endif -%}
+      "
     >
-      {%- if image != blank or mobile_image != blank -%}
-        {%- liquid
-          assign image_alt = image.alt
-          if image_alt == blank
-            assign image_alt = block_st.heading
-          endif
-        -%}
-        {% render 'responsive-image',
-          type: 'banner',
-          container: section_st.section_width,
-          image: image,
-          image_mobile: mobile_image,
-          image_alt: alt
-        %}
+      {%- if image != blank or mobile_image != blank or video != blank -%}
+        {%- if video != blank -%}
+          {%- liquid
+            assign source = video.sources
+            assign source_url = ''
+            for s in source
+              if s.format == 'mp4'
+                assign source_url = s.url
+                break
+              endif
+            endfor
+            assign video_poster = video.preview_image | image_url: width: 1100
+          -%}
+          <video-local>
+            <video
+              class="{% if block_st.content_position == 'overlay' %} h-full w-full object-fit-cover{% endif %}"
+              loop="true"
+              data-src="{{ source_url }}"
+              poster="{{ video_poster }}"
+              playsinline="true"
+              autoplay
+              title=""
+              muted
+            ></video>
+          </video-local>
+        {%- else %}
+          {%- liquid
+            assign image_alt = image.alt
+            if image_alt == blank
+              assign image_alt = block_st.heading
+            endif
+          -%}
+          {% render 'responsive-image',
+            type: 'banner',
+            container: section_st.section_width,
+            image: image,
+            image_mobile: mobile_image,
+            image_alt: alt
+          %}
+        {%- endif -%}
       {%- else -%}
         {%- render 'placeholder-render', type: 'lifestyle-1', class: 'img-placeholder h-full w-full' -%}
       {% endif %}
-      {% if block_st.content_position == 'bellow' %}
+      {% if block_st.content_position == 'bellow' and block_st.show_badge == true %}
         <div
-          class="block__highlight_text w-content absolute{% if block_st.vertical_position == 'top' %} top-15{% else %} bottom-15{% endif %} left-15 subheading_weight lh-normal inline-block text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-10 px-15 btn-rounded{% endif %}"
+          class="block__highlight_text w-content absolute{% if block_st.vertical_position == 'top' %} top-15{% else %} bottom-15{% endif %} left-15 fs-small subheading_weight lh-global text-color bg-custom flex align-center gap-5{% if has_custom_background %} py-6 px-15 btn-rounded{% endif %}"
           style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
           {{ block.shopify_attributes }}
         >
           {%- if block_st.highlight_text_icon == 'star' -%}
             {%- render 'icon-star' -%}
           {%- elsif block_st.highlight_text_icon == 'dot' -%}
-            {%- render 'icon-dot' -%}
+            <svg width="5" height="5" viewBox="0 0 8 8" fill="none">
+              <use href="#icon-dot"></use>
+            </svg>
           {%- endif -%}
           {{ block_st.badge | escape }}
         </div>
       {% endif %}
     </div>
     <div
-      class="group__block--content w-full z-3 flex {% if block_st.content_position == 'overlay' %} {{ block_st.desktop_content_position }} p-30 text-{{ block_st.text_alignment }}{% else %} mt-40 justify-content-{{ block_st.text_alignment }}{% endif %}"
+      class="group__block--content w-full z-3 flex{% if block_st.content_position == 'overlay' %} {{ block_st.desktop_content_position }} p-30 text-{{ block_st.text_alignment }}{% else %} mt-20 justify-content-{{ block_st.text_alignment }}{% endif %}"
     >
       <div
-        class="banner__box flex column align-{{ block_st.text_alignment }} max-w-100"
+        class="banner__box flex column align-{{ block_st.text_alignment }} max-w-100{% if block_st.content_position == 'bellow' %} text-{{ block_st.text_alignment }} {% endif %}"
       >
         {% content_for 'blocks' %}
       </div>
@@ -79,8 +127,8 @@
 </div>
 {% schema %}
 {
-  "name": "t:sections.image-with-text.name",
-  "class": "group--image-with-text w-full col-md-w-custom col-md-w-custom-50 switch-slide__mobile",
+  "name": "t:sections.media-with-text.name",
+  "class": "group--media-with-text w-full col-md-w-custom col-md-w-custom-50 switch-slide__mobile",
   "blocks": [
     {
       "type": "@app"
@@ -175,7 +223,7 @@
     },
     {
       "type": "header",
-      "content": "t:sections.all.image.label"
+      "content": "t:sections.main-product.settings.header.content"
     },
     {
       "type": "image_picker",
@@ -186,6 +234,12 @@
       "type": "image_picker",
       "id": "mobile_image",
       "label": "t:sections.all.image.mobile_image"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:sections.all.video.label",
+      "info": "t:sections.all.svg.custom_svg.info"
     },
     {
       "type": "header",
@@ -232,6 +286,12 @@
       "content": "t:sections.multi_content.blocks.bellow_image"
     },
     {
+      "type": "checkbox",
+      "id": "show_badge",
+      "default": true,
+      "label": "t:settings_schema.badges.settings.show_badge.label",
+    },
+    {
       "type": "text",
       "id": "badge",
       "default": "Highlight text",
@@ -242,16 +302,16 @@
       "id": "highlight_text_icon",
       "options": [
         {
-          "value": "none",
-          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__1.label"
-        },
-        {
           "value": "star",
           "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__2.label"
         },
         {
           "value": "dot",
           "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__3.label"
+        },
+        {
+          "value": "none",
+          "label": "t:settings_schema.typography.settings.heading.text_transform.unset"
         }
       ],
       "default": "star",
@@ -356,7 +416,7 @@
   ],
   "presets": [
     {
-      "name": "t:sections.image-with-text.name",
+      "name": "t:sections.media-with-text.name",
       "blocks": [
         {
           "type": "heading"

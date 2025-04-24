@@ -1,0 +1,66 @@
+<span class="flex wrap gap-10 align-center heading-color">
+  {%- if block.settings.svg_icon != 'none' -%}
+    {% render 'icon_svg_list', icon: block.settings.svg_icon %}
+  {%- endif -%}
+  {%- if block.settings.content != blank -%}
+    <span class="content">{{ block.settings.content }}</span>
+  {%- endif -%}
+</span>
+{% schema %}
+{
+  "name": "t:sections.all.product_setting.icon_with_text.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "svg_icon",
+      "label": "t:sections.all.product_setting.icon_with_text.svg.label",
+      "default": "verified",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.all.product_setting.icon_with_text.icon.none.label"
+        },
+        {
+          "value": "free_shipping",
+          "label": "t:sections.all.product_setting.icon_with_text.icon.free_shipping.label"
+        },
+        {
+          "value": "check_badge",
+          "label": "t:sections.all.product_setting.icon_with_text.icon.check_badge.label"
+        },
+        {
+          "value": "message_communications",
+          "label": "t:sections.all.product_setting.icon_with_text.icon.message_communications.label"
+        },
+        {
+          "value": "truck",
+          "label": "t:sections.all.product_setting.icon_with_text.icon.truck.label"
+        },
+        {
+          "value": "payment",
+          "label": "t:sections.all.product_setting.icon_with_text.icon.payment.label"
+        },
+        {
+          "value": "discount",
+          "label": "t:sections.all.product_setting.icon_with_text.icon.discount.label"
+        },
+        {
+          "value": "order",
+          "label": "t:sections.all.product_setting.icon_with_text.icon.order.label"
+        },
+        {
+          "value": "verified",
+          "label": "t:sections.all.icon.verified.label"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:sections.all.product_setting.icon_with_text.content.label",
+      "default": "<p>Icon with text</p>"
+    }
+  ],
+  "presets": [{ "name": "t:sections.all.product_setting.icon_with_text.name" }]
+}
+{% endschema %}
