@@ -343,7 +343,7 @@
           <div class="product__tag grey-color mb-8 fs-13 lh-normal">
             <ul
               class="list-unstyled flex wrap gap{% if settings.product_alignment == 'center' %} justify-center{% endif %}"
-              style="--gap: 6px;"
+              style="--gap: 6px;--gap-desktop: 6px;"
             >
               {% for tags in card_product.tags %}
                 <li>
@@ -389,12 +389,12 @@
           {% liquid
             assign show_available = true
             if type == 'bundle' or type == 'custom'
-              assign show_available = false 
+              assign show_available = false
             endif
           %}
           {%- render 'variant-swatches',
             scope: 'variant_swatch',
-            show_available: show_available
+            show_available: show_available,
             product: card_product,
             select_type: select_type,
             select_class: select_class
@@ -453,7 +453,13 @@
           </product-form>
         {%- endif -%}
         {%- if type == 'custom' -%}
-          <product-form-bundle class="quick-add" data-handle="{{ card_product.handle }}" data-section-id="{{ section.id }}" data-minimum="{{ minimum }}" data-maximum="{{ maximum }}">
+          <product-form-bundle
+            class="quick-add"
+            data-handle="{{ card_product.handle }}"
+            data-section-id="{{ section.id }}"
+            data-minimum="{{ minimum }}"
+            data-maximum="{{ maximum }}"
+          >
             {%- form 'product',
               card_product,
               id: product_form_id,

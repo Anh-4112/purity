@@ -124,11 +124,11 @@
   </script>
   {% if enable_sticky_desktop %}
     {%- assign product_form_id = 'sticky-addcart-form-' | append: section.id -%}
-    <sticky-add-cart class="sticky-add-cart fixed bottom-0 inset-x-0 bg-white z-5 shadow">
+    <sticky-add-cart class="sticky-add-cart opacity-0 amimate_show-hide transition-drawer fixed bottom-0 inset-x-0 bg-white z-5 shadow">
       <div class="{{ section_width }}">
         <div
           class="sticky-add-cart__inner flex gap-10 space-between align-center py-10"
-          style="--width: 7rem;--height: 7rem;"
+          style="--width: 7rem;--height: 7rem;--max-width: 70%;"
         >
           {%- liquid
             if product.selected_or_first_available_variant.featured_media
@@ -150,7 +150,7 @@
             disable_scrolling_text: true,
             disable_quickview: true,
             disable_color_swatches: true,
-            class: ' sticky-add-cart hidden block-1025',
+            class: ' sticky-add-cart hidden block-1025 max-w-custom',
             style_layout: ' flex gap-10 align-center',
             info_class: ' mt-0',
             image_class: ' flex-auto w-custom',
