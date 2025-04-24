@@ -65,13 +65,13 @@
         <div class="breadcrumbs mb-10">
           {%- render 'breadcrumbs' -%}
         </div>
-        <h1 class="heading-letter-spacing title title--primary h0 text-center">{{ 'sections.cart.title' | t }}</h1>
+        <h1 class="heading-letter-spacing title title--primary h0 text-center mt-50 mb-60">{{ 'sections.cart.title' | t }}</h1>
         {% assign total_price = cart.total_price | times: 1 %}
         {%- if show_free_shipping_message and free_minimum_amount -%}
           <free-ship-progress-bar
             data-fe-unavailable="{% if free_shipping_message != blank %}{{ free_shipping_message }}{% else %}{{ 'sections.cart.free_shipping_html' | t }}{% endif %}"
             data-fe-available="{{ 'sections.cart.free_shipping_available' | t }}"
-            class="free-shipping-bar mt-60 mb-60 block"
+            class="free-shipping-bar mt-10 mb-60 block"
           >
             <div class="progress-bar-message text-center heading-style"></div>
             <div
@@ -442,28 +442,37 @@
               {%- if enable_product_recommendations and cart != empty -%}
                 <div class="cart-recommendations mt-60" style="--width: 8rem; --gap-desktop: 1rem">
                   <product-recommendations
+                     class="swiper__controls-group"
+                    style="--position-arrow: static;--swiper-navigation-size: 20px;--padding: 0;"
                     data-type="{{ recommendation_product_type }}"
                     data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=cart-upsell"
                   >
-                    {%- if product_recommendations_heading -%}
-                      <h4 class="cart-recommendations-title fs-20 mb-25">
-                        {{ product_recommendations_heading }}
-                      </h4>
+                    {% if product_recommendations_heading != blank %}
+                      <div class="flex gap-10 align-center space-between mb-25">
+                        <h4 class="cart-recommendations-title fs-20">
+                          {{ product_recommendations_heading }}
+                        </h4>
+                          {%- render 'swiper-navigation',
+                            navigation_custom: true,
+                            type: 'custom_nav',
+                            class-custom: 'flex align-center gap-5'
+                          -%}
+                      </div>
                     {%- endif -%}
                     <div class="main-cart-upsell-product">
                       <slide-section
-                        class="swiper hover-action"
+                        class="swiper"
                         data-section-id="{{ section.id }}"
                         data-autoplay="false"
                         data-effect="slide"
                         data-loop="false"
                         data-speed="500"
+                        data-pagination="custom"
                         data-spacing="20"
                         data-mobile="1"
                         data-desktop="2"
                         data-tablet="2"
                       >
-                        {%- render 'swiper-navigation', show_on_hover: true -%}
                         <div class="swiper-wrapper">
                           {%- if recommendation_product_type != 'auto' -%}
                             {%- for item in select_product_recommendation -%}
@@ -499,7 +508,6 @@
                             {%- endfor -%}
                           {%- endif -%}
                         </div>
-                        <div class="swiper-pagination mt-20"></div>
                       </slide-section>
                     </div>
                   </product-recommendations>
