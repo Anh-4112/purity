@@ -1,0 +1,23 @@
+/* Announcement-bar */
+@media (min-width: 576px) {
+    announcement-bar slide-section {
+        width: 70%;
+        max-width: 44rem;
+    }
+}
+
+announcement-bar .swiper-arrow:hover {
+    --swiper-navigation-color: var(--color-text);
+}
+
+[class*='initialized'] .announcement-bar__content {
+    max-width: 80%;
+}
+
+.swiper:not([class*='initialized'])[data-direction='vertical'] .swiper-wrapper {
+    align-items: center;
+}
+
+.swiper:not([class*='initialized'])[data-direction='vertical'] .swiper-wrapper .swiper-slide:not(:first-child) {
+    opacity: 0;
+}
