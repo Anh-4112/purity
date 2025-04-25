@@ -490,3 +490,29 @@ export class FSProgressBar {
     }
   }
 }
+
+export function loadImages(imageOrArray) {
+  if (!imageOrArray) {
+    return Promise.resolve();
+  }
+
+  const images =
+    imageOrArray instanceof Element ? [imageOrArray] : Array.from(imageOrArray);
+
+  return Promise.all(
+    images.map((image) => {
+      return new Promise((resolve) => {
+        if (
+          (image.tagName === "IMG" && image.complete) ||
+          !image.offsetParent
+        ) {
+          resolve();
+        } else {
+          image.onload = () => {
+            resolve();
+          };
+        }
+      });
+    })
+  );
+}
