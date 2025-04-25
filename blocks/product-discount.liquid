@@ -62,11 +62,17 @@
         type: 'custom',
         minimum: section_st.minimum,
         maximum: section_st.maximum,
+        select_type: 'default',
+        select_class: ' mt-10 mb-15 mt-1025-15 w-1025-full max-w-100'
       %}
     {% endfor %}
   {% else %}
     {% for i in (1..6) %}
-      {% render 'card-product', section_id: section.id, class: ' grid-card-item switch-slide__mobile', indexFor: forloop.index %}
+      {% render 'card-product',
+        section_id: section.id,
+        class: ' grid-card-item switch-slide__mobile',
+        indexFor: forloop.index
+      %}
     {% endfor %}
   {% endif %}
 </carousel-mobile>
@@ -74,7 +80,7 @@
 {% schema %}
 {
   "name": "t:sections.product-bundle.blocks.settings.product_discount.name",
-  "class": "w-full col-1025-w-custom",
+  "class": "w-full col-1025-remaining",
   "settings": [
     {
       "type": "collection",
@@ -84,7 +90,7 @@
     {
       "type": "product_list",
       "id": "products",
-      "label": "t:sections.bundle-products.blocks.settings.select_product",
+      "label": "t:sections.compact_product_bundle.blocks.settings.select_product",
       "info": "t:sections.product-bundle.blocks.settings.product_discount.info"
     },
     {

@@ -37,8 +37,8 @@
     }
   }
   .fs-60 {
-      font-size: clamp(4rem, calc(4rem + (60 - 40) * var(--responsive-rate)), 6rem);
-    }
+    font-size: clamp(4rem, calc(4rem + (60 - 40) * var(--responsive-rate)), 6rem);
+  }
 {% endstyle %}
 <div
   class="section__scrolling-text color-{{ section_st.color_scheme }} gradient section"
@@ -51,7 +51,7 @@
     >
       {%- for i in (0..5) -%}
         <div
-          class="flex animation-marquee animation__marquee-{{ section_st.direction }} marquee whitespace-nowrap gap align-center"
+          class="flex animation-marquee animation__marquee-{{ section_st.direction }} whitespace-nowrap gap align-center"
           style="{{ col_style | strip | strip_newlines }}"
         >
           {%- for block in section.blocks -%}

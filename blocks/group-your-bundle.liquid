@@ -14,7 +14,20 @@
   assign show_progress_bar = block_st.show_progress_bar
   assign enable_quantity = block_st.enable_quantity
 %}
-<div class="bundle-sticky flex column gap-30">
+{% style %}
+  .product_bundle .product-item {
+    --input-height: 4rem;
+  }
+  @media (min-width: 1025px) {
+    .product_bundle .product-item {
+      --input-height: 5.2rem;
+    }
+  }
+{% endstyle %}
+<div
+  class="bundle-sticky border rounded sticky top-30 p-20 p-1025-40 flex column gap-20 gap-1025-30"
+  style="--border-height: 2px;--color-border:var(--color-heading);"
+>
   {%- if title != blank or description != blank -%}
     <div
       class="text-{{ text_alignment }}"
@@ -43,34 +56,41 @@
       {% for item in (1..section_st.maximum) %}
         <div class="skeleton-product flex align-center gap-15" data-product-bundle-variant>
           <figure
-            class="skeleton-product__media media relative overflow-hidden"
+            class="skeleton-product__media rounded media relative overflow- bg-secondary flex-auto w-custom"
             data-product-bundle-variant-media
-            style="--aspect-ratio: 1/1;"
+            style="--aspect-ratio: 1/1;--width: 10rem;"
           ></figure>
           <div
-            class="skeleton-product__details grow-1 flex column"
+            class="skeleton-product__details grow-1 flex column gap-10"
+            style="--height: 1rem;"
             data-product-bundle-variant-content
           >
-            <span class="skeleton-product__info skeleton-1"></span>
-            <span class="skeleton-product__info skeleton-2"></span>
-            <span class="skeleton-product__info skeleton-3"></span>
+            <span
+              class="skeleton-product__info skeleton-1 h-custom bg-secondary rounded-10 max-w-custom-all"
+              style="--max-width: 100%;"
+            ></span>
+            <span
+              class="skeleton-product__info skeleton-2 h-custom bg-secondary rounded-10 max-w-custom-all"
+              style="--max-width: 6rem;"
+            ></span>
+            <span
+              class="skeleton-product__info skeleton-3 h-custom bg-secondary rounded-10 max-w-custom-all"
+              style="--max-width: 12rem"
+            ></span>
           </div>
         </div>
       {% endfor %}
     </div>
   </div>
-  <div
-    class="divider"
-    style="border-bottom: 1px solid #E5E5E5;"
-  ></div>
+  <div class="divider border-top"></div>
   <div class="bundle-total h5 flex space-between gap-10">
     <span class="text">{{ 'sections.cart.total' | t }}:</span>
     <span class="bundle-total-price-{{ section.id }}">
-        {%- if settings.currency_code -%}
-            {{ 0 | money_with_currency }}
-          {%- else -%}
-            {{ 0 | money }}
-          {%- endif -%}
+      {%- if settings.currency_code -%}
+        {{ 0 | money_with_currency }}
+      {%- else -%}
+        {{ 0 | money }}
+      {%- endif -%}
     </span>
   </div>
   <button-submit-bundle
@@ -85,19 +105,15 @@
     <span class="hidden-on-load transition-short">{{ 'products.product.add_all_to_cart' | t }}</span>
     {%- render 'loader' -%}
   </button-submit-bundle>
-  <div class="bundle-footer flex column">
+  <div class="bundle-footer flex column gap-10">
     {% content_for 'blocks' %}
   </div>
 </div>
 {% schema %}
 {
   "name": "t:sections.product-bundle.settings.your_bundle.name",
-  "class": "w-full col-1025-remaining bundle-sidebar p-40 bundle-sticky",
+  "class": "w-full col-1025-w-custom bundle-sidebar",
   "settings": [
-    {
-      "type": "header",
-      "content": "t:sections.product-bundle.settings.your_bundle.settings.header.label"
-    },
     {
       "type": "text",
       "id": "title",

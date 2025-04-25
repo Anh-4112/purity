@@ -1,6 +1,5 @@
 {{ 'section-build-your-routine.css' | asset_url | stylesheet_tag }}
 <script type="module" src="{{ 'section-build-your-routine.js' | asset_url }}" defer="defer"></script>
-
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -20,7 +19,7 @@
   endif
 -%}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }}; --col-width: 70%;
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }}; --col-width: clamp(30%, 20vw, 46rem);
   {% if heading_size == 'large' %}--font-size: 40;{% endif %}
 {%- endcapture -%}
 
@@ -50,7 +49,12 @@
         {%- endif -%}
       </div>
     {%- endif -%}
-    <build-your-routine class="row-gap gap-large flex column flex-md-row wrap cols space-between" data-minimum="{{ section_st.minimum }}" data-maximum="{{ section_st.maximum }}" data-section-id="{{ section.id }}">
+    <build-your-routine
+      class="product_bundle row-gap gap-large flex column flex-md-row wrap cols space-between"
+      data-minimum="{{ section_st.minimum }}"
+      data-maximum="{{ section_st.maximum }}"
+      data-section-id="{{ section.id }}"
+    >
       {% content_for 'blocks' %}
     </build-your-routine>
   </div>
@@ -176,7 +180,7 @@
       "label": "t:sections.product-bundle.settings.discount.maximum",
       "default": 3,
       "min": 3,
-      "max": 12,
+      "max": 8,
       "step": 1
     },
     {
