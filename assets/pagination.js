@@ -5,6 +5,7 @@ class PaginateLoadmore extends HTMLElement {
     this.initLoadMore();
   }
   initLoadMore() {
+    const count = document.getElementById('load-more-container').getAttribute('data-count');
     this.querySelectorAll(".actions-load-more").forEach((loadMore) => {
       var _this = this;
       if (loadMore.classList.contains("infinit-scrolling")) {
@@ -12,7 +13,7 @@ class PaginateLoadmore extends HTMLElement {
           function (entries) {
             entries.forEach((entry) => {
               if (entry.intersectionRatio === 1) {
-                _this.loadMorePosts(loadMore);
+                _this.loadMorePosts(loadMore, count);
               }
             });
           },
@@ -25,14 +26,14 @@ class PaginateLoadmore extends HTMLElement {
           (event) => {
             event.preventDefault();
             const target = event.currentTarget;
-            _this.loadMorePosts(target);
+            _this.loadMorePosts(target, count);
           },
           false
         );
       }
     });
   }
-  loadMorePosts(target) {
+  loadMorePosts(target, count) {
     const loadMore_url = target.getAttribute("href");
     const _this = this;
     _this.toggleLoading(target, true);
@@ -62,6 +63,7 @@ class PaginateLoadmore extends HTMLElement {
         } else {
           target.remove();
         }
+        _this.updateProgressBar(count);
         _this.toggleLoading(target, false);
       })
       .catch((error) => {
@@ -74,6 +76,49 @@ class PaginateLoadmore extends HTMLElement {
       event.classList[method]("loading");
     }
   }
+  updateProgressBar(count) {
+    var amount = document.querySelectorAll('#section__content-items .item-load').length;
+    var percent =(amount / count) * 100 ; 
+    var progressBar = document.querySelector('.load-more-progress-bar');
+    progressBar.style.setProperty('--percent', percent + '%');
+    progressBar.style.setProperty('--amount', amount);
+  }
 }
 
 customElements.define("loadmore-button", PaginateLoadmore);
+
+class LoadMoreButtonCollection extends HTMLElement {
+  constructor() {
+    super();
+    this.handleClick();
+  }
+
+  handleClick() {
+    const loadMoreButton = this.querySelector('a');
+    const load_more = document.querySelector('.actions-load-more');
+
+    if (loadMoreButton) {
+      loadMoreButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (load_more) {
+          load_more.classList.add('loading');
+        }
+        setTimeout(() => {
+          this.initLoadMore();
+          if (load_more) {
+            load_more.classList.remove('loading');
+          }
+          this.remove();
+        }, 500);
+      });
+    }
+  }
+
+  initLoadMore() {
+    document.querySelectorAll('.section__collections-list .collection-item.hidden').forEach(item => {
+      item.classList.remove('hidden');
+    });
+  }
+}
+
+customElements.define('loadmore-button-collection', LoadMoreButtonCollection);

@@ -8,15 +8,23 @@
   else
     assign section_width = 'fluid_container'
   endif
+
+  assign column_gap_slide = section_st.column_gap
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 30
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 10
+  endif
+
   assign radius_image_class = ''
   assign radius_content_class = ''
   assign has_custom_background = false
-
   if section_st.background_color != 'rgba(0,0,0,0)' and section_st.background_color != 'transparent' and section_st.background_color != blank and section_st.background_color != '#fff' and section_st.background_color != '#ffffff'
     assign has_custom_background = true
   endif
-
-  if has_custom_background
+  if column_gap_slide == 0 and has_custom_background
     if section_st.image_desktop_position == 'left'
       assign radius_image_class = 'rounded-1025-left rounded-top-mb'
       assign radius_content_class = 'rounded-1025-right rounded-bottom-mb'
@@ -24,10 +32,18 @@
       assign radius_image_class = 'rounded-1025-right rounded-top-mb'
       assign radius_content_class = 'rounded-1025-left rounded-bottom-mb'
     endif
+  else
+    assign radius_image_class = 'rounded'
+    assign radius_content_class = 'rounded'
   endif
-
   if has_custom_background
-    assign padding_content_class = 'p-20 p-1025-40'
+    assign padding_content_class = 'p-30'
+  else
+    if column_gap_slide != 0
+      assign padding_content_class = ''
+    else
+      assign padding_content_class = 'image-with-text__container'
+    endif
   endif
 
   assign image_ratio = section_st.image_ratio
@@ -42,7 +58,9 @@
         assign ratio = '3/4'
     endcase
   else
-    if block_st.image != blank
+    if block_st.video_local != blank
+      assign ratio = block_st.video_local.aspect_ratio
+    elsif block_st.image != blank
       assign ratio = block_st.image.aspect_ratio
     else
       assign ratio = '3/4'
@@ -50,11 +68,15 @@
   endif
 -%}
 
+{%- capture col_style -%}
+  {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap: {{  column_gap_slide }}px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
+{%- endcapture -%}
+
 <div
-  class="flex wrap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
-  id="{{ forloop.index }}"
+  class="parallax-wrapper flex wrap gap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %} h-full"
+  style="{{ col_style | strip | strip_newlines }}"
 >
-  <div class="image-with-text__media-item w-full w-1025-50-percent">
+  <div class="parallax-media w-full col-1025-w-custom h-full">
     <div
       class="image-with-text__media banner__media {{ radius_image_class }} h-full"
       style="--aspect-ratio: {{ ratio }}"
@@ -66,7 +88,30 @@
           assign alt = block_st.image.alt | escape
         endif
       -%}
-      {%- if block_st.image != blank -%}
+      {% if block_st.video_local != blank %}
+        {%- liquid
+          assign source = block_st.video_local.sources
+          assign source_url = ''
+          for s in source
+            if s.format == 'mp4'
+              assign source_url = s.url
+              break
+            endif
+          endfor
+          assign video_poster = block_st.video_local.preview_image | image_url: width: 1100
+        -%}
+        <video-local>
+          <video
+            loop="true"
+            data-src="{{ source_url }}"
+            poster="{{ video_poster }}"
+            playsinline="true"
+            autoplay
+            muted
+            class="h-full w-full object-fit-cover"
+          ></video>
+        </video-local>
+      {% elsif block_st.image != blank %}
         {% render 'responsive-image',
           type: 'other',
           container: section_width,
@@ -79,10 +124,10 @@
       {% endif %}
     </div>
   </div>
-  <div class="w-full w-1025-50-percent flex text-{{ section_st.content_alignment }}">
+  <div class="parallax-content w-full col-1025-remaining flex text-{{ section_st.content_alignment }}">
     {% if has_custom_background %}
       <div
-        class="image-with-text__wrapper w-full flex bg-custom {{ radius_content_class }}"
+        class="w-full flex bg-custom {{ radius_content_class }}"
         style="--bg-color-custom: {{ section_st.background_color }};"
       >
     {% endif %}
@@ -96,10 +141,13 @@
 {% schema %}
 {
   "name": "t:sections.image_card.blocks.group_name",
-  "class": "blocks-group-image-card swiper-slide",
+  "class": "blocks-group-parallax-image w-full h-full",
   "blocks": [
     {
       "type": "@app"
+    },
+    {
+      "type": "_icon"
     },
     {
       "type": "heading"
@@ -112,9 +160,6 @@
     },
     {
       "type": "button"
-    },
-    {
-      "type": "highlight-text"
     }
   ],
   "settings": [
@@ -122,15 +167,18 @@
       "type": "image_picker",
       "id": "image",
       "label": "t:sections.all.image.label"
+    },
+    {
+      "type": "video",
+      "id": "video_local",
+      "label": "t:sections.video.settings.video_local.label",
+      "info": "t:sections.all.svg.custom_svg.info"
     }
   ],
   "presets": [
     {
       "name": "t:sections.image_card.blocks.group_name",
       "blocks": [
-        {
-          "type": "highlight-text"
-        },
         {
           "type": "heading"
         },

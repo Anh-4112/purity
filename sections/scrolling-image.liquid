@@ -21,7 +21,7 @@
     --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.speed }}s;
 {%- endcapture -%}
 {%- capture col_style -%}
-  {% if section_st.space_between < 15 %}--gap: {{ section_st.space_between }}px;{% else %}--gap: clamp(4rem, calc({{ section_st.space_between }} * var(--responsive-rate)), calc({{ section_st.space_between }}*1px));{% endif %}
+  {% if section_st.space_between < 40 %}--gap: {{ section_st.space_between }}px;{% else %}--gap: clamp(4rem, calc({{ section_st.space_between }} * var(--responsive-rate)), calc({{ section_st.space_between }}*1px));{% endif %}
 {%- endcapture -%}
 {% style %}
   .show-background-blur {
@@ -72,7 +72,7 @@
               assign image_alt = image.alt | default: image_alt_default | escape
             -%}
             <a
-              class="scrolling-image-item overflow-hidden w-custom-mb w-custom"
+              class="scrolling-image-item overflow-hidden w-custom"
               style="--width: {{ section_st.image_width }}px;"
               {% if link_image == blank %}
                 role="link" aria-disabled="true"

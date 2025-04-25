@@ -6,7 +6,7 @@
   assign content_alignment = section_st.text_alignment
 %}
 <div
-  class="mb-custom flex justify-content-{{ content_alignment }}"
+  class="mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex justify-content-{{ content_alignment }}"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
 >
   <spinning-text

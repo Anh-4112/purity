@@ -10,7 +10,7 @@
   class="block"
 >
   <div
-    class="block__highlight_text subheading_weight lh-normal mb-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if has_custom_background %} py-10 px-15 btn-rounded{% endif %} inline-flex align-center gap-5"
+    class="block__highlight_text subheading_weight lh-normal mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if has_custom_background %} py-10 px-15 btn-rounded{% endif %} inline-flex align-center gap-5"
     style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
     {{ block.shopify_attributes }}
   >
@@ -62,7 +62,7 @@
       "options": [
         {
           "value": "none",
-          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__1.label"
+          "label": "t:settings_schema.typography.settings.heading.text_transform.unset"
         },
         {
           "value": "star",

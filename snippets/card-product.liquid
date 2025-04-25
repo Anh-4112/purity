@@ -23,7 +23,7 @@
 %}
 {% if card_product and card_product != empty %}
   <div
-    class="product-item product__item-js{{ class }}"
+    class="product-item product__item-js{{ class }}" data-product-id="{{ card_product.id }}"
   >
     <div class="product-item__inner relative{{ style_layout }}{% if theme_st.product_show_quick_add_mobile == true %} show_quick_add-mb{% endif %}">
       {%- if disable_image != true -%}
@@ -343,7 +343,7 @@
           <div class="product__tag grey-color mb-8 fs-13 lh-normal">
             <ul
               class="list-unstyled flex wrap gap{% if settings.product_alignment == 'center' %} justify-center{% endif %}"
-              style="--gap: 6px;"
+              style="--gap: 6px;--gap-desktop: 6px;"
             >
               {% for tags in card_product.tags %}
                 <li>

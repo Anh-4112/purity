@@ -1,0 +1,392 @@
+{{ 'section-parallax-image.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign section_st = section.settings
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
+  assign column_gap_slide = section_st.column_gap
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 30
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 10
+  endif
+  assign heading_size = section_st.heading_size
+  assign header_size = ''
+  if heading_size == 'small'
+    assign header_size = 'h3'
+  elsif heading_size == 'large'
+    assign header_size = 'h1'
+  endif
+-%}
+{%- capture style -%}
+    --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--col-width: 50%;
+    {% if heading_size == 'large' %}--font-size: 40;{% endif %}
+  {%- endcapture -%}
+
+<div
+  class="section color-{{ section_st.color_scheme }}"
+  style="{{ style | strip | strip_newlines }}"
+  
+>
+  <div
+    class="{{ section_width }}" data-sticky-sections
+  >
+    {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
+      <div
+        class="section-header text-{{ section_st.header_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}"
+      >
+        {%- if section_st.subheading != blank -%}
+          <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight fs-big-2">
+            {{ section_st.subheading }}
+          </div>
+        {%- endif -%}
+        {%- if section_st.title != blank -%}
+          <h2 class="block section-heading {{ header_size }}">
+            {{ section_st.title }}
+          </h2>
+        {%- endif -%}
+        {%- if section_st.description != blank -%}
+          <div class="section-description mt-15">
+            {{ section_st.description }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    <sticky-section class="sticky-container block" data-sticky-sections>
+      <div class="section-sticky row-gap gap-{{ section_st.column_gap }} flex column flex-md-row wrap">
+        {% content_for 'blocks' %}
+      </div>
+    </sticky-section>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.parallax-image.name",
+  "class": "section section-parallax-image",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlay"]
+  },
+  "blocks": [
+    {
+      "type": "group-image-parallax"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.general"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "fix_width",
+          "label": "t:sections.all.layout.fix_width"
+        },
+        {
+          "value": "stretch_width",
+          "label": "t:sections.all.layout.stretch_width"
+        },
+        {
+          "value": "full_width",
+          "label": "t:sections.all.layout.full_width"
+        }
+      ],
+      "default": "fix_width",
+      "label": "t:sections.all.layout.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.info",
+      "default": "default-color-scheme"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_header.label"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.all.content_setting.subheading.label",
+      "default": "Sale Up to 75% Off"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Today's Best Deals",
+      "label": "t:sections.all.content_setting.heading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.all.content_setting.description.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:sections.all.content_header.heading_size.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.all.content_header.heading_size.options__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.all.content_header.heading_size.options__3.label"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.all.content_header.heading_size.label"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "center",
+      "label": "t:sections.all.text_alignment.alignment"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.image_card.blocks.header"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.all.image.aspect_ratio.adapt"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.all.image.aspect_ratio.options__1"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.all.image.aspect_ratio.options__2"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.all.image.aspect_ratio.options__3"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.all.image.aspect_ratio.label"
+    },
+    {
+      "type": "select",
+      "id": "image_desktop_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.all.image.desktop_position.left"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.all.image.desktop_position.right"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.all.image.desktop_position.label",
+      "info": "t:sections.all.image.desktop_position.info"
+    },
+    {
+      "type": "select",
+      "id": "column_gap",
+      "options": [
+        {
+          "value": "no_gap",
+          "label": "t:sections.all.padding.column_gap.no_gap"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.all.padding.column_gap.small"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.all.padding.column_gap.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.all.padding.column_gap.large"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.all.padding.column_gap.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_setting.label"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.image-with-text.settings.background_color",
+      "default": "#ECE7DA"
+    },
+    {
+      "type": "select",
+      "id": "desktop_vertical_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.top"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.middle"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.bottom"
+        }
+      ],
+      "default": "end",
+      "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.label"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "start",
+      "label": "t:sections.all.text_alignment.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.mobile_options.label"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment_mobile",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.all.text_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "start",
+      "label": "t:sections.all.text_alignment.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.parallax-image.name",
+      "blocks": [
+        {
+          "type": "group-image-parallax",
+          "blocks": [
+            {
+              "type": "heading"
+            },
+            {
+              "type": "description"
+            },
+            {
+              "type": "button"
+            }
+          ]
+        },
+        {
+          "type": "group-image-parallax",
+          "blocks": [
+            {
+              "type": "heading"
+            },
+            {
+              "type": "description"
+            },
+            {
+              "type": "button"
+            }
+          ]
+        },
+        {
+          "type": "group-image-parallax",
+          "blocks": [
+            {
+              "type": "heading"
+            },
+            {
+              "type": "description"
+            },
+            {
+              "type": "button"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
