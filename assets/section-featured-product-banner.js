@@ -155,30 +155,18 @@ class MediaEffect extends HTMLElement {
   playEntranceAnimation() {
     this.elements.forEach((element, index) => {
       const delay = index * 0.1;
-
-      if (typeof Motion !== 'undefined') {
-        Motion.animate(element,
-          {
-            opacity: [0, 1],
-            y: [20, 0],
-            scale: [0.95, 1]
-          },
-          {
-            duration: 0.6,
-            delay: delay,
-            easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)'
-          }
-        );
-      } else {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px) scale(0.95)';
-
-        setTimeout(() => {
-          element.style.transition = 'opacity 0.6s ease, transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)';
-          element.style.opacity = '1';
-          element.style.transform = 'translateY(0) scale(1)';
-        }, delay * 1000);
-      }
+      Motion.animate(element,
+        {
+          opacity: [0, 1],
+          y: [20, 0],
+          scale: [0.95, 1]
+        },
+        {
+          duration: 0.6,
+          delay: delay,
+          easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)'
+        }
+      );
     });
   }
 
@@ -197,17 +185,13 @@ class MediaEffect extends HTMLElement {
     }
 
     this.elements.forEach(element => {
-      if (typeof Motion !== 'undefined') {
-        Motion.animate(element, {
-          x: 0,
-          y: 0
-        }, {
-          duration: 0.3,
-          easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)'
-        });
-      } else {
-        element.style.transform = 'translate(0, 0)';
-      }
+      Motion.animate(element, {
+        x: 0,
+        y: 0
+      }, {
+        duration: 0.3,
+        easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)'
+      });
     });
   }
 
@@ -247,22 +231,17 @@ class MediaEffect extends HTMLElement {
       const moveX = rotatedX * speedFactor * this.container.offsetWidth * 0.3 * factorRandomX * softnessFactor;
       const moveY = rotatedY * speedFactor * this.container.offsetHeight * 0.3 * factorRandomY * softnessFactor;
 
-      if (typeof Motion !== 'undefined') {
-        Motion.animate(element, {
-          x: moveX,
-          y: moveY
-        }, {
-          type: "spring",
-          stiffness: 25 + Math.random() * 15,
-          damping: 15 + Math.random() * 10,
-          duration: 2 + Math.random() * 1,
-          restDelta: 0.001,
-          restSpeed: 0.001
-        });
-      } else {
-        element.style.transition = 'transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
-        element.style.transform = `translate(${moveX}px, ${moveY}px)`;
-      }
+      Motion.animate(element, {
+        x: moveX,
+        y: moveY
+      }, {
+        type: "spring",
+        stiffness: 25 + Math.random() * 15,
+        damping: 15 + Math.random() * 10,
+        duration: 2 + Math.random() * 1,
+        restDelta: 0.001,
+        restSpeed: 0.001
+      });
     });
 
     this.scheduleNextRandomMovement();
@@ -318,18 +297,14 @@ class MediaEffect extends HTMLElement {
     this.isHovering = false;
 
     this.elements.forEach(element => {
-      if (typeof Motion !== 'undefined') {
-        Motion.animate(element, {
-          x: 0,
-          y: 0
-        }, {
-          type: "spring",
-          stiffness: 200,
-          damping: 20
-        });
-      } else {
-        element.style.transform = 'translate(0, 0)';
-      }
+      Motion.animate(element, {
+        x: 0,
+        y: 0
+      }, {
+        type: "spring",
+        stiffness: 200,
+        damping: 20
+      });
     });
 
     if (this.animationId) {
@@ -466,30 +441,21 @@ class ContentEffect extends HTMLElement {
       const isEven = index % 2 === 0;
       const startX = isEven ? -40 : 40;
       
-      if (typeof Motion !== 'undefined' && typeof Motion.animate === 'function') {
-        Motion.animate(element, 
-          {
-            opacity: [0, 1],
-            x: [startX, 0]
-          },
-          {
-            delay: delay,
-            duration: 0.8,
-            easing: 'cubic-bezier(0.17, 0.67, 0.3, 1.33)',
-            onComplete: () => {
-              element.style.opacity = '1';
-              element.style.transform = 'translateX(0)';
-            }
+      Motion.animate(element, 
+        {
+          opacity: [0, 1],
+          x: [startX, 0]
+        },
+        {
+          delay: delay,
+          duration: 0.8,
+          easing: 'cubic-bezier(0.17, 0.67, 0.3, 1.33)',
+          onComplete: () => {
+            element.style.opacity = '1';
+            element.style.transform = 'translateX(0)';
           }
-        );
-      } else {
-        element.style.opacity = '0';
-        element.style.transform = `translateX(${startX}px)`;
-        setTimeout(() => {
-          element.style.opacity = '1';
-          element.style.transform = 'translateX(0)';
-        }, delay * 1000);
-      }
+        }
+      );
     });
   }
 
