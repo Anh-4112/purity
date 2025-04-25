@@ -501,6 +501,10 @@ input[type="checkbox"]:checked + .checkmark:before {
   left: 0;
   right: 0;
 }
+.inset-y-0 {
+  top: 0;
+  bottom: 0;
+}
 .top-0 {
   top: 0;
 }
@@ -748,7 +752,7 @@ a.hover-heading-color:hover,
 :where(.flex-row) {
   flex-direction: row;
 }
-:where(.flex-row-reverse) {
+:where(.row-reverse) {
   flex-direction: row-reverse;
 }
 :where(.column) {
@@ -1101,6 +1105,9 @@ a.hover-heading-color:hover,
 .my-25 {
   margin-top: 2.5rem;
   margin-bottom: 2.5rem;
+}
+.my-60 {
+  margin-block: clamp(4rem, 4.5vw, 6rem);
 }
 .my-custom {
   margin-block: calc(var(--space-bottom) * 1px);
@@ -1477,7 +1484,12 @@ variant-input label.disable:after {
 variants-dropdown .variant-input label.disable:after {
   display: none;
 }
-
+quantity-input input {
+  --input-border-radius: 0;
+}
+.quantity__button {
+  height: var(--input-height);
+}
 @media screen and (max-width: 767.98px) {
   .grid_scroll {
     grid-template-columns: repeat(
@@ -1525,6 +1537,9 @@ variants-dropdown .variant-input label.disable:after {
   }
   .row-reverse-md {
     flex-direction: row-reverse;
+  }
+  .flex-md-wrap {
+    flex-wrap: wrap;
   }
   .border-bottom-md-0 {
     border-bottom: 0;
@@ -1648,6 +1663,9 @@ variants-dropdown .variant-input label.disable:after {
   .swiper:not([class*="initialized"])[data-desktop="1"] .swiper-slide {
     width: 100%;
   }
+  .text-end-1025 {
+    text-align: end;
+  }
   :is(.grid-cols, .flex-cols, .cols) {
     --col: var(--col-desktop, var(--col-number));
     --gap-custom: var(--gap-desktop, var(--gap));
@@ -1660,6 +1678,12 @@ variants-dropdown .variant-input label.disable:after {
   }
   .flex-1025 {
     display: flex;
+  }
+  .row-1025 {
+    flex-direction: row;
+  }
+  .nowrap-1025 {
+    flex-wrap: nowrap;
   }
   .absolute-1025 {
     position: absolute;
@@ -1685,6 +1709,9 @@ variants-dropdown .variant-input label.disable:after {
   }
   .py-1025-20 {
     padding-block: 2rem;
+  }
+  .py-1025-30 {
+    padding-block: 3rem;
   }
   .p-1025-50 {
     padding: 5rem;
@@ -1715,6 +1742,12 @@ variants-dropdown .variant-input label.disable:after {
   }
   .mt-1025-40 {
     margin-top: 4rem;
+  }
+  .mb-1025-30 {
+    margin-bottom: 3rem;
+  }
+  .mb-1025-30 {
+    margin-bottom: 3rem;
   }
   .wh-1025-50 {
     width: 5rem;
@@ -1758,6 +1791,9 @@ variants-dropdown .variant-input label.disable:after {
 td,
 th {
   padding: 11px 12px;
+}
+.drawer-spacing {
+  padding: var(--padding-block, 2rem) var(--bs-gutter-x);
 }
 :where(.modal-inner:not(.draw-mb)) {
   transform: translateY(100%);
@@ -1820,5 +1856,9 @@ th {
     -webkit-transform: translateX(0) translateY(-100%);
     max-width: unset;
     border-radius: 0;
+  }
+  .drawer-spacing {
+    padding: var(--padding-block-desktop, 3rem)
+      var(--padding-inline-desktop, 4rem);
   }
 }
