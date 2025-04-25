@@ -1,6 +1,7 @@
 {%- liquid
   assign theme_st = settings
   assign image_lazy_loading = theme_st.image_lazy_loading
+  assign scroll_animation = theme_st.scroll_animation
   assign container = container
   assign type = type
   assign image_mobile = image_mobile
@@ -98,8 +99,11 @@
     , calc( ({{ section_width_mobile }} - {{ padding_mobile }} * {{ column_mobile | minus: 1 }} ) * {{ divide_column_mobile }})
   {%- endcapture -%}
 {% endif %}
-{% if motion %}
-  <motion-animation>
+{% if motion and scroll_animation %}
+  <motion-effect
+    class="block{{ class_motion }}"
+    data-animate="zoom-out-sm"
+  >
 {% endif %}
 {% if image_lazy_loading != blank %}
   {% if image_mobile != blank %}
@@ -126,7 +130,7 @@
       <img
         {% if fetchpriority == 'high' %}
           srcset="{{ srcset_image }}"
-          loading="eager"
+          loading="lazy"
           fetchpriority="high"
         {% elsif fetchpriority == 'low' %}
           data-srcset="{{ srcset_image }}"
@@ -142,6 +146,7 @@
         class="image-lazy-load"
         width="{{ image.width }}"
         height="{{ image.height }}"
+        is="lazy-loading-img"
         style="--point:{{ image.presentation.focal_point }}"
       >
     </picture>
@@ -155,7 +160,7 @@
     <img
       {% if fetchpriority == 'high' %}
         srcset="{{ srcset_image }}"
-        loading="eager"
+        loading="lazy"
         fetchpriority="high"
       {% elsif fetchpriority == 'low' %}
         data-srcset="{{ srcset_image }}"
@@ -172,6 +177,7 @@
       loading="lazy"
       width="{{ image.width }}"
       height="{{ image.height }}"
+      is="lazy-loading-img"
       style="--point:{{ image.presentation.focal_point }}"
     >
   {% endif %}
@@ -198,7 +204,8 @@
             sizes: sizes,
             widths: widths,
             alt: image_alt,
-            fetchpriority: fetchpriority
+            fetchpriority: fetchpriority,
+            is: 'lazy-loading-img'
         -}}
       {% else %}
         {{-
@@ -210,7 +217,8 @@
             height: image.height,
             sizes: sizes,
             widths: widths,
-            alt: image_alt
+            alt: image_alt,
+            is: 'lazy-loading-img'
         -}}
       {% endif %}
     </picture>
@@ -227,7 +235,8 @@
           sizes: sizes,
           widths: widths,
           alt: image_alt,
-          fetchpriority: fetchpriority
+          fetchpriority: fetchpriority,
+          is: 'lazy-loading-img'
       -}}
     {% else %}
       {{-
@@ -240,11 +249,12 @@
           sizes: sizes,
           widths: widths,
           class: class,
-          alt: image_alt
+          alt: image_alt,
+          is: 'lazy-loading-img'
       -}}
     {% endif %}
   {% endif %}
 {% endif %}
-{% if motion %}
-  </motion-animation>
+{% if motion and scroll_animation %}
+  </motion-effect>
 {% endif %}

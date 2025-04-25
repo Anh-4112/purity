@@ -23,7 +23,7 @@
 %}
 {% if card_product and card_product != empty %}
   <div
-    class="product-item product__item-js{{ class }}"
+    class="product-item product__item-js{{ class }}" data-product-id="{{ card_product.id }}"
   >
     <div class="product-item__inner relative{{ style_layout }}{% if theme_st.product_show_quick_add_mobile == true %} show_quick_add-mb{% endif %}">
       {%- if disable_image != true -%}
@@ -68,7 +68,7 @@
           >
             {%- if p_media -%}
               <div
-                class="product__media animation-swatches{{ image_rounded }}{% if type == 'bought_together' %} h-full{% endif %}"
+                class="image__media product__media animation-swatches{{ image_rounded }}{% if type == 'bought_together' %} h-full{% endif %}"
                 style="--aspect-ratio: {{ ratio }};"
               >
                 {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}

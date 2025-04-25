@@ -32,7 +32,6 @@ announcement-bar close-button:focus-visible::after {
   outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: -5px;
 }
-
 .footer-block__newsletter-inner input[type="email"]:-webkit-autofill,
 .footer-block__newsletter-inner input[type="email"]:-webkit-autofill:hover,
 .footer-block__newsletter-inner input[type="email"]:-webkit-autofill:focus,
@@ -506,5 +505,11 @@ html.no-js details[open].type-canvas .has-overlay:after {
     box-shadow: 0 0 0 1px var(--color-heading),
       inset 0 0 0 calc(var(--shadow-position, -3px) * -1)
         rgb(var(--color-white));
+  }
+  quantity-input :is(input:focus) {
+    box-shadow: none !important;
+  }
+  quantity-input:has(input:focus) {
+    border-color: var(--color-heading);
   }
 }

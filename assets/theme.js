@@ -322,6 +322,54 @@ CustomElement.observeAndPatchCustomElements({
   },
 });
 
+class LazyLoadingImg extends HTMLImageElement {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  init() {
+    if (this.media) {
+      window.addEventListener("resize", this.lazyLoading.bind(this));
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (
+            mutation.attributeName.includes("src") ||
+            mutation.attributeName.includes("srcset")
+          ) {
+            this.lazyLoading();
+          }
+        });
+      });
+
+      observer.observe(this, { attributes: true });
+      this.lazyLoading();
+    }
+  }
+
+  get media() {
+    return this.closest(".image__media") || this.closest(".image-picture");
+  }
+
+  lazyLoading() {
+    if (this.complete || this.classList.contains("loaded")) return;
+    this.media.classList.add("loading_img");
+    this.addEventListener("load", this.onImageLoad.bind(this));
+  }
+
+  onImageLoad() {
+    this.classList.add("loaded");
+    this.media.classList.remove("loading_img");
+  }
+}
+customElements.define("lazy-loading-img", LazyLoadingImg, { extends: "img" });
+CustomElement.observeAndPatchCustomElements({
+  "lazy-loading-img": {
+    tagElement: "img",
+    classElement: LazyLoadingImg,
+  },
+});
+
 class ToggleMenu extends HTMLElement {
   constructor() {
     super();
@@ -2310,3 +2358,410 @@ class ScrollingEffect extends HTMLElement {
   }
 }
 customElements.define("scrolling-effect", ScrollingEffect);
+
+class MotionEffect extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  async connectedCallback() {
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      (this.initAnimate(),
+      Motion.inView(
+        this,
+        async () => {
+          this.mediaElements &&
+            (await NextSkyTheme.loadImages(this.mediaElements)),
+            setTimeout(() => {
+              this.initAnimateEffect();
+            }, 10);
+        },
+        {
+          margin: "0px 0px -70px 0px",
+        }
+      ));
+  }
+
+  get mediaElements() {
+    return this.querySelectorAll("img, svg");
+  }
+
+  get animateEffect() {
+    return this.dataset.animate || "fade-up";
+  }
+
+  get delay() {
+    return parseInt(this.dataset.animateDelay || 0) / 100;
+  }
+
+  initAnimate() {
+    switch (this.animateEffect) {
+      case "left-to-right":
+        this.leftToRightInitial();
+        break;
+      case "fade-in":
+        this.fadeInInitial();
+        break;
+      case "fade-up":
+        this.fadeUpInitial();
+        break;
+      case "zoom-in":
+        this.zoomInInitial();
+        break;
+      case "zoom-in-lg":
+        this.zoomInLgInitial();
+        break;
+      case "zoom-out":
+        this.zoomOutInitial();
+        break;
+      case "zoom-out-sm":
+        this.zoomOutSmInitial();
+        break;
+    }
+  }
+
+  leftToRightInitial() {
+    Motion.animate(this, { opacity: 0 }, { duration: 0 });
+  }
+
+  fadeInInitial() {
+    Motion.animate(this, { opacity: 0.01 }, { duration: 0 });
+  }
+
+  fadeUpInitial() {
+    Motion.animate(
+      this,
+      { transform: "translateY(2.5rem)", opacity: 0.01 },
+      { duration: 0 }
+    );
+  }
+
+  zoomInInitial() {
+    Motion.animate(this, { transform: "scale(0.8)" }, { duration: 0 });
+  }
+
+  zoomInLgInitial() {
+    Motion.animate(this, { transform: "scale(0)" }, { duration: 0 });
+  }
+
+  zoomOutInitial() {
+    Motion.animate(this, { transform: "scale(1.3)" }, { duration: 0 });
+  }
+
+  zoomOutSmInitial() {
+    Motion.animate(this, { transform: "scale(1.1)" }, { duration: 0 });
+  }
+
+  async initAnimateEffect() {
+    switch (this.animateEffect) {
+      case "left-to-right":
+        this.leftToRight();
+        break;
+      case "fade-in":
+        await this.fadeIn();
+        break;
+      case "fade-up":
+        await this.fadeUp();
+        break;
+      case "zoom-in":
+        await this.zoomIn();
+        break;
+      case "zoom-in-lg":
+        await this.zoomInLg();
+        break;
+      case "zoom-out":
+        await this.zoomOut();
+        break;
+      case "zoom-out-sm":
+        await this.zoomOutSm();
+        break;
+    }
+  }
+
+  async leftToRight() {
+    await Motion.animate(this, { opacity: 1 }).finished;
+    this.classList.add("show");
+  }
+
+  async fadeIn() {
+    await Motion.animate(
+      this,
+      { opacity: 1 },
+      {
+        duration: 1.5,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+
+  async fadeUp() {
+    await Motion.animate(
+      this,
+      { transform: "translateY(0)", opacity: 1 },
+      {
+        duration: 0.5,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+
+  async zoomIn() {
+    await Motion.animate(
+      this,
+      { transform: "scale(1)" },
+      {
+        duration: 1.3,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+
+  async zoomInLg() {
+    await Motion.animate(
+      this,
+      { transform: "scale(1)" },
+      {
+        duration: 0.5,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+
+  async zoomOut() {
+    await Motion.animate(
+      this,
+      { transform: "scale(1)" },
+      {
+        duration: 1.5,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+
+  async zoomOutSm() {
+    await Motion.animate(
+      this,
+      { transform: "scale(1)" },
+      {
+        duration: 1,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+}
+customElements.define("motion-effect", MotionEffect);
+
+class StickySection extends HTMLElement {
+  constructor() {
+    super();
+    this.container = {
+      el: this,
+      height: 0,
+      top: 0,
+      bottom: 0,
+    };
+    this.sections = Array.from(
+      this.querySelectorAll(".blocks-group-parallax-image")
+    );
+    this.viewportTop = 0;
+    this.activeIndex = 0;
+    this.previousIndex = null;
+    this.scrollValue = 0;
+    this.boundOnScroll = this.onScroll.bind(this);
+    this.lastScrollY = 0;
+    this.scrollDirection = "down";
+  }
+
+  connectedCallback() {
+    this.initContainer();
+    this.handleSections();
+    window.addEventListener("scroll", this.boundOnScroll);
+
+    this.boundOnResize = this.onResize.bind(this);
+    window.addEventListener("resize", this.boundOnResize);
+    this.sections.forEach((section, i) => {
+      const media = section.querySelector(".parallax-media");
+      const content = section.querySelector(".parallax-content");
+
+      if (media) {
+        media.style.willChange = "transform, opacity";
+      }
+
+      if (content) {
+        content.style.willChange = "transform, opacity";
+      }
+
+      if (i !== this.activeIndex) {
+        section.style.setProperty("--stick-visibility", "0");
+      } else {
+        section.style.setProperty("--stick-visibility", "1");
+      }
+    });
+
+    setTimeout(() => {
+      this.onResize();
+      this.handleSections();
+    }, 100);
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener("scroll", this.boundOnScroll);
+    window.removeEventListener("resize", this.boundOnResize);
+  }
+
+  onResize() {
+    this.container.height = this.clientHeight;
+    this.container.top = this.offsetTop;
+    this.container.bottom = this.container.top + this.container.height;
+    this.handleSections();
+  }
+
+  onScroll() {
+    const currentScrollY = window.scrollY;
+    this.scrollDirection = currentScrollY > this.lastScrollY ? "down" : "up";
+    this.lastScrollY = currentScrollY;
+
+    this.handleSections();
+  }
+
+  initContainer() {
+    this.style.setProperty("--stick-items", `${this.sections.length + 1}00vh`);
+  }
+
+  handleSections() {
+    this.viewportTop = window.scrollY;
+    this.container.height = this.clientHeight;
+    this.container.top = this.offsetTop;
+    this.container.bottom = this.container.top + this.container.height;
+
+    if (this.container.bottom <= this.viewportTop) {
+      this.scrollValue = this.sections.length + 1;
+    } else if (this.container.top >= this.viewportTop) {
+      this.scrollValue = 0;
+    } else {
+      this.scrollValue = this.remapValue(
+        this.viewportTop,
+        this.container.top,
+        this.container.bottom,
+        0,
+        this.sections.length + 1
+      );
+    }
+
+    const previousActiveIndex = this.activeIndex;
+    this.activeIndex =
+      Math.floor(this.scrollValue) >= this.sections.length
+        ? this.sections.length - 1
+        : Math.floor(this.scrollValue);
+
+    if (previousActiveIndex !== this.activeIndex) {
+      this.animateSectionTransition(previousActiveIndex, this.activeIndex);
+    }
+  }
+
+  animateSectionTransition(fromIndex, toIndex) {
+    const isDesktop = window.innerWidth > 1025;
+    if (fromIndex !== null && this.sections[fromIndex]) {
+      const fromSection = this.sections[fromIndex];
+      const fromMedia = fromSection.querySelector(".parallax-media");
+      const fromContent = fromSection.querySelector(".parallax-content");
+
+      fromSection.style.setProperty("--stick-visibility", "0");
+
+      if (isDesktop) {
+        if (fromMedia && typeof Motion !== "undefined") {
+          Motion.animate(
+            fromMedia,
+            {
+              opacity: [1, 0],
+              scale: [1, this.scrollDirection === "down" ? 0.95 : 1.05],
+              y: [0, this.scrollDirection === "down" ? "-10px" : "10px"],
+            },
+            {
+              duration: 0.5,
+              easing: "cubic-bezier(0.4, 0.0, 0.2, 1)",
+            }
+          );
+        } else if (fromMedia) {
+          fromMedia.style.opacity = "0";
+        }
+  
+        if (fromContent && typeof Motion !== "undefined") {
+          Motion.animate(
+            fromContent,
+            {
+              opacity: [1, 0],
+              y: [0, this.scrollDirection === "down" ? "-20px" : "20px"],
+            },
+            {
+              duration: 0.5,
+              easing: "cubic-bezier(0.4, 0.0, 0.2, 1)",
+            }
+          );
+        } else if (fromContent) {
+          fromContent.style.opacity = "0";
+        }
+      }
+    }
+
+    const toSection = this.sections[toIndex];
+    if (toSection) {
+      const toMedia = toSection.querySelector(".parallax-media");
+      const toContent = toSection.querySelector(".parallax-content");
+
+      toSection.style.setProperty("--stick-visibility", "1");
+
+      if (isDesktop) {
+        if (toMedia && typeof Motion !== "undefined") {
+          Motion.animate(
+            toMedia,
+            {
+              opacity: [0, 1],
+              scale: [this.scrollDirection === "down" ? 1.05 : 0.95, 1],
+              y: [this.scrollDirection === "down" ? "10px" : "-10px", 0],
+            },
+            {
+              duration: 0.6,
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+            }
+          );
+        } else if (toMedia) {
+          toMedia.style.opacity = "1";
+        }
+  
+        if (toContent && typeof Motion !== "undefined") {
+          Motion.animate(
+            toContent,
+            {
+              opacity: [0, 1],
+              y: [this.scrollDirection === "down" ? "20px" : "-20px", 0],
+            },
+            {
+              duration: 0.6,
+              delay: 0.1,
+              easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+            }
+          );
+        } else if (toContent) {
+          toContent.style.opacity = "1";
+        }
+      }
+    }
+  }
+
+  remapValue(value, start1, end1, start2, end2) {
+    const remapped =
+      ((value - start1) * (end2 - start2)) / (end1 - start1) + start2;
+    return remapped > 0 ? remapped : 0;
+  }
+}
+
+if (!customElements.get("sticky-section")) {
+  customElements.define("sticky-section", StickySection);
+}
