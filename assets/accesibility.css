@@ -32,7 +32,6 @@ announcement-bar close-button:focus-visible::after {
   outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: -5px;
 }
-
 .footer-block__newsletter-inner input[type="email"]:-webkit-autofill,
 .footer-block__newsletter-inner input[type="email"]:-webkit-autofill:hover,
 .footer-block__newsletter-inner input[type="email"]:-webkit-autofill:focus,
@@ -46,7 +45,7 @@ input[type="checkbox"]:focus-visible + .checkmark:before {
 a.product-image.focus-inset:focus-visible,
 .banner__media.collection-media a:focus-visible,
 .scrolling__bar-link:focus-visible,
-.product_testimonial.focus-inset:focus-visible {
+.product_testimonial.focus-inset:focus-visible, a.scrolling-image-item.focus-inset:focus-visible {
   position: relative;
   outline: 0;
   border: 0;
@@ -58,7 +57,7 @@ a.product-image.focus-inset:focus-visible:after,
 .article-card .banner__media a:focus-visible::after,
 .product_testimonial.focus-inset:focus-visible:after,
 a.collection-item__media--ratio:focus-visible::after,
-video:focus-visible + .focus-video::after {
+video:focus-visible + .focus-video::after,a.scrolling-image-item.focus-inset:focus-visible:after {
   content: "";
   position: absolute;
   top: 2px;
@@ -506,5 +505,11 @@ html.no-js details[open].type-canvas .has-overlay:after {
     box-shadow: 0 0 0 1px var(--color-heading),
       inset 0 0 0 calc(var(--shadow-position, -3px) * -1)
         rgb(var(--color-white));
+  }
+  quantity-input :is(input:focus) {
+    box-shadow: none !important;
+  }
+  quantity-input:has(input:focus) {
+    border-color: var(--color-heading);
   }
 }
