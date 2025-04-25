@@ -12,43 +12,48 @@
   assign section_content_alignment = section_st.content_alignment
 %}
 {% if first_button_label != blank or block_st.second_button_label != blank %}
-  <div
-    class="block__buttons mb-custom flex wrap gap-10 text-center{% if text_alignment_mobile %} justify-content-{{ text_alignment_mobile }} flex-md-{{ content_alignment }}{% elsif section_content_alignment %} justify-content-{{ section_content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
-    style="--space-bottom: {{ block_st.spacing_bottom }};"
+  <motion-effect
+    data-animate="fade-up"
+    class="block"
   >
-    {% if first_button_label != blank %}
-      <a
-        {% if first_button_link == blank %}
-          role="link" aria-disabled="true"
-        {% else %}
-          href="{{ first_button_link | default: "#" }}"
-        {% endif %}
-        aria-label="{{ first_button_label }}"
-        class="btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %}"
-        {% if first_button_type != 'link' %}
-          style="--width: 20rem;"
-        {% endif %}
-      >
-        {{ first_button_label }}
-      </a>
-    {% endif %}
-    {% if second_button_label != blank %}
-      <a
-        {% if second_button_link == blank %}
-          role="link" aria-disabled="true"
-        {% else %}
-          href="{{ second_button_link | default: "#" }}"
-        {% endif %}
-        aria-label="{{ second_button_label }}"
-        class="btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %}"
-        {% if second_button_type != 'link' %}
-          style="--width: 20rem;"
-        {% endif %}
-      >
-        {{ second_button_label }}
-      </a>
-    {% endif %}
-  </div>
+    <div
+      class="block__buttons mb-custom flex wrap gap-10 text-center{% if text_alignment_mobile %} justify-content-{{ text_alignment_mobile }} flex-md-{{ content_alignment }}{% elsif section_content_alignment %} justify-content-{{ section_content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
+      style="--space-bottom: {{ block_st.spacing_bottom }};"
+    >
+      {% if first_button_label != blank %}
+        <a
+          {% if first_button_link == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ first_button_link | default: "#" }}"
+          {% endif %}
+          aria-label="{{ first_button_label }}"
+          class="btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %}"
+          {% if first_button_type != 'link' %}
+            style="--width: 20rem;"
+          {% endif %}
+        >
+          {{ first_button_label }}
+        </a>
+      {% endif %}
+      {% if second_button_label != blank %}
+        <a
+          {% if second_button_link == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ second_button_link | default: "#" }}"
+          {% endif %}
+          aria-label="{{ second_button_label }}"
+          class="btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %}"
+          {% if second_button_type != 'link' %}
+            style="--width: 20rem;"
+          {% endif %}
+        >
+          {{ second_button_label }}
+        </a>
+      {% endif %}
+    </div>
+  </motion-effect>
 {% endif %}
 
 {% schema %}

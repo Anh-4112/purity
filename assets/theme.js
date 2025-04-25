@@ -322,6 +322,54 @@ CustomElement.observeAndPatchCustomElements({
   },
 });
 
+class LazyLoadingImg extends HTMLImageElement {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  init() {
+    if (this.media) {
+      window.addEventListener("resize", this.lazyLoading.bind(this));
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (
+            mutation.attributeName.includes("src") ||
+            mutation.attributeName.includes("srcset")
+          ) {
+            this.lazyLoading();
+          }
+        });
+      });
+
+      observer.observe(this, { attributes: true });
+      this.lazyLoading();
+    }
+  }
+
+  get media() {
+    return this.closest(".image__media") || this.closest(".image-picture");
+  }
+
+  lazyLoading() {
+    if (this.complete || this.classList.contains("loaded")) return;
+    this.media.classList.add("loading_img");
+    this.addEventListener("load", this.onImageLoad.bind(this));
+  }
+
+  onImageLoad() {
+    this.classList.add("loaded");
+    this.media.classList.remove("loading_img");
+  }
+}
+customElements.define("lazy-loading-img", LazyLoadingImg, { extends: "img" });
+CustomElement.observeAndPatchCustomElements({
+  "lazy-loading-img": {
+    tagElement: "img",
+    classElement: LazyLoadingImg,
+  },
+});
+
 class ToggleMenu extends HTMLElement {
   constructor() {
     super();
@@ -2310,3 +2358,201 @@ class ScrollingEffect extends HTMLElement {
   }
 }
 customElements.define("scrolling-effect", ScrollingEffect);
+
+class MotionEffect extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  async connectedCallback() {
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      (this.initAnimate(),
+      Motion.inView(
+        this,
+        async () => {
+          this.mediaElements &&
+            (await NextSkyTheme.loadImages(this.mediaElements)),
+            setTimeout(() => {
+              this.initAnimateEffect();
+            }, 10);
+        },
+        {
+          margin: "0px 0px -70px 0px",
+        }
+      ));
+  }
+
+  get mediaElements() {
+    return this.querySelectorAll("img, svg");
+  }
+
+  get animateEffect() {
+    return this.dataset.animate || "fade-up";
+  }
+
+  get delay() {
+    return parseInt(this.dataset.animateDelay || 0) / 100;
+  }
+
+  initAnimate() {
+    switch (this.animateEffect) {
+      case "left-to-right":
+        this.leftToRightInitial();
+        break;
+      case "fade-in":
+        this.fadeInInitial();
+        break;
+      case "fade-up":
+        this.fadeUpInitial();
+        break;
+      case "zoom-in":
+        this.zoomInInitial();
+        break;
+      case "zoom-in-lg":
+        this.zoomInLgInitial();
+        break;
+      case "zoom-out":
+        this.zoomOutInitial();
+        break;
+      case "zoom-out-sm":
+        this.zoomOutSmInitial();
+        break;
+    }
+  }
+
+  leftToRightInitial() {
+    Motion.animate(this, { opacity: 0 }, { duration: 0 });
+  }
+
+  fadeInInitial() {
+    Motion.animate(this, { opacity: 0.01 }, { duration: 0 });
+  }
+
+  fadeUpInitial() {
+    Motion.animate(
+      this,
+      { transform: "translateY(2.5rem)", opacity: 0.01 },
+      { duration: 0 }
+    );
+  }
+
+  zoomInInitial() {
+    Motion.animate(this, { transform: "scale(0.8)" }, { duration: 0 });
+  }
+
+  zoomInLgInitial() {
+    Motion.animate(this, { transform: "scale(0)" }, { duration: 0 });
+  }
+
+  zoomOutInitial() {
+    Motion.animate(this, { transform: "scale(1.3)" }, { duration: 0 });
+  }
+
+  zoomOutSmInitial() {
+    Motion.animate(this, { transform: "scale(1.1)" }, { duration: 0 });
+  }
+
+  async initAnimateEffect() {
+    switch (this.animateEffect) {
+      case "left-to-right":
+        this.leftToRight();
+        break;
+      case "fade-in":
+        await this.fadeIn();
+        break;
+      case "fade-up":
+        await this.fadeUp();
+        break;
+      case "zoom-in":
+        await this.zoomIn();
+        break;
+      case "zoom-in-lg":
+        await this.zoomInLg();
+        break;
+      case "zoom-out":
+        await this.zoomOut();
+        break;
+      case "zoom-out-sm":
+        await this.zoomOutSm();
+        break;
+    }
+  }
+
+  async leftToRight() {
+    await Motion.animate(this, { opacity: 1 }).finished;
+    this.classList.add("show");
+  }
+
+  async fadeIn() {
+    await Motion.animate(
+      this,
+      { opacity: 1 },
+      {
+        duration: 1.5,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+
+  async fadeUp() {
+    await Motion.animate(
+      this,
+      { transform: "translateY(0)", opacity: 1 },
+      {
+        duration: 0.5,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+
+  async zoomIn() {
+    await Motion.animate(
+      this,
+      { transform: "scale(1)" },
+      {
+        duration: 1.3,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+
+  async zoomInLg() {
+    await Motion.animate(
+      this,
+      { transform: "scale(1)" },
+      {
+        duration: 0.5,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+
+  async zoomOut() {
+    await Motion.animate(
+      this,
+      { transform: "scale(1)" },
+      {
+        duration: 1.5,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+
+  async zoomOutSm() {
+    await Motion.animate(
+      this,
+      { transform: "scale(1)" },
+      {
+        duration: 1,
+        delay: this.delay,
+        easing: [0, 0, 0.3, 1],
+      }
+    ).finished;
+  }
+}
+customElements.define("motion-effect", MotionEffect);

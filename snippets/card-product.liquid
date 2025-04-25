@@ -68,7 +68,7 @@
           >
             {%- if p_media -%}
               <div
-                class="product__media animation-swatches{{ image_rounded }}{% if type == 'bought_together' %} h-full{% endif %}"
+                class="image__media product__media animation-swatches{{ image_rounded }}{% if type == 'bought_together' %} h-full{% endif %}"
                 style="--aspect-ratio: {{ ratio }};"
               >
                 {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
@@ -389,12 +389,12 @@
           {% liquid
             assign show_available = true
             if type == 'bundle' or type == 'custom'
-              assign show_available = false 
+              assign show_available = false
             endif
           %}
           {%- render 'variant-swatches',
             scope: 'variant_swatch',
-            show_available: show_available
+            show_available: show_available,
             product: card_product,
             select_type: select_type,
             select_class: select_class
@@ -453,7 +453,13 @@
           </product-form>
         {%- endif -%}
         {%- if type == 'custom' -%}
-          <product-form-bundle class="quick-add" data-handle="{{ card_product.handle }}" data-section-id="{{ section.id }}" data-minimum="{{ minimum }}" data-maximum="{{ maximum }}">
+          <product-form-bundle
+            class="quick-add"
+            data-handle="{{ card_product.handle }}"
+            data-section-id="{{ section.id }}"
+            data-minimum="{{ minimum }}"
+            data-maximum="{{ maximum }}"
+          >
             {%- form 'product',
               card_product,
               id: product_form_id,

@@ -403,9 +403,10 @@ input[type="checkbox"]:checked + .checkmark:before {
         svg:not(.product_media-model-icon),
         video,
         picture,
-        picture > *
+        picture > *,
+        motion-effect
       ),
-    motion-animation img
+    motion-effect :is(img, svg)
   ) {
   position: absolute;
   top: 0;
