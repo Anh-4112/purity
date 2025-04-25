@@ -3,7 +3,7 @@
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
-    assign section_width = 'full-width px-20'
+    assign section_width = 'full-width'
   else
     assign section_width = 'fluid_container'
   endif
@@ -34,12 +34,19 @@
       assign radius_image_class = 'rounded-1025-right rounded-top-mb'
       assign radius_content_class = 'rounded-1025-left rounded-bottom-mb'
     endif
+    if section_st.section_width == 'full_width'
+      assign radius_image_class = ''
+      assign radius_content_class = ''
+    endif
   else
     assign radius_image_class = 'rounded'
     assign radius_content_class = 'rounded'
   endif
   if has_custom_background
     assign padding_content_class = 'p-30'
+    if section_st.section_width == 'full_width'
+      assign padding_content_class = 'px-gutter-x px-1025-35 py-30'
+    endif
   else
     if column_gap_slide != 0
       assign padding_content_class = ''
@@ -78,15 +85,19 @@
   {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap: {{  column_gap_slide }}px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
 {%- endcapture -%}
 {% capture title_replace %}
-  <div class="title-select">
+  <select-options class="title-select relative px-15 pointer">
     {% if split_array.size > 0 %}
       {% liquid
         assign first_item = split_array[0]
         assign title_parts = first_item | split: '::'
         assign first_title = title_parts[0]
       %}
-      <span class="title-select__text">{{ first_title }}</span>
-      <div class="title-list">
+      <span class="title-select__text heading-style word-break select_option inline-flex align-center gap-20 border-bottom" style="--border-height: 2px; --color-border: var(--color-heading);">{{ first_title }}
+        <svg class="icon icon-down icon-rotate transition-short w-custom flex-auto" width="10" height="6" viewBox="0 0 10 6" style="--width: 1rem;">
+          <use href="#icon-arrow-down"></use>
+        </svg>
+       </span>
+      <custom-options class="title-list custom-scroll-bar">
         {% for item in split_array %}
           {% liquid
             assign title_parts = item | split: '::'
@@ -95,14 +106,14 @@
           %}
             <span class="title-item" data-block-id="{{ block_id }}">{{ title }}</span>
         {% endfor %}
-      </div>
+      </custom-options>
     {% else %}
-      <span class="title-select__text">{{ 'section-x.selected.title.default' | t }}</span>
+      <span class="title-select__text">{{ 'recommended_collection.selected.title.default' | t }}</span>
     {% endif %}
-  </div>
+  </select-options>
 {% endcapture %}
 {% capture replace_collection %}
-  <div class="collection-select">
+  <select-options class="collection-select relative px-15 pointer">
     {% if split_collection.size > 0 %}
       {% liquid
         assign first_item = split_collection[0]
@@ -112,8 +123,12 @@
         assign first_url = item_parts[2]
         assign url_default = first_url
       %}
-      <span class="collection-select__text" data-url="{{ first_url }}">{{ first_title }}</span>
-      <div class="collection-list">
+      <span class="collection-select__text heading-style word-break select_option inline-flex align-center gap-20 border-bottom" style="--border-height: 2px; --color-border: var(--color-heading);" data-url="{{ first_url }}">{{ first_title }}
+        <svg class="icon icon-down icon-rotate transition-short w-custom flex-auto" width="10" height="6" viewBox="0 0 10 6" style="--width: 1rem;">
+          <use href="#icon-arrow-down"></use>
+        </svg>
+      </span>
+      <custom-options class="collection-list custom-scroll-bar">
         {% for block_id in unique_block_ids %}
           <div class="collection-group" id="{{ block_id }}" {% if block_id != first_block_id %}style="display: none;"{% endif %}>
             {% for item in split_collection %}
@@ -129,71 +144,28 @@
             {% endfor %}
           </div>
         {% endfor %}
-      </div>
+      </custom-options>
     {% else %}
-      <span class="collection-select__text">{{ 'section-x.selected.collection.default' | t }}</span>
+      <span class="collection-select__text">{{ 'recommended_collection.selected.collection.default' | t }}</span>
     {% endif %}
-  </div>
+  </select-options>
 {% endcapture %}
 {% style %}
-  .title-select,
-  .collection-select {
-    position: relative;
-    cursor: pointer;
-    display: inline-block;
-  }
-
-  .title-select__text,
-  .collection-select__text {
-    display: inline-block;
-    font-weight: 600;
-    position: relative;
-    padding-right: 20px;
-  }
-
-  .title-select__text:after,
-  .collection-select__text:after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 5px solid currentColor;
-    transition: transform 0.3s ease;
-  }
-
-  .title-list,
-  .collection-list {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #fff;
-    border: 1px solid #e8e8e8;
-    border-radius: 4px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    min-width: 150px;
-    max-height: 200px;
-    overflow-y: auto;
-    margin-top: 5px;
-  }
-
-  .title-list.active,
-  .collection-list.active {
-    display: block;
-  }
-
-  .title-item,
-  .collection-item {
-    padding: 10px 15px;
-    display: block;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  @media (min-width: 1025px) {
+    .ps_screen {
+      padding-inline-start: clamp(
+        calc(5vw + var(--bs-gutter-x)),
+        calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2),
+        calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2)
+      );
+    }
+    .pe_screen {
+      padding-inline-end: clamp(
+        calc(5vw + var(--bs-gutter-x)),
+        calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2),
+        calc((100vw - var(--page-width) - (var(--bs-gutter-x) / 2 + 2px)) / 2)
+      );
+    }
   }
 {% endstyle %}
 <div
@@ -239,7 +211,7 @@
             style="--bg-color-custom: {{ section_st.background_color }};"
           >
         {% endif %}
-        <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }}">
+        <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }}{% if section_width == 'full-width' %}{% if section_st.image_desktop_position == 'left' %} pe_screen{% else %} ps_screen{% endif %}{% endif %}">
           <section-selected class="block">
             {% for block in section.blocks %}
               {% liquid
@@ -248,7 +220,7 @@
               {% case block.type %}
                 {% when 'heading' %}
                   <div
-                    class="block__heading mb-custom{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
+                    class="block__heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
                     style="--space-bottom: {{ block_st.spacing_bottom }};"
                     {{ block.shopify_attributes }}
                   >
@@ -256,7 +228,7 @@
                   </div>
                 {% when 'subheading' %}
                   <div
-                    class="block__highlight_text subheading_weight lh-normal inline-block mb-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-10 px-15 btn-rounded{% endif %}"
+                    class="block__highlight_text subheading_weight lh-normal inline-flex gap-5 content-center mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-8 px-15 btn-rounded{% endif %}"
                     style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
                     {{ block.shopify_attributes }}
                   >
@@ -269,7 +241,7 @@
                   </div>
                 {% when 'description' %}
                   <div
-                    class="block__description mb-custom fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
+                    class="block__description mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
                     style="--space-bottom: {{ block_st.spacing_bottom }};"
                     {{ block.shopify_attributes }}
                   >
@@ -289,8 +261,8 @@
                   %}
                   {% if first_button_label != blank or block_st.second_button_label != blank %}
                     <div
-                      class="block__buttons mb-custom flex wrap gap-10 text-center {% if section_content_alignment %} justify-content-{{ section_content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
-                      style="--space-bottom: {{ block_st.spacing_bottom }};"
+                      class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap gap text-center {% if section_content_alignment %} justify-content-{{ section_content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
+                      style="--space-bottom: {{ block_st.spacing_bottom }};--gap-desktop: 30px; --gap: 20px;"
                     >
                       {% if first_button_label != blank %}
                         <a
@@ -335,13 +307,13 @@
     </div>
   </div>
 </div>
-<script src="{{ 'section-x.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'recommended_collection.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {
-  "name": "t:sections.section-x.name",
+  "name": "t:sections.recommended_collection.name",
   "tag": "section",
-  "class": "section section-x",
+  "class": "section recommended_collection",
   "disabled_on": {
     "groups": ["header", "footer", "custom.overlay"]
   },
@@ -567,7 +539,7 @@
           "step": 1,
           "unit": "px",
           "label": "t:sections.all.padding.spacing_bottom",
-          "default": 25
+          "default": 40
         }
       ]
     },
@@ -648,7 +620,7 @@
           "step": 1,
           "unit": "px",
           "label": "t:sections.all.padding.spacing_bottom",
-          "default": 10
+          "default": 15
         }
       ]
     },
@@ -662,7 +634,7 @@
           "id": "description",
           "default": "I have [title] skin and my top skin concern is [collection]",
           "label": "t:sections.all.content_setting.description.label",
-          "info": "t:sections.section-x.blocks.button.info"
+          "info": "t:sections.recommended_collection.blocks.button.info"
         },
         {
           "type": "select",
@@ -681,7 +653,7 @@
               "label": "t:sections.all.content_header.heading_size.options__3.label"
             }
           ],
-          "default": "",
+          "default": "big-2",
           "label": "t:sections.all.content_header.heading_size.size"
         },
         {
@@ -692,7 +664,7 @@
           "step": 1,
           "unit": "px",
           "label": "t:sections.all.padding.spacing_bottom",
-          "default": 30
+          "default": 50
         }
       ]
     },
@@ -738,7 +710,8 @@
         {
           "type": "text",
           "id": "second_button_label",
-          "label": "t:sections.all.content_setting.second_button_label.label"
+          "label": "t:sections.all.content_setting.second_button_label.label",
+          "default": "Button label"
         },
         {
           "type": "url",
@@ -749,7 +722,7 @@
           "type": "select",
           "id": "second_button_type",
           "label": "t:sections.all.content_setting.button_type.label",
-          "default": "outline",
+          "default": "link",
           "options": [
             {
               "value": "primary",
@@ -780,7 +753,7 @@
     {
       "type": "featured_collection",
       "name": "t:sections.collection-list.blocks.featured_collection.name",
-      "limit": 6,
+      "limit": 5,
       "settings": [
         {
           "type": "text",
@@ -790,7 +763,7 @@
         {
           "type": "collection_list",
           "id": "collection_list",
-          "limit": 8,
+          "limit": 5,
           "label": "t:sections.collection-list.blocks.featured_collection.settings.collection.label"
         }
       ]
@@ -798,7 +771,7 @@
   ],
   "presets": [
     {
-      "name": "t:sections.section-x.name",
+      "name": "t:sections.recommended_collection.name",
       "blocks": [
         {
           "type": "subheading"

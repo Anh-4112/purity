@@ -1,19 +1,34 @@
-{% assign block_st = block.settings %}
-<div
-  class="block__highlight_text subheading_weight lh-normal inline-block mb-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-10 px-15 btn-rounded{% endif %}"
-  style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
-  {{ block.shopify_attributes }}
+{% liquid
+  assign block_st = block.settings
+  assign has_custom_background = false
+  if block_st.background_color != 'rgba(0,0,0,0)' and block_st.background_color != 'transparent' and block_st.background_color != blank and block_st.background_color != blank and block_st.background_color != '#fff' and block_st.background_color != '#ffffff'
+    assign has_custom_background = true
+  endif
+%}
+<motion-effect
+  data-animate="left-to-right"
+  class="block"
 >
-  {%- if block_st.highlight_text_icon == 'star' -%}
-    {%- render 'icon-star' -%}
-  {%- elsif block_st.highlight_text_icon == 'dot' -%}
-    {%- render 'icon-dot' -%}
-  {%- endif -%}
-  {{ block_st.highlight_text | escape }}
-</div>
+  <div
+    class="block__highlight_text subheading_weight lh-normal mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if has_custom_background %} py-10 px-15 btn-rounded{% endif %} inline-flex align-center gap-5"
+    style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block_st.highlight_text_icon == 'star' -%}
+      {%- render 'icon-star' -%}
+    {%- elsif block_st.highlight_text_icon == 'dot' -%}
+      <svg width="5" height="5" viewBox="0 0 8 8" fill="none">
+        <use href="#icon-dot"></use>
+      </svg>
+    {%- endif -%}
+
+    {{ block_st.highlight_text | escape }}
+  </div>
+</motion-effect>
 {% schema %}
 {
   "name": "t:sections.all.content_setting.highlight_text.label",
+  "class": "w-full",
   "settings": [
     {
       "type": "text",
@@ -47,7 +62,7 @@
       "options": [
         {
           "value": "none",
-          "label": "t:sections.all.content_setting.highlight_text.settings.icons.options__1.label"
+          "label": "t:settings_schema.typography.settings.heading.text_transform.unset"
         },
         {
           "value": "star",

@@ -1,6 +1,12 @@
 {%- liquid
   assign section_st = section.settings
-  assign section_width = section_st.section_width
+  if section_st.section_width == 'fix_width'
+    assign section_width = 'container'
+  elsif section_st.section_width == 'full_width'
+    assign section_width = 'full-width px-20'
+  else
+    assign section_width = 'fluid_container'
+  endif
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -18,7 +24,7 @@
       {%- case block.type -%}
         {%- when 'image' -%}
           <div
-            class="w-custom"
+            class="w-custom mb-50"
             style="{%- if image != blank -%}--aspect-ratio: {{ image.aspect_ratio }};{% endif %} --width:500px;"
           >
             {%- assign image_alt = image.alt | escape | default: 'image' -%}
@@ -30,27 +36,27 @@
                 image_alt: image_alt
               %}
             {% else %}
-              {%- render 'placeholder-render', type: 'lifestyle-2', class: 'img-placeholder h-full w-full' -%}
+              {%- render 'placeholder-render', type: 'lifestyle-2', class: 'img-placeholder h-full w-full rounded' -%}
             {% endif %}
           </div>
-        {%- when 'heading' -%}
-          <h2
-            class="block__content-heading mb-custom{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
-            style="--space-bottom: {{ block_st.spacing_bottom }};"
-            {{ block.shopify_attributes }}
-          >
-            {{ block_st.heading }}
-          </h2>
         {%- when 'subheading' -%}
           <div
-            class="block__content-subheading subheading_weight heading mb-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }}"
+            class="block__content-subheading subheading_weight heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }}"
             style="--space-bottom: {{ block_st.spacing_bottom }};"
           >
             {{ block_st.subheading | escape }}
           </div>
+        {%- when 'heading' -%}
+          <div
+            class="block__content-heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
+            style="--space-bottom: {{ block_st.spacing_bottom }};"
+            {{ block.shopify_attributes }}
+          >
+            {{ block_st.heading }}
+          </div>
         {%- when 'description' -%}
           <div
-            class="block__content-des mb-custom fs-{{ block_st.description_size }}"
+            class="block__content-des mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }}"
             style="--space-bottom: {{ block_st.spacing_bottom }};"
             {{ block.shopify_attributes }}
           >
@@ -67,7 +73,7 @@
           %}
           {% if first_button_label != blank or block_st.second_button_label != blank %}
             <div
-              class="block__buttons mb-custom flex wrap text-center"
+              class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap text-center gap-15"
               style="--space-bottom: {{ block_st.spacing_bottom }};"
             >
               {% if first_button_label != blank %}
@@ -78,9 +84,9 @@
                     href="{{ first_button_link | default: "#" }}"
                   {% endif %}
                   aria-label="{{ first_button_label }}"
-                  class="btn btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center{% else %} w-custom max-w-100{% endif %}"
+                  class="btn btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} min-w-custom max-w-100{% endif %}"
                   {% if first_button_type != 'link' %}
-                    style="--width: 20rem;"
+                    style="--width: 25rem;"
                   {% endif %}
                 >
                   {{ first_button_label }}
@@ -94,9 +100,9 @@
                     href="{{ second_button_link | default: "#" }}"
                   {% endif %}
                   aria-label="{{ second_button_label }}"
-                  class="btn btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center{% else %} w-custom max-w-100{% endif %}"
+                  class="btn btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} w-custom max-w-100{% endif %}"
                   {% if second_button_type != 'link' %}
-                    style="--width: 20rem;"
+                    style="--width: 25rem;"
                   {% endif %}
                 >
                   {{ second_button_label }}
@@ -147,21 +153,21 @@
       "type": "range",
       "id": "padding_top",
       "min": 0,
-      "max": 100,
-      "step": 1,
+      "max": 150,
+      "step": 5,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
-      "default": 48
+      "default": 90
     },
     {
       "type": "range",
       "id": "padding_bottom",
       "min": 0,
-      "max": 100,
-      "step": 1,
+      "max": 150,
+      "step": 5,
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
-      "default": 48
+      "default": 90
     }
   ],
   "blocks": [

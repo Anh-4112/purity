@@ -29,26 +29,7 @@
   {% if section_st.space_between_text < 15 %}--gap: {{ section_st.space_between_text}}px;{% else %}--gap: clamp(4rem, calc({{ section_st.space_between_text}} * var(--responsive-rate)), calc({{ section_st.space_between_text}}*1px));{% endif %}
 {%- endcapture -%}
 {%- if section.blocks.size > 0 and is_shown and section_st.announcement_actions == 'slide' -%}
-  {%- style -%}
-    @media (min-width: 576px) {
-      announcement-bar slide-section {
-        width: 70%;
-        max-width: 44rem;
-      }
-    }
-    announcement-bar .swiper-arrow:hover {
-      --swiper-navigation-color: var(--color-text);
-    }
-    [class*='initialized'] .announcement-bar__content {
-      max-width: 80%;
-    }
-    .swiper:not([class*='initialized'])[data-direction='vertical'] .swiper-wrapper {
-      align-items: center;
-    }
-    .swiper:not([class*='initialized'])[data-direction='vertical'] .swiper-wrapper .swiper-slide:not(:first-child) {
-      opacity: 0;
-    }
-  {%- endstyle -%}
+{{ 'section-announcement-bar.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 {%- if section.blocks.size > 0 and is_shown -%}
   {%- if announcement_actions == 'marquee' -%}
@@ -87,8 +68,8 @@
           data-desktop="1"
           data-direction="vertical"
           data-spacing="0"
-          data-autoplay="{{ section_st.slide_auto_change }}"
-          data-autoplay-speed="{{ section_st.change_slide_every | times: 1000 }}"
+          data-auto-play-speed="{{ section_st.change_slide_every }}"
+          style="--item-desktop: 1;--item-tablet: 1;--item-mb: 1;--gap: 0px; --gap-desktop: 0px;"
         >
           <div class="swiper-wrapper {% if section_st.uppercase %}uppercase {% endif %}fs-{{ scrolling_size }}">
             {%- for block in section.blocks -%}
@@ -167,6 +148,10 @@
     "groups": ["header"]
   },
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.announcement-bar.how_to_use.label"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

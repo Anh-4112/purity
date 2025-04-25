@@ -88,7 +88,7 @@
           <div class="compare-field flex wrap align-center word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
             {{ 'products.product.product_compare' | t }}
           </div>
-          <div class="compare-field flex wrap align-center word-break p-20 current-product bg-secondary">
+          <div class="compare-field flex wrap align-center gap-20 word-break p-20 current-product bg-secondary">
             {%- liquid
               assign p_media = product.featured_media
               assign ratio = '3/4'
@@ -207,6 +207,13 @@
                 {% render 'product-badges', scope: 'item', card_product: product %}
               </a>
             </div>
+            <a
+              aria-label="{{ product.title }}"
+              class="product__name heading-style block"
+              href="{{ product.url }}"
+            >
+              {{- product.title -}}
+            </a>
           </div>
           {%- for items in product.metafields.custom.compare_items.value -%}
             {%- liquid
@@ -330,9 +337,15 @@
                       {% render 'placeholder-render' %}
                     </div>
                   {%- endif -%}
-                  {% render 'product-badges', scope: 'item', card_product: items %}
                 </a>
               </div>
+              <a
+                aria-label="{{ product.title }}"
+                class="product__name heading-style block"
+                href="{{ product.url }}"
+              >
+                {{- product.title -}}
+              </a>
             </div>
           {%- endfor -%}
         </div>

@@ -52,11 +52,6 @@
 {%- endcapture -%}
 
 {% style %}
-  .media-product {
-    width: 100%;
-    max-width: 40rem;
-    margin: 0 auto;
-  }
   .media-effect__item:nth-of-type(1) {
     top: 0;
     right: 15%;
@@ -70,33 +65,27 @@
     bottom: 0;
     right: -5%;
   }
-  .information-text__wrapper{
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    padding-top: 20px;
-    z-index: 1;
+  .block__information_text:is(:nth-of-type(1), :nth-of-type(5)) {
+    margin-inline-end: 1.7rem;
   }
-  .information-text__content{
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: space-between;
-    height: 100%;
-    gap: 32px;
-    padding-top: 0;
+  .block__information_text:is(:nth-of-type(3), :nth-of-type(7)) {
+    margin-inline-end: 3.7rem;
   }
-  .block__information_text {
-        width: 40%;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-    }
-    .media-effect__item{
-      width: 10rem;
-      height: 10rem;
-    }
+  .block__information_text:is(:nth-of-type(2), :nth-of-type(6)) {
+    margin-inline-start: 1.7rem;
+  }
+  .block__information_text:is(:nth-of-type(4), :nth-of-type(8)) {
+    margin-inline-start: 3.7rem;
+  }
+  .balloon-icon {
+    bottom: -4px;
+    inset-inline-end: -9px;
+  }
+  .information-text__content {
+    --gap-desktop: var(--max-width, 40rem);
+    --width: (calc(100% - 40rem) / 2);
+    --row-gap: 5.7rem;
+  }
 {% endstyle %}
 <div
   class="section section color-{{ section_st.color_scheme }} gradient"
@@ -118,7 +107,7 @@
       </div>
     {%- endif -%}
     <div class="section-content relative">
-      <div class="media-product relative">
+      <div class="media-product relative w-full max-w-custom mx-auto" style="--max-width: 40rem;">
         <div
           class="media-product__main"
           style="--aspect-ratio: {{ ratio }};{% if image_mobile != blank %}--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
@@ -136,9 +125,12 @@
           {% endif %}
         </div>
         <media-effect>
-          {% assign image_effect_blocks = section.blocks | where: "type", "image_effect" %}
+          {% assign image_effect_blocks = section.blocks | where: 'type', 'image_effect' %}
           {% for block in image_effect_blocks %}
-            <div class="media-effect__item absolute">
+            <div
+              class="media-effect__item absolute w-custom max-w-100"
+              style="--width: 10rem;"
+            >
               {%- liquid
                 assign image = block.settings.image
                 assign ratio = '3/4'
@@ -175,21 +167,29 @@
           {% endfor %}
         </media-effect>
       </div>
-      <content-effect class="information-text__wrapper block">
-        <div class="information-text__content">
-          {% assign content_effect_blocks = section.blocks | where: "type", "information" %}
+      <content-effect class="information-text__wrapper block absolute top-0 w-full h-full z-1 pt-20">
+        <div class="information-text__content flex wrap align-start justify-center h-full gap">
+          {% assign content_effect_blocks = section.blocks | where: 'type', 'information' %}
           {% for block in content_effect_blocks %}
             {% assign block_st = block.settings %}
             <div
-              class="block__information_text"
+              class="block__information_text flex justify-center w-custom relative"
               {{ block.shopify_attributes }}
             >
-                <div class="subheading_weight lh-normal flex {% if block_st.highlight_text_icon != 'none' %}gap-10{% endif %} {% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-10 px-15 btn-rounded{% endif %}" style="--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};">
-                    {% if block_st.highlight_text_icon != 'none' %}
-                        {% render 'icon_svg_list', icon: block_st.highlight_text_icon %}
-                      {% endif %}
-                      {{ block_st.highlight_text | escape }}
+              <div
+                class="block__information_text-inner transition-short relative"
+                style="--gap: 8;"
+              >
+                <div class="block_infor-text heading_weight bg-secondary flex gap-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom py-15 px-25 btn-rounded">
+                  {% if block_st.highlight_text_icon != 'none' %}
+                    {% render 'icon_svg_list', icon: block_st.highlight_text_icon %}
+                  {% endif %}
+                  <span>{{ block_st.highlight_text | escape }}</span>
                 </div>
+                <svg width="25" height="25" fill="none" class="absolute balloon-icon">
+                  <ellipse cx="21" cy="20.999" fill="var(--color-background-2)" rx="4" ry="3.999"/><ellipse cx="9" cy="8.998" fill="var(--color-background-2)" rx="9" ry="8.998"/>
+                </svg>
+              </div>
             </div>
           {% endfor %}
         </div>
@@ -415,7 +415,7 @@
         {
           "type": "text",
           "id": "highlight_text",
-          "default": "Information text",
+          "default": "Icon with text",
           "label": "t:sections.all.content_setting.subheading.label"
         },
         {
@@ -473,18 +473,6 @@
               "label": "t:sections.all.icon.droplet.label"
             }
           ]
-        },
-        {
-          "type": "color",
-          "id": "background_color",
-          "label": "t:sections.image-with-text.settings.background_color",
-          "default": "#ECE7DA"
-        },
-        {
-          "type": "color",
-          "id": "text_color",
-          "label": "t:sections.image-with-text.settings.text_color",
-          "default": "#1F473E"
         },
         {
           "type": "checkbox",

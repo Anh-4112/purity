@@ -36,7 +36,7 @@
         class="swiper lazy-loading-swiper-before"
         data-section-id="{{ section.id }}"
         data-autoplay="{{ slide_auto_change }}"
-        data-autoplay-speed="{{ change_slide_every | times: 1000 }}"
+        data-auto-play-speed="{{ change_slide_every | times: 1000 }}"
         data-effect="fade"
         data-loop="true"
         data-speed="500"
@@ -44,6 +44,7 @@
         data-mobile="1"
         data-tablet="1"
         data-desktop="1"
+        style="--item-desktop: 1;--item-tablet: 1;--item-mb: 1;--gap: 0px; --gap-desktop: 0px;"
       >
         <div class="swiper-wrapper slideshow">
           {% for block in section.blocks %}
@@ -174,7 +175,9 @@
                         image: image,
                         image_mobile: image_mobile,
                         image_alt: image_alt,
-                        fetchpriority: fetchpriority
+                        fetchpriority: fetchpriority,
+                        motion: true,
+                        class_motion: ' w-full h-full'
                       %}
                     {% endif %}
                   {%- else -%}

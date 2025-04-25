@@ -154,7 +154,6 @@ class MediaZoomButton extends HTMLButtonElement {
 
     let dataSource = itemsToShow.map((media) => {
       const image = media.querySelector("img");
-
       if (media.getAttribute("media-gallery") === "image") {
         return {
           thumbnailElement: image,
@@ -173,15 +172,14 @@ class MediaZoomButton extends HTMLButtonElement {
         media.getAttribute("media-gallery") === "external_video" ||
         media.getAttribute("media-gallery") === "model"
       ) {
-        const video = media;
+        const video =
+          media.querySelector("video-product-gallery") ||
+          media.querySelector("[media-model]") ||
+          media;
         return {
           thumbnailElement: image,
           domElement: video,
-          type:
-            media.getAttribute("media-gallery") === "video" ||
-            media.getAttribute("media-gallery") === "external_video"
-              ? media.getAttribute("media-gallery")
-              : "image",
+          type: media.getAttribute("media-gallery"),
           src: image ? image.src : "",
           srcset: image ? image.srcset : "",
           msrc: image ? image.src : "",

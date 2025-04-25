@@ -1,3 +1,4 @@
+<script src="{{ 'pagination.js' | asset_url }}" defer></script>
 {%- liquid
   assign section_st = section.settings
   assign color_scheme = section_st.color_scheme
@@ -30,7 +31,7 @@
 {%- endcapture -%}
 
 {%- capture col_style -%}
-  --col-number: 1;--col-tablet: 2;--col-desktop: {{items_per_row }};
+  --col-number: 1;--col-tablet: 2;--col-desktop: {{items_per_row }};--row-gap: 4rem;
   {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
 {%- endcapture -%}
 <div
@@ -84,11 +85,11 @@
           {%- endif -%}
         {%- endpaginate -%}
       {%- else -%}
+        {%- assign load = false -%}
         <div
           class="collection-list-grid grid grid-cols gap"
           style="{{ col_style | strip | strip_newlines }}"
         >
-          {%- assign load = false -%}
           {% for block in section.blocks %}
             {%- liquid
               assign block_st = block.settings
@@ -111,12 +112,18 @@
           {% endfor %}
         </div>
         {%- if load -%}
-          {%- if pagination == 'load_more' or pagination == 'infinit_scrolling' -%}
-            <loadmore-button class="block collection-infinite-scroll text-center">
-              <a class="button inline-block btn-primary" aria-label="{{ section_st.button_show_more }}" role="link">
-                <span>{{ section_st.button_show_more }}</span>
+          {%- if pagination == 'button' or pagination == 'infinity' -%}
+            <loadmore-button-collection class="block collection-infinite-scroll text-center mt-30 mt-1025-60">
+              <a
+                class="btn actions-load-more inline-block btn-primary heading-style w-custom max-w-100{% if pagination == 'infinity' %} infinit-scrolling{% endif %}"
+                aria-label="{{ 'general.pagination.load_more' | t }}"
+                role="link"
+                style="--width: 20rem;"
+              >
+                <span class="hidden-on-load transition-short">{{ 'general.pagination.load_more' | t }}</span>
+                {%- render 'loader' -%}
               </a>
-            </loadmore-button>
+            </loadmore-button-collection>
           {%- endif -%}
         {%- endif -%}
       {% endif %}
@@ -251,6 +258,20 @@
       ],
       "default": "below",
       "label": "t:sections.main-list-collections.settings.information_position.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.collection-list.settings.overlay_image_settings"
+    },
+    {
+      "type": "color",
+      "id": "overlay_image_color",
+      "label": "t:sections.collection-list.settings.overlay_image_color",
+      "default": "#111"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.carousel.header"
     },
     {
       "type": "checkbox",

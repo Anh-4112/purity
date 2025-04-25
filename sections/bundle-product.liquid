@@ -195,11 +195,12 @@
                 show_quick_add: true,
                 type: 'bundle',
                 enable_quick_add: enable_quick_add,
-                class: '',
+                class: ' bundle-item-section',
                 style_layout: ' flex gap-20',
                 image_class: ' flex-auto w-custom rounded-10',
                 image_rounded: ' rounded-10',
-                info_class: ' flex-1 mt-0 relative flex-md column-md flex-1'
+                info_class: ' flex-1 mt-0 relative flex-md column-md flex-1',
+                bundle_swatch: true
               %}
             </bundle-item>
           {%- endfor -%}
@@ -223,7 +224,7 @@
                     assign loop_index = forloop.index
                   -%}
                   {% if product != blank %}
-                    <div class="variant-select">
+                    <div class="variant-select" product-id="{{ product.id }}">
                       {%- if product.variants.size > 1 -%}
                         {% for variant in product_available %}
                           {%- liquid

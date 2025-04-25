@@ -1,12 +1,12 @@
 <script src="{{ 'countdown-timer.js' | asset_url }}" defer="defer"></script>
 {% assign block_st = block.settings %}
 <div
-  class="block__heading mb-custom"
+  class="block__heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
   <countdown-timer
-    class="no-js-hidden inline-flex wrap mt-30 gap-10 overflow-hidden heading-color align-center"
+    class="no-js-hidden inline-flex wrap mt-30 gap-10 overflow-hidden heading-color align-center {{ block_st.style }}"
     data-deadline="{{ block.settings.end_times }}"
     data-days="{{ 'sections.countdown.format.days' | t }}"
     data-hours="{{ 'sections.countdown.format.hours' | t }}"
@@ -51,6 +51,22 @@
       "label": "t:sections.image-with-text-overlay.message.label",
       "info": "t:sections.image-with-text-overlay.message.info",
       "default": "Timer expired"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.main-password-content.blocks.countdown_bn.settings.countdown_design.label",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.main-password-content.blocks.countdown_bn.settings.countdown_design.options__1.label"
+        },
+        {
+          "value": "modern",
+          "label": "t:sections.main-password-content.blocks.countdown_bn.settings.countdown_design.options__2.label"
+        }
+      ],
+      "default": "default"
     },
     {
       "type": "range",

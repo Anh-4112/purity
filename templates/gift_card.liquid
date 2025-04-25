@@ -92,7 +92,8 @@
           --btn-link border-animation-color: {{ scheme.settings.btn_outline_color }};
           --btn-link border-animation-hover-color: {{ scheme.settings.btn_outline_color }};
           --input-color: var(--color-text);
-          --input-placeholder-color: rgba(var(--color-heading-rgb), 0.55);        }
+          --input-placeholder-color: rgba(var(--color-heading-rgb), 0.55);      
+        }
       {% endfor %}
       {{ scheme_classes | prepend: 'body' }} {
         color: var(--color-text);
@@ -271,30 +272,31 @@
     >
   </head>
 
-  <body class="gradient gift-card">
+  <body class="gradient gift-card section" style="--section-pt: 20;--section-pb: 30;">
     <header>
-      <div class="gift-card__price">
-        <h1>
+      <h1 class="flex justify-center mb-30">{{ shop.name }}</h1>
+      <div class="gift-card__price flex column content-center">
+        <h2 class="mb-20">
           {% if settings.currency_code_enabled %}
             {{ gift_card.balance | money_with_currency }}
           {% else %}
             {{ gift_card.balance | money }}
           {% endif %}
-        </h1>
+        </h2>
         {%- if gift_card.enabled == false or gift_card.expired -%}
-          <p class="badge badge--expired">{{ 'gift_cards.issued.expired' | t }}</p>
+          <p class="badge badge--expired mb-20">{{ 'gift_cards.issued.expired' | t }}</p>
         {%- endif -%}
       </div>
       {% if gift_card.expires_on %}
         {%- assign gift_card_expiration_date = gift_card.expires_on | date: '%B %e, %Y' -%}
-        <p class="gift-card__text">
+        <p class="gift-card__text flex column content-center mb-20">
           {{ 'gift_cards.issued.expiration_date' | t: expires_on: gift_card_expiration_date }}
         </p>
       {% endif %}
     </header>
 
     <main>
-      <div class="gift-card__image-wrapper">
+      <div class="gift-card__image-wrapper flex justify-center mb-20">
         {%- if settings.logo != blank -%}
           {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
           {{ settings.logo | image_url: width: 570 | image_tag: class: 'gift-card__image', alt: logo_alt }}
@@ -304,17 +306,20 @@
             src="{{ 'gift-card/card.svg' | shopify_asset_url }}"
             alt=""
             height="{{ 570 | divided_by: 1.5 }}"
-            width="570"
+            width="500"
             loading="eager"
           >
         {%- endif %}
       </div>
-      <h2>{{ shop.name }}</h2>
-      <div class="gift-card__text-wrapper">
-        <p class="gift-card__text">{{ 'gift_cards.issued.how_to_use_gift_card' | t }}</p>
+      <div class="gift-card__text-wrapper flex justify-center mb-20">
+        <p class="gift-card__text text-body text-size">{{ 'gift_cards.issued.how_to_use_gift_card' | t }}</p>
       </div>
-      <p id="gift-card-code" class="gift-card__number">{{ gift_card.code | format_code }}</p>
-      <div class="gift-card__qr-code" data-identifier="{{ gift_card.qr_identifier }}"></div>
+      <div
+        class="gift-card__qr-code flex justify-center mb-20 h-custom"
+        data-identifier="{{ gift_card.qr_identifier }}"
+        style="--height: 15rem;"
+      ></div>
+      <p id="gift-card-code" class="gift-card__number flex justify-center mb-20">{{ gift_card.code | format_code }}</p>
       {%- if gift_card.pass_url -%}
         <a
           href="{{ gift_card.pass_url }}"
@@ -330,18 +335,28 @@
           >
         </a>
       {%- endif -%}
-      <div class="gift-card__buttons no-print">
+      <div class="flex justify-center">
         <span class="gift-card__copy-success form__message" role="status"></span>
         <template>
-          <span class="svg-wrapper">
-            {{- 'icon-success.svg' | inline_asset_content -}}
-          </span>
-          {{ 'gift_cards.issued.copy_code_success' | t }}
+          <div
+            class="form-status form-status form__message success mb-10 flex align-center gap-10 mb-10"
+            tabindex="-1"
+            autofocus
+          >
+            <div class="flex content-center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path stroke="#137F24" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10Z"/><path stroke="#137F24" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m7.75 12 2.83 2.83 5.67-5.66"/>
+              </svg>
+            </div>
+            {{ 'gift_cards.issued.copy_code_success' | t }}
+          </div>
         </template>
-        <button class="button gift-card__copy-button">{{ 'gift_cards.issued.copy_code' | t }}</button>
+      </div>
+      <div class="gift-card__buttons no-print flex justify-center gap-20">
+        <button class="btn btn-primary gift-card__copy-button">{{ 'gift_cards.issued.copy_code' | t }}</button>
         <a
           href="{{ shop.url }}"
-          class="button button--secondary"
+          class="btn btn-outline"
           target="_blank"
           rel="noopener"
           aria-describedby="a11y-new-window-message"

@@ -5,7 +5,7 @@ class SectionSelected extends HTMLElement {
     this.titleSelectText = this.querySelector(".title-select__text");
     this.titleList = this.querySelector(".title-list");
     this.titleItems = this.querySelectorAll(".title-item");
-
+    console.log(this.titleItems);
     this.collectionSelect = this.querySelector(".collection-select");
     this.collectionSelectText = this.querySelector(".collection-select__text");
     this.collectionList = this.querySelector(".collection-list");
@@ -129,14 +129,14 @@ class SectionSelected extends HTMLElement {
 
   handleTitleToggle() {
     this.toggleDropdown(this.titleList);
-    if (this.collectionList.classList.contains("active")) {
+    if (this.collectionList?.classList.contains("active")) {
       this.closeDropdown(this.collectionList);
     }
   }
 
   handleCollectionToggle() {
     this.toggleDropdown(this.collectionList);
-    if (this.titleList.classList.contains("active")) {
+    if (this.titleList?.classList.contains("active")) {
       this.closeDropdown(this.titleList);
     }
   }
@@ -186,7 +186,7 @@ class SectionSelected extends HTMLElement {
   }
 
   toggleDropdown(dropdown) {
-    const isExpanded = dropdown.classList.toggle("active");
+    const isExpanded = dropdown?.classList.toggle("active");
 
     if (dropdown === this.titleList) {
       this.titleSelectText.setAttribute("aria-expanded", isExpanded);
@@ -213,6 +213,7 @@ class SectionSelected extends HTMLElement {
   }
 
   closeDropdown(dropdown) {
+    if (!dropdown) return;
     dropdown.classList.remove("active");
     if (dropdown === this.titleList) {
       this.titleSelectText.setAttribute("aria-expanded", "false");

@@ -123,10 +123,10 @@ blockquote {
 }
 .mb-big {
   margin-bottom: clamp(
-    (var(--space-bottom) * 0.64px),
+    (var(--space-bottom) * 0.66667px),
     calc(
-      (var(--space-bottom) * 0.64px) +
-        (var(--space-bottom) - (var(--space-bottom) * 0.64)) *
+      (var(--space-bottom) * 0.66667px) +
+        (var(--space-bottom) - (var(--space-bottom) * 0.66667)) *
         var(--responsive-rate)
     ),
     calc(var(--space-bottom) * 1px)
@@ -182,9 +182,6 @@ blockquote {
 .h-50 {
   height: 5rem;
 }
-.h-content {
-  height: fit-content;
-}
 .h-100vh {
   height: 100vh;
 }
@@ -220,9 +217,6 @@ blockquote {
 .px-5 {
   padding-left: 5px;
   padding-right: 5px;
-}
-.px-gutter-x {
-  padding-inline: var(--bs-gutter-x);
 }
 .ps-0 {
   padding-inline-start: 0;
@@ -270,12 +264,6 @@ blockquote {
 .py-5 {
   padding-block: 0.5rem;
 }
-.py-6 {
-  padding-block: 0.6rem;
-}
-.py-8 {
-  padding-block: 0.8rem;
-}
 .py-10 {
   padding-block: 1rem;
 }
@@ -287,9 +275,6 @@ blockquote {
 }
 .py-18 {
   padding-block: 1.8rem;
-}
-.py-30 {
-  padding-block: 3rem;
 }
 .py-40 {
   padding-block: 4rem;
@@ -381,9 +366,6 @@ blockquote {
 .mt-17 {
   margin-top: 1.7rem;
 }
-.mt-25 {
-  margin-top: 2.5rem;
-}
 .mb-13 {
   margin-bottom: 1.3rem;
 }
@@ -431,15 +413,8 @@ blockquote {
 .mt-22 {
   margin-top: 2.2rem;
 }
-.mt-25 {
-  margin-top: 2.5rem;
-}
 .mt-45 {
   margin-top: clamp(3rem, 4vw, 4.5rem);
-}
-.mt-60,
-.shopify-challenge__container {
-  margin-top: clamp(4rem, 4.5vw, 6rem);
 }
 .pb-custom {
   padding-bottom: calc(var(--space-bottom) * 1px);
@@ -618,7 +593,7 @@ blockquote {
   gap: clamp(
     1.5rem,
     calc(
-      (var(--gap) * 0.64px) + (var(--gap) - (var(--gap) * 0.64)) *
+      (var(--gap) * 0.66667px) + (var(--gap) - (var(--gap) * 0.66667)) *
         var(--responsive-rate)
     ),
     calc(var(--gap) * 1px)
@@ -690,7 +665,8 @@ blockquote {
   }
   .modal-popup-inner {
     max-width: unset;
-    max-height: 85vh;
+    max-height: 100vh;
+    height: 100vh;
     margin: unset;
     top: auto;
     border-radius: var(--img-rounded) var(--img-rounded) 0 0;
@@ -819,16 +795,6 @@ modal-popup :is(.modal-overlay) {
   100% {
     opacity: 1;
     transform: translateZ(0);
-  }
-}
-@keyframes fadeOutDown {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 100%, 0);
-    transform: translate3d(0, 100%, 0);
   }
 }
 @media (min-width: 576px) {
@@ -1124,12 +1090,6 @@ modal-popup :is(.modal-overlay) {
   .mb-1025-25 {
     margin-bottom: 2.5rem;
   }
-  .flex-1025-row {
-    flex-direction: row;
-  }
-  .flex-1025-row-reverse {
-    flex-direction: row-reverse;
-  }
   .space-between-1025 {
     justify-content: space-between;
   }
@@ -1238,6 +1198,12 @@ modal-popup :is(.modal-overlay) {
   }
   .gap-1025-40 {
     gap: 4rem;
+  }
+  .pb-1025-30 {
+    padding-bottom: 3rem;
+  }
+  .mb-1025-30 {
+    margin-bottom: 3rem;
   }
 }
 @media (min-width: 1200px) {
@@ -1592,7 +1558,8 @@ modal-popup :is(.modal-overlay) {
     .detail-open > summary .icon-rotate,
     .details-normal[open] > summary .icon-rotate,
     .button-localization.opened > .icon-rotate,
-    .active > .rotate-animate .icon-rotate
+    .active > .rotate-animate .icon-rotate,
+    .select_option[aria-expanded="true"] > .icon-rotate
   ) {
   transform: rotate(180deg);
   -webkit-transform: rotate(180deg);
@@ -1933,7 +1900,8 @@ mini-cart-recommendations .quick__shop-action .hidden-1025 {
   transition-delay: 0.35s;
   --transition: width 0.4s ease;
 }
-cart-drawer.active .progress {
+cart-drawer.active .progress,
+bundle-progress-bar .progress {
   width: var(--width);
 }
 @keyframes progress {
@@ -2003,11 +1971,14 @@ html:not(.open-nav, .open-canvas) mobile-navigation-bar {
   border-color: var(--color-primary);
   color: var(--btn-color);
 }
-/* Mobile navigation bar */
-.bls__mobile-navigation-bar {
-  animation: fadeOutDown 0.5s cubic-bezier(0.7, 0, 0.2, 1) both;
+.amimate_show-hide {
+  pointer-events: none;
+  transform: translateY(100%);
+  -webkit-transform: translateY(100%);
 }
-.bls__mobile-navigation-bar.show {
-  animation: fadeInUp 0.5s cubic-bezier(0.7, 0, 0.2, 1) both;
-  transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+.amimate_show-hide:is(.show, .show-sticky-cart) {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  -webkit-transform: translateY(0);
 }

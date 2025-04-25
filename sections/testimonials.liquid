@@ -28,9 +28,6 @@
       --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--max-width: {{ section_st.content_max_width }}%;
 {%- endcapture -%}
 {% style %}
-  .w-110 {
-    width: 110px;
-  }
   testimonials-thumb .swiper-slide:not(.swiper-slide-thumb-active) {
     opacity: 0.4;
   }
@@ -65,7 +62,7 @@
         class="swiper mb-40 mb-md-60 max-w-custom"
         data-section-id="{{ section.id }}"
         data-autoplay="{{ slide_auto_change }}"
-        data-autoplay-speed="{{ change_slide_every | times: 1000 }}"
+        data-auto-play-speed="{{ change_slide_every | times: 1000 }}"
         data-loop="true"
         data-speed="500"
         data-mobile="1"
@@ -108,7 +105,7 @@
                   assign alt_text = 'general.image.image_alt_default' | t
                 endif
               -%}
-              <div class="swiper-slide h-custom w-custom" style="--width: 18rem;--height: 6rem;">
+              <div class="swiper-slide h-custom w-custom" style="--width: {{ section_st.image_width }}px;--height: 6rem;">
                 <div class="testimonials-thumb-item flex content-center h-full">
                   {% if block_st.testimonial_image != blank %}
                     {% render 'responsive-image',
@@ -119,7 +116,7 @@
                       column: section.blocks.size
                     %}
                   {% else %}
-                    {% render 'placeholder-render' | type: "collection" | class: 'h-50 w-110 img-placeholder rounded' %}
+                    {% render 'placeholder-render' | type: "collection" | class: 'h-custom w-custom img-placeholder rounded' %}
                   {% endif %}
                 </div>
               </div>
@@ -244,6 +241,16 @@
       "default": 70,
       "label": "t:sections.rich-text.settings.max_width.label",
       "info": "t:sections.rich-text.settings.max_width.info"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "t:sections.all.image.width",
+      "default": 180,
+      "min": 100,
+      "max": 300,
+      "step": 5,
+      "unit": "px"
     },
     {
       "type": "checkbox",
