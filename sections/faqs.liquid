@@ -9,15 +9,6 @@
   assign button_label = section_st.button_label
   assign button_link = section_st.button_link
 
-  assign column_gap_slide = 0
-  if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-  elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-  elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
-  endif
-
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -30,9 +21,6 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 
-{%- capture col_style -%}
-  {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap: {{  column_gap_slide }}px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
-{%- endcapture -%}
 
 {% style %}
   .faq-container .shopify-block:first-child details {
@@ -45,11 +33,11 @@
 >
   <div class="{{ section_width }}">
     <div
-      class="section__faqs flex-md gap{% if image_desktop_position == 'right' %} flex-1025-row-reverse{% endif %}"
-      style="{{ col_style | strip | strip_newlines }}"
+      class="section__faqs{% if show_image %} flex column flex-1025-row{% endif %} gap{% if image_desktop_position == 'right' %} flex-1025-row-reverse{% endif %}"
+      style="{% if show_image %}--gap: clamp(3rem, 5vw, 10rem);--gap-desktop: clamp(3rem, 5vw, 10rem);{% endif %}"
     >
       {% if show_image %}
-        <div class="image-faq__media-item w-full">
+        <div class="image-faq__media-item col-1025-w-custom" style="--col-width: 46.45%;">
           <div
             class="image-faq__media banner__media rounded"
             {% if section_st.image != blank %}
@@ -78,19 +66,19 @@
         </div>
       {% endif %}
       <div
-        class="section__faqs-content w-full{% if show_faqs_message %} flex-md gap{% endif %}{% if show_image %} column{% endif %}"
-        style="--gap: clamp(3rem, 5vw, 10rem);--gap: clamp(3rem, 5vw, 10rem);--col-width: 30%;"
+        class="section__faqs-content w-full flex{% if show_faqs_message and show_image == false %} column flex-1025-row gap{% endif %}{% if show_faqs_message and show_image  %} column gap-30 gap-1025-40 justify-center{% endif %}{% if show_image and show_faqs_message == false %} align-center{% endif %}"
+        style="{% if show_faqs_message and show_image == false %}--gap: clamp(3rem, 5vw, 10rem);--gap-desktop: clamp(3rem, 5vw, 10rem);--col-width: 27%;{% endif %}"
       >
         {% if show_faqs_message %}
-          <div class="faqs__info w-full text-{{ section_st.text_alignment }}">
+          <div class="faqs__info{% if show_faqs_message and show_image == false %} col-1025-w-custom{% else %} w-full{% endif %} text-{{ section_st.text_alignment }} flex block-1025 column">
             {%- if subheading != blank -%}
-              <div class="faqs__subheading h7 heading-letter-spacing subheading_weight mb-10">{{ subheading }}</div>
+              <div class="faqs__subheading h7 heading-letter-spacing subheading_weight mb-5 mb-1025-10">{{ subheading }}</div>
             {%- endif -%}
             {%- if heading != blank -%}
-              <div class="faqs__heading h2 mb-15">{{ heading }}</div>
+              <div class="faqs__heading h2">{{ heading }}</div>
             {%- endif -%}
             {%- if description != blank -%}
-              <div class="faqs__description">{{ description }}</div>
+              <div class="faqs__description mt-10 mt-1025-15">{{ description }}</div>
             {%- endif -%}
             {%- if button_label != blank -%}
               <a
@@ -100,7 +88,7 @@
                   href="{{ button_link | default: "#" }}"
                 {% endif %}
                 aria-label="{{ button_label }}"
-                class="btn btn-primary inline-block mt-40 min-w-custom text-center"
+                class="btn btn-primary inline-block mt-40 min-w-custom w-full w-1025-auto text-center"
                 style="--min-width: 20rem;"
               >
                 {{ button_label }}
@@ -108,7 +96,7 @@
             {%- endif -%}
           </div>
         {% endif %}
-        <div class="faq-container w-full">
+        <div class="faq-container{% if show_faqs_message and show_image == false %} col-1025-remaining{% else %} w-full{% endif %}">
           {% content_for 'blocks' %}
         </div>
       </div>

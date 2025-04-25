@@ -1,7 +1,7 @@
 <script src="{{ 'countdown-timer.js' | asset_url }}" defer="defer"></script>
 {% assign block_st = block.settings %}
 <div
-  class="block__heading mb-custom"
+  class="block__heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
