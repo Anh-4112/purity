@@ -50,7 +50,7 @@
           </h2>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description mt-15">
+          <div class="section-description mt-15 prose">
             {{ section_st.description }}
           </div>
         {%- endif -%}
@@ -59,7 +59,7 @@
     {%- if section.blocks.size > 0 -%}
       <testimonial-slide
         id="swiper-{{ section.id }}"
-        class="swiper mb-40 mb-md-60 max-w-custom"
+        class="swiper mb-30 mb-md-60 max-w-custom"
         data-section-id="{{ section.id }}"
         data-autoplay="{{ slide_auto_change }}"
         data-auto-play-speed="{{ change_slide_every | times: 1000 }}"
@@ -77,7 +77,7 @@
             {% assign block_st = block.settings %}
             <div class="swiper-slide testimonials-item flex column justify-center">
               {% if section_st.show_icon_quote %}
-                <div class="icon-quote inline-flex justify-center mb-30">
+                <div class="icon-quote inline-flex justify-center mb-20 mb-1025-30">
                   {% render 'icon-quote' | custom_width: 56 %}
                 </div>
               {% endif %}
@@ -105,8 +105,8 @@
                   assign alt_text = 'general.image.image_alt_default' | t
                 endif
               -%}
-              <div class="swiper-slide h-custom w-custom" style="--width: {{ section_st.image_width }}px;--height: 6rem;">
-                <div class="testimonials-thumb-item flex content-center h-full">
+              <div class="swiper-slide h-custom w-custom flex justify-center" style="--width: {{ section_st.image_width }}px;--height: 6rem;">
+                <div class="testimonials-thumb-item flex content-center h-full h-custom w-custom">
                   {% if block_st.testimonial_image != blank %}
                     {% render 'responsive-image',
                       type: 'banner',

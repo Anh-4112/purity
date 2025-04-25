@@ -4,7 +4,7 @@
       {%- capture svg_icon -%}svg_icon_{{ i }}{%- endcapture -%}
       {%- capture content -%}content_{{ i }}{%- endcapture -%}
       {%- if block.settings[svg_icon] != 'none' or block.settings[content] != blank -%}
-        <li class="flex wrap gap-10 align-center heading-color">
+        <li class="flex wrap gap-10 align-center heading-color prose">
           {%- if block.settings[svg_icon] != 'none' -%}
             {% render 'icon_svg_list', icon: block.settings[svg_icon] %}
           {%- endif -%}

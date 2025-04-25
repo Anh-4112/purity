@@ -47,7 +47,7 @@
           </h2>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description mt-15">
+          <div class="section-description mt-15 prose">
             {{ section_st.description }}
           </div>
         {%- endif -%}
@@ -68,12 +68,14 @@
             {%- liquid
               assign image = block_st.image_block
               assign link_image = block_st.link_image
+              assign img_width = section_st.image_width
+              assign img_width_mb = section_st.image_width_mb
               assign image_alt_default = 'sections.scrolling_text.alt' | t
               assign image_alt = image.alt | default: image_alt_default | escape
             -%}
             <a
-              class="scrolling-image-item overflow-hidden w-custom"
-              style="--width: {{ section_st.image_width }}px;"
+              class="scrolling-image-item overflow-hidden w-custom w-custom-mb focus-inset relative"
+              style="--width: {{ img_width }}px;--width-mb: {{ img_width_mb }}px;"
               {% if link_image == blank %}
                 role="link" aria-disabled="true"
               {% else %}
@@ -84,7 +86,7 @@
               {%- if image != blank -%}
                 <div
                   class="scrolling-image image_scroll rounded"
-                  style="--image-width: {{ section_st.image_width }}px;--aspect-ratio: {{ image.aspect_ratio }};"
+                  style="--image-width: {{ section_st.image_width }}px;--width-mb: {{ img_width_mb }}px;--aspect-ratio: {{ image.aspect_ratio }};"
                 >
                   {% render 'responsive-image', image: image, type: 'banner', image_alt: image_alt %}
                 </div>
@@ -151,6 +153,16 @@
       "max": 320,
       "step": 5,
       "label": "t:sections.all.image.width",
+      "default": 150,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "image_width_mb",
+      "min": 20,
+      "max": 220,
+      "step": 5,
+      "label": "t:sections.all.image.mobile_image_width",
       "default": 150,
       "unit": "px"
     },
