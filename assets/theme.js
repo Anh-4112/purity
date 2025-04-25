@@ -2691,7 +2691,7 @@ class StickySection extends HTMLElement {
         } else if (fromMedia) {
           fromMedia.style.opacity = "0";
         }
-  
+
         if (fromContent && typeof Motion !== "undefined") {
           Motion.animate(
             fromContent,
@@ -2734,7 +2734,7 @@ class StickySection extends HTMLElement {
         } else if (toMedia) {
           toMedia.style.opacity = "1";
         }
-  
+
         if (toContent && typeof Motion !== "undefined") {
           Motion.animate(
             toContent,
