@@ -103,20 +103,42 @@
           <div
             class="section-header relative-1025 z-2"
           >
+            {% assign animate_delay = 25 %}
             {%- if section_st.subheading != blank -%}
-              <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
-                {{ section_st.subheading }}
-              </div>
+              {% assign animate_delay = animate_delay | plus: 5 %}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
+              >
+                <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
+                  {{ section_st.subheading }}
+                </div>
+              </motion-effect>
             {%- endif -%}
             {%- if section_st.title != blank -%}
-              <h2 class="block section-heading {{ header_size }}">
-                {{ section_st.title }}
-              </h2>
+              {% assign animate_delay = animate_delay | plus: 5 %}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
+              >
+                <h2 class="block section-heading {{ header_size }}">
+                  {{ section_st.title }}
+                </h2>
+              </motion-effect>
             {%- endif -%}
             {%- if section_st.description != blank -%}
-              <div class="section-description mt-15">
-                {{ section_st.description }}
-              </div>
+              {% assign animate_delay = animate_delay | plus: 5 %}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
+              >
+                <div class="section-description mt-15 prose">
+                  {{ section_st.description }}
+                </div>
+              </motion-effect>
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -155,7 +177,7 @@
                         style="height: 0;opacity: 0;"
                       {% endif %}
                     >
-                      <div class="mt-10">
+                      <div class="mt-10 prose">
                         {{ collection_description }}
                       </div>
                     </div>

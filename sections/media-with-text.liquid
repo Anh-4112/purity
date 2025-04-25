@@ -1,6 +1,5 @@
 {%- liquid
   assign section_st = section.settings
-  assign theme_st = settings
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -47,7 +46,8 @@
           assign video = block_st.video
           assign image_alt = media.alt
           if image_alt == blank
-            assign image_alt = 'media-with-text.image.default' | t
+            assign image_alt_translate = 'media-with-text.image.default' | t
+            assign image_alt = image_alt_translate | append: ' ' | append: forloop.index
           endif
           assign middle_index = section.blocks.size | divided_by: 2 | floor
           assign is_middle = false
@@ -113,7 +113,6 @@
                 ></video>
               </video-local>
             {%- elsif media != blank -%}
-              {{ image_alt }}
               {% render 'responsive-image',
                 type: 'banner',
                 container: section_st.section_width,
@@ -130,7 +129,7 @@
       {%- endfor -%}
     </div>
     <div class="multimedia_with_text__text text-center max-w-custom">
-      <div class="text-content {{ text_content_size }}">
+      <div class="text-content {{ text_content_size }} prose">
         {{ text }}
       </div>
     </div>
@@ -144,11 +143,11 @@
   "disabled_on": {
     "groups": ["header", "footer", "custom.overlay"]
   },
-  "max_blocks": 5,
+  "max_blocks": 3,
   "settings": [
     {
-        "type": "paragraph",
-        "content": "t:sections.multimedia_with_text.how_to_use"
+      "type": "paragraph",
+      "content": "t:sections.multimedia_with_text.how_to_use"
     },
     {
       "type": "header",

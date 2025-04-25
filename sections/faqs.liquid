@@ -21,7 +21,6 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 
-
 {% style %}
   .faq-container .shopify-block:first-child details {
     padding-top: 0;
@@ -71,28 +70,57 @@
       >
         {% if show_faqs_message %}
           <div class="faqs__info{% if show_faqs_message and show_image == false %} col-1025-w-custom{% else %} w-full{% endif %} text-{{ section_st.text_alignment }} flex block-1025 column">
+            {% assign animate_delay = 25 %}
             {%- if subheading != blank -%}
-              <div class="faqs__subheading h7 heading-letter-spacing subheading_weight mb-5 mb-1025-10">{{ subheading }}</div>
+              {% assign animate_delay = animate_delay | plus: 5 %}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
+              >
+                <div class="faqs__subheading h7 heading-letter-spacing subheading_weight mb-10">{{ subheading }}</div>
+              </motion-effect>
             {%- endif -%}
             {%- if heading != blank -%}
-              <div class="faqs__heading h2">{{ heading }}</div>
+              {% assign animate_delay = animate_delay | plus: 5 %}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
+              >
+                <h2 class="faqs__heading h2">{{ heading }}</h2>
+              </motion-effect>
             {%- endif -%}
             {%- if description != blank -%}
-              <div class="faqs__description mt-10 mt-1025-15">{{ description }}</div>
+              {% assign animate_delay = animate_delay | plus: 5 %}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
+              >
+                <div class="faqs__description mt-1025-15 prose">{{ description }}</div>
+              </motion-effect>
             {%- endif -%}
             {%- if button_label != blank -%}
-              <a
-                {% if button_link == blank %}
-                  role="link" aria-disabled="true"
-                {% else %}
-                  href="{{ button_link | default: "#" }}"
-                {% endif %}
-                aria-label="{{ button_label }}"
-                class="btn btn-primary inline-block mt-40 min-w-custom w-full w-1025-auto text-center"
-                style="--min-width: 20rem;"
+              {% assign animate_delay = animate_delay | plus: 5 %}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
               >
-                {{ button_label }}
-              </a>
+                <a
+                  {% if button_link == blank %}
+                    role="link" aria-disabled="true"
+                  {% else %}
+                    href="{{ button_link | default: "#" }}"
+                  {% endif %}
+                  aria-label="{{ button_label }}"
+                  class="btn btn-primary inline-block mt-40 min-w-custom w-full w-1025-auto text-center"
+                  style="--min-width: 20rem;"
+                >
+                  {{ button_label }}
+                </a>
+              </motion-effect>
             {%- endif -%}
           </div>
         {% endif %}
@@ -122,7 +150,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "t:sections.all.how_to_use"
+      "content": "t:sections.faq.how_to_use"
     },
     {
       "type": "header",
@@ -160,30 +188,6 @@
       "id": "open_all_question",
       "label": "t:sections.faq.settings.open_all_question",
       "default": false
-    },
-    {
-      "type": "select",
-      "id": "column_gap",
-      "options": [
-        {
-          "value": "no_gap",
-          "label": "t:sections.all.padding.column_gap.no_gap"
-        },
-        {
-          "value": "small",
-          "label": "t:sections.all.padding.column_gap.small"
-        },
-        {
-          "value": "medium",
-          "label": "t:sections.all.padding.column_gap.medium"
-        },
-        {
-          "value": "large",
-          "label": "t:sections.all.padding.column_gap.large"
-        }
-      ],
-      "default": "medium",
-      "label": "t:sections.all.padding.column_gap.label"
     },
     {
       "type": "header",

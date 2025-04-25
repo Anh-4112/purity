@@ -185,19 +185,12 @@ blockquote {
 .h-100vh {
   height: 100vh;
 }
-.drawer-spacing {
-  padding: var(--padding-block, 2rem) var(--bs-gutter-x);
-}
 .drawer__header {
   --padding-block: 1.65rem;
 }
 @media (min-width: 1025px) {
   .drawer__header {
     --padding-block-desktop: 1.9rem;
-  }
-  .drawer-spacing {
-    padding: var(--padding-block-desktop, 3rem)
-      var(--padding-inline-desktop, 4rem);
   }
 }
 .p-5 {
@@ -493,10 +486,6 @@ blockquote {
 .inset-x-20 {
   left: 2rem;
   right: 2rem;
-}
-.inset-y-0 {
-  top: 0;
-  bottom: 0;
 }
 .top-3 {
   top: 3px;
@@ -806,7 +795,6 @@ modal-popup :is(.modal-overlay) {
   100% {
     opacity: 1;
     transform: translateZ(0);
-    visibility: visible;
   }
 }
 @media (min-width: 576px) {
@@ -914,9 +902,6 @@ modal-popup :is(.modal-overlay) {
   }
   .transform-md-none {
     transform: none !important;
-  }
-  .flex-md-wrap {
-    flex-wrap: wrap;
   }
   .text-md-left {
     text-align: start;
@@ -1105,9 +1090,6 @@ modal-popup :is(.modal-overlay) {
   .mb-1025-25 {
     margin-bottom: 2.5rem;
   }
-  .mb-1025-30 {
-    margin-bottom: 3rem;
-  }
   .space-between-1025 {
     justify-content: space-between;
   }
@@ -1213,6 +1195,9 @@ modal-popup :is(.modal-overlay) {
   .remove-after:not(.active) .modal-popup-inner {
     animation: zoomOut var(--transition)
       var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83)) forwards;
+  }
+  .gap-1025-40 {
+    gap: 4rem;
   }
   .pb-1025-30 {
     padding-bottom: 3rem;
@@ -1763,7 +1748,7 @@ modal-popup :is(.modal-overlay) {
   align-items: center;
   padding: var(--mes-padding-block, 1.2rem) 2rem;
   position: relative;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: var(--color);
   background-color: var(--background);
   border: 1px solid var(--border-color);
@@ -1986,7 +1971,6 @@ html:not(.open-nav, .open-canvas) mobile-navigation-bar {
   border-color: var(--color-primary);
   color: var(--btn-color);
 }
-/* Mobile navigation bar */
 .amimate_show-hide {
   pointer-events: none;
   transform: translateY(100%);
