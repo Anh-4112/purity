@@ -1,6 +1,6 @@
 {%- if article and article != empty -%}
   <div
-    class="article-card-wrapper item-load{% if is_featured_blog %} gradient color-{{ color_scheme }}{% endif %}"
+    class="article-card-wrapper item-load {{class}}{% if is_featured_blog %} gradient color-{{ color_scheme }}{% endif %}"
   >
     <div
       class="card article-card {{ class }}{% if isPageBlog %} text-{{ content_alignment }}{% endif %}{{ featured-blog }}{% if is_featured_blog %} custom-blog-featured flex-1025 wrap gap rounded{% else %} hover-effect{% endif %}"
@@ -84,11 +84,11 @@
         </div>
         {%- if show_excerpt and is_featured_blog != true -%}
           {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
-            <p class="article-card__excerpt rte-width rte mb-15">
+            <p class="article-card__excerpt rte-width rte mb-15 header-color">
               {%- if article.excerpt.size > 0 -%}
-                {{ article.excerpt | strip_html | truncatewords: 30 }}
+                {{ article.excerpt | strip_html | truncatewords: 20 }}
               {%- else -%}
-                {{ article.content | strip_html | truncatewords: 30 }}
+                {{ article.content | strip_html | truncatewords: 20 }}
               {%- endif -%}
             </p>
           {%- endif -%}
@@ -115,11 +115,11 @@
         </ul>
         {%- if show_excerpt and is_featured_blog == true -%}
           {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
-            <p class="article-card__excerpt rte-width rte mb-35 text-truncate">
+            <p class="article-card__excerpt rte-width rte mb-35 text-truncate header-color">
               {%- if article.excerpt.size > 0 -%}
-                {{ article.excerpt | strip_html | truncatewords: 30 }}
+                {{ article.excerpt | strip_html | truncatewords: 20 }}
               {%- else -%}
-                {{ article.content | strip_html | truncatewords: 30 }}
+                {{ article.content | strip_html | truncatewords: 20 }}
               {%- endif -%}
             </p>
           {%- endif -%}
