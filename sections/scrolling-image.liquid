@@ -72,6 +72,22 @@
               assign img_width_mb = section_st.image_width_mb
               assign image_alt_default = 'sections.scrolling_text.alt' | t
               assign image_alt = image.alt | default: image_alt_default | escape
+              assign image_ratio = section_st.image_ratio
+              assign ratio = '1/1'
+              if image_ratio != 'adapt'
+                case image_ratio
+                  when 'square'
+                    assign ratio = '1/1'
+                  when 'landscape'
+                    assign ratio = '4/3'
+                  when 'portrait'
+                    assign ratio = '3/4'
+                endcase
+              else
+                if image != blank
+                  assign ratio = image.aspect_ratio
+                endif
+              endif
             -%}
             <a
               class="scrolling-image-item overflow-hidden w-custom w-custom-mb focus-inset relative"
@@ -86,14 +102,14 @@
               {%- if image != blank -%}
                 <div
                   class="scrolling-image image_scroll rounded"
-                  style="--image-width: {{ section_st.image_width }}px;--width-mb: {{ img_width_mb }}px;--aspect-ratio: {{ image.aspect_ratio }};"
+                  style="--image-width: {{ section_st.image_width }}px;--width-mb: {{ img_width_mb }}px;--aspect-ratio: {{ ratio }};"
                 >
                   {% render 'responsive-image', image: image, type: 'banner', image_alt: image_alt %}
                 </div>
               {% else %}
                 <div
                   class="w-custom flex content-center"
-                  style="--width: {{ section_st.image_width }}px;"
+                  style="--width: {{ section_st.image_width }}px;--aspect-ratio: {{ ratio }};"
                 >
                   {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full rounded' %}
                 </div>
@@ -157,7 +173,31 @@
       "unit": "px"
     },
     {
-      "type": "range",
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.all.image.aspect_ratio.adapt"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.all.image.aspect_ratio.options__1"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.all.image.aspect_ratio.options__2"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.all.image.aspect_ratio.options__3"
+        }
+      ],
+      "default": "square",
+      "label": "t:sections.all.image.aspect_ratio.label"
+    },
+    {
+    "type": "range",
       "id": "image_width_mb",
       "min": 20,
       "max": 220,
@@ -165,7 +205,7 @@
       "label": "t:sections.all.image.mobile_image_width",
       "default": 150,
       "unit": "px"
-    },
+     },
     {
       "type": "checkbox",
       "id": "show_background_blur",
