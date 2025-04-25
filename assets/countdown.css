@@ -1,0 +1,39 @@
+countdown-timer.section_block.default
+  :is(.hours_timer, .days_timer, .minutes_timer, .seconds_timer) {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);;
+  margin-right: 2px;
+}
+countdown-timer.section_block.modern
+  :is(.hours_timer, .days_timer, .minutes_timer, .seconds_timer) {
+  font-size: clamp(2.4rem, 5vw, 3rem);
+  margin-right: 2px;
+}
+countdown-timer.section_block.default .timer-announcementbar-text {
+    font-size: var(--body-font-size);
+}
+countdown-timer.section_block.modern .timer-announcementbar-text {
+    font-size: calc(var(--body-font-size)-2);
+}
+countdown-timer.section_block.modern .countdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 10rem;
+  min-width: 8rem;
+  padding: 2rem;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(5px);
+  height: 100%;
+}
+@media screen and (max-width: 768px) {
+  countdown-timer.section_block.modern .countdown-container {
+    width: calc(calc(100% - 1rem) / 2);
+  }
+    
+}
+countdown-timer.section_block.default .countdown-container {
+  display: block!important;
+}
