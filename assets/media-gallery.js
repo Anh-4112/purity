@@ -154,7 +154,6 @@ class MediaZoomButton extends HTMLButtonElement {
 
     let dataSource = itemsToShow.map((media) => {
       const image = media.querySelector("img");
-
       if (media.getAttribute("media-gallery") === "image") {
         return {
           thumbnailElement: image,

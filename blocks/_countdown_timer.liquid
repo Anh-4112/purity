@@ -1,4 +1,5 @@
 <script src="{{ 'countdown-timer.js' | asset_url }}" defer="defer"></script>
+{{ 'countdown.css' | asset_url | stylesheet_tag }}
 {% assign block_st = block.settings %}
 <div
   class="block__heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}"
@@ -6,7 +7,7 @@
   {{ block.shopify_attributes }}
 >
   <countdown-timer
-    class="no-js-hidden inline-flex wrap mt-30 gap-10 overflow-hidden heading-color align-center {{ block_st.style }}"
+    class="no-js-hidden inline-flex wrap gap-10 overflow-hidden heading-color align-center {{ block_st.style }} section_block"
     data-deadline="{{ block.settings.end_times }}"
     data-days="{{ 'sections.countdown.format.days' | t }}"
     data-hours="{{ 'sections.countdown.format.hours' | t }}"
@@ -14,19 +15,19 @@
     data-secs="{{ 'sections.countdown.format.secs' | t }}"
     data-message="{{ block.settings.message }}"
   >
-    <div class="countdown-container lh-normal flex relative content-center">
+    <div class="countdown-container lh-normal{% if block_st.style == 'modern' %} flex relative content-center{% endif %}">
       <span class="days_timer countdown-item">00</span>
       <span class="timer-announcementbar-text">{{ 'sections.countdown.format.days' | t }}</span>
     </div>
-    <div class="countdown-container lh-normal flex relative content-center">
+    <div class="countdown-container lh-normal{% if block_st.style == 'modern' %} flex relative content-center{% endif %}">
       <span class="hours_timer countdown-item">00</span>
       <span class="timer-announcementbar-text">{{ 'sections.countdown.format.hours' | t }}</span>
     </div>
-    <div class="countdown-container lh-normal flex relative content-center">
+    <div class="countdown-container lh-normal{% if block_st.style == 'modern' %} flex relative content-center{% endif %}">
       <span class="minutes_timer countdown-item">00</span>
       <span class="timer-announcementbar-text">{{ 'sections.countdown.format.mins' | t }}</span>
     </div>
-    <div class="countdown-container lh-normal flex relative content-center">
+    <div class="countdown-container lh-normal{% if block_st.style == 'modern' %} flex relative content-center{% endif %}">
       <span class="seconds_timer countdown-item">00</span>
       <span class="timer-announcementbar-text">{{ 'sections.countdown.format.secs' | t }}</span>
     </div>

@@ -1,4 +1,14 @@
 {%- liquid
+  assign theme_st = settings
+  assign scroll_animation = theme_st.scroll_animation
+-%}
+{% if scroll_animation != blank %}
+  <motion-effect
+    data-animate="zoom-out-sm"
+    class="block {{ class }}"
+  >
+{% endif %}
+{%- liquid
   assign cls_placeholder = 'img-placeholder rounded'
   if class != blank
     assign cls_placeholder = class
@@ -52,3 +62,6 @@
     endcase
   endif
 -%}
+{% if scroll_animation != blank %}
+  </motion-effect>
+{% endif %}

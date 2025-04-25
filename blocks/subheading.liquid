@@ -4,11 +4,17 @@
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
-  {{ block_st.subheading | escape }}
+  <motion-effect
+    data-animate="fade-up"
+    class="block"
+  >
+    {{ block_st.subheading | escape }}
+  </motion-effect>
 </div>
 {% schema %}
 {
   "name": "t:sections.all.content_setting.subheading.label",
+  "class": "w-full",
   "settings": [
     {
       "type": "text",
