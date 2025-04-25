@@ -51,7 +51,6 @@
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if section.blocks.size > 6 %}--speed: 15s;{% elsif  section.blocks.size > 4 %} --speed: 10s;{% elsif section.blocks.size > 2 %}--speed: 6s;{% else %}--speed: 4s;{% endif %}
 {%- endcapture -%}
-
 <div
   class="section section color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
@@ -117,15 +116,16 @@
               endif
             -%}
             <div
-              class="media-effect__item absolute w-custom max-w-100"
-              style="--width: 10rem;--aspect-ratio: {{ ratio}};"
+              class="media-effect__item absolute w-custom max-w-100 rounded"
+              style="--width: 10rem;left: {{ block.settings.position_left }}%;top: {{ block.settings.position_top }}%;--aspect-ratio: {{ ratio}};"
             >
               {% if image != blank %}
                 {% render 'responsive-image',
                   type: 'banner',
                   container: section_st.section_width,
                   image: image,
-                  image_alt: image_alt
+                  image_alt: image_alt,
+                  class: 'rounded'
                 %}
               {% else %}
                 {%- render 'placeholder-render', type: 'product' -%}
@@ -458,6 +458,26 @@
           "type": "image_picker",
           "id": "image",
           "label": "t:sections.all.image.label"
+        },
+        {
+          "type": "range",
+          "id": "position_top",
+          "label": "t:sections.bundle-products.blocks.settings.position_top",
+          "min": 0,
+          "max": 100,
+          "unit": "%",
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "position_left",
+          "label": "t:sections.bundle-products.blocks.settings.position_left",
+          "min": 0,
+          "max": 100,
+          "unit": "%",
+          "step": 1,
+          "default": 50
         }
       ]
     }
@@ -467,13 +487,25 @@
       "name": "t:sections.featured_product_banner.name",
       "blocks": [
         {
-          "type": "image_effect"
+          "type": "image_effect",
+          "settings": {
+            "position_top": 1,
+            "position_left": 15
+          }
         },
         {
-          "type": "image_effect"
+          "type": "image_effect",
+          "settings": {
+            "position_top": 50,
+            "position_left": 90
+          }
         },
         {
-          "type": "image_effect"
+          "type": "image_effect",
+          "settings": {
+            "position_top": 85,
+            "position_left": 0
+          }
         },
         {
           "type": "information"

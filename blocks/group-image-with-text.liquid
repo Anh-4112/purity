@@ -33,11 +33,6 @@
       "
     {% endif %}
   >
-    {%- if block_st.image.alt == blank -%}
-      {%- capture alt -%}{{ block_st.heading }}{%- endcapture -%}
-    {%- else -%}
-      {%- assign alt = block_st.image.alt -%}
-    {%- endif -%}
     <div
       class="banner rounded banner__media media{% if block_st.content_position == 'overlay' %} absolute inset-0 overlay-bg{% endif %}"
       style="
@@ -75,16 +70,15 @@
               poster="{{ video_poster }}"
               playsinline="true"
               autoplay
-              title=""
+              title="{{ 'accessibility.video' | t }}"
+              aria-label="{{ 'accessibility.video' | t }}"
               muted
             ></video>
           </video-local>
         {%- else %}
           {%- liquid
-            assign image_alt = image.alt
-            if image_alt == blank
-              assign image_alt = block_st.heading
-            endif
+            assign alt_default = 'accessibility.promotion_banner' | t
+            assign alt = image.alt | default: alt_default | escape
           -%}
           {% render 'responsive-image',
             type: 'banner',

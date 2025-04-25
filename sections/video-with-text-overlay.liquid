@@ -11,7 +11,6 @@
   endif
   assign video_height = section_st.video_height
   assign show_text_bellow_mobile = section_st.show_text_bellow_mobile
-  assign scrolling_effect = section_st.scrolling_effect
 %}
 {%- capture style -%}
   --overlay-opacity: {{ section_st.overlay_opacity }}%; --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -128,20 +127,12 @@
         </div>
       {%- endif -%}
       <div class="section__video-content media__content relative z-3 w-full{% if show_text_bellow_mobile %} flex-md{% else %} flex{% endif %} flex-md {{ section_st.desktop_content_position }} text-{{ section_st.text_alignment_mobile }} text-md-{{ section_st.text_alignment }}">
-        {%- if scrolling_effect -%}
-          <scrolling-effect class="banner__box max-w-100 px-custom">
-        {%- else -%}
-          <div
-            class="banner__box max-w-100 px-custom py-custom{% if section_st.padding_content_inline < 15 %} x-min-value{% endif %}{% if show_text_bellow_mobile and section_width == "full-width" %} padding-inline-gutter{% endif %}{% if show_text_bellow_mobile %} mt-40 mt-md-0{% endif %}"
-            style="--max-width: {{ section_st.max_width }}%;--padding-inline: {{ section_st.padding_content_inline }};--padding-block: {{ section_st.padding_content_block }};"
-          >
-        {%- endif -%}
-        {% content_for 'blocks' %}
-        {%- if scrolling_effect -%}
-          </scrolling-effect>
-        {%- else -%}
-          </div>
-        {%- endif -%}
+        <div
+          class="banner__box max-w-100 px-custom py-custom{% if section_st.padding_content_inline < 15 %} x-min-value{% endif %}{% if show_text_bellow_mobile and section_width == "full-width" %} padding-inline-gutter{% endif %}{% if show_text_bellow_mobile %} mt-40 mt-md-0{% endif %}"
+          style="--max-width: {{ section_st.max_width }}%;--padding-inline: {{ section_st.padding_content_inline }};--padding-block: {{ section_st.padding_content_block }};"
+        >
+          {% content_for 'blocks' %}
+        </div>
       </div>
       <div
         class="overlay absolute inset-0 bg-dark{% if section_width != "full-width" %} rounded{% endif %}{% if show_text_bellow_mobile %} d-none block-md{% endif %}"
@@ -290,11 +281,6 @@
     {
       "type": "header",
       "content": "t:sections.all.content_setting.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "scrolling_effect",
-      "label": "t:sections.video.settings.scrolling_effect.label"
     },
     {
       "type": "select",

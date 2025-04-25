@@ -23,7 +23,7 @@
 {%- endstyle -%}
 
 <div class="multi-content__block w-full h-full flex align-{{ block_st.vertical_alignment }}">
-  <video-section
+  <video-local
     class="w-full video-section relative{% if section_st.equal_height_adjustment %} h-full{% endif %} rounded"
   >
     <div
@@ -55,15 +55,44 @@
           allow="autoplay; encrypted-media"
           allowfullscreen
           frameborder="0"
+          title="{{ 'accessibility.video' | t }}"
           aria-label="{{ 'accessibility.video' | t }}"
         ></iframe>
 
       {%- else -%}
+        {% liquid
+          assign poster = block_st.video_local.preview_image
+          assign image_alt_default = 'general.image.image_alt_default' | t
+        %}
+        <div
+          class="video-thumbnail z-2 absolute banner__media overflow-hidden"
+        >
+          {%- if poster != null -%}
+            {% render 'responsive-image', type: 'other', image: poster, image_alt: image_alt_default %}
+          {%- else -%}
+            {%- render 'placeholder-render', type: 'lifestyle-1' -%}
+          {%- endif -%}
+        </div>
+        <template>
+          {{
+            video_local
+            | video_tag:
+              autoplay: autoplay,
+              alt: image_alt_default,
+              controls: true,
+              muted: muted,
+              poster: poster,
+              loop: loop,
+              class: 'focus-inset'
+          }}
+          <span class="focus-video absolute inset-0 pointer-none"></span>
+        </template>
         {{
           video_local
           | video_tag:
             autoplay: autoplay,
             controls: true,
+            alt: image_alt_default,
             muted: muted,
             poster: poster,
             loop: loop,
@@ -72,7 +101,7 @@
         <span class="focus-video absolute inset-0 pointer-none"></span>
       {%- endif -%}
     </div>
-  </video-section>
+  </video-local>
 </div>
 {% schema %}
 {
@@ -101,7 +130,7 @@
       "type": "checkbox",
       "id": "autoplay",
       "label": "t:sections.video.settings.autoplay.label",
-      "default": false
+      "default": true
     },
     {
       "type": "checkbox",
