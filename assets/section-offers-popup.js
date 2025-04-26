@@ -20,7 +20,7 @@ class ScrollOffer extends HTMLElement {
   
     initPopup(event){
       const target = event.target;
-      const wrapper = target.closest('.section-offers-popup');
+      const wrapper = target.closest('.overlay-offers-popup');
       const template = wrapper.querySelector('template');
       const content = document.createElement("div");
       content.appendChild(template.content.firstElementChild.cloneNode(true));

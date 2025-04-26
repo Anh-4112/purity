@@ -140,6 +140,10 @@ summary::-webkit-details-marker {
   font-weight: var(--heading-weight);
   color: var(--color-heading);
 }
+.prose strong {
+  color: var(--color-heading);
+  font-weight: var(--heading-weight);
+}
 :where(.h0) {
   --size: clamp(4rem, calc(4rem + (70 - 40) * var(--responsive-rate)), 7rem);
 }
@@ -410,7 +414,7 @@ input[type="checkbox"]:checked + .checkmark:before {
         picture > *,
         motion-effect
       ),
-    motion-effect :is(img, svg)
+    motion-effect > :is(img, svg)
   ) {
   position: absolute;
   top: 0;
@@ -420,7 +424,7 @@ input[type="checkbox"]:checked + .checkmark:before {
   object-fit: cover;
 }
 [style*="--point"],
-[style*="--point"] :is(img, picture) {
+[style*="--point"] > :is(img, picture) {
   object-position: var(--point);
 }
 .text-size {
@@ -960,6 +964,9 @@ a.hover-heading-color:hover,
   margin: 0;
   padding: 0;
   border: 0;
+}
+.p-gutter-x {
+  padding: var(--bs-gutter-x);
 }
 .p-0 {
   padding: 0;
@@ -1767,6 +1774,9 @@ quantity-input input {
   }
   .py-1025-25 {
     padding-block: 2.5rem;
+  }
+  .py-1025-40 {
+    padding-block: 4rem;
   }
   .py-1025-custom {
     padding-block: clamp(

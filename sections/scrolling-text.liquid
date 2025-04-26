@@ -32,8 +32,7 @@
 {% style %}
   @media screen and (max-width: 767.98px) {
     .section__scrolling-text .scrolling-image-item svg {
-      width: var(--width);
-      height: var(--width-mb);
+      width: var(--width-mb);
     }
   }
   .fs-60 {
@@ -115,10 +114,10 @@
                     </div>
                   {% elsif image == blank and icon_svg == 'none' %}
                     <div
-                      class="w-custom h-full rounded flex content-center"
-                      style="--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
+                      class="w-custom w-custom-mb h-full rounded flex content-center"
+                      style="--width-mb:{{ block_st.image_width_mb }}px;--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
                     >
-                      {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
+                      {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full object-fit-cover' %}
                     </div>
                   {%- endif -%}
                 </a>
