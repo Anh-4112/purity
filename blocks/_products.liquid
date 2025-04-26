@@ -20,7 +20,7 @@
 -%}
 <div class="group-lookbook_product relative">
   <div
-    class="group-lookbook_product__image rounded"
+    class="group-lookbook_product__image"
     style="--aspect-ratio: {{ ratio }};"
   >
     {%- if block_st.image != blank -%}
@@ -32,10 +32,11 @@
         type: 'banner',
         container: section_st.section_width,
         image: block_st.image,
-        image_alt: image_alt
+        image_alt: image_alt,
+        class: 'rounded'
       %}
     {%- else -%}
-      {%- render 'placeholder-render', type: 'lifestyle-1', class: 'img-placeholder h-full w-full' -%}
+      {%- render 'placeholder-render', type: 'lifestyle-1', class: 'img-placeholder h-full w-full rounded' -%}
     {%- endif -%}
   </div>
   <div class="group-lookbook_product__content">
@@ -70,7 +71,7 @@
       >
         <span
           tabindex="0"
-          class="icon-dot animation-hotspot transition flex content-center dot pointer w-custom h-custom rounded-50 bg-white grey-color"
+          class="icon-dot animation-hotspot transition flex content-center dot pointer w-custom h-custom rounded-50 bg-white color-primary"
           style="--width: 2.6rem;--height: 2.6rem;"
         >
           <svg width="8" height="8" viewBox="0 0 8 8" fill="none">

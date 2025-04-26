@@ -15,14 +15,14 @@
   assign column_gap_slide = 0
   assign column_gap_mb = 0
   if section_st.column_gap == 'large'
+    assign column_gap_slide = 50
+    assign column_gap_mb = 30
+  elsif section_st.column_gap == 'medium'
     assign column_gap_slide = 30
     assign column_gap_mb = 20
-  elsif section_st.column_gap == 'medium'
+  elsif section_st.column_gap == 'small'
     assign column_gap_slide = 20
     assign column_gap_mb = 10
-  elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
-    assign column_gap_mb = 5
   endif
 %}
 {%- capture style -%}
@@ -30,17 +30,18 @@
 {%- endcapture -%}
 
 {%- capture col_style -%}
-  --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--col-number: 1;
+  --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--col-number: 1;--col-width: 30%;
 {%- endcapture -%}
 
 <div
   class="section__shopable-image overflow-hidden section color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
 >
-  <div
-    class="{{ section_width }}"
-  >
-    <div class="row-gap gap-{{ section_st.column_gap }} flex column flex-md-row wrap cols" style="{{ col_style | strip | strip_newlines }}">
+  <div class="{{ section_width }}">
+    <div
+      class="row-gap gap-{{ section_st.column_gap }} flex column flex-md-row wrap gap"
+      style="{{ col_style | strip | strip_newlines }}"
+    >
       {% content_for 'blocks' %}
     </div>
   </div>
