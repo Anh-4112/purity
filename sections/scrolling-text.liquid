@@ -86,7 +86,7 @@
                   assign image_alt = image.alt | default: image_alt_default | escape
                 -%}
                 <a
-                  class="scrolling-image-item overflow-hidden flex align-center rounded w-custom-mb w-custom h-full"
+                  class="scrolling-image-item relative overflow-hidden flex align-center rounded w-custom-mb w-custom h-full"
                   style="--width-mb:{{ block_st.image_width_mb }}px;--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
                   {% if link_image == blank %}
                     role="link" aria-disabled="true"
@@ -110,6 +110,7 @@
                         image: image,
                         type: 'other',
                         image_alt: image_alt,
+                        container: section_st,
                         class: 'h-full w-full object-fit-cover'
                       %}
                     </div>
