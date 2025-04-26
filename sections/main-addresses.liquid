@@ -13,7 +13,7 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
-<section class="section" style="{{ style | strip | strip_newlines }}">
+<section class="section" style="{{ style | strip | strip_newlines }};--input-placeholder-color: #666666;">
   <div class="{{ section_width }}">
     <div class="flex wrap column w-full max-w-custom-all mx-auto" style="--max-width: 60rem;--padding-inline: 50">
       <div class="w-full">
@@ -43,7 +43,7 @@
                       {{- 'customer.addresses.first_name' | t -}}
                     </label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       placeholder="{{ 'customer.addresses.first_name' | t }}"
                       name="address[first_name]"
@@ -58,7 +58,7 @@
                       {{- 'customer.addresses.last_name' | t -}}
                     </label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[last_name]"
                       id="AddressLastName_{{ form.id }}"
@@ -73,7 +73,7 @@
                       {{- 'customer.addresses.company' | t -}}
                     </label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[company]"
                       id="AddressCompany_{{ form.id }}"
@@ -87,7 +87,7 @@
                       {{- 'customer.addresses.address1' | t -}}
                     </label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[address1]"
                       id="AddressAddress1_{{ form.id }}"
@@ -102,7 +102,7 @@
                       {{- 'customer.addresses.address2' | t -}}
                     </label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[address2]"
                       id="AddressAddress2_{{ form.id }}"
@@ -114,7 +114,7 @@
                   <div class="field relative form-group mb-15 flex column">
                     <label class="mb-5" for="AddressCity_{{ form.id }}">{{ 'customer.addresses.city' | t }}</label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[city]"
                       id="AddressCity_{{ form.id }}"
@@ -152,7 +152,7 @@
                   <div class="field relative form-group mb-15 flex column">
                     <label class="mb-5" for="AddressZip_{{ form.id }}">{{ 'customer.addresses.zip' | t }}</label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[zip]"
                       id="AddressZip_{{ form.id }}"
@@ -164,7 +164,7 @@
                   <div class="field relative form-group mb-15 flex column">
                     <label class="mb-5" for="AddressPhone_{{ form.id }}">{{ 'customer.addresses.phone' | t }}</label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="tel"
                       name="address[phone]"
                       id="AddressPhone_{{ form.id }}"
@@ -274,7 +274,7 @@
                           {{- 'customer.addresses.first_name' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           placeholder="{{ 'customer.addresses.first_name' | t }}"
                           name="address[first_name]"
@@ -288,7 +288,7 @@
                           {{- 'customer.addresses.last_name' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[last_name]"
                           id="AddressLastName_{{ form.id }}"
@@ -302,7 +302,7 @@
                           {{- 'customer.addresses.company' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[company]"
                           id="AddressCompany_{{ form.id }}"
@@ -316,7 +316,7 @@
                           {{- 'customer.addresses.address1' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[address1]"
                           id="AddressAddress1_{{ form.id }}"
@@ -330,7 +330,7 @@
                           {{- 'customer.addresses.address2' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[address2]"
                           id="AddressAddress2_{{ form.id }}"
@@ -342,7 +342,7 @@
                       <div class="field relative form-group mb-15 flex column">
                         <label class="mb-5" for="AddressCity_{{ form.id }}">{{ 'customer.addresses.city' | t }}</label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[city]"
                           id="AddressCity_{{ form.id }}"
@@ -382,7 +382,7 @@
                       <div class="field relative form-group mb-15 flex column">
                         <label class="mb-5" for="AddressZip_{{ form.id }}">{{ 'customer.addresses.zip' | t }}</label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[zip]"
                           id="AddressZip_{{ form.id }}"
@@ -396,7 +396,7 @@
                           {{- 'customer.addresses.phone' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="tel"
                           name="address[phone]"
                           id="AddressPhone_{{ form.id }}"

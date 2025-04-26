@@ -7,7 +7,7 @@
 {%- endcapture -%}
 <div
   class="stretch_width section flex column content-center w-full max-w-custom-all mx-auto"
-  style="{{ style | strip | strip_newlines }}--max-width: 56rem;--bs-gutter-x: 3rem;"
+  style="{{ style | strip | strip_newlines }}--max-width: 56rem;--bs-gutter-x: 3rem;--input-placeholder-color: #666666;"
 >
   <h1 id="recover" tabindex="-1" class="heading-title text-center mb-15">
     {{ 'customer.recover_password.submit' | t }}
@@ -47,7 +47,7 @@
               style="--color-border: #D0473E"
             {% endif %}
             placeholder="{{ 'customer.login_page.email' | t }} *"
-            class="w-full text-color{% if form.errors %} border{% endif %}"
+            class="w-full heading-color{% if form.errors %} border{% endif %}"
           >
           <label for="RecoverEmail" class="visually-hidden">
             {{ 'customer.login_page.email' | t }}
@@ -129,11 +129,11 @@
           autocapitalize="off"
           {% if form.errors contains 'form' %}
             aria-invalid="true"
-            style="--color-border: #D0473E"
+            style="--color-border: #D0473E;"
           {% endif %}
           placeholder="{{ 'customer.login_page.email' | t }} *"
           required
-          class="w-full fs-small-1 text-color{% if form.errors contains 'form' %} border{% endif %}"
+          class="w-full fs-small-1 heading-color{% if form.errors contains 'form' %} border{% endif %}"
         >
         <label for="CustomerEmail" class="visually-hidden">
           {{ 'customer.login_page.email' | t }}
@@ -155,7 +155,7 @@
               {% endif %}
               placeholder="{{ 'customer.login_page.password' | t }} *"
               required
-              class="w-full fs-small-1 text-color"
+              class="w-full fs-small-1 heading-color"
             >
             <show-pass-word class="show-pass-word transition absolute inset-y-0 flex content-center right-25">
               <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">

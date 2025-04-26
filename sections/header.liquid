@@ -925,28 +925,13 @@
                 {%- endfor -%}
               </ul>
             </nav>
-            {%- if section_st.show_account
-              or section_st.show_search
-              or section_st.show_cart
-              or section_st.show_language
-              or section_st.show_currency
-            -%}
+            {%- if section_st.show_account -%}
               <div class="disclosure__footer bg-white flex column gap-15 p-gutter-x border-top">
-                <div class="align-center justify-content-end d-flex gap-10 space-between">
-                  {% if section_st.show_language or section_st.show_currency %}
-                    <div class="desktop-localization-wrapper disclosure__footer last-r-0 pr-30 flex wrap gap-15 align-center">
-                      {% if section_st.show_currency %}
-                        {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
-                      {% endif %}
-                      {% if section_st.show_language %}
-                        {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
-                      {% endif %}
-                    </div>
-                  {% endif %}
+                <div class="align-center justify-content-end flex gap-10 space-between">
                   {%- if section_st.show_account -%}
                     <a
                       href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                      class="btn btn-primary block text-center mt-20 mb-15 text-size"
+                      class="btn btn-primary w-50-percent text-center mt-20 mb-15 text-size"
                       aria-label="{% if customer %}{{ 'customer.account.title' | t }}{% else %}{{ 'customer.login_page.title' | t }}{% endif %}"
                     >
                       {% if customer %}
@@ -955,26 +940,23 @@
                         {{ 'customer.login_page.title' | t }}
                       {% endif %}
                     </a>
-                    <div class="text-center">
-                      {%- if customer -%}
-                        <a
-                          href="{{ routes.account_logout_url }}"
-                          class="btn btn-outline block text-center text-size"
-                          aria-label="{{ 'customer.account_fallback' | t }}"
-                        >
-                          {{- 'customer.log_out' | t -}}
-                        </a>
-                      {%- else -%}
-                        <span>{{- 'customer.register.Do_not_have_an_account' | t -}}</span>
-                        <a
-                          href="{%- if customer -%}{{ routes.account_logout_url }}{%- else -%}{{ routes.account_register_url }}{%- endif -%}"
-                          class="heading-style underline"
-                          aria-label="{{ 'customer.account_fallback' | t }}"
-                        >
-                          {{- 'customer.register.title' | t -}}
-                        </a>
-                      {%- endif -%}
-                    </div>
+                    {%- if customer -%}
+                      <a
+                        href="{{ routes.account_logout_url }}"
+                        class="btn btn-outline block text-center text-size w-50-percent"
+                        aria-label="{{ 'customer.account_fallback' | t }}"
+                      >
+                        {{- 'customer.log_out' | t -}}
+                      </a>
+                    {%- else -%}
+                      <a
+                        href="{%- if customer -%}{{ routes.account_logout_url }}{%- else -%}{{ routes.account_register_url }}{%- endif -%}"
+                        class="heading-style btn btn-outline text-center text-size w-50-percent"
+                        aria-label="{{ 'customer.account_fallback' | t }}"
+                      >
+                        {{- 'customer.register.title' | t -}}
+                      </a>
+                    {%- endif -%}
                   {%- endif -%}
                 </div>
               </div>
