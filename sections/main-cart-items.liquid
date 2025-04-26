@@ -30,6 +30,7 @@
         assign trust_badges = true
     endcase
   endfor
+  assign total = cart.total_price | money
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--gap-desktop: 6rem;--col-width: 31.95%;
@@ -75,14 +76,16 @@
             data-fe-available="{{ 'sections.cart.free_shipping_available' | t }}"
             class="free-shipping-bar mt-10 mb-60 block"
           >
-            <div class="progress-bar-message text-center heading-style"></div>
+            <div class="progress-bar-message text-center heading-style">
+              {{ free_shipping_message | replace: '[amount]', total }}
+            </div>
             <div
               class="progress-bar rounded-10 mx-auto w-full h-custom bg-grey mt-10 relative max-w-custom"
               style="--height: 6px;--max-width: 60rem"
             >
               <div
                 class="progress rounded-10 h-custom absolute left-0 inset-y-0 transition"
-                style="width: var(--width);"
+                style="width: var(--width); --width: 100%;"
                 data-total-order="{{ total_price }}"
                 data-fe-amount="{{ free_minimum_amount }}"
               ></div>
@@ -481,11 +484,11 @@
               </main-cart-items>
               {%- if enable_product_recommendations and cart != empty -%}
                 <div class="cart-recommendations mt-60" style="--width: 8rem; --gap-desktop: 1rem">
-                  <product-recommendations
-                    class="swiper__controls-group"
+                  <mini-cart-recommendations
+                    class="swiper__controls-group hidden"
                     style="--position-arrow: static;--swiper-navigation-size: 20px;--padding: 0;"
                     data-type="{{ recommendation_product_type }}"
-                    data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=cart-upsell"
+                    data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=main-cart-upsell"
                   >
                     {% if product_recommendations_heading != blank %}
                       <div class="flex gap-10 align-center space-between mb-25">
@@ -550,7 +553,7 @@
                         </div>
                       </slide-section>
                     </div>
-                  </product-recommendations>
+                  </mini-cart-recommendations>
                 </div>
               {%- endif -%}
             </div>

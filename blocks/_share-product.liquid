@@ -22,7 +22,7 @@
         class="link list-social__link btn-reset pointer text-color hover-icon-zoom fs-0"
         tabindex="0"
         aria-label="{{ 'general.social.alt_text.share_on_facebook' | t }}"
-        onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 'facebook-share-dialog', 'width=436,height=436'); return false;"
+        onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('{{ request.origin }}{{ product.url }}'), 'facebook-share-dialog', 'width=436,height=436'); return false;"
       >
         <svg width="42" height="42" viewBox="0 0 42 42" fill="none" class="icon-zoom transition-short will-change">
           <circle cx="21" cy="21" r="20.5" stroke="#444444"/>
@@ -35,7 +35,7 @@
         tabindex="0"
         aria-label="{{ 'general.social.alt_text.share_on_twitter' | t }}"
         class="link list-social__link btn-reset pointer text-color hover-icon-zoom fs-0"
-        onclick="window.open('http://twitter.com/home/?status='+encodeURIComponent(location.href), 'twitter-share-dialog', 'width=436,height=436'); return false;"
+        onclick="window.open('http://twitter.com/home/?status='+encodeURIComponent('{{ request.origin }}{{ product.url }}'), 'twitter-share-dialog', 'width=436,height=436'); return false;"
       >
         <svg width="42" height="42" viewBox="0 0 42 42" fill="none" class="icon-zoom transition-short will-change">
           <circle cx="21" cy="21" r="20.5" stroke="currentColor"/>
@@ -48,7 +48,7 @@
         tabindex="0"
         aria-label="{{ 'general.social.alt_text.share_on_pinterest' | t }}"
         class="link list-social__link btn-reset pointer text-color hover-icon-zoom fs-0"
-        onclick="window.open('http://pinterest.com/pin/create/button/?url='+encodeURIComponent(location.href), 'pinterest-share-dialog', 'width=436,height=436'); return false;"
+        onclick="window.open('http://pinterest.com/pin/create/button/?url='+encodeURIComponent('{{ request.origin }}{{ product.url }}'), 'pinterest-share-dialog', 'width=436,height=436'); return false;"
       >
         <svg width="42" height="42" viewBox="0 0 42 42" fill="none" class="icon-zoom transition-short will-change">
           <circle cx="21" cy="21" r="20.5" stroke="currentColor"/>
@@ -61,7 +61,7 @@
         tabindex="0"
         aria-label="{{ 'general.social.alt_text.share_on_whatsapp' | t }}"
         class="link list-social__link btn-reset pointer text-color hover-icon-zoom fs-0"
-        onclick="window.open('//web.whatsapp.com/send?text='+encodeURIComponent(location.href)); return false;"
+        onclick="window.open('//web.whatsapp.com/send?text='+encodeURIComponent('{{ request.origin }}{{ product.url }}')); return false;"
       >
         <svg width="42" height="42" viewBox="0 0 42 42" fill="none" class="icon-zoom transition-short will-change">
           <circle cx="21" cy="21" r="20.5" stroke="currentColor"/>
@@ -74,7 +74,7 @@
         tabindex="0"
         aria-label="{{ 'general.social.alt_text.share_on_email' | t }}"
         class="link list-social__link btn-reset pointer text-color hover-icon-zoom fs-0"
-        onclick="window.open('mailto:?&amp;subject={{ product.title }}&amp;body='+encodeURIComponent(location.href)); return false;"
+        onclick="window.open('mailto:?&amp;subject={{ product.title }}&amp;body='+encodeURIComponent('{{ request.origin }}{{ product.url }}')); return false;"
       >
         <svg width="42" height="42" viewBox="0 0 42 42" fill="none" class="icon-zoom transition-short will-change">
           <circle cx="21" cy="21" r="20.5" stroke="currentColor"/>

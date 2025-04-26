@@ -9,6 +9,7 @@
     class="title"
     {{ block.shopify_attributes }}
   >
+    <a href="{{ closest.product.url }}">
 {%- endif -%}
 {%- if closest.product.title != blank -%}
   {{ closest.product.title | escape }}
@@ -18,6 +19,7 @@
 {%- if section_st.desktop_layout != blank -%}
   </h1>
 {%- else -%}
+  </a>
   </h2>
 {%- endif -%}
 {% schema %}
