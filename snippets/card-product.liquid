@@ -23,7 +23,8 @@
 %}
 {% if card_product and card_product != empty %}
   <div
-    class="product-item product__item-js{{ class }}" data-product-id="{{ card_product.id }}"
+    class="product-item product__item-js{{ class }}"
+    data-product-id="{{ card_product.id }}"
   >
     <div class="product-item__inner relative{{ style_layout }}{% if theme_st.product_show_quick_add_mobile == true %} show_quick_add-mb{% endif %}">
       {%- if disable_image != true -%}
@@ -77,7 +78,7 @@
                     <video-product class="product__img featured-image product__img_video lazy-video-item">
                       {% render 'responsive-image',
                         type: 'product',
-                        class: 'product__img video-thumbnail',
+                        class: 'center_swiper-arrow product__img video-thumbnail',
                         image: p_media.preview_image,
                         image_alt: alt_features,
                         container: container,
@@ -100,7 +101,7 @@
                     <video-product class="product__img featured-image product__img_video lazy-video-item">
                       {% render 'responsive-image',
                         type: 'product',
-                        class: 'product__img video-thumbnail',
+                        class: 'center_swiper-arrow product__img video-thumbnail',
                         image: p_media.preview_image,
                         image_alt: alt_features,
                         container: container,
@@ -138,7 +139,7 @@
                 {% else %}
                   {% render 'responsive-image',
                     type: 'product',
-                    class: 'product__img featured-image',
+                    class: 'center_swiper-arrow product__img featured-image',
                     image: p_media,
                     image_alt: alt_features,
                     container: container,
@@ -454,7 +455,7 @@
         {%- endif -%}
         {%- if type == 'custom' -%}
           <product-form-bundle
-            class="quick-add"
+            class="quick-add mt-10 mt-1025-15 block"
             data-handle="{{ card_product.handle }}"
             data-section-id="{{ section.id }}"
             data-minimum="{{ minimum }}"
@@ -477,7 +478,7 @@
                 id="{{ product_form_id }}-submit"
                 type="submit"
                 name="add"
-                class="btn shadow w-full btn-primary flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                class="btn w-full btn-primary flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
                 aria-haspopup="dialog"
                 aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
                 aria-live="polite"

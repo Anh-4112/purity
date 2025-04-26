@@ -1,9 +1,9 @@
 {%- if article and article != empty -%}
   <div
-    class="article-card-wrapper item-load {{class}}{% if is_featured_blog %} gradient color-{{ color_scheme }}{% endif %}"
+    class="article-card-wrapper item-load{{class}}{% if is_featured_blog %} gradient color-{{ color_scheme }}{% endif %}"
   >
     <div
-      class="card article-card {{ class }}{% if isPageBlog %} text-{{ content_alignment }}{% endif %}{{ featured-blog }}{% if is_featured_blog %} custom-blog-featured flex-1025 wrap gap rounded{% else %} hover-effect{% endif %}"
+      class="card article-card{% if isPageBlog %} text-{{ content_alignment }}{% endif %}{{ featured-blog }}{% if is_featured_blog %} custom-blog-featured flex-1025 wrap gap rounded{% else %} hover-effect{% endif %}"
       {% if is_featured_blog %}
         style="--col-width: 66%;--gap: 0px;"
       {% endif %}
@@ -29,7 +29,7 @@
           >
             {% render 'responsive-image',
               type: 'blog',
-              class: 'blog__img w-full h-full object-fit-cover rounded',
+              class: 'center_swiper-arrow blog__img w-full h-full object-fit-cover rounded',
               image: article.image,
               image_alt: alt,
               container: container,
