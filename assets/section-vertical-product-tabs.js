@@ -337,6 +337,7 @@ class ProductTabs extends HTMLElement {
         } catch (e) {
             console.error("Animation error:", e);
         }
+      toPanel.querySelector("motion-items-effect")?.animateItems();
     }
 
     disconnectedCallback() {

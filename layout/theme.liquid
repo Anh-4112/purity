@@ -2,7 +2,7 @@
   assign theme_st = settings
 %}
 <!doctype html>
-<html class="js{% if theme_st.rtl %} rtl{% endif %}" lang="{{ request.locale.iso_code }}">
+<html class="no-js{% if theme_st.rtl %} rtl{% endif %}" lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -240,25 +240,26 @@
     </script>
     <script type="module" src="{{ 'theme.js' | asset_url }}"></script>
     {{ content_for_header }}
-    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="{{ 'theme.css' | asset_url }}"></noscript>
-    <link rel="stylesheet" href="{{ 'accesibility.css' | asset_url }}" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="{{ 'accesibility.css' | asset_url }}"></noscript>
-
     <script>
+      document.documentElement.classList.replace('no-js', 'js');
       if (Shopify.designMode) {
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
+    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ 'theme.css' | asset_url }}"></noscript>
+    <link rel="stylesheet" href="{{ 'accesibility.css' | asset_url }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ 'accesibility.css' | asset_url }}"></noscript>
   </head>
 
   <body class="{{ theme_st.animation_hover_effect }}{% if template.name == 'product' %} template-product{% endif %}{% if template.name == 'index' %} template-index{% endif %}{% if template.name == 'cart' %} template-cart{% endif %}{% if theme_st.rounded_image > 10 %} rounded-style{% endif %}">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
-
+    {% if theme_st.scroll_animation %}
+      <page-loader class="page-loader"></page-loader>
+    {% endif %}
     {% sections 'header-group' %}
-
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
@@ -280,10 +281,6 @@
           assign money_format = shop.money_with_currency_format | strip_html
         endif
       -%}
-      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
-      if (Shopify.designMode) {
-        document.documentElement.classList.add('shopify-design-mode');
-      }
       window.themeGlobalVariables = {
         settings: {
           money_format: {{ shop.money_format | json }},
@@ -316,12 +313,6 @@
           success: `{{ 'newsletter.success' | t }}`,
           error: `{{ 'newsletter.error' | t }}`
         },
-      }
-    </script>
-    <script>
-      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
-      if (Shopify.designMode) {
-        document.documentElement.classList.add('shopify-design-mode');
       }
       window.importJs = {
         pswpModule: "{{ 'photoswipe.min.js' | asset_url }}",
