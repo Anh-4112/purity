@@ -1,6 +1,8 @@
 {% liquid
+  assign theme_st = settings
   assign block_st = block.settings
   assign section_st = section.settings
+  assign product_image_ratio = theme_st.product_image_ratio
   assign title = block_st.title
   assign description = block_st.description
   assign text_alignment = block_st.text_alignment
@@ -12,7 +14,19 @@
     assign header_size = 'h1'
   endif
   assign show_progress_bar = block_st.show_progress_bar
-  assign enable_quantity = block_st.enable_quantity
+  assign ratio = '3/4'
+  if product_image_ratio != 'adapt'
+    case product_image_ratio
+      when 'square'
+        assign ratio = '1/1'
+      when 'landscape'
+        assign ratio = '4/3'
+      when 'portrait'
+        assign ratio = '3/4'
+    endcase
+  else
+    assign ratio = '3/4'
+  endif
 %}
 {% style %}
   .product_bundle .product-item {
@@ -58,7 +72,7 @@
           <figure
             class="skeleton-product__media rounded media relative overflow- bg-secondary flex-auto w-custom"
             data-product-bundle-variant-media
-            style="--aspect-ratio: 1/1;--width: 10rem;"
+            style="--aspect-ratio: {{ ratio }};--width: 10rem;"
           ></figure>
           <div
             class="skeleton-product__details grow-1 flex column gap-10"
