@@ -1,89 +1,80 @@
 shopable-image {
-    --shopable-image-product: translate(-50%) translateY(40px);
-    --shopable-image-product-hover: translate(-50%) translateY(20px);
+  left: var(--left);
+  top: var(--top);
+  transform: var(--transform);
+  --shopable-image-product: translate(-50%) translateY(40px);
+  --shopable-image-product-hover: translate(-50%) translateY(20px);
 }
-
-shopable-image {
-    left: var(--left);
-    top: var(--top);
-    transform: var(--transform);
-}
-
 .animation-hotspot:after {
-    content: "";
-    position: absolute;
-    left: -1rem;
-    right: -1rem;
-    top: -1rem;
-    bottom: -1rem;
-    background-color: #ffffff73;
-    border-radius: 50%;
-    z-index: -1;
-    animation: ripple 1s infinite;
+  content: "";
+  position: absolute;
+  left: -1rem;
+  right: -1rem;
+  top: -1rem;
+  bottom: -1rem;
+  background-color: #ffffff73;
+  border-radius: 50%;
+  z-index: -1;
+  animation: ripple 1s infinite;
 }
 
 @keyframes ripple {
-    0% {
-        opacity: 1;
-        -webkit-transform: scale(0.5);
-        transform: scale(0.5);
-    }
+  0% {
+    opacity: 1;
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+  }
 
-    100% {
-        opacity: 0;
-        -webkit-transform: scale(1);
-        transform: scale(1);
-    }
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
 }
 .group-lookbook__item-product {
-    --transition: all 0.3s;
-    min-width: 34rem;
-    position: absolute;
-    z-index: 1;
-    top: 100%;
-    left: 50%;
-    transform: var(--shopable-image-product);
-    -webkit-transform: var(--shopable-image-product);
-    transition: var(--transition);
-    pointer-events: none;
-    opacity: 0;
-    visibility: hidden;
+  --transition: all 0.3s;
+  min-width: 34rem;
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  transform: var(--shopable-image-product);
+  -webkit-transform: var(--shopable-image-product);
+  transition: var(--transition);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
 }
 @media screen and (min-width: 767.98px) {
-    .group-lookbook_product__item.active .group-lookbook__item-product{
-        transform: var(--shopable-image-product-hover);
-        -webkit-transform: var(--shopable-image-product-hover);
-        pointer-events: auto;
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .group-lookbook__item-product.right {
-        --shopable-image-product: translate(-100%) translateY(40px);
-        --shopable-image-product-hover: translate(-100%) translateY(20px);
-    }
-
-    .group-lookbook__item-product.bottom {
-        --shopable-image-product: translate(-50%) translateY(-40px);
-        --shopable-image-product-hover: translate(-50%) translateY(-20px);
-        bottom: 100%;
-        top: auto;
-    }
-
-    .group-lookbook__item-product.bottom.right {
-        --shopable-image-product: translate(-100%) translateY(-40px);
-        --shopable-image-product-hover: translate(-100%) translateY(-20px);
-        bottom: 100%;
-        top: auto;
-    }
-
-    .group-lookbook__item-product.bottom.left {
-        --shopable-image-product: translate(0) translateY(-40px);
-        --shopable-image-product-hover: translate(0) translateY(-20px);
-    }
-
-    .group-lookbook__item-product.left {
-        --shopable-image-product: translate(0) translateY(40px);
-        --shopable-image-product-hover: translate(0) translateY(20px);
-    }
+  .group-lookbook_product__item.active .group-lookbook__item-product {
+    transform: var(--shopable-image-product-hover);
+    -webkit-transform: var(--shopable-image-product-hover);
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+  }
+  .group-lookbook__item-product.right {
+    --shopable-image-product: translate(-100%) translateY(40px);
+    --shopable-image-product-hover: translate(-100%) translateY(20px);
+  }
+  .group-lookbook__item-product.bottom {
+    --shopable-image-product: translate(-50%) translateY(-40px);
+    --shopable-image-product-hover: translate(-50%) translateY(-20px);
+    bottom: 100%;
+    top: auto;
+  }
+  .group-lookbook__item-product.bottom.right {
+    --shopable-image-product: translate(-100%) translateY(-40px);
+    --shopable-image-product-hover: translate(-100%) translateY(-20px);
+    bottom: 100%;
+    top: auto;
+  }
+  .group-lookbook__item-product.bottom.left {
+    --shopable-image-product: translate(0) translateY(-40px);
+    --shopable-image-product-hover: translate(0) translateY(-20px);
+  }
+  .group-lookbook__item-product.left {
+    --shopable-image-product: translate(0) translateY(40px);
+    --shopable-image-product-hover: translate(0) translateY(20px);
+  }
 }
