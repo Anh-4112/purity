@@ -33,15 +33,20 @@
   .modal-offer-wrapper .modal__close {
     left: 50%;
     transform: translate(-50%, -25px);
-
+  }
+  @media screen and (max-width: 767.98px) {
+    .modal-inner-offer .drawer__body {
+      height: calc(100vh - 4rem);
+      overflow: auto;
+    }
+  }
+  -- > .modal-inner-offer .swiper-vertical {
+    touch-action: auto !important;
   }
   icon-close-offer {
     width: 2.6rem;
     height: 2.6rem;
     top: -1.8rem;
-  }
-  .block__highlight_text {
-    font-weight: 700;
   }
 {% endstyle %}
 <scroll-offer class="block" style="opacity: 0;">
@@ -69,7 +74,7 @@
     <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
     <div
       class="modal-inner modal-inner-offer drawer-bottom transition-drawer invisible fixed z-15 bg-white w-full bottom-0 inset-x-0"
-      style="width: 100%;max-width: 100%;"
+      style="--drawer-width:100%;"
     >
       <button
         is="button-close-model"
@@ -93,6 +98,7 @@
           data-desktop="{{ items_per_row }}"
           data-tablet="1.5"
           data-free-mode="true"
+          data-direction-mobile="true"
         >
           {% if show_navigation %}
             {%- render 'swiper-navigation' -%}
@@ -116,12 +122,6 @@
     {
       "type": "header",
       "content": "t:sections.all.general"
-    },
-    {
-      "type": "color",
-      "id": "background_section",
-      "label": "t:sections.image-with-text.settings.background_color",
-      "default": "#ffffff"
     },
     {
       "type": "range",

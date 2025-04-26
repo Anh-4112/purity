@@ -4,10 +4,24 @@
 
   assign radius_image_class = 'rounded'
   assign padding_content_class = 'rounded px-20 py-20 py-1025-40'
+  assign column_gap = 0
+  if section_st.column_gap_block == 'large'
+    assign column_gap = 30
+  elsif section_st.column_gap_block == 'medium'
+    assign column_gap = 20
+  elsif section_st.column_gap_block == 'small'
+    assign column_gap = 10
+  endif
 %}
 {% style %}
-  .offer_pop_up .block__buttons a {
+  @media screen and (min-width: 767.98px) {
+    .offer_pop_up .block__buttons a {
     min-width: 16rem;
+    width: auto;
+  }
+  }
+  .offer_pop_up .block__highlight_text {
+    font-weight: 600;
   }
 {% endstyle %}
 <div
@@ -15,10 +29,10 @@
   style="--col-width: {{ block_st.desktop_image_width }}%;"
 >
   <div
-    class="flex gap-0{% if block_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
-    style="--gap:0px;"
+    class="flex gap{% if block_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
+    style="--gap: {{column_gap}}px;"
   >
-    <div class="image-with-text__media-item w-full col-1025-w-custom">
+    <div class="image-with-text__media-item w-50-percent col-1025-w-custom">
       <div
         class="image-with-text__media banner__media {{ radius_image_class }} h-full"
         {% if block_st.image != blank %}
@@ -45,7 +59,7 @@
         {% endif %}
       </div>
     </div>
-    <div class="w-full col-1025-remaining flex text-{{ section_st.content_alignment }}">
+    <div class="w-50-percent col-1025-remaining flex text-{{ section_st.content_alignment }}">
       <div
         class="offer_pop_up image-with-text__wrapper w-full flex bg-custom {{ radius_image_class }}"
         style="--bg-color-custom: {{ block_st.background_color }};"

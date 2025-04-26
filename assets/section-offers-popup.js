@@ -25,9 +25,10 @@ class ScrollOffer extends HTMLElement {
       const content = document.createElement("div");
       content.appendChild(template.content.firstElementChild.cloneNode(true));
       const offerWrapper = content.querySelector(".modal-offer-wrapper");
+      const slideSection = offerWrapper.querySelector('slide-section');
       NextSkyTheme.body.appendChild(offerWrapper);
       NextSkyTheme.eventModal(offerWrapper, "open", true);
-  
+      slideSection.swiper.update();
     }
   
     initialize() {
