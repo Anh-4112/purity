@@ -59,7 +59,6 @@ if (!customElements.get("product-form-bundle")) {
               }
 
               const bundleImage = html.querySelector(".bundle-image");
-              const dataRatio = bundleImage.dataset.ratio;
               const bundleContent = html.querySelector(".bundle-content");
               if (!bundleImage || !bundleContent) {
                 return;
@@ -71,7 +70,6 @@ if (!customElements.get("product-form-bundle")) {
               );
               if (mediaContainer && bundleImage) {
                 mediaContainer.innerHTML = bundleImage.innerHTML;
-                mediaContainer.style.setProperty("--aspect-ratio", dataRatio);
               }
               const contentContainer = targetContainer.querySelector(
                 "[data-product-bundle-variant-content]"
@@ -255,7 +253,6 @@ class ButtonSubmitBundle extends HTMLElement {
       );
       if (mediaContainer) {
         mediaContainer.innerHTML = "";
-        mediaContainer.style.setProperty("--aspect-ratio", "3/4");
       }
 
       const contentContainer = container.querySelector(
@@ -263,9 +260,9 @@ class ButtonSubmitBundle extends HTMLElement {
       );
       if (contentContainer) {
         contentContainer.innerHTML = `
-          <span class="skeleton-product__info skeleton-1 h-custom bg-secondary rounded-10 max-w-custom-all" style="--max-width: 100%;"></span>
-          <span class="skeleton-product__info skeleton-2 h-custom bg-secondary rounded-10 max-w-custom-all" style="--max-width: 6rem;"></span>
-          <span class="skeleton-product__info skeleton-3 h-custom bg-secondary rounded-10 max-w-custom-all" style="--max-width: 12rem"></span>
+          <span class="skeleton-product__info skeleton-1"></span>
+          <span class="skeleton-product__info skeleton-2"></span>
+          <span class="skeleton-product__info skeleton-3"></span>
         `;
       }
 
@@ -349,7 +346,6 @@ class BundleCartRemoveButton extends HTMLElement {
     );
     if (mediaContainer) {
       mediaContainer.innerHTML = "";
-      mediaContainer.style.setProperty("--aspect-ratio", "3/4");
     }
 
     const contentContainer = this.variantContainer.querySelector(
@@ -357,9 +353,9 @@ class BundleCartRemoveButton extends HTMLElement {
     );
     if (contentContainer) {
       contentContainer.innerHTML = `
-          <span class="skeleton-product__info skeleton-1 h-custom bg-secondary rounded-10 max-w-custom-all" style="--max-width: 100%;"></span>
-          <span class="skeleton-product__info skeleton-2 h-custom bg-secondary rounded-10 max-w-custom-all" style="--max-width: 6rem;"></span>
-          <span class="skeleton-product__info skeleton-3 h-custom bg-secondary rounded-10 max-w-custom-all" style="--max-width: 12rem"></span>
+          <span class="skeleton-product__info skeleton-1"></span>
+          <span class="skeleton-product__info skeleton-2"></span>
+          <span class="skeleton-product__info skeleton-3"></span>
         `;
     }
 

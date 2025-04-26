@@ -5,27 +5,21 @@
   assign products = block_st.products
   assign items_to_show = block_st.items_to_show
   assign items_per_row = block_st.items_per_row
-  assign items_per_row_mobile = block_st.items_per_row_mobile
-  assign enable_carousel_mobile = block_st.enable_carousel_mobile
+  assign items_per_row_tablet = items_per_row
+  if items_per_row > 4
+    assign items_per_row_tablet = items_per_row | minus: 1
+  endif
   assign column_gap_slide = 0
+  assign column_gap_mb = 0
   if block_st.column_gap == 'large'
     assign column_gap_slide = 30
+    assign column_gap_mb = 20
   elsif block_st.column_gap == 'medium'
     assign column_gap_slide = 20
+    assign column_gap_mb = 10
   elsif block_st.column_gap == 'small'
     assign column_gap_slide = 10
-  endif
-
-  assign data_free_scroll = 'false'
-  if items_per_row_mobile > 1 and items_per_row_mobile < 2
-    assign data_free_scroll = 'true'
-  elsif items_per_row_mobile > 2 and items_per_row_mobile < 3
-    assign data_free_scroll = 'true'
-  endif
-
-  assign items_per_row_tablet = items_per_row
-  if items_per_row > 3
-    assign items_per_row_tablet = items_per_row | minus: 1
+    assign column_gap_mb = 5
   endif
 
   if products != blank
@@ -34,27 +28,22 @@
     assign arr_product = collection.products
   endif
 %}
+{{ section_st.column_gap }}
 {%- capture col_style -%}
-    --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};{{- -}}
-    {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}; --col-mobile: {{ items_per_row_mobile }}
+  --col-desktop: {{ items_per_row }};--col-number:2;--col-tablet: {{items_per_row_tablet}};--col-mobile: 2;--row-gap: 3rem;--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
-<carousel-mobile
-  class="grid grid-cols gap{% if data_free_scroll == 'true' %} grid_scroll{% endif %}"
+<div
+  class="grid grid-cols gap"
   style="{{ col_style | strip | strip_newlines }}"
-  data-mobile="{{ items_per_row_mobile }}"
-  data-spacing="{{ column_gap_slide }}"
-  data-free-scroll="{{ data_free_scroll }}"
-  data-enable-carousel-mobile="{{ enable_carousel_mobile }}"
 >
   {% if arr_product != blank %}
     {% for product in arr_product limit: items_to_show %}
       {% render 'card-product',
         card_product: product,
         section_id: section.id,
-        class: ' grid-card-item switch-slide__mobile',
+        class: ' grid-card-item',
         container: section_st.section_width,
         column: items_per_row,
-        column_mobile: items_per_row_mobile,
         padding: column_gap_slide,
         disable_quickview: true,
         indexFor: forloop.index,
@@ -63,7 +52,7 @@
         minimum: section_st.minimum,
         maximum: section_st.maximum,
         select_type: 'default',
-        select_class: ' mt-10 mb-15 mt-1025-15 w-1025-full max-w-100'
+        select_class: ' mt-10 mt-1025-15 w-full max-w-100'
       %}
     {% endfor %}
   {% else %}
@@ -75,7 +64,7 @@
       %}
     {% endfor %}
   {% endif %}
-</carousel-mobile>
+</div>
 
 {% schema %}
 {
