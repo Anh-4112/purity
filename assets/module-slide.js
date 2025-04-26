@@ -10,7 +10,7 @@ function initSlide(_this) {
     : "horizontal";
   const directionMobile = _this?.dataset.directionMobile === "true" ;
   let autoPlaySpeed = _this?.dataset.autoPlaySpeed
-    ? _this?.dataset.autoPlaySpeed * 1000
+    ? _this?.dataset.autoPlaySpeed
     : 3000;
   let speed = _this?.dataset.speed ? _this?.dataset.speed : 400;
   const effect = _this?.dataset.effect ? _this?.dataset.effect : "slide";

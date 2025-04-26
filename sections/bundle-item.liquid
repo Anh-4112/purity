@@ -1,4 +1,6 @@
 {%- liquid
+  assign theme_st = settings
+  assign product_image_ratio = theme_st.product_image_ratio
   assign selected_variant_id = request.params.variant
   assign selected_variant = product.selected_variant
   if selected_variant_id
@@ -13,8 +15,28 @@
   if settings.currency_code_enabled
     assign money_price = selected_variant.price | money_with_currency
   endif
+
+  assign ratio = '3/4'
+  if product_image_ratio != 'adapt'
+    case product_image_ratio
+      when 'square'
+        assign ratio = '1/1'
+      when 'landscape'
+        assign ratio = '4/3'
+      when 'portrait'
+        assign ratio = '3/4'
+    endcase
+  else
+    if selected_variant.featured_media != blank
+      assign ratio = selected_variant.featured_media.aspect_ratio
+    elsif product.featured_media != blank
+      assign ratio = product.featured_media.aspect_ratio
+    else
+      assign ratio = '3/4'
+    endif
+  endif
 -%}
-<div class="bundle-image">
+<div class="bundle-image" data-ratio="{{ ratio }}">
   {%- if selected_variant.featured_media != blank -%}
     {%- assign image_alt = selected_variant.featured_media.alt | default: product.title | escape -%}
     {% render 'responsive-image',
