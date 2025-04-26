@@ -32,13 +32,12 @@
 {% style %}
   @media screen and (max-width: 767.98px) {
     .section__scrolling-text .scrolling-image-item svg {
-      width: var(--width);
-      height: var(--width-mb);
+      width: var(--width-mb);
     }
   }
   .fs-60 {
-      font-size: clamp(4rem, calc(4rem + (60 - 40) * var(--responsive-rate)), 6rem);
-    }
+    font-size: clamp(4rem, calc(4rem + (60 - 40) * var(--responsive-rate)), 6rem);
+  }
 {% endstyle %}
 <div
   class="section__scrolling-text color-{{ section_st.color_scheme }} gradient section"
@@ -51,7 +50,7 @@
     >
       {%- for i in (0..5) -%}
         <div
-          class="flex animation-marquee animation__marquee-{{ section_st.direction }} marquee whitespace-nowrap gap align-center"
+          class="flex animation-marquee animation__marquee-{{ section_st.direction }} whitespace-nowrap gap align-center"
           style="{{ col_style | strip | strip_newlines }}"
         >
           {%- for block in section.blocks -%}
@@ -115,10 +114,10 @@
                     </div>
                   {% elsif image == blank and icon_svg == 'none' %}
                     <div
-                      class="w-custom h-full rounded flex content-center"
-                      style="--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
+                      class="w-custom w-custom-mb h-full rounded flex content-center"
+                      style="--width-mb:{{ block_st.image_width_mb }}px;--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
                     >
-                      {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
+                      {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full object-fit-cover' %}
                     </div>
                   {%- endif -%}
                 </a>

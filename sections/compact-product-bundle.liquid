@@ -1,5 +1,5 @@
-{{ 'section-bundle-products.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'section-bundle-products.js' | asset_url }}" defer="defer"></script>
+{{ 'section-compact-product-bundle.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'section-compact-product-bundle.js' | asset_url }}" defer="defer"></script>
 {% liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -287,7 +287,7 @@
                   href="{{ section_st.button_link | default: "#" }}"
                 {% endif %}
                 aria-label="{{ section_st.button_label }}"
-                class="heading-style text-size border-animation pointer"
+                class="heading-style text-size btn-link border-animation pointer"
               >
                 {{ section_st.button_label }}
               </a>
@@ -300,7 +300,7 @@
 </div>
 {% schema %}
 {
-  "name": "t:sections.bundle-products.name",
+  "name": "t:sections.compact_product_bundle.name",
   "tag": "section",
   "class": "section bundle-products",
   "disabled_on": {
@@ -430,7 +430,7 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "t:sections.bundle-products.settings.image.label"
+      "label": "t:sections.compact_product_bundle.settings.image.label"
     },
     {
       "type": "range",
@@ -485,7 +485,7 @@
     {
       "type": "checkbox",
       "id": "enable_quick_add",
-      "label": "t:sections.bundle-products.settings.enable_quick_add_for_items.label",
+      "label": "t:sections.compact_product_bundle.settings.enable_quick_add_for_items.label",
       "default": true
     },
     {
@@ -527,18 +527,18 @@
   "blocks": [
     {
       "type": "product",
-      "name": "t:sections.bundle-products.blocks.settings.name",
+      "name": "t:sections.compact_product_bundle.blocks.settings.name",
       "limit": 5,
       "settings": [
         {
           "type": "product",
           "id": "product",
-          "label": "t:sections.bundle-products.blocks.settings.select_product"
+          "label": "t:sections.compact_product_bundle.blocks.settings.select_product"
         },
         {
           "type": "range",
           "id": "position_top",
-          "label": "t:sections.bundle-products.blocks.settings.position_top",
+          "label": "t:sections.compact_product_bundle.blocks.settings.position_top",
           "min": 0,
           "max": 100,
           "unit": "%",
@@ -548,7 +548,7 @@
         {
           "type": "range",
           "id": "position_left",
-          "label": "t:sections.bundle-products.blocks.settings.position_left",
+          "label": "t:sections.compact_product_bundle.blocks.settings.position_left",
           "min": 0,
           "max": 100,
           "unit": "%",
@@ -560,7 +560,7 @@
   ],
   "presets": [
     {
-      "name": "t:sections.bundle-products.presets.name",
+      "name": "t:sections.compact_product_bundle.presets.name",
       "blocks": [
         {
           "type": "product",

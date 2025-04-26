@@ -7,8 +7,14 @@
   animation: ticker-right var(--speed, 6s) infinite linear;
   -webkit-animation: ticker-right var(--speed, 6s) infinite linear;
 }
-.marquee:hover > * {
+:is(.marquee, content-effect):hover > * {
   animation-play-state: paused;
+}
+.marquee {
+  overflow-x: scroll;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
 }
 @keyframes ticker {
   0% {

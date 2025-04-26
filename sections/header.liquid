@@ -460,20 +460,8 @@
       {%- if section_st.show_account
         or section_st.show_search
         or section_st.show_cart
-        or section_st.show_language
-        or section_st.show_currency
       -%}
         <div class="header__action flex wrap flex-end align-center gap-20">
-          {% if section_st.show_language or section_st.show_currency %}
-            <div class="desktop-localization-wrapper hidden flex-1025 wrap align-center gap-15">
-              {% if section_st.show_currency %}
-                {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
-              {% endif %}
-              {% if section_st.show_language %}
-                {%- render 'language-localization', localPosition: 'HeaderLanguage' -%}
-              {% endif %}
-            </div>
-          {% endif %}
           {%- if section_st.show_search or section_st.show_account or section_st.show_cart -%}
             <div class="flex gap" style="--gap: 7px;--gap-desktop: 7px;">
               {%- if section_st.show_search -%}
@@ -925,28 +913,14 @@
                 {%- endfor -%}
               </ul>
             </nav>
-            {%- if section_st.show_account
-              or section_st.show_search
-              or section_st.show_cart
-              or section_st.show_language
-              or section_st.show_currency
-            -%}
-              <div class="disclosure__footer bg-white flex column gap-15 p-gutter-x border-top">
-                <div class="align-center justify-content-end d-flex gap-10 space-between">
-                  {% if section_st.show_language or section_st.show_currency %}
-                    <div class="desktop-localization-wrapper disclosure__footer last-r-0 pr-30 flex wrap gap-15 align-center">
-                      {% if section_st.show_currency %}
-                        {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
-                      {% endif %}
-                      {% if section_st.show_language %}
-                        {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
-                      {% endif %}
-                    </div>
-                  {% endif %}
+            {%- if section_st.show_account -%}
+              <div class="disclosure__footer bg-white p-gutter-x border-top">
+                <div class="align-center justify-content-end flex gap-10 space-between">
                   {%- if section_st.show_account -%}
                     <a
                       href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                      class="btn btn-primary block text-center mt-20 mb-15 text-size"
+                      class="btn btn-primary w-50-percent text-center text-size x-min-value py-15"
+                      style="--padding-inline: 8px;"
                       aria-label="{% if customer %}{{ 'customer.account.title' | t }}{% else %}{{ 'customer.login_page.title' | t }}{% endif %}"
                     >
                       {% if customer %}
@@ -955,26 +929,25 @@
                         {{ 'customer.login_page.title' | t }}
                       {% endif %}
                     </a>
-                    <div class="text-center">
-                      {%- if customer -%}
-                        <a
-                          href="{{ routes.account_logout_url }}"
-                          class="btn btn-outline block text-center text-size"
-                          aria-label="{{ 'customer.account_fallback' | t }}"
-                        >
-                          {{- 'customer.log_out' | t -}}
-                        </a>
-                      {%- else -%}
-                        <span>{{- 'customer.register.Do_not_have_an_account' | t -}}</span>
-                        <a
-                          href="{%- if customer -%}{{ routes.account_logout_url }}{%- else -%}{{ routes.account_register_url }}{%- endif -%}"
-                          class="heading-style underline"
-                          aria-label="{{ 'customer.account_fallback' | t }}"
-                        >
-                          {{- 'customer.register.title' | t -}}
-                        </a>
-                      {%- endif -%}
-                    </div>
+                    {%- if customer -%}
+                      <a
+                        href="{{ routes.account_logout_url }}"
+                        class="btn btn-outline block text-center text-size w-50-percent x-min-value py-15"
+                        style="--padding-inline: 8px;"
+                        aria-label="{{ 'customer.account_fallback' | t }}"
+                      >
+                        {{- 'customer.log_out' | t -}}
+                      </a>
+                    {%- else -%}
+                      <a
+                        href="{%- if customer -%}{{ routes.account_logout_url }}{%- else -%}{{ routes.account_register_url }}{%- endif -%}"
+                        class="heading-style btn btn-outline text-center text-size w-50-percent x-min-value py-15"
+                        style="--padding-inline: 8px;"
+                        aria-label="{{ 'customer.account_fallback' | t }}"
+                      >
+                        {{- 'customer.register.title' | t -}}
+                      </a>
+                    {%- endif -%}
                   {%- endif -%}
                 </div>
               </div>
@@ -1152,18 +1125,6 @@
       "id": "show_cart",
       "default": true,
       "label": "t:sections.header.settings.addons.show_cart.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_currency",
-      "default": true,
-      "label": "t:sections.header.settings.addons.show_currency.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_language",
-      "default": false,
-      "label": "t:sections.header.settings.addons.show_language.label"
     },
     {
       "type": "header",

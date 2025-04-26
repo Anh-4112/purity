@@ -33,11 +33,6 @@
       "
     {% endif %}
   >
-    {%- if block_st.image.alt == blank -%}
-      {%- capture alt -%}{{ block_st.heading }}{%- endcapture -%}
-    {%- else -%}
-      {%- assign alt = block_st.image.alt -%}
-    {%- endif -%}
     <div
       class="banner rounded banner__media media{% if block_st.content_position == 'overlay' %} absolute inset-0 overlay-bg{% endif %}"
       style="
@@ -75,16 +70,15 @@
               poster="{{ video_poster }}"
               playsinline="true"
               autoplay
-              title=""
+              title="{{ 'accessibility.video' | t }}"
+              aria-label="{{ 'accessibility.video' | t }}"
               muted
             ></video>
           </video-local>
         {%- else %}
           {%- liquid
-            assign image_alt = image.alt
-            if image_alt == blank
-              assign image_alt = block_st.heading
-            endif
+            assign alt_default = 'accessibility.promotion_banner' | t
+            assign alt = image.alt | default: alt_default | escape
           -%}
           {% render 'responsive-image',
             type: 'banner',
@@ -289,7 +283,7 @@
       "type": "checkbox",
       "id": "show_badge",
       "default": true,
-      "label": "t:settings_schema.badges.settings.show_badge.label",
+      "label": "t:settings_schema.badges.settings.show_badge.label"
     },
     {
       "type": "text",
@@ -343,7 +337,7 @@
         }
       ],
       "default": "bottom",
-      "label": "t:sections.bundle-products.blocks.settings.position_top"
+      "label": "t:sections.compact_product_bundle.blocks.settings.position_top"
     },
     {
       "type": "header",

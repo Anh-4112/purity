@@ -1,6 +1,8 @@
 {% liquid
+  assign theme_st = settings
   assign block_st = block.settings
   assign section_st = section.settings
+  assign product_image_ratio = theme_st.product_image_ratio
   assign title = block_st.title
   assign description = block_st.description
   assign text_alignment = block_st.text_alignment
@@ -13,8 +15,47 @@
   endif
   assign show_progress_bar = block_st.show_progress_bar
   assign enable_quantity = block_st.enable_quantity
+  assign ratio = '3/4'
+  if product_image_ratio != 'adapt'
+    case product_image_ratio
+      when 'square'
+        assign ratio = '1/1'
+      when 'landscape'
+        assign ratio = '4/3'
+      when 'portrait'
+        assign ratio = '3/4'
+    endcase
+  else
+    assign ratio = '3/4'
+  endif
 %}
-<div class="bundle-sticky flex column gap-30">
+{% style %}
+  .product_bundle .product-item {
+    --input-height: 4rem;
+    --btn-padding-y: 1rem;
+    --btn-padding-x: 1.5rem;
+  }
+  .bundle-sticky {
+    border-color: var(--color-heading);
+  }
+  .skeleton-product__info {
+    height: 1rem;
+    border-radius: 10px;
+    background: var(--color-background-2);
+    margin-bottom: 1rem;
+  }
+  @media (min-width: 1025px) {
+    .product_bundle .product-item {
+      --input-height: 5.2rem;
+      --btn-padding-y: 1.5rem;
+      --btn-padding-x: 3rem;
+    }
+  }
+{% endstyle %}
+<div
+  class="bundle-sticky border rounded sticky top-30 p-20 p-1025-40 flex column gap-20 gap-1025-30"
+  style="--border-height: 2px;"
+>
   {%- if title != blank or description != blank -%}
     <div
       class="text-{{ text_alignment }}"
@@ -41,36 +82,43 @@
   <div class="bundle-items__wrapper custom-scrollbar">
     <div class="bundle-content__items flex column gap-20">
       {% for item in (1..section_st.maximum) %}
-        <div class="skeleton-product flex align-center gap-15" data-product-bundle-variant>
+        <div class="skeleton-product flex gap-15" data-product-bundle-variant>
           <figure
-            class="skeleton-product__media media relative overflow-hidden"
+            class="skeleton-product__media rounded-10 media relative overflow-hidden align-self-start bg-secondary flex-auto w-custom"
             data-product-bundle-variant-media
-            style="--aspect-ratio: 1/1;"
+            style="--aspect-ratio: {{ ratio }};--width: 10rem;"
           ></figure>
           <div
-            class="skeleton-product__details grow-1 flex column"
+            class="skeleton-product__details grow-1 flex column justify-center"
+            style="--height: 1rem;"
             data-product-bundle-variant-content
           >
-            <span class="skeleton-product__info skeleton-1"></span>
-            <span class="skeleton-product__info skeleton-2"></span>
-            <span class="skeleton-product__info skeleton-3"></span>
+            <span
+              class="skeleton-product__info skeleton-1 h-custom bg-secondary rounded-10 max-w-custom-all mb-10"
+              style="--max-width: 100%;"
+            ></span>
+            <span
+              class="skeleton-product__info skeleton-2 h-custom bg-secondary rounded-10 max-w-custom-all mb-10"
+              style="--max-width: 6rem;"
+            ></span>
+            <span
+              class="skeleton-product__info skeleton-3 h-custom bg-secondary rounded-10 max-w-custom-all"
+              style="--max-width: 12rem"
+            ></span>
           </div>
         </div>
       {% endfor %}
     </div>
   </div>
-  <div
-    class="divider"
-    style="border-bottom: 1px solid #E5E5E5;"
-  ></div>
+  <div class="divider border-top"></div>
   <div class="bundle-total h5 flex space-between gap-10">
     <span class="text">{{ 'sections.cart.total' | t }}:</span>
     <span class="bundle-total-price-{{ section.id }}">
-        {%- if settings.currency_code -%}
-            {{ 0 | money_with_currency }}
-          {%- else -%}
-            {{ 0 | money }}
-          {%- endif -%}
+      {%- if settings.currency_code -%}
+        {{ 0 | money_with_currency }}
+      {%- else -%}
+        {{ 0 | money }}
+      {%- endif -%}
     </span>
   </div>
   <button-submit-bundle
@@ -85,19 +133,15 @@
     <span class="hidden-on-load transition-short">{{ 'products.product.add_all_to_cart' | t }}</span>
     {%- render 'loader' -%}
   </button-submit-bundle>
-  <div class="bundle-footer flex column">
+  <div class="bundle-footer flex column gap-10">
     {% content_for 'blocks' %}
   </div>
 </div>
 {% schema %}
 {
   "name": "t:sections.product-bundle.settings.your_bundle.name",
-  "class": "w-full col-1025-remaining bundle-sidebar p-40 bundle-sticky",
+  "class": "w-full col-1025-w-custom bundle-sidebar",
   "settings": [
-    {
-      "type": "header",
-      "content": "t:sections.product-bundle.settings.your_bundle.settings.header.label"
-    },
     {
       "type": "text",
       "id": "title",

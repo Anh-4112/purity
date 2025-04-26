@@ -1,54 +1,38 @@
 {% liquid
   assign section_st = section.settings
   assign block_st = block.settings
-  assign column_gap_slide = 0
-  if section_st.column_gap_block == 'large'
-    assign column_gap_slide = 30
-  elsif section_st.column_gap_block == 'medium'
-    assign column_gap_slide = 20
-  elsif section_st.column_gap_block == 'small'
-    assign column_gap_slide = 10
-  endif
 
-  assign radius_image_class = ''
-  assign radius_content_class = ''
-  assign has_custom_background = false
-  if block_st.background_color != 'rgba(0,0,0,0)' and block_st.background_color != 'transparent' and block_st.background_color != blank and block_st.background_color != '#fff' and block_st.background_color != '#ffffff'
-    assign has_custom_background = true
-  endif
-  if column_gap_slide == 0 and has_custom_background
-    if block_st.image_desktop_position == 'left'
-      assign radius_image_class = 'rounded'
-      assign radius_content_class = 'rounded'
-    else
-      assign radius_image_class = 'rounded'
-      assign radius_content_class = 'rounded'
-    endif
-  else
-    assign radius_image_class = 'rounded'
-    assign radius_content_class = 'rounded'
-  endif
-  if has_custom_background
-    assign padding_content_class = 'p-30'
-  else
-    if column_gap_slide != 0
-      assign padding_content_class = ''
-    else
-      assign padding_content_class = 'image-with-text__container'
-    endif
+  assign radius_image_class = 'rounded'
+  assign padding_content_class = 'rounded px-20 py-20 py-1025-40'
+  assign column_gap = 0
+  if section_st.column_gap_block == 'large'
+    assign column_gap = 30
+  elsif section_st.column_gap_block == 'medium'
+    assign column_gap = 20
+  elsif section_st.column_gap_block == 'small'
+    assign column_gap = 10
   endif
 %}
-
-{%- capture col_style -%}
-  {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap: {{  column_gap_slide }}px;--gap-desktop: {{  column_gap_slide }}px;{% endif %};
-{%- endcapture -%}
-
-<div class="color-{{ block_st.color_scheme }} gradient block__image-with-text-offer" style="--col-width: {{ block_st.desktop_image_width }}%;">
+{% style %}
+  @media screen and (min-width: 767.98px) {
+    .offer_pop_up .block__buttons a {
+    min-width: 16rem;
+    width: auto;
+  }
+  }
+  .offer_pop_up .block__highlight_text {
+    font-weight: 600;
+  }
+{% endstyle %}
+<div
+  class="color-{{ block_st.color_scheme }} gradient block__image-with-text-offer"
+  style="--col-width: {{ block_st.desktop_image_width }}%;"
+>
   <div
     class="flex gap{% if block_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
-    style="{{ col_style | strip | strip_newlines }}"
+    style="--gap: {{column_gap}}px;"
   >
-    <div class="image-with-text__media-item w-full col-1025-w-custom">
+    <div class="image-with-text__media-item w-50-percent col-1025-w-custom">
       <div
         class="image-with-text__media banner__media {{ radius_image_class }} h-full"
         {% if block_st.image != blank %}
@@ -67,7 +51,7 @@
           {% render 'responsive-image',
             type: 'other',
             container: 'full-width',
-            image: section_st.image,
+            image: block_st.image,
             image_alt: alt
           %}
         {% else %}
@@ -75,17 +59,16 @@
         {% endif %}
       </div>
     </div>
-    <div class="w-full col-1025-remaining flex text-{{ block_st.text_alignment }}">
-      {% if has_custom_background %}
-        <div
-          class="image-with-text__wrapper w-full flex bg-custom {{ radius_content_class }}"
-          style="--bg-color-custom: {{ block_st.background_color }};"
+    <div class="w-50-percent col-1025-remaining flex text-{{ section_st.content_alignment }}">
+      <div
+        class="offer_pop_up image-with-text__wrapper w-full flex bg-custom {{ radius_image_class }}"
+        style="--bg-color-custom: {{ block_st.background_color }};"
+      >
+        <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }}"
         >
-      {% endif %}
-      <div class="image-with-text__text-item-inner w-full align-self-{{ block_st.desktop_vertical_alignment }} {{ padding_content_class }}">
-        {% content_for 'blocks' %}
+          {% content_for 'blocks' %}
+        </div>
       </div>
-      {% if has_custom_background %}</div>{% endif %}
     </div>
   </div>
 </div>
@@ -134,7 +117,7 @@
     {
       "type": "range",
       "id": "desktop_image_width",
-      "min": 40,
+      "min": 35,
       "max": 70,
       "step": 1,
       "unit": "%",
@@ -167,46 +150,6 @@
       "type": "color",
       "id": "background_color",
       "label": "t:sections.image-with-text.settings.background_color"
-    },
-    {
-      "type": "select",
-      "id": "desktop_vertical_alignment",
-      "options": [
-        {
-          "value": "start",
-          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.top"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.middle"
-        },
-        {
-          "value": "end",
-          "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.bottom"
-        }
-      ],
-      "default": "start",
-      "label": "t:sections.image-with-text.settings.desktop_vertical_alignment.label"
-    },
-    {
-      "type": "select",
-      "id": "text_alignment",
-      "options": [
-        {
-          "value": "start",
-          "label": "t:sections.all.text_alignment.options__1.label"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.all.text_alignment.options__2.label"
-        },
-        {
-          "value": "end",
-          "label": "t:sections.all.text_alignment.options__3.label"
-        }
-      ],
-      "default": "start",
-      "label": "t:sections.all.text_alignment.label"
     }
   ],
   "presets": [
