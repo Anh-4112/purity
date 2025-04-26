@@ -73,6 +73,7 @@
   if fetchpriority == 'high'
     assign image_size = image.width
   endif
+  assign animate = animate | default: 'zoom-out-sm'
 -%}
 {% if sizes == blank %}
   {%- capture sizes -%}
@@ -102,7 +103,7 @@
 {% if motion and scroll_animation %}
   <motion-effect
     class="block{{ class_motion }}"
-    data-animate="zoom-out-sm"
+    data-animate="{{ animate }}"
   >
 {% endif %}
 {% if image_lazy_loading != blank %}

@@ -182,6 +182,24 @@ Shopify.CountryProvinceSelector.prototype = {
   },
 };
 
+class PageLoader extends HTMLElement {
+  constructor() {
+    super(),
+      window.addEventListener(
+        "DOMContentLoaded",
+        this.onDOMContentLoaded.bind(this),
+        false
+      );
+  }
+
+  onDOMContentLoaded() {
+    Motion.animate(this, { opacity: 0 }, { duration: 1 }).finished.then(() => {
+      this.classList.add("hidden");
+    });
+  }
+}
+customElements.define("page-loader", PageLoader);
+
 class BackToTop extends HTMLElement {
   constructor() {
     super();
@@ -2788,3 +2806,72 @@ class StickySection extends HTMLElement {
 if (!customElements.get("sticky-section")) {
   customElements.define("sticky-section", StickySection);
 }
+
+class MotionItemsEffect extends HTMLElement {
+  constructor() {
+    super();
+    this.setupInitialAnimation();
+    this.setupInViewEffect();
+  }
+
+  get allItems() {
+    return this.querySelectorAll(".motion-item");
+  }
+
+  get visibleItems() {
+    return this.querySelectorAll(".product-item:not([style])");
+  }
+
+  setupInitialAnimation() {
+    Motion.animate(
+      this.allItems,
+      {
+        transform: "translateY(4rem)",
+        opacity: 0.01,
+        visibility: "hidden",
+      },
+      {
+        duration: 0,
+      }
+    );
+  }
+
+  setupInViewEffect() {
+    Motion.inView(this, this.animateItems.bind(this), {
+      margin: "0px 0px -100px 0px",
+    });
+  }
+
+  animateItems() {
+    Motion.animate(
+      this.allItems,
+      {
+        transform: ["translateY(4rem)", "translateY(0)"],
+        opacity: [0.01, 1],
+        visibility: ["hidden", "visible"],
+      },
+      {
+        duration: 0.3,
+        delay: Motion.stagger(0.1),
+        easing: [0, 0, 0.3, 1],
+      }
+    );
+  }
+
+  reloadAnimationEffect() {
+    Motion.animate(
+      this.visibleItems,
+      {
+        transform: ["translateY(4rem)", "translateY(0)"],
+        opacity: [0.01, 1],
+        visibility: ["hidden", "visible"],
+      },
+      {
+        duration: 0.3,
+        delay: Motion.stagger(0.1),
+        easing: [0, 0, 0.3, 1],
+      }
+    );
+  }
+}
+customElements.define("motion-items-effect", MotionItemsEffect);
