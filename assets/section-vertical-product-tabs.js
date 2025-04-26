@@ -370,12 +370,20 @@ class SuitableFinder extends ProductTabs {
         this.handleDotTouchEnd = this.handleDotTouchEnd.bind(this);
         this.handleResize = this.handleResize.bind(this);
         this._isInitialized = false;
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", () => super.connectedCallback());
+          }
     }
     
     connectedCallback() {
         super.connectedCallback();
         
         if (this._dot && this._rangeSlider) {
+            const offsetWidth = this._tabHeaderContent.offsetWidth;
+            this._rangeSlider.style.setProperty(
+              "--width-range-slider",
+              offsetWidth + "px"
+            );
             this._dot.style.transition = "none";
             
             requestAnimationFrame(() => {
