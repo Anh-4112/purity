@@ -752,6 +752,9 @@ a.hover-heading-color:hover,
 .align-self-center {
   align-self: center;
 }
+.align-self-start {
+  align-self: start;
+}
 .flex-auto {
   flex: 0 0 auto;
 }
@@ -814,6 +817,7 @@ a.hover-heading-color:hover,
 }
 :where(.border) {
   border: var(--border-height, 1px) solid var(--color-border);
+  clip-path: unset;
 }
 :where(.border-dashed) {
   border: var(--border-height, 1px) dashed var(--color-border);
@@ -1006,6 +1010,9 @@ a.hover-heading-color:hover,
 }
 .px-20 {
   padding-inline: 2rem;
+}
+.px-25 {
+  padding-inline: 2.5rem;
 }
 .px-gutter-x {
   padding-inline: var(--bs-gutter-x);
@@ -1653,11 +1660,11 @@ quantity-input input {
   }
   .gap-medium {
     --gap: 20px;
-    --row-gap: 5rem;
+    --row-gap: 4rem;
   }
   .gap-large {
     --gap: 30px;
-    --row-gap: 5rem;
+    --row-gap: 4rem;
   }
   .gap-md-20 {
     gap: 2rem;
@@ -1735,6 +1742,9 @@ quantity-input input {
   .row-1025 {
     flex-direction: row;
   }
+  .wrap-1025 {
+    flex-wrap: wrap;
+  }
   .nowrap-1025 {
     flex-wrap: nowrap;
   }
@@ -1759,6 +1769,9 @@ quantity-input input {
   }
   .gap-1025-40 {
     gap: 4rem;
+  }
+  .gap-1025-30 {
+    gap: 3rem;
   }
   .swiper:not([class*="initialized"]) .swiper-wrapper {
     gap: var(--gap-desktop, var(--gap));

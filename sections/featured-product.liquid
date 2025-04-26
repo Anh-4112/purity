@@ -20,6 +20,8 @@
     assign column_gap_slide = 10
   endif
   assign product_image_ratio = theme_st.product_image_ratio
+  assign desktop_media_width = section_st.desktop_media_width
+  assign media_position = section_st.media_position
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{{- -}}
@@ -45,12 +47,12 @@
 {% endif %}
 <section
   id="Product-{{ section.id }}"
-  class="section section__featured-product"
+  class="section section__featured-product media-width-{{ desktop_media_width }}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     <div
-      class="featured-product flex wrap gap"
+      class="featured-product flex wrap gap {% if media_position == 'right' %} row-reverse-md{% endif %}"
       style="--gap: var(--bs-gutter-x); --gap-desktop: 8rem;--col-width: 48%;"
     >
       {% if product.media.size > 0 %}
@@ -190,6 +192,32 @@
       "type": "product",
       "id": "product",
       "label": "t:sections.featured-product.settings.product"
+    },
+    {
+      "type": "range",
+      "id": "desktop_media_width",
+      "min": 40,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "label": "t:sections.main-product.settings.media_width.label",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.main-product.settings.media_position.label"
     },
     {
       "type": "select",

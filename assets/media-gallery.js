@@ -163,6 +163,7 @@ class MediaZoomButton extends HTMLButtonElement {
           width: parseInt(image.getAttribute("width")),
           height: parseInt(image.getAttribute("height")),
           alt: image.alt,
+          mediaType: "image",
           thumbCropped: true,
         };
       }
@@ -186,11 +187,16 @@ class MediaZoomButton extends HTMLButtonElement {
           width: image ? parseInt(image.getAttribute("width")) : 800,
           height: image ? parseInt(image.getAttribute("height")) : 800,
           alt: image ? image.alt : "",
+          mediaType: "external",
           thumbCropped: true,
         };
       }
     });
     lightbox.loadAndOpen(index - 1, dataSource);
+    lightbox.on("pointerDown", (e) => {
+      console.log(lightbox.pswp);
+      lightbox.pswp.currSlide.data.mediaType != "image" && e.preventDefault();
+    });
   }
 }
 customElements.define("media-zoom-button", MediaZoomButton, {

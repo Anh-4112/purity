@@ -1,3 +1,5 @@
+{{ 'feature_product_banner.css' | asset_url | stylesheet_tag }}
+{{ 'section-scrolling-text.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -47,46 +49,8 @@
 -%}
 
 {%- capture style -%}
-    --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
-    {% if heading_size == 'large' %}--font-size: 40;{% endif %}
+    --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if section.blocks.size > 6 %}--speed: 15s;{% elsif  section.blocks.size > 4 %} --speed: 10s;{% elsif section.blocks.size > 2 %}--speed: 6s;{% else %}--speed: 4s;{% endif %}
 {%- endcapture -%}
-
-{% style %}
-  .media-effect__item:nth-of-type(1) {
-    top: 0;
-    right: 15%;
-  }
-  .media-effect__item:nth-of-type(2) {
-    top: 50%;
-    transform: translateY(-50%);
-    left: -5%;
-  }
-  .media-effect__item:nth-of-type(3) {
-    bottom: 0;
-    right: -5%;
-  }
-  .block__information_text:is(:nth-of-type(1), :nth-of-type(5)) {
-    margin-inline-end: 1.7rem;
-  }
-  .block__information_text:is(:nth-of-type(3), :nth-of-type(7)) {
-    margin-inline-end: 3.7rem;
-  }
-  .block__information_text:is(:nth-of-type(2), :nth-of-type(6)) {
-    margin-inline-start: 1.7rem;
-  }
-  .block__information_text:is(:nth-of-type(4), :nth-of-type(8)) {
-    margin-inline-start: 3.7rem;
-  }
-  .balloon-icon {
-    bottom: -4px;
-    inset-inline-end: -9px;
-  }
-  .information-text__content {
-    --gap-desktop: var(--max-width, 40rem);
-    --width: (calc(100% - 40rem) / 2);
-    --row-gap: 5.7rem;
-  }
-{% endstyle %}
 <div
   class="section section color-{{ section_st.color_scheme }} gradient"
   style="{{ style | strip | strip_newlines }}"
@@ -106,8 +70,8 @@
         {%- endif -%}
       </div>
     {%- endif -%}
-    <div class="section-content relative">
-      <div class="media-product relative w-full max-w-custom mx-auto" style="--max-width: 40rem;">
+    <div class="featured__parallax-inner section-content relative">
+      <div class="media-product relative w-full max-w-custom mx-auto">
         <div
           class="media-product__main"
           style="--aspect-ratio: {{ ratio }};{% if image_mobile != blank %}--aspect-ratio-mb: {{ ratio_mb }};{% endif %}"
@@ -124,41 +88,44 @@
             {%- render 'placeholder-render', type: 'lifestyle-2' -%}
           {% endif %}
         </div>
-        <media-effect>
+        <media-effect class="block">
           {% assign image_effect_blocks = section.blocks | where: 'type', 'image_effect' %}
           {% for block in image_effect_blocks %}
-            <div
-              class="media-effect__item absolute w-custom max-w-100"
-              style="--width: 10rem;"
-            >
-              {%- liquid
-                assign image = block.settings.image
-                assign ratio = '3/4'
-                if image_ratio != 'adapt'
-                  case image_ratio
-                    when 'square'
-                      assign ratio = '1/1'
-                    when 'landscape'
-                      assign ratio = '4/3'
-                    when 'portrait'
-                      assign ratio = '3/4'
-                  endcase
+            {%- liquid
+              assign image = block.settings.image
+              assign ratio = '3/4'
+              if image_ratio != 'adapt'
+                case image_ratio
+                  when 'square'
+                    assign ratio = '1/1'
+                  when 'landscape'
+                    assign ratio = '4/3'
+                  when 'portrait'
+                    assign ratio = '3/4'
+                endcase
+              else
+                if image != blank
+                  assign ratio = image.aspect_ratio
                 else
-                  if image != blank
-                    assign ratio = image.aspect_ratio
-                  endif
+                  assign ratio = '1'
                 endif
-                assign image_alt = image.alt
-                if image_alt == blank
-                  assign image_alt = 'general.image.image_alt_default' | t
-                endif
-              -%}
+              endif
+              assign image_alt = image.alt
+              if image_alt == blank
+                assign image_alt = 'general.image.image_alt_default' | t
+              endif
+            -%}
+            <div
+              class="media-effect__item absolute w-custom max-w-100 rounded"
+              style="--width: 10rem;left: {{ block.settings.position_left }}%;top: {{ block.settings.position_top }}%;--aspect-ratio: {{ ratio}};"
+            >
               {% if image != blank %}
                 {% render 'responsive-image',
                   type: 'banner',
                   container: section_st.section_width,
                   image: image,
-                  image_alt: image_alt
+                  image_alt: image_alt,
+                  class: 'rounded'
                 %}
               {% else %}
                 {%- render 'placeholder-render', type: 'product' -%}
@@ -167,17 +134,17 @@
           {% endfor %}
         </media-effect>
       </div>
-      <content-effect class="information-text__wrapper block absolute top-0 w-full h-full z-1 pt-20">
-        <div class="information-text__content flex wrap align-start justify-center h-full gap">
+      <content-effect class="information-text__wrapper block absolute-1025 top-0 w-full h-full z-1">
+        <div class="information-text__content flex wrap-1025 content-center gap">
           {% assign content_effect_blocks = section.blocks | where: 'type', 'information' %}
           {% for block in content_effect_blocks %}
             {% assign block_st = block.settings %}
             <div
-              class="block__information_text flex justify-center w-custom relative"
+              class="block__information_text flex justify-center relative"
               {{ block.shopify_attributes }}
             >
               <div
-                class="block__information_text-inner transition-short relative"
+                class="block__information_text-inner transition-short relative w-custom"
                 style="--gap: 8;"
               >
                 <div class="block_infor-text heading_weight bg-secondary flex gap-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom py-15 px-25 btn-rounded">
@@ -186,7 +153,7 @@
                   {% endif %}
                   <span>{{ block_st.highlight_text | escape }}</span>
                 </div>
-                <svg width="25" height="25" fill="none" class="absolute balloon-icon">
+                <svg width="25" height="25" fill="none" class="absolute balloon-icon hidden block-1025">
                   <ellipse cx="21" cy="20.999" fill="var(--color-background-2)" rx="4" ry="3.999"/><ellipse cx="9" cy="8.998" fill="var(--color-background-2)" rx="9" ry="8.998"/>
                 </svg>
               </div>
@@ -195,7 +162,7 @@
         </div>
       </content-effect>
       {% if section_st.button_label != blank %}
-        <div class="button-block flex justify-content-center">
+        <div class="button-block flex justify-content-center mt-50">
           <a
             {% if section_st.button_link == blank %}
               role="link" aria-disabled="true"
@@ -203,9 +170,9 @@
               href="{{ section_st.button_link | default: "#" }}"
             {% endif %}
             aria-label="{{ section_st.button_label }}"
-            class="text-center mt-30 btn btn-{{ section_st.button_type }}{% if section_st.button_type == "link" %} align-self-center{% else %} w-custom max-w-100{% endif %}"
+            class="text-center btn btn-{{ section_st.button_type }}{% if section_st.button_type == "link" %} align-self-center{% else %} w-custom max-w-100{% endif %}"
             {% if section_st.button_type != 'link' %}
-              style="--width: 20rem;"
+              style="--width: 25rem;"
             {% endif %}
           >
             {{ section_st.button_label }}
@@ -416,7 +383,7 @@
           "type": "text",
           "id": "highlight_text",
           "default": "Icon with text",
-          "label": "t:sections.all.content_setting.subheading.label"
+          "label": "t:sections.all.content_setting.content"
         },
         {
           "type": "select",
@@ -491,6 +458,26 @@
           "type": "image_picker",
           "id": "image",
           "label": "t:sections.all.image.label"
+        },
+        {
+          "type": "range",
+          "id": "position_top",
+          "label": "t:sections.bundle-products.blocks.settings.position_top",
+          "min": 0,
+          "max": 100,
+          "unit": "%",
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "position_left",
+          "label": "t:sections.bundle-products.blocks.settings.position_left",
+          "min": 0,
+          "max": 100,
+          "unit": "%",
+          "step": 1,
+          "default": 50
         }
       ]
     }
@@ -500,13 +487,25 @@
       "name": "t:sections.featured_product_banner.name",
       "blocks": [
         {
-          "type": "image_effect"
+          "type": "image_effect",
+          "settings": {
+            "position_top": 1,
+            "position_left": 15
+          }
         },
         {
-          "type": "image_effect"
+          "type": "image_effect",
+          "settings": {
+            "position_top": 50,
+            "position_left": 90
+          }
         },
         {
-          "type": "image_effect"
+          "type": "image_effect",
+          "settings": {
+            "position_top": 85,
+            "position_left": 0
+          }
         },
         {
           "type": "information"

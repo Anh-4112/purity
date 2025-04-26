@@ -1495,14 +1495,37 @@ class MiniCartUpSell extends HTMLElement {
           html.innerHTML = text;
           const recommendations = html.querySelector(".swiper-wrapper");
           if (!recommendations) {
-            this.classList.add("hidden-cart-upsell");
-          }
-          if (recommendations && recommendations.innerHTML.trim().length) {
-            this.querySelector(".swiper-wrapper").innerHTML =
-              recommendations.innerHTML;
+            if (this.closest(".drawer__cart-recommendations")) {
+              this.closest(".drawer__cart-recommendations").classList.add(
+                "hidden"
+              );
+            } else {
+              this.classList.add("hidden");
+            }
           }
           if (recommendations && recommendations.childElementCount == 0) {
-            this.classList.add("hidden-cart-upsell");
+            if (this.closest(".drawer__cart-recommendations")) {
+              this.closest(".drawer__cart-recommendations").classList.add(
+                "hidden"
+              );
+            } else {
+              this.classList.add("hidden");
+            }
+          }
+          if (
+            recommendations &&
+            recommendations.innerHTML.trim().length &&
+            recommendations.childElementCount > 0
+          ) {
+            this.querySelector(".swiper-wrapper").innerHTML =
+              recommendations.innerHTML;
+            if (this.closest(".drawer__cart-recommendations")) {
+              this.closest(".drawer__cart-recommendations").classList.remove(
+                "hidden"
+              );
+            } else {
+              this.classList.remove("hidden");
+            }
           }
         })
         .finally(() => {})
@@ -2548,7 +2571,7 @@ class MotionEffect extends HTMLElement {
       this,
       { transform: "scale(1)" },
       {
-        duration: 1,
+        duration: 0.65,
         delay: this.delay,
         easing: [0, 0, 0.3, 1],
       }
@@ -2691,7 +2714,7 @@ class StickySection extends HTMLElement {
         } else if (fromMedia) {
           fromMedia.style.opacity = "0";
         }
-  
+
         if (fromContent && typeof Motion !== "undefined") {
           Motion.animate(
             fromContent,
@@ -2734,7 +2757,7 @@ class StickySection extends HTMLElement {
         } else if (toMedia) {
           toMedia.style.opacity = "1";
         }
-  
+
         if (toContent && typeof Motion !== "undefined") {
           Motion.animate(
             toContent,

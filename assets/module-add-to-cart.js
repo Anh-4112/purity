@@ -169,6 +169,19 @@ export class ProductForm extends HTMLElement {
       })
       .then((state) => {
         const parsedState = JSON.parse(state);
+        if (parsedState.errors) {
+          const lineItemError =
+            document.getElementById(`CartItem-${line}`) ||
+            document.getElementById(`CartDrawer-Item-${line}`);
+          const quantity__input =
+            lineItemError.querySelector(".quantity__input");
+          if (quantity__input) {
+            quantity__input.value =
+              quantity__input.getAttribute("data-cart-quantity");
+          }
+          NextSkyTheme.notifier.show(parsedState.errors, "error", 3000);
+          return;
+        }
         if (this.cart.classList.contains("cart-drawer")) {
           this.updateCartDrawer(parsedState);
         } else if (this.cart.classList.contains("main-cart")) {
@@ -299,28 +312,6 @@ export class ProductForm extends HTMLElement {
         }
       });
     }
-  }
-
-  updateLiveRegions(line, message) {
-    const lineItemError =
-      document.getElementById(`Line-item-error-${line}`) ||
-      document.getElementById(`CartDrawer-LineItemError-${line}`);
-    if (message.length > 0) {
-      lineItemError.querySelector(".cart-item__error-text").innerHTML = message;
-      lineItemError.removeAttribute("hidden");
-    }
-    if (this.lineItemStatusElement) {
-      this.lineItemStatusElement.setAttribute("aria-hidden", true);
-    }
-
-    const cartStatus =
-      document.getElementById("cart-live-region-text") ||
-      document.getElementById("CartDrawer-LiveRegionText");
-    cartStatus.setAttribute("aria-hidden", false);
-
-    setTimeout(() => {
-      cartStatus.setAttribute("aria-hidden", true);
-    }, 1000);
   }
 
   getSectionInnerHTML(html, selector = ".shopify-section") {
