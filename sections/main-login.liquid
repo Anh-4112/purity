@@ -3,8 +3,8 @@
   assign section_st = section.settings
 %}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
-{%- endcapture -%}
+    --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+  {%- endcapture -%}
 <div
   class="stretch_width section flex column content-center w-full max-w-custom-all mx-auto"
   style="{{ style | strip | strip_newlines }}--max-width: 56rem;--bs-gutter-x: 3rem;"
@@ -157,7 +157,10 @@
               required
               class="w-full fs-small-1 text-color"
             >
-            <show-pass-word class="show-pass-word transition absolute inset-y-0 flex content-center right-25">
+            <show-pass-word
+              class="show-pass-word transition absolute inset-y-0 flex content-center right-25"
+              aria-label="{{ 'customer.login_page.submit' | t }}"
+            >
               <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <use href="#icon-hide-password"></use>
               </svg>

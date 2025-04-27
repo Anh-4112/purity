@@ -111,12 +111,12 @@ class SelectContact extends HTMLElement {
     if (text) {
       const options = text.split(',').map(item => item.trim());
       
-      const selectElement = document.querySelector('.contact-form-subject');  // id sẽ thay đổi theo Liquid
+      const selectElement = document.querySelector('.contact-form-subject');
       
       options.forEach(optionText => {
         const option = document.createElement('option');
         option.value = optionText.toLowerCase();
-        option.textContent = optionText.charAt(0).toUpperCase() + optionText.slice(1);  // Viết hoa chữ cái đầu
+        option.textContent = optionText.charAt(0).toUpperCase() + optionText.slice(1);
         selectElement.appendChild(option);
       });
     }
