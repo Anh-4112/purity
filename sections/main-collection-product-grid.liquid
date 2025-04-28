@@ -19,14 +19,10 @@
   for block in section.blocks
     case block.type
       when 'promotion'
-        if block.settings.image != blank
-          assign products_to_show = products_to_show | minus: 1
-          assign show_promotion = true
-        endif
+        assign products_to_show = products_to_show | minus: 1
+        assign show_promotion = true
       when 'steps'
-        if block.settings.image != blank
-          assign show_step = true
-        endif
+        assign show_step = true
     endcase
   endfor
   assign all_product = collection.products_count
@@ -109,7 +105,7 @@
                 data-effect="slide"
                 data-loop="false"
                 data-speed="500"
-                data-spacing="{{ column_gap_grid }}"
+                data-spacing="{{ column_gap_slide }}"
                 data-mobile="1.3"
                 data-desktop="3"
                 data-tablet="2"
@@ -123,25 +119,32 @@
                       assign heading = block_st.heading
                       assign description = block_st.description
                     -%}
-                    {%- if block.type == 'steps' and image != blank -%}
+                    {%- if block.type == 'steps' -%}
                       <div class="swiper-slide">
                         <div class="product__promotion-banner">
-                          <div class="banner__media">
+                          <div
+                            class="banner__media"
+                            style="--aspect-ratio: {% if image != blank %}{{ image.aspect_ratio }}{%- else -%}4/3{%- endif -%}"
+                          >
                             {%- liquid
                               assign banner_alt = 'sections.collection_template.promotion_banner' | t
                               assign banner_alt = heading | default: banner_alt
                               assign banner_alt = image.alt | default: banner_alt
                             -%}
-                            {% render 'responsive-image',
-                              type: 'product',
-                              image: image,
-                              image_alt: banner_alt,
-                              container: section_width,
-                              column: items_per_row,
-                              column_mobile: 2,
-                              padding: column_gap_grid,
-                              motion: true
-                            %}
+                            {%- if image -%}
+                              {% render 'responsive-image',
+                                type: 'product',
+                                image: image,
+                                image_alt: banner_alt,
+                                container: section_width,
+                                column: items_per_row,
+                                column_mobile: 2,
+                                padding: column_gap_slide,
+                                motion: true
+                              %}
+                            {%- else -%}
+                              {% render 'placeholder-render', type: 'product' %}
+                            {%- endif -%}
                           </div>
                           {%- if heading != blank or description != blank -%}
                             <div class="promotion-information">
@@ -417,14 +420,17 @@
                           assign promotion_link = block_st.promotion_link
                           assign promotion_position = block_st.promotion_position | minus: index_promotion
                         -%}
-                        {%- if block.type == 'promotion' and image != blank and promotion_position == index -%}
+                        {%- if block.type == 'promotion' and promotion_position == index -%}
                           {%- assign index_promotion = index_promotion | plus: 1 -%}
                           <div
                             {{ block.shopify_attributes }}
                             class="product-item product-item-promotion"
                           >
                             <div class="product__promotion-banner relative">
-                              <div class="banner__media">
+                              <div
+                                class="banner__media"
+                                style="--aspect-ratio: {% if image != blank %}{{ image.aspect_ratio }}{%- else -%}4/3{%- endif -%}"
+                              >
                                 {%- liquid
                                   assign banner_alt = 'sections.collection_template.promotion_banner' | t
                                   assign banner_alt = heading | default: banner_alt
@@ -439,16 +445,20 @@
                                   aria-label="{{ banner_alt }}"
                                   class="block"
                                 >
-                                  {% render 'responsive-image',
-                                    type: 'product',
-                                    image: image,
-                                    image_alt: banner_alt,
-                                    container: section_width,
-                                    column: items_per_row,
-                                    column_mobile: 2,
-                                    padding: column_gap_grid,
-                                    motion: true
-                                  %}
+                                  {%- if image -%}
+                                    {% render 'responsive-image',
+                                      type: 'product',
+                                      image: image,
+                                      image_alt: banner_alt,
+                                      container: section_width,
+                                      column: items_per_row,
+                                      column_mobile: 2,
+                                      padding: column_gap_slide,
+                                      motion: true
+                                    %}
+                                  {%- else -%}
+                                    {% render 'placeholder-render', type: 'product' %}
+                                  {%- endif -%}
                                 </a>
                               </div>
                               {%- if subheading != blank or heading != blank or button_label != blank -%}
@@ -490,7 +500,7 @@
                         container: section_width,
                         column: items_per_row,
                         column_mobile: 2,
-                        padding: column_gap_grid,
+                        padding: column_gap_slide,
                         indexFor: forloop.index
                       %}
                     {%- else -%}
@@ -500,7 +510,7 @@
                         container: section_width,
                         column: items_per_row,
                         column_mobile: 2,
-                        padding: column_gap_grid,
+                        padding: column_gap_slide,
                         indexFor: forloop.index
                       %}
                     {%- endif -%}
@@ -517,13 +527,16 @@
                         assign promotion_link = block_st.promotion_link
                         assign promotion_position = block_st.promotion_position | minus: index_promotion
                       -%}
-                      {%- if block.type == 'promotion' and image != blank and promotion_position >= products_to_show -%}
+                      {%- if block.type == 'promotion' and promotion_position >= products_to_show -%}
                         <div
                           {{ block.shopify_attributes }}
                           class="product-item product-item-promotion"
                         >
                           <div class="product__promotion-banner relative">
-                            <div class="banner__media">
+                            <div
+                              class="banner__media"
+                              style="--aspect-ratio: {% if image != blank %}{{ image.aspect_ratio }}{%- else -%}4/3{%- endif -%}"
+                            >
                               {%- liquid
                                 assign banner_alt = 'sections.collection_template.promotion_banner' | t
                                 assign banner_alt = heading | default: banner_alt
@@ -538,16 +551,20 @@
                                 aria-label="{{ banner_alt }}"
                                 class="block"
                               >
-                                {% render 'responsive-image',
-                                  type: 'product',
-                                  image: image,
-                                  image_alt: banner_alt,
-                                  container: section_width,
-                                  column: items_per_row,
-                                  column_mobile: 2,
-                                  padding: column_gap_grid,
-                                  motion: true
-                                %}
+                                {%- if image -%}
+                                  {% render 'responsive-image',
+                                    type: 'product',
+                                    image: image,
+                                    image_alt: banner_alt,
+                                    container: section_width,
+                                    column: items_per_row,
+                                    column_mobile: 2,
+                                    padding: column_gap_slide,
+                                    motion: true
+                                  %}
+                                {%- else -%}
+                                  {% render 'placeholder-render', type: 'product' %}
+                                {%- endif -%}
                               </a>
                             </div>
                             {%- if subheading != blank or heading != blank or button_label != blank -%}
