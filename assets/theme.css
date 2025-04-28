@@ -691,7 +691,7 @@ blockquote {
 modal-popup :is(.modal-overlay) {
   z-index: 15;
 }
-.modal-popup-inner .drawer__body > *:not(.modal-shopable_content),
+.modal-popup-inner .drawer__body:not(.drawer__body-shopable-video) > *,
 .animate-motion .slideIn-animate {
   opacity: 0;
   transform: translateY(2rem);
@@ -701,7 +701,7 @@ modal-popup :is(.modal-overlay) {
 }
 .modal.active
   .modal-popup-inner
-  .drawer__body
+  .drawer__body:not(.drawer__body-shopable-video)
   > *:not(.model_media, .spin, .modal-shopable_content),
 :is(.animate-motion.detail-open, .animate-motion.active) .slideIn-animate {
   animation: slideIn var(--transition)
@@ -715,7 +715,7 @@ modal-popup :is(.modal-overlay) {
 .remove-after:not(.active) .modal-inner .shopify-block,
 .remove-after:not(.active)
   .modal-popup-inner
-  .drawer__body
+  .drawer__body:not(.drawer__body-shopable-video)
   > *:not(.model_media, .spin) {
   animation: slideOut var(--transition)
     var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83)) forwards;
