@@ -113,7 +113,7 @@
       </action-search>
     </div>
   </div>
-  <div id="ProductsGridContainer" class="{{ section_width }} {{ filter_layout }}-filter-layout">
+  <div id="ProductsGridContainer" class="{{ section_width }} filter-layout {{ filter_layout }}-filter">
     {%- paginate search.results by products_to_show -%}
       {%- if enable_filtering and filter_layout == 'vertical' -%}
         <div class="collection__sidebar">
@@ -126,9 +126,9 @@
         </div>
       {%- endif -%}
       <div class="collection__results-gird">
-        <div class="facets-toolbar">
+        <div class="facets-toolbar flex align-center gap space-between mb-20" style="--gap-desktop: 50px; --gap: 15px;">
           {%- if enable_filtering -%}
-            <div class="facet-drawer">
+            <div class="facet-drawer{% if enable_filtering and filter_layout == 'drawer' %} grow-1{% else %} block hidden-1025{% endif %}">
               <button
                 id="FacetsDrawer"
                 class="button"
@@ -143,27 +143,29 @@
               >
                 <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
                 <div class="modal-inner drawer drawer-left fixed">
-                  <div class="drawer__body">
-                    <div class="drawer__header">
-                      <div class="drawer__heading h5">{{ 'products.facets.filter' | t }}</div>
-                      <button
-                        type="button"
-                        is="button-close-model"
-                        class="modal__close pointer hover-icon-zoom heading-color btn-reset w-30 h-full inline-flex align-center flex-end"
-                        aria-label="Close"
-                      >
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                          class="transition-short will-change icon-zoom"
+                  <div class="drawer__body flex h-full column">
+                    <div class="drawer__header drawer-spacing border-bottom" style="--padding-block-desktop: 2.15rem;">
+                      <div class="drawer__header h5 flex gap-10 space-between align-center drawer-spacing border-bottom">
+                        {{ 'products.facets.filter' | t }}
+                        <button
+                          type="button"
+                          is="button-close-model"
+                          class="modal__close pointer btn-reset w-30 h-full inline-flex align-center flex-end"
+                          aria-label="Close"
                         >
-                          <use href="#icon-close"></use>
-                        </svg>
-                      </button>
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 14 14"
+                            fill="none"
+                            class="transition-short will-change icon-zoom"
+                          >
+                            <use href="#icon-close"></use>
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                    <div class="drawer__inner">
+                    <div class="drawer__inner overflow-y-auto custom-scrollbar grow-1 flex column">
                       {% render 'facets',
                         results: search,
                         filter_layout: 'drawer',
@@ -178,7 +180,7 @@
           {%- endif -%}
           {%- if show_product_counts -%}
             <div
-              class="collection-count"
+              class="collection-count heading-color"
               role="status"
             >
               <span>
@@ -197,10 +199,10 @@
           {%- endif -%}
           {% if enable_sorting %}
             <facet-filters-form class="facets facets-vertical-sort">
-              <form class="facets-vertical-form" id="FacetSortForm">
+              <form class="facets-vertical-form relative" id="FacetSortForm">
                 {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
-                <div class="select-custom facet-filters__sort">
-                  <select-sorter class="select-selected">
+                <div class="select-custom facet-filters__sort heading-color py-10">
+                  <select-sorter class="select-selected block pointer rotate-animate">
                     <label>
                       {{- 'products.facets.sort_by_label' | t }}
                     </label>
@@ -210,22 +212,26 @@
                       {%- endfor -%}
                     </span>
                     <svg
-                      class="icon-down transition active-rotated text-color"
-                      width="8"
-                      height="5"
-                      viewBox="0 0 8 5"
+                      width="9"
+                      height="6"
+                      viewBox="0 0 9 6"
+                      fill="none"
+                      class="icon icon-down icon-rotate transition-short"
                     >
                       <use href="#icon-arrow-down"></use>
                     </svg>
                   </select-sorter>
                   <div
-                    class="select-custom__content facet-filters__sort"
+                    class="select-custom__content facet-filters__sort active-show absolute top-100 right-0 bg-white shadow p-20 p-1025-30 rounded-10 z-2 min-w-custom transition-short opacity-0 pointer-none"
                     id="SortBy"
+                    style="--min-width: 22rem;"
                   >
-                    <div class="facet-filters__select">
+                    <div
+                      class="facet-filters__select"
+                    >
                       {%- for option in search.sort_options -%}
                         <filter-sort
-                          class="block transition text-color py-3"
+                          class="block transition text-color py-4"
                           value="{{ option.value | escape }}"
                           {% if option.value == sort_by %}
                             selected="selected"
@@ -260,12 +266,15 @@
         </div>
         <div class="facets-filters-active">
           {% if current_tags.size > 0 or total_active_values > 0 %}
-            <div class="filters-count active-facets">
+            <div class="filters-count active-facets flex wrap gap-10 mb-30 fs-small">
               {%- for filter in search.filters -%}
                 {%- for value in filter.active_values -%}
                   <div class="facet-remove">
                     <facet-remove>
-                      <a href="{{ value.url_to_remove }}">
+                      <a
+                        href="{{ value.url_to_remove }}"
+                        class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal"
+                      >
                         {{ value.label | escape }}
                         <span class="active-facets__button-inner">
                           <svg width="9" height="10" viewBox="0 0 9 10" fill="none">
@@ -281,7 +290,10 @@
                   {%- if filter.min_value.value != null or filter.max_value.value != null -%}
                     <div class="facet-remove">
                       <facet-remove>
-                        <a href="{{ filter.url_to_remove }}">
+                        <a
+                          href="{{ filter.url_to_remove }}"
+                          class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal"
+                        >
                           {%- if filter.min_value.value -%}
                             {{ filter.min_value.value | money }}
                           {%- else -%}
@@ -307,7 +319,10 @@
               {%- endfor -%}
               <div class="facet-remove facet-clear-all">
                 <facet-remove class="active-facets__button-wrapper">
-                  <a href="{{ results_url }}">
+                  <a
+                    href="{{ results_url }}"
+                    class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal"
+                  >
                     <span>{{ 'products.facets.clear_all' | t }}</span>
                   </a>
                 </facet-remove>

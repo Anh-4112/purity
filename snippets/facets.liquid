@@ -10,8 +10,30 @@
   assign color_swatch_custom = theme_st.color_swatch_custom
   assign color_swatch_shape = theme_st.color_swatch_shape
 %}
+
+{% style %}
+  .filters-form action-filter:not(:last-child) {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--row-gap);
+  }
+  .filters-form {
+    --row-gap: var(--bs-gutter-x);
+  }
+  .facet-checkbox.p-2 {
+    padding: 2px;
+  }
+  @media (min-width: 1025px) {
+    .filters-form {
+      --row-gap: 4rem;
+    }
+  }
+{% endstyle %}
 <facet-filters-form>
-  <form id="{% if filter_layout == 'drawer' %}FacetFiltersFormDrawer{% else %}FacetFiltersForm{% endif %}">
+  <form
+    id="{% if filter_layout == 'drawer' %}FacetFiltersFormDrawer{% else %}FacetFiltersForm{% endif %}"
+    class="flex column gap filters-form{% if filter_layout == 'drawer' %} drawer-spacing{% endif %}"
+    style="--gap: 2rem;--checkmark_width: 2rem;--checkmark_rounded: 3px;--checkmark_top: 3px;--check_position: 45%;"
+  >
     {%- if results.terms -%}
       <input type="hidden" name="q" value="{{ results.terms | escape }}">
       <input name="options[prefix]" type="hidden" value="last">
@@ -21,21 +43,25 @@
       {% case filter.type %}
         {% when 'boolean', 'list' %}
           <action-filter
-            class="js-filter"
+            class="js-filter block"
             data-index="{{ forloop.index }}{% if filter_layout == 'drawer' %}-drawer{% endif %}"
           >
-            <details class="collapsible-row" is="collapsible-row" open>
-              <summary class="collapsible-row__summary">
+            <details class="collapsible-row detail-open" is="collapsible-row" open>
+              <summary class="collapsible-row__summary h6 mb-20">
                 <span class="inline-flex">
                   {{- filter.label | escape }}
                   <span class="facets__selected{% if filter.active_values.size == 0 %} hidden{% else %} inline-flex{% endif %}">
                     {{ filter.active_values.size -}}
                   </span>
                 </span>
+                <span class="open-children-toggle transition">
+                  <span class="icon_plus-animation heading-color"> </span>
+                </span>
               </summary>
+
               <div
                 id="Facet-{{ forloop.index }}-{{ section.id }}"
-                class="collapsible-row__content filter-attribute"
+                class="collapsible-row__content filter-attribute overflow-hidden"
               >
                 {%- liquid
                   assign is_color_option = false
@@ -46,36 +72,19 @@
                   endfor
                 -%}
                 <ul
-                  class="facets__list"
+                  class="facets__list list-unstyled flex gap-custom{% if is_color_option == false %} column{% else %} wrap{% endif %}"
+                  style="{% if is_color_option == false %}--gap: 12;{% else %}--gap: 10;--color-swatch-width: 3.2rem;--color-swatch-height: 3.2rem;{% endif %}"
                   role="list"
                 >
                   {%- for value in filter.values -%}
                     {%- if is_color_option == false -%}
-                      <li class="facets__item{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
-                        <input
-                          type="checkbox"
-                          name="{{ value.param_name }}"
-                          value="{{ value.value }}"
-                          id="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}"
-                          {% if value.active %}
-                            checked
-                          {% endif %}
-                          {% if value.count == 0 and value.active == false %}
-                            disabled
-                          {% endif %}
-                        >
-                        <label for="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}">
-                          {{- value.label | escape }}
-                          <span class="count nowrap">({{ value.count }})</span>
-                        </label>
-                      </li>
-                    {%- else -%}
-                      <li class="facets__item">
-                        <div class="facet-checkbox">
+                      <li class="facets__item flex gap-10 pointer{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
+                        <div class="input_checkbox relative">
                           <input
                             type="checkbox"
                             name="{{ value.param_name }}"
                             value="{{ value.value }}"
+                            class="opacity-0 absolute inset-0 m-0 w-full h-full z-1 pointer m-0"
                             id="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}"
                             {% if value.active %}
                               checked
@@ -84,6 +93,39 @@
                               disabled
                             {% endif %}
                           >
+                          <span
+                            class="checkmark relative rounded-50 pointer-none inline-flexw-custom h-custom"
+                          ></span>
+                        </div>
+                        <label
+                          for="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}"
+                          class="heading-color pointer"
+                        >
+                          {{- value.label | escape }}
+                          <span class="count nowrap grey-color">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- else -%}
+                      <li class="facets__item flex gap-10 pointer">
+                        <div class="facet-checkbox flex gap-10 relative p-2">
+                          <div class="input_checkbox absolute inset-0 opacity-0">
+                            <input
+                              type="checkbox"
+                              name="{{ value.param_name }}"
+                              value="{{ value.value }}"
+                              class="opacity-0 absolute inset-0 m-0 w-full h-full z-1 pointer m-0"
+                              id="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}"
+                              {% if value.active %}
+                                checked
+                              {% endif %}
+                              {% if value.count == 0 and value.active == false %}
+                                disabled
+                              {% endif %}
+                            >
+                            <span
+                              class="checkmark relative rounded-50 pointer-none inline-flex w-custom h-custom"
+                            ></span>
+                          </div>
                           {%- liquid
                             assign swatch_color = value.label
                             assign is_swatch_image = false
@@ -130,16 +172,17 @@
               assign uses_comma_decimals = true
             endif
           %}
-          <action-filter class="js-filter" data-index="{{ forloop.index }}">
-            <details class="collapsible-row" is="collapsible-row" open>
-              <summary class="collapsible-row__summary">
-                <span>
-                  {{- filter.label | escape }}
+          <action-filter class="js-filter block" data-index="{{ forloop.index }}">
+            <details class="collapsible-row detail-open" is="collapsible-row" open>
+              <summary class="collapsible-row__summary h6 mb-20">
+                <span>{{- filter.label | escape }} </span
+                ><span class="open-children-toggle transition">
+                  <span class="icon_plus-animation heading-color"> </span>
                 </span>
               </summary>
               <div
                 id="Facet-{{ forloop.index }}-{{ filter_layout }}-{{ section.id }}"
-                class="collapsible-row__content filter-attribute"
+                class="collapsible-row__content filter-attribute overflow-hidden"
               >
                 <div>
                   {%- assign max_price_amount = filter.range_max | money | strip_html | escape -%}
@@ -294,17 +337,18 @@
           </action-filter>
       {%- endcase -%}
     {%- endfor -%}
-    {% if filter_layout == 'drawer' %}
-      <div class="filter-action-bottom">
-        <facet-apply-canvas
-          tabindex="0"
-        >
-          <span>{{ 'products.facets.apply' | t }}</span>
-        </facet-apply-canvas>
-      </div>
-    {% endif %}
     {% if results.current_vendor or results.current_type %}
       <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
     {% endif %}
   </form>
+  {% if filter_layout == 'drawer' %}
+    <div class="filter-action-bottom sticky bottom-0 bg-white drawer-spacing shadow">
+      <facet-apply-canvas
+        class="btn btn-primary w-full block text-center"
+        tabindex="0"
+      >
+        <span>{{ 'products.facets.apply' | t }}</span>
+      </facet-apply-canvas>
+    </div>
+  {% endif %}
 </facet-filters-form>
