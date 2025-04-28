@@ -1,6 +1,8 @@
 {% liquid
+  assign theme_st = settings
   assign section_st = section.settings
   assign block_st = block.settings
+  assign scroll_animation = theme_st.scroll_animation
 %}
 
 <div
@@ -8,6 +10,12 @@
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
+  {%- if scroll_animation -%}
+    <motion-effect
+      data-animate="fade-up"
+      class="block"
+    >
+  {%- endif -%}
   {%- form 'customer', class: 'form-password-page', novalidate: 'novalidate' -%}
     <input
       type="hidden"
@@ -18,7 +26,12 @@
       class="field relative flex wrap gap-10 justify-content-{{ section_st.text_align }}"
       style="--max-width: 51rem;"
     >
+      <label for="email_contact" class="visually-hidden">
+        {{ 'customer.login_page.email' | t }}
+        <span class="required">*</span>
+      </label>
       <input
+        id="email_contact"
         type="email"
         required
         name="contact[email]"
@@ -67,6 +80,9 @@
       </div>
     {%- endif -%}
   {%- endform -%}
+  {%- if scroll_animation -%}
+    </motion-effect>
+  {%- endif -%}
 </div>
 
 <script type="module">

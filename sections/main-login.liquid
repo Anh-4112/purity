@@ -178,7 +178,10 @@
       <div class="mt-10 mb-30 text-start">
         <span class="required-field fs-small">{{ 'customer.account.required' | t }}</span>
       </div>
-      <button class="btn btn-primary w-full relative word-wrap relative mb-30">
+      <button
+        class="btn btn-primary w-full relative word-wrap relative mb-30"
+        aria-label="{{ 'customer.login_page.sign_in' | t }}"
+      >
         <span class="hidden-on-load transition-short">{{ 'customer.login_page.sign_in' | t }}</span>
         {%- render 'loader' -%}
       </button>
@@ -205,7 +208,7 @@
       <h2>{{ 'customer.login_page.guest_title' | t }}</h2>
 
       {%- form 'guest_login' -%}
-        <button class="button">
+        <button class="button" aria-label="{{ 'customer.login_page.guest_continue' | t }}">
           {{ 'customer.login_page.guest_continue' | t }}
         </button>
       {%- endform -%}

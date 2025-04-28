@@ -378,7 +378,9 @@ class SuitableFinder extends ProductTabs {
     
     connectedCallback() {
         super.connectedCallback();
-        
+        this._tabHeaderContent = this.querySelector(
+            ".product-tabs__header-content"
+          );
         if (this._dot && this._rangeSlider) {
             const offsetWidth = this._tabHeaderContent.offsetWidth;
             this._rangeSlider.style.setProperty(

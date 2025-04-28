@@ -1,5 +1,7 @@
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   assign heading = section_st.heading
   assign subheading = section_st.subheading
   assign show_faqs_message = section_st.show_faqs_message
@@ -56,7 +58,9 @@
                 type: 'other',
                 container: section_width,
                 image: section_st.image,
-                image_alt: alt
+                image_alt: alt,
+                animate: 'zoom-out-small',
+                motion: true
               %}
             {% else %}
               {% render 'placeholder-render', type: 'collection-6', class: 'img-placeholder h-full w-full rounded' %}
@@ -73,59 +77,88 @@
             {% assign animate_delay = 25 %}
             {%- if subheading != blank -%}
               {% assign animate_delay = animate_delay | plus: 5 %}
-              <motion-effect
-                data-animate="fade-up"
-                data-animate-delay="{{ animate_delay }}"
-                class="faqs__subheading h7 heading-letter-spacing subheading_weight mb-10 block"
-              >
+              {%- if scroll_animation -%}
+                <motion-effect
+                  data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
+                  class="block"
+                >
+              {%- endif -%}
+              <div class="faqs__subheading h7 heading-letter-spacing subheading_weight mb-10">
                 {{- subheading }}
-              </motion-effect>
+              </div>
+              {%- if scroll_animation -%}
+                </motion-effect>
+              {%- endif -%}
             {%- endif -%}
             {%- if heading != blank -%}
               {% assign animate_delay = animate_delay | plus: 5 %}
-              <motion-effect
-                data-animate="fade-up"
-                data-animate-delay="{{ animate_delay }}"
-                class="block"
-              >
-                <h2 class="faqs__heading h2">{{ heading }}</h2>
-              </motion-effect>
+              {%- if scroll_animation -%}
+                <motion-effect
+                  data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
+                  class="block"
+                >
+              {%- endif -%}
+              <h2 class="faqs__heading h2">{{ heading }}</h2>
+              {%- if scroll_animation -%}
+                </motion-effect>
+              {%- endif -%}
             {%- endif -%}
             {%- if description != blank -%}
               {% assign animate_delay = animate_delay | plus: 5 %}
-              <motion-effect
-                data-animate="fade-up"
-                data-animate-delay="{{ animate_delay }}"
-                class="faqs__description mt-1025-15 prose block"
-              >
+              {%- if scroll_animation -%}
+                <motion-effect
+                  data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
+                  class="block"
+                >
+              {%- endif -%}
+              <div class="faqs__description mt-1025-15 prose">
                 {{- description }}
-              </motion-effect>
+              </div>
+              {%- if scroll_animation -%}
+                </motion-effect>
+              {%- endif -%}
             {%- endif -%}
             {%- if button_label != blank -%}
               {% assign animate_delay = animate_delay | plus: 5 %}
-              <motion-effect
-                data-animate="fade-up"
-                data-animate-delay="{{ animate_delay }}"
-                class="block"
-              >
-                <a
-                  {% if button_link == blank %}
-                    role="link" aria-disabled="true"
-                  {% else %}
-                    href="{{ button_link | default: "#" }}"
-                  {% endif %}
-                  aria-label="{{ button_label }}"
-                  class="btn btn-primary inline-block mt-40 min-w-custom w-full w-1025-auto text-center"
-                  style="--min-width: 20rem;"
+              {%- if scroll_animation -%}
+                <motion-effect
+                  data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
+                  class="block"
                 >
-                  {{ button_label }}
-                </a>
-              </motion-effect>
+              {%- endif -%}
+              <a
+                {% if button_link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ button_link | default: "#" }}"
+                {% endif %}
+                aria-label="{{ button_label }}"
+                class="btn btn-primary inline-block mt-40 min-w-custom w-full w-1025-auto text-center"
+                style="--min-width: 20rem;"
+              >
+                {{ button_label }}
+              </a>
+              {%- if scroll_animation -%}
+                </motion-effect>
+              {%- endif -%}
             {%- endif -%}
           </div>
         {% endif %}
         <div class="faq-container{% if show_faqs_message and show_image == false %} col-1025-remaining{% else %} w-full{% endif %}">
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              class="block"
+            >
+          {%- endif -%}
           {% content_for 'blocks' %}
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         </div>
       </div>
     </div>
