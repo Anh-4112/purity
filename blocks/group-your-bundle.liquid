@@ -68,8 +68,8 @@
   data-enable-quantity="{{ enable_quantity }}"
 >
   {%- if title != blank or description != blank -%}
-    <div
-      class="bundle-header text-{{ text_alignment }}"
+    <bundle-header
+      class="bundle-header block text-{{ text_alignment }}"
     >
       <div class="bundle-title mb-10">
         {%- if title != blank -%}
@@ -91,7 +91,7 @@
           {{ description }}
         </div>
       {%- endif -%}
-    </div>
+    </bundle-header>
   {%- endif -%}
   <div class="bundle-content flex column gap-20 gap-1025-30">
     {% if show_progress_bar %}

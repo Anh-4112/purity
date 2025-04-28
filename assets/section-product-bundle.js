@@ -61,13 +61,17 @@ if (!customElements.get("product-form-bundle")) {
               const bundleImage = html.querySelector(".bundle-image");
               const bundleContent = html.querySelector(".bundle-content");
               const dataRatio = bundleImage.dataset.ratio;
-              const bundleSticky = this.closest('build-your-routine').querySelector('.bundle-sticky');
+              const bundleSticky =
+                this.closest("build-your-routine").querySelector(
+                  ".bundle-sticky"
+                );
               if (!bundleImage || !bundleContent) {
                 return;
               }
-              const enableQuantity = bundleSticky.dataset.enableQuantity === 'true';
-              const bundleQuantity = html.querySelector('.bundle-quantity');
-              if (enableQuantity === false){
+              const enableQuantity =
+                bundleSticky.dataset.enableQuantity === "true";
+              const bundleQuantity = html.querySelector(".bundle-quantity");
+              if (enableQuantity === false) {
                 bundleQuantity.remove();
               }
               targetContainer.setAttribute("data-variant-id", variantId);
@@ -757,3 +761,51 @@ class BundleProgressbar extends HTMLElement {
 }
 
 customElements.define("bundle-progress-bar", BundleProgressbar);
+
+class BundleHeader extends HTMLElement {
+  constructor() {
+    super();
+    this._title = this.querySelector(".bundle-title");
+    this._content =
+      this.closest(".bundle-sticky").querySelector(".bundle-content");
+    this.init();
+  }
+
+  init() {
+  const mediaQuery = window.matchMedia('(max-width: 1024.98px)');
+  const handleMediaQueryChange = (mediaQuery) => {
+    if (mediaQuery.matches) {
+      this._content.style.height = 0;
+      Motion.press(this._title, (event) => {
+        this.onHeaderClicked(event);
+      });
+    }else{
+      this._content.style.height = "auto";
+    }
+  };
+  handleMediaQueryChange(mediaQuery);
+  mediaQuery.addEventListener('change', handleMediaQueryChange);
+  }
+
+  onHeaderClicked(event) {
+    const transition = { duration: 0.3 };
+    let isOpen = event.dataset.isOpen === "true";
+    isOpen = !isOpen;
+    event.dataset.isOpen = isOpen;
+    event.setAttribute("aria-expanded", isOpen);
+    const chevron = event.querySelector("svg");
+    Motion.animate(chevron, { rotate: isOpen ? 180 : 0 }, { duration: 0.2 });
+    Motion.animate(
+      this._content,
+      isOpen
+        ? {
+            height: "auto"
+          }
+        : {
+            height: 0
+          },
+      transition
+    );
+  }
+}
+customElements.define("bundle-header", BundleHeader);
