@@ -2,16 +2,16 @@
   assign section_st = section.settings
 -%}
 {%- capture style -%}
-    --section-padding-top: {{ section_st.padding_top }}px; --section-padding-bottom: {{ section_st.padding_bottom }}px;
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 <div
-  class="section-padding"
+  class="section-padding section"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="container">
     <div class="page-title text-center">
       <div class="page-content">
-        <h1 class="heading-title heading-letter-spacing mb-15">
+        <h1 class="heading-title">
           {{ page.title }}
         </h1>
       </div>
