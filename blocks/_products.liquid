@@ -48,18 +48,6 @@
         assign position_left = block_st[offset_left]
         assign product_item = 'product_' | append: i
         assign item = block_st[product_item]
-        assign position_x = ''
-        if position_left > 80
-          assign position_x = ' right'
-        elsif position_left < 20
-          assign position_x = ' left'
-        endif
-        assign position_y = ''
-        if position_top > 65
-          assign position_y = ' bottom'
-        elsif position_top < 35
-          assign position_y = ' top'
-        endif
       %}
       {%- liquid
         assign product = all_products[item]
@@ -67,7 +55,7 @@
       <shopable-image
         class="group-lookbook_product__item absolute"
         data-url="{{ product.url }}"
-        style="--top: {{ position_top }}%; --left: {{ position_left }}%;--transform: translate(-{{ position_left }}%,-{{ position_top }}%);--width: 6rem;"
+        style="--top: {{ position_top }}%; --left: {{ position_left }}%;--transform: translate(-{{ position_left }}%,-{{ position_top }}%);"
       >
         <span
           tabindex="0"
@@ -78,24 +66,26 @@
             <use href="#icon-dot"></use>
           </svg>
         </span>
-        <div class="group-lookbook__item-product border rounded p-10 mt-10 bg-white {{ position_x }}{{ position_y }}">
-          {% render 'card-product',
-            card_product: product,
-            section_id: section.id,
-            show_video: false,
-            disable_quickview: true,
-            disable_badge: true,
-            disable_rate: true,
-            disable_vendor: true,
-            disable_hover_image: true,
-            show_quick_add: false,
-            disable_color_swatches: true,
-            style_layout: ' flex gap-10 align-center',
-            image_class: ' flex-auto w-custom rounded-10',
-            image_rounded: ' rounded-10',
-            info_class: ' flex-1 mt-0'
-          %}
-        </div>
+        <template>
+          <div class="group-lookbook__item-product border rounded p-10 mt-10 bg-white" style="--width: 6rem;">
+            {% render 'card-product',
+              card_product: product,
+              section_id: section.id,
+              show_video: false,
+              disable_quickview: true,
+              disable_badge: true,
+              disable_rate: true,
+              disable_vendor: true,
+              disable_hover_image: true,
+              show_quick_add: false,
+              disable_color_swatches: true,
+              style_layout: ' flex gap-10 align-center',
+              image_class: ' flex-auto w-custom rounded-10',
+              image_rounded: ' rounded-10',
+              info_class: ' flex-1 mt-0'
+            %}
+          </div>
+        </template>
       </shopable-image>
     {% endfor %}
   </div>
