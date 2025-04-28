@@ -305,6 +305,7 @@ class ShopableItem extends HTMLElement {
       if (actionButton) {
         event.preventDefault();
         event.stopPropagation();
+        actionButton.classList.add("active");
         const currentId = modalPopup.getAttribute("data-current");
         if (!currentId) return;
         const currentItem = modalPopup.querySelector(`#${currentId}`);
@@ -317,8 +318,10 @@ class ShopableItem extends HTMLElement {
         if (!popupInfo) return;
         if (buttonCloseInformation.classList.contains("hidden-important")) {
           buttonCloseInformation.classList.remove("hidden-important");
+          buttonCloseInformation.classList.add("active");
           buttonCloseModal.classList.add("hidden-important");
         } else {
+          buttonCloseInformation.classList.remove("active");
           buttonCloseInformation.classList.add("hidden-important");
           buttonCloseModal.classList.remove("hidden-important");
         }
@@ -334,8 +337,14 @@ class ShopableItem extends HTMLElement {
       }
       const closeInfoButton = event.target.closest(".modal__close-information");
       if (closeInfoButton) {
+        const actionButton = event.target
+          .closest(".drawer__body")
+          .querySelector(".popup-information__mobile");
         event.preventDefault();
         event.stopPropagation();
+        if (actionButton.classList.contains("active")) {
+          actionButton.classList.remove("active");
+        }
         const currentId = modalPopup.getAttribute("data-current");
         if (!currentId) return;
         const currentItem = modalPopup.querySelector(`#${currentId}`);
@@ -346,6 +355,7 @@ class ShopableItem extends HTMLElement {
         if (popupInfo) {
           this.hidePopupInformation(popupInfo);
           closeInfoButton.classList.add("hidden-important");
+          closeInfoButton.classList.remove("active");
           buttonCloseModal.classList.remove("hidden-important");
           const swiperContainer = modalPopup.querySelector("slide-section");
           if (swiperContainer && swiperContainer.swiper) {
@@ -581,6 +591,75 @@ class ShopableItem extends HTMLElement {
     }
   }
 
+  clickMuteVideoPopup(slide) {
+    const muteButton = slide.querySelector(".mute-button");
+    if (muteButton) {
+      const newPlayButton = muteButton.cloneNode(true);
+      muteButton.parentNode.replaceChild(newPlayButton, muteButton);
+      newPlayButton.addEventListener("click", (event) => {
+        const currentTarget = event.currentTarget;
+        const videoLocal = currentTarget.closest(".modal-shopable_content");
+        if (videoLocal && videoLocal.querySelector("video")) {
+          const video = videoLocal.querySelector("video");
+          if (video.muted == false) {
+            video.muted = true;
+            currentTarget.classList.remove("active");
+          } else {
+            video.muted = false;
+            currentTarget.classList.add("active");
+          }
+        }
+      });
+    }
+  }
+
+  clickMuteVideoPopupMobile(slide) {
+    const muteButton = slide.querySelector(".mute-button-mobile");
+    if (muteButton) {
+      const newPlayButton = muteButton.cloneNode(true);
+      muteButton.parentNode.replaceChild(newPlayButton, muteButton);
+      newPlayButton.addEventListener("click", (event) => {
+        const currentTarget = event.currentTarget;
+        const videoLocal = currentTarget.closest(".modal-shopable_content");
+        if (videoLocal && videoLocal.querySelector("video")) {
+          const video = videoLocal.querySelector("video");
+          if (video.muted == false) {
+            video.muted = true;
+            currentTarget.classList.remove("active");
+          } else {
+            video.muted = false;
+            currentTarget.classList.add("active");
+          }
+        }
+      });
+    }
+  }
+
+  clickPlayVideoPopup(slide) {
+    const videoElement = slide.querySelector("video");
+    if (videoElement) {
+      if (videoElement._clickHandler) {
+        videoElement.removeEventListener("click", videoElement._clickHandler);
+      }
+      videoElement._clickHandler = function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const videoLocal = this.closest("video-local");
+        const playButton = videoLocal?.querySelector(".play-button");
+        if (this.paused) {
+          this.play();
+          if (playButton) playButton.classList.add("active");
+          if (videoLocal) videoLocal.classList.remove("active");
+        } else {
+          this.pause();
+          if (playButton) playButton.classList.remove("active");
+          if (videoLocal) videoLocal.classList.add("active");
+        }
+      };
+      videoElement.addEventListener("click", videoElement._clickHandler);
+    }
+  }
+
   findAndActivateSlide(modalPopup, productId) {
     const swiperContainer = modalPopup.querySelector("slide-section");
     if (!swiperContainer || !swiperContainer.swiper) {
@@ -631,6 +710,7 @@ class ShopableItem extends HTMLElement {
 
     if (nextButton && prevButton && swiperContainer.swiper.navigation) {
       const _self = this;
+      _self.updateCurrentSlideId(modalPopup, swiperContainer);
       nextButton.setAttribute("tabindex", "0");
       prevButton.setAttribute("tabindex", "0");
       swiperContainer.swiper.navigation.nextEl = nextButton;
@@ -658,13 +738,15 @@ class ShopableItem extends HTMLElement {
 
   handleSwipeability(modalPopup, swiperContainer) {
     if (!modalPopup || !swiperContainer || !swiperContainer.swiper) return;
-    
+
     const isLargeScreen = window.innerWidth >= 1025;
-    
-    const hasPopupInfo = modalPopup.querySelector('.popup-information') !== null;
-    
-    const hasActivePopupInfo = modalPopup.querySelector('.popup-information.active') !== null;
-    
+
+    const hasPopupInfo =
+      modalPopup.querySelector(".popup-information") !== null;
+
+    const hasActivePopupInfo =
+      modalPopup.querySelector(".popup-information.active") !== null;
+
     if (isLargeScreen) {
       if (hasPopupInfo) {
         swiperContainer.swiper.allowTouchMove = false;
@@ -736,6 +818,7 @@ class ShopableItem extends HTMLElement {
   updateCurrentSlideId(modalPopup, swiperContainer) {
     if (!modalPopup || !swiperContainer || !swiperContainer.swiper) return;
 
+    const _self = this;
     const activeIndex = swiperContainer.swiper.activeIndex;
     const activeSlide = swiperContainer.swiper.slides[activeIndex];
 
@@ -752,10 +835,13 @@ class ShopableItem extends HTMLElement {
           buttonCloseModal.classList.remove("hidden-important");
         }
         modalPopup.setAttribute("data-current", productId);
-        this.closeAllPopupInformation(modalPopup);
+        _self.closeAllPopupInformation(modalPopup);
         const allSlides = swiperContainer.swiper.slides;
         allSlides.forEach((slide, index) => {
           const video = slide.querySelector("video");
+          const videoLocal = slide.querySelector("video-local");
+          const btnMute = videoLocal.querySelector(".mute-button");
+          const btnMuteMobile = slide.querySelector(".mute-button-mobile");
           const buttonCloseInformation = slide.querySelector(
             ".modal__close-information"
           );
@@ -765,12 +851,19 @@ class ShopableItem extends HTMLElement {
           if (video) {
             if (index === activeIndex) {
               video.muted = false;
+              btnMute.classList.add("active");
+              btnMuteMobile.classList.add("active");
             } else {
               video.muted = true;
+              btnMute.classList.remove("active");
+              btnMuteMobile.classList.remove("active");
             }
           }
         });
-        this.handleSwipeability(modalPopup, swiperContainer);
+        _self.clickPlayVideoPopup(activeSlide);
+        _self.clickMuteVideoPopup(activeSlide);
+        _self.clickMuteVideoPopupMobile(activeSlide);
+        _self.handleSwipeability(modalPopup, swiperContainer);
       }
     }
   }

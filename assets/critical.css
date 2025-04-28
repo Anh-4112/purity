@@ -298,13 +298,13 @@ mark {
 .checkmark:before {
   content: "";
   display: inline-flex;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  width: var(--checkmark_width, 28px);
+  height: var(--checkmark_width, 28px);
+  border-radius: var(--checkmark_rounded, 50%);
   border: 1px solid var(--color-border);
   background-color: rgb(var(--color-white));
   position: relative;
-  top: 2px;
+  top: var(--checkmark_top, 2px);
   transition: var(--bls-transition);
 }
 .checkmark:after {
@@ -312,7 +312,7 @@ mark {
   position: absolute;
   opacity: 0;
   left: 50%;
-  top: 50%;
+  top: var(--check_position, 50%);
   width: 5px;
   height: 10px;
   border: solid rgb(var(--color-white));
@@ -570,9 +570,6 @@ input[type="checkbox"]:checked + .checkmark:before {
 .lh-normal {
   line-height: normal;
 }
-.shadow {
-  box-shadow: 5px 0px 30px 0px rgba(0, 0, 0, 0.05);
-}
 .blur {
   backdrop-filter: blur(var(--blur, 3px));
   --opacity: 0.6;
@@ -816,6 +813,10 @@ a.hover-heading-color:hover,
   border-radius: 10px;
   clip-path: inset(0 0 0 0 round 10px);
 }
+.shadow {
+  box-shadow: 5px 0px 30px 0px rgba(0, 0, 0, 0.05);
+  clip-path: unset;
+}
 .border-0 {
   border: 0;
 }
@@ -1033,6 +1034,12 @@ a.hover-heading-color:hover,
 }
 .py-7 {
   padding-block: 0.7rem;
+}
+.py-10 {
+  padding-block: 1rem;
+}
+.py-11 {
+  padding-block: 1.1rem;
 }
 .py-15 {
   padding-top: 1.5rem;
@@ -1737,6 +1744,9 @@ quantity-input input {
   :is(.grid-cols, .flex-cols, .cols) {
     --col: var(--col-desktop, var(--col-number));
     --gap-custom: var(--gap-desktop, var(--gap));
+  }
+  .visibility-hidden-1025 {
+    visibility: hidden;
   }
   .hidden-1025 {
     display: none;
