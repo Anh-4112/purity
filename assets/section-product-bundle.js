@@ -775,11 +775,13 @@ class BundleHeader extends HTMLElement {
   const mediaQuery = window.matchMedia('(max-width: 1024.98px)');
   const handleMediaQueryChange = (mediaQuery) => {
     if (mediaQuery.matches) {
+      this.style.pointerEvents = "auto";
       this._content.style.height = 0;
       Motion.press(this._title, (event) => {
         this.onHeaderClicked(event);
       });
     }else{
+      this.style.pointerEvents = "none";
       this._content.style.height = "auto";
     }
   };
