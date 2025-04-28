@@ -437,18 +437,18 @@ class ContentEffect extends HTMLElement {
 
   playEntranceAnimation() {
     this.infoElements.forEach((element, index) => {
-      const delay = index * 0.15;
+      const delay = index * 0.1;
       const isEven = index % 2 === 0;
       const startX = isEven ? -40 : 40;
       
       Motion.animate(element, 
         {
           opacity: [0, 1],
-          x: [startX, 0]
+          x: [0, startX]
         },
         {
           delay: delay,
-          duration: 0.8,
+          duration: 0.4,
           easing: 'cubic-bezier(0.17, 0.67, 0.3, 1.33)',
           onComplete: () => {
             element.style.opacity = '1';
