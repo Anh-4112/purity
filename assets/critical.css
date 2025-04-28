@@ -140,6 +140,10 @@ summary::-webkit-details-marker {
   font-weight: var(--heading-weight);
   color: var(--color-heading);
 }
+.prose strong {
+  color: var(--color-heading);
+  font-weight: var(--heading-weight);
+}
 :where(.h0) {
   --size: clamp(4rem, calc(4rem + (70 - 40) * var(--responsive-rate)), 7rem);
 }
@@ -188,6 +192,7 @@ video {
   fill: rgba(51, 50, 50, 0.35);
   background-color: #eee;
   display: block;
+  border-radius: inherit;
 }
 [style*="--aspect-ratio"] {
   position: relative;
@@ -373,6 +378,9 @@ input[type="checkbox"]:checked + .checkmark:before {
 .w-full {
   width: 100%;
 }
+.w-50-percent {
+  width: 50%;
+}
 .w-custom {
   width: var(--width);
 }
@@ -410,7 +418,7 @@ input[type="checkbox"]:checked + .checkmark:before {
         picture > *,
         motion-effect
       ),
-    motion-effect :is(img, svg)
+    motion-effect > :is(img, svg)
   ) {
   position: absolute;
   top: 0;
@@ -420,7 +428,7 @@ input[type="checkbox"]:checked + .checkmark:before {
   object-fit: cover;
 }
 [style*="--point"],
-[style*="--point"] :is(img, picture) {
+[style*="--point"] > :is(img, picture) {
   object-position: var(--point);
 }
 .text-size {
@@ -447,6 +455,9 @@ input[type="checkbox"]:checked + .checkmark:before {
 }
 .bg-primary {
   background: var(--color-primary);
+}
+.color-primary {
+  color: var(--color-primary);
 }
 .bg-sale {
   background-color: rgba(var(--sale-bg-rgb), var(--opacity, 1));
@@ -745,6 +756,9 @@ a.hover-heading-color:hover,
 .align-self-center {
   align-self: center;
 }
+.align-self-start {
+  align-self: start;
+}
 .flex-auto {
   flex: 0 0 auto;
 }
@@ -961,6 +975,9 @@ a.hover-heading-color:hover,
   margin: 0;
   padding: 0;
   border: 0;
+}
+.p-gutter-x {
+  padding: var(--bs-gutter-x);
 }
 .p-0 {
   padding: 0;
@@ -1778,6 +1795,9 @@ quantity-input input {
   .py-1025-25 {
     padding-block: 2.5rem;
   }
+  .py-1025-40 {
+    padding-block: 4rem;
+  }
   .py-1025-custom {
     padding-block: clamp(
       calc((var(--padding-block) * 0.66667px)),
@@ -1831,6 +1851,9 @@ quantity-input input {
   .wh-1025-50 {
     width: 5rem;
     height: 5rem;
+  }
+  .w-1025-custom {
+    width: var(--width);
   }
   .w-1025-full {
     width: 100%;
@@ -1965,5 +1988,8 @@ th {
   }
   .multimedia_with_text__block.active {
     width: 18rem;
+  }
+.drawer-mb-bottom {
+    transform: translateY(100%);
   }
 }

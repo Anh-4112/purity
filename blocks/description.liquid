@@ -1,4 +1,8 @@
-{% assign block_st = block.settings %}
+{% liquid
+  assign theme_st = settings
+  assign block_st = block.settings
+  assign scroll_animation = theme_st.scroll_animation
+%}
 {% style %}
   .block__description ul {
     margin: 0;
@@ -13,12 +17,16 @@
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
-  <motion-effect
-    data-animate="fade-up"
-    class="block"
-  >
-    {{ block_st.description }}
-  </motion-effect>
+  {%- if scroll_animation -%}
+    <motion-effect
+      data-animate="fade-up"
+      class="block"
+    >
+  {%- endif -%}
+  {{ block_st.description }}
+  {%- if scroll_animation -%}
+    </motion-effect>
+  {%- endif -%}
 </div>
 
 {% schema %}

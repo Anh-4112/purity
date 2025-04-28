@@ -254,7 +254,7 @@
 .swiper-button-next,
 .swiper-button-prev {
   position: var(--position-arrow, absolute);
-  top: var(--swiper-navigation-top-offset, 50%);
+  top: var(--arrows-offset-top, 50%);
   width: var(--swiper-navigation-size);
   height: var(--swiper-navigation-size);
   margin-top: calc(0px - (var(--swiper-navigation-size) / 2));
@@ -299,14 +299,14 @@
   display: none;
 }
 .vertical-arrow .swiper-button-prev {
-  --swiper-navigation-top-offset: 4rem;
+  --arrows-offset-top: 4rem;
   right: auto;
   left: 50%;
   transform: translateX(-50%) rotate(90deg);
   transition: 0.3s;
 }
 .vertical-arrow .swiper-button-next {
-  --swiper-navigation-top-offset: auto;
+  --arrows-offset-top: auto;
   bottom: 20px;
   right: auto;
   left: 50%;
@@ -357,7 +357,7 @@
   right: auto;
   border: 1px solid var(--color-border);
 }
-.swiper-pagination-custom:not(.swiper-pagination-modal) {
+.swiper-pagination-custom {
   position: var(--position-arrow, absolute);
   bottom: 1.5rem;
   left: 1.5rem;

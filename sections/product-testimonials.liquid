@@ -53,7 +53,7 @@
 -%}
 {%- capture style -%}
       --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
-      {% if heading_size == 'large' %}--font-size: 40;{% endif %}--rate-color: {{ rating_color }};
+      --rate-color: {{ rating_color }};
 {%- endcapture -%}
 {%- capture col_style -%}
   --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};
@@ -270,9 +270,11 @@
                           </div>
                         </div>
                         <div class="testimonials-group flex flex-wrap wrap gap-15">
-                          <span class="heading-style max-w-custom-all" style="--max-width: 65%;">
-                            {{ author_name }}
-                          </span>
+                          {% if author_name != blank %}
+                            <span class="heading-style max-w-custom-all" style="--max-width: 65%;">
+                              {{ author_name }}
+                            </span>
+                          {% endif %}
                           {% if show_verified_buyer -%}
                             <span class="text-color flex gap-5 align-center fs-13">
                               <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
@@ -393,9 +395,11 @@
                           </div>
                         </div>
                         <div class="testimonials-group flex flex-wrap wrap gap-15">
-                          <span class="heading-style max-w-custom-all" style="--max-width: 65%;">
-                            {{ author_name }}
-                          </span>
+                          {% if author_name != blank %}
+                            <span class="heading-style max-w-custom-all" style="--max-width: 65%;">
+                              {{ author_name }}
+                            </span>
+                          {% endif %}
                           {% if show_verified_buyer -%}
                             <span class="text-color flex gap-5 align-center fs-13">
                               <svg width="16" height="12" viewBox="0 0 16 12" fill="none">

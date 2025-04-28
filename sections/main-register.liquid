@@ -8,7 +8,7 @@
 {%- endcapture -%}
 <div
   class="stretch_width customer register section flex column content-center w-full max-w-custom-all mx-auto"
-  style="{{ style | strip | strip_newlines }}--max-width: 56rem;--bs-gutter-x: 3rem;"
+  style="{{ style | strip | strip_newlines }}--max-width: 56rem;--bs-gutter-x: 3rem;--input-placeholder-color: #666666;"
 >
   <div class="w-full">
     <div class="mb-60">
@@ -58,7 +58,7 @@
                 {% endif %}
                 autocomplete="given-name"
                 placeholder="{{ 'customer.register.first_name' | t }} *"
-                class="w-full"
+                class="w-full heading-color"
               >
               <label for="RegisterForm-FirstName" class="visually-hidden">
                 {{ 'customer.register.first_name' | t }}
@@ -74,7 +74,7 @@
                 {% endif %}
                 autocomplete="family-name"
                 placeholder="{{ 'customer.register.last_name' | t }} *"
-                class="w-full"
+                class="w-full heading-color"
               >
               <label for="RegisterForm-LastName" class="visually-hidden">
                 {{ 'customer.register.last_name' | t }}
@@ -100,7 +100,7 @@
               style="--color-border: #D0473E"
             {% endif %}
             placeholder="{{ 'customer.register.email' | t }} *"
-            class="w-full {% if form.errors %} border{% endif %}"
+            class="w-full {% if form.errors %} border{% endif %} heading-color"
             required
           >
           <label for="RegisterForm-email" class="visually-hidden">
@@ -130,9 +130,12 @@
               {% endif %}
               placeholder="{{ 'customer.register.password' | t }} *"
               required
-              class="w-full"
+              class="w-full heading-color"
             >
-            <show-pass-word class="show-pass-word transition absolute inset-y-0 flex content-center right-25">
+            <show-pass-word
+              class="show-pass-word transition absolute inset-y-0 flex content-center right-25"
+              aria-label="{{ 'customer.login_page.sign_in' | t }}"
+            >
               <svg class="icon-hide" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <use href="#icon-hide-password"></use>
               </svg>

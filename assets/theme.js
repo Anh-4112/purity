@@ -182,6 +182,24 @@ Shopify.CountryProvinceSelector.prototype = {
   },
 };
 
+class PageLoader extends HTMLElement {
+  constructor() {
+    super(),
+      window.addEventListener(
+        "DOMContentLoaded",
+        this.onDOMContentLoaded.bind(this),
+        false
+      );
+  }
+
+  onDOMContentLoaded() {
+    Motion.animate(this, { opacity: 0 }, { duration: 1 }).finished.then(() => {
+      this.classList.add("hidden");
+    });
+  }
+}
+customElements.define("page-loader", PageLoader);
+
 class BackToTop extends HTMLElement {
   constructor() {
     super();
@@ -2431,14 +2449,14 @@ class MotionEffect extends HTMLElement {
       case "zoom-in":
         this.zoomInInitial();
         break;
-      case "zoom-in-lg":
-        this.zoomInLgInitial();
+      case "zoom-in-big":
+        this.zoomInBigInitial();
         break;
       case "zoom-out":
         this.zoomOutInitial();
         break;
-      case "zoom-out-sm":
-        this.zoomOutSmInitial();
+      case "zoom-out-small":
+        this.zoomOutSmallInitial();
         break;
     }
   }
@@ -2463,7 +2481,7 @@ class MotionEffect extends HTMLElement {
     Motion.animate(this, { transform: "scale(0.8)" }, { duration: 0 });
   }
 
-  zoomInLgInitial() {
+  zoomInBigInitial() {
     Motion.animate(this, { transform: "scale(0)" }, { duration: 0 });
   }
 
@@ -2471,7 +2489,7 @@ class MotionEffect extends HTMLElement {
     Motion.animate(this, { transform: "scale(1.3)" }, { duration: 0 });
   }
 
-  zoomOutSmInitial() {
+  zoomOutSmallInitial() {
     Motion.animate(this, { transform: "scale(1.1)" }, { duration: 0 });
   }
 
@@ -2489,14 +2507,14 @@ class MotionEffect extends HTMLElement {
       case "zoom-in":
         await this.zoomIn();
         break;
-      case "zoom-in-lg":
-        await this.zoomInLg();
+      case "zoom-in-big":
+        await this.zoomInBig();
         break;
       case "zoom-out":
         await this.zoomOut();
         break;
-      case "zoom-out-sm":
-        await this.zoomOutSm();
+      case "zoom-out-small":
+        await this.zoomOutSmall();
         break;
     }
   }
@@ -2542,7 +2560,7 @@ class MotionEffect extends HTMLElement {
     ).finished;
   }
 
-  async zoomInLg() {
+  async zoomInBig() {
     await Motion.animate(
       this,
       { transform: "scale(1)" },
@@ -2566,7 +2584,7 @@ class MotionEffect extends HTMLElement {
     ).finished;
   }
 
-  async zoomOutSm() {
+  async zoomOutSmall() {
     await Motion.animate(
       this,
       { transform: "scale(1)" },
@@ -2788,3 +2806,72 @@ class StickySection extends HTMLElement {
 if (!customElements.get("sticky-section")) {
   customElements.define("sticky-section", StickySection);
 }
+
+class MotionItemsEffect extends HTMLElement {
+  constructor() {
+    super();
+    this.setupInitialAnimation();
+    this.setupInViewEffect();
+  }
+
+  get allItems() {
+    return this.querySelectorAll(".motion-item");
+  }
+
+  get visibleItems() {
+    return this.querySelectorAll(".product-item:not([style])");
+  }
+
+  setupInitialAnimation() {
+    Motion.animate(
+      this.allItems,
+      {
+        transform: "translateY(4rem)",
+        opacity: 0.01,
+        visibility: "hidden",
+      },
+      {
+        duration: 0,
+      }
+    );
+  }
+
+  setupInViewEffect() {
+    Motion.inView(this, this.animateItems.bind(this), {
+      margin: "0px 0px -100px 0px",
+    });
+  }
+
+  animateItems() {
+    Motion.animate(
+      this.allItems,
+      {
+        transform: ["translateY(4rem)", "translateY(0)"],
+        opacity: [0.01, 1],
+        visibility: ["hidden", "visible"],
+      },
+      {
+        duration: 0.3,
+        delay: Motion.stagger(0.1),
+        easing: [0, 0, 0.3, 1],
+      }
+    );
+  }
+
+  reloadAnimationEffect() {
+    Motion.animate(
+      this.visibleItems,
+      {
+        transform: ["translateY(4rem)", "translateY(0)"],
+        opacity: [0.01, 1],
+        visibility: ["hidden", "visible"],
+      },
+      {
+        duration: 0.3,
+        delay: Motion.stagger(0.1),
+        easing: [0, 0, 0.3, 1],
+      }
+    );
+  }
+}
+customElements.define("motion-items-effect", MotionItemsEffect);

@@ -13,7 +13,7 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
-<section class="section" style="{{ style | strip | strip_newlines }}">
+<section class="section" style="{{ style | strip | strip_newlines }};--input-placeholder-color: #666666;">
   <div class="{{ section_width }}">
     <div class="flex wrap column w-full max-w-custom-all mx-auto" style="--max-width: 60rem;--padding-inline: 50">
       <div class="w-full">
@@ -26,9 +26,9 @@
           </div>
           <button
             class="btn btn-primary add-address w-full"
-            data-attr
             aria-expanded="false"
             aria-controls="AddAddress"
+            aria-label="{{- 'customer.addresses.title' | t -}}"
           >
             {{ 'customer.addresses.add_new' | t }}
           </button>
@@ -43,7 +43,7 @@
                       {{- 'customer.addresses.first_name' | t -}}
                     </label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       placeholder="{{ 'customer.addresses.first_name' | t }}"
                       name="address[first_name]"
@@ -58,7 +58,7 @@
                       {{- 'customer.addresses.last_name' | t -}}
                     </label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[last_name]"
                       id="AddressLastName_{{ form.id }}"
@@ -73,7 +73,7 @@
                       {{- 'customer.addresses.company' | t -}}
                     </label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[company]"
                       id="AddressCompany_{{ form.id }}"
@@ -87,7 +87,7 @@
                       {{- 'customer.addresses.address1' | t -}}
                     </label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[address1]"
                       id="AddressAddress1_{{ form.id }}"
@@ -102,7 +102,7 @@
                       {{- 'customer.addresses.address2' | t -}}
                     </label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[address2]"
                       id="AddressAddress2_{{ form.id }}"
@@ -114,7 +114,7 @@
                   <div class="field relative form-group mb-15 flex column">
                     <label class="mb-5" for="AddressCity_{{ form.id }}">{{ 'customer.addresses.city' | t }}</label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[city]"
                       id="AddressCity_{{ form.id }}"
@@ -152,7 +152,7 @@
                   <div class="field relative form-group mb-15 flex column">
                     <label class="mb-5" for="AddressZip_{{ form.id }}">{{ 'customer.addresses.zip' | t }}</label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="text"
                       name="address[zip]"
                       id="AddressZip_{{ form.id }}"
@@ -164,7 +164,7 @@
                   <div class="field relative form-group mb-15 flex column">
                     <label class="mb-5" for="AddressPhone_{{ form.id }}">{{ 'customer.addresses.phone' | t }}</label>
                     <input
-                      class="form-input form-input-placeholder"
+                      class="form-input form-input-placeholder heading-color"
                       type="tel"
                       name="address[phone]"
                       id="AddressPhone_{{ form.id }}"
@@ -181,11 +181,19 @@
                   </label>
                 </div>
                 <div class="mt-20 flex gap wrap row-gap-custom" style="--row-gap: 1rem;--col-width: 50%;--gap: 2rem;">
-                  <button type="submit" class="btn btn-primary w-full col-1025-w-custom relative">
+                  <button
+                    aria-label="{{ 'customer.addresses.add_new' | t }}"
+                    type="submit"
+                    class="btn btn-primary w-full col-1025-w-custom relative"
+                  >
                     <span class="hidden-on-load transition-short"> {{ 'customer.addresses.add_new' | t }}</span>
                     {%- render 'loader' -%}
                   </button>
-                  <button type="reset" class="btn btn-outline w-full col-1025-remaining cancel-add">
+                  <button
+                    aria-label="{{ 'customer.addresses.cancel' | t }}"
+                    type="reset"
+                    class="btn btn-outline w-full col-1025-remaining cancel-add"
+                  >
                     {{ 'customer.addresses.cancel' | t }}
                   </button>
                 </div>
@@ -240,6 +248,7 @@
                     </button>
                     <button
                       type="button"
+                      aria-label="{{ 'customer.addresses.delete' | t }}"
                       class="btn btn-secondart btn-outline address-delete flex-grow-1"
                       data-form-id="{{ address.id }}"
                       data-confirm-message="{{ 'customer.addresses.delete_confirm' | t }}"
@@ -274,7 +283,7 @@
                           {{- 'customer.addresses.first_name' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           placeholder="{{ 'customer.addresses.first_name' | t }}"
                           name="address[first_name]"
@@ -288,7 +297,7 @@
                           {{- 'customer.addresses.last_name' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[last_name]"
                           id="AddressLastName_{{ form.id }}"
@@ -302,7 +311,7 @@
                           {{- 'customer.addresses.company' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[company]"
                           id="AddressCompany_{{ form.id }}"
@@ -316,7 +325,7 @@
                           {{- 'customer.addresses.address1' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[address1]"
                           id="AddressAddress1_{{ form.id }}"
@@ -330,7 +339,7 @@
                           {{- 'customer.addresses.address2' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[address2]"
                           id="AddressAddress2_{{ form.id }}"
@@ -342,7 +351,7 @@
                       <div class="field relative form-group mb-15 flex column">
                         <label class="mb-5" for="AddressCity_{{ form.id }}">{{ 'customer.addresses.city' | t }}</label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[city]"
                           id="AddressCity_{{ form.id }}"
@@ -382,7 +391,7 @@
                       <div class="field relative form-group mb-15 flex column">
                         <label class="mb-5" for="AddressZip_{{ form.id }}">{{ 'customer.addresses.zip' | t }}</label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="text"
                           name="address[zip]"
                           id="AddressZip_{{ form.id }}"
@@ -396,7 +405,7 @@
                           {{- 'customer.addresses.phone' | t -}}
                         </label>
                         <input
-                          class="form-input form-input-placeholder"
+                          class="form-input form-input-placeholder heading-color"
                           type="tel"
                           name="address[phone]"
                           id="AddressPhone_{{ form.id }}"
@@ -416,12 +425,17 @@
                       class="mt-20 flex gap wrap row-gap-custom"
                       style="--row-gap: 1rem;--col-width: 50%;--gap: 2rem;"
                     >
-                      <button type="submit" class="btn btn-primary w-full col-1025-w-custom">
+                      <button
+                        type="submit"
+                        class="btn btn-primary w-full col-1025-w-custom"
+                        aria-label="{{ 'customer.addresses.update' | t }}"
+                      >
                         <span class="hidden-on-load transition-short"> {{ 'customer.addresses.update' | t }}</span>
                         {%- render 'loader' -%}
                       </button>
                       <button
                         type="reset"
+                        aria-label="{{ 'customer.addresses.cancel' | t }}"
                         onclick="Shopify.CustomerAddress.toggleForm({{ form.id }}); return false;"
                         class="btn btn-outline w-full col-1025-remaining"
                       >

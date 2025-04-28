@@ -90,7 +90,7 @@
     </bundle-cart-remove-button>
   </div>
   {% if selected_variant.title != 'Default Title' %}
-    <span class="text-muted">{{- selected_variant.title -}}</span>
+    <span class="text-muted fs-small">{{- selected_variant.title -}}</span>
   {% endif %}
   <div class="product__price heading-color mt-5" data-price="{{ selected_variant.price }}">
     <div class="card-product-price relative">
@@ -104,50 +104,52 @@
       </div>
     </div>
   </div>
-  <quantity-input-bundle
-    class="quantity cart-quantity input-rounded flex input-style px-0"
-    style="--input-height: 40px;"
-  >
-    <button
-      class="quantity__button flex align-center btn-reset ps-18 pe-10 pointer heading-color"
-      name="minus"
-      type="button"
+  <div class="grow-1 flex bundle-quantity">
+    <quantity-input-bundle
+      class="quantity cart-quantity input-rounded flex input-style px-0 align-self-end mt-10"
+      style="--input-height: 40px; "
     >
-      <span class="visually-hidden border-0 p-0 text-center">
-        {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
-      </span>
-      <svg width="10" height="2" viewBox="0 0 10 2" fill="none">
-        <use href="#icon-minus"></use>
-      </svg>
-    </button>
-    <input
-      class="quantity__input border-0 p-0 text-center w-custom fs-small"
-      type="number"
-      style="--width: 2.2rem;--input-height: 38px;"
-      data-variant-id="{{ selected_variant.id }}"
-      name="updates[]"
-      value="1"
-      min="1"
-      step="1"
-      aria-label="
-        {{
-          'products.product.quantity.decrease'
-          | t: product: product.title
-          | escape
-        }}
-      "
-    >
-    <button
-      class="quantity__button flex align-center btn-reset ps-10 pe-18 pointer heading-color"
-      name="plus"
-      type="button"
-    >
-      <span class="visually-hidden">
-        {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
-      </span>
-      <svg width="10" height="10" viewBox="0 0 10 12" fill="none">
-        <use href="#icon-plus"></use>
-      </svg>
-    </button>
-  </quantity-input-bundle>
+      <button
+        class="quantity__button flex align-center btn-reset ps-18 pe-10 pointer heading-color"
+        name="minus"
+        type="button"
+      >
+        <span class="visually-hidden border-0 p-0 text-center">
+          {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+        </span>
+        <svg width="10" height="2" viewBox="0 0 10 2" fill="none">
+          <use href="#icon-minus"></use>
+        </svg>
+      </button>
+      <input
+        class="quantity__input border-0 p-0 text-center w-custom fs-small"
+        type="number"
+        style="--width: 2.2rem;--input-height: 38px;"
+        data-variant-id="{{ selected_variant.id }}"
+        name="updates[]"
+        value="1"
+        min="1"
+        step="1"
+        aria-label="
+          {{
+            'products.product.quantity.decrease'
+            | t: product: product.title
+            | escape
+          }}
+        "
+      >
+      <button
+        class="quantity__button flex align-center btn-reset ps-10 pe-18 pointer heading-color"
+        name="plus"
+        type="button"
+      >
+        <span class="visually-hidden">
+          {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+        </span>
+        <svg width="10" height="10" viewBox="0 0 10 12" fill="none">
+          <use href="#icon-plus"></use>
+        </svg>
+      </button>
+    </quantity-input-bundle>
+  </div>
 </div>

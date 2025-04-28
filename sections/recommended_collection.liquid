@@ -84,6 +84,20 @@
 {%- capture col_style -%}
   {% if column_gap_slide < 15 %}--gap: {{ column_gap_slide }}px;--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap: {{  column_gap_slide }}px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
 {%- endcapture -%}
+{% style %}
+  custom-options {
+    top: calc(100% + 20px);
+    --timming: 0.2s;
+  }
+  custom-options > * {
+    max-height: 30rem;
+  }
+  custom-options.active {
+    opacity: 1;
+    pointer-events: auto;
+    top: calc(100% + 4px);
+  }
+{% endstyle %}
 {% capture title_replace %}
   <select-options class="title-select relative px-15 pointer">
     {% if split_array.size > 0 %}
@@ -93,18 +107,20 @@
         assign first_title = title_parts[0]
       %}
       <span class="title-select__text heading-style word-break select_option inline-flex align-center gap-20 border-bottom" style="--border-height: 2px; --color-border: var(--color-heading);">{{ first_title }}
-        <svg class="icon icon-down icon-rotate transition-short w-custom flex-auto" width="10" height="6" viewBox="0 0 10 6" style="--width: 1rem;">
+        <svg class="icon icon-down icon-rotate transition-drawer w-custom flex-auto" width="10" height="6" viewBox="0 0 10 6" style="--width: 1rem;">
           <use href="#icon-arrow-down"></use>
         </svg>
        </span>
-      <custom-options class="title-list custom-scroll-bar">
+      <custom-options class="title-list block absolute transition-drawer z-2 shadow min-w-custom word-break left-0 opacity-0 pointer-none" style="--min-width: 21rem;">
         {% for item in split_array %}
+             <div class="title-group custom-scrollbar flex column gap-10 fs-big-2 bg-white rounded-10 p-20 heading-color overflow-auto">
           {% liquid
             assign title_parts = item | split: '::'
             assign title = title_parts[0]
             assign block_id = title_parts[1]
           %}
-            <span class="title-item" data-block-id="{{ block_id }}">{{ title }}</span>
+            <span class="title-item lh-normal" data-block-id="{{ block_id }}">{{ title }}</span>
+          </div>
         {% endfor %}
       </custom-options>
     {% else %}
@@ -124,13 +140,13 @@
         assign url_default = first_url
       %}
       <span class="collection-select__text heading-style word-break select_option inline-flex align-center gap-20 border-bottom" style="--border-height: 2px; --color-border: var(--color-heading);" data-url="{{ first_url }}">{{ first_title }}
-        <svg class="icon icon-down icon-rotate transition-short w-custom flex-auto" width="10" height="6" viewBox="0 0 10 6" style="--width: 1rem;">
+        <svg class="icon icon-down icon-rotate transition-drawer w-custom flex-auto" width="10" height="6" viewBox="0 0 10 6" style="--width: 1rem;">
           <use href="#icon-arrow-down"></use>
         </svg>
       </span>
-      <custom-options class="collection-list custom-scroll-bar">
+      <custom-options class="collection-list block shadow absolute transition-drawer z-2 min-w-custom word-break left-0 opacity-0 pointer-none" style="--min-width: 21rem;">
         {% for block_id in unique_block_ids %}
-          <div class="collection-group" id="{{ block_id }}" {% if block_id != first_block_id %}style="display: none;"{% endif %}>
+          <div class="collection-group custom-scrollbar flex column gap-10 fs-big-2 bg-white rounded-10 p-20 heading-color overflow-auto" id="{{ block_id }}" {% if block_id != first_block_id %}style="display: none;"{% endif %}>
             {% for item in split_collection %}
               {% liquid
                 assign item_parts = item | split: '::'
@@ -139,7 +155,7 @@
                 assign item_url = item_parts[2]
               %}
               {% if item_block_id == block_id %}
-                <span class="collection-item" data-url="{{ item_url }}">{{ item_title }}</span>
+                <span class="collection-item lh-normal" data-url="{{ item_url }}">{{ item_title }}</span>
               {% endif %}
             {% endfor %}
           </div>

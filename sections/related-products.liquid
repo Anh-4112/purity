@@ -16,9 +16,9 @@
 
   assign header_size = ''
   if heading_size == 'small'
-    assign header_size = 'h3'
+    assign header_size = ' h3'
   elsif heading_size == 'large'
-    assign header_size = 'h1'
+    assign header_size = ' h1'
   endif
 
   assign items_per_row_mobile = section_st.items_per_row_mobile
@@ -48,7 +48,7 @@
   endif
 -%}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 {%- capture col_style -%}
   --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};

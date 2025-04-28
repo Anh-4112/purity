@@ -56,7 +56,7 @@
   assign width_range_slider = image_collection_width | times: block_size | plus: total_gap_size
   assign space_left = image_collection_width | minus: size_dot_range_slider | divided_by: 2
 -%}
-{%- capture style -%} --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if heading_size == 'large' %}--font-size: 40;{% endif %}--image-collection-width: {{ image_collection_width }}px;--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
+{%- capture style -%} --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--image-collection-width: {{ image_collection_width }}px;--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
 {%- capture col_style -%}
   --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }};  --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};
@@ -195,10 +195,7 @@
                         assign class_placeholder = 'img-placeholder h-full w-full rounded-50'
                       endif
                     %}
-                    {% render 'placeholder-render',
-                      type: 'collection',
-                      class: class_placeholder
-                    %}
+                    {% render 'placeholder-render', type: 'collection', class: class_placeholder %}
                   {%- endif -%}
                 </div>
               </div>
@@ -284,10 +281,7 @@
                         assign class_placeholder = 'img-placeholder h-full w-full rounded-50'
                       endif
                     %}
-                    {% render 'placeholder-render',
-                      type: 'collection',
-                      class: class_placeholder
-                    %}
+                    {% render 'placeholder-render', type: 'collection', class: class_placeholder %}
                   {%- endif -%}
                 </div>
                 <div class="product-tabs__header-title word-break heading-color text-center">

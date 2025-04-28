@@ -21,7 +21,7 @@
     --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.speed }}s;
 {%- endcapture -%}
 {%- capture col_style -%}
-  {% if section_st.space_between < 40 %}--gap: {{ section_st.space_between }}px;{% else %}--gap: clamp(4rem, calc({{ section_st.space_between }} * var(--responsive-rate)), calc({{ section_st.space_between }}*1px));{% endif %}
+  {% if section_st.space_between <= 20 %}--gap-desktop: {{ section_st.space_between }}px;--gap: 1rem;{% else %}--gap: clamp(2rem, calc({{ section_st.space_between }} * var(--responsive-rate)), calc({{ section_st.space_between }}*1px));{% endif %}
 {%- endcapture -%}
 {% style %}
   .show-background-blur {
@@ -108,8 +108,8 @@
                 </div>
               {% else %}
                 <div
-                  class="w-custom flex content-center"
-                  style="--width: {{ section_st.image_width }}px;--aspect-ratio: {{ ratio }};"
+                  class="w-custom w-custom-mb flex content-center"
+                  style="--width: {{ img_width }}px;--width-mb: {{ img_width_mb }}px;--aspect-ratio: {{ ratio }};"
                 >
                   {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full rounded' %}
                 </div>

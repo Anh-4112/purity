@@ -4,8 +4,8 @@
 %}
 
 {%- style -%}
-  #shopify-block-{{ block.id }} {
-    --col-width: {{ block_st.width }};
+  .block-tags{
+    justify-content: {{ block_st.text_alignment }};
   }
 {%- endstyle -%}
 
@@ -17,7 +17,7 @@
       <symbol id="icon-tick">
         <path d="M13.5742 0.824219C13.7435 0.667969 13.9388 0.589844 14.1602 0.589844C14.3945 0.589844 14.5898 0.667969 14.7461 0.824219C14.9154 0.99349 15 1.19531 15 1.42969C15 1.65104 14.9154 1.83984 14.7461 1.99609L5.58594 11.1758C5.42969 11.332 5.23438 11.4102 5 11.4102C4.76562 11.4102 4.57031 11.332 4.41406 11.1758L0.253906 6.99609C0.0846354 6.83984 0 6.65104 0 6.42969C0 6.19531 0.0846354 5.99349 0.253906 5.82422C0.410156 5.66797 0.598958 5.58984 0.820313 5.58984C1.05469 5.58984 1.25651 5.66797 1.42578 5.82422L5 9.39844L13.5742 0.824219Z" fill="black"/>
       </symbol>
-  </svg>
+    </svg>
     {% content_for 'blocks' %}
   </div>
 </div>
@@ -25,7 +25,7 @@
 {% schema %}
 {
   "name": "t:sections.all.text.label",
-  "class": "w-full col-md-w-custom col-md-w-custom-50",
+  "class": "w-full col-1025-w-custom col-md-w-custom-50",
   "blocks": [
     {
       "type": "@app"
@@ -47,54 +47,6 @@
     }
   ],
   "settings": [
-    {
-      "type": "header",
-      "content": "t:sections.all.content_setting.label"
-    },
-    {
-      "type": "select",
-      "id": "width",
-      "label": "t:sections.all.width.label",
-      "default": "33.333%",
-      "options": [
-        {
-          "value": "16.666%",
-          "label": "t:sections.footer.settings.width.options__1"
-        },
-        {
-          "value": "20%",
-          "label": "t:sections.footer.settings.width.options__2"
-        },
-        {
-          "value": "25%",
-          "label": "t:sections.footer.settings.width.options__3"
-        },
-        {
-          "value": "33.333%",
-          "label": "t:sections.footer.settings.width.options__4"
-        },
-        {
-          "value": "50%",
-          "label": "t:sections.footer.settings.width.options__5"
-        },
-        {
-          "value": "66.666%",
-          "label": "t:sections.footer.settings.width.options__6"
-        },
-        {
-          "value": "75%",
-          "label": "t:sections.footer.settings.width.options__7"
-        },
-        {
-          "value": "86%",
-          "label": "t:sections.footer.settings.width.options__8"
-        },
-        {
-          "value": "100%",
-          "label": "t:sections.footer.settings.width.options__9"
-        }
-      ]
-    },
     {
       "type": "select",
       "id": "vertical_alignment",

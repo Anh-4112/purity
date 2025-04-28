@@ -92,7 +92,7 @@
           --btn-link border-animation-color: {{ scheme.settings.btn_outline_color }};
           --btn-link border-animation-hover-color: {{ scheme.settings.btn_outline_color }};
           --input-color: var(--color-text);
-          --input-placeholder-color: rgba(var(--color-heading-rgb), 0.55);      
+          --input-placeholder-color: rgba(var(--color-heading-rgb), 0.55);
         }
       {% endfor %}
       {{ scheme_classes | prepend: 'body' }} {
@@ -274,7 +274,6 @@
 
   <body class="gradient gift-card section" style="--section-pt: 20;--section-pb: 30;">
     <header>
-      <h1 class="flex justify-center mb-30">{{ shop.name }}</h1>
       <div class="gift-card__price flex column content-center">
         <h2 class="mb-20">
           {% if settings.currency_code_enabled %}
@@ -287,6 +286,7 @@
           <p class="badge badge--expired mb-20">{{ 'gift_cards.issued.expired' | t }}</p>
         {%- endif -%}
       </div>
+      <h1 class="flex justify-center mb-30">{{ shop.name }}</h1>
       {% if gift_card.expires_on %}
         {%- assign gift_card_expiration_date = gift_card.expires_on | date: '%B %e, %Y' -%}
         <p class="gift-card__text flex column content-center mb-20">
@@ -298,8 +298,7 @@
     <main>
       <div class="gift-card__image-wrapper flex justify-center mb-20">
         {%- if settings.logo != blank -%}
-          {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
-          {{ settings.logo | image_url: width: 570 | image_tag: class: 'gift-card__image', alt: logo_alt }}
+          {%- render 'logo' -%}
         {%- else %}
           <img
             class="gift-card__image"
