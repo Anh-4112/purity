@@ -470,6 +470,20 @@
                           style="--aspect-ratio: {{ video_ratio }};"
                         >
                           {% if local_video != blank %}
+                            <button
+                              aria-label="{{ 'accessibility.play_button.video' | t }}"
+                              class="play-button play-button-popup btn-{{ block.id }} pointer border-0 absolute z-2 inline-flex align-center justify-content-center active"
+                            >
+                              {% render 'icon-play' %}
+                              {% render 'icon-pause' %}
+                            </button>
+                            <button
+                              aria-label="{{ 'accessibility.mute_button.video' | t }}"
+                              class="hidden active mute-button mute-button-popup pointer absolute z-2 right-15 bottom-15 border-0 inline-flex-1025 align-center justify-content-center"
+                            >
+                              {% render 'icon-mute-open' %}
+                              {% render 'icon-mute-close' %}
+                            </button>
                             {%- liquid
                               assign source = local_video.sources
                               assign source_url = ''
@@ -488,7 +502,6 @@
                               preload="auto"
                               loop
                               playsinline
-                              controls
                               autoplay
                               poster="{{ poster }}"
                               data-src="{{ source_url }}"
@@ -518,40 +531,49 @@
                         </div>
                       {% endif %}
                       <div
-                        class="popup-information__mobile z-2 hidden-1025 shadow rounded-10 overflow-hidden flex align-center space-between absolute bottom-20 right-20 left-20 pe-20"
+                        class="flex column hidden-1025 absolute bottom-20 right-20 left-20 pe-20"
                         style="--width: 7.5rem;"
                       >
-                        {% render 'card-product',
-                          card_product: card_product,
-                          section_id: section.id,
-                          show_video: false,
-                          disable_quickview: true,
-                          disable_badge: true,
-                          disable_rate: true,
-                          disable_vendor: true,
-                          disable_hover_image: true,
-                          show_quick_add: true,
-                          disable_color_swatches: true,
-                          class: ' z-2',
-                          style_layout: ' flex',
-                          image_class: ' flex-auto w-custom rounded-10 w-full-1025',
-                          image_rounded: ' rounded-10',
-                          info_class: ' flex-1 mt-0 px-20 py-15 align-self-center'
-                        %}
                         <button
-                          class="btn-shopable__action-mobile btn__quick-shop bg-white btn-reset shadow z-2 flex"
-                          name="{{ 'products.product.shop_now' | t }}"
+                          aria-label="{{ 'accessibility.mute_button.video' | t }}"
+                          class="active mute-button-mobile pointer border-0 inline-flex z-2 relative align-center justify-content-center"
                         >
-                          <svg
-                            width="16"
-                            height="16"
-                            class="hidden-1025 hidden-on-load transition-short heading-color"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                          >
-                            <use href="#icon-cart" />
-                          </svg>
+                          {% render 'icon-mute-open' %}
+                          {% render 'icon-mute-close' %}
                         </button>
+                        <div class="flex align-center space-between popup-information__mobile z-2 shadow rounded-10 overflow-hidden">
+                          {% render 'card-product',
+                            card_product: card_product,
+                            section_id: section.id,
+                            show_video: false,
+                            disable_quickview: true,
+                            disable_badge: true,
+                            disable_rate: true,
+                            disable_vendor: true,
+                            disable_hover_image: true,
+                            show_quick_add: true,
+                            disable_color_swatches: true,
+                            class: ' z-2',
+                            style_layout: ' flex',
+                            image_class: ' flex-auto w-custom rounded-10 w-full-1025',
+                            image_rounded: ' rounded-10',
+                            info_class: ' flex-1 mt-0 px-20 py-15 align-self-center'
+                          %}
+                          <button
+                            class="btn-shopable__action-mobile btn__quick-shop bg-white btn-reset shadow z-2 flex"
+                            name="{{ 'products.product.shop_now' | t }}"
+                          >
+                            <svg
+                              width="16"
+                              height="16"
+                              class="hidden-1025 hidden-on-load transition-short heading-color"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                            >
+                              <use href="#icon-cart" />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                       <div
                         class="popup-information transition-drawer relative-1025 absolute inset-0 bg-white z-2"
