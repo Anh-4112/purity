@@ -605,24 +605,30 @@
                     data-all-products="{{ all_product }}"
                     data-limit="{{ products_to_show }}"
                     data-url="?page={{ paginate.current_page | plus: 1 }}"
+                    class="pagination-load-more mt-60 block text-center"
                   >
                     <div class="paginate-progress">
-                      <p class="counting_product">
+                      <p class="counting_product load-more-amount mb-20">
                         {{-
                           'sections.collection_template.product_count.one'
                           | t: count: amount_products, product_count: collection.products_count
                         -}}
                       </p>
-                      <div class="progress">
-                        <span
-                          class="current"
-                          style="width: {{ amount_products | divided_by: collection_products_count | times: 100 }}%"
-                        ></span>
-                      </div>
+                      <div
+                        class="load-more-progress-bar relative mx-auto h-custom rounded max-w-custom bg-custom"
+                        style="--percent: {{ amount_products | divided_by: collection_products_count | times: 100 }}%; --amount: {{ amount_products }}; --count: {{ amount_products }};--height: 3px;--img-rounded: 5px;--max-width: 32rem;--bg-color-custom: #e5e5e5;"
+                      ></div>
                     </div>
                     {% if all_product > products_to_show %}
-                      <button class="button" aria-label="{{ 'sections.collection_template.load_more' | t }}">
-                        <span class="hidden-on-load">{{ 'sections.collection_template.load_more' | t }}</span>
+                      <button
+                        class="relative btn btn-primary inline-flex content-center pointer transition w-custom max-w-100 mt-25"
+                        style="--width: 20rem;"
+                        aria-label="{{ 'sections.collection_template.load_more' | t }}"
+                      >
+                        <span class="btn-label hidden-on-load transition-short">
+                          {{- 'sections.collection_template.load_more' | t -}}
+                        </span>
+                        {%- render 'loader' -%}
                       </button>
                     {% endif %}
                   </loadmore-button>
@@ -631,24 +637,26 @@
                     data-all-products="{{ all_product }}"
                     data-limit="{{ products_to_show }}"
                     data-url="?page={{ paginate.current_page | plus: 1 }}"
-                    class="block text-center mt-80"
+                    class="block text-center mt-60"
                   >
                     <div class="paginate-progress">
-                      <p class="counting_product">
+                      <p class="counting_product load-more-amount mb-20">
                         {{-
-                          'sections.collection_template.product_count'
+                          'sections.collection_template.product_count.one'
                           | t: count: amount_products, product_count: collection.products_count
                         -}}
                       </p>
-                      <div class="progress">
-                        <span
-                          class="current"
-                          style="width: {{ amount_products | divided_by: collection_products_count | times: 100 }}%"
-                        ></span>
-                      </div>
+                      <div
+                        class="load-more-progress-bar relative mx-auto h-custom rounded max-w-custom bg-custom"
+                        style="--percent: {{ amount_products | divided_by: collection_products_count | times: 100 }}%; --amount: {{ amount_products }}; --count: {{ amount_products }};--height: 3px;--img-rounded: 5px;--max-width: 32rem;--bg-color-custom: #e5e5e5;"
+                      ></div>
                     </div>
                     {% if all_product > products_to_show %}
-                      <button class="button" aria-label="{{ 'sections.collection_template.load_more' | t }}">
+                      <button
+                        aria-label="{{ 'sections.collection_template.load_more' | t }}"
+                        class="relative btn btn-primary inline-flex content-center pointer transition w-custom max-w-100 mt-25"
+                        style="--width: 20rem;"
+                      >
                         <span class="hidden-on-load">{{ 'sections.collection_template.load_more' | t }}</span>
                       </button>
                     {% endif %}
