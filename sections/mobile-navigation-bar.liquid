@@ -14,7 +14,7 @@
     }
   {% endstyle %}
   {%- if show_homepage or show_shop or show_account or show_cart -%}
-    <mobile-navigation-bar class="bls__mobile-navigation-bar opacity-0 amimate_show-hide transition-drawer block hidden-md fixed bottom-0 inset-x-0 z-5 bg-white shadow px-20 py-10 fs-12">
+    <mobile-navigation-bar class="section__mobile-navigation-bar opacity-0 amimate_show-hide transition-drawer block hidden-md fixed bottom-0 inset-x-0 z-5 bg-white shadow px-20 py-10 fs-12">
       <ul class="flex content-center align-center list-unstyled text-center">
         {%- if show_homepage -%}
           <li class="flex-1">
@@ -22,6 +22,7 @@
               href="{{ routes.root_url }}"
               id="homepage-icon-bubble"
               class="flex column content-center heading-color gap-5{% if request.path == "/" %} active{% endif %}"
+              aria-label="{{ 'general.mobile_navbar.homepage' | t }}"
             >
               {% render 'icon-home' %}
               <span class="block">{{ 'general.mobile_navbar.homepage' | t }}</span>
@@ -32,6 +33,7 @@
           <li class="flex-1">
             <a
               href="{{ collections.all.url }}"
+              aria-label="{{ 'general.mobile_navbar.shop' | t }}"
               class="inline-flex column content-center heading-color gap-5{% if request.path == "/collections/all" %} active{% endif %}"
             >
               {% render 'icon-shop', custom_width: 24 %}
@@ -66,6 +68,7 @@
           <li class="flex-1">
             <a
               href="{{ routes.cart_url }}"
+              aria-label="{{ 'templates.cart.cart' | t }}"
               class="inline-flex column content-center heading-color gap-5 icon--cart-action relative{% if request.path == "/cart" %} active{% endif %}"
               id="cart-icon-bubble-mobile"
             >
@@ -108,6 +111,10 @@
   "name": "t:sections.mobile-navigation-bar.name",
   "tag": "section",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.mobile-navigation-bar.how_to_use"
+    },
     {
       "type": "paragraph",
       "content": "t:sections.mobile-navigation-bar.info"
