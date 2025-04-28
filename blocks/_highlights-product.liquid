@@ -5,14 +5,14 @@
       style="--col-number: 2;--col-desktop: 4;"
     >
       {%- for highlights in closest.product.metafields.custom.highlights.value -%}
-        <li class="flex column fs-small">
+        <li class="flex column content-center fs-small" style="--width:4.5rem;">
           {% assign image_alt = highlights.title | default: closest.product.title | escape %}
           {%- if highlights.icon -%}
             {% render 'responsive-image',
               type: 'other',
               image: highlights.icon,
               image_alt: image_alt,
-              class: 'rounded'
+              class: 'rounded w-custom max-w-100'
             %}
           {% endif %}
           {%- if highlights.title -%}

@@ -147,12 +147,12 @@ summary::-webkit-details-marker {
 :where(.h0) {
   --size: clamp(4rem, calc(4rem + (70 - 40) * var(--responsive-rate)), 7rem);
 }
-:where(h2, .h2) {
-  --size: clamp(3rem, calc(3rem + (40 - 30) * var(--responsive-rate)), 4rem);
-}
 :where(h1, .h1),
 .h1-size {
   --size: clamp(4rem, calc(4rem + (50 - 40) * var(--responsive-rate)), 5rem);
+}
+:where(h2, .h2) {
+  --size: clamp(3rem, calc(3rem + (40 - 30) * var(--responsive-rate)), 4rem);
 }
 :where(h3, .h3) {
   --size: clamp(
@@ -875,6 +875,9 @@ a.hover-heading-color:hover,
 :where(.gap) {
   gap: var(--row-gap, var(--gap)) var(--gap, 2rem);
 }
+.row-as-col-gap {
+  row-gap: var(--gap);
+}
 .swiper:not([class*="initialized"]) .swiper-wrapper {
   gap: var(--gap, 2rem);
 }
@@ -901,6 +904,7 @@ a.hover-heading-color:hover,
 }
 :where(.gap-10) {
   --gap: 1rem;
+  --gap-desktop: 1rem;
   gap: var(--gap);
 }
 :where(.gap-15) {
@@ -1612,8 +1616,8 @@ quantity-input input {
     width: var(--col-width, 50%);
   }
   .col-md-remaining {
-    flex: 0 0 calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
-    width: calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
+    flex: 0 0 calc(100% - var(--col-width) - var(--gap));
+    width: calc(100% - var(--col-width) - var(--gap));
   }
   .mb-md-5 {
     margin-bottom: 0.5rem;
@@ -1771,6 +1775,10 @@ quantity-input input {
   :where(.gap) {
     gap: var(--row-gap, var(--gap)) var(--gap-desktop, var(--gap));
   }
+
+  .row-as-col-gap {
+    row-gap: var(--gap-desktop, var(--gap));
+  }
   .gap-1025-40 {
     gap: 4rem;
   }
@@ -1866,6 +1874,10 @@ quantity-input input {
     width: var(--col-width, 50%);
   }
   .col-1025-remaining {
+    flex: 0 0 calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
+    width: calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
+  }
+  .col-md-remaining {
     flex: 0 0 calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
     width: calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
   }
@@ -1989,7 +2001,10 @@ th {
   .multimedia_with_text__block.active {
     width: 18rem;
   }
-.drawer-mb-bottom {
+  .drawer-mb-bottom {
     transform: translateY(100%);
   }
+}
+.spinning-text__content span {
+  font-family: monospace;
 }

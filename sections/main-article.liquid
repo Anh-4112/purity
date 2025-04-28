@@ -23,9 +23,6 @@
     itemscope
     itemtype="http://schema.org/BlogPosting"
   >
-    <div class="single-post-breadcrumbs">
-      {%- render 'breadcrumbs' -%}
-    </div>
     <div class="flex column gap-20 gap-1025-40">
       {%- for block in section.blocks -%}
         {% assign block_st = block.settings %}
@@ -139,7 +136,7 @@
                     <span class="heading-style">{{ 'blogs.article.tags' | t }}:</span>
                     <ul class="flex wrap align-center list-unstyled gap-10">
                       {% for tag in article.tags limit: 8 %}
-                        <li class="transition fs-small text-color btn-tag p-0 medium-weight">
+                        <li class="transition fs-small text-color btn-tag p-0 lh-global btn body-weight">
                           {{- tag | link_to_tag: tag -}}
                         </li>
                       {% endfor %}
