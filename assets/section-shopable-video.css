@@ -94,9 +94,15 @@
 @media screen and (min-width: 1025px) {
   .modal-nav {
     --swiper-navigation-sides-offset: 0;
+    opacity: 0;
+    transition-delay: 0.5s;
   }
   .modal-shopable-video.active .modal-nav {
     --swiper-navigation-sides-offset: -100px;
+    opacity: 1;
+  }
+  .modal-shopable-video.active .modal-nav .swiper-arrow {
+    transition-delay: 0.5s;
   }
 }
 @media (max-width: 1024.98px) {
@@ -105,6 +111,15 @@
     clip-path: unset;
     height: auto;
     overflow: hidden;
+  }
+  :is(.modal-shopable-video) .modal__close {
+    --color-white: 0, 0, 0;
+    --opacity: 0.38;
+  }
+  :is(.modal-shopable-video) .modal__close svg {
+    width: 1rem;
+    height: 1rem;
+    color: #fff;
   }
   .popup-information {
     opacity: 0;
@@ -128,5 +143,14 @@
     margin-top: 0;
     top: 1.5rem;
     bottom: auto;
+  }
+  .modal__close-information {
+    background-color: var(--overlay-bg);
+    pointer-events: none;
+    opacity: 0;
+  }
+  .modal__close-information.active {
+    pointer-events: auto;
+    opacity: 1;
   }
 }

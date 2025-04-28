@@ -305,6 +305,7 @@ class ShopableItem extends HTMLElement {
       if (actionButton) {
         event.preventDefault();
         event.stopPropagation();
+        actionButton.classList.add("active");
         const currentId = modalPopup.getAttribute("data-current");
         if (!currentId) return;
         const currentItem = modalPopup.querySelector(`#${currentId}`);
@@ -317,8 +318,10 @@ class ShopableItem extends HTMLElement {
         if (!popupInfo) return;
         if (buttonCloseInformation.classList.contains("hidden-important")) {
           buttonCloseInformation.classList.remove("hidden-important");
+          buttonCloseInformation.classList.add("active");
           buttonCloseModal.classList.add("hidden-important");
         } else {
+          buttonCloseInformation.classList.remove("active");
           buttonCloseInformation.classList.add("hidden-important");
           buttonCloseModal.classList.remove("hidden-important");
         }
@@ -334,8 +337,14 @@ class ShopableItem extends HTMLElement {
       }
       const closeInfoButton = event.target.closest(".modal__close-information");
       if (closeInfoButton) {
+        const actionButton = event.target
+          .closest(".drawer__body")
+          .querySelector(".popup-information__mobile");
         event.preventDefault();
         event.stopPropagation();
+        if (actionButton.classList.contains("active")) {
+          actionButton.classList.remove("active");
+        }
         const currentId = modalPopup.getAttribute("data-current");
         if (!currentId) return;
         const currentItem = modalPopup.querySelector(`#${currentId}`);
@@ -346,6 +355,7 @@ class ShopableItem extends HTMLElement {
         if (popupInfo) {
           this.hidePopupInformation(popupInfo);
           closeInfoButton.classList.add("hidden-important");
+          closeInfoButton.classList.remove("active");
           buttonCloseModal.classList.remove("hidden-important");
           const swiperContainer = modalPopup.querySelector("slide-section");
           if (swiperContainer && swiperContainer.swiper) {
@@ -658,13 +668,15 @@ class ShopableItem extends HTMLElement {
 
   handleSwipeability(modalPopup, swiperContainer) {
     if (!modalPopup || !swiperContainer || !swiperContainer.swiper) return;
-    
+
     const isLargeScreen = window.innerWidth >= 1025;
-    
-    const hasPopupInfo = modalPopup.querySelector('.popup-information') !== null;
-    
-    const hasActivePopupInfo = modalPopup.querySelector('.popup-information.active') !== null;
-    
+
+    const hasPopupInfo =
+      modalPopup.querySelector(".popup-information") !== null;
+
+    const hasActivePopupInfo =
+      modalPopup.querySelector(".popup-information.active") !== null;
+
     if (isLargeScreen) {
       if (hasPopupInfo) {
         swiperContainer.swiper.allowTouchMove = false;
