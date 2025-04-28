@@ -217,7 +217,19 @@ export function eventModal(
       modal_element.classList.remove("active");
     }
     if (modal_element.classList.contains("remove-after")) {
-      setTimeout(() => modal_element.remove(), 600);
+      setTimeout(() => {
+        if (focus_item && focus_item == "FacetsDrawer") {
+          document
+            .getElementById(focus_item)
+            .parentNode.insertBefore(
+              modal_element,
+              modal_element.parentNode.nextElementSibling
+            );
+          modal_element.classList.remove("remove-after");
+        } else {
+          modal_element.remove();
+        }
+      }, 600);
     }
     if (!modal_element.classList.contains("delay")) {
       if (active_modal.length <= 1) {
@@ -227,14 +239,6 @@ export function eventModal(
     removeTrapFocus(modal_element);
     if (focus_item && document.getElementById(focus_item)) {
       trapFocus(document.getElementById(focus_item));
-      if (focus_item == "FacetsDrawer") {
-        document
-          .getElementById(focus_item)
-          .parentNode.parentNode.insertBefore(
-            modal_element,
-            modal_element.parentNode.nextElementSibling
-          );
-      }
     }
   }
 }

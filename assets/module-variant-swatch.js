@@ -5,9 +5,9 @@ const delegate = new NextSkyTheme.eventDelegate();
 class VariantInput extends HTMLElement {
   constructor() {
     super(),
-      (this.show_more = this.querySelector(".number-showmore")),
-      (this.size_chart = this.querySelector(".open-size-chart")),
-      (this.event_target = null),
+      (this.showMore = this.querySelector(".number-showmore")),
+      (this.sizeChart = this.querySelector(".open-size-chart")),
+      (this.eventTarget = null),
       (this.swatch = this.querySelector(
         ".product-card-swatch-js .variant-input"
       )),
@@ -46,14 +46,14 @@ class VariantInput extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this.show_more) {
-      this.show_more.addEventListener(
+    if (this.showMore) {
+      this.showMore.addEventListener(
         "click",
         this.onShowMoreClicked.bind(this)
       );
     }
-    if (this.size_chart) {
-      this.size_chart.addEventListener(
+    if (this.sizeChart) {
+      this.sizeChart.addEventListener(
         "click",
         this.onShowSizeChartClicked.bind(this)
       );
@@ -105,8 +105,8 @@ class VariantInput extends HTMLElement {
 
   async onVariantChange(event) {
     event.preventDefault();
-    this.event_target = event.target;
-    const option_dropdown = this.event_target.closest(
+    this.eventTarget = event.target;
+    const option_dropdown = this.eventTarget.closest(
       ".product-variants-option"
     );
     if (option_dropdown) {
@@ -142,7 +142,7 @@ class VariantInput extends HTMLElement {
         onSuccess(
           parsedHTML,
           this.sectionId,
-          this.event_target,
+          this.eventTarget,
           this.blockId,
           _this
         );
@@ -372,17 +372,17 @@ class VariantInput extends HTMLElement {
     swatch_hidden.forEach((swatch) => {
       swatch.classList.remove("hidden");
     });
-    this.show_more.closest("li").remove();
+    this.showMore.closest("li").remove();
   }
 
   onShowSizeChartClicked(event) {
     event.preventDefault();
-    const size_chart = event.target
+    const sizeChart = event.target
       .closest(".product-variants-info")
       .querySelector("template");
-    if (size_chart) {
+    if (sizeChart) {
       const content = document.createElement("div");
-      content.appendChild(size_chart.content.firstElementChild.cloneNode(true));
+      content.appendChild(sizeChart.content.firstElementChild.cloneNode(true));
       NextSkyTheme.body.appendChild(content.querySelector("size-chart-popup"));
     }
     setTimeout(
@@ -509,9 +509,11 @@ class VariantSwatchSelect extends VariantInput {
     }
     this.updateBoughtTogether(currentSection);
   }
-  
-  updateProductFormBundleRoutine(currentProduct,value) {
-    const productFormBundle = currentProduct.querySelector("product-form-bundle");
+
+  updateProductFormBundleRoutine(currentProduct, value) {
+    const productFormBundle = currentProduct.querySelector(
+      "product-form-bundle"
+    );
     if (productFormBundle) {
       const id = productFormBundle.querySelector("input[name=id]");
       if (id) {
@@ -520,7 +522,7 @@ class VariantSwatchSelect extends VariantInput {
     }
   }
 
-  updateProductFormBundleSection(currentProduct,value) {
+  updateProductFormBundleSection(currentProduct, value) {
     const productFormBundle = currentProduct.querySelector("product-form");
     const currentSection = currentProduct.closest("bundle-products");
     if (productFormBundle) {
@@ -537,7 +539,6 @@ class VariantSwatchSelect extends VariantInput {
       if (variant) {
         variant.querySelector(`input[name="items[][id]"]`).value = value;
       }
-      
     }
   }
 }

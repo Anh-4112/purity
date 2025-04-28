@@ -82,33 +82,11 @@
           name="VariantSwatchSelect-{{ section.id }}-{{ product.id }}"
           class="{% if select_type == 'default' %} fs-small-1{% else %} border-0 h-auto max-w-100 fs-small lh-global{% endif %}{{ select_class }}"
         >
-          {% liquid
-            assign color_option = ''
-            for option in product.options
-              if option contains color_swatch_trigger
-                assign color_option = option
-              endif
-            endfor
-          %}
           {% for variant in product.variants %}
             {% assign quantity = variant.inventory_quantity %}
             {%- if show_available == false and quantity < 1 and variant.available == false -%}
               {% continue %}
             {%- endif -%}
-            {% liquid
-              assign color_value = ''
-              if color_option == product.options[0]
-                assign color_value = variant.option1
-              elsif color_option == product.options[1]
-                assign color_value = variant.option2
-              elsif color_option == product.options[2]
-                assign color_value = variant.option3
-              endif
-            %}
-            {% assign color_option = '' %}
-            {% for option in product.options_with_values %}
-              {% assign color_option = option.name %}
-            {% endfor %}
             <option
               class="swatch-option"
               value="{{ variant.id }}"
@@ -307,8 +285,7 @@
               <button
                 type="button"
                 class="rotate-animate variants__option-dropdown pointer input-style w-full inline-flex gap-10 align-center"
-                aria-expanded="false"
-                aria-controls="dropdown-{{ section.id }}-product-{{ product.id }}-position-{{ forloop.index0 }}"
+                title="{{ 'products.product.variant_select' | t }}"
               >
                 <span class="flex-1 flex align-center gap-10">
                   {%- if is_color_option -%}

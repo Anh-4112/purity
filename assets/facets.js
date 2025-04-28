@@ -4,7 +4,7 @@ class FacetFiltersForm extends HTMLElement {
   constructor() {
     super();
     this.onActiveFilterClick = this.onActiveFilterClick.bind(this);
-
+    this.container = document.getElementById("ProductsGridContainer");
     this.debouncedOnSubmit = NextSkyTheme.debounce((event) => {
       this.onSubmitHandler(event);
     }, 500);
@@ -47,7 +47,9 @@ class FacetFiltersForm extends HTMLElement {
   }
 
   static renderSectionFromFetch(url, event) {
-    event.target.closest("#ProductsGridContainer").classList.add("loading");
+    if (this.container) {
+      this.container.classList.add("loading");
+    }
     fetch(url)
       .then((response) => response.text())
       .then((responseText) => {
@@ -64,7 +66,9 @@ class FacetFiltersForm extends HTMLElement {
   }
 
   static renderSectionFromCache(filterDataUrl, event) {
-    event.target.closest("#ProductsGridContainer").classList.add("loading");
+    if (this.container) {
+      this.container.classList.add("loading");
+    }
     const html = FacetFiltersForm.filterData.find(filterDataUrl).html;
     const htmlRender = new DOMParser().parseFromString(html, "text/html");
     FacetFiltersForm.renderFilters(htmlRender, event);
@@ -132,7 +136,9 @@ class FacetFiltersForm extends HTMLElement {
         countsToRender,
         event.target.closest(".js-filter")
       );
-    event.target.closest("#ProductsGridContainer").classList.remove("loading");
+    if (this.container) {
+      this.container.classList.remove("loading");
+    }
   }
 
   static renderActiveFacets(html) {
