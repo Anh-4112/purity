@@ -28,57 +28,59 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }} flex">
-    {% if use_collection_image or background_image != blank %}
-      <div
-        class="banner__media absolute inset-0 h-{{ image_height }}"
-        style="--aspect-ratio: {%- if image_height == 'adapt' and use_collection_image and collection.image -%}{{ collection.image.aspect_ratio }}{% elsif section_st.image != blank and image_height == 'adapt' %}{{ section_st.image.aspect_ratio }}{%- else -%} 16/9{%- endif -%}"
-      >
-        {%- liquid
-          assign alt = collection.image.alt | default: collection.title | escape
-          assign width = collection.image.width
-          assign height = collection.image.height
-        -%}
-        {%- if use_collection_image and collection.image -%}
-          {{
-            collection.image
-            | image_url: width: 1500
-            | image_tag:
-              loading: 'lazy',
-              sizes: '100vw',
-              widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
-              height: height,
-              width: width,
-              alt: alt
-          }}
-        {%- elsif background_image != blank -%}
-          {{
-            section_st.image
-            | image_url: width: 1500
-            | image_tag: loading: 'lazy', sizes: '100vw', widths: '165, 360, 535, 750, 1070, 1500', alt: alt
-          }}
-        {%- else -%}
-          {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
-        {%- endif -%}
-      </div>
-    {% endif %}
-    <div class="heading-content w-full flex z-2 relative {{ section_st.desktop_content_position }}">
-      <div class="flex column">
-        {%- for block in section.blocks -%}
-          {%- case block.type -%}
-            {%- when 'heading' -%}
-              {% if collection.title != blank %}
-                <h2 class="heading-title">
-                  {{ collection.title }}
-                </h2>
-              {% endif %}
-            {%- when 'description' -%}
-              {% if collection.description != blank %}
-                <div class="heading-description rte">
-                  {{ collection.description }}
-                </div>
-              {% endif %}
-          {%- endcase -%}
-        {%- endfor -%}
+    <div class="relative">
+      {% if use_collection_image or background_image != blank %}
+        <div
+          class="banner__media absolute inset-0 h-{{ image_height }}"
+          style="--aspect-ratio: {%- if image_height == 'adapt' and use_collection_image and collection.image -%}{{ collection.image.aspect_ratio }}{% elsif section_st.image != blank and image_height == 'adapt' %}{{ section_st.image.aspect_ratio }}{%- else -%} 16/9{%- endif -%}"
+        >
+          {%- liquid
+            assign alt = collection.image.alt | default: collection.title | escape
+            assign width = collection.image.width
+            assign height = collection.image.height
+          -%}
+          {%- if use_collection_image and collection.image -%}
+            {{
+              collection.image
+              | image_url: width: 1500
+              | image_tag:
+                loading: 'lazy',
+                sizes: '100vw',
+                widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+                height: height,
+                width: width,
+                alt: alt
+            }}
+          {%- elsif background_image != blank -%}
+            {{
+              section_st.image
+              | image_url: width: 1500
+              | image_tag: loading: 'lazy', sizes: '100vw', widths: '165, 360, 535, 750, 1070, 1500', alt: alt
+            }}
+          {%- else -%}
+            {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
+          {%- endif -%}
+        </div>
+      {% endif %}
+      <div class="heading-content w-full flex z-2 relative {{ section_st.desktop_content_position }}">
+        <div class="flex column">
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'heading' -%}
+                {% if collection.title != blank %}
+                  <h2 class="heading-title">
+                    {{ collection.title }}
+                  </h2>
+                {% endif %}
+              {%- when 'description' -%}
+                {% if collection.description != blank %}
+                  <div class="heading-description rte">
+                    {{ collection.description }}
+                  </div>
+                {% endif %}
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
       </div>
     </div>
   </div>
