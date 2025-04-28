@@ -1,6 +1,8 @@
 {% liquid
+  assign theme_st = settings
   assign section_st = section.settings
   assign block_st = block.settings
+  assign scroll_animation = theme_st.scroll_animation
 %}
 
 <div
@@ -8,6 +10,12 @@
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
+  {%- if scroll_animation -%}
+    <motion-effect
+      data-animate="fade-up"
+      class="block"
+    >
+  {%- endif -%}
   {%- form 'customer', class: 'form-password-page', novalidate: 'novalidate' -%}
     <input
       type="hidden"
@@ -72,6 +80,9 @@
       </div>
     {%- endif -%}
   {%- endform -%}
+  {%- if scroll_animation -%}
+    </motion-effect>
+  {%- endif -%}
 </div>
 
 <script type="module">

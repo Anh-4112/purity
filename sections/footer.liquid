@@ -1,5 +1,7 @@
 {%- liquid
   assign section_st = section.settings
+  assign theme_st = settings
+  assign scroll_animation = theme_st.scroll_animation
   assign menu_store_policies = section_st.menu_store_policies
   assign payment_enable = section_st.payment_enable
 
@@ -68,112 +70,137 @@
                         <div class="footer-block__newsletter-heading">
                           {% assign animate_delay = 25 %}
                           {%- if block_st.heading != blank -%}
-                            <motion-effect
-                              data-animate="fade-up"
-                              data-animate-delay="{{ animate_delay }}"
-                              class="block footer__block-heading h6 flex space-between align-center collapsible-title relative py-20 mb-md-5"
+                            {%- if scroll_animation -%}
+                              <motion-effect
+                                data-animate="fade-up"
+                                data-animate-delay="{{ animate_delay }}"
+                                class="block"
+                              >
+                            {%- endif -%}
+
+                            <h6
+                              class="footer__block-heading flex space-between align-center collapsible-title relative py-20 mb-md-5"
                             >
                               {{- block_st.heading | escape -}}
-                            </motion-effect>
+                            </h6>
+                            {%- if scroll_animation -%}
+                              </motion-effect>
+                            {%- endif -%}
                           {%- endif -%}
                           {%- if block_st.description != blank -%}
                             {% assign animate_delay = animate_delay | plus: 5 %}
-                            <motion-effect
-                              data-animate="fade-up"
-                              data-animate-delay="{{ animate_delay }}"
-                              class="block footer__block-description mb-20"
+                            {%- if scroll_animation -%}
+                              <motion-effect
+                                data-animate="fade-up"
+                                data-animate-delay="{{ animate_delay }}"
+                                class="block"
+                              >
+                            {%- endif -%}
+                            <div
+                              class="footer__block-description mb-20"
                             >
                               {{ block_st.description }}
-                            </motion-effect>
+                            </div>
+                            {%- if scroll_animation -%}
+                              </motion-effect>
+                            {%- endif -%}
                           {%- endif -%}
                         </div>
                       {%- endif -%}
                       {% assign animate_delay = animate_delay | plus: 5 %}
-                      <motion-effect
-                        data-animate="fade-up"
-                        data-animate-delay="{{ animate_delay }}"
-                        class="block"
-                      >
-                        {%- form 'customer',
-                          id: 'ContactFooter',
-                          class: 'footer__newsletter newsletter-form',
-                          novalidate: 'novalidate'
-                        -%}
-                          <input type="hidden" name="contact[tags]" value="newsletter">
-                          <div class="newsletter-form__field-wrapper mb-20">
-                            <div class="field relative">
-                              <div class="flex gap-10">
-                                <input
-                                  id="NewsletterForm--{{ section.id }}"
-                                  type="email"
-                                  name="contact[email]"
-                                  class="field__input show-placeholder grow-1 w-custom"
-                                  style="--width: calc(100% - 65px)"
-                                  value="{{ form.email }}"
-                                  aria-required="true"
-                                  autocapitalize="off"
-                                  autocomplete="email"
-                                  {% if form.errors %}
-                                    aria-invalid="true"
-                                    aria-describedby="ContactFooter-error"
-                                  {% elsif form.posted_successfully? %}
-                                    aria-describedby="ContactFooter-success"
-                                  {% endif %}
-                                  placeholder="{%- if block_st.email_placeholder != blank -%}{{ block_st.email_placeholder }} {%- else -%} {{ 'newsletter.label' | t }} {%- endif -%}"
-                                  required
-                                  pattern=".+\.[a-zA-Z]{2,6}"
-                                >
-                                <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
-                                  {{ 'newsletter.label' | t }}
-                                  <span class="required">*</span></label
-                                >
-                                <button
-                                  class="newsletter-form__button btn p-0 btn-primary btn-hover wh-55"
-                                  id="Subscribe-{{ section.id }}"
-                                  aria-label="{{ 'subscribe.button_label' | t }}"
-                                >
-                                  <svg class="hidden-on-load transition-short" width="6" height="11" fill="none">
-                                    <use href="#icon-next" />
-                                  </svg>
-                                  {%- render 'loader' -%}
-                                </button>
-                              </div>
-                            </div>
-                            {%- if form.errors -%}
-                              <div
-                                class="newsletter-form__message form__message error fs-small inline-flex align-center gap-10 mt-10"
-                                id="ContactFooter-error"
-                              >
-                                {%- render 'icon-error' -%}
-                                <span>
-                                  {{- form.errors.translated_fields.email | capitalize }}
-                                  {{ form.errors.messages.email -}}
-                                </span>
-                              </div>
-                            {%- endif -%}
-                          </div>
-                          {%- if form.posted_successfully? -%}
-                            <div
-                              class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex align-center gap-10"
-                              id="ContactFooter-success"
-                              tabindex="-1"
-                            >
-                              {%- render 'icon-success' -%}
-                              <span>{{- 'newsletter.success' | t }}</span>
-                            </div>
-                          {%- else -%}
-                          {%- endif -%}
-                        {%- endform -%}
-                      </motion-effect>
-                      {%- if block_st.note != blank -%}
-                        {% assign animate_delay = animate_delay | plus: 5 %}
+                      {%- if scroll_animation -%}
                         <motion-effect
                           data-animate="fade-up"
                           data-animate-delay="{{ animate_delay }}"
-                          class="block footer__block-note fs-small"
+                          class="block"
                         >
-                          {{ block_st.note }}
+                      {%- endif -%}
+                      {%- form 'customer',
+                        id: 'ContactFooter',
+                        class: 'footer__newsletter newsletter-form',
+                        novalidate: 'novalidate'
+                      -%}
+                        <input type="hidden" name="contact[tags]" value="newsletter">
+                        <div class="newsletter-form__field-wrapper mb-20">
+                          <div class="field relative">
+                            <div class="flex gap-10">
+                              <input
+                                id="NewsletterForm--{{ section.id }}"
+                                type="email"
+                                name="contact[email]"
+                                class="field__input show-placeholder grow-1 w-custom"
+                                style="--width: calc(100% - 65px)"
+                                value="{{ form.email }}"
+                                aria-required="true"
+                                autocapitalize="off"
+                                autocomplete="email"
+                                {% if form.errors %}
+                                  aria-invalid="true"
+                                  aria-describedby="ContactFooter-error"
+                                {% elsif form.posted_successfully? %}
+                                  aria-describedby="ContactFooter-success"
+                                {% endif %}
+                                placeholder="{%- if block_st.email_placeholder != blank -%}{{ block_st.email_placeholder }} {%- else -%} {{ 'newsletter.label' | t }} {%- endif -%}"
+                                required
+                                pattern=".+\.[a-zA-Z]{2,6}"
+                              >
+                              <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
+                                {{ 'newsletter.label' | t }}
+                                <span class="required">*</span></label
+                              >
+                              <button
+                                class="newsletter-form__button btn p-0 btn-primary btn-hover wh-55"
+                                id="Subscribe-{{ section.id }}"
+                                aria-label="{{ 'subscribe.button_label' | t }}"
+                              >
+                                <svg class="hidden-on-load transition-short" width="6" height="11" fill="none">
+                                  <use href="#icon-next" />
+                                </svg>
+                                {%- render 'loader' -%}
+                              </button>
+                            </div>
+                          </div>
+                          {%- if form.errors -%}
+                            <div
+                              class="newsletter-form__message form__message error fs-small inline-flex align-center gap-10 mt-10"
+                              id="ContactFooter-error"
+                            >
+                              {%- render 'icon-error' -%}
+                              <span>
+                                {{- form.errors.translated_fields.email | capitalize }}
+                                {{ form.errors.messages.email -}}
+                              </span>
+                            </div>
+                          {%- endif -%}
+                        </div>
+                        {%- if form.posted_successfully? -%}
+                          <div
+                            class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex align-center gap-10"
+                            id="ContactFooter-success"
+                            tabindex="-1"
+                          >
+                            {%- render 'icon-success' -%}
+                            <span>{{- 'newsletter.success' | t }}</span>
+                          </div>
+                        {%- else -%}
+                        {%- endif -%}
+                      {%- endform -%}
+                      {%- if scroll_animation -%}
                         </motion-effect>
+                      {%- endif -%}
+                      {%- if block_st.note != blank -%}
+                        {% assign animate_delay = animate_delay | plus: 5 %}
+                        {%- if scroll_animation -%}
+                          <motion-effect
+                            data-animate="fade-up"
+                            data-animate-delay="{{ animate_delay }}"
+                            class="block"
+                          >
+                        {%- endif -%}
+                        <div class="footer__block-note fs-small">{{ block_st.note }}</div>
+                        {%- if scroll_animation -%}
+                          </motion-effect>
+                        {%- endif -%}
                       {%- endif -%}
                     </div>
                   </div>
@@ -186,11 +213,14 @@
                       open
                     >
                       <summary class="collapsible-row__summary pointer-md-none py-20 mb-md-5">
-                        <motion-effect
-                          data-animate="fade-up"
-                          data-animate-delay="{{ animate_delay }}"
-                          class="block h6 footer__block-heading flex space-between align-center collapsible-heading"
-                        >
+                        {%- if scroll_animation -%}
+                          <motion-effect
+                            data-animate="fade-up"
+                            data-animate-delay="{{ animate_delay }}"
+                            class="block"
+                          >
+                        {%- endif -%}
+                        <h6 class="footer__block-heading flex space-between align-center collapsible-heading">
                           <span>
                             {{- block_st.heading | default: block_st.menu.title | escape -}}
                           </span>
@@ -199,26 +229,33 @@
                               <use href="#icon-arrow-down"></use>
                             </svg>
                           {%- endif -%}
-                        </motion-effect>
+                        </h6>
+                        {%- if scroll_animation -%}
+                          </motion-effect>
+                        {%- endif -%}
                       </summary>
                       {%- if block_st.menu != blank -%}
                         <ul class="footer__block-content collapsible-row__content list-unstyled overflow-hidden-mb">
                           {%- for link in block_st.menu.links -%}
                             {% assign animate_delay = animate_delay | plus: 5 %}
                             <li class="mb-10">
-                              <motion-effect
-                                data-animate="fade-up"
-                                data-animate-delay="{{ animate_delay }}"
-                                class="block"
-                              >
-                                <a
-                                  href="{{ link.url }}"
-                                  aria-label="{{ link.title }}"
-                                  class="{% if link.active %} list-menu__item--active{% endif %}"
+                              {%- if scroll_animation -%}
+                                <motion-effect
+                                  data-animate="fade-up"
+                                  data-animate-delay="{{ animate_delay }}"
+                                  class="block"
                                 >
-                                  {{ link.title }}
-                                </a>
-                              </motion-effect>
+                              {%- endif -%}
+                              <a
+                                href="{{ link.url }}"
+                                aria-label="{{ link.title }}"
+                                class="{% if link.active %} list-menu__item--active{% endif %}"
+                              >
+                                {{ link.title }}
+                              </a>
+                              {%- if scroll_animation -%}
+                                </motion-effect>
+                              {%- endif -%}
                             </li>
                           {%- endfor -%}
                         </ul>
@@ -234,18 +271,24 @@
                   >
                     {%- if block_st.store_heading != blank -%}
                       <summary class="collapsible-row__summary pointer-md-none py-20 mb-md-5">
-                        <motion-effect
-                          data-animate="fade-up"
-                          data-animate-delay="{{ animate_delay }}"
-                          class="block h6 footer__block-heading flex space-between align-center collapsible-heading relative"
-                        >
+                        {%- if scroll_animation -%}
+                          <motion-effect
+                            data-animate="fade-up"
+                            data-animate-delay="{{ animate_delay }}"
+                            class="block h6 "
+                          >
+                        {%- endif -%}
+                        <h6 class="footer__block-heading flex space-between align-center collapsible-heading relative">
                           <span>
                             {{ block_st.store_heading | escape }}
                           </span>
                           <svg class="icon icon-down icon-rotate transition-short hidden-md" width="10" height="6">
                             <use href="#icon-arrow-down"></use>
                           </svg>
-                        </motion-effect>
+                        </h6>
+                        {%- if scroll_animation -%}
+                          </motion-effect>
+                        {%- endif -%}
                       </summary>
                     {%- endif -%}
                     <div
@@ -256,23 +299,30 @@
                           <div class="footer_store-infor flex column">
                             {%- if block_st.store_address != blank -%}
                               {% assign animate_delay = animate_delay | plus: 5 %}
-                              <motion-effect
-                                data-animate="fade-up"
-                                data-animate-delay="{{ animate_delay }}"
-                                class="block footer__store-info"
-                              >
-                                <div class="footer__info-content">
-                                  {{ block_st.store_address }}
-                                </div>
-                              </motion-effect>
+                              {%- if scroll_animation -%}
+                                <motion-effect
+                                  data-animate="fade-up"
+                                  data-animate-delay="{{ animate_delay }}"
+                                  class="block footer__store-info"
+                                >
+                              {%- endif -%}
+                              <div class="footer__info-content">
+                                {{ block_st.store_address }}
+                              </div>
+                              {%- if scroll_animation -%}
+                                </motion-effect>
+                              {%- endif -%}
                             {%- endif -%}
                             {%- if block_st.store_phone != blank -%}
                               {% assign animate_delay = animate_delay | plus: 5 %}
-                              <motion-effect
-                                data-animate="fade-up"
-                                data-animate-delay="{{ animate_delay }}"
-                                class="block footer__store-info"
-                              >
+                              {%- if scroll_animation -%}
+                                <motion-effect
+                                  data-animate="fade-up"
+                                  data-animate-delay="{{ animate_delay }}"
+                                  class="block"
+                                >
+                              {%- endif -%}
+                              <div class="footer__store-info">
                                 <a
                                   href="tel:{{ block_st.store_phone }}"
                                   class="footer__info-content"
@@ -280,59 +330,83 @@
                                 >
                                   {{ block_st.store_phone }}
                                 </a>
-                              </motion-effect>
+                              </div>
+                              {%- if scroll_animation -%}
+                                </motion-effect>
+                              {%- endif -%}
                             {%- endif -%}
                             {%- if block_st.store_email != blank -%}
                               {% assign animate_delay = animate_delay | plus: 5 %}
-                              <motion-effect
-                                data-animate="fade-up"
-                                data-animate-delay="{{ animate_delay }}"
-                                class="block footer__store-info"
-                              >
+                              {%- if scroll_animation -%}
+                                <motion-effect
+                                  data-animate="fade-up"
+                                  data-animate-delay="{{ animate_delay }}"
+                                  class="block"
+                                >
+                              {%- endif -%}
+                              <div class="footer__store-info">
                                 <a
                                   href="mailto:{{ block_st.store_email }}"
                                   class="footer__info-content"
                                 >
                                   {{ block_st.store_email }}
                                 </a>
-                              </motion-effect>
+                              </div>
+                              {%- if scroll_animation -%}
+                                </motion-effect>
+                              {%- endif -%}
                             {%- endif -%}
                           </div>
                         {%- endif -%}
                         {%- if shop.features.follow_on_shop? and section_st.enable_follow_on_shop -%}
                           {% assign animate_delay = animate_delay | plus: 5 %}
-                          <motion-effect
-                            data-animate="fade-up"
-                            data-animate-delay="{{ animate_delay }}"
-                            class="block footer__follow-on-shop"
-                          >
+                          {%- if scroll_animation -%}
+                            <motion-effect
+                              data-animate="fade-up"
+                              data-animate-delay="{{ animate_delay }}"
+                              class="block"
+                            >
+                          {%- endif -%}
+                          <div class="footer__follow-on-shop">
                             {% comment %} TODO: enable theme-check once `login_button` is accepted as valid filter {% endcomment %}
                             {% # theme-check-disable %}
                             {{ shop | login_button: action: 'follow' }}
                             {% # theme-check-enable %}
-                          </motion-effect>
+                          </div>
+                          {%- if scroll_animation -%}
+                            </motion-effect>
+                          {%- endif -%}
                         {%- endif -%}
                         {%- if block_st.show_social -%}
                           {% assign animate_delay = animate_delay | plus: 5 %}
-                          <motion-effect
-                            data-animate="fade-up"
-                            data-animate-delay="{{ animate_delay }}"
-                            class="block"
-                          >
-                            <social-icon class="social-icon">
-                              {% render 'social-icons' %}
-                            </social-icon>
-                          </motion-effect>
+                          {%- if scroll_animation -%}
+                            <motion-effect
+                              data-animate="fade-up"
+                              data-animate-delay="{{ animate_delay }}"
+                              class="block"
+                            >
+                          {%- endif -%}
+
+                          <social-icon class="social-icon">
+                            {% render 'social-icons' %}
+                          </social-icon>
+                          {%- if scroll_animation -%}
+                            </motion-effect>
+                          {%- endif -%}
                         {%- endif -%}
                         {%- if block_st.store_description != blank -%}
                           {% assign animate_delay = animate_delay | plus: 5 %}
-                          <motion-effect
-                            data-animate="fade-up"
-                            data-animate-delay="{{ animate_delay }}"
-                            class="block footer__block-info"
-                          >
-                            {{ block_st.store_description }}
-                          </motion-effect>
+                          {%- if scroll_animation -%}
+                            <motion-effect
+                              data-animate="fade-up"
+                              data-animate-delay="{{ animate_delay }}"
+                              class="block"
+                            >
+                          {%- endif -%}
+                          <div class="footer__block-info">{{ block_st.store_description }}</div>
+                          {%- if scroll_animation -%}
+                            </motion-effect>
+                          {%- endif -%}
                         {%- endif -%}
                       </div>
                     </div>
@@ -344,6 +418,14 @@
       {%- endif -%}
     </div>
   </div>
+  {% assign animate_delay = animate_delay | plus: 5 %}
+  {%- if scroll_animation -%}
+    <motion-effect
+      data-animate="fade-up"
+      data-animate-delay="{{ animate_delay }}"
+      class="block"
+    >
+  {%- endif -%}
   <div class="footer__bottom">
     <div class="{{ section_width }} pb-custom" style="--space-bottom: 100">
       <div
@@ -418,6 +500,9 @@
       {%- endif -%}
     </div>
   </div>
+  {%- if scroll_animation -%}
+    </motion-effect>
+  {%- endif -%}
 </footer>
 <script type="module">
   import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
