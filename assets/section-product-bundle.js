@@ -1,4 +1,5 @@
 import * as NextSkyTheme from "global";
+import { LazyLoader } from "module-lazyLoad";
 if (!customElements.get("product-form-bundle")) {
   customElements.define(
     "product-form-bundle",
@@ -98,6 +99,7 @@ if (!customElements.get("product-form-bundle")) {
             console.error("Error adding product to bundle:", error);
           })
           .finally(() => {
+            new LazyLoader(".image-lazy-load");
             this.updateBundleButtonStatus();
             this.updateBundleTotal();
             document.dispatchEvent(new CustomEvent("bundle:item-changed"));
