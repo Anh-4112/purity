@@ -1,12 +1,25 @@
-{% assign block_st = block.settings %}
+{% liquid
+  assign theme_st = settings
+  assign block_st = block.settings
+  assign scroll_animation = theme_st.scroll_animation
+%}
 <div
   class="block__heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
+  {%- if scroll_animation -%}
+    <motion-effect
+      data-animate="fade-up"
+      class="block"
+    >
+  {%- endif -%}
   <social-icon class="social-icon">
     {% render 'social-icons' %}
   </social-icon>
+  {%- if scroll_animation -%}
+    </motion-effect>
+  {%- endif -%}
 </div>
 
 {% schema %}
