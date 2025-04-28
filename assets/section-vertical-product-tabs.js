@@ -380,7 +380,7 @@ class SuitableFinder extends ProductTabs {
         super.connectedCallback();
         
         if (this._dot && this._rangeSlider) {
-            const offsetWidth = this._tabHeaderContent.offsetWidth;
+            const offsetWidth = this._tabHeaderContent?.offsetWidth || 0;
             this._rangeSlider.style.setProperty(
               "--width-range-slider",
               offsetWidth + "px"
