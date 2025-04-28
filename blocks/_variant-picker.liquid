@@ -1,10 +1,15 @@
 {%- liquid
+  assign theme_st = settings
   assign product = closest.product
   assign variant_type = block.settings.variant_type
+  assign color_swatch_type = theme_st.color_swatch_type
 -%}
 {% if product.metafields.custom.external_affiliate == blank %}
   {%- unless product.has_only_default_variant -%}
-    <div class="main-product-block main-product-variant-picker" {{ block.shopify_attributes }}>
+    <div
+      class="main-product-block main-product-variant-picker variant-swatch-{{ color_swatch_type }}"
+      {{ block.shopify_attributes }}
+    >
       {%- assign is_dropdown = false -%}
       {% if variant_type == 'dropdown' %}
         {%- assign is_dropdown = true -%}
