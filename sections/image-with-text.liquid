@@ -70,7 +70,7 @@
           {% endif %}
         >
           {%- liquid
-            assign alt = 'general.image.image_alt_default' | t
+            assign alt = 'accessibility.promotion_banner' | t
             if section_st.image.alt
               assign alt = section_st.image.alt | escape
             endif
@@ -80,7 +80,9 @@
               type: 'other',
               container: section_width,
               image: section_st.image,
-              image_alt: alt
+              image_alt: alt,
+              animate: 'zoom-out-small',
+              motion: true
             %}
           {% else %}
             {% render 'placeholder-render', type: 'collection-6', class: 'img-placeholder h-full w-full' %}
@@ -133,7 +135,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "t:sections.all.how_to_use"
+      "content": "t:sections.image-with-text.how_to_use"
     },
     {
       "type": "header",

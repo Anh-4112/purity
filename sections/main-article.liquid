@@ -23,9 +23,6 @@
     itemscope
     itemtype="http://schema.org/BlogPosting"
   >
-    <div class="single-post-breadcrumbs">
-      {%- render 'breadcrumbs' -%}
-    </div>
     <div class="flex column gap-20 gap-1025-40">
       {%- for block in section.blocks -%}
         {% assign block_st = block.settings %}
@@ -41,7 +38,7 @@
                   {{ blog.title }}
                 </a>
               {% endif %}
-              <h1 class="article-template__title mt-5 mb-10" itemprop="headline">
+              <h1 class="article-template__title mt-10 mb-10" itemprop="headline">
                 {{ article.title | escape }}
               </h1>
               <ul class="article-card__info post-meta list-unstyled flex wrap capitalize medium-weight fs-small grey-color">
@@ -139,7 +136,7 @@
                     <span class="heading-style">{{ 'blogs.article.tags' | t }}:</span>
                     <ul class="flex wrap align-center list-unstyled gap-10">
                       {% for tag in article.tags limit: 8 %}
-                        <li class="transition fs-small text-color btn-tag p-0 medium-weight">
+                        <li class="transition fs-small text-color btn-tag p-0 lh-global btn body-weight">
                           {{- tag | link_to_tag: tag -}}
                         </li>
                       {% endfor %}
@@ -210,7 +207,7 @@
                 {% if blog.previous_article != null %}
                   <a href="{{ blog.previous_article.url }}" class="previous flex-1">
                     <div class="content">
-                      <div class="btn-text-transform">
+                      <div class="btn-text-transform mb-10">
                         <svg
                           class="icon-back min-w-custom me-10"
                           width="6"

@@ -251,9 +251,6 @@ blockquote {
 .py-5 {
   padding-block: 0.5rem;
 }
-.py-10 {
-  padding-block: 1rem;
-}
 .py-12 {
   padding-block: 1.2rem;
 }
@@ -691,7 +688,20 @@ blockquote {
 modal-popup :is(.modal-overlay) {
   z-index: 15;
 }
-.modal-popup-inner .drawer__body > *:not(.modal-shopable_content),
+.modal-inner
+  .drawer__body
+  .quickview-product
+  :is(> div .shopify-block, media-gallery__image) {
+  opacity: 0;
+  transition: var(--transition);
+}
+.modal.active
+  .drawer__body
+  .quickview-product
+  :is(> div .shopify-block, media-gallery__image) {
+  opacity: 1;
+}
+.modal-popup-inner .drawer__body:not(.drawer__body-shopable-video) > *,
 .animate-motion .slideIn-animate {
   opacity: 0;
   transform: translateY(2rem);
@@ -701,7 +711,7 @@ modal-popup :is(.modal-overlay) {
 }
 .modal.active
   .modal-popup-inner
-  .drawer__body
+  .drawer__body:not(.drawer__body-shopable-video)
   > *:not(.model_media, .spin, .modal-shopable_content),
 :is(.animate-motion.detail-open, .animate-motion.active) .slideIn-animate {
   animation: slideIn var(--transition)
@@ -715,7 +725,7 @@ modal-popup :is(.modal-overlay) {
 .remove-after:not(.active) .modal-inner .shopify-block,
 .remove-after:not(.active)
   .modal-popup-inner
-  .drawer__body
+  .drawer__body:not(.drawer__body-shopable-video)
   > *:not(.model_media, .spin) {
   animation: slideOut var(--transition)
     var(--timing-function, cubic-bezier(0.5, -0.03, 0.34, 0.83)) forwards;
@@ -1962,4 +1972,7 @@ html:not(.open-nav, .open-canvas) mobile-navigation-bar {
   pointer-events: auto;
   transform: translateY(0);
   -webkit-transform: translateY(0);
+}
+.filter-layout.loading :is(.loading-filter, .icon-loader) {
+  opacity: 1;
 }

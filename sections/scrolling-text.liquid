@@ -85,7 +85,7 @@
                   assign image_alt = image.alt | default: image_alt_default | escape
                 -%}
                 <a
-                  class="scrolling-image-item overflow-hidden flex align-center rounded w-custom-mb w-custom h-full"
+                  class="scrolling-image-item relative overflow-hidden flex align-center rounded w-custom-mb w-custom h-full"
                   style="--width-mb:{{ block_st.image_width_mb }}px;--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
                   {% if link_image == blank %}
                     role="link" aria-disabled="true"
@@ -102,13 +102,14 @@
                     %}
                   {%- elsif image != blank and icon_svg == 'none' -%}
                     <div
-                      class="scrolling-image image_scroll rounded flex"
+                      class="scrolling-image image_scroll rounded flex w-full"
                       style="--image-width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
                     >
                       {% render 'responsive-image',
                         image: image,
                         type: 'other',
                         image_alt: image_alt,
+                        container: section_st,
                         class: 'h-full w-full object-fit-cover'
                       %}
                     </div>
@@ -139,7 +140,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "t:sections.all.how_to_use"
+      "content": "t:sections.scrolling_text.how_to_use"
     },
     {
       "type": "header",

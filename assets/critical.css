@@ -147,12 +147,12 @@ summary::-webkit-details-marker {
 :where(.h0) {
   --size: clamp(4rem, calc(4rem + (70 - 40) * var(--responsive-rate)), 7rem);
 }
-:where(h2, .h2) {
-  --size: clamp(3rem, calc(3rem + (40 - 30) * var(--responsive-rate)), 4rem);
-}
 :where(h1, .h1),
 .h1-size {
   --size: clamp(4rem, calc(4rem + (50 - 40) * var(--responsive-rate)), 5rem);
+}
+:where(h2, .h2) {
+  --size: clamp(3rem, calc(3rem + (40 - 30) * var(--responsive-rate)), 4rem);
 }
 :where(h3, .h3) {
   --size: clamp(
@@ -192,6 +192,7 @@ video {
   fill: rgba(51, 50, 50, 0.35);
   background-color: #eee;
   display: block;
+  border-radius: inherit;
 }
 [style*="--aspect-ratio"] {
   position: relative;
@@ -297,13 +298,13 @@ mark {
 .checkmark:before {
   content: "";
   display: inline-flex;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  width: var(--checkmark_width, 28px);
+  height: var(--checkmark_width, 28px);
+  border-radius: var(--checkmark_rounded, 50%);
   border: 1px solid var(--color-border);
   background-color: rgb(var(--color-white));
   position: relative;
-  top: 2px;
+  top: var(--checkmark_top, 2px);
   transition: var(--bls-transition);
 }
 .checkmark:after {
@@ -311,7 +312,7 @@ mark {
   position: absolute;
   opacity: 0;
   left: 50%;
-  top: 50%;
+  top: var(--check_position, 50%);
   width: 5px;
   height: 10px;
   border: solid rgb(var(--color-white));
@@ -455,6 +456,9 @@ input[type="checkbox"]:checked + .checkmark:before {
 .bg-primary {
   background: var(--color-primary);
 }
+.color-primary {
+  color: var(--color-primary);
+}
 .bg-sale {
   background-color: rgba(var(--sale-bg-rgb), var(--opacity, 1));
   color: var(--sale-color);
@@ -565,9 +569,6 @@ input[type="checkbox"]:checked + .checkmark:before {
 }
 .lh-normal {
   line-height: normal;
-}
-.shadow {
-  box-shadow: 5px 0px 30px 0px rgba(0, 0, 0, 0.05);
 }
 .blur {
   backdrop-filter: blur(var(--blur, 3px));
@@ -812,6 +813,10 @@ a.hover-heading-color:hover,
   border-radius: 10px;
   clip-path: inset(0 0 0 0 round 10px);
 }
+.shadow {
+  box-shadow: 5px 0px 30px 0px rgba(0, 0, 0, 0.05);
+  clip-path: unset;
+}
 .border-0 {
   border: 0;
 }
@@ -862,6 +867,9 @@ a.hover-heading-color:hover,
 .row-gap-0 {
   row-gap: 0;
 }
+.row-gap-10 {
+  row-gap: 1rem;
+}
 .row-gap-20 {
   row-gap: 2rem;
 }
@@ -870,6 +878,9 @@ a.hover-heading-color:hover,
 }
 :where(.gap) {
   gap: var(--row-gap, var(--gap)) var(--gap, 2rem);
+}
+.row-as-col-gap {
+  row-gap: var(--gap);
 }
 .swiper:not([class*="initialized"]) .swiper-wrapper {
   gap: var(--gap, 2rem);
@@ -897,6 +908,7 @@ a.hover-heading-color:hover,
 }
 :where(.gap-10) {
   --gap: 1rem;
+  --gap-desktop: 1rem;
   gap: var(--gap);
 }
 :where(.gap-15) {
@@ -1025,6 +1037,12 @@ a.hover-heading-color:hover,
 }
 .py-7 {
   padding-block: 0.7rem;
+}
+.py-10 {
+  padding-block: 1rem;
+}
+.py-11 {
+  padding-block: 1.1rem;
 }
 .py-15 {
   padding-top: 1.5rem;
@@ -1600,6 +1618,9 @@ quantity-input input {
   .flex-md-wrap {
     flex-wrap: wrap;
   }
+  .nowrap-md {
+    flex-wrap: nowrap;
+  }
   .border-bottom-md-0 {
     border-bottom: 0;
   }
@@ -1608,8 +1629,11 @@ quantity-input input {
     width: var(--col-width, 50%);
   }
   .col-md-remaining {
-    flex: 0 0 calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
-    width: calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
+    flex: 0 0 calc(100% - var(--col-width) - var(--gap));
+    width: calc(100% - var(--col-width) - var(--gap));
+  }
+  .w-md-custom {
+    width: var(--width);
   }
   .mb-md-5 {
     margin-bottom: 0.5rem;
@@ -1730,6 +1754,9 @@ quantity-input input {
     --col: var(--col-desktop, var(--col-number));
     --gap-custom: var(--gap-desktop, var(--gap));
   }
+  .visibility-hidden-1025 {
+    visibility: hidden;
+  }
   .hidden-1025 {
     display: none;
   }
@@ -1766,6 +1793,10 @@ quantity-input input {
   }
   :where(.gap) {
     gap: var(--row-gap, var(--gap)) var(--gap-desktop, var(--gap));
+  }
+
+  .row-as-col-gap {
+    row-gap: var(--gap-desktop, var(--gap));
   }
   .gap-1025-40 {
     gap: 4rem;
@@ -1862,6 +1893,10 @@ quantity-input input {
     width: var(--col-width, 50%);
   }
   .col-1025-remaining {
+    flex: 0 0 calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
+    width: calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
+  }
+  .col-md-remaining {
     flex: 0 0 calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
     width: calc(100% - var(--col-width) - var(--gap-desktop, var(--gap)));
   }
@@ -1987,6 +2022,8 @@ th {
   }
   .drawer-mb-bottom {
     transform: translateY(100%);
-    
   }
+}
+.spinning-text__content span {
+  font-family: monospace;
 }

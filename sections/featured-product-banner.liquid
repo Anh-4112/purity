@@ -151,7 +151,7 @@
                   {% if block_st.highlight_text_icon != 'none' %}
                     {% render 'icon_svg_list', icon: block_st.highlight_text_icon %}
                   {% endif %}
-                  <span>{{ block_st.highlight_text | escape }}</span>
+                  <span>{{ block_st.title | escape }}</span>
                 </div>
                 <svg width="25" height="25" fill="none" class="absolute balloon-icon hidden block-1025">
                   <ellipse cx="21" cy="20.999" fill="var(--color-background-2)" rx="4" ry="3.999"/><ellipse cx="9" cy="8.998" fill="var(--color-background-2)" rx="9" ry="8.998"/>
@@ -381,7 +381,7 @@
       "settings": [
         {
           "type": "text",
-          "id": "highlight_text",
+          "id": "title",
           "default": "Icon with text",
           "label": "t:sections.all.content_setting.content"
         },
@@ -462,7 +462,7 @@
         {
           "type": "range",
           "id": "position_top",
-          "label": "t:sections.bundle-products.blocks.settings.position_top",
+          "label": "t:sections.featured_product_banner.blocks.image_effect.position_top",
           "min": 0,
           "max": 100,
           "unit": "%",
@@ -472,7 +472,7 @@
         {
           "type": "range",
           "id": "position_left",
-          "label": "t:sections.bundle-products.blocks.settings.position_left",
+          "label": "t:sections.featured_product_banner.blocks.image_effect.position_left",
           "min": 0,
           "max": 100,
           "unit": "%",

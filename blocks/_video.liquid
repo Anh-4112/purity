@@ -68,7 +68,13 @@
           class="video-thumbnail z-2 absolute banner__media overflow-hidden"
         >
           {%- if poster != null -%}
-            {% render 'responsive-image', type: 'other', image: poster, image_alt: image_alt_default %}
+            {% render 'responsive-image',
+              type: 'other',
+              image: poster,
+              image_alt: image_alt_default,
+              animate: 'zoom-out-small',
+              motion: true
+            %}
           {%- else -%}
             {%- render 'placeholder-render', type: 'lifestyle-1' -%}
           {%- endif -%}

@@ -383,11 +383,13 @@
           class="modal-popup-inner h-content h-content transition max-w-custom m-auto invisible-1025 fixed inset-0 z-20 w-full"
           style="--max-width: 80rem;"
         >
-          <div class="modal-nav">
+          <div class="modal-nav hidden block-1025 transition">
             {%- render 'swiper-navigation' -%}
           </div>
-          <div class="modal-pagination hidden-1025 absolute z-3 top-10 left-10 bg-white blur shadow fs-small heading-color lh-normal rounded">
-            <div class="swiper-pagination swiper-pagination-modal"></div>
+          <div class="modal-pagination hidden-1025">
+            <div
+              class="swiper-pagination swiper-pagination-modal absolute bg-white blur shadow fs-small heading-color lh-normal rounded"
+            ></div>
           </div>
           <button
             is="button-close-model"
@@ -419,13 +421,9 @@
                     id="Product-{{ block.id }}"
                   >
                     <button
-                      class="modal__close-information hidden-important pointer btn-hover overflow-hidden btn-reset wh-40 wh-1025-50 bg-white blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow heading-color"
+                      class="modal__close-information hidden-important pointer btn-hover overflow-hidden btn-reset inline-flex content-center absolute z-2 inset-0 heading-color"
                       aria-label="Close"
-                    >
-                      <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-                        <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
-                      </svg>
-                    </button>
+                    ></button>
                     <div
                       class="flex flex-cols wrap relative modal-shopable_content w-full"
                       style="--gap: 0px; --col-desktop: 2;--col-tablet: 1; --col-number: 1;"
@@ -472,6 +470,20 @@
                           style="--aspect-ratio: {{ video_ratio }};"
                         >
                           {% if local_video != blank %}
+                            <button
+                              aria-label="{{ 'accessibility.play_button.video' | t }}"
+                              class="play-button play-button-popup btn-{{ block.id }} pointer border-0 absolute z-2 inline-flex align-center justify-content-center active"
+                            >
+                              {% render 'icon-play' %}
+                              {% render 'icon-pause' %}
+                            </button>
+                            <button
+                              aria-label="{{ 'accessibility.mute_button.video' | t }}"
+                              class="hidden active mute-button mute-button-popup pointer absolute z-2 right-15 bottom-15 border-0 inline-flex-1025 align-center justify-content-center"
+                            >
+                              {% render 'icon-mute-open' %}
+                              {% render 'icon-mute-close' %}
+                            </button>
                             {%- liquid
                               assign source = local_video.sources
                               assign source_url = ''
@@ -490,7 +502,6 @@
                               preload="auto"
                               loop
                               playsinline
-                              controls
                               autoplay
                               poster="{{ poster }}"
                               data-src="{{ source_url }}"
@@ -520,40 +531,49 @@
                         </div>
                       {% endif %}
                       <div
-                        class="popup-information__mobile z-2 hidden-1025 shadow rounded-10 overflow-hidden flex align-center space-between absolute bottom-20 right-20 left-20 pe-20"
+                        class="flex column hidden-1025 absolute bottom-20 right-20 left-20 pe-20"
                         style="--width: 7.5rem;"
                       >
-                        {% render 'card-product',
-                          card_product: card_product,
-                          section_id: section.id,
-                          show_video: false,
-                          disable_quickview: true,
-                          disable_badge: true,
-                          disable_rate: true,
-                          disable_vendor: true,
-                          disable_hover_image: true,
-                          show_quick_add: true,
-                          disable_color_swatches: true,
-                          class: ' z-2',
-                          style_layout: ' flex',
-                          image_class: ' flex-auto w-custom rounded-10 w-full-1025',
-                          image_rounded: ' rounded-10',
-                          info_class: ' flex-1 mt-0 px-20 py-15 align-self-center'
-                        %}
                         <button
-                          class="btn-shopable__action-mobile btn__quick-shop bg-white btn-reset shadow z-2 flex"
-                          name="{{ 'products.product.shop_now' | t }}"
+                          aria-label="{{ 'accessibility.mute_button.video' | t }}"
+                          class="active mute-button-mobile pointer border-0 inline-flex z-2 relative align-center justify-content-center"
                         >
-                          <svg
-                            width="16"
-                            height="16"
-                            class="hidden-1025 hidden-on-load transition-short heading-color"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                          >
-                            <use href="#icon-cart" />
-                          </svg>
+                          {% render 'icon-mute-open' %}
+                          {% render 'icon-mute-close' %}
                         </button>
+                        <div class="flex align-center space-between popup-information__mobile z-2 shadow rounded-10 overflow-hidden">
+                          {% render 'card-product',
+                            card_product: card_product,
+                            section_id: section.id,
+                            show_video: false,
+                            disable_quickview: true,
+                            disable_badge: true,
+                            disable_rate: true,
+                            disable_vendor: true,
+                            disable_hover_image: true,
+                            show_quick_add: true,
+                            disable_color_swatches: true,
+                            class: ' z-2',
+                            style_layout: ' flex',
+                            image_class: ' flex-auto w-custom rounded-10 w-full-1025',
+                            image_rounded: ' rounded-10',
+                            info_class: ' flex-1 mt-0 px-20 py-15 align-self-center'
+                          %}
+                          <button
+                            class="btn-shopable__action-mobile btn__quick-shop bg-white btn-reset shadow z-2 flex"
+                            name="{{ 'products.product.shop_now' | t }}"
+                          >
+                            <svg
+                              width="16"
+                              height="16"
+                              class="hidden-1025 hidden-on-load transition-short heading-color"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                            >
+                              <use href="#icon-cart" />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                       <div
                         class="popup-information transition-drawer relative-1025 absolute inset-0 bg-white z-2"

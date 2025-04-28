@@ -3,29 +3,39 @@
   assign items_per_row = block_st.items_per_row
   assign show_pagination = block_st.show_pagination
   assign show_navigation = block_st.show_navigation
-  assign items_per_row_mobile = section_st.items_per_row_mobile
+  assign items_per_row_mobile = block_st.items_per_row_mobile
 
   assign items_per_row_tablet = items_per_row
-  if items_per_row > 3
+  if items_per_row > 2
     assign items_per_row_tablet = items_per_row | minus: 1
   endif
-
+  assign data_free_scroll = 'false'
+  if items_per_row_mobile > 1 and items_per_row_mobile < 2
+    assign data_free_scroll = 'true'
+  elsif items_per_row_mobile > 2 and items_per_row_mobile < 3
+    assign data_free_scroll = 'true'
+  endif
   assign column_gap_slide = 0
+  assign column_gap_mb = 0
   if block_st.column_gap == 'large'
     assign column_gap_slide = 30
+    assign column_gap_mb = 20
   elsif block_st.column_gap == 'medium'
     assign column_gap_slide = 20
+    assign column_gap_mb = 10
   elsif block_st.column_gap == 'small'
     assign column_gap_slide = 10
+    assign column_gap_mb = 5
   endif
 -%}
-{%- style -%}
-  #shopify-block-{{ block.id }} {
-    --col-width: {{ block_st.width }};
-  }
-{%- endstyle -%}
+{%- capture col_style -%}
+  --item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }}; --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
+{%- endcapture -%}
+{% if data_free_scroll == 'true' %}
+  <div class="free-scroll">
+{% endif %}
 <slide-section
-  class="swiper"
+  class="swiper hover-action{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
   data-section-id="{{ block.id }}"
   data-autoplay="false"
   data-effect="slide"
@@ -35,9 +45,10 @@
   data-mobile="{{ items_per_row_mobile }}"
   data-desktop="{{ items_per_row }}"
   data-tablet="{{ items_per_row_tablet }}"
+  style="{{ col_style | strip | strip_newlines }}"
 >
   {% if show_navigation %}
-    {%- render 'swiper-navigation' -%}
+    {%- render 'swiper-navigation', show_on_hover: true -%}
   {% endif %}
   <div class="swiper-wrapper">
     {% content_for 'blocks' %}
@@ -48,16 +59,13 @@
     ></div>
   {% endif %}
 </slide-section>
-
-{%- style -%}
-  #shopify-block-{{ block.id }} {
-    --col-width: {{ block_st.width }};
-  }
-{%- endstyle -%}
+{% if data_free_scroll == 'true' %}
+  </div>
+{% endif %}
 {% schema %}
 {
   "name": "t:sections.shopable-image.blocks.lookbook.name",
-  "class": "w-full col-md-w-custom col-md-w-custom-50",
+  "class": "w-full col-1025-remaining col-md-w-custom-50",
   "blocks": [
     {
       "type": "@app"
@@ -67,34 +75,6 @@
     }
   ],
   "settings": [
-    {
-      "type": "select",
-      "id": "width",
-      "label": "t:sections.all.width.label",
-      "default": "66.666%",
-      "options": [
-        {
-          "value": "50%",
-          "label": "t:sections.footer.settings.width.options__5"
-        },
-        {
-          "value": "66.666%",
-          "label": "t:sections.footer.settings.width.options__6"
-        },
-        {
-          "value": "75%",
-          "label": "t:sections.footer.settings.width.options__7"
-        },
-        {
-          "value": "86%",
-          "label": "t:sections.footer.settings.width.options__8"
-        },
-        {
-          "value": "100%",
-          "label": "t:sections.footer.settings.width.options__9"
-        }
-      ]
-    },
     {
       "type": "header",
       "content": "t:sections.all.carousel.header"

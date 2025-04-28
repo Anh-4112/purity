@@ -8,9 +8,8 @@ function initSlide(_this) {
   const direction = _this?.dataset.direction
     ? _this?.dataset.direction
     : "horizontal";
-  const directionMobile = _this?.dataset.directionMobile === "true" ;
   let autoPlaySpeed = _this?.dataset.autoPlaySpeed
-    ? _this?.dataset.autoPlaySpeed * 1000
+    ? _this?.dataset.autoPlaySpeed
     : 3000;
   let speed = _this?.dataset.speed ? _this?.dataset.speed : 400;
   const effect = _this?.dataset.effect ? _this?.dataset.effect : "slide";
@@ -48,12 +47,11 @@ function initSlide(_this) {
     prevEl = swiperControls.querySelector(".swiper-button-prev");
     paginationSwiper = swiperControls.querySelector(".swiper-pagination");
   }
-  console.log("initSlide", directionMobile);
   new Swiper(_this, {
     slidesPerView: freeMode ? "auto" : autoItem ? "auto" : itemMobile,
     spaceBetween: freeMode ? spacing : spacing >= 10 ? 10 : spacing,
     autoplay: autoplay,
-    direction: directionMobile ? 'vertical' : direction,
+    direction: direction,
     loop: loop,
     effect: effect,
     speed: speed,
@@ -80,12 +78,10 @@ function initSlide(_this) {
     },
     breakpoints: {
       768: {
-        direction: directionMobile ? 'horizontal' : direction,
         slidesPerView: itemTablet,
         spaceBetween: spacing >= 30 ? 30 : spacing,
       },
       1025: {
-        direction: directionMobile ? 'horizontal' : direction,
         slidesPerView: itemDesktop,
         spaceBetween: spacing,
       },

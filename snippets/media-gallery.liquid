@@ -103,7 +103,11 @@
             %}
           </grid-gallery>
         {% when 'quick_view' %}
-          <quick-view-gallery id="GalleryViewer-{{ section.id }}" class="swiper">
+          <quick-view-gallery
+            id="GalleryViewer-{{ section.id }}"
+            class="swiper"
+            style="--gap: 10px;--gap-desktop: 10px;"
+          >
             {%- render 'swiper-navigation', show_on_hover: true -%}
             <div class="swiper-wrapper">
               {% render 'product-media',
