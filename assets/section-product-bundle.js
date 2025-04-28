@@ -61,8 +61,14 @@ if (!customElements.get("product-form-bundle")) {
               const bundleImage = html.querySelector(".bundle-image");
               const bundleContent = html.querySelector(".bundle-content");
               const dataRatio = bundleImage.dataset.ratio;
+              const bundleSticky = this.closest('build-your-routine').querySelector('.bundle-sticky');
               if (!bundleImage || !bundleContent) {
                 return;
+              }
+              const enableQuantity = bundleSticky.dataset.enableQuantity === 'true';
+              const bundleQuantity = html.querySelector('.bundle-quantity');
+              if (enableQuantity === false){
+                bundleQuantity.remove();
               }
               targetContainer.setAttribute("data-variant-id", variantId);
               targetContainer.setAttribute("data-quantity", quantity);
