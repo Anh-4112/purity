@@ -688,6 +688,19 @@ blockquote {
 modal-popup :is(.modal-overlay) {
   z-index: 15;
 }
+.modal-inner
+  .drawer__body
+  .quickview-product
+  :is(> div .shopify-block, media-gallery__image) {
+  opacity: 0;
+  transition: var(--transition);
+}
+.modal.active
+  .drawer__body
+  .quickview-product
+  :is(> div .shopify-block, media-gallery__image) {
+  opacity: 1;
+}
 .modal-popup-inner .drawer__body:not(.drawer__body-shopable-video) > *,
 .animate-motion .slideIn-animate {
   opacity: 0;

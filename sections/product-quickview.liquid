@@ -2,6 +2,20 @@
 {%- liquid
   assign section_st = section.settings
 -%}
+{% style %}
+  @media (min-width: 768) {
+    .modal-inner {
+      width: fit-content;
+    }
+    .product-detail__media {
+      transition: transform 0.5s cubic-bezier(0.24, 0.25, 0, 1);
+      transform: translateX(0);
+    }
+    quickview-drawer.active .product-detail__media {
+      transform: translateX(-100%);
+    }
+  }
+{% endstyle %}
 <script type="module" src="{{ 'quickview-product.js' | asset_url }}"></script>
 <quickview-drawer
   id="Product-{{ section.id }}"
@@ -10,7 +24,7 @@
   style="--drawer-width: 82rem;--col-width: clamp(25%, 12vw, 300px);"
 >
   <modal-overlay class="modal-overlay pointer invisible transition z-15"></modal-overlay>
-  <div class="modal-inner color-default transition-drawer drawer drawer-right fixed right-0 z-20 inset-y-0 bg-white w-full">
+  <div class="modal-inner color-default transition-drawer drawer drawer-right fixed right-0 z-20 inset-y-0 w-full">
     <button
       is="button-close-model"
       class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
@@ -21,9 +35,12 @@
       </svg>
     </button>
     <div class="drawer__body h-full overflow-y-auto custom-scrollbar">
-      <div class="quickview-product h-full flex wrap gap-20 px-20">
+      <div class="quickview-product h-full flex wrap nowrap-md gap-20">
         {% if product.media.size > 0 %}
-          <div class="product-detail__media w-full col-md-w-custom py-20">
+          <div
+            class="product-detail__media w-full w-md-custom py-20 bg-white fixed-1025 inset-y-0 left-0 px-20 z-1"
+            style="--width: 32rem;"
+          >
             {% render 'media-gallery',
               images: product.media,
               section_st: section_st,
@@ -33,7 +50,7 @@
             %}
           </div>
         {% endif %}
-        <div class="product-detail__information w-full p-20{% if product.media.size > 0 %} col-md-remaining{% endif %}">
+        <div class="product-detail__information w-full w-md-custom bg-white p-20 z-2" style="--width: 48rem;">
           <div class="sticky top-20">
             {% content_for 'blocks', closest.product: product %}
             <a
