@@ -58,7 +58,9 @@
                 type: 'other',
                 container: section_width,
                 image: section_st.image,
-                image_alt: alt
+                image_alt: alt,
+                animate: 'zoom-out-small',
+                motion: true
               %}
             {% else %}
               {% render 'placeholder-render', type: 'collection-6', class: 'img-placeholder h-full w-full rounded' %}
@@ -78,6 +80,7 @@
               {%- if scroll_animation -%}
                 <motion-effect
                   data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
                   class="block"
                 >
               {%- endif -%}
@@ -146,7 +149,16 @@
           </div>
         {% endif %}
         <div class="faq-container{% if show_faqs_message and show_image == false %} col-1025-remaining{% else %} w-full{% endif %}">
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              class="block"
+            >
+          {%- endif -%}
           {% content_for 'blocks' %}
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         </div>
       </div>
     </div>

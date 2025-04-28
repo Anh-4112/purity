@@ -1,0 +1,57 @@
+{%- liquid
+  assign section_st = section.settings
+-%}
+{%- capture style -%}
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+{%- endcapture -%}
+<div
+  class="section-padding section"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="container">
+    <div class="page-title text-center">
+      <div class="page-content">
+        <h1 class="heading-title">
+          {{ page.title }}
+        </h1>
+      </div>
+    </div>
+    <div class="rte section-spacing">
+      {{ page.content }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-page.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ]
+}
+{% endschema %}

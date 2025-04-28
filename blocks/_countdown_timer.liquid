@@ -1,11 +1,21 @@
 <script src="{{ 'countdown-timer.js' | asset_url }}" defer="defer"></script>
 {{ 'countdown.css' | asset_url | stylesheet_tag }}
-{% assign block_st = block.settings %}
+{% liquid
+  assign theme_st = settings
+  assign block_st = block.settings
+  assign scroll_animation = theme_st.scroll_animation
+%}
 <div
   class="block__heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
+  {%- if scroll_animation -%}
+    <motion-effect
+      data-animate="fade-up"
+      class="block"
+    >
+  {%- endif -%}
   <countdown-timer
     class="no-js-hidden inline-flex wrap gap-10 overflow-hidden heading-color align-center {{ block_st.style }} section_block"
     data-deadline="{{ block.settings.end_times }}"
@@ -32,6 +42,9 @@
       <span class="timer-announcementbar-text">{{ 'sections.countdown.format.secs' | t }}</span>
     </div>
   </countdown-timer>
+  {%- if scroll_animation -%}
+    </motion-effect>
+  {%- endif -%}
 </div>
 
 {% schema %}

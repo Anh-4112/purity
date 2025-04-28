@@ -1,4 +1,5 @@
 {%- liquid
+  assign theme_st = settings
   assign block_st = block.settings
   assign heading_1 = block_st.heading_1
   assign description_1 = block_st.description_1
@@ -18,12 +19,19 @@
       assign size = size | plus: 1
     endif
   endfor
+  assign scroll_animation = theme_st.scroll_animation
 -%}
 <div
   class="grid-info mb-custom"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
+  {%- if scroll_animation -%}
+    <motion-effect
+      data-animate="fade-up"
+      class="block"
+    >
+  {%- endif -%}
   <ul class="grid-info__content list-unstyled grid grid-cols gap row-as-col-gap w-full" style="{% if size > 1 %}--col-number: 2;--col-tablet: 2;{% else %}--col-number:1;{% endif %}--gap-desktop: 3rem;--gap: 2rem;">
     {%- if heading_1 != blank or description_1 != blank -%}
       <li>
@@ -90,6 +98,9 @@
       </li>
     {%- endif -%}
   </ul>
+  {%- if scroll_animation -%}
+    </motion-effect>
+  {%- endif -%}
 </div>
 {% schema %}
 {
