@@ -453,7 +453,7 @@
           <div class="footer__bottom--right flex column flex-1025-row gap-20">
             {%- if menu_store_policies != blank -%}
               <div class="menu__policies">
-                <ul class="menu__policies-list flex wrap justify-center justify-end-1025 gap-20 list-unstyled fs-small">
+                <ul class="menu__policies-list flex wrap justify-center justify-end-1025 gap-20 row-gap-10 list-unstyled fs-small">
                   {%- for link in menu_store_policies.links -%}
                     <li>
                       <a
@@ -486,13 +486,11 @@
         {%- endif -%}
       </div>
       {%- if section.settings.show_policy -%}
-        <ul class="policies list-unstyled">
+        <ul class="policies list-unstyled flex wrap justify-center justify-center gap-20 row-gap-10 list-unstyled fs-small mt-20">
           {%- for policy in shop.policies -%}
             {%- if policy != blank -%}
               <li>
-                <small class="copyright__content">
-                  <a href="{{ policy.url }}">{{ policy.title | escape }}</a>
-                </small>
+                <a href="{{ policy.url }}">{{ policy.title | escape }}</a>
               </li>
             {%- endif -%}
           {%- endfor -%}
