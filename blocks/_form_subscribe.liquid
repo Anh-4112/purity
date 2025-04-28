@@ -18,7 +18,12 @@
       class="field relative flex wrap gap-10 justify-content-{{ section_st.text_align }}"
       style="--max-width: 51rem;"
     >
+      <label for="email_contact" class="visually-hidden">
+        {{ 'customer.login_page.email' | t }}
+        <span class="required">*</span>
+      </label>
       <input
+        id="email_contact"
         type="email"
         required
         name="contact[email]"
