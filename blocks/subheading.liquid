@@ -1,15 +1,23 @@
-{% assign block_st = block.settings %}
+{% liquid
+  assign theme_st = settings
+  assign block_st = block.settings
+  assign scroll_animation = theme_st.scroll_animation
+%}
 <div
   class="block__subheading subheading_weight heading-color lh-global inline-block mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }}"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
   {{ block.shopify_attributes }}
 >
-  <motion-effect
-    data-animate="fade-up"
-    class="block"
-  >
-    {{ block_st.subheading | escape }}
-  </motion-effect>
+  {%- if scroll_animation -%}
+    <motion-effect
+      data-animate="fade-up"
+      class="block"
+    >
+  {%- endif -%}
+  {{ block_st.subheading | escape }}
+  {%- if scroll_animation -%}
+    </motion-effect>
+  {%- endif -%}
 </div>
 {% schema %}
 {

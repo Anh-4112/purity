@@ -2449,14 +2449,14 @@ class MotionEffect extends HTMLElement {
       case "zoom-in":
         this.zoomInInitial();
         break;
-      case "zoom-in-lg":
-        this.zoomInLgInitial();
+      case "zoom-in-big":
+        this.zoomInBigInitial();
         break;
       case "zoom-out":
         this.zoomOutInitial();
         break;
-      case "zoom-out-sm":
-        this.zoomOutSmInitial();
+      case "zoom-out-small":
+        this.zoomOutSmallInitial();
         break;
     }
   }
@@ -2481,7 +2481,7 @@ class MotionEffect extends HTMLElement {
     Motion.animate(this, { transform: "scale(0.8)" }, { duration: 0 });
   }
 
-  zoomInLgInitial() {
+  zoomInBigInitial() {
     Motion.animate(this, { transform: "scale(0)" }, { duration: 0 });
   }
 
@@ -2489,7 +2489,7 @@ class MotionEffect extends HTMLElement {
     Motion.animate(this, { transform: "scale(1.3)" }, { duration: 0 });
   }
 
-  zoomOutSmInitial() {
+  zoomOutSmallInitial() {
     Motion.animate(this, { transform: "scale(1.1)" }, { duration: 0 });
   }
 
@@ -2507,14 +2507,14 @@ class MotionEffect extends HTMLElement {
       case "zoom-in":
         await this.zoomIn();
         break;
-      case "zoom-in-lg":
-        await this.zoomInLg();
+      case "zoom-in-big":
+        await this.zoomInBig();
         break;
       case "zoom-out":
         await this.zoomOut();
         break;
-      case "zoom-out-sm":
-        await this.zoomOutSm();
+      case "zoom-out-small":
+        await this.zoomOutSmall();
         break;
     }
   }
@@ -2560,7 +2560,7 @@ class MotionEffect extends HTMLElement {
     ).finished;
   }
 
-  async zoomInLg() {
+  async zoomInBig() {
     await Motion.animate(
       this,
       { transform: "scale(1)" },
@@ -2584,7 +2584,7 @@ class MotionEffect extends HTMLElement {
     ).finished;
   }
 
-  async zoomOutSm() {
+  async zoomOutSmall() {
     await Motion.animate(
       this,
       { transform: "scale(1)" },
