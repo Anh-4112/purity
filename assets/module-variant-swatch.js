@@ -391,7 +391,8 @@ class VariantInput extends HTMLElement {
           document.querySelector("size-chart-popup"),
           "open",
           true,
-          "touch"
+          null,
+          false
         ),
       100
     );

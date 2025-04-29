@@ -56,7 +56,8 @@ class ButtonQuickView extends HTMLButtonElement {
           document.querySelector("quickview-drawer"),
           "open",
           false,
-          "delay"
+          "delay",
+          true
         );
         new LazyLoader(".image-lazy-load");
         await (import(importJs.mediaLightboxGallery),

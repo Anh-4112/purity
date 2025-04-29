@@ -661,13 +661,15 @@ blockquote {
   .modal__header {
     justify-content: center;
   }
-  draggable-modal:not(.modal__header) {
+  draggable-modal:not(.modal__header),
+  draggable-localization {
     padding-block: 1.25rem;
   }
   draggable-modal.modal__header::before {
     top: 18%;
   }
-  draggable-modal::before {
+  draggable-modal::before,
+  draggable-localization::before{
     content: "";
     background-color: #e5e5e5;
     position: absolute;
@@ -1719,6 +1721,7 @@ modal-popup :is(.modal-overlay) {
     left: 0;
     bottom: -3rem;
     border-radius: var(--img-rounded) var(--img-rounded) 0 0;
+    transition: transform 0.3s ease;
   }
   .disclosure__footer .opened.show-overlay:after {
     opacity: 1;
