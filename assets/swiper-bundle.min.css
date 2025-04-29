@@ -362,7 +362,7 @@
   bottom: 1.5rem;
   left: 1.5rem;
   border-radius: var(--img-rounded);
-  padding: var(--padding, 6px 15px);
+  padding: var(--padding, 6px 18.5px);
   margin-top: 0;
 }
 .swiper-pagination.swiper-pagination-hidden {
@@ -745,4 +745,18 @@ button.swiper-pagination-bullet {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   overflow: hidden;
+}
+@media (min-width: 1025px) {
+  .swiper-vertical.smooth_scroll {
+    scroll-behavior: smooth;
+  }
+  .swiper-vertical.smooth_scroll > .swiper-wrapper {
+    scroll-behavior: smooth;
+    transition: transform 0.2s ease, -webkit-transform 0.2s ease !important;
+    -webkit-transition: transform 0.2s ease, -webkit-transform 0.2s ease !important;
+    scroll-snap-type: y mandatory;
+  }
+  .swiper-vertical.smooth_scroll > .swiper-wrapper > * {
+    scroll-snap-align: start;
+  }
 }

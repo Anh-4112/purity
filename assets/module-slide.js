@@ -178,12 +178,16 @@ function initSlideMedia(_this, gallery, thumbnail) {
     swiperElement = _this;
   } else if (gallery == "QuickView" || gallery == "CartUpSell") {
     swiperElement = _this;
-    spaceBetween = 20;
+    spaceBetween = 10;
     if (gallery == "QuickView") {
-      itemMobile = 1.3;
+      const items = _this.querySelectorAll(".swiper-slide");
+      const itemsToShow = Array.from(items);
+      if (itemsToShow.length > 1) {
+        itemMobile = 1.5;
+      }
     }
     direction = "horizontal";
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 1024) {
       itemMobile = "auto";
       direction = "vertical";
       mousewheel = true;
@@ -208,6 +212,9 @@ function initSlideMedia(_this, gallery, thumbnail) {
     },
     breakpoints: {
       768: {
+        direction: direction,
+      },
+      1024: {
         direction: direction,
       },
     },

@@ -269,6 +269,9 @@ blockquote {
 .py-60 {
   padding-block: clamp(4rem, 4vw, 6rem);
 }
+.py-gutter-x {
+  padding-block: var(--bs-gutter-x);
+}
 .pt-5 {
   padding-top: 5px;
 }
@@ -555,9 +558,6 @@ blockquote {
 .z-16 {
   z-index: 16;
 }
-.z-20 {
-  z-index: 20;
-}
 .z-auto {
   z-index: auto;
 }
@@ -587,7 +587,7 @@ blockquote {
 .row-gap-custom {
   row-gap: var(--row-gap, 0);
 }
-.rounded-0 {
+:is(.rounded-0) {
   border-radius: 0;
 }
 .top-rounded {
@@ -644,10 +644,11 @@ blockquote {
     transform: translateY(calc(-100% + 60px));
     -webkit-transform: translateY(calc(-100% + 60px));
   }
-  .modal-popup-inner {
+  .modal-popup-inner,
+  .modal-inner:not(.draw-mb) {
     max-width: unset;
-    max-height: 100vh;
-    height: 100vh;
+    max-height: 85vh;
+    height: 85vh;
     margin: unset;
     top: auto;
     border-radius: var(--img-rounded) var(--img-rounded) 0 0;
@@ -656,6 +657,28 @@ blockquote {
   .modal.active .modal-popup-inner {
     pointer-events: auto;
     transform: translateX(0) translateY(0);
+  }
+  .modal__header {
+    justify-content: center;
+  }
+  draggable-modal:not(.modal__header),
+  draggable-localization {
+    padding-block: 1.25rem;
+  }
+  draggable-modal.modal__header::before {
+    top: 18%;
+  }
+  draggable-modal::before,
+  draggable-localization::before{
+    content: "";
+    background-color: #e5e5e5;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6rem;
+    height: 0.4rem;
+    transform: translate(-50%, -50%);
+    border-radius: 1rem;
   }
 }
 .modal-overlay {
@@ -937,6 +960,9 @@ modal-popup :is(.modal-overlay) {
     padding-left: 3rem;
     padding-right: 3rem;
   }
+  .py-md-20 {
+    padding-block: 2rem;
+  }
   .pe-md-0 {
     padding-inline-end: 0;
   }
@@ -1028,6 +1054,9 @@ modal-popup :is(.modal-overlay) {
   }
   .pb-1025-0 {
     padding-bottom: 0;
+  }
+  .py-1025-0 {
+    padding-block: 0;
   }
   .py-1025-5 {
     padding-top: 5px;
@@ -1692,6 +1721,7 @@ modal-popup :is(.modal-overlay) {
     left: 0;
     bottom: -3rem;
     border-radius: var(--img-rounded) var(--img-rounded) 0 0;
+    transition: transform 0.3s ease;
   }
   .disclosure__footer .opened.show-overlay:after {
     opacity: 1;
@@ -1940,6 +1970,49 @@ bundle-progress-bar .progress {
   mini-cart-recommendations .card-product-price {
     justify-content: center;
     line-height: normal;
+  }
+}
+quickview-drawer .media-zoom-button span {
+  display: none;
+}
+@media (min-width: 768px) {
+  .modal-inner.quickview_inner {
+    --slide-out: 100%;
+    width: fit-content;
+    transform: translateX(var(--slide-out, -100%)) translateY(0);
+    -webkit-transform: translateX(var(--slide-out, -100%)) translateY(0);
+    top: 0;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    clip-path: unset;
+  }
+  .product-detail__media {
+    transition: transform 0.5s cubic-bezier(0.24, 0.25, 0, 1);
+    transform: translateX(0);
+    border-radius: var(--img-rounded) 0 0 var(--img-rounded);
+  }
+  quickview-drawer.active .product-detail__media {
+    transform: translateX(calc(-100% + 1px));
+  }
+}
+@media (max-width: 767.98px) {
+  quickview-drawer .product-detail__information {
+    padding-bottom: 92px;
+  }
+  quickview-drawer .product__submit-form-cart {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgb(var(--color-white));
+    padding: 1.5rem var(--bs-gutter-x);
+    z-index: 3;
+    border-top: 1px solid var(--color-border);
+  }
+  quickview-drawer .product__submit-form-cart .btn-outline {
+    --btn-bg: var(--btn-primary-bg-color);
+    --btn-color: var(--btn-primary-color);
   }
 }
 html:not(.open-nav, .open-canvas) mobile-navigation-bar {

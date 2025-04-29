@@ -390,7 +390,9 @@ class VariantInput extends HTMLElement {
         NextSkyTheme.eventModal(
           document.querySelector("size-chart-popup"),
           "open",
-          true
+          true,
+          null,
+          false
         ),
       100
     );

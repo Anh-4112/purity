@@ -26,14 +26,14 @@
         class="modal active-modal-js modal-newsletter-popup"
         role="dialog"
       >
-        <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
+        <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
         <div
-          class="modal-popup-inner transition rounded max-w-custom m-auto invisible fixed inset-0 z-15 w-full"
+          class="modal-popup-inner modal-body modal-draggable transition rounded max-w-custom m-auto fixed inset-0 z-15 w-full bg-white"
           style="--max-width: 80rem;"
         >
           <button
             is="button-close-model"
-            class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
+            class="modal__close pointer btn-reset wh-40 inline-flex-1025 hidden content-center absolute z-3 top-0 right-0"
             aria-label="Close"
           >
             <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
@@ -41,18 +41,17 @@
             </svg>
           </button>
           <div
-            class="drawer__body drawer__body-item rte h-full overflow-y-auto custom-scrollbar bg-white"
+            class="drawer__body drawer__body-item rte h-full overflow-y-auto custom-scrollbar "
           >
             <div
               class="flex wrap gap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
               style="--col-width: {% if banner_image != blank %}{{ section_st.desktop_image_width }}{% else %}0{% endif %}%;"
             >
               {% if banner_image != blank %}
-                <div class="image-with-text__media-item w-full col-1025-w-custom">
+                <div class="image-with-text__media-item w-full col-1025-w-custom block-1025 hidden">
                   <div
                     class="image-with-text__media banner__media h-full"
-                    style="--aspect-ratio: {{ banner_image.aspect_ratio }}"
-                    ;
+                    style="--aspect-ratio: {{ banner_image.aspect_ratio }}";
                   >
                     {%- liquid
                       assign alt = 'general.image.image_alt_default' | t
