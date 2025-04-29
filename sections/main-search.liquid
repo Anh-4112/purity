@@ -204,7 +204,7 @@
             {%- endif -%}
             {%- if show_product_counts -%}
               <div
-               class="collection-count heading-color"
+               class="collection-count heading-color hidden block-md"
                 role="status"
               >
                 <span>
@@ -226,12 +226,12 @@
                 <form class="facets-vertical-form relative" id="FacetSortForm">
                   {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
                   <div class="select-custom facet-filters__sort heading-color py-10">
-                    <select-sorter class="select-selected block pointer rotate-animate">
+                    <select-sorter class="select-selected flex gap-5 align-center pointer rotate-animate">
                       <label>
                         {{- 'products.facets.sort_by_label' | t }}
                       </label>
                       <span class="inline-block-1025">
-                        {%- for option in search.sort_options -%}
+                        {%- for option in collection.sort_options -%}
                           {% if option.value == sort_by %}{{ option.name | escape }}{% endif %}
                         {%- endfor -%}
                       </span>
@@ -240,7 +240,7 @@
                         height="6"
                         viewBox="0 0 9 6"
                         fill="none"
-                        class="icon icon-down icon-rotate transition-short"
+                        class="icon icon-down icon-rotate transition-short flex-auto w-custom" style="--width: 9px;"
                       >
                         <use href="#icon-arrow-down"></use>
                       </svg>

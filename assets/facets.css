@@ -1,0 +1,137 @@
+.filters-form action-filter:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--row-gap);
+}
+.filters-form {
+  --row-gap: var(--bs-gutter-x);
+}
+.facet-checkbox.p-2 {
+  padding: 2px;
+}
+@media (min-width: 1025px) {
+  .filters-form {
+    --row-gap: 4rem;
+  }
+}
+
+price-range .field.rounded-5.gap-0.flex-nowrap.flex-1 {
+  flex: 0 0 auto;
+  width: calc((100% - 31px) / 2);
+}
+
+.price-range {
+  --color: #000;
+  background: linear-gradient(
+    90deg,
+    #dfdfdf var(--range-from),
+    var(--color) var(--range-from),
+    var(--color) var(--range-to),
+    #e6e7ec var(--range-to)
+  );
+  border-radius: 10px;
+  height: 3px;
+  margin: 27px 0px 28px;
+  position: relative;
+}
+
+.price-range .range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: none;
+  height: 3px;
+  outline: none;
+  padding: 0;
+  pointer-events: none;
+  vertical-align: top;
+  margin: 0;
+  width: 100%;
+}
+
+.price-range .range-slider.range-slider-max {
+  right: 0;
+  position: absolute;
+  top: 0;
+}
+
+.price-range .range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  height: 16px;
+  margin-top: -7px;
+  position: relative;
+  width: 16px;
+  pointer-events: auto;
+  background-color: #fff;
+  z-index: 1;
+  background: #fff
+    url("data:image/svg+xml,%3Csvg width='7' height='7' viewBox='0 0 7 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0H1V7H0V0Z' fill='%23151515'/%3E%3Cpath d='M3 0H4V7H3V0Z' fill='%23151515'/%3E%3Cpath d='M6 0H7V7H6V0Z' fill='%23151515'/%3E%3C/svg%3E");
+  backface-visibility: hidden;
+  background-repeat: no-repeat;
+  background-position: 4px 4px;
+  background-size: 7px;
+  border: 1px solid var(--color-dark);
+  width: 17px;
+  height: 17px;
+}
+
+.price-range .range-slider::-moz-range-thumb {
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px #000;
+  cursor: pointer;
+  height: 16px;
+  margin-top: -7px;
+  position: relative;
+  width: 16px;
+  z-index: 1;
+  pointer-events: auto;
+  transform: scale(1.3);
+  -webkit-transform: scale(1.3);
+  background: #fff
+    url("data:image/svg+xml,%3Csvg width='7' height='7' viewBox='0 0 7 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0H1V7H0V0Z' fill='%23151515'/%3E%3Cpath d='M3 0H4V7H3V0Z' fill='%23151515'/%3E%3Cpath d='M6 0H7V7H6V0Z' fill='%23151515'/%3E%3C/svg%3E");
+  backface-visibility: hidden;
+  background-repeat: no-repeat;
+  background-position: 4px 4px;
+  background-size: 7px;
+  border: 1px solid var(--color-dark);
+  width: 17px;
+}
+
+.price-range .range-slider::-webkit-slider-runnable-track {
+  background: var(--accent-color-second, #dfdfdf);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  height: 3px;
+  width: 100%;
+}
+
+.price-range .range-slider::-moz-range-progress,
+.price-range .range-slider::-moz-range-track {
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  height: 3px;
+  width: 100%;
+}
+
+.price-range .range-slider::-moz-range-progress {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.price-range .range-slider::-moz-range-track {
+  background-color: var(--accent-color-second, #dfdfdf);
+}
+
+.price-range .range-slider::-webkit-slider-runnable-track {
+  background: none;
+}
+
+.price-range .range-slider::-moz-range-progress,
+.price-range .range-slider::-moz-range-track {
+  background: none;
+}
