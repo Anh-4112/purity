@@ -646,8 +646,8 @@ blockquote {
   }
   .modal-popup-inner {
     max-width: unset;
-    max-height: 100vh;
-    height: 100vh;
+    max-height: 80vh;
+    height: 80vh;
     margin: unset;
     top: auto;
     border-radius: var(--img-rounded) var(--img-rounded) 0 0;
@@ -657,6 +657,26 @@ blockquote {
   .popup-information.active {
     pointer-events: auto;
     transform: translateX(0) translateY(0);
+  }
+  .modal__header{
+    justify-content: center;
+  }
+  draggable-modal:not(.modal__header) {
+    padding-block: 1.25rem;
+  }
+  draggable-modal.modal__header::before{
+    top: 18%;
+  }
+  draggable-modal::before{
+    content: "";
+    background-color: #E5E5E5;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6rem;
+    height: 0.4rem;
+    transform: translate(-50%,-50%);
+    border-radius: 1rem;
   }
 }
 .modal-overlay {

@@ -189,6 +189,13 @@ export function eventModal(
       setTimeout(() => {
         element.querySelector(".model_media").classList.add("open");
       }, 350);
+    }else if (actionModal == "touch") {
+      const draggableModal = document.createElement("draggable-modal");
+      draggableModal.classList.add("block", "hidden-1025", "relative", "pointer");
+      const modalBody = element.querySelector(".modal-body");
+      if (modalBody) {
+        modalBody.prepend(draggableModal);
+      }
     }
     root.style.setProperty("padding-right", getScrollBarWidth.init() + "px");
     trapFocus(element);
@@ -520,3 +527,108 @@ export function loadImages(imageOrArray) {
     })
   );
 }
+
+class DraggableModal extends HTMLElement {
+  constructor() {
+    super();
+    this.isDragging = false;
+    this.startY = 0;
+    this.currentY = 0;
+    this.threshold = 100;
+    
+    this.startDrag = this.startDrag.bind(this);
+    this.onDrag = this.onDrag.bind(this);
+    this.endDrag = this.endDrag.bind(this);
+  }
+
+  connectedCallback() {
+    this.modalElement = this.closest('.active-modal-js');
+    if (!this.modalElement) return;
+    
+    this.addEventListener('touchstart', this.startDrag, { passive: true });
+    this.addEventListener('mousedown', this.startDrag);
+    document.addEventListener('touchmove', this.onDrag, { passive: false });
+    document.addEventListener('mousemove', this.onDrag);
+    document.addEventListener('touchend', this.endDrag);
+    document.addEventListener('mouseup', this.endDrag);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('touchstart', this.startDrag);
+    this.removeEventListener('mousedown', this.startDrag);
+    document.removeEventListener('touchmove', this.onDrag);
+    document.removeEventListener('mousemove', this.onDrag);
+    document.removeEventListener('touchend', this.endDrag);
+    document.removeEventListener('mouseup', this.endDrag);
+  }
+
+  startDrag(e) {
+    if (!this.modalElement) return;
+    
+    this.isDragging = true;
+    this.startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    this.currentY = this.startY;
+    
+    this.modalElement.classList.add('is-dragging');
+    this.style.cursor = 'grabbing';
+    
+    const modalBody = this.modalElement.querySelector('.modal-draggable');
+    if (modalBody) {
+      modalBody.style.transition = 'none';
+    }
+  }
+
+  onDrag(e) {
+    if (!this.isDragging || !this.modalElement) return;
+    
+    e.preventDefault();
+    
+    this.currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    const dragDistance = this.currentY - this.startY;
+    
+    if (dragDistance > 0) {
+      const resistance = 0.4;
+      const modalBody = this.modalElement.querySelector('.modal-draggable');
+      
+      if (modalBody) {
+        modalBody.style.transform = `translateY(${dragDistance * resistance}px)`;
+      }
+    }
+  }
+
+  endDrag() {
+    if (!this.isDragging || !this.modalElement) return;
+    
+    const dragDistance = this.currentY - this.startY;
+    this.isDragging = false;
+    this.style.cursor = 'grab';
+    this.modalElement.classList.remove('is-dragging');
+    
+    const modalBody = this.modalElement.querySelector('.modal-draggable');
+    if (!modalBody) return;
+    
+    modalBody.style.transition = 'transform 0.3s ease-out';
+    
+    if (dragDistance > this.threshold) {
+      modalBody.style.transform = `translateY(100%)`;
+      
+      setTimeout(() => {
+        if (typeof NextSkyTheme !== 'undefined' && NextSkyTheme.eventModal) {
+          NextSkyTheme.eventModal(this.modalElement, 'close');
+        } else {
+          eventModal(this.modalElement, 'close');
+        }
+        
+        modalBody.style.transform = '';
+        modalBody.style.transition = '';
+      }, 300);
+    } else {
+      modalBody.style.transform = '';
+      setTimeout(() => {
+        modalBody.style.transition = '';
+      }, 300);
+    }
+  }
+}
+
+customElements.define('draggable-modal', DraggableModal);
