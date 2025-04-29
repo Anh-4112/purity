@@ -182,8 +182,8 @@ function initSlideMedia(_this, gallery, thumbnail) {
     if (gallery == "QuickView") {
       const items = _this.querySelectorAll(".swiper-slide");
       const itemsToShow = Array.from(items);
-      if (itemsToShow > 1) {
-        itemMobile = 1.3;
+      if (itemsToShow.length > 1) {
+        itemMobile = 1.5;
       }
     }
     direction = "horizontal";
