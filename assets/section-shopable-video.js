@@ -300,70 +300,89 @@ class ShopableItem extends HTMLElement {
   }
 
   setupMobileActionButton(modalPopup) {
+    if (!modalPopup) return;
+
     modalPopup.addEventListener("click", (event) => {
       const actionButton = event.target.closest(".popup-information__mobile");
       if (actionButton) {
         event.preventDefault();
         event.stopPropagation();
-        actionButton.classList.add("active");
+
         const currentId = modalPopup.getAttribute("data-current");
         if (!currentId) return;
+
         const currentItem = modalPopup.querySelector(`#${currentId}`);
         if (!currentItem) return;
+
         const popupInfo = currentItem.querySelector(".popup-information");
+        if (!popupInfo) return;
+
         const buttonCloseModal = modalPopup.querySelector(".modal__close");
         const buttonCloseInformation = currentItem.querySelector(
           ".modal__close-information"
         );
-        if (!popupInfo) return;
-        if (buttonCloseInformation.classList.contains("hidden-important")) {
-          buttonCloseInformation.classList.remove("hidden-important");
-          buttonCloseInformation.classList.add("active");
-          buttonCloseModal.classList.add("hidden-important");
-        } else {
-          buttonCloseInformation.classList.remove("active");
-          buttonCloseInformation.classList.add("hidden-important");
-          buttonCloseModal.classList.remove("hidden-important");
-        }
-        if (popupInfo.classList.contains("active")) {
-          popupInfo.classList.remove("active");
-        } else {
-          popupInfo.classList.add("active");
-        }
-        const swiperContainer = modalPopup.querySelector("slide-section");
-        if (swiperContainer && swiperContainer.swiper) {
-          this.handleSwipeability(modalPopup, swiperContainer);
-        }
+
+        actionButton.classList.toggle("active");
+
+        this.toggleElements(buttonCloseInformation, buttonCloseModal);
+
+        popupInfo.classList.toggle("active");
+
+        this.updateSwiperState(modalPopup);
       }
+
       const closeInfoButton = event.target.closest(".modal__close-information");
       if (closeInfoButton) {
+        event.preventDefault();
+        event.stopPropagation();
+
         const actionButton = event.target
           .closest(".drawer__body")
           .querySelector(".popup-information__mobile");
-        event.preventDefault();
-        event.stopPropagation();
-        if (actionButton.classList.contains("active")) {
+
+        if (actionButton) {
           actionButton.classList.remove("active");
         }
+
         const currentId = modalPopup.getAttribute("data-current");
         if (!currentId) return;
+
         const currentItem = modalPopup.querySelector(`#${currentId}`);
         if (!currentItem) return;
-        const popupInfo = currentItem.querySelector(".popup-information");
-        const buttonCloseModal = modalPopup.querySelector(".modal__close");
 
+        const popupInfo = currentItem.querySelector(".popup-information");
         if (popupInfo) {
           this.hidePopupInformation(popupInfo);
-          closeInfoButton.classList.add("hidden-important");
-          closeInfoButton.classList.remove("active");
-          buttonCloseModal.classList.remove("hidden-important");
-          const swiperContainer = modalPopup.querySelector("slide-section");
-          if (swiperContainer && swiperContainer.swiper) {
-            this.handleSwipeability(modalPopup, swiperContainer);
-          }
         }
+
+        const buttonCloseModal = modalPopup.querySelector(".modal__close");
+
+        closeInfoButton.classList.add("hidden-important");
+        closeInfoButton.classList.remove("active");
+        buttonCloseModal.classList.remove("hidden-important");
+
+        this.updateSwiperState(modalPopup);
       }
     });
+  }
+
+  toggleElements(elementToShow, elementToHide) {
+    if (elementToShow.classList.contains("hidden-important")) {
+      elementToShow.classList.remove("hidden-important");
+      elementToShow.classList.add("active");
+      elementToHide.classList.add("hidden-important");
+    } else {
+      elementToShow.classList.remove("active");
+      elementToShow.classList.add("hidden-important");
+      elementToHide.classList.remove("hidden-important");
+    }
+  }
+
+  updateSwiperState(modalPopup) {
+    const swiperContainer = modalPopup.querySelector("slide-section");
+    if (swiperContainer && swiperContainer.swiper) {
+      this.handleSwipeability(modalPopup, swiperContainer);
+    }
   }
 
   hidePopupInformation(popupInfo) {
@@ -381,6 +400,7 @@ class ShopableItem extends HTMLElement {
         this.handleSwipeability(modalPopup, swiperContainer);
       }
     }
+    popupInfo.style.transform = '';
   }
 
   setupCloseButton() {
@@ -641,7 +661,7 @@ class ShopableItem extends HTMLElement {
       if (videoElement._clickHandler) {
         videoElement.removeEventListener("click", videoElement._clickHandler);
       }
-      videoElement._clickHandler = function(event) {
+      videoElement._clickHandler = function (event) {
         event.preventDefault();
         event.stopPropagation();
         const videoLocal = this.closest("video-local");
@@ -840,7 +860,7 @@ class ShopableItem extends HTMLElement {
         allSlides.forEach((slide, index) => {
           const video = slide.querySelector("video");
           const videoLocal = slide.querySelector("video-local");
-          const btnMute = videoLocal.querySelector(".mute-button");
+          const btnMute = videoLocal?.querySelector(".mute-button");
           const btnMuteMobile = slide.querySelector(".mute-button-mobile");
           const buttonCloseInformation = slide.querySelector(
             ".modal__close-information"
@@ -869,3 +889,98 @@ class ShopableItem extends HTMLElement {
   }
 }
 customElements.define("shopable-item", ShopableItem);
+
+class PopupInformationHeader extends ShopableItem {
+  constructor() {
+    super();
+    this.isDragging = false;
+    this.startY = 0;
+    this.currentY = 0;
+    this.threshold = 100;
+    
+    this.startDrag = this.startDrag.bind(this);
+    this.onDrag = this.onDrag.bind(this);
+    this.endDrag = this.endDrag.bind(this);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.headerElement = this;
+    if (this.headerElement) {
+      this.headerElement.addEventListener("touchstart", this.startDrag, { passive: true });
+      this.headerElement.addEventListener("touchmove", this.onDrag, { passive: false });
+      this.headerElement.addEventListener("touchend", this.endDrag);
+      this.headerElement.addEventListener("mousedown", this.startDrag);
+      document.addEventListener("mousemove", this.onDrag);
+      document.addEventListener("mouseup", this.endDrag);
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    
+    if (this.headerElement) {
+      this.headerElement.removeEventListener("touchstart", this.startDrag);
+      this.headerElement.removeEventListener("touchmove", this.onDrag);
+      this.headerElement.removeEventListener("touchend", this.endDrag);
+      
+      this.headerElement.removeEventListener("mousedown", this.startDrag);
+      document.removeEventListener("mousemove", this.onDrag);
+      document.removeEventListener("mouseup", this.endDrag);
+    }
+  }
+
+  startDrag(e) {
+    this.container = this.closest(".popup-information.active");
+    if (!this.container) return;
+    this.isDragging = true;
+    this.startY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    this.currentY = this.startY;
+  }
+
+  onDrag(e) {
+    if (!this.isDragging || !this.container) return;
+    
+    e.preventDefault();
+    this.currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    const dragDistance = this.currentY - this.startY;
+    
+    if (dragDistance > 0) {
+      this.container.style.transform = `translateY(${dragDistance}px)`;
+    }
+  }
+
+  endDrag() {
+    if (!this.isDragging || !this.container) return;
+    const dragDistance = this.currentY - this.startY;
+    
+    if (dragDistance > this.threshold) {
+      const modalPopup = this.container.closest('modal-popup');
+      if (modalPopup) {
+        const currentId = modalPopup.getAttribute('data-current');
+        if (currentId) {
+          const currentItem = modalPopup.querySelector(`#${currentId}`);
+          if (currentItem) {
+            const buttonCloseModal = modalPopup.querySelector('.modal__close');
+            const buttonCloseInformation = currentItem.querySelector('.modal__close-information');
+            const actionButton = modalPopup.querySelector('.popup-information__mobile');
+            this.hidePopupInformation(this.container);
+            if (actionButton) {
+              actionButton.classList.remove('active');
+            }
+            if (buttonCloseInformation && buttonCloseModal) {
+              buttonCloseInformation.classList.add('hidden-important');
+              buttonCloseInformation.classList.remove('active');
+              buttonCloseModal.classList.remove('hidden-important');
+            }
+            this.updateSwiperState(modalPopup);
+          }
+        }
+      }
+    } else {
+      this.container.style.transform = '';
+    }
+    this.isDragging = false;
+  }
+}
+customElements.define("popup-information-header", PopupInformationHeader);
