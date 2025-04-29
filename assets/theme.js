@@ -2281,7 +2281,7 @@ class NewsletterPopup extends HTMLElement {
     );
 
     setTimeout(() => {
-      NextSkyTheme.eventModal(wrapper, "open", true, "touch");
+      NextSkyTheme.eventModal(wrapper, "open", true, null, true);
     }, 3000);
 
     this.initNotShow(wrapper);
