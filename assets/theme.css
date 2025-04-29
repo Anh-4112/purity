@@ -555,9 +555,6 @@ blockquote {
 .z-16 {
   z-index: 16;
 }
-.z-20 {
-  z-index: 20;
-}
 .z-auto {
   z-index: auto;
 }
@@ -587,7 +584,7 @@ blockquote {
 .row-gap-custom {
   row-gap: var(--row-gap, 0);
 }
-.rounded-0 {
+:is(.rounded-0) {
   border-radius: 0;
 }
 .top-rounded {
@@ -644,7 +641,8 @@ blockquote {
     transform: translateY(calc(-100% + 60px));
     -webkit-transform: translateY(calc(-100% + 60px));
   }
-  .modal-popup-inner {
+  .modal-popup-inner,
+  .modal-inner:not(.draw-mb) {
     max-width: unset;
     max-height: 80vh;
     height: 80vh;

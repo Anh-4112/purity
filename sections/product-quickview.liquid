@@ -3,13 +3,19 @@
   assign section_st = section.settings
 -%}
 {% style %}
-  @media (min-width: 768) {
-    .modal-inner {
+  @media (min-width: 768px) {
+    .quickview_inner {
+      --slide-out: 100%;
       width: fit-content;
+      transform: translateX(var(--slide-out, -100%)) translateY(0);
+      -webkit-transform: translateX(var(--slide-out, -100%)) translateY(0);
+      top: 0;
+      max-height: 100vh;
     }
     .product-detail__media {
       transition: transform 0.5s cubic-bezier(0.24, 0.25, 0, 1);
       transform: translateX(0);
+      border-radius: var(--img-rounded) 0 0 var(--img-rounded);
     }
     quickview-drawer.active .product-detail__media {
       transform: translateX(-100%);
@@ -23,8 +29,8 @@
   class="modal pointer-none active-modal-js"
   style="--drawer-width: 82rem;--col-width: clamp(25%, 12vw, 300px);"
 >
-  <modal-overlay class="modal-overlay pointer invisible transition z-15"></modal-overlay>
-  <div class="modal-inner color-default transition-drawer drawer drawer-right fixed right-0 z-20 inset-y-0 w-full">
+  <modal-overlay class="modal-overlay invisible transition-drawer pointer z-15"></modal-overlay>
+  <div class="modal-inner opacity-0 quickview_inner color-default transition-drawer drawer drawer-right fixed right-0 z-20 inset-y-0 w-full{% if product.media.size > 0 %} rounded-0{% endif %}">
     <button
       is="button-close-model"
       class="modal__close pointer btn-reset wh-40 inline-flex content-center absolute z-3 top-0 right-0"
@@ -38,8 +44,8 @@
       <div class="quickview-product h-full flex wrap nowrap-md gap-20">
         {% if product.media.size > 0 %}
           <div
-            class="product-detail__media w-full w-md-custom py-20 bg-white fixed-1025 inset-y-0 left-0 px-20 z-1"
-            style="--width: 32rem;"
+            class="product-detail__media w-full w-md-custom py-20 bg-white fixed-md inset-y-0 left-0 px-gutter-x px-1025-20 z-1"
+            style="--width: clamp(25rem, 12vw, 32rem);"
           >
             {% render 'media-gallery',
               images: product.media,
@@ -50,7 +56,10 @@
             %}
           </div>
         {% endif %}
-        <div class="product-detail__information w-full w-md-custom bg-white p-20 z-2" style="--width: 48rem;">
+        <div
+          class="product-detail__information w-full w-md-custom bg-white p-20 z-2"
+          style="--width: clamp(40rem, 15vw,48rem);"
+        >
           <div class="sticky top-20">
             {% content_for 'blocks', closest.product: product %}
             <a
