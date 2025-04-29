@@ -187,7 +187,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
       }
     }
     direction = "horizontal";
-    if (window.innerWidth >= 1024) {
+    if (window.innerWidth >= 768) {
       itemMobile = "auto";
       direction = "vertical";
       mousewheel = true;
@@ -212,9 +212,6 @@ function initSlideMedia(_this, gallery, thumbnail) {
     },
     breakpoints: {
       768: {
-        direction: direction,
-      },
-      1024: {
         direction: direction,
       },
     },
