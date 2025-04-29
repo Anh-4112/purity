@@ -111,21 +111,21 @@
                 {{- 'blogs.article.featured' | t -}}
               </a>
             </div>
-            <ul class="article-card__info mb-20 fs-13 grey-color capitalize list-unstyled inline-flex align-center gap-15 text-{{ section_st.content_alignment }} justify-content-{{ section_st.content_alignment }}">
+            <div class="article-card__info mb-20 fs-13 grey-color capitalize list-unstyled inline-flex align-center gap-15 text-{{ section_st.content_alignment }} justify-content-{{ section_st.content_alignment }}">
               {%- if section_st.show_date -%}
-                <li class="post-date">
+                <div class="post-date">
                   {{- 'blogs.article.post_date' | t -}}
-                </li>
+                </div>
               {%- endif -%}
               {%- if section_st.show_author -%}
                 <svg width="5" height="5" viewBox="0 0 10 10" fill="none">
                   <use href="#icon-dot"></use>
                 </svg>
-                <li class="post-author">
+                <div class="post-author">
                   {{- 'blogs.article.author' | t -}}
-                </li>
+                </div>
               {%- endif -%}
-            </ul>
+            </div>
             {%- if section_st.show_excerpt -%}
               <p class="rte-width rte mt-0 mb-35">
                 {{- 'blogs.article.description' | t -}}
