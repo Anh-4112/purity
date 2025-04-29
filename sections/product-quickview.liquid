@@ -2,26 +2,6 @@
 {%- liquid
   assign section_st = section.settings
 -%}
-{% style %}
-  @media (min-width: 768px) {
-    .quickview_inner {
-      --slide-out: 100%;
-      width: fit-content;
-      transform: translateX(var(--slide-out, -100%)) translateY(0);
-      -webkit-transform: translateX(var(--slide-out, -100%)) translateY(0);
-      top: 0;
-      max-height: 100vh;
-    }
-    .product-detail__media {
-      transition: transform 0.5s cubic-bezier(0.24, 0.25, 0, 1);
-      transform: translateX(0);
-      border-radius: var(--img-rounded) 0 0 var(--img-rounded);
-    }
-    quickview-drawer.active .product-detail__media {
-      transform: translateX(-100%);
-    }
-  }
-{% endstyle %}
 <script type="module" src="{{ 'quickview-product.js' | asset_url }}"></script>
 <quickview-drawer
   id="Product-{{ section.id }}"
@@ -41,24 +21,26 @@
       </svg>
     </button>
     <div class="drawer__body h-full overflow-y-auto custom-scrollbar">
-      <div class="quickview-product h-full flex wrap nowrap-md gap-20">
+      <div class="quickview-product h-full flex wrap nowrap-md gap-20 py-gutter-x py-1025-0">
         {% if product.media.size > 0 %}
           <div
-            class="product-detail__media w-full w-md-custom py-20 bg-white fixed-md inset-y-0 left-0 px-gutter-x px-1025-20 z-1"
+            class="product-detail__media w-full w-md-custom py-md-20 bg-white fixed-md inset-y-0 left-0 px-gutter-x px-1025-20 z-1 overflow-hidden-mb"
             style="--width: clamp(25rem, 12vw, 32rem);"
           >
-            {% render 'media-gallery',
-              images: product.media,
-              section_st: section_st,
-              product: product,
-              section: section,
-              type_section: 'quick_view'
-            %}
+            <div class="free-scroll">
+              {% render 'media-gallery',
+                images: product.media,
+                section_st: section_st,
+                product: product,
+                section: section,
+                type_section: 'quick_view'
+              %}
+            </div>
           </div>
         {% endif %}
         <div
-          class="product-detail__information w-full w-md-custom bg-white p-20 z-2"
-          style="--width: clamp(40rem, 15vw,48rem);"
+          class="product-detail__information w-full w-md-custom bg-white px-gutter-x px-1025-20 py-md-20 z-2"
+          style="--width: clamp(40rem, 15vw,48rem);--space-bottom: 20;"
         >
           <div class="sticky top-20">
             {% content_for 'blocks', closest.product: product %}
@@ -69,7 +51,7 @@
                 href="{{ product.url }}"
               {% endif %}
               aria-label="{{ 'products.product.view_full_details' | t }}"
-              class="slideIn-animate mt-25 product-singe__view-all-button heading_weight heading-color inline-flex align-center gap-5 no-underline lh-normal"
+              class="slideIn-animate mt-5 product-singe__view-all-button heading_weight heading-color inline-flex align-center gap-5 no-underline lh-normal"
             >
               {{ 'products.product.view_full_details' | t }}
               {% if settings.rtl %}
