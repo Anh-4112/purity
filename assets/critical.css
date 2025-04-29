@@ -1,4 +1,7 @@
 /* Reset */
+page-loader {
+  background-color: var(--color-dark);
+}
 :where(.container, .fluid_container) {
   padding-left: var(--bs-gutter-x, 1.5rem);
   padding-right: var(--bs-gutter-x, 1.5rem);
@@ -506,6 +509,9 @@ input[type="checkbox"]:checked + .checkmark:before {
 .z-15 {
   z-index: 15;
 }
+.z-20 {
+  z-index: 20;
+}
 .top-15 {
   top: 1.5rem;
 }
@@ -556,7 +562,7 @@ input[type="checkbox"]:checked + .checkmark:before {
 }
 .invisible {
   opacity: 0;
-  visibility: hidden;
+  pointer-events: none;
 }
 .visibility-hidden {
   visibility: hidden;
@@ -1928,14 +1934,15 @@ th {
 .drawer-spacing {
   padding: var(--padding-block, 2rem) var(--bs-gutter-x);
 }
-:where(.modal-inner:not(.draw-mb)) {
+.modal-inner:not(.draw-mb) {
   transform: translateY(100%);
   -webkit-transform: translateY(100%);
   will-change: transform;
   bottom: 0;
-  max-height: calc(100vh - 60px);
+  max-height: calc(100vh - 90px);
   top: auto;
   --transition: 0.3s;
+  height: fit-content;
 }
 :where(.drawer-left-mb) {
   transform: translateX(-100%);
