@@ -534,13 +534,15 @@
                         class="flex column hidden-1025 absolute bottom-20 right-20 left-20 pe-20"
                         style="--width: 7.5rem;"
                       >
-                        <button
-                          aria-label="{{ 'accessibility.mute_button.video' | t }}"
-                          class="active mute-button-mobile pointer border-0 inline-flex z-2 relative align-center justify-content-center"
-                        >
-                          {% render 'icon-mute-open' %}
-                          {% render 'icon-mute-close' %}
-                        </button>
+                        {% if local_video != blank %}
+                          <button
+                            aria-label="{{ 'accessibility.mute_button.video' | t }}"
+                            class="active mute-button-mobile pointer border-0 inline-flex z-2 relative align-center justify-content-center"
+                          >
+                            {% render 'icon-mute-open' %}
+                            {% render 'icon-mute-close' %}
+                          </button>
+                        {% endif %}
                         <div class="flex align-center space-between popup-information__mobile z-2 shadow rounded-10 overflow-hidden">
                           {% render 'card-product',
                             card_product: card_product,
@@ -576,10 +578,11 @@
                         </div>
                       </div>
                       <div
-                        class="popup-information transition-drawer relative-1025 absolute inset-0 bg-white z-2"
+                        class="popup-information relative-1025 absolute inset-0 bg-white z-2"
                         style="--padding-inline-desktop: 3rem;--padding-block: 2.4rem;"
                       >
                         <div class="flex column absolute inset-0 w-full h-full">
+                          <popup-information-header class="block relative"></popup-information-header>
                           <div class="grow-1 drawer-spacing overflow-x-hidden overflow-auto custom-scrollbar">
                             {% if card_product != blank %}
                               <slide-section

@@ -169,6 +169,22 @@
     color: #fff;
   }
 
+  popup-information-header{
+    padding-block: 1.25rem;
+  }
+
+  popup-information-header::before{
+    content: "";
+    background-color: #E5E5E5;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6rem;
+    height: 0.4rem;
+    transform: translate(-50%,-50%);
+    border-radius: 1rem;
+  }
+
   .popup-information {
     opacity: 0;
     visibility: hidden;
@@ -176,12 +192,14 @@
     -webkit-transform: translateY(100%);
     top: auto;
     height: 75vh;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
     border-radius: var(--img-rounded) var(--img-rounded) 0 0;
   }
 
   .popup-information.active {
     opacity: 1;
     visibility: visible;
+    transform: translateY(0);
   }
 
   .modal-shopable-video :is(.video-item--ratio, .video-local)[style*="--aspect-ratio"]:before {
