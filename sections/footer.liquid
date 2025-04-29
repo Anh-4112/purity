@@ -419,15 +419,8 @@
     </div>
   </div>
   {% assign animate_delay = animate_delay | plus: 5 %}
-  {%- if scroll_animation -%}
-    <motion-effect
-      data-animate="fade-up"
-      data-animate-delay="{{ animate_delay }}"
-      class="block"
-    >
-  {%- endif -%}
   <div class="footer__bottom">
-    <div class="{{ section_width }} pb-custom" style="--space-bottom: 100">
+    <div class="{{ section_width }} pb-custom" style="--space-bottom: 30">
       <div
         class="footer_bottom-inner flex column flex-1025-row gap-20 space-between border-top pt-30"
       >
@@ -498,9 +491,6 @@
       {%- endif -%}
     </div>
   </div>
-  {%- if scroll_animation -%}
-    </motion-effect>
-  {%- endif -%}
 </footer>
 <script type="module">
   import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
