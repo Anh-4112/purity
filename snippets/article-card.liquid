@@ -93,26 +93,26 @@
             </p>
           {%- endif -%}
         {%- endif -%}
-        <ul class="article-card__info fs-13 grey-color capitalize list-unstyled inline-flex align-center gap-15{% if is_featured_blog %} mb-20 text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
+        <div class="article-card__info fs-13 grey-color capitalize list-unstyled inline-flex align-center gap-15{% if is_featured_blog %} mb-20 text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
           {%- if show_date -%}
-            <li class="post-date">
+            <div class="post-date">
               {{- article.published_at | date: '%d %b %Y' -}}
-            </li>
+            </div>
           {%- endif -%}
           {%- if show_author -%}
             <svg width="5" height="5" viewBox="0 0 10 10" fill="none">
               <use href="#icon-dot"></use>
             </svg>
-            <li class="post-author">
+            <div class="post-author">
               {{ 'blogs.article.by_html' | t: author: article.author -}}
-            </li>
+            </div>
           {%- endif -%}
           {%- if show_comment_count and blog.comments_enabled? -%}
-            <li class="blog-comments">
+            <div class="blog-comments">
               {{ 'blogs.article.comments' | t: count: article.comments_count -}}
-            </li>
+            </div>
           {%- endif -%}
-        </ul>
+        </div>
         {%- if show_excerpt and is_featured_blog == true -%}
           {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
             <p class="article-card__excerpt rte-width rte mb-35 text-truncate header-color">
