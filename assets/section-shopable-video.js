@@ -1,5 +1,6 @@
 import { SlideSection } from "module-slide";
 import * as NextSkyTheme from "global";
+import { LazyLoader } from "module-lazyLoad";
 
 class ShopableVideo extends SlideSection {
   constructor() {
@@ -823,6 +824,7 @@ class ShopableItem extends HTMLElement {
       } else {
         modalPopup.removeAttribute("data-loading");
       }
+      new LazyLoader(".image-lazy-load");
     }
   }
 
