@@ -219,7 +219,6 @@ class ProductTabs extends HTMLElement {
             const isSelected = tab.dataset.blockId === blockId;
             tab.classList.toggle("selected", isSelected);
             tab.classList.toggle("active", isSelected);
-            tab.setAttribute("aria-selected", isSelected ? "true" : "false");
             if (isSelected) {
                 activeTab = tab;
                 const description = tab.querySelector(
