@@ -2877,3 +2877,31 @@ class MotionItemsEffect extends HTMLElement {
   }
 }
 customElements.define("motion-items-effect", MotionItemsEffect);
+
+class ButtonCopyLink extends HTMLButtonElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    this.addEventListener("click", this.onClick.bind(this), false);
+  }
+  onClick() {
+    const url = this.getAttribute("data-href");
+    navigator.clipboard.writeText(url);
+    NextSkyTheme.notifier.show(
+      window.message.socialCopyLink.success,
+      "success",
+      3000
+    );
+  }
+}
+customElements.define("button-copy-link", ButtonCopyLink, {
+  extends: "button",
+});
+CustomElement.observeAndPatchCustomElements({
+  "button-copy-link": {
+    tagElement: "button",
+    classElement: ButtonCopyLink,
+  },
+});
