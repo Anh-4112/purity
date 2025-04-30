@@ -38,7 +38,7 @@
       }
     }
     @media (min-width: 1025px) {
-      .drawer__body{
+      action-search .drawer__body{
         overflow: auto;
       }
       .predictive-search:has(.no-results){
@@ -58,13 +58,13 @@
 <script type="module" src="{{ 'search.js' | asset_url }}"></script>
 <action-search
   id="{{ section.id }}"
-  class="modal pointer-none active-modal-js{% if search_type == 'drawer' %} search-type-drawer{% else %} search-type-popup{% endif %}"
+  class="block modal pointer-none active-modal-js{% if search_type == 'drawer' %} search-type-drawer{% else %} search-type-popup{% endif %}"
   data-section-id="{{ section.id }}"
   data-type="{{ search_type }}"
   data-focus-item="search-icon-bubble"
 >
   <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
-  <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer drawer{% if search_type != 'popup' %} drawer-right{% else %} drawer-top{% endif %} fixed right-0 z-15 inset-y-0 bg-white w-full">
+  <div class="modal-inner invisible draw-mb drawer-right-mb color-default transition-drawer drawer{% if search_type != 'popup' %} drawer-right{% else %} drawer-top{% endif %} fixed right-0 z-15 inset-y-0 bg-white w-full">
     <div class="drawer__body h-full flex column{% if search_type == 'popup' %} pt-1025-60 custom-scrollbar{% endif %}">
       <div class="search__header drawer__header drawer-spacing border-bottom flex gap-10 space-between{% if search_type == 'popup' %} justify-center-1025 p-1025-0 border-1025-0{% endif %}">
         {% if search_type == 'popup' %}

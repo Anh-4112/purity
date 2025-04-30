@@ -251,13 +251,6 @@ class SiteHeader extends HTMLElement {
       ? this.getAttribute("data-sticky-type")
       : "none";
   }
-
-  get dataStickyMobile() {
-    return this.hasAttribute("data-sticky-mobile")
-      ? this.getAttribute("data-sticky-mobile")
-      : "false";
-  }
-
   get heightAnnouncementBar() {
     return document.querySelector(".section-announcement-bar")
       ? Math.round(
@@ -279,11 +272,11 @@ class SiteHeader extends HTMLElement {
 
   onStickyHeader() {
     if (this.dataStickyType != "none") {
-      if (this.dataStickyMobile == "false" && window.innerWidth < 1025) {
-        return;
-      }
       if (this.dataStickyType === "on-scroll-up") {
-        this.classList.add("scroll-up");
+        this.closest(".site-header").classList.add("scroll-up");
+      }
+      if (this.dataStickyType === "always") {
+        this.closest(".site-header").classList.add("header-sticky");
       }
       window.addEventListener("scroll", () => {
         this.stickyFunction();
@@ -2650,7 +2643,7 @@ class StickySection extends HTMLElement {
     setTimeout(() => {
       this.onResize();
       this.handleSections();
-    }, 100);
+    }, 500);
   }
 
   disconnectedCallback() {
