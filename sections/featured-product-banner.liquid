@@ -88,7 +88,7 @@
             {%- render 'placeholder-render', type: 'lifestyle-2' -%}
           {% endif %}
         </div>
-        <media-effect class="block">
+        <media-effect class="hidden block-md">
           {% assign image_effect_blocks = section.blocks | where: 'type', 'image_effect' %}
           {% for block in image_effect_blocks %}
             {%- liquid
@@ -454,6 +454,10 @@
       "name": "t:sections.featured_product_banner.blocks.image_effect.label",
       "limit": 3,
       "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.featured_product_banner.blocks.image_effect.info"
+        },
         {
           "type": "image_picker",
           "id": "image",
