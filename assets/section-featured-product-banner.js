@@ -525,7 +525,9 @@ class ContentEffect extends HTMLElement {
 
   playEntranceAnimation() {
     this.infoElements.forEach((element, index) => {
-      const delay = index * 0.1;
+      const pairIndex = Math.floor(index / 2);
+      const delay = pairIndex * 0.1;
+      
       const isEven = index % 2 === 0;
       const startX = isEven ? -40 : 40;
 
@@ -537,7 +539,7 @@ class ContentEffect extends HTMLElement {
         },
         {
           delay: delay,
-          duration: 0.4,
+          duration: 0.3,
           easing: "cubic-bezier(0.17, 0.67, 0.3, 1.33)",
           onComplete: () => {
             element.style.opacity = "1";
