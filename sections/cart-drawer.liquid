@@ -24,10 +24,12 @@
     class="cart-drawer block modal active-modal-js"
     data-section-id="{{ section.id }}"
     data-cart-type="{{ add_cart_type }}"
-    data-focus-item="cart-icon-bubble"
   >
     <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
-    <div class="modal-inner invisible draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 z-15 inset-y-0 w-full{% if enable_product_recommendations and cart != empty %} bg-secondary-1025 rounded-1025-0{% endif %}">
+    <div
+      class="modal-inner invisible draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 z-15 inset-y-0 w-full{% if enable_product_recommendations and cart != empty %} bg-secondary-1025 rounded-1025-0{% endif %}"
+      tabindex="-1"
+    >
       <div class="drawer__body h-full flex column bg-white rounded-start">
         <div
           class="drawer__header drawer__header-cart flex gap-10 space-between align-center drawer-spacing border-bottom"

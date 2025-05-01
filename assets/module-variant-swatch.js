@@ -396,6 +396,7 @@ class VariantInput extends HTMLElement {
         ),
       100
     );
+    NextSkyTheme.global.rootToFocus = this.sizeChart;
   }
 }
 customElements.define("variant-input", VariantInput);
