@@ -1,3 +1,4 @@
+import * as NextSkyTheme from "global";
 class LocalizationForm extends HTMLElement {
   constructor() {
     super();
@@ -37,6 +38,9 @@ class LocalizationForm extends HTMLElement {
     this.elements.button.setAttribute('aria-expanded', 'false');
     this.elements.button.classList.remove("opened");
     this.elements.panelWrapper.setAttribute('hidden', true);
+    if (NextSkyTheme.root.classList.contains("open-modal")) {
+      NextSkyTheme.root.classList.remove("open-modal");
+    }
   }
 
   onContainerKeyUp(event) {
@@ -71,6 +75,18 @@ class LocalizationForm extends HTMLElement {
       }
       requestAnimationFrame(() => {
         this.elements.button.classList.add("opened");
+        const mediaQuery = window.matchMedia("(max-width: 1024.98px)");
+        const handleMediaQueryChange = (mediaQuery) => {
+          if (mediaQuery.matches) {
+            NextSkyTheme.root.classList.add("open-modal");
+          }else{
+            if (NextSkyTheme.root.classList.contains("open-modal")) {
+              NextSkyTheme.root.classList.remove("open-modal");
+            }
+          }
+        }
+        handleMediaQueryChange(mediaQuery);
+        mediaQuery.addEventListener("change", handleMediaQueryChange);
       });
     }
   }
@@ -183,6 +199,9 @@ class DraggableLocalization extends HTMLElement {
     }
     if (this.panelWrapper) {
       this.panelWrapper.setAttribute('hidden', true);
+    }
+    if (NextSkyTheme.root.classList.contains("open-modal")) {
+      NextSkyTheme.root.classList.remove("open-modal");
     }
   }
 }
