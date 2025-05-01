@@ -24,6 +24,8 @@ class LocalizationForm extends HTMLElement {
       item.addEventListener("click", this.onItemClick.bind(this))
     );
     this.onBodyClick = this.handleBodyClick.bind(this);
+    this.currentMediaQuery = null;
+    this.mediaQueryHandler = null;
   }
 
   handleBodyClick(evt) {
@@ -38,6 +40,12 @@ class LocalizationForm extends HTMLElement {
     this.elements.button.setAttribute('aria-expanded', 'false');
     this.elements.button.classList.remove("opened");
     this.elements.panelWrapper.setAttribute('hidden', true);
+    
+    if (this.currentMediaQuery && this.mediaQueryHandler) {
+      this.currentMediaQuery.removeEventListener("change", this.mediaQueryHandler);
+      this.currentMediaQuery = null;
+      this.mediaQueryHandler = null;
+    }
     if (NextSkyTheme.root.classList.contains("open-modal")) {
       NextSkyTheme.root.classList.remove("open-modal");
     }
@@ -76,17 +84,18 @@ class LocalizationForm extends HTMLElement {
       requestAnimationFrame(() => {
         this.elements.button.classList.add("opened");
         const mediaQuery = window.matchMedia("(max-width: 1024.98px)");
-        const handleMediaQueryChange = (mediaQuery) => {
+        this.mediaQueryHandler = (mediaQuery) => {
           if (mediaQuery.matches) {
             NextSkyTheme.root.classList.add("open-modal");
-          }else{
+          } else {
             if (NextSkyTheme.root.classList.contains("open-modal")) {
               NextSkyTheme.root.classList.remove("open-modal");
             }
           }
-        }
-        handleMediaQueryChange(mediaQuery);
-        mediaQuery.addEventListener("change", handleMediaQueryChange);
+        };
+        this.mediaQueryHandler(mediaQuery);
+        mediaQuery.addEventListener("change", this.mediaQueryHandler);
+        this.currentMediaQuery = mediaQuery;
       });
     }
   }
