@@ -1,5 +1,8 @@
 export var root = document.getElementsByTagName("html")[0];
 export var body = document.getElementsByTagName("body")[0];
+export const global = {
+  rootToFocus: null,
+};
 
 export function formatMoney(cents, format) {
   if (typeof cents == "string") {
@@ -194,15 +197,23 @@ export function eventModal(
     if (actionMobile) {
       if (actionMobile) {
         const modalBody = element.querySelector(".modal-body");
-        if (modalBody && !modalBody.querySelector('draggable-modal')) {
+        if (modalBody && !modalBody.querySelector("draggable-modal")) {
           const draggableModal = document.createElement("draggable-modal");
-          draggableModal.classList.add("block", "hidden-1025", "relative", "pointer");
+          draggableModal.classList.add(
+            "block",
+            "hidden-1025",
+            "relative",
+            "pointer"
+          );
           modalBody.prepend(draggableModal);
         }
       }
     }
     root.style.setProperty("padding-right", getScrollBarWidth.init() + "px");
-    trapFocus(element);
+    const elementFocus =
+      element.querySelector(".modal-inner") ||
+      element.querySelector(".modal-focus");
+    trapFocus(elementFocus);
   } else {
     const active_modal = document.querySelectorAll(".active-modal-js.active");
     const modal_element = element.classList.contains("active-modal-js")
@@ -247,10 +258,8 @@ export function eventModal(
         removeModalAction(modal_element);
       }
     }
-    removeTrapFocus(modal_element);
-    if (focus_item && document.getElementById(focus_item)) {
-      trapFocus(document.getElementById(focus_item));
-    }
+    removeTrapFocus(global.rootToFocus);
+    global.rootToFocus = null;
   }
 }
 
@@ -539,100 +548,102 @@ class DraggableModal extends HTMLElement {
     this.startY = 0;
     this.currentY = 0;
     this.threshold = 100;
-    
+
     this.startDrag = this.startDrag.bind(this);
     this.onDrag = this.onDrag.bind(this);
     this.endDrag = this.endDrag.bind(this);
   }
 
   connectedCallback() {
-    this.modalElement = this.closest('.active-modal-js');
+    this.modalElement = this.closest(".active-modal-js");
     if (!this.modalElement) return;
-    
-    this.addEventListener('touchstart', this.startDrag, { passive: true });
-    this.addEventListener('mousedown', this.startDrag);
-    document.addEventListener('touchmove', this.onDrag, { passive: false });
-    document.addEventListener('mousemove', this.onDrag);
-    document.addEventListener('touchend', this.endDrag);
-    document.addEventListener('mouseup', this.endDrag);
+
+    this.addEventListener("touchstart", this.startDrag, { passive: true });
+    this.addEventListener("mousedown", this.startDrag);
+    document.addEventListener("touchmove", this.onDrag, { passive: false });
+    document.addEventListener("mousemove", this.onDrag);
+    document.addEventListener("touchend", this.endDrag);
+    document.addEventListener("mouseup", this.endDrag);
   }
 
   disconnectedCallback() {
-    this.removeEventListener('touchstart', this.startDrag);
-    this.removeEventListener('mousedown', this.startDrag);
-    document.removeEventListener('touchmove', this.onDrag);
-    document.removeEventListener('mousemove', this.onDrag);
-    document.removeEventListener('touchend', this.endDrag);
-    document.removeEventListener('mouseup', this.endDrag);
+    this.removeEventListener("touchstart", this.startDrag);
+    this.removeEventListener("mousedown", this.startDrag);
+    document.removeEventListener("touchmove", this.onDrag);
+    document.removeEventListener("mousemove", this.onDrag);
+    document.removeEventListener("touchend", this.endDrag);
+    document.removeEventListener("mouseup", this.endDrag);
   }
 
   startDrag(e) {
     if (!this.modalElement) return;
-    
+
     this.isDragging = true;
-    this.startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    this.startY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
     this.currentY = this.startY;
-    
-    this.modalElement.classList.add('is-dragging');
-    this.style.cursor = 'grabbing';
-    
-    const modalBody = this.modalElement.querySelector('.modal-draggable');
+
+    this.modalElement.classList.add("is-dragging");
+    this.style.cursor = "grabbing";
+
+    const modalBody = this.modalElement.querySelector(".modal-draggable");
     if (modalBody) {
-      modalBody.style.transition = 'none';
+      modalBody.style.transition = "none";
     }
   }
 
   onDrag(e) {
     if (!this.isDragging || !this.modalElement) return;
-    
+
     e.preventDefault();
-    
-    this.currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+
+    this.currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
     const dragDistance = this.currentY - this.startY;
-    
+
     if (dragDistance > 0) {
       const resistance = 0.4;
-      const modalBody = this.modalElement.querySelector('.modal-draggable');
-      
+      const modalBody = this.modalElement.querySelector(".modal-draggable");
+
       if (modalBody) {
-        modalBody.style.transform = `translateY(${dragDistance * resistance}px)`;
+        modalBody.style.transform = `translateY(${
+          dragDistance * resistance
+        }px)`;
       }
     }
   }
 
   endDrag() {
     if (!this.isDragging || !this.modalElement) return;
-    
+
     const dragDistance = this.currentY - this.startY;
     this.isDragging = false;
-    this.style.cursor = 'grab';
-    this.modalElement.classList.remove('is-dragging');
-    
-    const modalBody = this.modalElement.querySelector('.modal-draggable');
+    this.style.cursor = "grab";
+    this.modalElement.classList.remove("is-dragging");
+
+    const modalBody = this.modalElement.querySelector(".modal-draggable");
     if (!modalBody) return;
-    
-    modalBody.style.transition = 'transform 0.3s ease-out';
-    
+
+    modalBody.style.transition = "transform 0.3s ease-out";
+
     if (dragDistance > this.threshold) {
       modalBody.style.transform = `translateY(100%)`;
-      
+
       setTimeout(() => {
-        if (typeof NextSkyTheme !== 'undefined' && NextSkyTheme.eventModal) {
-          NextSkyTheme.eventModal(this.modalElement, 'close');
+        if (typeof NextSkyTheme !== "undefined" && NextSkyTheme.eventModal) {
+          NextSkyTheme.eventModal(this.modalElement, "close");
         } else {
-          eventModal(this.modalElement, 'close');
+          eventModal(this.modalElement, "close");
         }
-        
-        modalBody.style.transform = '';
-        modalBody.style.transition = '';
+
+        modalBody.style.transform = "";
+        modalBody.style.transition = "";
       }, 300);
     } else {
-      modalBody.style.transform = '';
+      modalBody.style.transform = "";
       setTimeout(() => {
-        modalBody.style.transition = '';
+        modalBody.style.transition = "";
       }, 300);
     }
   }
 }
 
-customElements.define('draggable-modal', DraggableModal);
+customElements.define("draggable-modal", DraggableModal);

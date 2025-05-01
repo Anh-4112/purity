@@ -2221,6 +2221,7 @@ class AskQuestion extends HTMLButtonElement {
         ),
       100
     );
+    NextSkyTheme.global.rootToFocus = this;
   }
 }
 customElements.define("ask-question", AskQuestion, {
