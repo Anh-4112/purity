@@ -1,3 +1,4 @@
+import * as NextSkyTheme from "global";
 class LocalizationForm extends HTMLElement {
   constructor() {
     super();
@@ -23,6 +24,8 @@ class LocalizationForm extends HTMLElement {
       item.addEventListener("click", this.onItemClick.bind(this))
     );
     this.onBodyClick = this.handleBodyClick.bind(this);
+    this.currentMediaQuery = null;
+    this.mediaQueryHandler = null;
   }
 
   handleBodyClick(evt) {
@@ -37,6 +40,15 @@ class LocalizationForm extends HTMLElement {
     this.elements.button.setAttribute('aria-expanded', 'false');
     this.elements.button.classList.remove("opened");
     this.elements.panelWrapper.setAttribute('hidden', true);
+    
+    if (this.currentMediaQuery && this.mediaQueryHandler) {
+      this.currentMediaQuery.removeEventListener("change", this.mediaQueryHandler);
+      this.currentMediaQuery = null;
+      this.mediaQueryHandler = null;
+    }
+    if (NextSkyTheme.root.classList.contains("open-modal")) {
+      NextSkyTheme.root.classList.remove("open-modal");
+    }
   }
 
   onContainerKeyUp(event) {
@@ -71,6 +83,19 @@ class LocalizationForm extends HTMLElement {
       }
       requestAnimationFrame(() => {
         this.elements.button.classList.add("opened");
+        const mediaQuery = window.matchMedia("(max-width: 1024.98px)");
+        this.mediaQueryHandler = (mediaQuery) => {
+          if (mediaQuery.matches) {
+            NextSkyTheme.root.classList.add("open-modal");
+          } else {
+            if (NextSkyTheme.root.classList.contains("open-modal")) {
+              NextSkyTheme.root.classList.remove("open-modal");
+            }
+          }
+        };
+        this.mediaQueryHandler(mediaQuery);
+        mediaQuery.addEventListener("change", this.mediaQueryHandler);
+        this.currentMediaQuery = mediaQuery;
       });
     }
   }
@@ -183,6 +208,9 @@ class DraggableLocalization extends HTMLElement {
     }
     if (this.panelWrapper) {
       this.panelWrapper.setAttribute('hidden', true);
+    }
+    if (NextSkyTheme.root.classList.contains("open-modal")) {
+      NextSkyTheme.root.classList.remove("open-modal");
     }
   }
 }

@@ -16,7 +16,6 @@
     assign transparent_class = ' absolute inset-x-0 transparent z-15'
   endif
 -%}
-<script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--gap: 1rem; --gap-desktop: 2.5rem;{{- -}}
   {% if transparent %}--transparent-color: {{ section_st.header_text_icon_transparent }};{% endif %}{{- -}}
@@ -75,7 +74,6 @@
 <header
   is="site-header"
   data-sticky-type="{{ section_st.sticky_header_type }}"
-  data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
   data-menu-trigger="{{ section_st.menu_trigger }}"
   data-dropdowns-animation="{{ dropdowns_animation }}"
   class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}{% if request.page_type != 'index' %} border-bottom{% endif %}"
@@ -531,14 +529,14 @@
       style="--modal-width: 100%;"
     >
       <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
-      <div class="modal-inner draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-15 left-0 bg-white">
+      <div class="modal-inner invisible draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-15 left-0 bg-white">
         <div class="drawer__body h-full">
           <div class="drawer__content flex column h-full max-height-mb-menu">
             <nav class="header__menu-mobile overflow-y-auto overflow-x-hidden w-full h-full grow-1">
               {%- if section_st.banner_image != blank -%}
                 <div class="banner overflow-hidden relative">
                   <button
-                    class="modal__close transition-short heading-color absolute{% if section_st.banner_image != blank %} top-10 right-10 bg-white blur rounded-50 shadow{% else %} invisible inset-x-0 mx-auto bg-white btn-close-model{% endif %} w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
+                    class="modal__close transition-short heading-color absolute{% if section_st.banner_image != blank %} top-10 right-10 bg-white blur rounded-50 shadow{% else %} invisible inset-x-0 mx-auto bg-white{% endif %} w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
                     style="--width: 2.4rem;"
                     is="button-close-model"
                     aria-label="{{ 'accessibility.button.close' | t }}"
@@ -710,7 +708,7 @@
                                                       </h6>
                                                     {% endif %}
                                                     {% if description != blank %}
-                                                      <div class="description fs-16">
+                                                      <div class="description">
                                                         {{ description }}
                                                       </div>
                                                     {% endif %}
@@ -958,7 +956,7 @@
 {% schema %}
 {
   "name": "t:sections.header.name",
-  "class": "site-header sticky z-10",
+  "class": "site-header",
   "settings": [
     {
       "type": "header",
@@ -1027,12 +1025,6 @@
       ],
       "default": "on-scroll-up",
       "label": "t:sections.header.settings.sticky_header_type.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "sticky_header_mobile",
-      "default": true,
-      "label": "t:sections.header.settings.sticky_header_mobile.label"
     },
     {
       "type": "checkbox",
