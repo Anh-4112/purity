@@ -87,8 +87,8 @@
           aria-controls="Menu-Drawer"
           aria-label="{{ 'accessibility.toggle_menu' | t }}"
         >
-          <svg width="20" height="14" fill="none">
-            <path fill="currentColor" d="M1.007 7.997c-.281 0-.523-.094-.726-.282A1.036 1.036 0 0 1 0 6.988c0-.266.094-.492.281-.68a.99.99 0 0 1 .726-.305h17.986c.281 0 .515.102.703.305a.893.893 0 0 1 .304.68.993.993 0 0 1-.304.727.953.953 0 0 1-.703.282H1.007Zm0-6.004c-.281 0-.523-.094-.726-.281A1.036 1.036 0 0 1 0 .985C0 .719.094.492.281.305A.99.99 0 0 1 1.007 0h17.986c.281 0 .515.102.703.305a.893.893 0 0 1 .304.68.993.993 0 0 1-.304.727.953.953 0 0 1-.703.281H1.007Zm0 12.007c-.281 0-.523-.094-.726-.281A1.036 1.036 0 0 1 0 12.992c0-.266.094-.493.281-.68a.99.99 0 0 1 .726-.305h17.986c.281 0 .515.101.703.305a.893.893 0 0 1 .304.68.993.993 0 0 1-.304.727.953.953 0 0 1-.703.281H1.007Z"/>
+          <svg width="22" height="22" fill="none">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2 3.5h18M2 8.5h9.47M2 13.5h18M2 18.5h9.47"/>
           </svg>
         </button>
       </toggle-menu>
@@ -459,15 +459,11 @@
               {%- if section_st.show_search -%}
                 <a
                   href="{{ routes.search_url }}"
-                  class="header__icon transparent-color wh-40 flex content-center"
+                  class="header__icon heading-color transparent-color wh-40 flex content-center"
                   id="search-icon-bubble"
                 >
-                  <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
-                    {{ 'general.search.search' | t }}
-                  </span>
-                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                    <path d="M10.5465 19.1672C15.3076 19.1672 19.1672 15.3076 19.1672 10.5465C19.1672 5.7854 15.3076 1.92578 10.5465 1.92578C5.7854 1.92578 1.92578 5.7854 1.92578 10.5465C1.92578 15.3076 5.7854 19.1672 10.5465 19.1672Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M20.0746 20.0742L18.2598 18.2593" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <svg width="22" height="22" fill="none">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.546 19.167a8.62 8.62 0 1 0 0-17.241 8.62 8.62 0 0 0 0 17.241ZM20.073 20.074l-1.815-1.815"/>
                   </svg>
                   <span class="visually-hidden">{{ 'general.search.search' | t }}</span>
                 </a>
@@ -475,7 +471,7 @@
               {%- if section_st.show_account -%}
                 <a
                   href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                  class="header__icon transparent-color wh-40 hidden flex-1025 content-center"
+                  class="header__icon heading-color transparent-color wh-40 hidden flex-1025 content-center"
                   aria-label="{{ 'customer.account_fallback' | t }}"
                 >
                   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -487,15 +483,12 @@
               {%- if section_st.show_cart -%}
                 <a
                   href="{{ routes.cart_url }}"
-                  class="header__icon transparent-color wh-40 flex content-center relative"
+                  class="header__icon heading-color transparent-color wh-40 flex content-center relative"
                   id="cart-icon-bubble"
                 >
                   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                     <use href="#icon-cart" />
                   </svg>
-                  <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
-                    {{ 'templates.cart.minicart' | t }}
-                  </span>
                   <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
                   {%- if cart != empty -%}
                     <div class="cart-count rounded-50 inline-flex content-center absolute bg-sale fs-10">
