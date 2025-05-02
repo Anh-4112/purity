@@ -119,7 +119,8 @@
                 image: media,
                 image_alt: image_alt,
                 padding: column_gap_slide,
-                column: section.blocks.size
+                column: section.blocks.size,
+                motion: true
               %}
             {%- else -%}
               {% render 'placeholder-render', type: 'blog' %}
@@ -128,11 +129,19 @@
         </div>
       {%- endfor -%}
     </div>
-    <div class="multimedia_with_text__text text-center max-w-custom">
-      <div class="text-content {{ text_content_size }} prose">
-        {{ text }}
+    {% if text != blank %}
+      <div class="multimedia_with_text__text text-center max-w-custom">
+        <motion-effect
+          data-animate="fade-up"
+          data-animate-delay="30"
+          class="block"
+        >
+          <div class="text-content {{ text_content_size }} prose">
+            {{ text }}
+          </div>
+        </motion-effect>
       </div>
-    </div>
+    {% endif %}
   </div>
 </div>
 {% schema %}

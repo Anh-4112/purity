@@ -919,8 +919,6 @@ class PopupInformationHeader extends ShopableItem {
   }
 
   disconnectedCallback() {
-    super.disconnectedCallback();
-    
     if (this.headerElement) {
       this.headerElement.removeEventListener("touchstart", this.startDrag);
       this.headerElement.removeEventListener("touchmove", this.onDrag);

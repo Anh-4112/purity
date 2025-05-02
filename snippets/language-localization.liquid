@@ -37,20 +37,16 @@
           aria-describedby="{{ localPosition }}Label"
         >
           {{ localization.language.endonym_name | capitalize }}
-          <svg class="icon icon-down icon-rotate transition-short" width="9" height="6" viewBox="0 0 9 6">
+          <svg class="icon icon-down icon-rotate transition-drawer" width="9" height="6" viewBox="0 0 9 6">
             <use href="#icon-arrow-down" />
           </svg>
         </button>
 
         <div
-          class="disclosure__list-wrapper block invisible bg-white z-3 fs-small body_weight transition-short absolute left-0 shadow"
+          class="disclosure__list-wrapper block invisible bg-white z-3 fs-small body_weight absolute left-0 shadow transition-short"
           hidden="true"
         >
-          <icon-close class="disclosure__list-close pointer-none border inline-flex hidden-1025 mx-auto rounded-50 overflow-hidden absolute top-0 inset-x-0 w-50 h-50 content-center heading-color bg-white">
-            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-              <use href="#icon-close" />
-            </svg>
-          </icon-close>
+          <draggable-localization class="block hidden-1025 relative pointer"> </draggable-localization>
           <ul
             class="disclosure__list h-full text-start list-unstyled px-gutter-x py-20 overflow-auto custom-scrollbar"
             role="list"

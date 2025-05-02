@@ -251,13 +251,6 @@ class SiteHeader extends HTMLElement {
       ? this.getAttribute("data-sticky-type")
       : "none";
   }
-
-  get dataStickyMobile() {
-    return this.hasAttribute("data-sticky-mobile")
-      ? this.getAttribute("data-sticky-mobile")
-      : "false";
-  }
-
   get heightAnnouncementBar() {
     return document.querySelector(".section-announcement-bar")
       ? Math.round(
@@ -279,11 +272,11 @@ class SiteHeader extends HTMLElement {
 
   onStickyHeader() {
     if (this.dataStickyType != "none") {
-      if (this.dataStickyMobile == "false" && window.innerWidth < 1025) {
-        return;
-      }
       if (this.dataStickyType === "on-scroll-up") {
-        this.classList.add("scroll-up");
+        this.closest(".site-header").classList.add("scroll-up");
+      }
+      if (this.dataStickyType === "always") {
+        this.closest(".site-header").classList.add("header-sticky");
       }
       window.addEventListener("scroll", () => {
         this.stickyFunction();
@@ -1582,12 +1575,14 @@ class CartUpSellProduct extends SlideSection {
   actionOnMobile() {
     this.initSlideMediaGallery("CartUpSell");
     this.style.maxHeight = "auto";
+    this.style.minHeight = "auto";
   }
 
   actionOutMobile() {
     this.initSlideMediaGallery("CartUpSell");
     this.style.maxHeight =
       this.closest(".drawer__body").offsetHeight - 140 + "px";
+    this.style.minHeight = "calc(100vh - 140px)";
   }
 }
 customElements.define("cart-upsell-product", CartUpSellProduct);
@@ -2219,6 +2214,7 @@ class AskQuestion extends HTMLButtonElement {
         ),
       100
     );
+    NextSkyTheme.global.rootToFocus = this;
   }
 }
 customElements.define("ask-question", AskQuestion, {
@@ -2279,7 +2275,7 @@ class NewsletterPopup extends HTMLElement {
     );
 
     setTimeout(() => {
-      NextSkyTheme.eventModal(wrapper, "open", true);
+      NextSkyTheme.eventModal(wrapper, "open", true, null, true);
     }, 3000);
 
     this.initNotShow(wrapper);
@@ -2648,7 +2644,7 @@ class StickySection extends HTMLElement {
     setTimeout(() => {
       this.onResize();
       this.handleSections();
-    }, 100);
+    }, 500);
   }
 
   disconnectedCallback() {
@@ -2875,3 +2871,133 @@ class MotionItemsEffect extends HTMLElement {
   }
 }
 customElements.define("motion-items-effect", MotionItemsEffect);
+
+class ButtonCopyLink extends HTMLButtonElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    this.addEventListener("click", this.onClick.bind(this), false);
+  }
+  onClick() {
+    const url = this.getAttribute("data-href");
+    navigator.clipboard.writeText(url);
+    NextSkyTheme.notifier.show(
+      window.message.socialCopyLink.success,
+      "success",
+      3000
+    );
+  }
+}
+customElements.define("button-copy-link", ButtonCopyLink, {
+  extends: "button",
+});
+CustomElement.observeAndPatchCustomElements({
+  "button-copy-link": {
+    tagElement: "button",
+    classElement: ButtonCopyLink,
+  },
+});
+class DraggableModal extends HTMLElement {
+  constructor() {
+    super();
+    this.isDragging = false;
+    this.startY = 0;
+    this.currentY = 0;
+    this.threshold = 100;
+    
+    this.startDrag = this.startDrag.bind(this);
+    this.onDrag = this.onDrag.bind(this);
+    this.endDrag = this.endDrag.bind(this);
+  }
+
+  connectedCallback() {
+    this.modalElement = this.closest('.active-modal-js');
+    if (!this.modalElement) return;
+    
+    this.addEventListener('touchstart', this.startDrag, { passive: true });
+    this.addEventListener('mousedown', this.startDrag);
+    document.addEventListener('touchmove', this.onDrag, { passive: false });
+    document.addEventListener('mousemove', this.onDrag);
+    document.addEventListener('touchend', this.endDrag);
+    document.addEventListener('mouseup', this.endDrag);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('touchstart', this.startDrag);
+    this.removeEventListener('mousedown', this.startDrag);
+    document.removeEventListener('touchmove', this.onDrag);
+    document.removeEventListener('mousemove', this.onDrag);
+    document.removeEventListener('touchend', this.endDrag);
+    document.removeEventListener('mouseup', this.endDrag);
+  }
+
+  startDrag(e) {
+    if (!this.modalElement) return;
+    
+    this.isDragging = true;
+    this.startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    this.currentY = this.startY;
+    
+    this.modalElement.classList.add('is-dragging');
+    this.style.cursor = 'grabbing';
+    
+    const modalBody = this.modalElement.querySelector('.modal-draggable');
+    if (modalBody) {
+      modalBody.style.transition = 'none';
+    }
+  }
+
+  onDrag(e) {
+    if (!this.isDragging || !this.modalElement) return;
+    
+    e.preventDefault();
+    
+    this.currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    const dragDistance = this.currentY - this.startY;
+    
+    if (dragDistance > 0) {
+      const resistance = 0.4;
+      const modalBody = this.modalElement.querySelector('.modal-draggable');
+      
+      if (modalBody) {
+        modalBody.style.transform = `translateY(${dragDistance * resistance}px)`;
+      }
+    }
+  }
+
+  endDrag() {
+    if (!this.isDragging || !this.modalElement) return;
+    
+    const dragDistance = this.currentY - this.startY;
+    this.isDragging = false;
+    this.style.cursor = 'grab';
+    this.modalElement.classList.remove('is-dragging');
+    
+    const modalBody = this.modalElement.querySelector('.modal-draggable');
+    if (!modalBody) return;
+    
+    modalBody.style.transition = 'transform 0.3s ease-out';
+    
+    if (dragDistance > this.threshold) {
+      modalBody.style.transform = `translateY(100%)`;
+      
+      setTimeout(() => {
+        if (typeof NextSkyTheme !== 'undefined' && NextSkyTheme.eventModal) {
+          NextSkyTheme.eventModal(this.modalElement, 'close');
+        }
+        
+        modalBody.style.transform = '';
+        modalBody.style.transition = '';
+      }, 300);
+    } else {
+      modalBody.style.transform = '';
+      setTimeout(() => {
+        modalBody.style.transition = '';
+      }, 300);
+    }
+  }
+}
+
+customElements.define('draggable-modal', DraggableModal);

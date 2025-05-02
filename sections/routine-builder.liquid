@@ -1,5 +1,7 @@
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -62,22 +64,43 @@
         class="section-header text-{{ text_alignment }}"
       >
         {%- if section_st.subheading != blank -%}
-          <div class="section-subheading h7 mb-5 mb-md-10 body_weight">
-            {{ section_st.subheading }}
-          </div>
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="30"
+            class="block"
+          >
+            <div class="section-subheading h7 mb-5 mb-md-10 body_weight">
+              {{ section_st.subheading }}
+            </div>
+          </motion-effect>
         {%- endif -%}
         {%- if section_st.title != blank -%}
-          <h2 class="section-heading {{ header_size }}">
-            {{ section_st.title }}
-          </h2>
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="35"
+            class="block"
+          >
+            <h2 class="section-heading {{ header_size }}">
+              {{ section_st.title }}
+            </h2>
+          </motion-effect>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description mt-15 prose">
-            {{ section_st.description }}
-          </div>
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="40"
+            class="block"
+          >
+            <div class="section-description mt-15 prose">
+              {{ section_st.description }}
+            </div>
+          </motion-effect>
         {%- endif -%}
       </div>
     {%- endif -%}
+    {% if scroll_animation %}
+      <motion-items-effect>
+    {% endif %}
     {%- if section_st.enable_carousel -%}
       {% if data_free_scroll == 'true' %}
         <div class="free-scroll">
@@ -106,7 +129,7 @@
               assign product = block_st.step_product
               assign step_title = block_st.step_title
             -%}
-            <div class="swiper-slide routine-builder__item">
+            <div class="swiper-slide routine-builder__item motion-item">
               <div class="routine-builder__item-content">
                 {% if step_title != blank %}
                   <span class="routine-builder__item-title heading-color mb-20 subheading_weight block text-center">
@@ -154,7 +177,7 @@
             assign product = block_st.step_product
             assign step_title = block_st.step_title
           -%}
-          <div class="routine-builder__item grid-card-item">
+          <div class="routine-builder__item grid-card-item motion-item">
             <div class="routine-builder__item-content">
               {% if step_title != blank %}
                 <span class="routine-builder__item-title heading-color mb-20 subheading_weight block text-center">
@@ -179,6 +202,9 @@
           </div>
         {% endfor %}
       </grid-custom>
+    {% endif %}
+    {% if scroll_animation %}
+      </motion-items-effect>
     {% endif %}
   </div>
 </div>

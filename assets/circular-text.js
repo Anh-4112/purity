@@ -12,7 +12,7 @@ class SpinningTextElement extends HTMLElement {
     const uppercase = this.dataset.uppercase === 'true';
 
     const unit = rawText.trim() + ' • ';
-    const displayText = ((unit + unit).trim());
+    const displayText = ((unit + unit));
     const finalText = uppercase ? displayText.toUpperCase() : displayText;
 
     const circle = this.querySelector('.spinning-text__circle');

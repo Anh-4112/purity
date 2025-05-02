@@ -1,3 +1,4 @@
+import * as NextSkyTheme from "global";
 class LocalizationForm extends HTMLElement {
   constructor() {
     super();
@@ -23,6 +24,8 @@ class LocalizationForm extends HTMLElement {
       item.addEventListener("click", this.onItemClick.bind(this))
     );
     this.onBodyClick = this.handleBodyClick.bind(this);
+    this.currentMediaQuery = null;
+    this.mediaQueryHandler = null;
   }
 
   handleBodyClick(evt) {
@@ -37,6 +40,15 @@ class LocalizationForm extends HTMLElement {
     this.elements.button.setAttribute('aria-expanded', 'false');
     this.elements.button.classList.remove("opened");
     this.elements.panelWrapper.setAttribute('hidden', true);
+    
+    if (this.currentMediaQuery && this.mediaQueryHandler) {
+      this.currentMediaQuery.removeEventListener("change", this.mediaQueryHandler);
+      this.currentMediaQuery = null;
+      this.mediaQueryHandler = null;
+    }
+    if (NextSkyTheme.root.classList.contains("open-modal")) {
+      NextSkyTheme.root.classList.remove("open-modal");
+    }
   }
 
   onContainerKeyUp(event) {
@@ -71,6 +83,19 @@ class LocalizationForm extends HTMLElement {
       }
       requestAnimationFrame(() => {
         this.elements.button.classList.add("opened");
+        const mediaQuery = window.matchMedia("(max-width: 1024.98px)");
+        this.mediaQueryHandler = (mediaQuery) => {
+          if (mediaQuery.matches) {
+            NextSkyTheme.root.classList.add("open-modal");
+          } else {
+            if (NextSkyTheme.root.classList.contains("open-modal")) {
+              NextSkyTheme.root.classList.remove("open-modal");
+            }
+          }
+        };
+        this.mediaQueryHandler(mediaQuery);
+        mediaQuery.addEventListener("change", this.mediaQueryHandler);
+        this.currentMediaQuery = mediaQuery;
       });
     }
   }
@@ -84,3 +109,110 @@ class LocalizationForm extends HTMLElement {
   }
 }
 customElements.define("localization-form", LocalizationForm);
+
+
+class DraggableLocalization extends HTMLElement {
+  constructor() {
+    super();
+    
+    this.isDragging = false;
+    this.startY = 0;
+    this.currentY = 0;
+    this.threshold = 50;
+    
+    this.startDrag = this.startDrag.bind(this);
+    this.onDrag = this.onDrag.bind(this);
+    this.endDrag = this.endDrag.bind(this);
+
+    this.localizationForm = this.closest('localization-form');
+    
+    if (!this.localizationForm) return;
+    
+    this.buttonElement = this.localizationForm.querySelector("button");
+    this.panelWrapper = this.localizationForm.querySelector(".disclosure__list-wrapper");
+  }
+
+  connectedCallback() {
+    if (!this.localizationForm) return;
+
+    this.addEventListener('touchstart', this.startDrag, { passive: true });
+    this.addEventListener('mousedown', this.startDrag);
+    document.addEventListener('touchmove', this.onDrag, { passive: false });
+    document.addEventListener('mousemove', this.onDrag);
+    document.addEventListener('touchend', this.endDrag);
+    document.addEventListener('mouseup', this.endDrag);
+    
+    this.classList.add('draggable');
+    this.style.cursor = 'grab';
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('touchstart', this.startDrag);
+    this.removeEventListener('mousedown', this.startDrag);
+    document.removeEventListener('touchmove', this.onDrag);
+    document.removeEventListener('mousemove', this.onDrag);
+    document.removeEventListener('touchend', this.endDrag);
+    document.removeEventListener('mouseup', this.endDrag);
+  }
+
+  startDrag(e) {
+    if (!this.panelWrapper || this.panelWrapper.hasAttribute('hidden')) return;
+    this.isDragging = true;
+    this.startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    this.currentY = this.startY;
+    this.panelWrapper.style.transition = 'none';
+  }
+
+  onDrag(e) {
+    if (!this.isDragging || !this.panelWrapper) return;
+    e.preventDefault();
+    this.currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    const dragDistance = this.currentY - this.startY;
+    if (dragDistance > 0) {
+      const resistance = 0.4;
+      this.panelWrapper.style.transform = `translateY(${dragDistance * resistance}px)`;
+    }
+  }
+
+  endDrag() {
+    if (!this.isDragging || !this.panelWrapper) return;
+    const dragDistance = this.currentY - this.startY;
+    this.isDragging = false;
+    this.panelWrapper.style.transition = 'transform 0.3s ease-out';
+    if (dragDistance > this.threshold) {
+      this.closePanel();
+    } else {
+      this.resetPanelPosition();
+    }
+  }
+  
+  closePanel() {
+    this.panelWrapper.style.transform = 'translateY(100%)';
+    setTimeout(() => {
+      this.hidePanel();
+      this.resetPanelPosition();
+    }, 300);
+  }
+  
+  resetPanelPosition() {
+    this.panelWrapper.style.transform = '';
+    setTimeout(() => {
+      this.panelWrapper.style.transition = '';
+    }, 300);
+  }
+
+  hidePanel() {
+    if (this.buttonElement) {
+      this.buttonElement.setAttribute('aria-expanded', 'false');
+      this.buttonElement.classList.remove("opened");
+    }
+    if (this.panelWrapper) {
+      this.panelWrapper.setAttribute('hidden', true);
+    }
+    if (NextSkyTheme.root.classList.contains("open-modal")) {
+      NextSkyTheme.root.classList.remove("open-modal");
+    }
+  }
+}
+
+customElements.define('draggable-localization', DraggableLocalization);

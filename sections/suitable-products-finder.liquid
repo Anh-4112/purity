@@ -1,6 +1,8 @@
 <script type="module" src="{{ 'section-vertical-product-tabs.js' | asset_url }}" defer="defer"></script>
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -93,19 +95,37 @@
         class="section-header text-{{ text_alignment }}"
       >
         {%- if section_st.subheading != blank -%}
-          <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
-            {{ section_st.subheading }}
-          </div>
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="30"
+            class="block"
+          >
+            <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
+              {{ section_st.subheading }}
+            </div>
+          </motion-effect>
         {%- endif -%}
         {%- if section_st.title != blank -%}
-          <h2 class="block section-heading {{ header_size }}">
-            {{ section_st.title }}
-          </h2>
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="35"
+            class="block"
+          >
+            <h2 class="block section-heading {{ header_size }}">
+              {{ section_st.title }}
+            </h2>
+          </motion-effect>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description mt-15 prose">
-            {{ section_st.description }}
-          </div>
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="40"
+            class="block"
+          >
+            <div class="section-description mt-15 prose">
+              {{ section_st.description }}
+            </div>
+          </motion-effect>
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -319,6 +339,9 @@
             data-block-id="{{ block.id }}"
             {{ block.shopify_attributes }}
           >
+            {% if scroll_animation %}
+              <motion-items-effect>
+            {% endif %}
             <slide-section
               class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
               data-section-id="{{ block.id }}"
@@ -341,7 +364,7 @@
                   {% render 'card-product',
                     card_product: product,
                     section_id: block.id,
-                    class: ' swiper-slide',
+                    class: ' swiper-slide motion-item',
                     show_video: true,
                     container: section_width,
                     column: items_per_row,
@@ -357,6 +380,9 @@
                 ></div>
               {% endif %}
             </slide-section>
+            {% if scroll_animation %}
+              </motion-items-effect>
+            {% endif %}
           </div>
         {%- else -%}
           <div
@@ -364,6 +390,9 @@
             data-block-id="{{ block.id }}"
             {{ block.shopify_attributes }}
           >
+            {% if scroll_animation %}
+              <motion-items-effect>
+            {% endif %}
             <slide-section
               class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
               data-section-id="{{ block.id }}"
@@ -385,7 +414,7 @@
                 {%- for product in (1..5) -%}
                   {% render 'card-product',
                     section_id: block.id,
-                    class: ' swiper-slide',
+                    class: ' swiper-slide motion-item',
                     show_video: true,
                     container: section_width,
                     column: items_per_row,
@@ -401,6 +430,9 @@
                 ></div>
               {% endif %}
             </slide-section>
+            {% if scroll_animation %}
+              </motion-items-effect>
+            {% endif %}
           </div>
         {%- endif -%}
       {%- endfor -%}

@@ -19,7 +19,7 @@ function initSlide(_this) {
     ? _this?.dataset.pagination
     : "bullets";
   const autoItem = _this?.dataset.itemMobile === "true";
-  let arrowCenterImage = _this?.dataset.itemMobile === "true";
+  let arrowCenterImage = _this?.dataset.arrowCenterImage === "true";
   spacing = Number(spacing);
   autoPlaySpeed = Number(autoPlaySpeed);
   speed = Number(speed);
@@ -89,9 +89,7 @@ function initSlide(_this) {
     on: {
       init: function () {
         if (arrowCenterImage) {
-          const items_slide = _this.querySelectorAll(
-            ".product-item__media--ratio"
-          );
+          const items_slide = _this.querySelectorAll(".center_swiper-arrow");
           if (items_slide.length != 0) {
             const oH = [];
             items_slide.forEach((e) => {
@@ -178,9 +176,13 @@ function initSlideMedia(_this, gallery, thumbnail) {
     swiperElement = _this;
   } else if (gallery == "QuickView" || gallery == "CartUpSell") {
     swiperElement = _this;
-    spaceBetween = 20;
+    spaceBetween = 10;
     if (gallery == "QuickView") {
-      itemMobile = 1.3;
+      const items = _this.querySelectorAll(".swiper-slide");
+      const itemsToShow = Array.from(items);
+      if (itemsToShow.length > 1) {
+        itemMobile = 1.5;
+      }
     }
     direction = "horizontal";
     if (window.innerWidth >= 768) {

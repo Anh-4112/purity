@@ -198,6 +198,7 @@
         font-weight: var(--body-font-weight);
         line-height: var(--body-line-height, 1.625);
         -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
         -webkit-text-size-adjust: 100%;
         text-rendering: optimizeSpeed;
         overflow-wrap: break-word;
@@ -257,7 +258,9 @@
       {{ 'accessibility.skip_to_text' | t }}
     </a>
     {% if theme_st.scroll_animation %}
-      <page-loader class="page-loader"></page-loader>
+      <page-loader class="page-loader z-20 fixed inset-0 overflow-hidden pointer-none no-js-hidden flex content-center">
+        <span class="loader"> </span>
+      </page-loader>
     {% endif %}
     {% sections 'header-group' %}
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
@@ -312,6 +315,9 @@
         newsletter: {
           success: `{{ 'newsletter.success' | t }}`,
           error: `{{ 'newsletter.error' | t }}`
+        },
+        socialCopyLink: {
+          success: `{{ 'general.social.copy_link_success' | t }}`,
         },
       }
       window.accessibilityStrings = {

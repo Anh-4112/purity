@@ -1,6 +1,8 @@
 {% liquid
+  assign theme_st = settings
   assign section_st = section.settings
   assign block_st = block.settings
+  assign scroll_animation = theme_st.scroll_animation
   assign collection = block_st.collection
   assign products = block_st.products
   assign items_to_show = block_st.items_to_show
@@ -32,6 +34,9 @@
 {%- capture col_style -%}
   --col-desktop: {{ items_per_row }};--col-number:2;--col-tablet: {{items_per_row_tablet}};--col-mobile: 2;--row-gap: 3rem;--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
+{% if scroll_animation %}
+  <motion-items-effect>
+{% endif %}
 <div
   class="grid grid-cols gap"
   style="{{ col_style | strip | strip_newlines }}"
@@ -41,7 +46,7 @@
       {% render 'card-product',
         card_product: product,
         section_id: section.id,
-        class: ' grid-card-item',
+        class: ' grid-card-item motion-item',
         container: section_st.section_width,
         column: items_per_row,
         padding: column_gap_slide,
@@ -59,12 +64,15 @@
     {% for i in (1..6) %}
       {% render 'card-product',
         section_id: section.id,
-        class: ' grid-card-item switch-slide__mobile',
+        class: ' grid-card-item motion-item',
         indexFor: forloop.index
       %}
     {% endfor %}
   {% endif %}
 </div>
+{% if scroll_animation %}
+  </motion-items-effect>
+{% endif %}
 
 {% schema %}
 {

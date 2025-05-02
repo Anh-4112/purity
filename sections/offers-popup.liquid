@@ -40,7 +40,7 @@
       overflow: auto;
     }
   }
-  -- > .modal-inner-offer .swiper-vertical {
+  .modal-inner-offer .swiper-vertical {
     touch-action: auto !important;
   }
   icon-close-offer {
@@ -70,9 +70,9 @@
   </icon-close-offer>
 </scroll-offer>
 <offer-popup class="modal-offer-wrapper modal active-modal-js relative">
-  <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
+  <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
   <div
-    class="modal-inner modal-inner-offer drawer-bottom transition-drawer invisible fixed z-15 bg-white w-full bottom-0 inset-x-0"
+    class="modal-inner invisible modal-inner-offer drawer-bottom transition-drawer fixed z-15 bg-white w-full bottom-0 inset-x-0"
     style="--drawer-width:100%;"
   >
     <button
@@ -107,8 +107,7 @@
           </div>
         </slide-section>
       </div>
-      <div class="flex column gap-{{ column_gap_slide }} offer-content__mobile hidden-md">
-      </div>
+      <div class="flex column gap-{{ column_gap_slide }} offer-content__mobile hidden-md"></div>
     </div>
   </div>
 </offer-popup>

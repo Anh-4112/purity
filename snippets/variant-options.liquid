@@ -111,13 +111,13 @@
         value="{%- if scope == 'item' -%}{{ variants.first.id }}{%- else -%}{{ value.id }}{%- endif -%}"
         data-option-position="{{ option.position }}"
         class="variant-options"
+        {% if scope == 'detail' and option.selected_value == value %}
+          checked
+        {% endif %}
         {%- if scope == 'item' -%}
           data-href="{{ product.url }}?variant={{ variants.first.id }}"
           data-value-id="{{ value.id }}"
         {%- endif -%}
-        {% if scope == 'detail' and option.selected_value == value %}
-          checked
-        {% endif %}
       >
       {%- if is_color and is_dropdown == false -%}
         <label
@@ -151,6 +151,9 @@
   {%- elsif count >= color_limit -%}
     <li class="variant-input hidden">
       <input
+        {%- if scope == 'item' -%}
+          data-href="{{ product.url }}?variant={{ variants.first.id }}"
+        {%- endif -%}
         type="radio"
         name="swatch-product-{{ product.id }}-{{ option.position }}-{{ section.id }}"
         id="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
@@ -158,9 +161,6 @@
         data-option-position="1"
         data-option-position="{{ option.position }}"
         class="variant-options"
-        {%- if scope == 'item' -%}
-          data-href="{{ product.url }}?variant={{ variants.first.id }}"
-        {%- endif -%}
         {% if scope == 'detail' and option.selected_value == value %}
           checked
         {% endif %}

@@ -163,7 +163,6 @@ if (!customElements.get("product-form-bundle")) {
     }
   );
 }
-
 class ButtonSubmitBundle extends HTMLElement {
   constructor() {
     super();
@@ -327,7 +326,6 @@ class ButtonSubmitBundle extends HTMLElement {
   }
 }
 customElements.define("button-submit-bundle", ButtonSubmitBundle);
-
 class BundleCartRemoveButton extends HTMLElement {
   constructor() {
     super();
@@ -514,9 +512,7 @@ class BundleCartRemoveButton extends HTMLElement {
     this.removeEventListener("click", this.handleRemove);
   }
 }
-
 customElements.define("bundle-cart-remove-button", BundleCartRemoveButton);
-
 class QuantityInputBundle extends HTMLElement {
   constructor() {
     super();
@@ -724,9 +720,7 @@ class QuantityInputBundle extends HTMLElement {
     }
   }
 }
-
 customElements.define("quantity-input-bundle", QuantityInputBundle);
-
 class BundleProgressbar extends HTMLElement {
   constructor() {
     super();
@@ -761,7 +755,6 @@ class BundleProgressbar extends HTMLElement {
     }
   }
 }
-
 customElements.define("bundle-progress-bar", BundleProgressbar);
 
 class BundleHeader extends HTMLElement {

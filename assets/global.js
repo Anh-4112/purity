@@ -1,5 +1,8 @@
 export var root = document.getElementsByTagName("html")[0];
 export var body = document.getElementsByTagName("body")[0];
+export const global = {
+  rootToFocus: null,
+};
 
 export function formatMoney(cents, format) {
   if (typeof cents == "string") {
@@ -176,7 +179,8 @@ export function eventModal(
   element,
   event,
   removeElementAfter = false,
-  actionModal = null
+  actionModal = null,
+  actionMobile = false
 ) {
   if (event == "open") {
     root.classList.add("open-modal");
@@ -190,8 +194,26 @@ export function eventModal(
         element.querySelector(".model_media").classList.add("open");
       }, 350);
     }
+    if (actionMobile) {
+      if (actionMobile) {
+        const modalBody = element.querySelector(".modal-body");
+        if (modalBody && !modalBody.querySelector("draggable-modal")) {
+          const draggableModal = document.createElement("draggable-modal");
+          draggableModal.classList.add(
+            "block",
+            "hidden-1025",
+            "relative",
+            "pointer"
+          );
+          modalBody.prepend(draggableModal);
+        }
+      }
+    }
     root.style.setProperty("padding-right", getScrollBarWidth.init() + "px");
-    trapFocus(element);
+    const elementFocus =
+      element.querySelector(".modal-inner") ||
+      element.querySelector(".modal-focus");
+    trapFocus(elementFocus);
   } else {
     const active_modal = document.querySelectorAll(".active-modal-js.active");
     const modal_element = element.classList.contains("active-modal-js")
@@ -236,10 +258,8 @@ export function eventModal(
         removeModalAction(modal_element);
       }
     }
-    removeTrapFocus(modal_element);
-    if (focus_item && document.getElementById(focus_item)) {
-      trapFocus(document.getElementById(focus_item));
-    }
+    removeTrapFocus(global.rootToFocus);
+    global.rootToFocus = null;
   }
 }
 
