@@ -823,6 +823,7 @@ class ShopableItem extends HTMLElement {
           shopable_video.content.firstElementChild.cloneNode(true)
         );
         NextSkyTheme.body.appendChild(content.querySelector("modal-popup"));
+        NextSkyTheme.global.rootToFocus = this;
         modalPopup = document.querySelector("modal-popup");
         this.setupMobileActionButton(modalPopup);
       }
