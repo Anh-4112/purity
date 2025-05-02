@@ -37,6 +37,7 @@
   }
   .bundle-sticky {
     border-color: var(--color-heading);
+    pointer-events: auto;
   }
   .skeleton-product__info {
     height: 1rem;
@@ -49,6 +50,10 @@
       --input-height: 5.2rem;
       --btn-padding-y: 1.5rem;
       --btn-padding-x: 3rem;
+    }
+    .bundle-sticky {
+      position: sticky;
+      inset-block-start: 3rem;
     }
   }
   @media screen and (max-width: 1024.98px) {
@@ -63,10 +68,43 @@
     .bundle-content{
       height: 0;
     }
+    .bundle-sidebar{
+      margin-top: 3rem;
+      position: sticky;
+      z-index: 11;
+      inset-block-end: 0;
+      padding-block-start: 60vh;
+      padding-block-start: 60lvh;
+    }
+    .product_bundle > .col-1025-remaining{
+      margin-block-end: -60vh;
+      margin-block-end: -60lvh;
+    }
+    .product_bundle .bundle-sticky{
+      backdrop-filter: blur(20px);
+      background-color: rgb(255 255 255 / 80%);
+      margin-inline: calc(var(--bs-gutter-x)* -1);
+      padding: 2rem 2rem;
+      border-radius: 15px 15px 0 0;
+      border: 0;
+      gap: 2rem;
+      box-shadow: 5px 0px 30px 0px rgba(0, 0, 0, 0.08);
+    }
+    .bundle-items__wrapper {
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      scrollbar-color: auto;
+      scrollbar-width: thin;
+      padding-inline-end: 1rem;
+      margin-inline-end: -1rem;
+      max-height: 300px;
+    }
   }
 {% endstyle %}
 <div
-  class="bundle-sticky border rounded sticky top-30 p-20 p-1025-40 flex column gap-20 gap-1025-30"
+  class="bundle-sticky border rounded p-20 p-1025-40 flex column gap-20 gap-1025-30"
   style="--border-height: 2px;"
   data-enable-quantity="{{ enable_quantity }}"
 >
@@ -166,7 +204,7 @@
 {% schema %}
 {
   "name": "t:sections.product-bundle.settings.your_bundle.name",
-  "class": "w-full col-1025-w-custom bundle-sidebar",
+  "class": "w-full col-1025-w-custom bundle-sidebar pointer-none",
   "settings": [
     {
       "type": "text",

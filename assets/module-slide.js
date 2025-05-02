@@ -19,7 +19,7 @@ function initSlide(_this) {
     ? _this?.dataset.pagination
     : "bullets";
   const autoItem = _this?.dataset.itemMobile === "true";
-  let arrowCenterImage = _this?.dataset.itemMobile === "true";
+  let arrowCenterImage = _this?.dataset.arrowCenterImage === "true";
   spacing = Number(spacing);
   autoPlaySpeed = Number(autoPlaySpeed);
   speed = Number(speed);
@@ -89,9 +89,7 @@ function initSlide(_this) {
     on: {
       init: function () {
         if (arrowCenterImage) {
-          const items_slide = _this.querySelectorAll(
-            ".product-item__media--ratio"
-          );
+          const items_slide = _this.querySelectorAll(".center_swiper-arrow");
           if (items_slide.length != 0) {
             const oH = [];
             items_slide.forEach((e) => {

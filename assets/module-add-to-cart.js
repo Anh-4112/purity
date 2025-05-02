@@ -44,6 +44,7 @@ export class ProductForm extends HTMLElement {
         this.cart.getSectionsToRender().map((section) => section.id)
       );
       formData.append("sections_url", window.location.pathname);
+      NextSkyTheme.global.rootToFocus = this.submitButton;
     }
     config.body = formData;
     fetch(`${routes.cart_add_url}`, config)
@@ -785,6 +786,7 @@ class CartDrawer extends HTMLElement {
   onShowCartDrawer(event) {
     event.preventDefault();
     NextSkyTheme.eventModal(this, "open", false, "delay");
+    NextSkyTheme.global.rootToFocus = this.cartActionId;
   }
 }
 customElements.define("cart-drawer", CartDrawer);

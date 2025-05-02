@@ -251,13 +251,6 @@ class SiteHeader extends HTMLElement {
       ? this.getAttribute("data-sticky-type")
       : "none";
   }
-
-  get dataStickyMobile() {
-    return this.hasAttribute("data-sticky-mobile")
-      ? this.getAttribute("data-sticky-mobile")
-      : "false";
-  }
-
   get heightAnnouncementBar() {
     return document.querySelector(".section-announcement-bar")
       ? Math.round(
@@ -279,11 +272,11 @@ class SiteHeader extends HTMLElement {
 
   onStickyHeader() {
     if (this.dataStickyType != "none") {
-      if (this.dataStickyMobile == "false" && window.innerWidth < 1025) {
-        return;
-      }
       if (this.dataStickyType === "on-scroll-up") {
-        this.classList.add("scroll-up");
+        this.closest(".site-header").classList.add("scroll-up");
+      }
+      if (this.dataStickyType === "always") {
+        this.closest(".site-header").classList.add("header-sticky");
       }
       window.addEventListener("scroll", () => {
         this.stickyFunction();
@@ -1598,6 +1591,7 @@ class CarouselMobile extends HTMLElement {
     super();
     this.enable = this.dataset.enableCarouselMobile == "true";
     this.isMulticontent = this.dataset.multicontent == "true";
+    this.bundle = this.dataset.bundle == "true";
     this.swiperSlideInnerHtml = this.innerHTML;
     this.initCarousel();
   }
@@ -1646,7 +1640,13 @@ class CarouselMobile extends HTMLElement {
   actionOutMobile() {
     this.classList.remove("swiper");
     this.innerHTML = this.swiperSlideInnerHtml;
-
+    if (this.bundle){
+      this.className = ''
+      setTimeout(() => {
+        this.classList.remove('swiper-backface-hidden')
+      }, 100);
+      return;
+    }
     if (this.isMulticontent) {
       this.classList.add("flex", "column", "flex-md-row", "wrap", "cols");
       this.classList.remove("grid", "grid-cols");
@@ -2008,6 +2008,7 @@ class AskQuestion extends HTMLButtonElement {
         ),
       100
     );
+    NextSkyTheme.global.rootToFocus = this;
   }
 }
 customElements.define("ask-question", AskQuestion, {
@@ -2437,7 +2438,7 @@ class StickySection extends HTMLElement {
     setTimeout(() => {
       this.onResize();
       this.handleSections();
-    }, 100);
+    }, 500);
   }
 
   disconnectedCallback() {
@@ -2692,3 +2693,105 @@ CustomElement.observeAndPatchCustomElements({
     classElement: ButtonCopyLink,
   },
 });
+class DraggableModal extends HTMLElement {
+  constructor() {
+    super();
+    this.isDragging = false;
+    this.startY = 0;
+    this.currentY = 0;
+    this.threshold = 100;
+    
+    this.startDrag = this.startDrag.bind(this);
+    this.onDrag = this.onDrag.bind(this);
+    this.endDrag = this.endDrag.bind(this);
+  }
+
+  connectedCallback() {
+    this.modalElement = this.closest('.active-modal-js');
+    if (!this.modalElement) return;
+    
+    this.addEventListener('touchstart', this.startDrag, { passive: true });
+    this.addEventListener('mousedown', this.startDrag);
+    document.addEventListener('touchmove', this.onDrag, { passive: false });
+    document.addEventListener('mousemove', this.onDrag);
+    document.addEventListener('touchend', this.endDrag);
+    document.addEventListener('mouseup', this.endDrag);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('touchstart', this.startDrag);
+    this.removeEventListener('mousedown', this.startDrag);
+    document.removeEventListener('touchmove', this.onDrag);
+    document.removeEventListener('mousemove', this.onDrag);
+    document.removeEventListener('touchend', this.endDrag);
+    document.removeEventListener('mouseup', this.endDrag);
+  }
+
+  startDrag(e) {
+    if (!this.modalElement) return;
+    
+    this.isDragging = true;
+    this.startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    this.currentY = this.startY;
+    
+    this.modalElement.classList.add('is-dragging');
+    this.style.cursor = 'grabbing';
+    
+    const modalBody = this.modalElement.querySelector('.modal-draggable');
+    if (modalBody) {
+      modalBody.style.transition = 'none';
+    }
+  }
+
+  onDrag(e) {
+    if (!this.isDragging || !this.modalElement) return;
+    
+    e.preventDefault();
+    
+    this.currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    const dragDistance = this.currentY - this.startY;
+    
+    if (dragDistance > 0) {
+      const resistance = 0.4;
+      const modalBody = this.modalElement.querySelector('.modal-draggable');
+      
+      if (modalBody) {
+        modalBody.style.transform = `translateY(${dragDistance * resistance}px)`;
+      }
+    }
+  }
+
+  endDrag() {
+    if (!this.isDragging || !this.modalElement) return;
+    
+    const dragDistance = this.currentY - this.startY;
+    this.isDragging = false;
+    this.style.cursor = 'grab';
+    this.modalElement.classList.remove('is-dragging');
+    
+    const modalBody = this.modalElement.querySelector('.modal-draggable');
+    if (!modalBody) return;
+    
+    modalBody.style.transition = 'transform 0.3s ease-out';
+    
+    if (dragDistance > this.threshold) {
+      modalBody.style.transform = `translateY(100%)`;
+      
+      setTimeout(() => {
+        if (typeof NextSkyTheme !== 'undefined' && NextSkyTheme.eventModal) {
+          NextSkyTheme.eventModal(this.modalElement, 'close');
+        }
+        
+        modalBody.style.transform = '';
+        modalBody.style.transition = '';
+      }, 300);
+    } else {
+      modalBody.style.transform = '';
+      setTimeout(() => {
+        modalBody.style.transition = '';
+      }, 300);
+    }
+  }
+}
+
+customElements.define('draggable-modal', DraggableModal);

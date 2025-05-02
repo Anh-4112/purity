@@ -475,6 +475,7 @@ class FacetDrawer extends HTMLElement {
       this.FacetsDrawer.classList.add("active");
       const drawer = document.querySelector("facet-drawer");
       NextSkyTheme.eventModal(drawer, "open", true);
+      NextSkyTheme.global.rootToFocus = this.FacetsDrawer;
     }, 100);
   }
 }

@@ -21,13 +21,15 @@
 {%- if request.page_type != 'cart' -%}
   <cart-drawer
     id="{{ section.id }}"
-    class="cart-drawer modal pointer-none active-modal-js"
+    class="cart-drawer block modal active-modal-js"
     data-section-id="{{ section.id }}"
     data-cart-type="{{ add_cart_type }}"
-    data-focus-item="cart-icon-bubble"
   >
     <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
-    <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 z-15 inset-y-0 w-full{% if enable_product_recommendations and cart != empty %} bg-secondary-1025 rounded-1025-0{% endif %}">
+    <div
+      class="modal-inner invisible draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 z-15 inset-y-0 w-full{% if enable_product_recommendations and cart != empty %} bg-secondary-1025 rounded-1025-0{% endif %}"
+      tabindex="-1"
+    >
       <div class="drawer__body h-full flex column bg-white rounded-start">
         <div
           class="drawer__header drawer__header-cart flex gap-10 space-between align-center drawer-spacing border-bottom"
@@ -350,6 +352,15 @@
                                   >
                                     {%- for discount in item.discounts -%}
                                       <li class="discounts__discount">
+                                        <svg
+                                          aria-hidden="true"
+                                          focusable="false"
+                                          class="icon icon-discount w-custom"
+                                          style="--width: 12px;"
+                                          viewBox="0 0 12 12"
+                                        >
+                                          <path fill-rule="evenodd" clip-rule="evenodd" d="M7 0h3a2 2 0 012 2v3a1 1 0 01-.3.7l-6 6a1 1 0 01-1.4 0l-4-4a1 1 0 010-1.4l6-6A1 1 0 017 0zm2 2a1 1 0 102 0 1 1 0 00-2 0z" fill="currentColor">
+                                        </svg>
                                         {{ discount.title }}
                                       </li>
                                     {%- endfor -%}
@@ -447,7 +458,7 @@
                 style="--max-width: 26rem; --width: 6rem;"
               >
                 <mini-cart-recommendations
-                  class="flex column h-full"
+                  class="flex column h-full minicar_recommend"
                   data-type="{{ recommendation_product_type }}"
                   data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=cart-upsell"
                 >
@@ -658,7 +669,7 @@
                 {% endif %}
               {%- endif -%}
               {%- if show_cart_note -%}
-                <cart-note-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-2">
+                <cart-note-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-16">
                   <div class="cart-addons-element">
                     <div class="cart-addons-title flex space-between gap-10 mb-10 py-12">
                       <span class="title h7">{{ 'sections.cart.note.title' | t }}</span>
@@ -705,7 +716,7 @@
                 </cart-note-element>
               {%- endif -%}
               {%- if show_estimate_shipping -%}
-                <cart-estimate-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-2">
+                <cart-estimate-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-16">
                   <form>
                     <div class="cart-addons-title flex space-between gap-10 mb-10 py-12">
                       <span class="title h7">{{ 'sections.cart.shipping.estimate_shipping_title' | t }}</span>

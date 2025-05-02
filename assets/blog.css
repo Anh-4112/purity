@@ -4,37 +4,33 @@
   margin-left: auto;
   margin-right: auto;
 }
-.text-truncate{
-  --line-clamp: 2;
-  display: -webkit-box;
-  -webkit-line-clamp: var(--line-clamp);
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 :is(.h-small, .h-medium, .h-large) {
   min-height: var(--item-height-mb);
 }
-
 .h-small {
   --item-height-mb: 390px;
-  --item-height: clamp(40rem,
-      calc(40rem + (500 - 400) * var(--responsive-rate)),
-      50rem);
+  --item-height: clamp(
+    40rem,
+    calc(40rem + (500 - 400) * var(--responsive-rate)),
+    50rem
+  );
 }
-
 .h-medium {
   --item-height-mb: 450px;
-  --item-height: clamp(60rem,
-      calc(45rem + (700 - 600) * var(--responsive-rate)),
-      70rem);
+  --item-height: clamp(
+    60rem,
+    calc(45rem + (700 - 600) * var(--responsive-rate)),
+    70rem
+  );
 }
 
 .h-large {
   --item-height-mb: 555px;
-  --item-height: clamp(80rem,
-      calc(45rem + (900 - 800) * var(--responsive-rate)),
-      90rem);
+  --item-height: clamp(
+    80rem,
+    calc(45rem + (900 - 800) * var(--responsive-rate)),
+    90rem
+  );
 }
 .btn-tag a {
   padding: 9.5px 2rem;
@@ -56,7 +52,7 @@
   height: 5px;
   border-radius: 100%;
   margin: 0 1.5rem 0;
-  vertical-align: .15rem;
+  vertical-align: 0.15rem;
   background-color: currentColor;
 }
 .text-line:before {
@@ -68,23 +64,23 @@
   left: 0;
   width: 25px;
   height: 1px;
-  background: #E5E5E5;
+  background: #e5e5e5;
 }
 .blog-post-related {
   box-shadow: 0 0 0 100vmax var(--color-background);
   clip-path: inset(0 -100vmax);
 }
-.post-tags a.active{
+.post-tags a.active {
   background-color: var(--btn-primary-bg-color);
   color: var(--btn-primary-color);
 }
-.custom-blog-featured img{
+.custom-blog-featured img {
   --img-rounded: 0;
 }
-li.blog-tag{
+li.blog-tag {
   background-color: var(--color-primary);
 }
-.blog-tag > a{
+.blog-tag > a {
   display: block;
   pointer-events: auto;
   color: currentColor;
@@ -92,15 +88,14 @@ li.blog-tag{
   background-color: var(--color-primary);
 }
 @media (max-width: 1024px) {
-  li.post-tags > a{
+  li.post-tags > a {
     --btn-padding-y: 1rem;
     --btn-padding-x: 2rem;
-
   }
 }
-.article-card__info > svg:first-of-type{
+.article-card__info > svg:first-of-type {
   display: none;
 }
-.article-card__info .post-date ~ svg{
+.article-card__info .post-date ~ svg {
   display: block;
 }

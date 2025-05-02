@@ -16,7 +16,6 @@
     assign transparent_class = ' absolute inset-x-0 transparent z-15'
   endif
 -%}
-<script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--gap: 1rem; --gap-desktop: 2.5rem;{{- -}}
   {% if transparent %}--transparent-color: {{ section_st.header_text_icon_transparent }};{% endif %}{{- -}}
@@ -75,7 +74,6 @@
 <header
   is="site-header"
   data-sticky-type="{{ section_st.sticky_header_type }}"
-  data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
   data-menu-trigger="{{ section_st.menu_trigger }}"
   data-dropdowns-animation="{{ dropdowns_animation }}"
   class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}{% if request.page_type != 'index' %} border-bottom{% endif %}"
@@ -103,9 +101,6 @@
           class="hidden"
           hidden
         >
-          <symbol id="icon-arrow-down">
-            <path d="M0.195652 1.58361C0.0652174 1.46321 0 1.31773 0 1.14716C0 0.966555 0.0652174 0.811037 0.195652 0.680602C0.316054 0.560201 0.466555 0.5 0.647157 0.5C0.827759 0.5 0.978261 0.560201 1.09866 0.680602L4.5 4.08194L7.90134 0.680602C8.02174 0.560201 8.17224 0.5 8.35284 0.5C8.53344 0.5 8.68395 0.560201 8.80435 0.680602C8.93478 0.811037 9 0.966555 9 1.14716C9 1.31773 8.93478 1.46321 8.80435 1.58361L4.9515 5.43646C4.8311 5.56689 4.6806 5.63211 4.5 5.63211C4.3194 5.63211 4.1689 5.56689 4.04849 5.43646L0.195652 1.58361Z" fill="currentColor"/>
-          </symbol>
           <symbol id="icon-back" viewBox="0 0 6 11" fill="none">
             <path d="M4.7193 10.7605C4.85965 10.9202 5.03509 11 5.24561 11C5.45614 11 5.63158 10.9202 5.77193 10.7605C5.92398 10.6131 6 10.435 6 10.2261C6 10.005 5.92398 9.81463 5.77193 9.65494L1.80702 5.49079L5.77193 1.32663C5.92398 1.17923 6 1.00112 6 0.792295C6 0.571189 5.92398 0.380793 5.77193 0.221106C5.63158 0.0737018 5.45614 0 5.24561 0C5.03509 0 4.85965 0.0737018 4.7193 0.221106L0.22807 4.93802C0.0760236 5.09771 0 5.28811 0 5.50921C0 5.71803 0.0760236 5.89615 0.22807 6.04355L4.7193 10.7605Z" fill="currentColor"/>
           </symbol>
@@ -531,14 +526,14 @@
       style="--modal-width: 100%;"
     >
       <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
-      <div class="modal-inner draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-15 left-0 bg-white">
+      <div class="modal-inner invisible draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-15 left-0 bg-white">
         <div class="drawer__body h-full">
           <div class="drawer__content flex column h-full max-height-mb-menu">
             <nav class="header__menu-mobile overflow-y-auto overflow-x-hidden w-full h-full grow-1">
               {%- if section_st.banner_image != blank -%}
                 <div class="banner overflow-hidden relative">
                   <button
-                    class="modal__close transition-short heading-color absolute{% if section_st.banner_image != blank %} top-10 right-10 bg-white blur rounded-50 shadow{% else %} invisible inset-x-0 mx-auto bg-white btn-close-model{% endif %} w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
+                    class="modal__close transition-short heading-color absolute{% if section_st.banner_image != blank %} top-10 right-10 bg-white blur rounded-50 shadow{% else %} invisible inset-x-0 mx-auto bg-white{% endif %} w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
                     style="--width: 2.4rem;"
                     is="button-close-model"
                     aria-label="{{ 'accessibility.button.close' | t }}"
@@ -710,7 +705,7 @@
                                                       </h6>
                                                     {% endif %}
                                                     {% if description != blank %}
-                                                      <div class="description fs-16">
+                                                      <div class="description">
                                                         {{ description }}
                                                       </div>
                                                     {% endif %}
@@ -958,7 +953,7 @@
 {% schema %}
 {
   "name": "t:sections.header.name",
-  "class": "site-header sticky z-10",
+  "class": "site-header",
   "settings": [
     {
       "type": "header",
@@ -1027,12 +1022,6 @@
       ],
       "default": "on-scroll-up",
       "label": "t:sections.header.settings.sticky_header_type.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "sticky_header_mobile",
-      "default": true,
-      "label": "t:sections.header.settings.sticky_header_mobile.label"
     },
     {
       "type": "checkbox",

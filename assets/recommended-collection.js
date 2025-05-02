@@ -145,16 +145,17 @@ class SectionSelected extends HTMLElement {
     const title = item.textContent.trim();
 
     this.titleSelectText.textContent = title;
-
+    this.titleSelectText.appendChild(this.createSvgIcon());
     this.collectionGroups.forEach((group) => {
       if (group.id === blockId) {
-        group.style.display = "block";
+        group.style.display = "flex";
         const firstCollectionItem = group.querySelector(".collection-item");
         if (firstCollectionItem) {
           const collectionTitle = firstCollectionItem.textContent.trim();
           const collectionUrl = firstCollectionItem.getAttribute("data-url");
 
           this.collectionSelectText.textContent = collectionTitle;
+          this.collectionSelectText.appendChild(this.createSvgIcon());
           this.collectionSelectText.setAttribute("data-url", collectionUrl);
           if (this.firstButton && collectionUrl) {
             this.firstButton.href = collectionUrl;
@@ -167,6 +168,19 @@ class SectionSelected extends HTMLElement {
 
     this.closeDropdown(this.titleList);
     this.titleSelectText.focus();
+  }
+
+  createSvgIcon(){
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", "10");
+    svg.setAttribute("height", "6");
+    svg.setAttribute("viewBox", "0 0 10 6");
+    svg.style.setProperty("--width", "1rem");
+    svg.classList.add("icon", "icon-down", "icon-rotate", "transition-drawer", "w-custom", "flex-auto");
+    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#icon-arrow-down");
+    svg.appendChild(use);
+    return svg;
   }
 
   selectCollection(item) {

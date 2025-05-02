@@ -44,7 +44,8 @@ class ActionSearch extends HTMLElement {
           this.updateProductRecommended();
         }
         NextSkyTheme.eventModal(this, "open", false);
-        setTimeout(() => this.input.focus(), 300);
+        NextSkyTheme.global.rootToFocus = this.actionSearch;
+        setTimeout(() => this.input.focus(), 10);
       });
     }
     if (this.type == "popup") {
