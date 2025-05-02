@@ -1,6 +1,7 @@
 {%- liquid
   assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -42,15 +43,38 @@
       <div
         class="section-header text-{{ text_alignment }}"
       >
+        {% assign animate_delay = 25 %}
         {%- if section_st.title != blank -%}
+          {% assign animate_delay = animate_delay | plus: 5 %}
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {%- endif -%}
           <h2 class="section-heading {{ header_size }}">
             {{ section_st.title }}
           </h2>
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         {%- endif -%}
         {%- if section_st.description != blank -%}
+          {% assign animate_delay = animate_delay | plus: 5 %}
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {%- endif -%}
           <div class="section-description mt-15 prose">
             {{ section_st.description }}
           </div>
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -158,6 +182,10 @@
   "tag": "section",
   "class": "section section-blog-posts",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.featured-blog.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"
