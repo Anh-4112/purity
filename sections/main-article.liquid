@@ -92,25 +92,19 @@
                     style="--aspect-ratio:{{ article.image.aspect_ratio }}"
                   {% endif %}
                 >
-                  <img
-                    srcset="
-                      {% if article.image.width >= 350 %}{{ article.image | image_url: width: 350 }} 350w,{% endif %}
-                      {% if article.image.width >= 750 %}{{ article.image | image_url: width: 750 }} 750w,{% endif %}
-                      {% if article.image.width >= 1100 %}{{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
-                      {% if article.image.width >= 1500 %}{{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
-                      {% if article.image.width >= 2200 %}{{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
-                      {% if article.image.width >= 3000 %}{{ article.image | image_url: width: 3000 }} 3000w,{% endif %}
-                      {{ article.image | image_url }} {{ article.image.width }}w
-                    "
-                    sizes="100vw"
-                    src="{{ article.image | image_url: width: 3000 }}"
-                    loading="eager"
-                    fetchpriority="high"
-                    width="{{ article.image.width }}"
-                    height="{{ article.image.height }}"
-                    alt="{{ article.image.alt | escape }}"
-                    class="rounded absolute h-full inset-0 object-fit-cover"
-                  >
+                  {%- liquid
+                    assign alt_default = 'accessibility.promotion_banner' | t
+                    assign alt = article.image.alt | default: alt_default | escape
+                  -%}
+                  {% render 'responsive-image',
+                    type: 'other',
+                    image_alt: alt,
+                    container: section_width,
+                    image: article.image,
+                    animate: 'zoom-out-small',
+                    motion: true,
+                    class: 'rounded absolute h-full inset-0 object-fit-cover'
+                  %}
                 </div>
               </div>
             {%- endif -%}
@@ -627,6 +621,10 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.image-with-text.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"
