@@ -5,6 +5,7 @@ import { LazyLoader } from "module-lazyLoad";
 class ShopableVideo extends SlideSection {
   constructor() {
     super();
+    this.innerWidth = window.innerWidth;
     this.initShopableVideo();
   }
 
@@ -12,39 +13,49 @@ class ShopableVideo extends SlideSection {
     if (this.classList.contains("swiper-slide-center")) {
       this.handleCenterSlides();
     }
+    window.addEventListener("resize", this.handleResize.bind(this));
   }
 
   handleCenterSlides() {
     if (!this) return;
-    if (window.innerWidth < 1025) return;
+    if (this.innerWidth < 1025) return;
 
     const checkSwiper = setInterval(() => {
       if (this.swiper) {
         clearInterval(checkSwiper);
         this.updateCenterSlideClass();
         this.swiper.on("slideChange", () => {
-          if (window.innerWidth >= 1025) {
+          if (this.innerWidth >= 1025) {
             this.updateCenterSlideClass();
           }
         });
         this.swiper.on("breakpoint", () => {
-          if (window.innerWidth >= 1025) {
+          if (this.innerWidth >= 1025) {
             this.updateCenterSlideClass();
           }
         });
-
-        window.addEventListener("resize", this.handleResize.bind(this));
       }
     }, 100);
   }
 
   handleResize() {
-    if (window.innerWidth >= 1025) {
+    this.innerWidth = window.innerWidth;
+    if (this.innerWidth >= 1025) {
       if (this.swiper) {
         this.updateCenterSlideClass();
       }
     } else {
       this.resetCenterSlideEffects();
+    }
+    const autoplayVideo = this.dataset.autoplayVideo === "true";
+    if (!autoplayVideo || !this.swiper) return;
+    const useCenterSlideMode = this.classList.contains("swiper-slide-center");
+    if (useCenterSlideMode) {
+      if (this.innerWidth >= 1025) {
+        this.playCenterSlideVideo();
+      } else {
+        this.playActiveSlideVideo(this.swiper.activeIndex);
+      }
     }
   }
 
@@ -202,7 +213,11 @@ class ShopableVideo extends SlideSection {
     if (!autoplayVideo || !this.swiper) return;
     const useCenterSlideMode = this.classList.contains("swiper-slide-center");
     if (useCenterSlideMode) {
-      this.playCenterSlideVideo();
+      if (this.innerWidth >= 1025) {
+        this.playCenterSlideVideo();
+      } else {
+        this.playActiveSlideVideo(this.swiper.activeIndex);
+      }
     } else {
       this.playActiveSlideVideo(this.swiper.activeIndex);
     }
@@ -236,6 +251,7 @@ class ShopableVideo extends SlideSection {
     if (!activeSlide) return;
     const videoElement = activeSlide.querySelector("video-local video");
     if (videoElement) {
+      activeSlide.querySelector(".play-button").classList.add("active");
       videoElement.play();
     }
   }
@@ -246,6 +262,10 @@ class ShopableVideo extends SlideSection {
       if (!video.paused) {
         video.pause();
       }
+    });
+    const playButtons = this.querySelectorAll(".play-button");
+    playButtons.forEach((button) => {
+      button.classList.remove("active");
     });
   }
 }
@@ -582,7 +602,7 @@ class ShopableItem extends HTMLElement {
         });
       this.querySelector("video").muted = true;
       this.querySelector("video").play();
-      if (window.innerWidth > 1199) {
+      if (this.innerWidth > 1199) {
         this.classList.add("active-video");
       }
     }
@@ -760,7 +780,7 @@ class ShopableItem extends HTMLElement {
   handleSwipeability(modalPopup, swiperContainer) {
     if (!modalPopup || !swiperContainer || !swiperContainer.swiper) return;
 
-    const isLargeScreen = window.innerWidth >= 1025;
+    const isLargeScreen = this.innerWidth >= 1025;
 
     const hasPopupInfo =
       modalPopup.querySelector(".popup-information") !== null;
