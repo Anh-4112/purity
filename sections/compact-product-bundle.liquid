@@ -190,50 +190,51 @@
             {%- endif -%}
           </div>
         {%- endif -%}
+        <motion-effect
+          data-animate="fade-up"
+          data-animate-delay="45"
+          class="block"
+        >
         <div class="bundle-products__list">
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="45"
-            class="block"
-          >
-            {%- for block in section.blocks -%}
-              {%- liquid
-                assign block_st = block.settings
-                assign product = block_st.product
-              -%}
-              <bundle-item
-                data-product-position="{{ forloop.index }}"
-                style="--width: 8rem;"
-                class="bundle-item border-bottom block last-0 py-20{% if forloop.first %} pt-0{% endif %} transition"
-              >
-                {% render 'card-product',
-                  card_product: product,
-                  section_id: section.id,
-                  show_video: true,
-                  disable_quickview: true,
-                  disable_badge: true,
-                  disable_rate: true,
-                  variant_swatch: true,
-                  disable_vendor: true,
-                  disable_hover_image: true,
-                  show_quick_add: true,
-                  type: 'bundle',
-                  enable_quick_add: enable_quick_add,
-                  class: ' bundle-item-section',
-                  style_layout: ' flex gap-20',
-                  image_class: ' flex-auto w-custom rounded-10',
-                  image_rounded: ' rounded-10',
-                  info_class: ' flex-1 mt-0 relative flex-md column-md flex-1',
-                  bundle_swatch: true
-                %}
-              </bundle-item>
-            {%- endfor -%}
-          </motion-effect>
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="50"
-            class="block"
-          >
+            <carousel-mobile
+              data-items="1"
+              data-enable-carousel-mobile="true"
+              data-mobile="1"
+              data-bundle="true"
+            >
+              {%- for block in section.blocks -%}
+                {%- liquid
+                  assign block_st = block.settings
+                  assign product = block_st.product
+                -%}
+                <bundle-item
+                  data-product-position="{{ forloop.index }}"
+                  style="--width: 8rem;"
+                  class="bundle-item switch-slide__mobile border-bottom-md block last-0 py-20-md{% if forloop.first %} pt-0{% endif %} transition"
+                >
+                  {% render 'card-product',
+                    card_product: product,
+                    section_id: section.id,
+                    show_video: true,
+                    disable_quickview: true,
+                    disable_badge: true,
+                    disable_rate: true,
+                    variant_swatch: true,
+                    disable_vendor: true,
+                    disable_hover_image: true,
+                    show_quick_add: true,
+                    type: 'bundle',
+                    enable_quick_add: enable_quick_add,
+                    class: ' bundle-item-section',
+                    style_layout: ' flex gap-20',
+                    image_class: ' flex-auto w-custom rounded-10',
+                    image_rounded: ' rounded-10',
+                    info_class: ' flex-1 mt-0 relative flex-md column-md flex-1',
+                    bundle_swatch: true
+                  %}
+                </bundle-item>
+              {%- endfor -%}
+            </carousel-mobile>
             <product-form class="bundle-products-form">
               <form
                 method="post"
@@ -308,13 +309,7 @@
                 {%- endif -%}
               </form>
             </product-form>
-          </motion-effect>
           {%- if section_st.button_label != blank %}
-            <motion-effect
-              data-animate="fade-up"
-              data-animate-delay="55"
-              class="block"
-            >
               <div class="mt-20 text-center">
                 <a
                   {% if section_st.button_link == blank %}
@@ -328,9 +323,9 @@
                   {{ section_st.button_label }}
                 </a>
               </div>
-            </motion-effect>
           {%- endif -%}
         </div>
+      </motion-effect>
       </div>
     </bundle-products>
   </div>
