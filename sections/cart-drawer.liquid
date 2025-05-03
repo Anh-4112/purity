@@ -27,7 +27,7 @@
   >
     <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
     <div
-      class="modal-inner invisible draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 z-15 inset-y-0 w-full{% if enable_product_recommendations and cart != empty %} bg-secondary-1025 rounded-1025-0{% endif %}"
+      class="modal-inner invisible draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 z-15 inset-y-0 w-full"
       tabindex="-1"
     >
       <div class="drawer__body h-full flex column bg-white rounded-start">
@@ -97,7 +97,7 @@
                     <li
                       class="w-full"
                       {% if collection_media %}
-                        style="--color-text: {{ theme_st.overlay_image_color }};"
+                        style="--color-text: {{ theme_st.overlay_image_color }};--color-heading: {{ theme_st.overlay_image_color }};"
                       {% endif %}
                     >
                       <a
@@ -207,7 +207,10 @@
                           >
                             <div class="cart-item_inner flex gap-20 transition">
                               {% if item.image %}
-                                <div class="cart-item__media flex-auto w-custom" style="--width: 10rem;">
+                                <div
+                                  class="cart-item__media flex-auto w-custom"
+                                  style="--width: 10rem;"
+                                >
                                   {%- liquid
                                     assign ratio = ''
                                     if theme_st.product_image_ratio != 'adapt'
@@ -221,15 +224,15 @@
                                       assign ratio = item.image.aspect_ratio
                                     endif
                                   -%}
-                                  <div
-                                    class="banner__media rounded-10 align-self-start"
-                                    style="--aspect-ratio: {{ ratio }}"
+                                  <a
+                                    href="{{ item.url }}"
+                                    class="cart-item__link block rounded-10 focus-inset-inside word-break align-self-start"
+                                    aria-hidden="true"
+                                    arial-label="{{ item.product.title | escape }}"
                                   >
-                                    <a
-                                      href="{{ item.url }}"
-                                      class="cart-item__link word-break"
-                                      aria-hidden="true"
-                                      arial-label="{{ item.product.title | escape }}"
+                                    <div
+                                      class="banner__media"
+                                      style="--aspect-ratio: {{ ratio }}"
                                     >
                                       <img
                                         class="cart-item__image"
@@ -239,8 +242,8 @@
                                         width="150"
                                         height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
                                       >
-                                    </a>
-                                  </div>
+                                    </div>
+                                  </a>
                                 </div>
                               {% endif %}
                               <div
@@ -251,7 +254,7 @@
                                   class="cart-item-info"
                                   arial-label=" {{- item.product.title | escape -}}"
                                 >
-                                  <div class="flex gap-10 align-center space-between">
+                                  <div class="flex gap-10 space-between">
                                     <a
                                       href="{{ item.url }}"
                                       class="block word-break lh-normal heading-style mb-5 w-full"
@@ -336,7 +339,7 @@
                                       <span class="visually-hidden">
                                         {{ 'products.product.price.sale_price' | t }}
                                       </span>
-                                      <strong class="cart-item__final-price product-option">
+                                      <strong class="cart-item__final-price product-option heading-color heading_weight">
                                         {{ item.final_price | money }}
                                       </strong>
                                     </div>
@@ -351,7 +354,7 @@
                                     aria-label="{{ 'customer.order.discount' | t }}"
                                   >
                                     {%- for discount in item.discounts -%}
-                                      <li class="discounts__discount">
+                                      <li class="discounts__discount fs-small">
                                         <svg
                                           aria-hidden="true"
                                           focusable="false"
@@ -391,7 +394,7 @@
                                       </svg>
                                     </button>
                                     <input
-                                      class="quantity__input border-0 p-0 text-center w-custom fs-small"
+                                      class="quantity__input border-0 p-0 text-center w-custom fs-small heading-color"
                                       type="number"
                                       style="--width: 2.2rem;--input-height: 38px;"
                                       type="number"

@@ -947,10 +947,11 @@ blockquote {
     width: 100%;
   }
   .model_media {
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.4, 1), all 0.5s,
-      opacity 0.5s 0.2s;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.4, 1), all 0.4s,
+      opacity 0.4s 0.2s;
     transform: none;
     border-radius: var(--img-rounded) 0 0 var(--img-rounded);
+    box-shadow: 30px 0px 0 0 var(--color-background-2);
   }
   .model_media.open {
     transform: translateX(-100%);
@@ -1095,7 +1096,9 @@ blockquote {
     opacity: 1;
   }
   .border-animation:is(:hover, .active),
-  .hover-effect:hover .border-animation {
+  .detail-open .outlined-border,
+  .outlined-border:hover,
+  .hover-effect:hover :is(.border-animation, .outlined-border) {
     background-size: 100% var(--height, 1px);
     background-position: left bottom;
   }
@@ -1182,13 +1185,12 @@ blockquote {
   }
   .btn__quick-shop.absolute {
     --btn-padding-y: 1.5rem;
-    transform: translateY(30px) translateZ(0);
-    will-change: transform;
+    transform: translateY(50%);
     transition: var(--transition);
   }
   .product__inner:hover .btn__quick-shop.absolute,
   .btn__quick-shop:focus-visible {
-    transform: translateY(0) translateZ(0);
+    transform: translateY(0);
     pointer-events: auto;
   }
   .text-swatch-label:not(.pill):hover {
@@ -1724,7 +1726,7 @@ quickview-drawer .media-zoom-button span {
     --btn-color: var(--btn-primary-color);
   }
 }
-.results .recommend-search {
+.results :is(.recommend-search, .search-keyword) {
   display: none;
 }
 .search-modal__form:not(.results) .predictive-search {

@@ -7,7 +7,8 @@
   animation: ticker-right var(--speed, 6s) infinite linear;
   -webkit-animation: ticker-right var(--speed, 6s) infinite linear;
 }
-:is(.marquee, content-effect):hover > * {
+:is(.marquee, content-effect):hover > *,
+.marquee:has(.scrolling-image-item:focus-visible) > * {
   animation-play-state: paused;
 }
 .marquee {
