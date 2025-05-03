@@ -40,7 +40,7 @@
 {%- endcapture -%}
 
 {%- capture col_style -%}
-  --col-number: {{ section_st.items_per_row }};--col-tablet: 2;--col-desktop: 3;
+  --col-number: {{ section_st.items_per_row }};--col-tablet: 2;--col-desktop: {{ section.blocks.size }};
 {%- endcapture -%}
 
 <div
@@ -140,7 +140,7 @@
         {%- endfor -%}
       </carousel-mobile>
       {% if scroll_animation %}
-      </motion-items-effect>
+        </motion-items-effect>
       {% endif %}
     {%- endif -%}
   </div>
@@ -154,6 +154,10 @@
     "groups": ["header", "custom.overlay"]
   },
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.icon-box.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"
