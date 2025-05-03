@@ -130,7 +130,7 @@
                           </div>
                           {%- if collection_media -%}
                             <span
-                              class="collection-list__icon wh-1025-50 w-custom h-custom flex content-center bg-white blur rounded-50 text-color btn-hover overflow-hidden transition-short flex-auto"
+                              class="collection-list__icon wh-1025-50 w-custom h-custom flex content-center bg-white blur rounded-50 text-color btn-hover pointer overflow-hidden transition-short flex-auto"
                               style="--width:4.6rem;--height:4.6rem;"
                             >
                               {%- render 'icon-arrow-top' -%}
@@ -149,7 +149,7 @@
                   <a
                     href="{{ cart_empty_button_link | default : "/collections/all" }}"
                     arial-label="{{ cart_empty_button_label }}"
-                    class="block w-full btn btn-primary text-center"
+                    class="block w-full btn pointer btn-primary text-center"
                   >
                     {{- cart_empty_button_label -}}
                   </a>
@@ -265,7 +265,7 @@
                                     >
                                       <button
                                         type="button"
-                                        class="btn-reset inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
+                                        class="btn-reset pointer inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
                                         aria-label="{{- 'sections.cart.remove_title' | t: title: item.title -}}"
                                       >
                                         <svg
@@ -653,7 +653,7 @@
                           <div class="addon-actions mt-20 mb-40">
                             <button
                               type="button"
-                              class="select-package btn btn-primary w-full text-center"
+                              class="select-package btn pointer btn-primary w-full text-center"
                               aria-label="{{- 'sections.cart.gift.select' | t }}"
                             >
                               <span class="hidden-on-load transition-short">
@@ -704,7 +704,7 @@
                       <div class="addon-actions">
                         <button
                           type="button"
-                          class="apply-note btn btn-primary mt-20 w-full"
+                          class="apply-note btn pointer btn-primary mt-20 w-full"
                           aria-label="{{- 'general.button.save' | t }}"
                         >
                           <span class="hidden-on-load transition-short"> {{ 'general.button.save' | t }}</span>
@@ -786,7 +786,7 @@
                       </div>
                       <div class="addon-actions">
                         <button
-                          class="estimate btn btn-primary mt-20 w-full"
+                          class="estimate btn pointer btn-primary mt-20 w-full"
                           data-action="shipping"
                         >
                           <span class="hidden-on-load transition-short">
@@ -830,7 +830,7 @@
               <a
                 href="{{ routes.cart_url }}"
                 aria-label="{{ 'sections.cart.view_cart' | t }}"
-                class="btn btn-outline"
+                class="btn pointer btn-outline"
               >
                 <span class="hidden-on-load transition-short">{{ 'sections.cart.view_cart' | t }}</span>
                 {%- render 'loader' -%}
@@ -838,7 +838,7 @@
               <button
                 type="submit"
                 name="checkout"
-                class="grow-1 btn btn-primary"
+                class="grow-1 btn pointer btn-primary"
               >
                 <span class="hidden-on-load transition-short"> {{ 'sections.cart.checkout' | t }}</span>
                 {%- render 'loader' -%}

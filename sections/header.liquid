@@ -273,7 +273,7 @@
                                                   {% endif %}
                                                   {% if button_label != blank %}
                                                     <button
-                                                      class="btn btn-primary mt-20 text-center w-custom"
+                                                      class="btn pointer btn-primary mt-20 text-center w-custom"
                                                       style="--width: 70%;--btn-padding-x: 2rem;"
                                                       aria-label="{{ button_label }}"
                                                     >
@@ -705,7 +705,7 @@
                                                     {% if button_label != blank %}
                                                       <div class="button">
                                                         <a
-                                                          class="btn btn-primary inline-block text-center mt-20"
+                                                          class="btn pointer btn-primary inline-block text-center mt-20"
                                                           {% if banner_link == blank %}
                                                             role="link" aria-disabled="true"
                                                           {% else %}
@@ -904,7 +904,7 @@
                   {%- if section_st.show_account -%}
                     <a
                       href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                      class="btn btn-primary w-50-percent text-center text-size x-min-value py-15"
+                      class="btn pointer btn-primary w-50-percent text-center text-size x-min-value py-15"
                       style="--padding-inline: 8px;"
                       aria-label="{% if customer %}{{ 'customer.account.title' | t }}{% else %}{{ 'customer.login_page.title' | t }}{% endif %}"
                     >
@@ -917,7 +917,7 @@
                     {%- if customer -%}
                       <a
                         href="{{ routes.account_logout_url }}"
-                        class="btn btn-outline block text-center text-size w-50-percent x-min-value py-15"
+                        class="btn pointer btn-outline block text-center text-size w-50-percent x-min-value py-15"
                         style="--padding-inline: 8px;"
                         aria-label="{{ 'customer.account_fallback' | t }}"
                       >
@@ -926,7 +926,7 @@
                     {%- else -%}
                       <a
                         href="{%- if customer -%}{{ routes.account_logout_url }}{%- else -%}{{ routes.account_register_url }}{%- endif -%}"
-                        class="heading-style btn btn-outline text-center text-size w-50-percent x-min-value py-15"
+                        class="heading-style btn pointer btn-outline text-center text-size w-50-percent x-min-value py-15"
                         style="--padding-inline: 8px;"
                         aria-label="{{ 'customer.account_fallback' | t }}"
                       >
