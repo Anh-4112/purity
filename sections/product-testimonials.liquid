@@ -136,9 +136,9 @@
             data-animate-delay="30"
             class="block"
           >
-          <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
-            {{ section_st.subheading }}
-          </div>
+            <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
+              {{ section_st.subheading }}
+            </div>
           </motion-effect>
         {%- endif -%}
         {%- if section_st.title != blank -%}
@@ -147,9 +147,9 @@
             data-animate-delay="35"
             class="block"
           >
-          <h2 class="block section-heading {{ header_size }}">
-            {{ section_st.title }}
-          </h2>
+            <h2 class="block section-heading {{ header_size }}">
+              {{ section_st.title }}
+            </h2>
           </motion-effect>
         {%- endif -%}
         {%- if section_st.description != blank -%}
@@ -158,9 +158,9 @@
             data-animate-delay="40"
             class="block"
           >
-          <div class="section-description mt-15 prose">
-            {{ section_st.description }}
-          </div>
+            <div class="section-description mt-15 prose">
+              {{ section_st.description }}
+            </div>
           </motion-effect>
         {%- endif -%}
       </div>
@@ -168,7 +168,7 @@
     {%- if section.blocks.size > 0 -%}
       <slide-section
         id="swiper-{{ section.id }}"
-        class="swiper {% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+        class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
         data-section-id="{{ section.id }}"
         data-autoplay="{{ slide_auto_change }}"
         data-auto-play-speed="{{ change_slide_every | times: 1000 }}"
@@ -181,7 +181,7 @@
         style="{{ col_style | strip | strip_newlines }}"
       >
         {% if show_navigation %}
-          {%- render 'swiper-navigation' -%}
+          {%- render 'swiper-navigation', show_on_hover: true -%}
         {% endif %}
         <div class="swiper-wrapper">
           {%- for block in section.blocks -%}

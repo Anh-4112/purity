@@ -269,20 +269,20 @@
                     </div>
                   </motion-effect>
                 {% when 'description' %}
-                    <motion-effect
-                      class="block__description block relative z-2 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
-                      style="--space-bottom: {{ block_st.spacing_bottom }};"
-                      {{ block.shopify_attributes }}
-                      data-animate="fade-up"
-                      data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
-                      class="block"
-                    >
-                      {{
-                        block_st.description
-                        | replace: '[title]', title_replace
-                        | replace: '[collection]', replace_collection
-                      }}
-                    </motion-effect>
+                  <motion-effect
+                    class="block__description block relative z-2 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
+                    style="--space-bottom: {{ block_st.spacing_bottom }};"
+                    {{ block.shopify_attributes }}
+                    data-animate="fade-up"
+                    data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
+                    class="block"
+                  >
+                    {{
+                      block_st.description
+                      | replace: '[title]', title_replace
+                      | replace: '[collection]', replace_collection
+                    }}
+                  </motion-effect>
                 {% when 'button' %}
                   {% liquid
                     assign first_button_label = block_st.first_button_label
@@ -309,7 +309,7 @@
                               href="{{ url_default | default: "#" }}"
                             {% endif %}
                             aria-label="{{ first_button_label }}"
-                            class="btn-change-url btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %}"
+                            class="btn-change-url btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
                             {% if first_button_type != 'link' %}
                               style="--width: 20rem;"
                             {% endif %}
@@ -325,7 +325,7 @@
                               href="{{ second_button_link | default: "#" }}"
                             {% endif %}
                             aria-label="{{ second_button_label }}"
-                            class="btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %}"
+                            class="btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
                             {% if second_button_type != 'link' %}
                               style="--width: 20rem;"
                             {% endif %}

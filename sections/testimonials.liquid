@@ -1,5 +1,4 @@
-<script type="module" src="{{ 'section-testimonials.js' | asset_url }}" defer="defer"></script>
-
+<script type="module" src="{{ 'section-testimonials.js' | asset_url }}"></script>
 {%- liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -11,7 +10,6 @@
   endif
 
   assign heading_size = section_st.heading_size
-  assign items_per_row = section_st.items_per_row
   assign show_pagination = section_st.show_pagination
   assign show_navigation = section_st.show_navigation
   assign slide_auto_change = section_st.slide_auto_change
@@ -25,11 +23,15 @@
   endif
 -%}
 {%- capture style -%}
-      --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--max-width: {{ section_st.content_max_width }}%;
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--max-width: {{ section_st.content_max_width }}%;--item-width: {{ section_st.image_width }}px; --item-count: {{ section.blocks.size }};
 {%- endcapture -%}
 {% style %}
   testimonials-thumb .swiper-slide:not(.swiper-slide-thumb-active) {
     opacity: 0.4;
+  }
+  testimonials-thumb {
+    width: calc(var(--item-count) * var(--item-width) + (var(--item-count) - 1) * 60px);
+    max-width: 100%;
   }
 {% endstyle %}
 <div
@@ -57,46 +59,53 @@
       </div>
     {%- endif -%}
     {%- if section.blocks.size > 0 -%}
-      <testimonial-slide
-        id="swiper-{{ section.id }}"
-        class="swiper mb-30 mb-md-60 max-w-custom"
-        data-section-id="{{ section.id }}"
-        data-autoplay="{{ slide_auto_change }}"
-        data-auto-play-speed="{{ change_slide_every | times: 1000 }}"
-        data-loop="true"
-        data-speed="500"
-        data-mobile="1"
-        data-tablet="1"
-        data-desktop="{{ items_per_row }}"
-        style="--swiper-navigation-sides-offset: 0px;"
-      >
+      <div class="relative max-w-custom mx-auto" style="--swiper-navigation-sides-offset: 0px;">
+        <testimonial-slide
+          id="swiper-{{ section.id }}"
+          class="swiper mb-30 mb-md-60{% if show_navigation %} max-w-custom-all{% endif %}"
+          data-section-id="{{ section.id }}"
+          data-autoplay="{{ slide_auto_change }}"
+          data-auto-play-speed="{{ change_slide_every | times: 1000 }}"
+          data-loop="true"
+          data-speed="500"
+          data-mobile="1"
+          data-tablet="1"
+          data-desktop="1"
+          style="--max-width: calc(100% - var(--swiper-navigation-size) * 2 - 15px)"
+        >
+          <div class="swiper-wrapper">
+            {%- for block in section.blocks -%}
+              {% assign block_st = block.settings %}
+              <div class="swiper-slide">
+                <div class="testimonials-item flex column justify-center">
+                  {% if section_st.show_icon_quote %}
+                    <div class="icon-quote inline-flex justify-center mb-20 mb-1025-30">
+                      {% render 'icon-quote' | custom_width: 56 %}
+                    </div>
+                  {% endif %}
+                  {% if block_st.testimonial_quote %}
+                    <div class="testimonials-quote inline-flex justify-center text-center h4">
+                      {{ block_st.testimonial_quote }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </testimonial-slide>
         {% if show_navigation %}
-          {%- render 'swiper-navigation' -%}
+          {%- render 'swiper-navigation', type: 'original', class-custom: 'testimonial-swiper-action' -%}
         {% endif %}
-        <div class="swiper-wrapper">
-          {%- for block in section.blocks -%}
-            {% assign block_st = block.settings %}
-            <div class="swiper-slide testimonials-item flex column justify-center">
-              {% if section_st.show_icon_quote %}
-                <div class="icon-quote inline-flex justify-center mb-20 mb-1025-30">
-                  {% render 'icon-quote' | custom_width: 56 %}
-                </div>
-              {% endif %}
-              {% if block_st.testimonial_quote %}
-                <div class="testimonials-quote inline-flex justify-center text-center h4">
-                  {{ block_st.testimonial_quote }}
-                </div>
-              {% endif %}
-            </div>
-          {%- endfor -%}
-        </div>
-      </testimonial-slide>
+      </div>
       {%- if show_pagination -%}
         <testimonials-thumb
           id="testimonials-thumb-swiper-{{ section.id }}"
           class="swiper"
+          data-desktop="{{ section.blocks.size }}"
+          data-tablet="{{ section.blocks.size }}"
+          style="--item-desktop: {{ section.blocks.size }};--item-tablet: {{ section.blocks.size }};--item-mb: 1;--gap-desktop: 60px;--gap: 60px;"
         >
-          <div class="swiper-wrapper flex-md-center ms-md-30">
+          <div class="swiper-wrapper flex">
             {%- for block in section.blocks -%}
               {%- liquid
                 assign block_st = block.settings
@@ -106,18 +115,26 @@
                   assign alt_text = 'general.image.image_alt_default' | t
                 endif
               -%}
-              <div class="swiper-slide h-custom w-custom flex justify-center" style="--width: {{ section_st.image_width }}px;--height: 6rem;">
-                <div class="testimonials-thumb-item flex content-center h-full h-custom w-custom">
+              <div
+                class="swiper-slide flex justify-center transition"
+                style="--width: {{ section_st.image_width }}px;margin-right: 60px;"
+              >
+                <div
+                  class="testimonials-thumb-item flex content-center pointer w-custom"
+                  style="{% if block_st.testimonial_image == blank %}--aspect-ratio: 7/3;{% endif %}"
+                >
                   {% if block_st.testimonial_image != blank %}
                     {% render 'responsive-image',
                       type: 'banner',
                       image: block_st.testimonial_image,
                       image_alt: alt_text,
                       container: section_width,
-                      column: section.blocks.size
+                      column: section.blocks.size,
+                      class: ' w-full h-full rounded',
+                      class_motion: ' w-full h-full'
                     %}
                   {% else %}
-                    {% render 'placeholder-render' | type: "collection" | class: 'h-custom w-custom img-placeholder rounded' %}
+                    {% render 'placeholder-render' | type: "collection" | class: 'w-full h-full img-placeholder rounded', class_motion: ' w-full h-full' %}
                   {% endif %}
                 </div>
               </div>
@@ -134,7 +151,7 @@
   "name": "t:sections.testimonials.name",
   "tag": "section",
   "class": "section-testimonials",
-  "max_blocks": 4,
+  "max_blocks": 6,
   "disabled_on": {
     "groups": ["header", "footer", "custom.overlay"]
   },
@@ -262,22 +279,6 @@
     {
       "type": "header",
       "content": "t:sections.all.carousel.header"
-    },
-    {
-      "type": "select",
-      "id": "items_per_row",
-      "label": "t:sections.testimonials.settings.item_on_desktop.label",
-      "default": "1",
-      "options": [
-        {
-          "value": "1",
-          "label": "t:sections.testimonials.settings.item_on_desktop.options__1.label"
-        },
-        {
-          "value": "2",
-          "label": "t:sections.testimonials.settings.item_on_desktop.options__2.label"
-        }
-      ]
     },
     {
       "type": "checkbox",

@@ -171,7 +171,7 @@
                                     href="{{ button_link | default: "#" }}"
                                   {% endif %}
                                   aria-label="{{ button_label }}"
-                                  class="btn-link border-animation inline-block mt-10"
+                                  class="btn-link border-animation inline-block mt-10 pointer"
                                 >
                                   {{ button_label }}
                                 </a>
@@ -195,7 +195,7 @@
               <div class="facet-drawer grow-1{% if enable_filtering and filter_layout == 'drawer' %}{% else %} block hidden-1025{% endif %}">
                 <button
                   id="FacetsDrawer"
-                  class="button heading color btn-reset inline-flex gap-5 align-center body_weight"
+                  class="button heading color btn-reset inline-flex gap-5 align-center body_weight pointer"
                   aria-label="{{ 'products.facets.filter' | t }}"
                 >
                   <svg width="22" height="22" fill="none">
@@ -345,7 +345,7 @@
                       <facet-remove>
                         <a
                           href="{{ value.url_to_remove }}"
-                          class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal"
+                          class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal"
                         >
                           {{ value.label | escape }}
                           <span class="active-facets__button-inner">
@@ -364,7 +364,7 @@
                         <facet-remove>
                           <a
                             href="{{ filter.url_to_remove }}"
-                            class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal"
+                            class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal"
                           >
                             {%- if filter.min_value.value -%}
                               {{ filter.min_value.value | money }}
@@ -393,7 +393,7 @@
                   <facet-remove class="active-facets__button-wrapper">
                     <a
                       href="{{ results_url }}"
-                      class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal"
+                      class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal"
                     >
                       <span>{{ 'products.facets.clear_all' | t }}</span>
                     </a>

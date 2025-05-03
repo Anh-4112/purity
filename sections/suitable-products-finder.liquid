@@ -70,6 +70,13 @@
     transform: translateY(-50%);
     left: var(--progress-width);
   }
+  .hidden_range .product-tabs__header-item {
+    opacity: 0.5;
+    transition: var(--transition);
+  }
+  .hidden_range .product-tabs__header-item.active {
+    opacity: 1;
+  }
   @media screen and (max-width: 767.98px) {
     .product-tabs__header-content {
       max-width: 100%;
@@ -222,7 +229,7 @@
             {%- endfor -%}
           </div>
         </slide-section>
-        <div class="product-tabs__header-content flex gap-30 mb-30">
+        <div class="product-tabs__header-content flex gap-30 mb-30{% if section_st.show_range_slider == false %} hidden_range{% endif %}">
           {%- for block in section.blocks -%}
             {%- liquid
               assign block_st = block.settings
@@ -318,7 +325,7 @@
           >
             <div class="bg-custom overflow-hidden h-custom btn-rounded"></div>
             <span
-              class="product-tabs__dot pointer absolute w-custom h-custom inline-flex content-center"
+              class="product-tabs__dot pointer absolute w-custom h-custom inline-flex content-center transition-drawer"
               style="--width: 3.6rem; --height: 3.6rem"
             >
               <svg width="26" height="26" fill="none">
@@ -343,7 +350,7 @@
               <motion-items-effect>
             {% endif %}
             <slide-section
-              class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+              class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
               data-section-id="{{ block.id }}"
               data-autoplay="false"
               data-effect="slide"
@@ -357,7 +364,7 @@
               style="{{ col_style | strip | strip_newlines }}"
             >
               {% if show_navigation %}
-                {%- render 'swiper-navigation' -%}
+                {%- render 'swiper-navigation', show_on_hover: true -%}
               {% endif %}
               <div class="swiper-wrapper">
                 {%- for product in collection.products limit: items_to_show -%}
@@ -394,7 +401,7 @@
               <motion-items-effect>
             {% endif %}
             <slide-section
-              class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+              class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
               data-section-id="{{ block.id }}"
               data-autoplay="false"
               data-effect="slide"
@@ -408,7 +415,7 @@
               style="{{ col_style | strip | strip_newlines }}"
             >
               {% if show_navigation %}
-                {%- render 'swiper-navigation' -%}
+                {%- render 'swiper-navigation', show_on_hover: true -%}
               {% endif %}
               <div class="swiper-wrapper">
                 {%- for product in (1..5) -%}

@@ -498,6 +498,7 @@ blockquote {
 :is(.active, .open).visible {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 .overflow-x-hidden {
   overflow-x: hidden;
@@ -515,14 +516,15 @@ blockquote {
   position: sticky;
   z-index: 8;
 }
-.header-sticky-hidden {
-  top: calc(-1 * var(--header-height));
-}
 .site-header.animate {
   top: 0;
   transition: var(--transition-drawer);
 }
-.header-sticky .gradient {
+.header-sticky-hidden,
+.header-sticky-hidden.animate {
+  top: calc(-1 * var(--header-height));
+}
+.site-header.gradient {
   background-attachment: unset;
 }
 .show-overlay:after {
@@ -542,6 +544,7 @@ blockquote {
 .show-overlay.active:after {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 .bright_gradient:before {
   content: "";
@@ -635,6 +638,7 @@ blockquote {
   pointer-events: auto;
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
   transform: translateX(0) translateY(0);
 }
 :where(modal-popup :is(.modal-overlay)) {
@@ -977,57 +981,6 @@ blockquote {
     margin-bottom: 3rem;
   }
 }
-@media (min-width: 1200px) {
-  .static-xl {
-    position: static;
-  }
-  .relative-xl {
-    position: relative;
-  }
-  .static-xl-impo {
-    position: static !important;
-  }
-  .block-xl {
-    display: block;
-  }
-  .grid-xl {
-    display: grid;
-  }
-  .flex-xl {
-    display: flex;
-  }
-  .flex-xl-nowrap {
-    flex-wrap: nowrap;
-  }
-  .text-xl-start {
-    text-align: start;
-  }
-  .gap-xl-25 {
-    gap: 2.5rem;
-  }
-  .gap-xl-30 {
-    gap: 3rem;
-  }
-  .gap-xl-50 {
-    gap: clamp(1.5rem, 2vw, 5rem);
-  }
-  .gap-xl-60 {
-    gap: 6rem;
-  }
-  .transform-xl-none {
-    transform: none !important;
-  }
-  .px-xl-0 {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .pe-xl-25 {
-    padding-inline-end: 2.5rem;
-  }
-  .space-between-xl {
-    justify-content: space-between;
-  }
-}
 .bg-transparent {
   background: transparent !important;
 }
@@ -1195,6 +1148,7 @@ blockquote {
   .show-on-hover {
     transform: translateX(var(--transform-x, 0));
     will-change: transform;
+    visibility: hidden;
   }
   .media-gallery__image .show-on-hover {
     transform: scale(0.8);
@@ -1204,6 +1158,7 @@ blockquote {
   }
   .hover-action:hover .show-on-hover {
     visibility: visible;
+    pointer-events: auto;
     transform: translateX(0) scale(1);
   }
   .hover-action:hover .vertical-arrow .show-on-hover {
@@ -1223,6 +1178,7 @@ blockquote {
   .btn__quick-shop:focus-visible {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
   }
   .btn__quick-shop.absolute {
     --btn-padding-y: 1.5rem;
@@ -1464,6 +1420,7 @@ blockquote {
   .disclosure__footer .opened.show-overlay:after {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
   }
   .disclosure__footer .button-localization.opened + .disclosure__list-wrapper {
     bottom: 0;
@@ -1485,7 +1442,7 @@ blockquote {
 .back-to-top.show {
   transform: scale(1);
   opacity: 1;
-  visibility: visible;
+  pointer-events: auto;
 }
 .height-scroll {
   height: var(--scroll-percentage);
@@ -1793,4 +1750,7 @@ quickview-drawer .media-zoom-button span {
 }
 .filter-layout.loading :is(.loading-filter, .icon-loader) {
   opacity: 1;
+}
+.size_guide-footer a {
+  color: inherit;
 }

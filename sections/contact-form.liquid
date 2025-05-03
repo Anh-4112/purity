@@ -58,7 +58,11 @@
       {%- endif -%}
       {%- form 'contact', id: contact_id, class: 'isolate field', novalidate: 'novalidate' -%}
         {%- if form.posted_successfully? -%}
-          <div class="form-status form-status form__message success mb-10 flex align-center gap-10 mb-10" tabindex="-1" autofocus>
+          <div
+            class="form-status form-status form__message success mb-10 flex align-center gap-10 mb-10"
+            tabindex="-1"
+            autofocus
+          >
             <div class="flex content-center">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <use href="#icon-success"></use>
@@ -145,7 +149,7 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                       <use href="#icon-error"></use>
                     </svg>
-                  </div>                
+                  </div>
                   <span class="form__message">
                     {{- form.errors.translated_fields.email | capitalize }}
                     {{ form.errors.messages.email -}}
@@ -196,7 +200,7 @@
         <div
           class="contact__button mt-30 mt-1025-40"
         >
-          <button type="submit" class="btn btn-primary w-full relative">
+          <button type="submit" class="btn pointer btn-primary w-full relative">
             <span class="hidden-on-load transition-short">{{ section_st.button_label }}</span>
             {%- render 'loader' -%}
           </button>

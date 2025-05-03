@@ -31,7 +31,7 @@
             <div {{ block.shopify_attributes }} class="container-min single__post-header page-title">
               {% if block_st.show_category %}
                 <a
-                  class="blog-category inline-block bg-sale btn-rounded fs-13 px-15 py-4"
+                  class="blog-category pointer inline-block bg-sale btn-rounded fs-13 px-15 py-4"
                   href="{{ blog.url }}"
                   aria-label="{{ blog.title }}"
                 >
@@ -199,7 +199,7 @@
                 class="container-min blog-previous-next flex gap-15 space-between border-top pt-30 pb-10 mt-20 {% if blog.previous_article == null %}justify-content-right{% endif %}"
               >
                 {% if blog.previous_article != null %}
-                  <a href="{{ blog.previous_article.url }}" class="previous flex-1">
+                  <a href="{{ blog.previous_article.url }}" class="previous flex-1 pointer">
                     <div class="content">
                       <div class="btn-text-transform mb-10">
                         <svg
@@ -544,7 +544,7 @@
                   <div class="comment-action text-center mt-30">
                     <button
                       type="submit"
-                      class="comment-form__button btn btn-primary mw-250 relative"
+                      class="comment-form__button btn pointer btn-primary mw-250 relative"
                       name="commit"
                       id="Subscribe-{{ section.id }}"
                       aria-label="{{ 'subscribe.button_label' | t }}"
