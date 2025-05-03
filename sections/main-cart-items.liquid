@@ -321,7 +321,7 @@
                                   <span class="visually-hidden">
                                     {{ 'products.product.price.sale_price' | t }}
                                   </span>
-                                  <strong class="cart-item__final-price product-option">
+                                  <strong class="cart-item__final-price product-option heading-color heading_weight">
                                     {{ item.final_price | money }}
                                   </strong>
                                 </div>
@@ -336,7 +336,7 @@
                                 aria-label="{{ 'customer.order.discount' | t }}"
                               >
                                 {%- for discount in item.discounts -%}
-                                  <li class="discounts__discount">
+                                  <li class="discounts__discount fs-small">
                                     <svg
                                       aria-hidden="true"
                                       focusable="false"
@@ -383,7 +383,7 @@
                                     </svg>
                                   </button>
                                   <input
-                                    class="quantity__input border-0 p-0 text-center w-custom fs-small"
+                                    class="quantity__input border-0 p-0 text-center w-custom fs-small heading-color"
                                     type="number"
                                     style="--width: 5rem;--input-height: 50px;"
                                     type="number"
@@ -761,7 +761,7 @@
                         aria-label="{{ 'customer.order.discount' | t }}"
                       >
                         {%- for discount in cart.cart_level_discount_applications -%}
-                          <li class="discounts__discount discounts__discount--position flex gap-5">
+                          <li class="discounts__discount fs-small discounts__discount fs-small--position flex gap-5">
                             <svg
                               aria-hidden="true"
                               focusable="false"

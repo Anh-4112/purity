@@ -153,9 +153,9 @@
                         -%}
                     {%- endcase -%}
                     {%- if link.links.size > 0 or has_content -%}
-                      <details is="details-mega-menu" class="details-header-menu animate-motion">
+                      <details is="details-mega-menu" class="details-header-menu level-1 animate-motion">
                         <summary
-                          class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
+                          class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
                           data-href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
@@ -372,14 +372,14 @@
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
-                        {{- link.title -}}
+                        <span class="outlined-border">{{- link.title -}}</span>
                       </a>
                     {%- endif -%}
                   {%- else -%}
                     {%- if link.links.size > 0 -%}
-                      <details is="details-mega-menu" class="details-header-menu animate-motion">
+                      <details is="details-mega-menu" class="details-header-menu level-1 animate-motion">
                         <summary
-                          class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
+                          class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
                           data-href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
@@ -406,7 +406,7 @@
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
-                        {{- link.title -}}
+                        <span class="outlined-border">{{- link.title -}}</span>
                       </a>
                     {%- endif -%}
                   {%- endif -%}
@@ -414,9 +414,9 @@
               {%- else -%}
                 <li>
                   {%- if link.links.size > 0 -%}
-                    <details is="details-mega-menu" class="details-header-menu animate-motion">
+                    <details is="details-mega-menu" class="details-header-menu level-1 animate-motion">
                       <summary
-                        class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
+                        class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
                         data-href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
@@ -443,7 +443,7 @@
                       href="{{ link.url }}"
                       aria-label="{{ link.title }}"
                     >
-                      {{- link.title -}}
+                      <span class="outlined-border">{{- link.title -}}</span>
                     </a>
                   {%- endif -%}
                 </li>
@@ -606,9 +606,9 @@
                             -%}
                         {%- endcase -%}
                         {%- if link.links.size > 0 or has_content -%}
-                          <details is="details-mega-menu" class="details-header-menu animate-motion">
+                          <details is="details-mega-menu" class="details-header-menu level-1 animate-motion">
                             <summary
-                              class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
+                              class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
                               data-href="{{ link.url }}"
                               aria-label="{{ link.title }}"
                             >
@@ -850,7 +850,7 @@
                             href="{{ link.url }}"
                             aria-label="{{ link.title }}"
                           >
-                            {{- link.title -}}
+                            <span class="outlined-border">{{- link.title -}}</span>
                           </a>
                         {%- endif -%}
                       {%- endif -%}
@@ -858,9 +858,9 @@
                   {%- else -%}
                     <li class="py-10">
                       {%- if link.links.size > 0 -%}
-                        <details is="details-mega-menu" class="details-header-menu animate-motion">
+                        <details is="details-mega-menu" class="details-header-menu level-1 animate-motion">
                           <summary
-                            class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
+                            class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
                             data-href="{{ link.url }}"
                             aria-label="{{ link.title }}"
                           >
@@ -875,7 +875,6 @@
                               </svg>
                             {% endif %}
                           </summary>
-
                           {%- render 'horizontal-menu',
                             section_st: section_st,
                             menu_mobile: true,
@@ -890,7 +889,7 @@
                           href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
-                          {{- link.title -}}
+                          <span class="outlined-border">{{- link.title -}}</span>
                         </a>
                       {%- endif -%}
                     </li>

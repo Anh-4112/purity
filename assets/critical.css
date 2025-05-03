@@ -724,7 +724,8 @@ input[type="radio"]:checked + .text-swatch-label.pill {
   font-size: calc(var(--body-font-size) + 1px);
   cursor: pointer;
 }
-.border-animation {
+.border-animation,
+.outlined-border {
   position: relative;
   background-image: linear-gradient(
     to right,
@@ -859,6 +860,7 @@ a.hover-heading-color:hover,
   border-radius: 5px;
 }
 .rounded-style :where(.rounded-10) {
+  --img-rounded: 10px;
   border-radius: 10px;
   clip-path: inset(0 0 0 0 round 10px);
 }
@@ -2029,7 +2031,7 @@ th {
     transform: translateX(var(--slide-out, -100%)) translateY(0);
     -webkit-transform: translateX(var(--slide-out, -100%)) translateY(0);
     top: 0;
-    will-change: transform;
+    will-change: transform, opacity;
     max-height: 100vh;
   }
   :where(.drawer-left) {

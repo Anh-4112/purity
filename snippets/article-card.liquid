@@ -79,7 +79,7 @@
         <div class="card__heading lh-normal mb-10 {% if is_featured_blog %}h2{% else %}h4{% endif %}">
           <a
             href="{{ article.url }}"
-            class="heading-color remove-underline border-animation"
+            class="heading-color remove-underline outlined-border"
           >
             {{ article.title | escape }}
           </a>
@@ -137,7 +137,7 @@
                 href="{{ button_link | default: "#" }}"
               {% endif %}
               aria-label="{{ button_label }}"
-              class="text-center pointer btn-{{ button_type }}{% if button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %}"
+              class="text-center pointer btn-{{ button_type }}{% if button_type == "link" %} align-self-center outlined-border{% else %} btn w-custom max-w-100{% endif %}"
               style="--width: 20rem;"
             >
               {{ button_label }}
