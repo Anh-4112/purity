@@ -130,20 +130,6 @@
                   </span>
                 </a>
               </div>
-              {%- liquid
-                assign position_x = ''
-                if position_left > 80
-                  assign position_x = ' right'
-                elsif position_left < 20
-                  assign position_x = ' left'
-                endif
-                assign position_y = ''
-                if position_top > 65
-                  assign position_y = ' bottom'
-                elsif position_top < 35
-                  assign position_y = ' top'
-                endif
-              -%}
             </div>
           {%- endfor -%}
         </div>
@@ -339,6 +325,10 @@
     "groups": ["header", "footer", "custom.overlay"]
   },
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.compact_product_bundle.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"
