@@ -231,7 +231,7 @@ class ProductTabs extends HTMLElement {
         }
         const position = tab.dataset.position;
         if (slideSectionHeader) {
-          slideSectionHeader.swiper.slideToLoop(position - 1, 300, true);
+          slideSectionHeader.swiper.slideToLoop(position - 1, 170, true);
         }
       }
     });

@@ -52,18 +52,18 @@ class TestimonialsSlide extends SlideSection {
     );
     if (nextEl) {
       this.swiper.navigation.nextEl = nextEl;
+      nextEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.swiper.slideNext();
+      });
     }
     if (prevEl) {
       this.swiper.navigation.prevEl = prevEl;
+      prevEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.swiper.slidePrev();
+      });
     }
-    nextEl.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.swiper.slideNext();
-    });
-    prevEl.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.swiper.slidePrev();
-    });
     this.swiper.on("slideChangeTransitionEnd", () => {
       this.swiper.thumbs.update();
     });
