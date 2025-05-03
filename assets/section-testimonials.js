@@ -28,7 +28,8 @@ class TestimonialsSlide extends SlideSection {
       spaceBetween: 60,
       watchSlidesProgress: true,
       grabCursor: true,
-      allowTouchMove: true,
+      loop: true,
+      allowTouchMove: false,
       slideActiveClass: "swiper-slide-thumb-active",
       breakpoints: {
         768: {
@@ -42,7 +43,27 @@ class TestimonialsSlide extends SlideSection {
 
     this.swiper.thumbs.swiper = this.thumbsSwiper;
     this.swiper.thumbs.init();
-
+    const section = this.closest(".section-testimonials");
+    const nextEl = section.querySelector(
+      ".testimonial-swiper-action .swiper-button-next"
+    );
+    const prevEl = section.querySelector(
+      ".testimonial-swiper-action .swiper-button-prev"
+    );
+    if (nextEl) {
+      this.swiper.navigation.nextEl = nextEl;
+    }
+    if (prevEl) {
+      this.swiper.navigation.prevEl = prevEl;
+    }
+    nextEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.swiper.slideNext();
+    });
+    prevEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.swiper.slidePrev();
+    });
     this.swiper.on("slideChangeTransitionEnd", () => {
       this.swiper.thumbs.update();
     });
