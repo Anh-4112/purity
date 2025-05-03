@@ -1,5 +1,7 @@
 {% liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -70,6 +72,9 @@
       </div>
     {%- endif -%}
     {%- if section.blocks.size > 0 -%}
+      {% if scroll_animation %}
+        <motion-items-effect>
+      {% endif %}
       <carousel-mobile
         data-items="1"
         class="grid-cols gap gap-{{ column_gap_slide }} grid"
@@ -88,7 +93,7 @@
             assign icon_position = section_st.icon_position
           -%}
           <div
-            class="{% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
+            class="motion-item {% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
             style="---width: {{ section_st.icon_size }}px;"
           >
             <div
@@ -134,6 +139,9 @@
           </div>
         {%- endfor -%}
       </carousel-mobile>
+      {% if scroll_animation %}
+      </motion-items-effect>
+      {% endif %}
     {%- endif -%}
   </div>
 </div>

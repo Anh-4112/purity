@@ -392,7 +392,6 @@ class SuitableFinder extends ProductTabs {
         "--width-range-slider",
         offsetWidth + "px"
       );
-      this._dot.style.transition = "none";
 
       requestAnimationFrame(() => {
         this.setupDraggableDot();
@@ -404,8 +403,6 @@ class SuitableFinder extends ProductTabs {
 
           requestAnimationFrame(() => {
             if (this._dot) {
-              this._dot.style.transition =
-                "left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)";
               this._isInitialized = true;
             }
           });
@@ -498,7 +495,6 @@ class SuitableFinder extends ProductTabs {
     event.preventDefault();
     this._isDragging = true;
     this._dot.style.cursor = "grabbing";
-    this._dot.style.transition = "none";
 
     document.addEventListener("mousemove", this.handleDotMouseMove);
     document.addEventListener("mouseup", this.handleDotMouseUp);
@@ -529,8 +525,6 @@ class SuitableFinder extends ProductTabs {
         0,
         Math.min(rangeSliderRect.width - dotWidth, newPosition)
       );
-
-      this._dot.style.left = `${newPosition}px`;
 
       const dotCenter = newPosition + dotWidth / 2;
       this.activateTabWhileDragging(dotCenter);
@@ -571,7 +565,6 @@ class SuitableFinder extends ProductTabs {
 
     this._isDragging = false;
     this._dot.style.cursor = "grab";
-    this._dot.style.transition = "left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)";
 
     document.removeEventListener("mousemove", this.handleDotMouseMove);
     document.removeEventListener("mouseup", this.handleDotMouseUp);
@@ -587,7 +580,6 @@ class SuitableFinder extends ProductTabs {
 
     event.preventDefault();
     this._isDragging = true;
-    this._dot.style.transition = "none";
 
     document.addEventListener("touchmove", this.handleDotTouchMove, {
       passive: false,
@@ -624,8 +616,6 @@ class SuitableFinder extends ProductTabs {
         Math.min(rangeSliderRect.width - dotWidth, newPosition)
       );
 
-      this._dot.style.left = `${newPosition}px`;
-
       const dotCenter = newPosition + dotWidth / 2;
       this.activateTabWhileDragging(dotCenter);
     });
@@ -635,7 +625,6 @@ class SuitableFinder extends ProductTabs {
     if (!this._isDragging) return;
 
     this._isDragging = false;
-    this._dot.style.transition = "left 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)";
 
     document.removeEventListener("touchmove", this.handleDotTouchMove);
     document.removeEventListener("touchend", this.handleDotTouchEnd);
@@ -713,16 +702,9 @@ class SuitableFinder extends ProductTabs {
     );
 
     if (!animate || !this._isInitialized) {
-      this._dot.style.transition = "none";
-      this._dot.style.left = `${adjustedPosition}px`;
-
       if (!animate) {
         void this._dot.offsetWidth;
       }
-    } else {
-      this._dot.style.transition =
-        "left 0.15s cubic-bezier(0.25, 0.1, 0.25, 1)";
-      this._dot.style.left = `${adjustedPosition}px`;
     }
   }
 

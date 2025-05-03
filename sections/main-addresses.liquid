@@ -25,7 +25,7 @@
             </a>
           </div>
           <button
-            class="btn btn-primary add-address w-full"
+            class="btn pointer btn-primary add-address w-full"
             aria-expanded="false"
             aria-controls="AddAddress"
             aria-label="{{- 'customer.addresses.title' | t -}}"
@@ -184,7 +184,7 @@
                   <button
                     aria-label="{{ 'customer.addresses.add_new' | t }}"
                     type="submit"
-                    class="btn btn-primary w-full col-1025-w-custom relative"
+                    class="btn pointer btn-primary w-full col-1025-w-custom relative"
                   >
                     <span class="hidden-on-load transition-short"> {{ 'customer.addresses.add_new' | t }}</span>
                     {%- render 'loader' -%}
@@ -192,7 +192,7 @@
                   <button
                     aria-label="{{ 'customer.addresses.cancel' | t }}"
                     type="reset"
-                    class="btn btn-outline w-full col-1025-remaining cancel-add"
+                    class="btn pointer btn-outline w-full col-1025-remaining cancel-add"
                   >
                     {{ 'customer.addresses.cancel' | t }}
                   </button>
@@ -242,14 +242,14 @@
                       aria-controls="EditAddress_{{ address.id }}"
                       aria-expanded="false"
                       data-address-id="{{ address.id }}"
-                      class="mr-10 btn btn-outline flex-grow-1 "
+                      class="mr-10 btn pointer btn-outline flex-grow-1 "
                     >
                       {{ 'customer.addresses.edit' | t }}
                     </button>
                     <button
                       type="button"
                       aria-label="{{ 'customer.addresses.delete' | t }}"
-                      class="btn btn-secondart btn-outline address-delete flex-grow-1"
+                      class="btn pointer btn-outline address-delete flex-grow-1"
                       data-form-id="{{ address.id }}"
                       data-confirm-message="{{ 'customer.addresses.delete_confirm' | t }}"
                     >
@@ -427,7 +427,7 @@
                     >
                       <button
                         type="submit"
-                        class="btn btn-primary w-full col-1025-w-custom"
+                        class="btn pointer btn-primary w-full col-1025-w-custom"
                         aria-label="{{ 'customer.addresses.update' | t }}"
                       >
                         <span class="hidden-on-load transition-short"> {{ 'customer.addresses.update' | t }}</span>
@@ -437,7 +437,7 @@
                         type="reset"
                         aria-label="{{ 'customer.addresses.cancel' | t }}"
                         onclick="Shopify.CustomerAddress.toggleForm({{ form.id }}); return false;"
-                        class="btn btn-outline w-full col-1025-remaining"
+                        class="btn pointer btn-outline w-full col-1025-remaining"
                       >
                         {{ 'customer.addresses.cancel' | t }}
                       </button>

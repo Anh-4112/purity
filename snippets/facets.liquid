@@ -91,24 +91,19 @@
                     {%- else -%}
                       <li class="facets__item flex gap-10 pointer">
                         <div class="facet-checkbox flex gap-10 relative p-2">
-                          <div class="input_checkbox absolute inset-0 opacity-0">
-                            <input
-                              type="checkbox"
-                              name="{{ value.param_name }}"
-                              value="{{ value.value }}"
-                              class="opacity-0 absolute inset-0 m-0 w-full h-full z-1 pointer m-0"
-                              id="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}"
-                              {% if value.active %}
-                                checked
-                              {% endif %}
-                              {% if value.count == 0 and value.active == false %}
-                                disabled
-                              {% endif %}
-                            >
-                            <span
-                              class="checkmark relative rounded-50 pointer-none inline-flex w-custom h-custom"
-                            ></span>
-                          </div>
+                          <input
+                            type="radio"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            class="variant-options opacity-0 absolute inset-0 m-0 w-full h-full z-1 pointer m-0"
+                            id="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}"
+                            {% if value.active %}
+                              checked
+                            {% endif %}
+                            {% if value.count == 0 and value.active == false %}
+                              disabled
+                            {% endif %}
+                          >
                           {%- liquid
                             assign swatch_color = value.label
                             assign is_swatch_image = false

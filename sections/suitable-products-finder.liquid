@@ -1,6 +1,8 @@
 <script type="module" src="{{ 'section-vertical-product-tabs.js' | asset_url }}" defer="defer"></script>
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -68,6 +70,13 @@
     transform: translateY(-50%);
     left: var(--progress-width);
   }
+  .hidden_range .product-tabs__header-item {
+    opacity: 0.5;
+    transition: var(--transition);
+  }
+  .hidden_range .product-tabs__header-item.active {
+    opacity: 1;
+  }
   @media screen and (max-width: 767.98px) {
     .product-tabs__header-content {
       max-width: 100%;
@@ -93,19 +102,37 @@
         class="section-header text-{{ text_alignment }}"
       >
         {%- if section_st.subheading != blank -%}
-          <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
-            {{ section_st.subheading }}
-          </div>
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="30"
+            class="block"
+          >
+            <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
+              {{ section_st.subheading }}
+            </div>
+          </motion-effect>
         {%- endif -%}
         {%- if section_st.title != blank -%}
-          <h2 class="block section-heading {{ header_size }}">
-            {{ section_st.title }}
-          </h2>
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="35"
+            class="block"
+          >
+            <h2 class="block section-heading {{ header_size }}">
+              {{ section_st.title }}
+            </h2>
+          </motion-effect>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description mt-15 prose">
-            {{ section_st.description }}
-          </div>
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="40"
+            class="block"
+          >
+            <div class="section-description mt-15 prose">
+              {{ section_st.description }}
+            </div>
+          </motion-effect>
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -202,7 +229,7 @@
             {%- endfor -%}
           </div>
         </slide-section>
-        <div class="product-tabs__header-content flex gap-30 mb-30">
+        <div class="product-tabs__header-content flex gap-30 mb-30{% if section_st.show_range_slider == false %} hidden_range{% endif %}">
           {%- for block in section.blocks -%}
             {%- liquid
               assign block_st = block.settings
@@ -298,7 +325,7 @@
           >
             <div class="bg-custom overflow-hidden h-custom btn-rounded"></div>
             <span
-              class="product-tabs__dot pointer absolute w-custom h-custom inline-flex content-center"
+              class="product-tabs__dot pointer absolute w-custom h-custom inline-flex content-center transition-drawer"
               style="--width: 3.6rem; --height: 3.6rem"
             >
               <svg width="26" height="26" fill="none">
@@ -319,8 +346,11 @@
             data-block-id="{{ block.id }}"
             {{ block.shopify_attributes }}
           >
+            {% if scroll_animation %}
+              <motion-items-effect>
+            {% endif %}
             <slide-section
-              class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+              class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
               data-section-id="{{ block.id }}"
               data-autoplay="false"
               data-effect="slide"
@@ -334,14 +364,14 @@
               style="{{ col_style | strip | strip_newlines }}"
             >
               {% if show_navigation %}
-                {%- render 'swiper-navigation' -%}
+                {%- render 'swiper-navigation', show_on_hover: true -%}
               {% endif %}
               <div class="swiper-wrapper">
                 {%- for product in collection.products limit: items_to_show -%}
                   {% render 'card-product',
                     card_product: product,
                     section_id: block.id,
-                    class: ' swiper-slide',
+                    class: ' swiper-slide motion-item',
                     show_video: true,
                     container: section_width,
                     column: items_per_row,
@@ -357,6 +387,9 @@
                 ></div>
               {% endif %}
             </slide-section>
+            {% if scroll_animation %}
+              </motion-items-effect>
+            {% endif %}
           </div>
         {%- else -%}
           <div
@@ -364,8 +397,11 @@
             data-block-id="{{ block.id }}"
             {{ block.shopify_attributes }}
           >
+            {% if scroll_animation %}
+              <motion-items-effect>
+            {% endif %}
             <slide-section
-              class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+              class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
               data-section-id="{{ block.id }}"
               data-autoplay="false"
               data-effect="slide"
@@ -379,13 +415,13 @@
               style="{{ col_style | strip | strip_newlines }}"
             >
               {% if show_navigation %}
-                {%- render 'swiper-navigation' -%}
+                {%- render 'swiper-navigation', show_on_hover: true -%}
               {% endif %}
               <div class="swiper-wrapper">
                 {%- for product in (1..5) -%}
                   {% render 'card-product',
                     section_id: block.id,
-                    class: ' swiper-slide',
+                    class: ' swiper-slide motion-item',
                     show_video: true,
                     container: section_width,
                     column: items_per_row,
@@ -401,6 +437,9 @@
                 ></div>
               {% endif %}
             </slide-section>
+            {% if scroll_animation %}
+              </motion-items-effect>
+            {% endif %}
           </div>
         {%- endif -%}
       {%- endfor -%}

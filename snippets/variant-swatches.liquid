@@ -172,7 +172,7 @@
               %}
                 <button
                   type="button"
-                  class="button open-size-chart btn-reset btn-link border-animation fs-small"
+                  class="button open-size-chart btn-reset btn-link border-animation fs-small pointer"
                   title="{{ size_guide_label }}"
                   aria-label="{{ size_guide_label }}"
                 >
@@ -185,23 +185,28 @@
                     >
                       <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
                       <div
-                        class="modal-popup-inner modal-focus h-content transition modal-draggable rounded max-w-custom m-auto invisible-1025 fixed inset-0 z-15 bg-white w-full"
+                        class="modal-popup-inner flex column modal-focus h-content transition modal-draggable rounded max-w-custom m-auto invisible-1025 fixed inset-0 z-15 bg-white w-full"
                         tabindex="-1"
                         style="--max-width: 80rem;"
                       >
-                        <draggable-modal class="modal__header drawer__header drawer-spacing border-bottom flex gap-10 space-between relative">
-                          <div class="drawer__heading h5">{{ size_guide_label }}</div>
+                        <draggable-modal
+                          class="modal__header relative drawer__header drawer-spacing border-bottom flex gap-10 space-between"
+                          style="--padding-block-desktop: 1.65rem;"
+                        >
+                          <div class="drawer__heading h6">
+                            {{ size_guide_label }}
+                          </div>
                           <button
                             is="button-close-model"
-                            class="modal__close pointer btn-reset wh-40 inline-flex-1025 hidden content-center absolute z-3 top-0 right-0"
+                            class="modal__close pointer btn-reset hidden w-30 inline-flex-1025 align-center flex-end"
                             aria-label="Close"
                           >
-                            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-                              <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
+                            <svg width="14" height="15" viewBox="0 0 14 15" fill="none">
+                              <use href="#icon-close" />
                             </svg>
                           </button>
                         </draggable-modal>
-                        <div class="drawer__body rte h-full overflow-y-auto custom-scrollbar p-30">
+                        <div class="drawer__body grow-1 rte h-full overflow-y-auto custom-scrollbar p-30">
                           {% if product.metafields.custom.size_chart != blank %}
                             {% assign size_chart_html = product.metafields.custom.size_chart
                               | replace: '&lt;', '<'
@@ -219,7 +224,9 @@
                           {% endif %}
                         </div>
                         {% if size_guide_footer %}
-                          <div class="modal__footer">{{ size_guide_footer }}</div>
+                          <div class="modal__footer size_guide-footer bg-primary color-white text-center px-gutter py-15 prose">
+                            {{ size_guide_footer }}
+                          </div>
                         {% endif %}
                       </div>
                     </size-chart-popup>

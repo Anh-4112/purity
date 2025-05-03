@@ -1,5 +1,7 @@
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -22,6 +24,7 @@
         assign image = block_st.image
       -%}
       {%- case block.type -%}
+          {% assign animate_delay = 25 %}
         {%- when 'image' -%}
           <div
             class="w-custom mb-50"
@@ -33,20 +36,40 @@
                 type: 'other',
                 container: section_width,
                 image: image,
-                image_alt: image_alt
+                image_alt: image_alt,
+                animate: 'zoom-out-small',
+                motion: true
               %}
             {% else %}
               {%- render 'placeholder-render', type: 'lifestyle-2', class: 'img-placeholder h-full w-full rounded' -%}
             {% endif %}
           </div>
         {%- when 'subheading' -%}
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {%- endif -%}
           <div
             class="block__content-subheading subheading_weight heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }}"
             style="--space-bottom: {{ block_st.spacing_bottom }};"
           >
             {{ block_st.subheading | escape }}
           </div>
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         {%- when 'heading' -%}
+          {% assign animate_delay = animate_delay | plus: 5 %}
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {%- endif -%}
           <div
             class="block__content-heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
             style="--space-bottom: {{ block_st.spacing_bottom }};"
@@ -54,7 +77,18 @@
           >
             {{ block_st.heading }}
           </div>
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         {%- when 'description' -%}
+          {% assign animate_delay = animate_delay | plus: 5 %}
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {%- endif -%}
           <div
             class="block__content-des mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} prose"
             style="--space-bottom: {{ block_st.spacing_bottom }};"
@@ -62,6 +96,9 @@
           >
             {{ block_st.description }}
           </div>
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         {%- when 'button' -%}
           {%- liquid
             assign first_button_label = block_st.first_button_label
@@ -72,6 +109,14 @@
             assign second_button_type = block_st.second_button_type
           %}
           {% if first_button_label != blank or block_st.second_button_label != blank %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            {%- if scroll_animation -%}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
+              >
+            {%- endif -%}
             <div
               class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap text-center gap-15"
               style="--space-bottom: {{ block_st.spacing_bottom }};"
@@ -84,7 +129,7 @@
                     href="{{ first_button_link | default: "#" }}"
                   {% endif %}
                   aria-label="{{ first_button_label }}"
-                  class="btn btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} min-w-custom max-w-100{% endif %}"
+                  class="btn pointer btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} min-w-custom max-w-100{% endif %}"
                   {% if first_button_type != 'link' %}
                     style="--width: 25rem;"
                   {% endif %}
@@ -100,7 +145,7 @@
                     href="{{ second_button_link | default: "#" }}"
                   {% endif %}
                   aria-label="{{ second_button_label }}"
-                  class="btn btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} w-custom max-w-100{% endif %}"
+                  class="btn pointer btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} w-custom max-w-100{% endif %}"
                   {% if second_button_type != 'link' %}
                     style="--width: 25rem;"
                   {% endif %}
@@ -109,6 +154,9 @@
                 </a>
               {% endif %}
             </div>
+            {%- if scroll_animation -%}
+              </motion-effect>
+            {%- endif -%}
           {% endif %}
       {%- endcase -%}
     {%- endfor -%}

@@ -1804,6 +1804,7 @@ class CarouselMobile extends HTMLElement {
     super();
     this.enable = this.dataset.enableCarouselMobile == "true";
     this.isMulticontent = this.dataset.multicontent == "true";
+    this.bundle = this.dataset.bundle == "true";
     this.swiperSlideInnerHtml = this.innerHTML;
     this.initCarousel();
   }
@@ -1852,7 +1853,13 @@ class CarouselMobile extends HTMLElement {
   actionOutMobile() {
     this.classList.remove("swiper");
     this.innerHTML = this.swiperSlideInnerHtml;
-
+    if (this.bundle){
+      this.className = ''
+      setTimeout(() => {
+        this.classList.remove('swiper-backface-hidden')
+      }, 100);
+      return;
+    }
     if (this.isMulticontent) {
       this.classList.add("flex", "column", "flex-md-row", "wrap", "cols");
       this.classList.remove("grid", "grid-cols");

@@ -35,7 +35,9 @@
               container: container,
               column: column,
               column_mobile: column_mobile,
-              padding: padding
+              padding: padding,
+              animate: 'zoom-out-small',
+              motion: true
             %}
           </a>
         {%- endif -%}
@@ -50,7 +52,7 @@
               {% if blog_name != blank %}
                 <li class="blog-meta-tag blog-cate inline-flex align-center">
                   <a
-                    class="post-tags blog-cate inline-block bg-sale btn-rounded fs-13 px-15 py-4"
+                    class="post-tags blog-cate inline-block bg-sale btn-rounded fs-13 px-15 py-4 pointer"
                     href="{{ blog.url }}"
                     aria-label="blog category"
                   >
@@ -135,7 +137,7 @@
                 href="{{ button_link | default: "#" }}"
               {% endif %}
               aria-label="{{ button_label }}"
-              class="text-center btn-{{ button_type }}{% if button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %}"
+              class="text-center pointer btn-{{ button_type }}{% if button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %}"
               style="--width: 20rem;"
             >
               {{ button_label }}

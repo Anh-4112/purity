@@ -1,5 +1,7 @@
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   assign rounded = ' rounded'
   assign section_width = section_st.section_width
   if section_st.section_width == 'fix_width'
@@ -40,20 +42,42 @@
 >
   <div class="{{ section_width }}">
     {%- if section_st.heading != blank or section_st.description != blank -%}
+      {% assign animate_delay = 25 %}
       <div class="section-header text-{{ section_st.text_alignment }}">
         {%- if section_st.heading != blank -%}
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {%- endif -%}
           <h2
             class="section-heading {{ header_size }}"
           >
             {{ section_st.heading }}
           </h2>
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         {%- endif -%}
         {%- if section_st.description != blank -%}
+          {% assign animate_delay = animate_delay | plus: 5 %}
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {%- endif -%}
           <div
             class="section-description mt-15 prose"
           >
             {{ section_st.description }}
           </div>
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -116,7 +140,9 @@
             type: 'other',
             container: section_width,
             image: section_st.video_poster,
-            image_alt: image_alt
+            image_alt: image_alt,
+            animate: 'zoom-out-small',
+            motion: true
           %}
         {%- else -%}
           {%- render 'placeholder-render', type: 'lifestyle-1' -%}

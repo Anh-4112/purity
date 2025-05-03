@@ -79,48 +79,45 @@
         <h1>
           {{ 'templates.search.title_no_search' | t }}
         </h1>
-      {%- endif -%}
-      <div class="search-form container">
-        <action-search class="block mt-30">
-          <div class="search-form">
-            <form
-              action="{{ routes.search_url }}"
-              method="get"
-              role="search"
-              class="search"
-            >
-              <div
-                class="field bg-secondary px-25 btn-rounded flex align-center gap-10 relative max-w-custom mx-auto"
-                style="--max-width: 60rem;"
+    {%- endif -%}
+    <div class="search-form container">
+      <action-search class="block mt-30">
+        <div class="search-form">
+          <form
+            action="{{ routes.search_url }}"
+            method="get"
+            role="search"
+            class="search"
+          >
+            <div class="field bg-secondary px-25 btn-rounded flex align-center gap-10 relative max-w-custom mx-auto" style="--max-width: 60rem;">
+              <button
+                type="submit"
+                class="button pointer btn-reset search__button relative fs-0"
+                tabindex="0"
+                aria-label="{{ 'general.search.search' | t }}"
               >
-                <button
-                  type="submit"
-                  class="button btn-reset search__button relative fs-0"
-                  tabindex="0"
-                  aria-label="{{ 'general.search.search' | t }}"
-                >
-                  <svg width="20" height="20" fill="none" class="heading-color">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.587 17.424a7.837 7.837 0 1 0 0-15.674 7.837 7.837 0 0 0 0 15.674ZM18.25 18.25 16.6 16.6"/>
-                  </svg>
-                </button>
-                <input
-                  class="search__input field__input flex-1"
-                  style="--input-bg:transparent;--input-border-width: 0;--input-padding: 0;--input-height: 6rem;--input-placeholder-color: var(--color-heading);"
-                  type="search"
-                  name="q"
-                  value="{{ search.terms | escape }}"
-                  value=""
-                  placeholder="{{ 'general.search.search' | t }}"
-                  maxlength="128"
-                  role="combobox"
-                  aria-expanded="false"
-                  aria-haspopup="listbox"
-                  aria-autocomplete="list"
-                  autocorrect="off"
-                  autocomplete="off"
-                  autocapitalize="off"
-                  spellcheck="false"
-                  id="Search-In-Page"
+                <svg width="20" height="20" fill="none" class="heading-color">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.587 17.424a7.837 7.837 0 1 0 0-15.674 7.837 7.837 0 0 0 0 15.674ZM18.25 18.25 16.6 16.6"/>
+                </svg>
+              </button>
+              <input
+                 class="search__input field__input flex-1"
+                 style="--input-bg:transparent;--input-border-width: 0;--input-padding: 0;--input-height: 6rem;--input-placeholder-color: var(--color-heading);"
+                type="search"
+                name="q"
+                value="{{ search.terms | escape }}"
+                value=""
+                placeholder="{{ 'general.search.search' | t }}"
+                maxlength="128"
+                role="combobox"
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                aria-autocomplete="list"
+                autocorrect="off"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                id="Search-In-Page"
                 >
                 <label class="visually-hidden" for="Search-In-Page"> {{ 'general.search.search' | t }}</label>
                 <input type="hidden" name="options[prefix]" value="last">
@@ -164,7 +161,7 @@
               <div class="facet-drawer grow-1{% if enable_filtering and filter_layout == 'drawer' %}{% else %} block hidden-1025{% endif %}">
                 <button
                   id="FacetsDrawer"
-                  class="button heading color btn-reset inline-flex gap-5 align-center body_weight"
+                  class="button heading color btn-reset pointer inline-flex gap-5 align-center body_weight"
                   aria-label="{{ 'products.facets.filter' | t }}"
                 >
                   <svg width="22" height="22" fill="none">
@@ -312,8 +309,7 @@
                       <facet-remove>
                         <a
                           href="{{ value.url_to_remove }}"
-                          class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal"
-                        >
+                          class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer">
                           {{ value.label | escape }}
                           <span class="active-facets__button-inner">
                             <svg width="9" height="10" viewBox="0 0 9 10" fill="none">
@@ -331,8 +327,7 @@
                         <facet-remove>
                           <a
                             href="{{ filter.url_to_remove }}"
-                            class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal"
-                          >
+                            class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer">
                             {%- if filter.min_value.value -%}
                               {{ filter.min_value.value | money }}
                             {%- else -%}
@@ -358,10 +353,7 @@
                 {%- endfor -%}
                 <div class="facet-remove facet-clear-all">
                   <facet-remove class="active-facets__button-wrapper">
-                    <a
-                      href="{{ results_url }}"
-                      class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal"
-                    >
+                    <a href="{{ results_url }}"  class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer">
                       <span>{{ 'products.facets.clear_all' | t }}</span>
                     </a>
                   </facet-remove>

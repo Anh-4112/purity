@@ -2,6 +2,41 @@
 page-loader {
   background-color: var(--color-dark);
 }
+page-loader:not([style="opacity: 1;"]) .loader {
+  opacity: 1;
+}
+.loader {
+  display: block;
+  --height-of-loader: 2px;
+  --loader-color: #000000;
+  width: 60px;
+  height: var(--height-of-loader);
+  border-radius: 30px;
+  background-color: #00000038;
+  position: relative;
+}
+.loader::before {
+  content: "";
+  position: absolute;
+  background: var(--loader-color);
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  border-radius: 30px;
+  animation: moving 1s ease-in-out infinite;
+}
+@keyframes moving {
+  50% {
+    width: 100%;
+  }
+
+  100% {
+    width: 0;
+    right: 0;
+    left: unset;
+  }
+}
 :where(.container, .fluid_container) {
   padding-left: var(--bs-gutter-x, 1.5rem);
   padding-right: var(--bs-gutter-x, 1.5rem);
@@ -509,6 +544,9 @@ input[type="checkbox"]:checked + .checkmark:before {
 .z-15 {
   z-index: 15;
 }
+.z-16 {
+  z-index: 16;
+}
 .z-20 {
   z-index: 20;
 }
@@ -577,6 +615,9 @@ input[type="checkbox"]:checked + .checkmark:before {
   backdrop-filter: blur(var(--blur, 3px));
   --opacity: 0.6;
 }
+.zoom-in {
+  cursor: zoom-in;
+}
 :where(.btn:not(.btn-link)),
 :is(
     body .shopify-payment-button__more-options,
@@ -602,6 +643,9 @@ input[type="checkbox"]:checked + .checkmark:before {
   overflow: hidden;
   border: 1px solid var(--btn-border-color);
   text-decoration: none;
+}
+:where(.btn-hover) {
+  overflow: hidden;
 }
 :where(
     .btn:not(.btn-link),
@@ -654,9 +698,13 @@ input[type="checkbox"]:checked + .checkmark:before {
   padding: 0;
   font-family: var(--body-font-family);
 }
-:where([disabled], .disabled) {
-  pointer-events: none;
+:where([disabled], .disabled),
+:is([disabled], .disabled).pointer {
   opacity: 0.6;
+  cursor: not-allowed;
+}
+a[role="link"],
+a[role="link"].pointer {
   cursor: not-allowed;
 }
 .btn-active.active,
@@ -1196,6 +1244,15 @@ a.hover-heading-color:hover,
 .overflow-auto {
   overflow: auto;
 }
+.text-truncate {
+  --line-clamp: 2;
+  display: -webkit-box;
+  -webkit-line-clamp: var(--line-clamp);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .section {
   padding-top: clamp(
     (var(--section-pt) * 0.75px),
@@ -1487,7 +1544,7 @@ body:not(.template-index) .transparent-logo {
 :is(
     .color-swatch-label.active,
     .color-swatch-label:hover,
-    input[type="radio"]:checked + .color-swatch-label,
+    .variant-options:checked + .color-swatch-label,
     .variant-options:focus-visible + label.color-swatch-label
   ) {
   --color-border: var(--color-dark);
@@ -1495,7 +1552,7 @@ body:not(.template-index) .transparent-logo {
 :is(
     .color-swatch-label:hover,
     .variant-options:focus-visible + label.color-swatch-label,
-    input[type="radio"]:checked + .color-swatch-label
+    .variant-options:checked + .color-swatch-label
   ):before {
   --shadow-position: 5px;
 }
@@ -1598,6 +1655,12 @@ quantity-input input {
   }
   .nowrap-md {
     flex-wrap: nowrap;
+  }
+  :where(.border-bottom-md) {
+    border-bottom: var(--border-height, 1px) solid var(--color-border);
+  }
+  .py-20-md {
+    padding-block: 2rem;
   }
   .border-bottom-md-0 {
     border-bottom: 0;
@@ -1705,12 +1768,17 @@ quantity-input input {
       100vh - var(--header-height, 80px) - var(--height-bar, 0px)
     );
   }
+  .section-announcement-bar ~ .content-for-layout .h-full_screen {
+    min-height: calc(
+      100vh - var(--header-height, 80px) - var(--height-bar, 46px)
+    );
+  }
   [style*="--aspect-ratio"].h-full_screen::before {
     padding-top: 0;
   }
   .stretch_width .h-full_screen {
     min-height: calc(
-      100vh - var(--header-height, 70px) - var(--height-bar, 0px) -
+      100vh - var(--header-height, 70px) - var(--height-bar, 46px) -
         var(--bs-gutter-x)
     );
   }
