@@ -31,7 +31,7 @@
             <div {{ block.shopify_attributes }} class="container-min single__post-header page-title">
               {% if block_st.show_category %}
                 <a
-                  class="blog-category inline-block bg-sale btn-rounded fs-13 px-15 py-4"
+                  class="blog-category pointer inline-block bg-sale btn-rounded fs-13 px-15 py-4"
                   href="{{ blog.url }}"
                   aria-label="{{ blog.title }}"
                 >
@@ -92,25 +92,19 @@
                     style="--aspect-ratio:{{ article.image.aspect_ratio }}"
                   {% endif %}
                 >
-                  <img
-                    srcset="
-                      {% if article.image.width >= 350 %}{{ article.image | image_url: width: 350 }} 350w,{% endif %}
-                      {% if article.image.width >= 750 %}{{ article.image | image_url: width: 750 }} 750w,{% endif %}
-                      {% if article.image.width >= 1100 %}{{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
-                      {% if article.image.width >= 1500 %}{{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
-                      {% if article.image.width >= 2200 %}{{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
-                      {% if article.image.width >= 3000 %}{{ article.image | image_url: width: 3000 }} 3000w,{% endif %}
-                      {{ article.image | image_url }} {{ article.image.width }}w
-                    "
-                    sizes="100vw"
-                    src="{{ article.image | image_url: width: 3000 }}"
-                    loading="eager"
-                    fetchpriority="high"
-                    width="{{ article.image.width }}"
-                    height="{{ article.image.height }}"
-                    alt="{{ article.image.alt | escape }}"
-                    class="rounded absolute h-full inset-0 object-fit-cover"
-                  >
+                  {%- liquid
+                    assign alt_default = 'accessibility.promotion_banner' | t
+                    assign alt = article.image.alt | default: alt_default | escape
+                  -%}
+                  {% render 'responsive-image',
+                    type: 'other',
+                    image_alt: alt,
+                    container: section_width,
+                    image: article.image,
+                    animate: 'zoom-out-small',
+                    motion: true,
+                    class: 'rounded absolute h-full inset-0 object-fit-cover'
+                  %}
                 </div>
               </div>
             {%- endif -%}
@@ -205,7 +199,7 @@
                 class="container-min blog-previous-next flex gap-15 space-between border-top pt-30 pb-10 mt-20 {% if blog.previous_article == null %}justify-content-right{% endif %}"
               >
                 {% if blog.previous_article != null %}
-                  <a href="{{ blog.previous_article.url }}" class="previous flex-1">
+                  <a href="{{ blog.previous_article.url }}" class="previous flex-1 pointer">
                     <div class="content">
                       <div class="btn-text-transform mb-10">
                         <svg
@@ -405,7 +399,7 @@
                       tabindex="-1"
                       autofocus
                     >
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto">
                         <use href="#icon-error"></use>
                       </svg>
                       {{ 'templates.contact.form.error_heading' | t }}
@@ -433,7 +427,7 @@
                   {%- elsif form.posted_successfully? -%}
                     <div class="form-status form__message success mb-15" role="status">
                       <div class="form-status flex  align-center gap-10" tabindex="-1" autofocus>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                           <use href="#icon-success">
                         </svg>
                         {{ post_message | t }}
@@ -550,7 +544,7 @@
                   <div class="comment-action text-center mt-30">
                     <button
                       type="submit"
-                      class="comment-form__button btn btn-primary mw-250 relative"
+                      class="comment-form__button btn pointer btn-primary mw-250 relative"
                       name="commit"
                       id="Subscribe-{{ section.id }}"
                       aria-label="{{ 'subscribe.button_label' | t }}"
@@ -627,6 +621,10 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.image-with-text.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

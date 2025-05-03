@@ -16,7 +16,6 @@
     assign transparent_class = ' absolute inset-x-0 transparent z-15'
   endif
 -%}
-<script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--gap: 1rem; --gap-desktop: 2.5rem;{{- -}}
   {% if transparent %}--transparent-color: {{ section_st.header_text_icon_transparent }};{% endif %}{{- -}}
@@ -75,7 +74,6 @@
 <header
   is="site-header"
   data-sticky-type="{{ section_st.sticky_header_type }}"
-  data-sticky-mobile="{{ section_st.sticky_header_mobile }}"
   data-menu-trigger="{{ section_st.menu_trigger }}"
   data-dropdowns-animation="{{ dropdowns_animation }}"
   class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}{% if request.page_type != 'index' %} border-bottom{% endif %}"
@@ -89,8 +87,8 @@
           aria-controls="Menu-Drawer"
           aria-label="{{ 'accessibility.toggle_menu' | t }}"
         >
-          <svg width="20" height="14" fill="none">
-            <path fill="currentColor" d="M1.007 7.997c-.281 0-.523-.094-.726-.282A1.036 1.036 0 0 1 0 6.988c0-.266.094-.492.281-.68a.99.99 0 0 1 .726-.305h17.986c.281 0 .515.102.703.305a.893.893 0 0 1 .304.68.993.993 0 0 1-.304.727.953.953 0 0 1-.703.282H1.007Zm0-6.004c-.281 0-.523-.094-.726-.281A1.036 1.036 0 0 1 0 .985C0 .719.094.492.281.305A.99.99 0 0 1 1.007 0h17.986c.281 0 .515.102.703.305a.893.893 0 0 1 .304.68.993.993 0 0 1-.304.727.953.953 0 0 1-.703.281H1.007Zm0 12.007c-.281 0-.523-.094-.726-.281A1.036 1.036 0 0 1 0 12.992c0-.266.094-.493.281-.68a.99.99 0 0 1 .726-.305h17.986c.281 0 .515.101.703.305a.893.893 0 0 1 .304.68.993.993 0 0 1-.304.727.953.953 0 0 1-.703.281H1.007Z"/>
+          <svg width="22" height="22" fill="none">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2 3.5h18M2 8.5h9.47M2 13.5h18M2 18.5h9.47"/>
           </svg>
         </button>
       </toggle-menu>
@@ -103,9 +101,6 @@
           class="hidden"
           hidden
         >
-          <symbol id="icon-arrow-down">
-            <path d="M0.195652 1.58361C0.0652174 1.46321 0 1.31773 0 1.14716C0 0.966555 0.0652174 0.811037 0.195652 0.680602C0.316054 0.560201 0.466555 0.5 0.647157 0.5C0.827759 0.5 0.978261 0.560201 1.09866 0.680602L4.5 4.08194L7.90134 0.680602C8.02174 0.560201 8.17224 0.5 8.35284 0.5C8.53344 0.5 8.68395 0.560201 8.80435 0.680602C8.93478 0.811037 9 0.966555 9 1.14716C9 1.31773 8.93478 1.46321 8.80435 1.58361L4.9515 5.43646C4.8311 5.56689 4.6806 5.63211 4.5 5.63211C4.3194 5.63211 4.1689 5.56689 4.04849 5.43646L0.195652 1.58361Z" fill="currentColor"/>
-          </symbol>
           <symbol id="icon-back" viewBox="0 0 6 11" fill="none">
             <path d="M4.7193 10.7605C4.85965 10.9202 5.03509 11 5.24561 11C5.45614 11 5.63158 10.9202 5.77193 10.7605C5.92398 10.6131 6 10.435 6 10.2261C6 10.005 5.92398 9.81463 5.77193 9.65494L1.80702 5.49079L5.77193 1.32663C5.92398 1.17923 6 1.00112 6 0.792295C6 0.571189 5.92398 0.380793 5.77193 0.221106C5.63158 0.0737018 5.45614 0 5.24561 0C5.03509 0 4.85965 0.0737018 4.7193 0.221106L0.22807 4.93802C0.0760236 5.09771 0 5.28811 0 5.50921C0 5.71803 0.0760236 5.89615 0.22807 6.04355L4.7193 10.7605Z" fill="currentColor"/>
           </symbol>
@@ -158,9 +153,9 @@
                         -%}
                     {%- endcase -%}
                     {%- if link.links.size > 0 or has_content -%}
-                      <details is="details-mega-menu" class="details-header-menu animate-motion">
+                      <details is="details-mega-menu" class="details-header-menu level-1 animate-motion">
                         <summary
-                          class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
+                          class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
                           data-href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
@@ -278,7 +273,7 @@
                                                   {% endif %}
                                                   {% if button_label != blank %}
                                                     <button
-                                                      class="btn btn-primary mt-20 text-center w-custom"
+                                                      class="btn pointer btn-primary mt-20 text-center w-custom"
                                                       style="--width: 70%;--btn-padding-x: 2rem;"
                                                       aria-label="{{ button_label }}"
                                                     >
@@ -377,14 +372,14 @@
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
-                        {{- link.title -}}
+                        <span class="outlined-border">{{- link.title -}}</span>
                       </a>
                     {%- endif -%}
                   {%- else -%}
                     {%- if link.links.size > 0 -%}
-                      <details is="details-mega-menu" class="details-header-menu animate-motion">
+                      <details is="details-mega-menu" class="details-header-menu level-1 animate-motion">
                         <summary
-                          class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
+                          class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
                           data-href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
@@ -411,7 +406,7 @@
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
-                        {{- link.title -}}
+                        <span class="outlined-border">{{- link.title -}}</span>
                       </a>
                     {%- endif -%}
                   {%- endif -%}
@@ -419,9 +414,9 @@
               {%- else -%}
                 <li>
                   {%- if link.links.size > 0 -%}
-                    <details is="details-mega-menu" class="details-header-menu animate-motion">
+                    <details is="details-mega-menu" class="details-header-menu level-1 animate-motion">
                       <summary
-                        class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
+                        class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
                         data-href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
@@ -448,7 +443,7 @@
                       href="{{ link.url }}"
                       aria-label="{{ link.title }}"
                     >
-                      {{- link.title -}}
+                      <span class="outlined-border">{{- link.title -}}</span>
                     </a>
                   {%- endif -%}
                 </li>
@@ -457,25 +452,18 @@
           </ul>
         </nav>
       {%- endif -%}
-      {%- if section_st.show_account
-        or section_st.show_search
-        or section_st.show_cart
-      -%}
+      {%- if section_st.show_account or section_st.show_search or section_st.show_cart -%}
         <div class="header__action flex wrap flex-end align-center gap-20">
           {%- if section_st.show_search or section_st.show_account or section_st.show_cart -%}
             <div class="flex gap" style="--gap: 7px;--gap-desktop: 7px;">
               {%- if section_st.show_search -%}
                 <a
                   href="{{ routes.search_url }}"
-                  class="header__icon transparent-color wh-40 flex content-center"
+                  class="header__icon heading-color transparent-color wh-40 flex content-center"
                   id="search-icon-bubble"
                 >
-                  <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
-                    {{ 'general.search.search' | t }}
-                  </span>
-                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                    <path d="M10.5465 19.1672C15.3076 19.1672 19.1672 15.3076 19.1672 10.5465C19.1672 5.7854 15.3076 1.92578 10.5465 1.92578C5.7854 1.92578 1.92578 5.7854 1.92578 10.5465C1.92578 15.3076 5.7854 19.1672 10.5465 19.1672Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M20.0746 20.0742L18.2598 18.2593" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <svg width="22" height="22" fill="none">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.546 19.167a8.62 8.62 0 1 0 0-17.241 8.62 8.62 0 0 0 0 17.241ZM20.073 20.074l-1.815-1.815"/>
                   </svg>
                   <span class="visually-hidden">{{ 'general.search.search' | t }}</span>
                 </a>
@@ -483,7 +471,7 @@
               {%- if section_st.show_account -%}
                 <a
                   href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                  class="header__icon transparent-color wh-40 hidden flex-1025 content-center"
+                  class="header__icon heading-color transparent-color wh-40 hidden flex-1025 content-center"
                   aria-label="{{ 'customer.account_fallback' | t }}"
                 >
                   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -495,15 +483,12 @@
               {%- if section_st.show_cart -%}
                 <a
                   href="{{ routes.cart_url }}"
-                  class="header__icon transparent-color wh-40 flex content-center relative"
+                  class="header__icon heading-color transparent-color wh-40 flex content-center relative"
                   id="cart-icon-bubble"
                 >
                   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                     <use href="#icon-cart" />
                   </svg>
-                  <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
-                    {{ 'templates.cart.minicart' | t }}
-                  </span>
                   <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
                   {%- if cart != empty -%}
                     <div class="cart-count rounded-50 inline-flex content-center absolute bg-sale fs-10">
@@ -533,15 +518,15 @@
       class="modal pointer-none block active-modal-js"
       style="--modal-width: 100%;"
     >
-      <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-      <div class="modal-inner draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-15 left-0 bg-white">
+      <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
+      <div class="modal-inner invisible draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-15 left-0 bg-white">
         <div class="drawer__body h-full">
           <div class="drawer__content flex column h-full max-height-mb-menu">
             <nav class="header__menu-mobile overflow-y-auto overflow-x-hidden w-full h-full grow-1">
               {%- if section_st.banner_image != blank -%}
                 <div class="banner overflow-hidden relative">
                   <button
-                    class="modal__close transition-short heading-color absolute{% if section_st.banner_image != blank %} top-10 right-10 bg-white blur rounded-50 shadow{% else %} invisible inset-x-0 mx-auto bg-white btn-close-model{% endif %} w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
+                    class="modal__close transition-short heading-color absolute{% if section_st.banner_image != blank %} top-10 right-10 bg-white blur rounded-50 shadow{% else %} invisible inset-x-0 mx-auto bg-white{% endif %} w-50 h-50 btn-reset rounded-50 inline-flex content-center pointer"
                     style="--width: 2.4rem;"
                     is="button-close-model"
                     aria-label="{{ 'accessibility.button.close' | t }}"
@@ -621,9 +606,9 @@
                             -%}
                         {%- endcase -%}
                         {%- if link.links.size > 0 or has_content -%}
-                          <details is="details-mega-menu" class="details-header-menu animate-motion">
+                          <details is="details-mega-menu" class="details-header-menu level-1 animate-motion">
                             <summary
-                              class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
+                              class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
                               data-href="{{ link.url }}"
                               aria-label="{{ link.title }}"
                             >
@@ -713,14 +698,14 @@
                                                       </h6>
                                                     {% endif %}
                                                     {% if description != blank %}
-                                                      <div class="description fs-16">
+                                                      <div class="description">
                                                         {{ description }}
                                                       </div>
                                                     {% endif %}
                                                     {% if button_label != blank %}
                                                       <div class="button">
                                                         <a
-                                                          class="btn btn-primary inline-block text-center mt-20"
+                                                          class="btn pointer btn-primary inline-block text-center mt-20"
                                                           {% if banner_link == blank %}
                                                             role="link" aria-disabled="true"
                                                           {% else %}
@@ -865,7 +850,7 @@
                             href="{{ link.url }}"
                             aria-label="{{ link.title }}"
                           >
-                            {{- link.title -}}
+                            <span class="outlined-border">{{- link.title -}}</span>
                           </a>
                         {%- endif -%}
                       {%- endif -%}
@@ -873,9 +858,9 @@
                   {%- else -%}
                     <li class="py-10">
                       {%- if link.links.size > 0 -%}
-                        <details is="details-mega-menu" class="details-header-menu animate-motion">
+                        <details is="details-mega-menu" class="details-header-menu level-1 animate-motion">
                           <summary
-                            class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
+                            class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 menu_weight flex align-center gap-5 space-between"
                             data-href="{{ link.url }}"
                             aria-label="{{ link.title }}"
                           >
@@ -890,7 +875,6 @@
                               </svg>
                             {% endif %}
                           </summary>
-
                           {%- render 'horizontal-menu',
                             section_st: section_st,
                             menu_mobile: true,
@@ -905,7 +889,7 @@
                           href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
-                          {{- link.title -}}
+                          <span class="outlined-border">{{- link.title -}}</span>
                         </a>
                       {%- endif -%}
                     </li>
@@ -919,7 +903,7 @@
                   {%- if section_st.show_account -%}
                     <a
                       href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                      class="btn btn-primary w-50-percent text-center text-size x-min-value py-15"
+                      class="btn pointer btn-primary w-50-percent text-center text-size x-min-value py-15"
                       style="--padding-inline: 8px;"
                       aria-label="{% if customer %}{{ 'customer.account.title' | t }}{% else %}{{ 'customer.login_page.title' | t }}{% endif %}"
                     >
@@ -932,7 +916,7 @@
                     {%- if customer -%}
                       <a
                         href="{{ routes.account_logout_url }}"
-                        class="btn btn-outline block text-center text-size w-50-percent x-min-value py-15"
+                        class="btn pointer btn-outline block text-center text-size w-50-percent x-min-value py-15"
                         style="--padding-inline: 8px;"
                         aria-label="{{ 'customer.account_fallback' | t }}"
                       >
@@ -941,7 +925,7 @@
                     {%- else -%}
                       <a
                         href="{%- if customer -%}{{ routes.account_logout_url }}{%- else -%}{{ routes.account_register_url }}{%- endif -%}"
-                        class="heading-style btn btn-outline text-center text-size w-50-percent x-min-value py-15"
+                        class="heading-style btn pointer btn-outline text-center text-size w-50-percent x-min-value py-15"
                         style="--padding-inline: 8px;"
                         aria-label="{{ 'customer.account_fallback' | t }}"
                       >
@@ -961,7 +945,7 @@
 {% schema %}
 {
   "name": "t:sections.header.name",
-  "class": "site-header sticky z-10",
+  "class": "site-header",
   "settings": [
     {
       "type": "header",
@@ -1030,12 +1014,6 @@
       ],
       "default": "on-scroll-up",
       "label": "t:sections.header.settings.sticky_header_type.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "sticky_header_mobile",
-      "default": true,
-      "label": "t:sections.header.settings.sticky_header_mobile.label"
     },
     {
       "type": "checkbox",

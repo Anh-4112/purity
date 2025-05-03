@@ -152,6 +152,9 @@ class ShopableImage extends HTMLElement {
           duration: 0.3,
           easing: "ease-out",
           onComplete: () => {
+            tooltip
+              .querySelector(".group-lookbook__item-product")
+              .classList.add("active");
             const focusableElements = tooltip.querySelectorAll(
               'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
             );

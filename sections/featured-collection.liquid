@@ -59,7 +59,7 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
+    {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div
         class="section-header text-{{ text_alignment }}"
       >
@@ -79,7 +79,7 @@
             </motion-effect>
           {% endif %}
         {%- endif -%}
-        {%- if section_st.title != blank -%}
+        {%- if section_st.heading != blank -%}
           {% assign animate_delay = animate_delay | plus: 5 %}
           {% if scroll_animation %}
             <motion-effect
@@ -89,7 +89,7 @@
             >
           {% endif %}
           <h2 class="section-heading {{ header_size }}">
-            {{ section_st.title }}
+            {{ section_st.heading }}
           </h2>
           {% if scroll_animation %}
             </motion-effect>
@@ -237,7 +237,7 @@
     },
     {
       "type": "text",
-      "id": "title",
+      "id": "heading",
       "default": "Featured collection",
       "label": "t:sections.all.content_setting.heading.label"
     },

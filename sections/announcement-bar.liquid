@@ -8,9 +8,7 @@
   else
     assign section_width = 'fluid_container'
   endif
-
   assign scrolling_size = section_st.scrolling_size
-
   assign is_shown = false
   if section_st.homepage_only
     if request.page_type == 'index'
@@ -36,19 +34,15 @@
         max-width: 44rem;
       }
     }
-
     announcement-bar .swiper-arrow:hover {
       --swiper-navigation-color: var(--color-text);
     }
-
     .announcement-bar__content {
       max-width: 80%;
     }
-
     .swiper:not([class*='initialized'])[data-direction='vertical'] .swiper-wrapper {
       align-items: center;
     }
-
     .swiper:not([class*='initialized'])[data-direction='vertical'] .swiper-wrapper .swiper-slide:not(:first-child) {
       opacity: 0;
     }
@@ -59,7 +53,7 @@
     {{ 'section-scrolling-text.css' | asset_url | stylesheet_tag }}
   {%- endif -%}
   <announcement-bar
-    class="section section__announcement-bar {% if show_mobile %}block{% else %}d-none block-md{% endif %} color-{{ color_scheme }} gradient relative"
+    class="section section__announcement-bar {% if show_mobile %}block{% else %}d-none block-md{% endif %} color-{{ color_scheme }} gradient relative{% if section_st.homepage_only %} only_homepage{% endif %}"
     style="{{ style | strip | strip_newlines }}"
   >
     <div class="{{ section_width }}">

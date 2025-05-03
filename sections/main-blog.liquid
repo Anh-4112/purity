@@ -1,6 +1,8 @@
 {{ 'blog.css' | asset_url | stylesheet_tag }}
 {% liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   assign aspect_ratio = '1/1'
   case section_st.image_ratio
     when 'adapt'
@@ -66,15 +68,38 @@
       <div
         class="section-header text-{{ text_alignment }}"
       >
+        {% assign animate_delay = 25 %}
         {%- if section_st.title != blank -%}
+          {% assign animate_delay = animate_delay | plus: 5 %}
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {%- endif -%}
           <h2 class="section-heading mb-10 {{ header_size }}">
             {{ section_st.title }}
           </h2>
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         {%- endif -%}
         {%- if section_st.description != blank -%}
+          {% assign animate_delay = animate_delay | plus: 5 %}
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {%- endif -%}
           <div class="section-description prose">
             {{ section_st.description }}
           </div>
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -133,7 +158,7 @@
               {%- for block in section.blocks -%}
                 <div
                   {{ block.shopify_attributes }}
-                  class="blog-subscribe flex column justify-center p-30 p-1025-40 text-center rounded blog-subscribe bg-secondary"
+                  class="blog-subscribe flex column justify-center p-30 p-1025-40 text-center rounded blog-subscribe"
                   id="blocks blog-subscribe-{{ block.id }}"
                 >
                   {% if block.settings.form_title != blank or block.settings.form_description != blank %}
@@ -215,7 +240,7 @@
                         </div>
                       {%- elsif form.errors -%}
                         <small class="subscribe-form__message form__message" id="subscribe-error--{{ section.id }}">
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto">
                             <use href="#icon-error"></use>
                           </svg>
                           {{- form.errors.translated_fields.email | capitalize }}
@@ -282,6 +307,10 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.main-blog.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

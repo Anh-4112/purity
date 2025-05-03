@@ -5,22 +5,33 @@
   assign section_st = section.settings
   assign block_st = block.settings
   assign content_alignment = section_st.text_alignment
+  assign theme_st = settings
+  assign scroll_animation = theme_st.scroll_animation
 %}
 <div
   class="mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex justify-content-{{ content_alignment }}"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
 >
+  {%- if scroll_animation -%}
+    <motion-effect
+      data-animate="fade-up"
+      class="block"
+    >
+  {%- endif -%}
   <spinning-text
     class="flex justify-center align-center relative"
     data-text="{{ block_st.circle_text | escape }}"
     data-speed="{{ block_st.spin_speed }}"
     data-direction="{{ block_st.spin_direction }}"
   >
-    {% render 'icon_svg_list', icon: block_st.icon_svg, custom_width: 40, custom_height: 40 %}
+    {% render 'icon_svg_list', icon: block_st.icon_svg, custom_width: 42, custom_height: 42 %}
     <div class="spinning-text__circle absolute w-full h-full">
       <p class="spinning-text__content absolute w-full h-full{% if block_st.uppercase %} uppercase{% endif %}"></p>
     </div>
   </spinning-text>
+  {%- if scroll_animation -%}
+    </motion-effect>
+  {%- endif -%}
 </div>
 <script>
   window.SpinningTextComponent?.load?.();

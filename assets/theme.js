@@ -251,13 +251,6 @@ class SiteHeader extends HTMLElement {
       ? this.getAttribute("data-sticky-type")
       : "none";
   }
-
-  get dataStickyMobile() {
-    return this.hasAttribute("data-sticky-mobile")
-      ? this.getAttribute("data-sticky-mobile")
-      : "false";
-  }
-
   get heightAnnouncementBar() {
     return document.querySelector(".section-announcement-bar")
       ? Math.round(
@@ -279,11 +272,11 @@ class SiteHeader extends HTMLElement {
 
   onStickyHeader() {
     if (this.dataStickyType != "none") {
-      if (this.dataStickyMobile == "false" && window.innerWidth < 1025) {
-        return;
-      }
       if (this.dataStickyType === "on-scroll-up") {
-        this.classList.add("scroll-up");
+        this.closest(".site-header").classList.add("scroll-up");
+      }
+      if (this.dataStickyType === "always") {
+        this.closest(".site-header").classList.add("header-sticky");
       }
       window.addEventListener("scroll", () => {
         this.stickyFunction();
@@ -1582,233 +1575,23 @@ class CartUpSellProduct extends SlideSection {
   actionOnMobile() {
     this.initSlideMediaGallery("CartUpSell");
     this.style.maxHeight = "auto";
+    this.style.minHeight = "auto";
   }
 
   actionOutMobile() {
     this.initSlideMediaGallery("CartUpSell");
     this.style.maxHeight =
       this.closest(".drawer__body").offsetHeight - 140 + "px";
+    this.style.minHeight = "calc(100vh - 140px)";
   }
 }
 customElements.define("cart-upsell-product", CartUpSellProduct);
-
-class CollectionHover extends HTMLElement {
-  constructor() {
-    super();
-    this.content = this.querySelector(".collection-list__content");
-    this.imageHover = this.querySelector(".collection-list__image-hover");
-    this.mousePosition = { x: 0, y: 0 };
-    this.isHovering = false;
-    this.bounds = null;
-    this.imageVisible = false;
-    this.animationId = null;
-    this.cursorOffset = { x: 10, y: 10 };
-  }
-
-  connectedCallback() {
-    if (!this.content || !this.imageHover) return;
-
-    this.setupImageStyles();
-
-    this.content.addEventListener("mouseenter", this.onMouseEnter.bind(this));
-    this.content.addEventListener("mouseleave", this.onMouseLeave.bind(this));
-    this.content.addEventListener("mousemove", this.onMouseMove.bind(this));
-
-    const image = this.imageHover.querySelector("img");
-    if (image && !image.complete) {
-      image.addEventListener("load", () => {
-        this.updateImageSize();
-      });
-    } else {
-      this.updateImageSize();
-    }
-  }
-
-  setupImageStyles() {
-    if (!this.imageHover) return;
-
-    this.imageHover.style.position = "fixed";
-    this.imageHover.style.pointerEvents = "none";
-    this.imageHover.style.zIndex = "100";
-    this.imageHover.style.opacity = "0";
-    this.imageHover.style.transform = "translate(-50%, -50%) scale(0.95)";
-    this.imageHover.style.overflow = "hidden";
-
-    this.imageHover.style.left = "-9999px";
-    this.imageHover.style.top = "-9999px";
-
-    this.imageHover.style.transition = "none";
-  }
-
-  updateImageSize() {
-    const maxWidth = Math.min(300, window.innerWidth * 0.5);
-    const maxHeight = Math.min(300, window.innerHeight * 0.5);
-
-    this.imageHover.style.width = `120px`;
-    this.imageHover.style.height = "auto";
-    this.imageHover.style.maxHeight = `${maxHeight}px`;
-  }
-
-  onMouseEnter(event) {
-    this.isHovering = true;
-    this.bounds = this.content.getBoundingClientRect();
-
-    this.updateMousePosition(event);
-
-    if (!this.imageVisible && this.imageHover) {
-      this.positionImageAtCursor();
-      setTimeout(() => {
-        this.imageHover.style.transition =
-          "opacity 0.1s ease, transform 0.1s ease";
-      }, 10);
-
-      this.imageVisible = true;
-
-      if (typeof Motion !== "undefined") {
-        Motion.animate(
-          this.imageHover,
-          {
-            opacity: [0, 1],
-            scale: [0.9, 1],
-          },
-          {
-            duration: 0.2,
-            easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-          }
-        );
-      } else {
-        this.imageHover.style.opacity = "1";
-        this.imageHover.style.transform = "translate(-50%, -50%) scale(1)";
-      }
-
-      this.animateImagePosition();
-    }
-  }
-
-  positionImageAtCursor() {
-    if (!this.mousePosition || !this.bounds) return;
-
-    const x = this.mousePosition.x + this.cursorOffset.x;
-    const y = this.mousePosition.y + this.cursorOffset.y;
-
-    const centerX = this.bounds.left + this.bounds.width / 2;
-    const centerY = this.bounds.top + this.bounds.height / 2;
-
-    const pullFactor = 0.1;
-    const finalX = x + (centerX - x) * pullFactor;
-    const finalY = y + (centerY - y) * pullFactor;
-
-    this.imageHover.style.left = `${finalX}px`;
-    this.imageHover.style.top = `${finalY}px`;
-  }
-
-  onMouseLeave() {
-    this.isHovering = false;
-
-    if (this.imageVisible && this.imageHover) {
-      this.imageVisible = false;
-
-      if (typeof Motion !== "undefined") {
-        Motion.animate(
-          this.imageHover,
-          {
-            opacity: [1, 0],
-            scale: [1, 0.9],
-          },
-          {
-            duration: 0.2,
-            easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-          }
-        );
-      } else {
-        this.imageHover.style.opacity = "0";
-        this.imageHover.style.transform = "translate(-50%, -50%) scale(0.95)";
-      }
-
-      if (this.animationId) {
-        cancelAnimationFrame(this.animationId);
-        this.animationId = null;
-      }
-
-      setTimeout(() => {
-        if (!this.isHovering) {
-          this.imageHover.style.left = "-9999px";
-          this.imageHover.style.top = "-9999px";
-        }
-      }, 300);
-    }
-  }
-
-  onMouseMove(event) {
-    if (this.isHovering) {
-      this.updateMousePosition(event);
-    }
-  }
-
-  updateMousePosition(event) {
-    this.mousePosition = {
-      x: event.clientX,
-      y: event.clientY,
-    };
-  }
-
-  animateImagePosition() {
-    if (!this.isHovering || !this.imageVisible) {
-      return;
-    }
-
-    const x = this.mousePosition.x + this.cursorOffset.x;
-    const y = this.mousePosition.y + this.cursorOffset.y;
-
-    const centerX = this.bounds.left + this.bounds.width / 2;
-    const centerY = this.bounds.top + this.bounds.height / 2;
-
-    const pullFactor = 0.1;
-    const finalX = x + (centerX - x) * pullFactor;
-    const finalY = y + (centerY - y) * pullFactor;
-
-    this.imageHover.style.left = `${finalX}px`;
-    this.imageHover.style.top = `${finalY}px`;
-
-    const image = this.imageHover.querySelector("img");
-    if (image) {
-      const relX =
-        (this.mousePosition.x - this.bounds.left) / this.bounds.width;
-      const relY =
-        (this.mousePosition.y - this.bounds.top) / this.bounds.height;
-
-      const moveX = (relX - 0.5) * -6;
-      const moveY = (relY - 0.5) * -6;
-
-      image.style.transform = `translate(${moveX}%, ${moveY}%)`;
-      image.style.transition = "transform 0.2s ease-out";
-    }
-
-    this.animationId = requestAnimationFrame(
-      this.animateImagePosition.bind(this)
-    );
-  }
-
-  disconnectedCallback() {
-    if (this.content) {
-      this.content.removeEventListener("mouseenter", this.onMouseEnter);
-      this.content.removeEventListener("mouseleave", this.onMouseLeave);
-      this.content.removeEventListener("mousemove", this.onMouseMove);
-    }
-
-    if (this.animationId) {
-      cancelAnimationFrame(this.animationId);
-    }
-  }
-}
-
-customElements.define("collection-hover", CollectionHover);
-
 class CarouselMobile extends HTMLElement {
   constructor() {
     super();
     this.enable = this.dataset.enableCarouselMobile == "true";
     this.isMulticontent = this.dataset.multicontent == "true";
+    this.bundle = this.dataset.bundle == "true";
     this.swiperSlideInnerHtml = this.innerHTML;
     this.initCarousel();
   }
@@ -1857,7 +1640,13 @@ class CarouselMobile extends HTMLElement {
   actionOutMobile() {
     this.classList.remove("swiper");
     this.innerHTML = this.swiperSlideInnerHtml;
-
+    if (this.bundle){
+      this.className = ''
+      setTimeout(() => {
+        this.classList.remove('swiper-backface-hidden')
+      }, 100);
+      return;
+    }
     if (this.isMulticontent) {
       this.classList.add("flex", "column", "flex-md-row", "wrap", "cols");
       this.classList.remove("grid", "grid-cols");
@@ -2219,6 +2008,7 @@ class AskQuestion extends HTMLButtonElement {
         ),
       100
     );
+    NextSkyTheme.global.rootToFocus = this;
   }
 }
 customElements.define("ask-question", AskQuestion, {
@@ -2279,7 +2069,7 @@ class NewsletterPopup extends HTMLElement {
     );
 
     setTimeout(() => {
-      NextSkyTheme.eventModal(wrapper, "open", true);
+      NextSkyTheme.eventModal(wrapper, "open", true, null, true);
     }, 3000);
 
     this.initNotShow(wrapper);
@@ -2415,10 +2205,10 @@ class MotionEffect extends HTMLElement {
             (await NextSkyTheme.loadImages(this.mediaElements)),
             setTimeout(() => {
               this.initAnimateEffect();
-            }, 10);
+            }, 100);
         },
         {
-          margin: "0px 0px -70px 0px",
+          margin: "0px 0px -30px 0px",
         }
       ));
   }
@@ -2648,7 +2438,7 @@ class StickySection extends HTMLElement {
     setTimeout(() => {
       this.onResize();
       this.handleSections();
-    }, 100);
+    }, 500);
   }
 
   disconnectedCallback() {
@@ -2838,7 +2628,7 @@ class MotionItemsEffect extends HTMLElement {
 
   setupInViewEffect() {
     Motion.inView(this, this.animateItems.bind(this), {
-      margin: "0px 0px -100px 0px",
+      margin: "0px 0px -50px 0px",
     });
   }
 
@@ -2875,3 +2665,135 @@ class MotionItemsEffect extends HTMLElement {
   }
 }
 customElements.define("motion-items-effect", MotionItemsEffect);
+
+class ButtonCopyLink extends HTMLButtonElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    this.addEventListener("click", this.onClick.bind(this), false);
+  }
+  onClick() {
+    const url = this.getAttribute("data-href");
+    navigator.clipboard.writeText(url);
+    NextSkyTheme.notifier.show(
+      window.message.socialCopyLink.success,
+      "success",
+      3000
+    );
+  }
+}
+customElements.define("button-copy-link", ButtonCopyLink, {
+  extends: "button",
+});
+CustomElement.observeAndPatchCustomElements({
+  "button-copy-link": {
+    tagElement: "button",
+    classElement: ButtonCopyLink,
+  },
+});
+class DraggableModal extends HTMLElement {
+  constructor() {
+    super();
+    this.isDragging = false;
+    this.startY = 0;
+    this.currentY = 0;
+    this.threshold = 100;
+
+    this.startDrag = this.startDrag.bind(this);
+    this.onDrag = this.onDrag.bind(this);
+    this.endDrag = this.endDrag.bind(this);
+  }
+
+  connectedCallback() {
+    this.modalElement = this.closest(".active-modal-js");
+    if (!this.modalElement) return;
+
+    this.addEventListener("touchstart", this.startDrag, { passive: true });
+    this.addEventListener("mousedown", this.startDrag);
+    document.addEventListener("touchmove", this.onDrag, { passive: false });
+    document.addEventListener("mousemove", this.onDrag);
+    document.addEventListener("touchend", this.endDrag);
+    document.addEventListener("mouseup", this.endDrag);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener("touchstart", this.startDrag);
+    this.removeEventListener("mousedown", this.startDrag);
+    document.removeEventListener("touchmove", this.onDrag);
+    document.removeEventListener("mousemove", this.onDrag);
+    document.removeEventListener("touchend", this.endDrag);
+    document.removeEventListener("mouseup", this.endDrag);
+  }
+
+  startDrag(e) {
+    if (!this.modalElement) return;
+
+    this.isDragging = true;
+    this.startY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    this.currentY = this.startY;
+
+    this.modalElement.classList.add("is-dragging");
+    this.style.cursor = "grabbing";
+
+    const modalBody = this.modalElement.querySelector(".modal-draggable");
+    if (modalBody) {
+      modalBody.style.transition = "none";
+    }
+  }
+
+  onDrag(e) {
+    if (!this.isDragging || !this.modalElement) return;
+
+    e.preventDefault();
+
+    this.currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    const dragDistance = this.currentY - this.startY;
+
+    if (dragDistance > 0) {
+      const resistance = 0.4;
+      const modalBody = this.modalElement.querySelector(".modal-draggable");
+
+      if (modalBody) {
+        modalBody.style.transform = `translateY(${
+          dragDistance * resistance
+        }px)`;
+      }
+    }
+  }
+
+  endDrag() {
+    if (!this.isDragging || !this.modalElement) return;
+
+    const dragDistance = this.currentY - this.startY;
+    this.isDragging = false;
+    this.style.cursor = "grab";
+    this.modalElement.classList.remove("is-dragging");
+
+    const modalBody = this.modalElement.querySelector(".modal-draggable");
+    if (!modalBody) return;
+
+    modalBody.style.transition = "transform 0.3s ease-out";
+
+    if (dragDistance > this.threshold) {
+      modalBody.style.transform = `translateY(100%)`;
+
+      setTimeout(() => {
+        if (typeof NextSkyTheme !== "undefined" && NextSkyTheme.eventModal) {
+          NextSkyTheme.eventModal(this.modalElement, "close");
+        }
+
+        modalBody.style.transform = "";
+        modalBody.style.transition = "";
+      }, 300);
+    } else {
+      modalBody.style.transform = "";
+      setTimeout(() => {
+        modalBody.style.transition = "";
+      }, 300);
+    }
+  }
+}
+
+customElements.define("draggable-modal", DraggableModal);

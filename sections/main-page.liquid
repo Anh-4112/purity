@@ -5,20 +5,18 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 <div
-  class="section-padding section"
-  style="{{ style | strip | strip_newlines }}"
+  class="section-padding section stretch_width w-full max-w-custom-all mx-auto"
+  style="{{ style | strip | strip_newlines }};--max-width: 66rem;--bs-gutter-x: 3rem;"
 >
-  <div class="container">
-    <div class="page-title text-center">
-      <div class="page-content">
-        <h1 class="heading-title">
-          {{ page.title }}
-        </h1>
-      </div>
+  <div class="page-title text-center">
+    <div class="page-content">
+      <h1 class="heading-title mb-60">
+        {{ page.title }}
+      </h1>
     </div>
-    <div class="rte section-spacing">
-      {{ page.content }}
-    </div>
+  </div>
+  <div class="rte section-spacing">
+    {{ page.content }}
   </div>
 </div>
 

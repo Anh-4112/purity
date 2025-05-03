@@ -67,18 +67,18 @@
       {%- render 'breadcrumbs' -%}
     </div>
     <div class="page-header my-60">
-    {%- if terms -%}
-      {% if search.performed and search.results_count > 0 %}
-        <h1>{{ 'templates.search.title' | t }}</h1>
+      {%- if terms -%}
+        {% if search.performed and search.results_count > 0 %}
+          <h1>{{ 'templates.search.title' | t }}</h1>
+        {%- else -%}
+          <h1>
+            {{ 'templates.search.results_with_count_and_term.none' | t: terms: terms }}
+          </h1>
+        {% endif %}
       {%- else -%}
         <h1>
-          {{ 'templates.search.results_with_count_and_term.none' | t: terms: terms }}
+          {{ 'templates.search.title_no_search' | t }}
         </h1>
-      {% endif %}
-    {%- else -%}
-      <h1>
-        {{ 'templates.search.title_no_search' | t }}
-      </h1>
     {%- endif -%}
     <div class="search-form container">
       <action-search class="block mt-30">
@@ -92,7 +92,7 @@
             <div class="field bg-secondary px-25 btn-rounded flex align-center gap-10 relative max-w-custom mx-auto" style="--max-width: 60rem;">
               <button
                 type="submit"
-                class="button btn-reset search__button relative fs-0"
+                class="button pointer btn-reset search__button relative fs-0"
                 tabindex="0"
                 aria-label="{{ 'general.search.search' | t }}"
               >
@@ -118,40 +118,50 @@
                 autocapitalize="off"
                 spellcheck="false"
                 id="Search-In-Page"
-              >
-              <label class="visually-hidden" for="Search-In-Page"> {{ 'general.search.search' | t }}</label>
-              <input type="hidden" name="options[prefix]" value="last">
-            </div>
-          </form>
-        </div>
-      </action-search>
+                >
+                <label class="visually-hidden" for="Search-In-Page"> {{ 'general.search.search' | t }}</label>
+                <input type="hidden" name="options[prefix]" value="last">
+              </div>
+            </form>
+          </div>
+        </action-search>
+      </div>
     </div>
-  </div> </div>
-  <div id="ProductsGridContainer"  class="{{ section_width }} filter-layout {{ filter_layout }}-filter{% if enable_filtering and filter_layout == 'vertical' %} flex gap{% endif %}"
+  </div>
+  <div
+    id="ProductsGridContainer"
+    class="{{ section_width }} filter-layout {{ filter_layout }}-filter{% if enable_filtering and filter_layout == 'vertical' %} flex gap{% endif %}"
     {% if enable_filtering and filter_layout == 'vertical' %}
-      style="--col-width: 30rem;--gap-desktop: 6rem;--gap: 3rem;">
+      style="--col-width: 30rem;--gap-desktop: 6rem;--gap: 3rem;"
     {% endif %}
+  >
     {%- paginate search.results by products_to_show -%}
       {%- if enable_filtering and filter_layout == 'vertical' -%}
-        <div class="collection__sidebar col-1025-w-custom hidden block-1025">
+        <div id="CollectionSidebar" class="collection__sidebar col-1025-w-custom hidden block-1025">
           <div class="sticky top-30">
-          {% render 'facets',
-            results: search,
-            filter_layout: 'vertical',
-            paginate: paginate,
-            results_url: results_url
-          %}
-        </div></div>
+            {% render 'facets',
+              results: search,
+              filter_layout: 'vertical',
+              paginate: paginate,
+              results_url: results_url
+            %}
+          </div>
+        </div>
       {%- endif -%}
-      <div class="collection__results-gird w-full{% if enable_filtering and filter_layout == 'vertical' %} col-1025-remaining{% endif %}">
+      <div
+        id="CollectionResultsGird"
+        class="collection__results-gird w-full{% if enable_filtering and filter_layout == 'vertical' %} col-1025-remaining{% endif %}"
+      >
         <div class="sticky top-30">
-          <div  class="facets-toolbar flex align-center gap space-between mb-20"
-            style="--gap-desktop: 50px; --gap: 15px;">
+          <div
+            class="facets-toolbar flex align-center gap space-between mb-20"
+            style="--gap-desktop: 50px; --gap: 15px;"
+          >
             {%- if enable_filtering -%}
               <div class="facet-drawer grow-1{% if enable_filtering and filter_layout == 'drawer' %}{% else %} block hidden-1025{% endif %}">
                 <button
                   id="FacetsDrawer"
-                  class="button heading color btn-reset inline-flex gap-5 align-center body_weight"
+                  class="button heading color btn-reset pointer inline-flex gap-5 align-center body_weight"
                   aria-label="{{ 'products.facets.filter' | t }}"
                 >
                   <svg width="22" height="22" fill="none">
@@ -164,8 +174,11 @@
                   class="modal pointer-none active-modal-js"
                   data-focus-item="FacetsDrawer"
                 >
-                  <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-                  <div class="modal-inner draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-15 left-0 bg-white">
+                  <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
+                  <div
+                    class="modal-inner invisible draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-15 left-0 bg-white"
+                    tabindex="-1"
+                  >
                     <div class="drawer__body flex h-full column">
                       <div
                         class="drawer__header h5 flex gap-10 space-between align-center drawer-spacing border-bottom"
@@ -204,7 +217,7 @@
             {%- endif -%}
             {%- if show_product_counts -%}
               <div
-               class="collection-count heading-color"
+                class="collection-count heading-color hidden block-md"
                 role="status"
               >
                 <span>
@@ -225,13 +238,13 @@
               <facet-filters-form class="facets facets-vertical-sort">
                 <form class="facets-vertical-form relative" id="FacetSortForm">
                   {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
-                  <div class="select-custom facet-filters__sort heading-color py-10">
-                    <select-sorter class="select-selected block pointer rotate-animate">
+                  <div class="select-custom facet-filters heading-color py-10">
+                    <select-sorter class="select-selected flex gap-5 align-center pointer rotate-animate">
                       <label>
                         {{- 'products.facets.sort_by_label' | t }}
                       </label>
                       <span class="inline-block-1025">
-                        {%- for option in search.sort_options -%}
+                        {%- for option in collection.sort_options -%}
                           {% if option.value == sort_by %}{{ option.name | escape }}{% endif %}
                         {%- endfor -%}
                       </span>
@@ -240,7 +253,8 @@
                         height="6"
                         viewBox="0 0 9 6"
                         fill="none"
-                        class="icon icon-down icon-rotate transition-short"
+                        class="icon icon-down icon-rotate transition-short flex-auto w-custom"
+                        style="--width: 9px;"
                       >
                         <use href="#icon-arrow-down"></use>
                       </svg>
@@ -253,7 +267,7 @@
                       <div class="facet-filters__select">
                         {%- for option in search.sort_options -%}
                           <filter-sort
-                           class="block transition text-color py-4"
+                            class="block transition text-color py-4"
                             value="{{ option.value | escape }}"
                             {% if option.value == sort_by %}
                               selected="selected"
@@ -293,8 +307,9 @@
                   {%- for value in filter.active_values -%}
                     <div class="facet-remove">
                       <facet-remove>
-                        <a href="{{ value.url_to_remove }}" class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal"
-                        >
+                        <a
+                          href="{{ value.url_to_remove }}"
+                          class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer">
                           {{ value.label | escape }}
                           <span class="active-facets__button-inner">
                             <svg width="9" height="10" viewBox="0 0 9 10" fill="none">
@@ -310,7 +325,9 @@
                     {%- if filter.min_value.value != null or filter.max_value.value != null -%}
                       <div class="facet-remove">
                         <facet-remove>
-                          <a href="{{ filter.url_to_remove }}" class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal">
+                          <a
+                            href="{{ filter.url_to_remove }}"
+                            class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer">
                             {%- if filter.min_value.value -%}
                               {{ filter.min_value.value | money }}
                             {%- else -%}
@@ -336,7 +353,7 @@
                 {%- endfor -%}
                 <div class="facet-remove facet-clear-all">
                   <facet-remove class="active-facets__button-wrapper">
-                    <a href="{{ results_url }}"  class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal">
+                    <a href="{{ results_url }}"  class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer">
                       <span>{{ 'products.facets.clear_all' | t }}</span>
                     </a>
                   </facet-remove>
@@ -361,7 +378,7 @@
                         container: section_width,
                         column: items_per_row,
                         column_mobile: 2,
-                        padding: column_gap_grid,
+                        padding: column_gap_slide,
                         indexFor: forloop.index
                       %}
                     {%- when 'article' -%}
@@ -378,7 +395,7 @@
                         container: section_width,
                         column: items_per_row,
                         column_mobile: 2,
-                        padding: column_gap_grid,
+                        padding: column_gap_slide,
                         indexFor: forloop.index
                       %}
                     {%- when 'page' -%}
@@ -415,77 +432,44 @@
                 endif
                 assign collection_products_count = search.results_count | times: 1.0
               -%}
-              {%- case pagination_type -%}
-                {%- when 'button' -%}
-                  <loadmore-button
-                    data-all-products="{{ all_product }}"
-                    data-limit="{{ products_to_show }}"
-                    data-url="?page={{ paginate.current_page | plus: 1 }}"
-                    class="pagination-load-more mt-60 block text-center"
-                  >
-                    <div class="paginate-progress">
-                      <p class="counting_product load-more-amount mb-20">
-                        {{-
-                          'sections.collection_template.product_count.one'
-                          | t: count: amount_products, product_count: search.results_count
-                        -}}
-                      </p>
-                      <div
-                        class="load-more-progress-bar relative mx-auto h-custom rounded max-w-custom bg-custom"
-                        style="--percent: {{ amount_products | divided_by: collection_products_count | times: 100 }}%; --amount: {{ amount_products }}; --count: {{ amount_products }};--height: 3px;--img-rounded: 5px;--max-width: 32rem;--bg-color-custom: #e5e5e5;"
-                      ></div>
-                    </div>
-                    {% if all_product > products_to_show %}
-                      <button
-                        class="relative btn btn-primary inline-flex content-center pointer transition w-custom max-w-100 mt-25"
-                        style="--width: 20rem;"
-                        aria-label="{{ 'sections.collection_template.load_more' | t }}"
-                      >
-                        <span class="btn-label hidden-on-load transition-short">
-                          {{- 'sections.collection_template.load_more' | t -}}
-                        </span>
-                        {%- render 'loader' -%}
-                      </button>
-                    {% endif %}
-                  </loadmore-button>
-                {%- when 'infinity' -%}
-                  <loadmore-infinity
-                    data-all-products="{{ all_product }}"
-                    data-limit="{{ products_to_show }}"
-                    data-url="?page={{ paginate.current_page | plus: 1 }}"
-                    class="block text-center mt-60"
-                  >
-                    <div class="paginate-progress">
-                      <p class="counting_product mb-20">
-                        {{-
-                          'sections.collection_template.product_count'
-                          | t: count: amount_products, product_count: search.results_count
-                        -}}
-                      </p>
-                      <div class="paginate-progress">
-                        <p class="counting_product load-more-amount mb-20">
-                          {{-
-                            'sections.collection_template.product_count.one'
-                            | t: count: amount_products, product_count: search.results_count
-                          -}}
-                        </p>
-                        <div
-                          class="load-more-progress-bar relative mx-auto h-custom rounded max-w-custom bg-custom"
-                          style="--percent: {{ amount_products | divided_by: collection_products_count | times: 100 }}%; --amount: {{ amount_products }}; --count: {{ amount_products }};--height: 3px;--img-rounded: 5px;--max-width: 32rem;--bg-color-custom: #e5e5e5;"
-                        ></div>
-                      </div>
-                    </div>
-                    {% if all_product > products_to_show %}
-                      <button  class="relative btn btn-primary inline-flex content-center pointer transition w-custom max-w-100 mt-25" aria-label="{{ 'sections.collection_template.load_more' | t }}" style="--width: 20rem;">
-                        <span class="hidden-on-load">{{ 'sections.collection_template.load_more' | t }}</span>
-                      </button>
-                    {% endif %}
-                  </loadmore-infinity>
-                {%- else -%}
-                  {%- if paginate.pages > 1 -%}
-                    {% render 'pagination', paginate: paginate, anchor: '' %}
-                  {%- endif -%}
-              {%- endcase -%}
+              {%- if pagination_type == 'button' or pagination_type == 'infinity' -%}
+                <loadmore-button
+                  data-pagination="{{ pagination_type }}"
+                  data-all-products="{{ all_product }}"
+                  data-limit="{{ products_to_show }}"
+                  data-url="?page={{ paginate.current_page | plus: 1 }}"
+                  class="pagination-load-more mt-60 block text-center"
+                >
+                  <div class="paginate-progress">
+                    <p class="counting_product load-more-amount mb-20">
+                      {{-
+                        'sections.collection_template.product_count.one'
+                        | t: count: amount_products, product_count: search.results_count
+                      -}}
+                    </p>
+                    <div
+                      class="load-more-progress-bar relative mx-auto h-custom rounded max-w-custom bg-custom"
+                      style="--percent: {{ amount_products | divided_by: collection_products_count | times: 100 }}%; --amount: {{ amount_products }}; --count: {{ amount_products }};--height: 3px;--img-rounded: 5px;--max-width: 32rem;--bg-color-custom: #e5e5e5;"
+                    ></div>
+                  </div>
+                  {% if all_product > products_to_show and amount_products < all_product %}
+                    <button
+                      class="relative btn btn-primary inline-flex content-center pointer transition w-custom max-w-100 mt-25"
+                      style="--width: 20rem;"
+                      aria-label="{{ 'sections.collection_template.load_more' | t }}"
+                    >
+                      <span class="btn-label hidden-on-load transition-short">
+                        {{- 'sections.collection_template.load_more' | t -}}
+                      </span>
+                      {%- render 'loader' -%}
+                    </button>
+                  {% endif %}
+                </loadmore-button>
+              {%- else -%}
+                {%- if paginate.pages > 1 -%}
+                  {% render 'pagination', paginate: paginate, anchor: '' %}
+                {%- endif -%}
+              {%- endif -%}
             {%- elsif search.results.size == 0 and search.filters != empty -%}
               <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
                 <div class="title-wrapper text-center">
@@ -505,7 +489,7 @@
                   </a>
                 </div>
               </div>
-            {%- endif -%} 
+            {%- endif -%}
             <div
               class="loading-filter opacity-0 pointer-none absolute inset-0 bg-white transition"
               style="--opacity: 0.6;"
@@ -514,7 +498,7 @@
             </div>
           </div>
         </div>
-    </div>
+      </div>
     {%- endpaginate -%}
     <script type="module" src="{{ 'facets.js' | asset_url }}"></script>
   </div>

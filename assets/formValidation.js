@@ -52,7 +52,8 @@ export class FormValidator {
     let errorEl = parentElement.querySelector(".form-error-message");
     if (!errorEl) {
       errorEl = document.createElement("div");
-      errorEl.className = "form-error-message warning mt-10 max-w-custom";
+      errorEl.className = "form-error-message warning mt-10 max-w-custom fs-small inline-flex align-center gap-10 w-full h-custom";
+      errorEl.style.setProperty('--height', '5.6rem');
       parentElement.appendChild(errorEl);
     }
 

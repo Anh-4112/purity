@@ -21,13 +21,15 @@
 {%- if request.page_type != 'cart' -%}
   <cart-drawer
     id="{{ section.id }}"
-    class="cart-drawer modal pointer-none active-modal-js"
+    class="cart-drawer block modal active-modal-js"
     data-section-id="{{ section.id }}"
     data-cart-type="{{ add_cart_type }}"
-    data-focus-item="cart-icon-bubble"
   >
-    <modal-overlay class="modal-overlay pointer invisible transition"></modal-overlay>
-    <div class="modal-inner draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 z-15 inset-y-0 w-full{% if enable_product_recommendations and cart != empty %} bg-secondary-1025 rounded-1025-0{% endif %}">
+    <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
+    <div
+      class="modal-inner invisible draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 z-15 inset-y-0 w-full"
+      tabindex="-1"
+    >
       <div class="drawer__body h-full flex column bg-white rounded-start">
         <div
           class="drawer__header drawer__header-cart flex gap-10 space-between align-center drawer-spacing border-bottom"
@@ -95,7 +97,7 @@
                     <li
                       class="w-full"
                       {% if collection_media %}
-                        style="--color-text: {{ theme_st.overlay_image_color }};"
+                        style="--color-text: {{ theme_st.overlay_image_color }};--color-heading: {{ theme_st.overlay_image_color }};"
                       {% endif %}
                     >
                       <a
@@ -128,7 +130,7 @@
                           </div>
                           {%- if collection_media -%}
                             <span
-                              class="collection-list__icon wh-1025-50 w-custom h-custom flex content-center bg-white blur rounded-50 text-color btn-hover overflow-hidden transition-short flex-auto"
+                              class="collection-list__icon wh-1025-50 w-custom h-custom flex content-center bg-white blur rounded-50 text-color btn-hover pointer overflow-hidden transition-short flex-auto"
                               style="--width:4.6rem;--height:4.6rem;"
                             >
                               {%- render 'icon-arrow-top' -%}
@@ -147,7 +149,7 @@
                   <a
                     href="{{ cart_empty_button_link | default : "/collections/all" }}"
                     arial-label="{{ cart_empty_button_label }}"
-                    class="block w-full btn btn-primary text-center"
+                    class="block w-full btn pointer btn-primary text-center"
                   >
                     {{- cart_empty_button_label -}}
                   </a>
@@ -205,7 +207,10 @@
                           >
                             <div class="cart-item_inner flex gap-20 transition">
                               {% if item.image %}
-                                <div class="cart-item__media flex-auto w-custom" style="--width: 10rem;">
+                                <div
+                                  class="cart-item__media flex-auto w-custom"
+                                  style="--width: 10rem;"
+                                >
                                   {%- liquid
                                     assign ratio = ''
                                     if theme_st.product_image_ratio != 'adapt'
@@ -219,15 +224,15 @@
                                       assign ratio = item.image.aspect_ratio
                                     endif
                                   -%}
-                                  <div
-                                    class="banner__media rounded-10 align-self-start"
-                                    style="--aspect-ratio: {{ ratio }}"
+                                  <a
+                                    href="{{ item.url }}"
+                                    class="cart-item__link block rounded-10 focus-inset-inside word-break align-self-start"
+                                    aria-hidden="true"
+                                    arial-label="{{ item.product.title | escape }}"
                                   >
-                                    <a
-                                      href="{{ item.url }}"
-                                      class="cart-item__link word-break"
-                                      aria-hidden="true"
-                                      arial-label="{{ item.product.title | escape }}"
+                                    <div
+                                      class="banner__media"
+                                      style="--aspect-ratio: {{ ratio }}"
                                     >
                                       <img
                                         class="cart-item__image"
@@ -237,8 +242,8 @@
                                         width="150"
                                         height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
                                       >
-                                    </a>
-                                  </div>
+                                    </div>
+                                  </a>
                                 </div>
                               {% endif %}
                               <div
@@ -249,7 +254,7 @@
                                   class="cart-item-info"
                                   arial-label=" {{- item.product.title | escape -}}"
                                 >
-                                  <div class="flex gap-10 align-center space-between">
+                                  <div class="flex gap-10 space-between">
                                     <a
                                       href="{{ item.url }}"
                                       class="block word-break lh-normal heading-style mb-5 w-full"
@@ -263,7 +268,7 @@
                                     >
                                       <button
                                         type="button"
-                                        class="btn-reset inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
+                                        class="btn-reset pointer inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
                                         aria-label="{{- 'sections.cart.remove_title' | t: title: item.title -}}"
                                       >
                                         <svg
@@ -334,7 +339,7 @@
                                       <span class="visually-hidden">
                                         {{ 'products.product.price.sale_price' | t }}
                                       </span>
-                                      <strong class="cart-item__final-price product-option">
+                                      <strong class="cart-item__final-price product-option heading-color heading_weight">
                                         {{ item.final_price | money }}
                                       </strong>
                                     </div>
@@ -349,7 +354,16 @@
                                     aria-label="{{ 'customer.order.discount' | t }}"
                                   >
                                     {%- for discount in item.discounts -%}
-                                      <li class="discounts__discount">
+                                      <li class="discounts__discount fs-small">
+                                        <svg
+                                          aria-hidden="true"
+                                          focusable="false"
+                                          class="icon icon-discount w-custom"
+                                          style="--width: 12px;"
+                                          viewBox="0 0 12 12"
+                                        >
+                                          <path fill-rule="evenodd" clip-rule="evenodd" d="M7 0h3a2 2 0 012 2v3a1 1 0 01-.3.7l-6 6a1 1 0 01-1.4 0l-4-4a1 1 0 010-1.4l6-6A1 1 0 017 0zm2 2a1 1 0 102 0 1 1 0 00-2 0z" fill="currentColor">
+                                        </svg>
                                         {{ discount.title }}
                                       </li>
                                     {%- endfor -%}
@@ -380,7 +394,7 @@
                                       </svg>
                                     </button>
                                     <input
-                                      class="quantity__input border-0 p-0 text-center w-custom fs-small"
+                                      class="quantity__input border-0 p-0 text-center w-custom fs-small heading-color"
                                       type="number"
                                       style="--width: 2.2rem;--input-height: 38px;"
                                       type="number"
@@ -447,7 +461,7 @@
                 style="--max-width: 26rem; --width: 6rem;"
               >
                 <mini-cart-recommendations
-                  class="flex column h-full"
+                  class="flex column h-full minicar_recommend"
                   data-type="{{ recommendation_product_type }}"
                   data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=cart-upsell"
                 >
@@ -457,7 +471,7 @@
                     </div>
                   {%- endif -%}
                   <div class="cart-upsell-product grow-1">
-                    <cart-upsell-product class="swiper hover-action">
+                    <cart-upsell-product class="swiper hover-action smooth_scroll">
                       {%- render 'swiper-navigation',
                         class-custom: 'hidden block-1025 vertical-arrow',
                         show_on_hover: true
@@ -642,7 +656,7 @@
                           <div class="addon-actions mt-20 mb-40">
                             <button
                               type="button"
-                              class="select-package btn btn-primary w-full text-center"
+                              class="select-package btn pointer btn-primary w-full text-center"
                               aria-label="{{- 'sections.cart.gift.select' | t }}"
                             >
                               <span class="hidden-on-load transition-short">
@@ -658,7 +672,7 @@
                 {% endif %}
               {%- endif -%}
               {%- if show_cart_note -%}
-                <cart-note-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-2">
+                <cart-note-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-16">
                   <div class="cart-addons-element">
                     <div class="cart-addons-title flex space-between gap-10 mb-10 py-12">
                       <span class="title h7">{{ 'sections.cart.note.title' | t }}</span>
@@ -693,7 +707,7 @@
                       <div class="addon-actions">
                         <button
                           type="button"
-                          class="apply-note btn btn-primary mt-20 w-full"
+                          class="apply-note btn pointer btn-primary mt-20 w-full"
                           aria-label="{{- 'general.button.save' | t }}"
                         >
                           <span class="hidden-on-load transition-short"> {{ 'general.button.save' | t }}</span>
@@ -705,7 +719,7 @@
                 </cart-note-element>
               {%- endif -%}
               {%- if show_estimate_shipping -%}
-                <cart-estimate-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-2">
+                <cart-estimate-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-16">
                   <form>
                     <div class="cart-addons-title flex space-between gap-10 mb-10 py-12">
                       <span class="title h7">{{ 'sections.cart.shipping.estimate_shipping_title' | t }}</span>
@@ -775,7 +789,7 @@
                       </div>
                       <div class="addon-actions">
                         <button
-                          class="estimate btn btn-primary mt-20 w-full"
+                          class="estimate btn pointer btn-primary mt-20 w-full"
                           data-action="shipping"
                         >
                           <span class="hidden-on-load transition-short">
@@ -819,7 +833,7 @@
               <a
                 href="{{ routes.cart_url }}"
                 aria-label="{{ 'sections.cart.view_cart' | t }}"
-                class="btn btn-outline"
+                class="btn pointer btn-outline"
               >
                 <span class="hidden-on-load transition-short">{{ 'sections.cart.view_cart' | t }}</span>
                 {%- render 'loader' -%}
@@ -827,7 +841,7 @@
               <button
                 type="submit"
                 name="checkout"
-                class="grow-1 btn btn-primary"
+                class="grow-1 btn pointer btn-primary"
               >
                 <span class="hidden-on-load transition-short"> {{ 'sections.cart.checkout' | t }}</span>
                 {%- render 'loader' -%}

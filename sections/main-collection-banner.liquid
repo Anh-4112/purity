@@ -41,32 +41,30 @@
         >
           {%- liquid
             assign alt = collection.image.alt | default: collection.title | escape
-            assign width = collection.image.width
-            assign height = collection.image.height
           -%}
           {%- if use_collection_image and collection.image -%}
-            {{
-              collection.image
-              | image_url: width: 1500
-              | image_tag:
-                loading: 'lazy',
-                sizes: '100vw',
-                widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
-                height: height,
-                width: width,
-                alt: alt
-            }}
+            {% render 'responsive-image',
+              type: 'other',
+              container: section_width,
+              image: collection.image,
+              image_alt: alt,
+              animate: 'zoom-out-small',
+              motion: true
+            %}
           {%- elsif background_image != blank -%}
-            {{
-              section_st.image
-              | image_url: width: 1500
-              | image_tag: loading: 'lazy', sizes: '100vw', widths: '165, 360, 535, 750, 1070, 1500', alt: alt
-            }}
+            {% render 'responsive-image',
+              type: 'other',
+              container: section_width,
+              image: background_image,
+              image_alt: alt,
+              animate: 'zoom-out-small',
+              motion: true
+            %}
           {%- else -%}
             {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}
           {%- endif -%}
           <div
-            class="overlay absolute inset-0 bg-dark{% if section_width != "full-width" %} rounded{% endif %}{% if show_text_bellow_mobile %} d-none block-md{% endif %}"
+            class="overlay absolute inset-0 bg-dark{% if section_width != "full-width" %} rounded{% endif %}"
             style="--opacity: {{ section_st.overlay_opacity | times: 0.01 }}"
           ></div>
         </div>
@@ -238,19 +236,6 @@
     {
       "type": "description",
       "name": "t:sections.all.content_setting.description.label"
-    }
-  ],
-  "presets": [
-    {
-      "name": "t:sections.main-collection-banner.name",
-      "blocks": [
-        {
-          "type": "heading"
-        },
-        {
-          "type": "description"
-        }
-      ]
     }
   ]
 }

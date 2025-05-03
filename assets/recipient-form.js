@@ -1,3 +1,5 @@
+import * as NextSkyTheme from "global";
+
 if (!customElements.get("recipient-form")) {
   customElements.define(
     "recipient-form",
@@ -50,8 +52,8 @@ if (!customElements.get("recipient-form")) {
       cartErrorUnsubscriber = undefined;
 
       connectedCallback() {
-        this.cartUpdateUnsubscriber = subscribe(
-          PUB_SUB_EVENTS.cartUpdate,
+        this.cartUpdateUnsubscriber = NextSkyTheme.subscribe(
+          NextSkyTheme.PUB_SUB_EVENTS.cartUpdate,
           (event) => {
             if (
               event.source === "product-form" &&
@@ -62,8 +64,8 @@ if (!customElements.get("recipient-form")) {
           }
         );
 
-        this.variantChangeUnsubscriber = subscribe(
-          PUB_SUB_EVENTS.variantChange,
+        this.variantChangeUnsubscriber = NextSkyTheme.subscribe(
+          NextSkyTheme.PUB_SUB_EVENTS.variantChange,
           (event) => {
             if (event.data.sectionId === this.dataset.sectionId) {
               this.currentProductVariantId = event.data.variant.id.toString();
@@ -71,8 +73,8 @@ if (!customElements.get("recipient-form")) {
           }
         );
 
-        this.cartUpdateUnsubscriber = subscribe(
-          PUB_SUB_EVENTS.cartError,
+        this.cartUpdateUnsubscriber = NextSkyTheme.subscribe(
+          NextSkyTheme.PUB_SUB_EVENTS.cartError,
           (event) => {
             if (
               event.source === "product-form" &&

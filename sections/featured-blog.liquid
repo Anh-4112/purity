@@ -1,6 +1,7 @@
 {%- liquid
   assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -42,15 +43,38 @@
       <div
         class="section-header text-{{ text_alignment }}"
       >
+        {% assign animate_delay = 25 %}
         {%- if section_st.title != blank -%}
+          {% assign animate_delay = animate_delay | plus: 5 %}
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {%- endif -%}
           <h2 class="section-heading {{ header_size }}">
             {{ section_st.title }}
           </h2>
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         {%- endif -%}
         {%- if section_st.description != blank -%}
+          {% assign animate_delay = animate_delay | plus: 5 %}
+          {%- if scroll_animation -%}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {%- endif -%}
           <div class="section-description mt-15 prose">
             {{ section_st.description }}
           </div>
+          {%- if scroll_animation -%}
+            </motion-effect>
+          {%- endif -%}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -111,21 +135,21 @@
                 {{- 'blogs.article.featured' | t -}}
               </a>
             </div>
-            <ul class="article-card__info mb-20 fs-13 grey-color capitalize list-unstyled inline-flex align-center gap-15 text-{{ section_st.content_alignment }} justify-content-{{ section_st.content_alignment }}">
+            <div class="article-card__info mb-20 fs-13 grey-color capitalize list-unstyled inline-flex align-center gap-15 text-{{ section_st.content_alignment }} justify-content-{{ section_st.content_alignment }}">
               {%- if section_st.show_date -%}
-                <li class="post-date">
+                <div class="post-date">
                   {{- 'blogs.article.post_date' | t -}}
-                </li>
+                </div>
               {%- endif -%}
               {%- if section_st.show_author -%}
                 <svg width="5" height="5" viewBox="0 0 10 10" fill="none">
                   <use href="#icon-dot"></use>
                 </svg>
-                <li class="post-author">
+                <div class="post-author">
                   {{- 'blogs.article.author' | t -}}
-                </li>
+                </div>
               {%- endif -%}
-            </ul>
+            </div>
             {%- if section_st.show_excerpt -%}
               <p class="rte-width rte mt-0 mb-35">
                 {{- 'blogs.article.description' | t -}}
@@ -140,7 +164,7 @@
                   href="{{ button_link | default: "#" }}"
                 {% endif %}
                 aria-label="{{ section_st.button_label }}"
-                class="text-center btn-{{ section_st.button_type }}{% if section_st.button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} "
+                class="text-center btn-{{ section_st.button_type }}{% if section_st.button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
                 style="--width: 20rem;"
               >
                 {{ section_st.button_label }}
@@ -158,6 +182,10 @@
   "tag": "section",
   "class": "section section-blog-posts",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.featured-blog.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

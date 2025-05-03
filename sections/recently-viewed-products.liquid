@@ -1,4 +1,5 @@
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
@@ -13,7 +14,7 @@
   assign show_pagination = section_st.show_pagination
   assign show_navigation = section_st.show_navigation
   assign reveal_slide = section_st.reveal_slide
-
+  assign scroll_animation = theme_st.scroll_animation
   assign header_size = ''
   if heading_size == 'small'
     assign header_size = 'h3'
@@ -62,27 +63,53 @@
       data-url="{{ routes.search_url }}?section_id={{ section.id }}"
       data-limit="{{ section_st.items_to_show }}"
     >
+      {% assign animate_delay = 25 %}
       {% if search.results != blank %}
         {%- if section_st.title != blank or section_st.description != blank -%}
           <div class="section-header text-{{ text_alignment }}">
             {%- if section_st.title != blank -%}
+              {% assign animate_delay = animate_delay | plus: 5 %}
+              {% if scroll_animation %}
+                <motion-effect
+                  data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
+                  class="block"
+                >
+              {% endif %}
               <h2 class="section-heading {{ header_size }}">
                 {{ section_st.title }}
               </h2>
+              {% if scroll_animation %}
+                </motion-effect>
+              {% endif %}
             {%- endif -%}
             {%- if section_st.description != blank -%}
+              {% assign animate_delay = animate_delay | plus: 5 %}
+              {% if scroll_animation %}
+                <motion-effect
+                  data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
+                  class="block"
+                >
+              {% endif %}
               <div class="section-description mt-15 prose">
                 {{ section_st.description }}
               </div>
+              {% if scroll_animation %}
+                </motion-effect>
+              {% endif %}
             {%- endif -%}
           </div>
         {%- endif -%}
+        {% if scroll_animation %}
+          <motion-items-effect>
+        {% endif %}
         {%- if section_st.enable_carousel -%}
           {% if data_free_scroll == 'true' %}
             <div class="free-scroll">
           {% endif %}
           <slide-section
-            class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+            class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
             data-section-id="{{ section.id }}"
             data-autoplay="false"
             data-effect="slide"
@@ -96,14 +123,14 @@
             style="{{ col_style | strip | strip_newlines }}"
           >
             {% if show_navigation %}
-              {%- render 'swiper-navigation' -%}
+              {%- render 'swiper-navigation', show_on_hover: true -%}
             {% endif %}
             <div class="swiper-wrapper">
               {% for card_product in search.results %}
                 {% render 'card-product',
                   card_product: card_product,
                   section_id: section.id,
-                  class: ' swiper-slide',
+                  class: ' swiper-slide motion-item',
                   container: section_width,
                   column: items_per_row,
                   column_mobile: items_per_row_mobile,
@@ -133,7 +160,7 @@
               {% render 'card-product',
                 card_product: card_product,
                 section_id: section.id,
-                class: ' grid-card-item',
+                class: ' grid-card-item motion-item',
                 container: section_width,
                 column: items_per_row,
                 column_mobile: items_per_row_mobile,
@@ -143,6 +170,9 @@
             {% endfor %}
           </grid-custom>
         {%- endif -%}
+        {% if scroll_animation %}
+          </motion-items-effect>
+        {% endif %}
       {%- endif -%}
     </recently-viewed-products>
   </div>

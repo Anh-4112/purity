@@ -59,14 +59,26 @@
     {%- if section_st.heading != blank or section_st.description != blank -%}
       <div class="section-header section-header__in-section text-{{ section_st.text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}">
         {%- if section_st.heading != blank -%}
-          <h2 class="block section-heading {{ header_size }}">
-            {{ section_st.heading }}
-          </h2>
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="30"
+            class="block"
+          >
+            <h2 class="block section-heading {{ header_size }}">
+              {{ section_st.heading }}
+            </h2>
+          </motion-effect>
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <div class="section-description mt-15 prose">
-            {{ section_st.description }}
-          </div>
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="35"
+            class="block"
+          >
+            <div class="section-description mt-15 prose">
+              {{ section_st.description }}
+            </div>
+          </motion-effect>
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -88,7 +100,7 @@
             {%- render 'placeholder-render', type: 'lifestyle-2' -%}
           {% endif %}
         </div>
-        <media-effect class="block">
+        <media-effect class="hidden block-md">
           {% assign image_effect_blocks = section.blocks | where: 'type', 'image_effect' %}
           {% for block in image_effect_blocks %}
             {%- liquid
@@ -125,7 +137,8 @@
                   container: section_st.section_width,
                   image: image,
                   image_alt: image_alt,
-                  class: 'rounded'
+                  class: 'rounded',
+                  motion: true
                 %}
               {% else %}
                 {%- render 'placeholder-render', type: 'product' -%}
@@ -149,7 +162,9 @@
               >
                 <div class="block_infor-text heading_weight bg-secondary flex gap-custom{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom py-15 px-25 btn-rounded">
                   {% if block_st.highlight_text_icon != 'none' %}
-                    {% render 'icon_svg_list', icon: block_st.highlight_text_icon %}
+                    <span class="w-custom flex-auto" style="--width: 24px;">
+                      {% render 'icon_svg_list', icon: block_st.highlight_text_icon %}
+                    </span>
                   {% endif %}
                   <span>{{ block_st.title | escape }}</span>
                 </div>
@@ -170,7 +185,7 @@
               href="{{ section_st.button_link | default: "#" }}"
             {% endif %}
             aria-label="{{ section_st.button_label }}"
-            class="text-center btn btn-{{ section_st.button_type }}{% if section_st.button_type == "link" %} align-self-center{% else %} w-custom max-w-100{% endif %}"
+            class="text-center btn pointer btn-{{ section_st.button_type }}{% if section_st.button_type == "link" %} align-self-center{% else %} w-custom max-w-100{% endif %}"
             {% if section_st.button_type != 'link' %}
               style="--width: 25rem;"
             {% endif %}
@@ -454,6 +469,10 @@
       "name": "t:sections.featured_product_banner.blocks.image_effect.label",
       "limit": 3,
       "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.featured_product_banner.blocks.image_effect.info"
+        },
         {
           "type": "image_picker",
           "id": "image",

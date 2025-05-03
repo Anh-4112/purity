@@ -1,3 +1,4 @@
+<script src="{{ 'section-collection-highlights.js' | asset_url }}" defer="defer"></script>
 {% liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -7,7 +8,6 @@
   else
     assign section_width = 'fluid_container'
   endif
-
   assign column_gap_slide = 0
   if section_st.column_gap == 'large'
     assign column_gap_desktop = 80
@@ -100,6 +100,10 @@
   },
   "max_blocks": 2,
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.collection-highlights.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

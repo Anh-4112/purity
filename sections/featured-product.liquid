@@ -12,21 +12,25 @@
     assign section_width = 'fluid_container'
   endif
   assign column_gap_slide = 0
+  assign column_gap_mb = 0
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
+    assign column_gap_slide = 80
+    assign column_gap_mb = 24
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
+    assign column_gap_slide = 50
+    assign column_gap_mb = 24
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
+    assign column_gap_slide = 30
+    assign column_gap_mb = 20
   endif
   assign product_image_ratio = theme_st.product_image_ratio
   assign desktop_media_width = section_st.desktop_media_width
   assign media_position = section_st.media_position
+  assign scroll_animation = theme_st.scroll_animation
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{{- -}}
-  {% if column_gap_slide < 20 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 15px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}{{- -}}
-{%- endcapture -%}
+  --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px{%- endcapture -%}
 {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
 {%- if first_3d_model -%}
   {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
@@ -53,11 +57,18 @@
   <div class="{{ section_width }}">
     <div
       class="featured-product flex wrap gap {% if media_position == 'right' %} row-reverse-md{% endif %}"
-      style="--gap: var(--bs-gutter-x); --gap-desktop: 8rem;--col-width: 48%;"
+      style="--col-width: {{ desktop_media_width }}%;"
     >
       {% if product.media.size > 0 %}
         <div class="product-detail__media w-full col-md-w-custom">
           <div class="block__media-gallery sticky top-20">
+            {% if scroll_animation %}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="25"
+                class="block"
+              >
+            {% endif %}
             {% render 'media-gallery',
               images: product.media,
               section_st: section_st,
@@ -65,15 +76,22 @@
               section: section,
               type_section: 'featured'
             %}
+            {% if scroll_animation %}
+              </motion-effect>
+            {% endif %}
           </div>
         </div>
       {% endif %}
       {% if product == blank %}
         <div
-          class="product-detail__media w-full col-md-w-custom"
+          class="product-detail__media w-full col-md-w-custom rounded"
           style="--aspect-ratio: {% if product_image_ratio == 'adapt' -%}1/1{%- elsif product_image_ratio == 'square' -%}1/1{%- elsif product_image_ratio == 'portrait' -%}3/4{%- elsif product_image_ratio == 'landscape' -%}4/3{%- endif -%}"
         >
-          {%- render 'placeholder-render', type: 'product', class: 'img-placeholder rounded w-full h-full' -%}
+          {%- render 'placeholder-render',
+            type: 'product',
+            class: 'img-placeholder rounded w-full h-full',
+            class_motion: ' rounded'
+          -%}
         </div>
       {% endif %}
       <div class="product-detail__information w-full col-md-remaining">
@@ -133,6 +151,9 @@
   "name": "t:sections.featured-product.name",
   "tag": "section",
   "class": "section section-featured-product",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlay"]
+  },
   "blocks": [
     { "type": "@app" },
     { "type": "_badges-product" },
