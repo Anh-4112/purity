@@ -92,7 +92,7 @@
             <div class="field bg-secondary px-25 btn-rounded flex align-center gap-10 relative max-w-custom mx-auto" style="--max-width: 60rem;">
               <button
                 type="submit"
-                class="button btn-reset search__button relative fs-0"
+                class="button pointer btn-reset search__button relative fs-0"
                 tabindex="0"
                 aria-label="{{ 'general.search.search' | t }}"
               >
@@ -151,7 +151,7 @@
               <div class="facet-drawer grow-1{% if enable_filtering and filter_layout == 'drawer' %}{% else %} block hidden-1025{% endif %}">
                 <button
                   id="FacetsDrawer"
-                  class="button heading color btn-reset inline-flex gap-5 align-center body_weight"
+                  class="button heading color btn-reset pointer inline-flex gap-5 align-center body_weight"
                   aria-label="{{ 'products.facets.filter' | t }}"
                 >
                   <svg width="22" height="22" fill="none">
@@ -293,7 +293,7 @@
                   {%- for value in filter.active_values -%}
                     <div class="facet-remove">
                       <facet-remove>
-                        <a href="{{ value.url_to_remove }}" class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal"
+                        <a href="{{ value.url_to_remove }}" class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer"
                         >
                           {{ value.label | escape }}
                           <span class="active-facets__button-inner">
@@ -310,7 +310,7 @@
                     {%- if filter.min_value.value != null or filter.max_value.value != null -%}
                       <div class="facet-remove">
                         <facet-remove>
-                          <a href="{{ filter.url_to_remove }}" class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal">
+                          <a href="{{ filter.url_to_remove }}" class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer">
                             {%- if filter.min_value.value -%}
                               {{ filter.min_value.value | money }}
                             {%- else -%}
@@ -336,7 +336,7 @@
                 {%- endfor -%}
                 <div class="facet-remove facet-clear-all">
                   <facet-remove class="active-facets__button-wrapper">
-                    <a href="{{ results_url }}"  class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal">
+                    <a href="{{ results_url }}"  class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer">
                       <span>{{ 'products.facets.clear_all' | t }}</span>
                     </a>
                   </facet-remove>
