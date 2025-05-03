@@ -1,4 +1,5 @@
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
@@ -13,7 +14,7 @@
   assign show_pagination = section_st.show_pagination
   assign show_navigation = section_st.show_navigation
   assign reveal_slide = section_st.reveal_slide
-
+  assign scroll_animation = theme_st.scroll_animation
   assign header_size = ''
   if heading_size == 'small'
     assign header_size = 'h3'
@@ -59,111 +60,74 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    {%- if section_st.title != blank or section_st.description != blank -%}
+    {%- if section_st.heading != blank or section_st.description != blank -%}
       <div class="section-header text-{{ text_alignment }}">
         {% assign animate_delay = 25 %}
-        {%- if section_st.title != blank -%}
+        {%- if section_st.heading != blank -%}
           {% assign animate_delay = animate_delay | plus: 5 %}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="{{ animate_delay }}"
-            class="block"
-          >
-            <h2 class="block section-heading {{ header_size }}">
-              {{ section_st.title }}
-            </h2>
-          </motion-effect>
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
+          <h2 class="block section-heading {{ header_size }}">
+            {{ section_st.heading }}
+          </h2>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.description != blank -%}
           {% assign animate_delay = animate_delay | plus: 5 %}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="{{ animate_delay }}"
-            class="block"
-          >
-            <div class="section-description mt-15 prose">
-              {{ section_st.description }}
-            </div>
-          </motion-effect>
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
+          <div class="section-description mt-15 prose">
+            {{ section_st.description }}
+          </div>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
       </div>
     {%- endif -%}
-    <motion-items-effect>
-      {%- if section_st.enable_carousel -%}
-        <slide-section
-          class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
-          data-section-id="{{ section.id }}"
-          data-autoplay="false"
-          data-effect="slide"
-          data-loop="false"
-          data-speed="500"
-          data-spacing="{{ column_gap_slide }}"
-          data-mobile="{{ items_per_row_mobile }}"
-          data-desktop="{{ items_per_row }}"
-          data-tablet="{{ items_per_row_tablet }}"
-          data-free-scroll="{{ data_free_scroll }}"
-          style="{{ col_style | strip | strip_newlines }}"
-        >
-          {% if show_navigation %}
-            {%- render 'swiper-navigation' -%}
-          {% endif %}
-          <div class="swiper-wrapper">
-            {% if section.blocks.size > 0 %}
-              {% for block in section.blocks %}
-                {% assign block_st = block.settings %}
-                <div
-                  class="collection-item motion-item swiper-slide"
-                  {{ block.shopify_attributes }}
-                >
-                  {% render 'collection-item',
-                    card_collection: block_st.collection,
-                    section: section,
-                    block: block,
-                    container: section_width,
-                    column: items_per_row,
-                    column_mobile: section_st.items_per_row_mobile,
-                    padding: column_gap_slide
-                  %}
-                </div>
-              {% endfor %}
-            {% else %}
-              {% for i in (1..items_per_row) %}
-                <div
-                  class="collection-item motion-item swiper-slide"
-                >
-                  {% render 'collection-item',
-                    section: section,
-                    container: section_width,
-                    column: items_per_row,
-                    column_mobile: section_st.items_per_row_mobile,
-                    padding: column_gap_slide
-                  %}
-                </div>
-              {% endfor %}
-            {% endif %}
-          </div>
-          {%- if show_pagination -%}
-            <div
-              class="swiper-pagination"
-            ></div>
-          {% endif %}
-        </slide-section>
-      {%- else -%}
-        <grid-custom
-          class="collection-list--grid grid grid-cols gap{% if data_free_scroll == 'true' %} grid_scroll{% endif %}"
-          style="{{ col_style | strip | strip_newlines }}"
-          data-mobile="{{ items_per_row_mobile }}"
-          data-spacing="{{ column_gap_slide }}"
-          data-free-scroll="{{ data_free_scroll }}"
-        >
+    {% if scroll_animation %}
+      <motion-items-effect>
+    {% endif %}
+    {%- if section_st.enable_carousel -%}
+      <slide-section
+        class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+        data-section-id="{{ section.id }}"
+        data-autoplay="false"
+        data-effect="slide"
+        data-loop="false"
+        data-speed="500"
+        data-spacing="{{ column_gap_slide }}"
+        data-mobile="{{ items_per_row_mobile }}"
+        data-desktop="{{ items_per_row }}"
+        data-tablet="{{ items_per_row_tablet }}"
+        data-free-scroll="{{ data_free_scroll }}"
+        style="{{ col_style | strip | strip_newlines }}"
+      >
+        {% if show_navigation %}
+          {%- render 'swiper-navigation' -%}
+        {% endif %}
+        <div class="swiper-wrapper">
           {% if section.blocks.size > 0 %}
             {% for block in section.blocks %}
               {% assign block_st = block.settings %}
               <div
-                class="collection-item motion-item grid-custom-item"
+                class="collection-item motion-item swiper-slide"
                 {{ block.shopify_attributes }}
               >
                 {% render 'collection-item',
+                  card_collection: block_st.collection,
                   section: section,
                   block: block,
                   container: section_width,
@@ -176,7 +140,7 @@
           {% else %}
             {% for i in (1..items_per_row) %}
               <div
-                class="collection-item motion-item grid-custom-item"
+                class="collection-item motion-item swiper-slide"
               >
                 {% render 'collection-item',
                   section: section,
@@ -188,9 +152,58 @@
               </div>
             {% endfor %}
           {% endif %}
-        </grid-custom>
-      {% endif %}
-    </motion-items-effect>
+        </div>
+        {%- if show_pagination -%}
+          <div
+            class="swiper-pagination"
+          ></div>
+        {% endif %}
+      </slide-section>
+    {%- else -%}
+      <grid-custom
+        class="collection-list--grid grid grid-cols gap{% if data_free_scroll == 'true' %} grid_scroll{% endif %}"
+        style="{{ col_style | strip | strip_newlines }}"
+        data-mobile="{{ items_per_row_mobile }}"
+        data-spacing="{{ column_gap_slide }}"
+        data-free-scroll="{{ data_free_scroll }}"
+      >
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            {% assign block_st = block.settings %}
+            <div
+              class="collection-item motion-item grid-custom-item"
+              {{ block.shopify_attributes }}
+            >
+              {% render 'collection-item',
+                section: section,
+                block: block,
+                container: section_width,
+                column: items_per_row,
+                column_mobile: section_st.items_per_row_mobile,
+                padding: column_gap_slide
+              %}
+            </div>
+          {% endfor %}
+        {% else %}
+          {% for i in (1..items_per_row) %}
+            <div
+              class="collection-item motion-item grid-custom-item"
+            >
+              {% render 'collection-item',
+                section: section,
+                container: section_width,
+                column: items_per_row,
+                column_mobile: section_st.items_per_row_mobile,
+                padding: column_gap_slide
+              %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </grid-custom>
+    {% endif %}
+    {% if scroll_animation %}
+      </motion-items-effect>
+    {% endif %}
   </div>
 </div>
 {% schema %}
@@ -240,7 +253,7 @@
     },
     {
       "type": "text",
-      "id": "title",
+      "id": "heading",
       "default": "Collection list",
       "label": "t:sections.all.content_setting.heading.label"
     },

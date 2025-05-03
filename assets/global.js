@@ -519,10 +519,11 @@ export function loadImages(imageOrArray) {
   if (!imageOrArray) {
     return Promise.resolve();
   }
-
   const images =
     imageOrArray instanceof Element ? [imageOrArray] : Array.from(imageOrArray);
-
+  if (images.length > 1) {
+    return Promise.resolve();
+  }
   return Promise.all(
     images.map((image) => {
       return new Promise((resolve) => {

@@ -151,9 +151,6 @@
   {%- elsif count >= color_limit -%}
     <li class="variant-input hidden">
       <input
-        {%- if scope == 'item' -%}
-          data-href="{{ product.url }}?variant={{ variants.first.id }}"
-        {%- endif -%}
         type="radio"
         name="swatch-product-{{ product.id }}-{{ option.position }}-{{ section.id }}"
         id="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
@@ -164,6 +161,9 @@
         {% if scope == 'detail' and option.selected_value == value %}
           checked
         {% endif %}
+        {%- if scope == 'item' -%}
+          data-href="{{ product.url }}?variant={{ variants.first.id }}"
+        {%- endif -%}
       >
       <label
         class="color-swatch-label pointer {{ color_swatch_shape }}{% if disable_variant %} disable{% endif %}{% if is_swatch_image %} swatch-image{% endif %}"

@@ -1,5 +1,18 @@
 {%- assign section_st = section.settings -%}
-{%- if section_st.desktop_layout != blank -%}
+{%- liquid
+  assign theme_st = settings
+  assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
+  assign desktop_layout = section_st.desktop_layout
+-%}
+{% if scroll_animation %}
+  <motion-effect
+    data-animate="fade-up"
+    data-animate-delay="25"
+    class="block"
+  >
+{% endif %}
+{%- if desktop_layout != blank -%}
   <h1
     class="title h2"
     {{ block.shopify_attributes }}
@@ -16,12 +29,15 @@
 {%- else -%}
   {{ 'onboarding.product_title' | t }}
 {%- endif -%}
-{%- if section_st.desktop_layout != blank -%}
+{%- if desktop_layout != blank -%}
   </h1>
 {%- else -%}
   </a>
   </h2>
 {%- endif -%}
+{% if scroll_animation %}
+  </motion-effect>
+{% endif %}
 {% schema %}
 {
   "name": "t:sections.all.product_setting.title.name",

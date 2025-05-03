@@ -2411,10 +2411,10 @@ class MotionEffect extends HTMLElement {
             (await NextSkyTheme.loadImages(this.mediaElements)),
             setTimeout(() => {
               this.initAnimateEffect();
-            }, 10);
+            }, 100);
         },
         {
-          margin: "0px 0px -70px 0px",
+          margin: "0px 0px -30px 0px",
         }
       ));
   }
@@ -2834,7 +2834,7 @@ class MotionItemsEffect extends HTMLElement {
 
   setupInViewEffect() {
     Motion.inView(this, this.animateItems.bind(this), {
-      margin: "0px 0px -100px 0px",
+      margin: "0px 0px -50px 0px",
     });
   }
 
@@ -2906,98 +2906,100 @@ class DraggableModal extends HTMLElement {
     this.startY = 0;
     this.currentY = 0;
     this.threshold = 100;
-    
+
     this.startDrag = this.startDrag.bind(this);
     this.onDrag = this.onDrag.bind(this);
     this.endDrag = this.endDrag.bind(this);
   }
 
   connectedCallback() {
-    this.modalElement = this.closest('.active-modal-js');
+    this.modalElement = this.closest(".active-modal-js");
     if (!this.modalElement) return;
-    
-    this.addEventListener('touchstart', this.startDrag, { passive: true });
-    this.addEventListener('mousedown', this.startDrag);
-    document.addEventListener('touchmove', this.onDrag, { passive: false });
-    document.addEventListener('mousemove', this.onDrag);
-    document.addEventListener('touchend', this.endDrag);
-    document.addEventListener('mouseup', this.endDrag);
+
+    this.addEventListener("touchstart", this.startDrag, { passive: true });
+    this.addEventListener("mousedown", this.startDrag);
+    document.addEventListener("touchmove", this.onDrag, { passive: false });
+    document.addEventListener("mousemove", this.onDrag);
+    document.addEventListener("touchend", this.endDrag);
+    document.addEventListener("mouseup", this.endDrag);
   }
 
   disconnectedCallback() {
-    this.removeEventListener('touchstart', this.startDrag);
-    this.removeEventListener('mousedown', this.startDrag);
-    document.removeEventListener('touchmove', this.onDrag);
-    document.removeEventListener('mousemove', this.onDrag);
-    document.removeEventListener('touchend', this.endDrag);
-    document.removeEventListener('mouseup', this.endDrag);
+    this.removeEventListener("touchstart", this.startDrag);
+    this.removeEventListener("mousedown", this.startDrag);
+    document.removeEventListener("touchmove", this.onDrag);
+    document.removeEventListener("mousemove", this.onDrag);
+    document.removeEventListener("touchend", this.endDrag);
+    document.removeEventListener("mouseup", this.endDrag);
   }
 
   startDrag(e) {
     if (!this.modalElement) return;
-    
+
     this.isDragging = true;
-    this.startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    this.startY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
     this.currentY = this.startY;
-    
-    this.modalElement.classList.add('is-dragging');
-    this.style.cursor = 'grabbing';
-    
-    const modalBody = this.modalElement.querySelector('.modal-draggable');
+
+    this.modalElement.classList.add("is-dragging");
+    this.style.cursor = "grabbing";
+
+    const modalBody = this.modalElement.querySelector(".modal-draggable");
     if (modalBody) {
-      modalBody.style.transition = 'none';
+      modalBody.style.transition = "none";
     }
   }
 
   onDrag(e) {
     if (!this.isDragging || !this.modalElement) return;
-    
+
     e.preventDefault();
-    
-    this.currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+
+    this.currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
     const dragDistance = this.currentY - this.startY;
-    
+
     if (dragDistance > 0) {
       const resistance = 0.4;
-      const modalBody = this.modalElement.querySelector('.modal-draggable');
-      
+      const modalBody = this.modalElement.querySelector(".modal-draggable");
+
       if (modalBody) {
-        modalBody.style.transform = `translateY(${dragDistance * resistance}px)`;
+        modalBody.style.transform = `translateY(${
+          dragDistance * resistance
+        }px)`;
       }
     }
   }
 
   endDrag() {
     if (!this.isDragging || !this.modalElement) return;
-    
+
     const dragDistance = this.currentY - this.startY;
     this.isDragging = false;
-    this.style.cursor = 'grab';
-    this.modalElement.classList.remove('is-dragging');
-    
-    const modalBody = this.modalElement.querySelector('.modal-draggable');
+    this.style.cursor = "grab";
+    this.modalElement.classList.remove("is-dragging");
+
+    const modalBody = this.modalElement.querySelector(".modal-draggable");
     if (!modalBody) return;
-    
-    modalBody.style.transition = 'transform 0.3s ease-out';
-    
+
+    modalBody.style.transition = "transform 0.3s ease-out";
+
     if (dragDistance > this.threshold) {
       modalBody.style.transform = `translateY(100%)`;
-      
+
       setTimeout(() => {
-        if (typeof NextSkyTheme !== 'undefined' && NextSkyTheme.eventModal) {
-          NextSkyTheme.eventModal(this.modalElement, 'close');
+        if (typeof NextSkyTheme !== "undefined" && NextSkyTheme.eventModal) {
+          NextSkyTheme.eventModal(this.modalElement, "close");
         }
-        
-        modalBody.style.transform = '';
-        modalBody.style.transition = '';
+
+        modalBody.style.transform = "";
+        modalBody.style.transition = "";
       }, 300);
     } else {
-      modalBody.style.transform = '';
+      modalBody.style.transform = "";
       setTimeout(() => {
-        modalBody.style.transition = '';
+        modalBody.style.transition = "";
       }, 300);
     }
   }
 }
 
-customElements.define('draggable-modal', DraggableModal);
+customElements.define("draggable-modal", DraggableModal);
