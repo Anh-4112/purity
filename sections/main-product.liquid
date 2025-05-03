@@ -1,7 +1,9 @@
 {{ 'main-product.css' | asset_url | stylesheet_tag }}
 {{ 'judgeme-review.css' | asset_url | stylesheet_tag }}
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   assign enable_sticky_desktop = section_st.enable_sticky_desktop
   assign desktop_layout = section_st.desktop_layout
   assign desktop_media_width = section_st.desktop_media_width
@@ -35,6 +37,13 @@
     >
       {% if product.media.size > 0 %}
         <div class="product-detail__media w-full col-md-w-custom">
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="25"
+              class="block"
+            >
+          {% endif %}
           {% render 'media-gallery',
             images: product.media,
             section_st: section_st,
@@ -42,11 +51,24 @@
             section: section,
             desktop_layout: desktop_layout
           %}
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         </div>
       {% endif %}
       <div class="product-detail__information w-full{% if product.media.size > 0 %} col-md-remaining{% endif %}">
         <div class="sticky top-20">
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="25"
+              class="block"
+            >
+          {% endif %}
           {% content_for 'blocks', closest.product: product %}
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         </div>
       </div>
     </div>

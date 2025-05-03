@@ -93,7 +93,12 @@ class FacetFiltersForm extends HTMLElement {
       }
     };
 
-    const blocksToUpdate = ["collection-count", "facets-filters-active"];
+    const blocksToUpdate = [
+      "collection-count",
+      "facets-filters-active",
+      "select-custom.facet-filters",
+      "pagination-load-more",
+    ];
     blocksToUpdate.forEach(updateContent);
   }
 
@@ -185,8 +190,35 @@ class FacetFiltersForm extends HTMLElement {
 
   onSubmitHandler(event) {
     event.preventDefault();
+    if (event.target.closest("#FacetFiltersFormDrawer")) {
+      return;
+    }
     const searchParams = this.createSearchParams(event.target.closest("form"));
     this.onSubmitForm(searchParams, event);
+    const scrollIntoView =
+      document.querySelector("#CollectionResultsGird .facets-toolbar") ||
+      document.querySelector("#CollectionResultsGird .facets-filters-active") ||
+      document.querySelector("#CollectionResultsGird #CollectionGird");
+    scrollIntoView.scrollIntoView({
+      behavior: "smooth",
+    });
+  }
+
+  facetApplyFilter(event) {
+    event.preventDefault();
+    const drawer = document.querySelector("facet-drawer");
+    const searchParams = this.createSearchParams(
+      document.querySelector("#FacetFiltersFormDrawer")
+    );
+    this.onSubmitForm(searchParams, event);
+    NextSkyTheme.eventModal(drawer, "close");
+    const scrollIntoView =
+      document.querySelector("#CollectionResultsGird .facets-toolbar") ||
+      document.querySelector("#CollectionResultsGird .facets-filters-active") ||
+      document.querySelector("#CollectionResultsGird #CollectionGird");
+    scrollIntoView.scrollIntoView({
+      behavior: "smooth",
+    });
   }
 
   onActiveFilterClick(event) {
@@ -454,6 +486,7 @@ class FilterSort extends FacetFiltersForm {
     const value = this.getAttribute("value");
     select.value = value;
     select.dispatchEvent(new Event("input", { bubbles: true }));
+    this.closest(".facet-filters").classList.remove("active");
   }
 }
 customElements.define("filter-sort", FilterSort);
@@ -481,19 +514,26 @@ class FacetDrawer extends HTMLElement {
 }
 customElements.define("facet-drawer", FacetDrawer);
 
+class FacetApplyCanvas extends FacetFiltersForm {
+  constructor() {
+    super();
+    this.addEventListener("click", this.facetApplyFilter.bind(this), false);
+  }
+}
+customElements.define("facet-apply-canvas", FacetApplyCanvas);
+
 class LoadMoreProduct extends HTMLElement {
   constructor() {
     super();
-    this.init();
+    this.addEventListener("click", this.fetchData.bind(this), false);
   }
 
-  init() {
-    const _this = this;
-    this.button = this.querySelector("button");
-    if (!this.button) return;
-    this.button.addEventListener("click", function () {
-      _this.fetchData();
-    });
+  connectedCallback() {
+    if (this.dataset.pagination == "infinity") {
+      Motion.inView(this, this.fetchData.bind(this), {
+        margin: "100px 0px -10px 0px",
+      });
+    }
   }
 
   fetchData() {
@@ -505,7 +545,7 @@ class LoadMoreProduct extends HTMLElement {
     if (param.length > 0) {
       url = currentUrl + url.replaceAll("?", "&");
     }
-    this.button.classList.add("loading");
+    this.classList.add("loading");
     fetch(url)
       .then((response) => response.text())
       .then((html) => {
@@ -516,78 +556,21 @@ class LoadMoreProduct extends HTMLElement {
         resultNodesHtml.forEach((prodNode) =>
           document.querySelector("#product-grid").appendChild(prodNode)
         );
-        document.querySelector(".paginate-progress").innerHTML =
-          htmlRender.querySelector(".paginate-progress").innerHTML;
+        document.querySelector(".pagination-load-more").innerHTML =
+          htmlRender.querySelector(".pagination-load-more").innerHTML;
+        document
+          .querySelector("#CollectionGird")
+          .querySelector("motion-items-effect")
+          ?.reloadAnimationEffect();
       })
       .finally(() => {
-        if (window.SPR) {
-          window.SPR.registerCallbacks();
-          window.SPR.initRatingHandler();
-          window.SPR.initDomEls();
-          window.SPR.loadProducts();
-          window.SPR.loadBadges();
-        }
-        _this.updateUrl(Number(this.dataset.url.replace("?page=", "")));
-        this.button.classList.remove("loading");
+        this.classList.remove("loading");
       })
       .catch((e) => {
         console.error(e);
       });
   }
-
-  updateUrl(e) {
-    const all = this.dataset.allProducts;
-    const limit = this.dataset.limit;
-    if (all && limit && all > 0) {
-      const times = ~~(all / limit);
-      const remainder = all % limit;
-      let pages = times;
-      if (remainder > 0) {
-        pages = times + 1;
-      }
-      if (e < pages) {
-        this.dataset.url = "?page=" + ++e;
-      } else {
-        const btn = this.querySelector("button");
-        if (btn) {
-          btn.remove();
-        }
-      }
-    }
-  }
 }
 if (!customElements.get("loadmore-button")) {
   customElements.define("loadmore-button", LoadMoreProduct);
-}
-
-if (!customElements.get("loadmore-infinity")) {
-  customElements.define(
-    "loadmore-infinity",
-    class LoadInfinity extends LoadMoreProduct {
-      constructor() {
-        super();
-      }
-
-      init() {
-        this.scroll();
-      }
-
-      scroll() {
-        const _this = this;
-        this.btn = this.querySelector("button");
-        if (!this.querySelector("button")) return;
-        var isVisible = false;
-        window.addEventListener("scroll", function () {
-          var buttonRect = _this.btn.getBoundingClientRect();
-          var viewportHeight = window.innerHeight;
-          if (!isVisible && buttonRect.top <= viewportHeight) {
-            isVisible = true;
-            _this.fetchData();
-          } else if (isVisible && buttonRect.top > viewportHeight) {
-            isVisible = false;
-          }
-        });
-      }
-    }
-  );
 }
