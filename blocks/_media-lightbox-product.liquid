@@ -53,6 +53,7 @@
             <div class="media-lightbox-item">
               <video-local-lightbox
                 tabindex="0"
+                data-position="{{ forloop.index | minus: 1 }}"
                 class="fs-0 rounded-10 w-full h-full flex content-center"
               >
                 {% if media.media_type == 'video' -%}
@@ -88,6 +89,110 @@
     {% if items_to_show > 3 %}
       </div>
     {% endif %}
+    <template class="media-lightbox-popup">
+      <media-lightbox-popup
+        class="modal"
+        role="dialog"
+      >
+        <div
+          class="modal-focus"
+          tabindex="-1"
+          style="--max-width: 30rem;"
+        >
+          <button
+            class="modal__close"
+            aria-label="Close"
+          >
+            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
+              <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
+            </svg>
+          </button>
+          <slide-section
+            class="swiper"
+            data-effect="slide"
+            data-direction="vertical"
+            data-mousewheel="true"
+            data-loop="true"
+            data-speed="500"
+            data-spacing="0"
+            data-mobile="1"
+            data-desktop="1"
+            data-tablet="1"
+            style="height: 800px;"
+          >
+            {%- render 'swiper-navigation' -%}
+            <div class="swiper-wrapper">
+              {%- for media in closest.product.metafields.custom.media_lightbox.value -%}
+                <div class="swiper-slide">
+                  {%- assign image_alt = media.alt | default: closest.product.title | escape -%}
+                  <div class="media-lightbox-item">
+                    {% if media.media_type == 'video' -%}
+                      <video-lightbox-item>
+                        <button
+                          aria-label="{{ 'accessibility.play_button.video' | t }}"
+                          class="play-button play-button-popup active"
+                        >
+                          {% render 'icon-play' %}
+                          {% render 'icon-pause' %}
+                        </button>
+                        <button
+                          aria-label="{{ 'accessibility.mute_button.video' | t }}"
+                          class="mute-button mute-button-popup"
+                        >
+                          {% render 'icon-mute-open' %}
+                          {% render 'icon-mute-close' %}
+                        </button>
+                        {%- liquid
+                          assign source = media.sources
+                          assign source_url = ''
+                          for s in source
+                            if s.format == 'mp4'
+                              assign source_url = s.url
+                              break
+                            endif
+                          endfor
+                          assign poster = media.preview_image | image_url: width: 500
+                        -%}
+                        <video
+                          preload="auto"
+                          loop
+                          muted
+                          playsinline
+                          autoplay
+                          poster="{{ poster }}"
+                          src="{{ source_url }}"
+                        ></video>
+                      </video-lightbox-item>
+                    {% else %}
+                      {% render 'responsive-image', type: 'banner', image: media, image_alt: image_alt, class="rounded-10" %}
+                    {% endif %}
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+          </slide-section>
+          {% render 'card-product',
+            card_product: closest.product,
+            section_id: section.id,
+            disable_hover_image: true,
+            disable_show_video: true,
+            disable_lazy_loading: true,
+            disable_badge: true,
+            disable_rate: true,
+            disable_tag: true,
+            disable_countdown: true,
+            disable_scrolling_text: true,
+            disable_color_swatches: true,
+            class: ' swiper-slide bg-secondary rounded-10 p-20',
+            style_layout: ' flex gap-10 align-center',
+            image_class: ' flex-auto w-custom rounded-10',
+            image_rounded: ' rounded-10',
+            info_class: ' flex-1 mt-0',
+            type: 'action_beside'
+          %}
+        </div>
+      </media-lightbox-popup>
+    </template>
   {% endif %}
 {% endif %}
 {% schema %}
