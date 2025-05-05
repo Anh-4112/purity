@@ -71,7 +71,7 @@
 {%- endcapture -%}
 
 <div
-  class="overflow-hidden section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
+  class="overflow-hidden section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' %} overflow-hidden{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -820,6 +820,10 @@
     "groups": ["header", "footer", "custom.overlay"]
   },
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.shopable_video.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

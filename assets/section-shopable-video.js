@@ -6,6 +6,7 @@ class ShopableVideo extends SlideSection {
   constructor() {
     super();
     this.innerWidth = window.innerWidth;
+    this.autoplayVideo = this.dataset.autoplayVideo === "true";
     this.initShopableVideo();
   }
 
@@ -14,6 +15,21 @@ class ShopableVideo extends SlideSection {
       this.handleCenterSlides();
     }
     window.addEventListener("resize", this.handleResize.bind(this));
+    const mediaQuery = window.matchMedia("(max-width: 1024.98px)");
+    const handleMediaQueryChange = (mediaQuery) => {
+      if (mediaQuery.matches) {
+        this.playActiveSlideVideo(this.swiper.activeIndex);
+      } else {
+        if (!this.autoplayVideo) {
+          this.pauseAllVideos();
+        }
+        if (this.classList.contains("swiper-slide-center")) {
+          this.updateCenterSlideClass();
+        }
+      }
+    };
+    handleMediaQueryChange(mediaQuery);
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
   }
 
   handleCenterSlides() {
@@ -39,17 +55,16 @@ class ShopableVideo extends SlideSection {
   }
 
   handleResize() {
+    const useCenterSlideMode = this.classList.contains("swiper-slide-center");
     this.innerWidth = window.innerWidth;
     if (this.innerWidth >= 1025) {
-      if (this.swiper) {
+      if (this.swiper && useCenterSlideMode) {
         this.updateCenterSlideClass();
       }
     } else {
       this.resetCenterSlideEffects();
     }
-    const autoplayVideo = this.dataset.autoplayVideo === "true";
-    if (!autoplayVideo || !this.swiper) return;
-    const useCenterSlideMode = this.classList.contains("swiper-slide-center");
+    if (!this.autoplayVideo || !this.swiper) return;
     if (useCenterSlideMode) {
       if (this.innerWidth >= 1025) {
         this.playCenterSlideVideo();
@@ -76,7 +91,6 @@ class ShopableVideo extends SlideSection {
   }
 
   updateCenterSlideClass() {
-    const autoplayVideo = this.dataset.autoplayVideo === "true";
     if (!this || !this.swiper) return;
 
     if (!this._animations) {
@@ -120,7 +134,7 @@ class ShopableVideo extends SlideSection {
         allSlides[centerIndex].classList.add("center-slide");
         const newCenterSlide = allSlides[centerIndex];
         const buttonPlay = newCenterSlide.querySelector(".play-button");
-        if (buttonPlay && autoplayVideo) {
+        if (buttonPlay && this.autoplayVideo) {
           buttonPlay.classList.add("active");
         }
         const video = newCenterSlide.querySelector("video-local");
@@ -159,7 +173,7 @@ class ShopableVideo extends SlideSection {
               const nonCenterVideoInner =
                 slide.querySelector(".video-item--ratio");
               const buttonPlay = slide.querySelector(".play-button");
-              if (buttonPlay && autoplayVideo) {
+              if (buttonPlay && this.autoplayVideo) {
                 buttonPlay.classList.remove("active");
               }
               if (nonCenterVideoInner && videoHeight) {
@@ -209,8 +223,7 @@ class ShopableVideo extends SlideSection {
   }
 
   setupVideoAutoplay() {
-    const autoplayVideo = this.dataset.autoplayVideo === "true";
-    if (!autoplayVideo || !this.swiper) return;
+    if (!this.swiper) return;
     const useCenterSlideMode = this.classList.contains("swiper-slide-center");
     if (useCenterSlideMode) {
       if (this.innerWidth >= 1025) {
@@ -223,9 +236,19 @@ class ShopableVideo extends SlideSection {
     }
     this.swiper.on("slideChangeTransitionEnd", () => {
       if (useCenterSlideMode) {
-        this.playCenterSlideVideo();
+        if (this.innerWidth >= 1025) {
+          this.playCenterSlideVideo();
+        } else {
+          this.playActiveSlideVideo(this.swiper.activeIndex);
+        }
       } else {
-        this.playActiveSlideVideo(this.swiper.activeIndex);
+        if (this.innerWidth >= 1025) {
+          if (this.autoplayVideo) {
+            this.playActiveSlideVideo(this.swiper.activeIndex);
+          }
+        } else {
+          this.playActiveSlideVideo(this.swiper.activeIndex);
+        }
       }
     });
     this.addEventListener("center-slide-updated", () => {
@@ -237,10 +260,12 @@ class ShopableVideo extends SlideSection {
 
   playCenterSlideVideo() {
     this.pauseAllVideos();
+    if (!this.autoplayVideo) return;
     const centerSlide = this.querySelector(".swiper-slide.center-slide");
     if (!centerSlide) return;
     const videoElement = centerSlide.querySelector("video-local video");
     if (videoElement) {
+      centerSlide.querySelector(".play-button").classList.add("active");
       videoElement.play();
     }
   }
@@ -585,8 +610,7 @@ class ShopableItem extends HTMLElement {
 
   openVideo() {
     if (
-      this.querySelector("video") &&
-      !this.classList.contains("active-video")
+      this.querySelector("video")
     ) {
       this.closest(".section-shopable-video")
         .querySelectorAll("shopable-item")
@@ -602,9 +626,6 @@ class ShopableItem extends HTMLElement {
         });
       this.querySelector("video").muted = true;
       this.querySelector("video").play();
-      if (this.innerWidth > 1199) {
-        this.classList.add("active-video");
-      }
     }
   }
 
@@ -765,7 +786,7 @@ class ShopableItem extends HTMLElement {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           swiperContainer.swiper.slideNext();
-        _self.updateCurrentSlideId(modalPopup, swiperContainer);
+          _self.updateCurrentSlideId(modalPopup, swiperContainer);
         }
       });
       prevButton.addEventListener("click", (e) => {
@@ -777,7 +798,7 @@ class ShopableItem extends HTMLElement {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           swiperContainer.swiper.slidePrev();
-        _self.updateCurrentSlideId(modalPopup, swiperContainer);
+          _self.updateCurrentSlideId(modalPopup, swiperContainer);
         }
       });
       if (!swiperContainer._hasSlideChangeHandler) {
@@ -849,6 +870,7 @@ class ShopableItem extends HTMLElement {
       modalPopup.setAttribute("data-loading", "true");
       modalPopup.setAttribute("data-current", productId);
       NextSkyTheme.eventModal(modalPopup, "open", true);
+      this.openVideo();
       const swiperContainer = modalPopup.querySelector("slide-section");
       if (swiperContainer) {
         if (!swiperContainer.swiper) {
