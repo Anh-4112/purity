@@ -124,7 +124,7 @@
           "name": "t:sections.all.product_setting.collapsible_row.name",
           "settings": {
             "heading": "Product Info",
-            "content": "<p>Collapsible content</p>",
+            "content": "{{ closest.product.description }}",
             "page": ""
           },
           "blocks": {}
@@ -134,7 +134,7 @@
           "name": "t:sections.all.product_setting.collapsible_row.name",
           "settings": {
             "heading": "How to Use",
-            "content": "<p>Collapsible content</p>",
+            "content": "<p>{{ closest.product.metafields.custom.how_to_use | metafield_tag }}</p>",
             "page": ""
           },
           "blocks": {}
@@ -144,7 +144,7 @@
           "name": "t:sections.all.product_setting.collapsible_row.name",
           "settings": {
             "heading": "Ingredients",
-            "content": "<p>Collapsible content</p>",
+            "content": "<p>{{ closest.product.metafields.custom.ingredient_highlights | metafield_tag }}</p>",
             "page": ""
           },
           "blocks": {}
@@ -768,7 +768,7 @@
         "section_width": "fix_width",
         "color_scheme": "",
         "subheading": "",
-        "title": "Others Also Bought",
+        "heading": "Featured collection",
         "description": "<p>Check out similar products people are loving. Click to explore trending styles.</p>",
         "heading_size": "medium",
         "text_alignment": "center",
