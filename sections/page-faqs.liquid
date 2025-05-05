@@ -31,7 +31,10 @@
     >
       {% if show_faqs_message %}
         <div class="contact_form-field w-full col-1025-w-custom bg-secondary p-20 p-1025-40 h-content rounded sticky-1025 top-20 transition">
-          {%- if section_st.heading != blank or section_st.description != blank or section_st.highlight_text != blank -%}
+          {%- if section_st.heading != blank
+            or section_st.description != blank
+            or section_st.highlight_text != blank
+          -%}
             <div
               class="text-{{ section_st.text_alignment }} mb-30"
             >
@@ -195,7 +198,7 @@
   </div>
 </section>
 <script type="module">
-  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
 
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({

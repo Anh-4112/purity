@@ -79,10 +79,14 @@
                           {%- endif -%}
                         </div>
                       {%- endif -%}
-                      {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
+                      {%- form 'customer',
+                        id: 'ContactFooter',
+                        class: 'footer__newsletter newsletter-form',
+                        novalidate: 'novalidate'
+                      -%}
                         <input type="hidden" name="contact[tags]" value="newsletter">
                         <div class="newsletter-form__field-wrapper mb-20">
-                          <div class="field">
+                          <div class="field relative">
                             <div class="flex gap-10">
                               <input
                                 id="NewsletterForm--{{ section.id }}"
@@ -109,24 +113,16 @@
                                 <span class="required">*</span></label
                               >
                               <button
-                                type="submit"
                                 class="newsletter-form__button btn pointer p-0 btn-primary btn-hover wh-55"
-                                name="commit"
                                 id="Subscribe-{{ section.id }}"
                                 aria-label="{{ 'subscribe.button_label' | t }}"
                               >
-                                <svg class="hidden-on-load" width="6" height="11" fill="none">
-                                  <use href="#icon-next" />
-                                </svg>
-                                <svg
-                                  width="14"
-                                  height="14"
-                                  viewBox="0 0 14 14"
-                                  fill="none"
-                                  class="spin opacity-0 pointer-none icon-load absolute"
-                                >
-                                  <use href="#icon-load"></use>
-                                </svg>
+                                <span class="hidden-on-load transition-short">
+                                  <svg width="6" height="11" fill="none">
+                                    <use href="#icon-next" />
+                                  </svg>
+                                </span>
+                                {%- render 'loader' -%}
                               </button>
                             </div>
                           </div>
@@ -354,17 +350,19 @@
   </div>
 </footer>
 <script type="module">
-  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form#ContactFooter',
       fields: {
-        email: (value) =>
-          !value
+        'contact[email]': (value) => {
+          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          return !value
             ? '{{ "customer.validate.email" | t }}'
-            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            : !emailRegex.test(value)
             ? '{{ "customer.validate.email_invalid" | t }}'
-            : '',
+            : '';
+        },
       },
     });
   });
