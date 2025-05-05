@@ -64,6 +64,7 @@
   if remainder == 1
     assign center_slide = true
   endif
+  assign animate_delay = 25
 -%}
 {%- capture style -%}
       --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--width: 5rem;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
@@ -80,9 +81,10 @@
       >
         {%- if section_st.subheading != blank -%}
           {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
             <motion-effect
               data-animate="fade-up"
-              data-animate-delay="30"
+              data-animate-delay="{{ animate_delay }}"
               class="block"
             >
           {% endif %}
@@ -95,9 +97,10 @@
         {%- endif -%}
         {%- if section_st.title != blank -%}
           {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
             <motion-effect
               data-animate="fade-up"
-              data-animate-delay="35"
+              data-animate-delay="{{ animate_delay }}"
               class="block"
             >
           {% endif %}
@@ -110,9 +113,10 @@
         {%- endif -%}
         {%- if section_st.description != blank -%}
           {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
             <motion-effect
               data-animate="fade-up"
-              data-animate-delay="40"
+              data-animate-delay="{{ animate_delay }}"
               class="block"
             >
           {% endif %}

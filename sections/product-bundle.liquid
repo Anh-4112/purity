@@ -31,6 +31,7 @@
     assign column_gap_slide = 10
     assign column_gap_mb = 5
   endif
+  assign animate_delay = 25
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }}; --col-width: clamp(30%, 20vw, 46rem);
@@ -47,9 +48,10 @@
       >
         {%- if section_st.subheading != blank -%}
           {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
             <motion-effect
               data-animate="fade-up"
-              data-animate-delay="30"
+              data-animate-delay="{{ animate_delay }}"
               class="block"
             >
           {% endif %}
@@ -62,9 +64,10 @@
         {%- endif -%}
         {%- if section_st.title != blank -%}
           {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
             <motion-effect
               data-animate="fade-up"
-              data-animate-delay="35"
+              data-animate-delay="{{ animate_delay }}"
               class="block"
             >
           {% endif %}
@@ -77,9 +80,10 @@
         {%- endif -%}
         {%- if section_st.description != blank -%}
           {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
             <motion-effect
               data-animate="fade-up"
-              data-animate-delay="40"
+              data-animate-delay="{{ animate_delay }}"
               class="block"
             >
           {% endif %}
