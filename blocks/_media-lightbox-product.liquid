@@ -50,7 +50,7 @@
         {%- for media in closest.product.metafields.custom.media_lightbox.value -%}
           <div class="swiper-slide">
             {%- assign image_alt = media.alt | default: closest.product.title | escape -%}
-            <div class="media-lightbox-item">
+            <div class="media-lightbox-item zoom-in">
               <video-local-lightbox
                 tabindex="0"
                 data-position="{{ forloop.index | minus: 1 }}"
@@ -95,16 +95,16 @@
         role="dialog"
       >
         <div
-          class="modal-focus"
+          class="modal-popup-inner flex column modal-focus h-content transition modal-draggable rounded max-w-custom m-auto invisible-1025 fixed right-30 bottom-30 z-22 bg-white w-full"
           tabindex="-1"
-          style="--max-width: 30rem;"
+          style="--max-width: 30rem;--width: 4.6rem; --height: 4.6rem;--swiper-navigation-size: 4.6rem;--position-arrow: static;"
         >
           <button
-            class="modal__close"
+            class="modal__close absolute pointer btn-hover overflow-hidden btn-reset w-custom h-custom bg-white blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow color-white"
             aria-label="Close"
           >
-            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
-              <path d="M0.282609 2.06784C0.0942029 1.89363 0 1.68314 0 1.43635C0 1.17504 0.0942029 0.950028 0.282609 0.761307C0.456522 0.587102 0.673913 0.5 0.934783 0.5C1.19565 0.5 1.41304 0.587102 1.58696 0.761307L6.5 5.68258L11.413 0.761307C11.587 0.587102 11.8043 0.5 12.0652 0.5C12.3261 0.5 12.5435 0.587102 12.7174 0.761307C12.9058 0.950028 13 1.17504 13 1.43635C13 1.68314 12.9058 1.89363 12.7174 2.06784L7.80435 6.98911L12.7174 11.9104C12.9058 12.0991 13 12.3241 13 12.5854C13 12.8322 12.9058 13.0427 12.7174 13.2169C12.5435 13.4056 12.3261 13.5 12.0652 13.5C11.8043 13.5 11.587 13.4056 11.413 13.2169L6.5 8.31742L1.58696 13.2169C1.41304 13.4056 1.19565 13.5 0.934783 13.5C0.673913 13.5 0.456522 13.4056 0.282609 13.2169C0.0942029 13.0427 0 12.8322 0 12.5854C0 12.3241 0.0942029 12.0991 0.282609 11.9104L5.19565 6.98911L0.282609 2.06784Z" fill="currentColor"></path>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M0.217391 1.20603C0.0724638 1.07203 0 0.910106 0 0.720268C0 0.519263 0.0724638 0.346175 0.217391 0.201005C0.351171 0.0670017 0.518395 0 0.719064 0C0.919732 0 1.08696 0.0670017 1.22074 0.201005L5 3.9866L8.77926 0.201005C8.91304 0.0670017 9.08027 0 9.28094 0C9.48161 0 9.64883 0.0670017 9.78261 0.201005C9.92754 0.346175 10 0.519263 10 0.720268C10 0.910106 9.92754 1.07203 9.78261 1.20603L6.00334 4.99162L9.78261 8.77722C9.92754 8.92239 10 9.09548 10 9.29648C10 9.48632 9.92754 9.64824 9.78261 9.78224C9.64883 9.92741 9.48161 10 9.28094 10C9.08027 10 8.91304 9.92741 8.77926 9.78224L5 6.0134L1.22074 9.78224C1.08696 9.92741 0.919732 10 0.719064 10C0.518395 10 0.351171 9.92741 0.217391 9.78224C0.0724638 9.64824 0 9.48632 0 9.29648C0 9.09548 0.0724638 8.92239 0.217391 8.77722L3.99666 4.99162L0.217391 1.20603Z" fill="white"/>
             </svg>
           </button>
           <slide-section
@@ -118,26 +118,26 @@
             data-mobile="1"
             data-desktop="1"
             data-tablet="1"
-            style="height: 800px;"
           >
             {%- render 'swiper-navigation' -%}
             <div class="swiper-wrapper">
               {%- for media in closest.product.metafields.custom.media_lightbox.value -%}
                 <div class="swiper-slide">
                   {%- assign image_alt = media.alt | default: closest.product.title | escape -%}
-                  <div class="media-lightbox-item">
+                  <div class="media-lightbox-item h-full">
                     {% if media.media_type == 'video' -%}
-                      <video-lightbox-item>
+                      <video-lightbox-item class="h-full">
                         <button
                           aria-label="{{ 'accessibility.play_button.video' | t }}"
-                          class="play-button play-button-popup active"
+                          class="play-button play-button-popup active absolute inset-0 m-auto btn-reset w-custom h-custom bg-white blur rounded-50 z-1 pointer inline-flex content-center"
+                          style="--width: 5rem; --height: 5rem;"
                         >
                           {% render 'icon-play' %}
                           {% render 'icon-pause' %}
                         </button>
                         <button
                           aria-label="{{ 'accessibility.mute_button.video' | t }}"
-                          class="mute-button mute-button-popup"
+                          class="mute-button mute-button-popup absolute right-10 bottom-10 btn-reset bg-white blur w-custom h-custom rounded-50 z-1 pointer"
                         >
                           {% render 'icon-mute-open' %}
                           {% render 'icon-mute-close' %}
@@ -164,7 +164,7 @@
                         ></video>
                       </video-lightbox-item>
                     {% else %}
-                      {% render 'responsive-image', type: 'banner', image: media, image_alt: image_alt, class="rounded-10" %}
+                      {% render 'responsive-image', type: 'banner', image: media, image_alt: image_alt, class="rounded-10 h-full" %}
                     {% endif %}
                   </div>
                 </div>
@@ -183,10 +183,10 @@
             disable_countdown: true,
             disable_scrolling_text: true,
             disable_color_swatches: true,
-            class: ' swiper-slide bg-secondary rounded-10 p-20',
+            class: ' swiper-slide bg-white rounded-10 absolute z-2',
             style_layout: ' flex gap-10 align-center',
-            image_class: ' flex-auto w-custom rounded-10',
-            image_rounded: ' rounded-10',
+            image_class: ' flex-auto w-custom rounded-0',
+            image_rounded: ' rounded-0',
             info_class: ' flex-1 mt-0',
             type: 'action_beside'
           %}

@@ -1089,7 +1089,7 @@ blockquote {
     z-index: 1;
     pointer-events: none;
   }
-  .btn__quick-shop.bg-white > span {
+  .btn__quick-shop.bg-white span {
     z-index: 2;
   }
   .shopify-payment-button__button--unbranded:hover:not([disabled]) {
@@ -1849,4 +1849,36 @@ scroll-offer {
   100% {
     transform: scale(1, 1) translateZ(0);
   }
+}
+.media-lightbox-item > *,
+video-lightbox-item video {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+}
+media-lightbox-popup .bg-white {
+  --swiper-navigation-color: #fff;
+}
+:is(.mute-button, .play-button) :where(.icon-pause, .mute-close) {
+  display: none;
+}
+:is(.mute-button, .play-button).active :where(.icon-pause, .mute-close) {
+  display: inline-block;
+}
+:is(.mute-button, .play-button).active :where(.icon-play, .mute-open) {
+  display: none;
+}
+.play-button,
+.play-button svg {
+  color: rgb(var(--color-white)) !important;
+}
+media-lightbox-popup .swiper-actions {
+  position: absolute;
+}
+media-lightbox-popup .product-item {
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  width: auto;
+  height: auto;
 }
