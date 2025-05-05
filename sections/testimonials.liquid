@@ -1,6 +1,8 @@
 <script type="module" src="{{ 'section-testimonials.js' | asset_url }}"></script>
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -42,19 +44,49 @@
     {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div class="section-header section-header__in-section d-block text-{{ section_st.text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}">
         {%- if section_st.subheading != blank -%}
-          <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight fs-big-2">
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="30"
+              class="block"
+            >
+          {% endif %}
+          <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
             {{ section_st.subheading }}
           </div>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.title != blank -%}
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="35"
+              class="block"
+            >
+          {% endif %}
           <h2 class="block section-heading {{ header_size }}">
             {{ section_st.title }}
           </h2>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.description != blank -%}
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="40"
+              class="block"
+            >
+          {% endif %}
           <div class="section-description mt-15 prose">
             {{ section_st.description }}
           </div>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
       </div>
     {%- endif -%}

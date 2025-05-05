@@ -1,5 +1,7 @@
 {%- liquid
   assign section_st = section.settings
+  assign theme_st = settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -236,40 +238,58 @@
               %}
               {% case block.type %}
                 {% when 'heading' %}
-                  <motion-effect
-                    data-animate="fade-up"
-                    data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
-                    class="block"
+                  {% if scroll_animation %}
+                    <motion-effect
+                      data-animate="fade-up"
+                      data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
+                      class="block"
+                    >
+                  {% endif %}
+                  <div
+                    class="block__heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
+                    style="--space-bottom: {{ block_st.spacing_bottom }};"
+                    {{ block.shopify_attributes }}
                   >
-                    <div
-                      class="block__heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
+                    {{ block_st.heading }}
+                  </div>
+                  {% if scroll_animation %}
+                    </motion-effect>
+                  {% endif %}
+                {% when 'subheading' %}
+                  {% if scroll_animation %}
+                    <motion-effect
+                      data-animate="left-to-right"
+                      data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
+                      class="block"
+                    >
+                  {% endif %}
+                  <div
+                    class="block__highlight_text subheading_weight lh-normal inline-flex gap-5 content-center mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-8 px-15 btn-rounded{% endif %}"
+                    style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
+                    {{ block.shopify_attributes }}
+                  >
+                    {%- if block_st.highlight_text_icon == 'star' -%}
+                      {%- render 'icon-star' -%}
+                    {%- elsif block_st.highlight_text_icon == 'dot' -%}
+                      {%- render 'icon-dot' -%}
+                    {%- endif -%}
+                    {{ block_st.highlight_text | escape }}
+                  </div>
+                  {% if scroll_animation %}
+                    </motion-effect>
+                  {% endif %}
+                {% when 'description' %}
+                  {% if scroll_animation %}
+                    <motion-effect
+                      class="block__description block relative z-2 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
                       style="--space-bottom: {{ block_st.spacing_bottom }};"
                       {{ block.shopify_attributes }}
+                      data-animate="fade-up"
+                      data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
+                      class="block"
                     >
-                      {{ block_st.heading }}
-                    </div>
-                  </motion-effect>
-                {% when 'subheading' %}
-                  <motion-effect
-                    data-animate="left-to-right"
-                    data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
-                    class="block"
-                  >
-                    <div
-                      class="block__highlight_text subheading_weight lh-normal inline-flex gap-5 content-center mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-8 px-15 btn-rounded{% endif %}"
-                      style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
-                      {{ block.shopify_attributes }}
-                    >
-                      {%- if block_st.highlight_text_icon == 'star' -%}
-                        {%- render 'icon-star' -%}
-                      {%- elsif block_st.highlight_text_icon == 'dot' -%}
-                        {%- render 'icon-dot' -%}
-                      {%- endif -%}
-                      {{ block_st.highlight_text | escape }}
-                    </div>
-                  </motion-effect>
-                {% when 'description' %}
-                  <motion-effect
+                  {% endif %}
+                  <div
                     class="block__description block relative z-2 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
                     style="--space-bottom: {{ block_st.spacing_bottom }};"
                     {{ block.shopify_attributes }}
@@ -282,7 +302,10 @@
                       | replace: '[title]', title_replace
                       | replace: '[collection]', replace_collection
                     }}
-                  </motion-effect>
+                  </div>
+                  {% if scroll_animation %}
+                    </motion-effect>
+                  {% endif %}
                 {% when 'button' %}
                   {% liquid
                     assign first_button_label = block_st.first_button_label
@@ -292,49 +315,53 @@
                     assign second_button_type = block_st.second_button_type
                   %}
                   {% if first_button_label != blank or block_st.second_button_label != blank %}
-                    <motion-effect
-                      data-animate="fade-up"
-                      data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
-                      class="block"
-                    >
-                      <div
-                        class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap gap text-center {% if section_content_alignment %} justify-content-{{ section_content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
-                        style="--space-bottom: {{ block_st.spacing_bottom }};--gap-desktop: 30px; --gap: 20px;"
+                    {% if scroll_animation %}
+                      <motion-effect
+                        data-animate="fade-up"
+                        data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
+                        class="block"
                       >
-                        {% if first_button_label != blank %}
-                          <a
-                            {% if url_default == blank %}
-                              role="link" aria-disabled="true"
-                            {% else %}
-                              href="{{ url_default | default: "#" }}"
-                            {% endif %}
-                            aria-label="{{ first_button_label }}"
-                            class="btn-change-url btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
-                            {% if first_button_type != 'link' %}
-                              style="--width: 20rem;"
-                            {% endif %}
-                          >
-                            {{ first_button_label }}
-                          </a>
-                        {% endif %}
-                        {% if second_button_label != blank %}
-                          <a
-                            {% if second_button_link == blank %}
-                              role="link" aria-disabled="true"
-                            {% else %}
-                              href="{{ second_button_link | default: "#" }}"
-                            {% endif %}
-                            aria-label="{{ second_button_label }}"
-                            class="btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
-                            {% if second_button_type != 'link' %}
-                              style="--width: 20rem;"
-                            {% endif %}
-                          >
-                            {{ second_button_label }}
-                          </a>
-                        {% endif %}
-                      </div>
-                    </motion-effect>
+                    {% endif %}
+                    <div
+                      class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap gap text-center {% if section_content_alignment %} justify-content-{{ section_content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
+                      style="--space-bottom: {{ block_st.spacing_bottom }};--gap-desktop: 30px; --gap: 20px;"
+                    >
+                      {% if first_button_label != blank %}
+                        <a
+                          {% if url_default == blank %}
+                            role="link" aria-disabled="true"
+                          {% else %}
+                            href="{{ url_default | default: "#" }}"
+                          {% endif %}
+                          aria-label="{{ first_button_label }}"
+                          class="btn-change-url btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
+                          {% if first_button_type != 'link' %}
+                            style="--width: 20rem;"
+                          {% endif %}
+                        >
+                          {{ first_button_label }}
+                        </a>
+                      {% endif %}
+                      {% if second_button_label != blank %}
+                        <a
+                          {% if second_button_link == blank %}
+                            role="link" aria-disabled="true"
+                          {% else %}
+                            href="{{ second_button_link | default: "#" }}"
+                          {% endif %}
+                          aria-label="{{ second_button_label }}"
+                          class="btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
+                          {% if second_button_type != 'link' %}
+                            style="--width: 20rem;"
+                          {% endif %}
+                        >
+                          {{ second_button_label }}
+                        </a>
+                      {% endif %}
+                    </div>
+                    {% if scroll_animation %}
+                      </motion-effect>
+                    {% endif %}
                   {% endif %}
               {% endcase %}
             {% endfor %}
