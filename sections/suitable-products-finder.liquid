@@ -57,6 +57,7 @@
   assign image_collection_width = section_st.image_collection_width
   assign width_range_slider = image_collection_width | times: block_size | plus: total_gap_size
   assign space_left = image_collection_width | minus: size_dot_range_slider | divided_by: 2
+  assign animate_delay = 25
 -%}
 {%- capture style -%} --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--image-collection-width: {{ image_collection_width }}px;--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
@@ -103,9 +104,10 @@
       >
         {%- if section_st.subheading != blank -%}
           {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
             <motion-effect
               data-animate="fade-up"
-              data-animate-delay="30"
+              data-animate-delay="{{ animate_delay }}"
               class="block"
             >
           {% endif %}
@@ -118,9 +120,10 @@
         {%- endif -%}
         {%- if section_st.title != blank -%}
           {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
             <motion-effect
               data-animate="fade-up"
-              data-animate-delay="35"
+              data-animate-delay="{{ animate_delay }}"
               class="block"
             >
           {% endif %}
@@ -133,9 +136,10 @@
         {%- endif -%}
         {%- if section_st.description != blank -%}
           {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
             <motion-effect
               data-animate="fade-up"
-              data-animate-delay="40"
+              data-animate-delay="{{ animate_delay }}"
               class="block"
             >
           {% endif %}
