@@ -3,11 +3,13 @@ function initSlide(_this) {
   const loop = _this?.dataset.loop === "true";
   const itemDesktop = _this?.dataset.desktop ? _this?.dataset.desktop : 4;
   const freeMode = _this?.dataset.freeMode === "true";
+  const mousewheel = _this?.dataset.mousewheel === "true";
   let itemTablet = _this?.dataset.tablet ? _this?.dataset.tablet : "";
   const itemMobile = _this?.dataset.mobile ? _this?.dataset.mobile : 1;
   const direction = _this?.dataset.direction
     ? _this?.dataset.direction
     : "horizontal";
+  const heightAuto = _this?.dataset.heightAuto === "true";
   let autoPlaySpeed = _this?.dataset.autoPlaySpeed
     ? _this?.dataset.autoPlaySpeed
     : 3000;
@@ -35,7 +37,7 @@ function initSlide(_this) {
       itemTablet = 3;
     }
   }
-  if (direction == "vertical") {
+  if (direction == "vertical" && heightAuto) {
     _this.style.maxHeight = _this.offsetHeight + "px";
   }
   let nextEl = _this.querySelector(".swiper-button-next");
@@ -50,6 +52,7 @@ function initSlide(_this) {
   new Swiper(_this, {
     slidesPerView: freeMode ? "auto" : autoItem ? "auto" : itemMobile,
     spaceBetween: freeMode ? spacing : spacing >= 10 ? 10 : spacing,
+    mousewheel: mousewheel,
     autoplay: autoplay,
     direction: direction,
     loop: loop,
