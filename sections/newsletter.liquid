@@ -25,7 +25,7 @@
   
 {%- endcapture -%}
 <div
-  class="section section__newsletter color-{{ section_st.color_scheme }} gradient"
+  class="section section__newsletter color-{{ section_st.color_scheme }} gradient{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -142,7 +142,7 @@
   </div>
 </div>
 <script type="module">
-  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
 
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
@@ -297,6 +297,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "presets": [
