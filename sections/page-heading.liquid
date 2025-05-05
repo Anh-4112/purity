@@ -1,5 +1,7 @@
 {% liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -18,12 +20,20 @@
 >
   <div class="{{ section_width }}">
     <div class="section_header">
+      {% assign animate_delay = 25 %}
       {% for block in section.blocks %}
         {%- liquid
           assign block_st = block.settings
         -%}
         {% case block.type %}
           {% when 'heading' %}
+            {%- if scroll_animation -%}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
+              >
+            {%- endif -%}
             <h1 class="heading-title">
               {% if block_st.heading != blank %}
                 {{ block_st.heading }}
@@ -31,7 +41,18 @@
                 {{ page.title }}
               {% endif %}
             </h1>
+            {%- if scroll_animation -%}
+              </motion-effect>
+            {%- endif -%}
           {% when 'description' %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            {%- if scroll_animation -%}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
+              >
+            {%- endif -%}
             {%- if block_st.description != blank -%}
               <div class="heading-description mt-15 prose">
                 {{ block_st.description }}
@@ -40,6 +61,9 @@
               <div class="heading-description mt-15 rte">
                 {{ page.content }}
               </div>
+            {%- endif -%}
+            {%- if scroll_animation -%}
+              </motion-effect>
             {%- endif -%}
         {% endcase %}
       {% endfor %}
