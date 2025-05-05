@@ -6,6 +6,7 @@
   assign section_st = section.settings
 
   assign product_image_ratio = theme_st.product_image_ratio
+  assign scroll_animation = theme_st.scroll_animation
 
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
@@ -78,37 +79,49 @@
         class="section-header text-{{ text_alignment }}"
       >
         {%- if section_st.subheading != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="30"
-            class="block"
-          >
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="30"
+              class="block"
+            >
+          {% endif %}
           <div class="section-subheading subheading_weight">
             {{ section_st.subheading }}
           </div>
-          </motion-effect>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.title != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="35"
-            class="block"
-          >
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="35"
+              class="block"
+            >
+          {% endif %}
           <h2 class="block section-heading {{ header_size }}">
             {{ section_st.title }}
           </h2>
-          </motion-effect>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="40"
-            class="block"
-          >
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="40"
+              class="block"
+            >
+          {% endif %}
           <div class="section-description mt-15 prose">
             {{ section_st.description }}
           </div>
-          </motion-effect>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -172,7 +185,6 @@
             %}
             <div class="swiper-slide" {{ block.shopify_attributes }}>
               <shopable-item
-                tabindex="0"
                 class="pointer rounded block"
                 data-product="Product-{{ block.id }}"
                 data-position="{{ forloop.index | minus: 1 }}"
@@ -182,6 +194,7 @@
                     <video-local
                       class="video-item--ratio rounded block"
                       style="--aspect-ratio: {{ video_ratio }};"
+                      tabindex="0"
                     >
                       {% if local_video != blank %}
                         {%- liquid
@@ -268,6 +281,7 @@
                     disable_badge: true,
                     disable_rate: true,
                     disable_vendor: true,
+                    disable_tag: true,
                     disable_hover_image: true,
                     show_quick_add: true,
                     disable_color_swatches: true,
@@ -400,6 +414,7 @@
         <div
           class="modal-popup-inner modal-focus h-content h-content transition-drawer max-w-custom m-auto invisible-1025 fixed inset-0 z-20 w-full"
           style="--max-width: 80rem;"
+          tabindex="-1"
         >
           <div class="modal-nav hidden block-1025 transition">
             {%- render 'swiper-navigation' -%}
