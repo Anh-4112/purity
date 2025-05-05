@@ -11,10 +11,10 @@
   assign color_swatch_custom = theme_st.color_swatch_custom
   assign color_swatch_shape = theme_st.color_swatch_shape
 %}
-<facet-filters-form>
+<facet-filters-form class="flex column h-full">
   <form
     id="{% if filter_layout == 'drawer' %}FacetFiltersFormDrawer{% else %}FacetFiltersForm{% endif %}"
-    class="flex column gap filters-form{% if filter_layout == 'drawer' %} drawer-spacing{% endif %}"
+    class="flex column gap grow-1 filters-form{% if filter_layout == 'drawer' %} drawer-spacing{% endif %}"
     style="--gap: 2rem;--checkmark_width: 2rem;--checkmark_rounded: 3px;--checkmark_top: 3px;--check_position: 45%;"
   >
     {%- if results.terms -%}
