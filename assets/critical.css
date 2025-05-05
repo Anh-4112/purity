@@ -1965,6 +1965,10 @@ quantity-input input {
   .w-1025-50-percent {
     width: 50%;
   }
+  .text-left-1025,
+  .text-1025-start {
+    text-align: start;
+  }
 }
 .pt-0 {
   padding-top: 0;
@@ -2069,18 +2073,20 @@ th {
   opacity: 1;
 }
 .multimedia_with_text__block {
-  width: 7.6rem;
+  width: 5rem;
 }
 .multimedia_with_text__block.active {
-  width: 15rem;
+  width: 13rem;
 }
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 390px) {
   .multimedia_with_text__block {
-    width: 10rem;
+    width: clamp(7.6rem, 8vw, 10rem);
   }
   .multimedia_with_text__block.active {
-    width: 18rem;
+    width: clamp(15rem, 12vw, 18rem);
   }
+}
+@media screen and (min-width: 768px) {
   .drawer-mb-bottom {
     transform: translateY(100%);
     will-change: transform;

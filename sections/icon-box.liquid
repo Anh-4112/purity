@@ -52,7 +52,7 @@
   >
     {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div
-        class="section-header text-{{ section_st.alignment }}"
+        class="section-header text-{{ section_st.alignment }} mb-30 mb-md-40"
       >
         {%- if section_st.subheading != blank -%}
           <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
@@ -93,7 +93,7 @@
             assign icon_position = section_st.icon_position
           -%}
           <div
-            class="motion-item {% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
+            class="motion-item {% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-15 gap-md-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
             style="---width: {{ section_st.icon_size }}px;"
           >
             <div
