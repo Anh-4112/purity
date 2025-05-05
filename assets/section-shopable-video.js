@@ -761,10 +761,24 @@ class ShopableItem extends HTMLElement {
         swiperContainer.swiper.slideNext();
         _self.updateCurrentSlideId(modalPopup, swiperContainer);
       });
+      nextButton.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          swiperContainer.swiper.slideNext();
+        _self.updateCurrentSlideId(modalPopup, swiperContainer);
+        }
+      });
       prevButton.addEventListener("click", (e) => {
         e.preventDefault();
         swiperContainer.swiper.slidePrev();
         _self.updateCurrentSlideId(modalPopup, swiperContainer);
+      });
+      prevButton.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          swiperContainer.swiper.slidePrev();
+        _self.updateCurrentSlideId(modalPopup, swiperContainer);
+        }
       });
       if (!swiperContainer._hasSlideChangeHandler) {
         swiperContainer.swiper.on("slideChange", () => {

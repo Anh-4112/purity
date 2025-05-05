@@ -172,7 +172,6 @@
             %}
             <div class="swiper-slide" {{ block.shopify_attributes }}>
               <shopable-item
-                tabindex="0"
                 class="pointer rounded block"
                 data-product="Product-{{ block.id }}"
                 data-position="{{ forloop.index | minus: 1 }}"
@@ -182,6 +181,7 @@
                     <video-local
                       class="video-item--ratio rounded block"
                       style="--aspect-ratio: {{ video_ratio }};"
+                      tabindex="0"
                     >
                       {% if local_video != blank %}
                         {%- liquid
@@ -268,6 +268,7 @@
                     disable_badge: true,
                     disable_rate: true,
                     disable_vendor: true,
+                    disable_tag: true,
                     disable_hover_image: true,
                     show_quick_add: true,
                     disable_color_swatches: true,
@@ -400,6 +401,7 @@
         <div
           class="modal-popup-inner modal-focus h-content h-content transition-drawer max-w-custom m-auto invisible-1025 fixed inset-0 z-20 w-full"
           style="--max-width: 80rem;"
+          tabindex="-1"
         >
           <div class="modal-nav hidden block-1025 transition">
             {%- render 'swiper-navigation' -%}
