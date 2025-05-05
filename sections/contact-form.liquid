@@ -1,5 +1,7 @@
 {% liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   assign contact_id = 'ContactForm-' | append: section.id
 %}
 {%- capture style -%}
@@ -7,52 +9,46 @@
 {%- endcapture -%}
 
 <div
-  class="color-{{ section_st.color_scheme }} gradient section stretch_width flex column content-center w-full max-w-custom-all mx-auto"
+  class="color-{{ section_st.color_scheme }} gradient section stretch_width flex column content-center w-full max-w-custom-all mx-auto{% if section_st.show_divider %} border-top {% endif %}"
   style="{{ style | strip | strip_newlines }}--max-width: 78rem;--bs-gutter-x: 3rem;"
 >
   <div class="contact_form-inner">
-    {% for block in section.blocks %}
-      {%- liquid
-        assign block_st = block.settings
-        assign heading_text_block = block_st.heading_text_block
-        assign description_text_block = block_st.description_text_block
-        assign content = block_st.content
-      -%}
-      {% case block.type %}
-        {% when 'text_block' %}
-          {% if heading_text_block != blank or description_text_block != blank or content != blank %}
-            <div class="support_customer w-full col-md-w-custom">
-              <div class="contact_header">
-                {% if heading_text_block != blank %}
-                  <h2 class="section__header-heading">{{ heading_text_block }}</h2>
-                {% endif %}
-                {% if description_text_block != blank %}
-                  <div class="section__header-des">
-                    {{ description_text_block }}
-                  </div>
-                {% endif %}
-              </div>
-              {% if content != blank %}
-                {{ content }}
-              {% endif %}
-            </div>
-          {% endif %}
-      {% endcase %}
-    {% endfor %}
-    <div class="contact_form-field w-full{% for block in section.blocks %}{% case block.type %}{% when 'text_block' %}{% if heading_text_block != blank or description_text_block != blank or content != blank %} col-md-remaining{% endif %}{% endcase %}{% endfor %}">
+    <div class="contact_form-field w-full">
       {%- if section_st.heading != blank or section_st.description != blank -%}
+        {% assign animate_delay = 25 %}
         <div
           class="section-header text-{{ section_st.text_alignment }}"
         >
           {%- if section_st.heading != blank -%}
+            {% if scroll_animation %}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
+              >
+            {% endif %}
             <h2 class="section-heading">{{ section_st.heading }}</h2>
+            {% if scroll_animation %}
+              </motion-effect>
+            {% endif %}
           {%- endif -%}
           {%- if section_st.description != blank -%}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            {% if scroll_animation %}
+              <motion-effect
+                data-animate="fade-up"
+                data-animate-delay="{{ animate_delay }}"
+                class="block"
+              >
+            {% endif %}
             <div
               class="short-des mt-15 prose"
             >
               {{ section_st.description }}
             </div>
+            {% if scroll_animation %}
+              </motion-effect>
+            {% endif %}
           {%- endif -%}
         </div>
       {%- endif -%}
@@ -161,15 +157,12 @@
           <div class="field relative w-full flex wrap mb-20">
             <select
               id="ContactFormSubject-{{ section.id }}"
-              class="field__input w-full"
+              class="field__input w-full contact-form-subject"
               name="contact[subject]"
               required
             >
               <option value="" disabled selected>{{ 'templates.contact.subject.name' | t }}</option>
-              <option value="product">{{ 'templates.contact.subject.product' | t }}</option>
-              <option value="order">{{ 'templates.contact.subject.order' | t }}</option>
-              <option value="press">{{ 'templates.contact.subject.press' | t }}</option>
-              <option value="other">{{ 'templates.contact.subject.other' | t }}</option>
+              <select-contact text="{{ section_st.option_select }}"></select-contact>
             </select>
             <label for="ContactFormSubject-{{ section.id }}" class="visually-hidden">
               {{ 'templates.contact.subject.name' | t }}
@@ -253,6 +246,10 @@
   "class": "section",
   "settings": [
     {
+      "type": "paragraph",
+      "content": "t:sections.contact-form.how_to_use"
+    },
+    {
       "type": "header",
       "content": "t:sections.all.general"
     },
@@ -328,6 +325,12 @@
       "default": "Send message"
     },
     {
+      "type": "text",
+      "id": "option_select",
+      "label": "t:sections.contact-form.settings.option",
+      "default": "Product, Order, Press, Other"
+    },
+    {
       "type": "header",
       "content": "t:sections.all.padding.section_padding_heading"
     },
@@ -350,6 +353,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ]
 }

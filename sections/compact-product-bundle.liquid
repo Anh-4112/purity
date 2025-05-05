@@ -1,7 +1,9 @@
 {{ 'section-compact-product-bundle.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'section-compact-product-bundle.js' | asset_url }}" defer="defer"></script>
 {% liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -48,6 +50,7 @@
 
   assign text_alignment = section_st.text_alignment
   assign enable_quick_add = section_st.enable_quick_add
+  assign animate_delay = 25
 %}
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -142,176 +145,196 @@
             class="section-header text-{{ text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}"
           >
             {%- if section_st.subheading != blank -%}
-              <motion-effect
-                data-animate="fade-up"
-                data-animate-delay="30"
-                class="block"
-              >
-                <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
-                  {{ section_st.subheading }}
-                </div>
-              </motion-effect>
+              {% if scroll_animation %}
+                {% assign animate_delay = animate_delay | plus: 5 %}
+                <motion-effect
+                  data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
+                  class="block"
+                >
+              {% endif %}
+              <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
+                {{ section_st.subheading }}
+              </div>
+              {% if scroll_animation %}
+                </motion-effect>
+              {% endif %}
             {%- endif -%}
             {%- if section_st.title != blank -%}
-              <motion-effect
-                data-animate="fade-up"
-                data-animate-delay="35"
-                class="block"
-              >
-                <h2 class="block section-heading {{ header_size }}">
-                  {{ section_st.title }}
-                </h2>
-              </motion-effect>
+              {% if scroll_animation %}
+                {% assign animate_delay = animate_delay | plus: 5 %}
+                <motion-effect
+                  data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
+                  class="block"
+                >
+              {% endif %}
+              <h2 class="block section-heading {{ header_size }}">
+                {{ section_st.title }}
+              </h2>
+              {% if scroll_animation %}
+                </motion-effect>
+              {% endif %}
             {%- endif -%}
             {%- if section_st.description != blank -%}
-              <motion-effect
-                data-animate="fade-up"
-                data-animate-delay="40"
-                class="block"
-              >
-                <div class="section-description mt-15 prose">
-                  {{ section_st.description }}
-                </div>
-              </motion-effect>
+              {% if scroll_animation %}
+                {% assign animate_delay = animate_delay | plus: 5 %}
+                <motion-effect
+                  data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
+                  class="block"
+                >
+              {% endif %}
+              <div class="section-description mt-15 prose">
+                {{ section_st.description }}
+              </div>
+              {% if scroll_animation %}
+                </motion-effect>
+              {% endif %}
             {%- endif -%}
           </div>
         {%- endif -%}
-        <motion-effect
-          data-animate="fade-up"
-          data-animate-delay="45"
-          class="block"
-        >
-          <div class="bundle-products__list">
-            <carousel-mobile
-              data-items="1"
-              data-enable-carousel-mobile="true"
-              data-mobile="1"
-              data-bundle="true"
-            >
-              {%- for block in section.blocks -%}
-                {%- liquid
-                  assign block_st = block.settings
-                  assign product = block_st.product
-                -%}
-                <bundle-item
-                  data-product-position="{{ forloop.index }}"
-                  style="--width: 8rem;"
-                  class="bundle-item switch-slide__mobile border-bottom-md block last-0 py-20-md{% if forloop.first %} pt-0{% endif %} transition"
-                >
-                  {% render 'card-product',
-                    card_product: product,
-                    section_id: section.id,
-                    show_video: true,
-                    disable_quickview: true,
-                    disable_badge: true,
-                    disable_rate: true,
-                    variant_swatch: true,
-                    disable_vendor: true,
-                    disable_hover_image: true,
-                    show_quick_add: true,
-                    type: 'bundle',
-                    enable_quick_add: enable_quick_add,
-                    class: ' bundle-item-section',
-                    style_layout: ' flex gap-20',
-                    image_class: ' flex-auto w-custom rounded-10',
-                    image_rounded: ' rounded-10',
-                    info_class: ' flex-1 mt-0 relative flex-md column-md flex-1',
-                    bundle_swatch: true
-                  %}
-                </bundle-item>
-              {%- endfor -%}
-            </carousel-mobile>
-            <product-form class="bundle-products-form">
-              <form
-                method="post"
-                action="/cart/add"
-                accept-charset="UTF-8"
-                enctype="multipart/form-data"
-                novalidate="novalidate"
-                data-type="add-to-cart-form"
+        {% if scroll_animation %}
+          {% assign animate_delay = animate_delay | plus: 5 %}
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="{{ animate_delay }}"
+            class="block"
+          >
+        {% endif %}
+        <div class="bundle-products__list">
+          <carousel-mobile
+            data-items="1"
+            data-enable-carousel-mobile="true"
+            data-mobile="1"
+            data-bundle="true"
+          >
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign block_st = block.settings
+                assign product = block_st.product
+              -%}
+              <bundle-item
+                data-product-position="{{ forloop.index }}"
+                style="--width: 8rem;"
+                class="bundle-item switch-slide__mobile border-bottom-md block last-0 py-20-md{% if forloop.first %} pt-0{% endif %} transition"
               >
-                <input type="hidden" name="form_type" value="product">
-                <input type="hidden" name="utf8" value="✓">
-                <div class="product-bundle-products-list">
-                  {%- for block in section.blocks -%}
-                    {%- liquid
-                      assign blo_settings = block.settings
-                      assign product = blo_settings.product
-                      assign product_available = product.variants | where: 'available'
-                      assign loop_index = forloop.index
-                    -%}
-                    {% if product != blank %}
-                      <div class="variant-select" product-id="{{ product.id }}">
-                        {%- if product.variants.size > 1 -%}
-                          {% for variant in product_available %}
-                            {%- liquid
-                              assign selected = false
-                              assign quantity = variant.inventory_quantity
-                            -%}
-                            {% if quantity < 1 and variant.available == false %}
-                              {% continue %}
-                            {% else %}
-                              {% assign selected = true %}
-                              {% assign show_button_add_all = true %}
-                            {% endif %}
-                            <input
-                              type="hidden"
-                              name="items[][id]"
-                              data-index="{{ loop_index }}"
-                              value="{{ variant.id }}"
-                            >
-                            <input type="hidden" name="items[][quantity]" class="quantity" value="1">
-                            {% if selected %}
-                              {% break %}
-                            {% endif %}
-                          {% endfor %}
-                        {%- else -%}
-                          {%- if product.selected_or_first_available_variant.inventory_quantity > 0
-                            or product.selected_or_first_available_variant.available == true
+                {% render 'card-product',
+                  card_product: product,
+                  section_id: section.id,
+                  show_video: true,
+                  disable_quickview: true,
+                  disable_badge: true,
+                  disable_rate: true,
+                  variant_swatch: true,
+                  disable_vendor: true,
+                  disable_hover_image: true,
+                  show_quick_add: true,
+                  type: 'bundle',
+                  enable_quick_add: enable_quick_add,
+                  class: ' bundle-item-section',
+                  style_layout: ' flex gap-20',
+                  image_class: ' flex-auto w-custom rounded-10',
+                  image_rounded: ' rounded-10',
+                  info_class: ' flex-1 mt-0 relative flex-md column-md flex-1',
+                  bundle_swatch: true
+                %}
+              </bundle-item>
+            {%- endfor -%}
+          </carousel-mobile>
+          <product-form class="bundle-products-form">
+            <form
+              method="post"
+              action="/cart/add"
+              accept-charset="UTF-8"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              data-type="add-to-cart-form"
+            >
+              <input type="hidden" name="form_type" value="product">
+              <input type="hidden" name="utf8" value="✓">
+              <div class="product-bundle-products-list">
+                {%- for block in section.blocks -%}
+                  {%- liquid
+                    assign blo_settings = block.settings
+                    assign product = blo_settings.product
+                    assign product_available = product.variants | where: 'available'
+                    assign loop_index = forloop.index
+                  -%}
+                  {% if product != blank %}
+                    <div class="variant-select" product-id="{{ product.id }}">
+                      {%- if product.variants.size > 1 -%}
+                        {% for variant in product_available %}
+                          {%- liquid
+                            assign selected = false
+                            assign quantity = variant.inventory_quantity
                           -%}
+                          {% if quantity < 1 and variant.available == false %}
+                            {% continue %}
+                          {% else %}
+                            {% assign selected = true %}
                             {% assign show_button_add_all = true %}
-                            <input
-                              type="hidden"
-                              name="items[][id]"
-                              data-index="{{ loop_index }}"
-                              value="{{ product.selected_or_first_available_variant.id }}"
-                            >
-                            <input type="hidden" name="items[][quantity]" class="quantity" value="1">
                           {% endif %}
+                          <input
+                            type="hidden"
+                            name="items[][id]"
+                            data-index="{{ loop_index }}"
+                            value="{{ variant.id }}"
+                          >
+                          <input type="hidden" name="items[][quantity]" class="quantity" value="1">
+                          {% if selected %}
+                            {% break %}
+                          {% endif %}
+                        {% endfor %}
+                      {%- else -%}
+                        {%- if product.selected_or_first_available_variant.inventory_quantity > 0
+                          or product.selected_or_first_available_variant.available == true
+                        -%}
+                          {% assign show_button_add_all = true %}
+                          <input
+                            type="hidden"
+                            name="items[][id]"
+                            data-index="{{ loop_index }}"
+                            value="{{ product.selected_or_first_available_variant.id }}"
+                          >
+                          <input type="hidden" name="items[][quantity]" class="quantity" value="1">
                         {% endif %}
-                      </div>
-                    {% endif %}
-                  {%- endfor -%}
-                </div>
-                {%- if show_button_add_all -%}
-                  <button
-                    type="submit"
-                    class="btn pointer btn-primary w-full relative product_submit_button product-form__submit word-wrap relative mt-30 mt-1025-40"
-                    aria-label="{{ 'products.product.add_all_to_cart' | t }}"
-                  >
-                    <span class="hidden-on-load transition-short">{{ 'products.product.add_all_to_cart' | t }}</span>
-                    {%- render 'loader' -%}
-                  </button>
-                {%- endif -%}
-              </form>
-            </product-form>
-            {%- if section_st.button_label != blank %}
-              <div class="mt-20 text-center">
-                <a
-                  {% if section_st.button_link == blank %}
-                    role="link" aria-disabled="true"
-                  {% else %}
-                    href="{{ section_st.button_link | default: "#" }}"
+                      {% endif %}
+                    </div>
                   {% endif %}
-                  aria-label="{{ section_st.button_label }}"
-                  class="heading-style text-size btn-link border-animation pointer"
-                >
-                  {{ section_st.button_label }}
-                </a>
+                {%- endfor -%}
               </div>
-            {%- endif -%}
-          </div>
-        </motion-effect>
+              {%- if show_button_add_all -%}
+                <button
+                  type="submit"
+                  class="btn pointer btn-primary w-full relative product_submit_button product-form__submit word-wrap relative mt-30 mt-1025-40"
+                  aria-label="{{ 'products.product.add_all_to_cart' | t }}"
+                >
+                  <span class="hidden-on-load transition-short">{{ 'products.product.add_all_to_cart' | t }}</span>
+                  {%- render 'loader' -%}
+                </button>
+              {%- endif -%}
+            </form>
+          </product-form>
+          {%- if section_st.button_label != blank %}
+            <div class="mt-20 text-center">
+              <a
+                {% if section_st.button_link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ section_st.button_link | default: "#" }}"
+                {% endif %}
+                aria-label="{{ section_st.button_label }}"
+                class="heading-style text-size btn-link border-animation pointer"
+              >
+                {{ section_st.button_label }}
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+        {% if scroll_animation %}
+          </motion-effect>
+        {% endif %}
       </div>
     </bundle-products>
   </div>

@@ -653,8 +653,10 @@ input[type="checkbox"]:checked + .checkmark:before {
     .btn-tag a,
     body .jdgm-write-rev-link,
     body .jdgm-write-rev-link.jdgm-write-rev-link,
-    input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
-  )::after {
+    input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev,
+    .btn__quick-shop.bg-white
+  )::after,
+:is(body .shopify-payment-button__button--unbranded)::after {
   content: "";
   position: absolute;
   top: 0;
@@ -690,7 +692,7 @@ input[type="checkbox"]:checked + .checkmark:before {
 .btn-white {
   --btn-bg: rgb(var(--color-white));
   --btn-color: var(--btn-outline-color);
-  --btn-border-color: transparent;
+  border: 0;
 }
 :where(.btn-reset) {
   background: transparent;
