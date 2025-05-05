@@ -421,7 +421,7 @@ class ShopableItem extends HTMLElement {
         this.handleSwipeability(modalPopup, swiperContainer);
       }
     }
-    popupInfo.style.transform = '';
+    popupInfo.style.transform = "";
   }
 
   setupCloseButton() {
@@ -773,38 +773,40 @@ class ShopableItem extends HTMLElement {
         swiperContainer._hasSlideChangeHandler = true;
       }
     }
-
+    this.updateSwiperState(modalPopup);
     modalPopup.removeAttribute("data-loading");
   }
 
   handleSwipeability(modalPopup, swiperContainer) {
     if (!modalPopup || !swiperContainer || !swiperContainer.swiper) return;
 
-    const isLargeScreen = this.innerWidth >= 1025;
-
     const hasPopupInfo =
       modalPopup.querySelector(".popup-information") !== null;
 
     const hasActivePopupInfo =
       modalPopup.querySelector(".popup-information.active") !== null;
-
-    if (isLargeScreen) {
-      if (hasPopupInfo) {
-        swiperContainer.swiper.allowTouchMove = false;
-        swiperContainer.swiper.unsetGrabCursor();
+    const mediaQuery = window.matchMedia("(max-width: 1024.98px)");
+    const handleMediaQueryChange = (mediaQuery) => {
+      if (mediaQuery.matches) {
+        if (hasActivePopupInfo) {
+          swiperContainer.swiper.allowTouchMove = false;
+          swiperContainer.swiper.unsetGrabCursor();
+        } else {
+          swiperContainer.swiper.allowTouchMove = true;
+          swiperContainer.swiper.setGrabCursor();
+        }
       } else {
-        swiperContainer.swiper.allowTouchMove = true;
-        swiperContainer.swiper.setGrabCursor();
+        if (hasPopupInfo) {
+          swiperContainer.swiper.allowTouchMove = false;
+          swiperContainer.swiper.unsetGrabCursor();
+        } else {
+          swiperContainer.swiper.allowTouchMove = true;
+          swiperContainer.swiper.setGrabCursor();
+        }
       }
-    } else {
-      if (hasActivePopupInfo) {
-        swiperContainer.swiper.allowTouchMove = false;
-        swiperContainer.swiper.unsetGrabCursor();
-      } else {
-        swiperContainer.swiper.allowTouchMove = true;
-        swiperContainer.swiper.setGrabCursor();
-      }
-    }
+    };
+    handleMediaQueryChange(mediaQuery);
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
   }
 
   onShowPopupModal(event) {
@@ -920,7 +922,7 @@ class PopupInformationHeader extends ShopableItem {
     this.startY = 0;
     this.currentY = 0;
     this.threshold = 100;
-    
+
     this.startDrag = this.startDrag.bind(this);
     this.onDrag = this.onDrag.bind(this);
     this.endDrag = this.endDrag.bind(this);
@@ -930,8 +932,12 @@ class PopupInformationHeader extends ShopableItem {
     super.connectedCallback();
     this.headerElement = this;
     if (this.headerElement) {
-      this.headerElement.addEventListener("touchstart", this.startDrag, { passive: true });
-      this.headerElement.addEventListener("touchmove", this.onDrag, { passive: false });
+      this.headerElement.addEventListener("touchstart", this.startDrag, {
+        passive: true,
+      });
+      this.headerElement.addEventListener("touchmove", this.onDrag, {
+        passive: false,
+      });
       this.headerElement.addEventListener("touchend", this.endDrag);
       this.headerElement.addEventListener("mousedown", this.startDrag);
       document.addEventListener("mousemove", this.onDrag);
@@ -944,7 +950,7 @@ class PopupInformationHeader extends ShopableItem {
       this.headerElement.removeEventListener("touchstart", this.startDrag);
       this.headerElement.removeEventListener("touchmove", this.onDrag);
       this.headerElement.removeEventListener("touchend", this.endDrag);
-      
+
       this.headerElement.removeEventListener("mousedown", this.startDrag);
       document.removeEventListener("mousemove", this.onDrag);
       document.removeEventListener("mouseup", this.endDrag);
@@ -961,11 +967,11 @@ class PopupInformationHeader extends ShopableItem {
 
   onDrag(e) {
     if (!this.isDragging || !this.container) return;
-    
+
     e.preventDefault();
     this.currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
     const dragDistance = this.currentY - this.startY;
-    
+
     if (dragDistance > 0) {
       this.container.style.transform = `translateY(${dragDistance}px)`;
     }
@@ -974,32 +980,36 @@ class PopupInformationHeader extends ShopableItem {
   endDrag() {
     if (!this.isDragging || !this.container) return;
     const dragDistance = this.currentY - this.startY;
-    
+
     if (dragDistance > this.threshold) {
-      const modalPopup = this.container.closest('modal-popup');
+      const modalPopup = this.container.closest("modal-popup");
       if (modalPopup) {
-        const currentId = modalPopup.getAttribute('data-current');
+        const currentId = modalPopup.getAttribute("data-current");
         if (currentId) {
           const currentItem = modalPopup.querySelector(`#${currentId}`);
           if (currentItem) {
-            const buttonCloseModal = modalPopup.querySelector('.modal__close');
-            const buttonCloseInformation = currentItem.querySelector('.modal__close-information');
-            const actionButton = modalPopup.querySelector('.popup-information__mobile');
+            const buttonCloseModal = modalPopup.querySelector(".modal__close");
+            const buttonCloseInformation = currentItem.querySelector(
+              ".modal__close-information"
+            );
+            const actionButton = modalPopup.querySelector(
+              ".popup-information__mobile"
+            );
             this.hidePopupInformation(this.container);
             if (actionButton) {
-              actionButton.classList.remove('active');
+              actionButton.classList.remove("active");
             }
             if (buttonCloseInformation && buttonCloseModal) {
-              buttonCloseInformation.classList.add('hidden-important');
-              buttonCloseInformation.classList.remove('active');
-              buttonCloseModal.classList.remove('hidden-important');
+              buttonCloseInformation.classList.add("hidden-important");
+              buttonCloseInformation.classList.remove("active");
+              buttonCloseModal.classList.remove("hidden-important");
             }
             this.updateSwiperState(modalPopup);
           }
         }
       }
     } else {
-      this.container.style.transform = '';
+      this.container.style.transform = "";
     }
     this.isDragging = false;
   }
