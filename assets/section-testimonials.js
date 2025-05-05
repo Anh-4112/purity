@@ -27,6 +27,7 @@ class TestimonialsSlide extends SlideSection {
       slidesPerView: 1,
       spaceBetween: 60,
       watchSlidesProgress: true,
+      watchSlidesVisibility: true,
       grabCursor: true,
       loop: true,
       allowTouchMove: false,
@@ -39,6 +40,13 @@ class TestimonialsSlide extends SlideSection {
           slidesPerView: itemDesktop,
         },
       },
+      on: {
+        init: function() {
+          this.slides.forEach((slide, index) => {
+            slide.setAttribute('tabindex',0);
+          });
+        },
+      }
     });
 
     this.swiper.thumbs.swiper = this.thumbsSwiper;
@@ -51,22 +59,58 @@ class TestimonialsSlide extends SlideSection {
       ".testimonial-swiper-action .swiper-button-prev"
     );
     if (nextEl) {
+      nextEl.setAttribute("tabindex", "0");
       this.swiper.navigation.nextEl = nextEl;
       nextEl.addEventListener("click", (e) => {
         e.preventDefault();
         this.swiper.slideNext();
       });
+      nextEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          this.swiper.slideNext();
+        }
+      });
     }
     if (prevEl) {
+      prevEl.setAttribute("tabindex", "0");
       this.swiper.navigation.prevEl = prevEl;
       prevEl.addEventListener("click", (e) => {
         e.preventDefault();
         this.swiper.slidePrev();
       });
+      prevEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          this.swiper.slidePrev();
+        }
+      });
     }
+    this.addKeyboardNavigationToSlides();
     this.swiper.on("slideChangeTransitionEnd", () => {
       this.swiper.thumbs.update();
     });
+  }
+
+  addKeyboardNavigationToSlides() {
+    if (!this.thumbsSwiper) return;
+    setTimeout(() => {
+      const slides = this.thumbsSwiper.slides;
+      slides.forEach(slide => {
+        slide.addEventListener('keydown', (e) => {
+          const key = e.key;
+          switch (key) {
+            case 'Enter':
+            case ' ':
+              e.preventDefault();
+              const realIndex = parseInt(slide.dataset.swiperSlideIndex);
+              this.thumbsSwiper.slideTo(realIndex);
+              this.swiper.slideTo(realIndex);
+              break;
+          }
+        });
+      });
+    }, 100);
   }
 }
 customElements.define("testimonial-slide", TestimonialsSlide);
