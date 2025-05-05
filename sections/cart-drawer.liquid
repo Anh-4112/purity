@@ -237,7 +237,7 @@
                                       <img
                                         class="cart-item__image"
                                         src="{{ item.image | image_url: width: 300 }}"
-                                        alt="{{ item.image.alt | escape }}"
+                                        alt="{{ item.image.alt | default: item.product.title | escape }}"
                                         loading="lazy"
                                         width="150"
                                         height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
@@ -364,7 +364,7 @@
                                         >
                                           <path fill-rule="evenodd" clip-rule="evenodd" d="M7 0h3a2 2 0 012 2v3a1 1 0 01-.3.7l-6 6a1 1 0 01-1.4 0l-4-4a1 1 0 010-1.4l6-6A1 1 0 017 0zm2 2a1 1 0 102 0 1 1 0 00-2 0z" fill="currentColor">
                                         </svg>
-                                        {{ discount.title }}
+                                        {{ discount.title }} (-{{ discount.amount | money }})
                                       </li>
                                     {%- endfor -%}
                                   </ul>
@@ -817,6 +817,29 @@
                   {{ cart.total_price | money_with_currency }}
                 </span>
               </div>
+              {%- if cart.cart_level_discount_applications.size > 0 -%}
+                <ul
+                  class="discounts list-unstyled flex column gap-15 mb-15"
+                  role="list"
+                  aria-label="{{ 'customer.order.discount' | t }}"
+                >
+                  {%- for discount in cart.cart_level_discount_applications -%}
+                    <li class="discounts__discount fs-small discounts__discount fs-small--position flex gap-5">
+                      <svg
+                        aria-hidden="true"
+                        focusable="false"
+                        class="icon icon-discount w-custom"
+                        viewBox="0 0 12 12"
+                        style="--width: 12px;"
+                      >
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7 0h3a2 2 0 012 2v3a1 1 0 01-.3.7l-6 6a1 1 0 01-1.4 0l-4-4a1 1 0 010-1.4l6-6A1 1 0 017 0zm2 2a1 1 0 102 0 1 1 0 00-2 0z" fill="currentColor">
+                      </svg>
+
+                      {{ discount.title }} (-{{ discount.total_allocated_amount | money }})
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
               <small class="tax-note caption-large word-break text-center">
                 {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
                   {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
@@ -829,6 +852,7 @@
                 {%- endif -%}
               </small>
             </div>
+
             <form action="{{ routes.cart_url }}" method="POST" class="flex wrap gap-10 mt-20 mt-1025-30 mb-1025-10">
               <a
                 href="{{ routes.cart_url }}"
