@@ -190,6 +190,7 @@
             <div class="swiper-slide" {{ block.shopify_attributes }}>
               <shopable-item
                 class="pointer rounded block focus-inset-inside"
+                tabindex="0"
                 data-product="Product-{{ block.id }}"
                 data-position="{{ forloop.index | minus: 1 }}"
                 tabindex="0"
@@ -743,9 +744,7 @@
                                   {%- endif -%}
                                 </div>
                               </div>
-                              {% if card_product.metafields.custom.short_description != blank
-                                or card_product.description != blank
-                              %}
+                           {% if card_product.metafields.custom.short_description != blank or card_product.description != blank %}
                                 <div class="block-product__description">
                                   {%- if card_product.metafields.custom.short_description -%}
                                     {{ card_product.metafields.custom.short_description }}
