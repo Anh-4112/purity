@@ -99,9 +99,12 @@
     pointer-events: auto;
     top: calc(100% + 4px);
   }
+  .recommend-prose {
+    line-height: 3;
+  }
 {% endstyle %}
 {% capture title_replace %}
-  <select-options class="title-select relative px-15 pointer">
+  <select-options class="title-select relative px-15 pointer lh-global">
     {% if split_array.size > 0 %}
       {% liquid
         assign first_item = split_array[0]
@@ -131,7 +134,7 @@
   </select-options>
 {% endcapture %}
 {% capture replace_collection %}
-  <select-options class="collection-select relative px-15 pointer">
+  <select-options class="collection-select relative px-15 pointer lh-global">
     {% if split_collection.size > 0 %}
       {% liquid
         assign first_item = split_collection[0]
@@ -300,7 +303,7 @@
                     >
                   {% endif %}
                   <div
-                    class="block__description block relative z-2 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
+                    class="block__description recommend-prose block relative z-2 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
                     style="--space-bottom: {{ block_st.spacing_bottom }};"
                     {{ block.shopify_attributes }}
                     data-animate="fade-up"

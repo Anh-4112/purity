@@ -55,13 +55,13 @@
           endif
         -%}
         <div
-          class="product__inner relative block rounded overflow-hidden{{ image_class }}{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect"
+          class="product__inner relative block{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect"
           {% if type == 'list' or type == 'bundle' %}
             style="--width: 8rem;"
           {% endif %}
         >
           <a
-            class="product-image focus-inset block{% if type_video and product_show_video_featured %} video-pause{% endif %}{% if type == 'bought_together' %} h-full{% endif %}"
+            class="product-image focus-inset block rounded overflow-hidden {{ image_class }}{% if type_video and product_show_video_featured %} video-pause{% endif %}{% if type == 'bought_together' %} h-full{% endif %}"
             draggable="false"
             {% if type == 'bought_together' %}
               tabindex="-1"
@@ -345,7 +345,7 @@
           <div class="product__tag grey-color mb-8 fs-13 lh-normal">
             <ul
               class="list-unstyled flex wrap gap{% if settings.product_alignment == 'center' %} justify-center{% endif %}"
-              style="--gap: 6px;--gap-desktop: 6px;"
+              style="--gap: 6px;--gap-desktop: 6px;--row-gap: 6px;"
             >
               {% for tags in card_product.tags %}
                 <li>
