@@ -261,23 +261,43 @@ class ShopableVideo extends SlideSection {
   playCenterSlideVideo() {
     this.pauseAllVideos();
     if (!this.autoplayVideo) return;
+
     const centerSlide = this.querySelector(".swiper-slide.center-slide");
     if (!centerSlide) return;
-    const videoElement = centerSlide.querySelector("video-local-shopable video");
-    if (videoElement) {
-      centerSlide.querySelector(".play-button").classList.add("active");
-      videoElement.play();
-    }
+
+    this._playSlideVideo(centerSlide);
   }
 
   playActiveSlideVideo(activeIndex) {
     this.pauseAllVideos();
-    const activeSlide = this.swiper.slides[activeIndex];
+    const activeSlide = this.swiper?.slides[activeIndex];
     if (!activeSlide) return;
-    const videoElement = activeSlide.querySelector("video-local-shopable video");
+
+    this._playSlideVideo(activeSlide);
+  }
+
+  _playSlideVideo(slide) {
+    const videoLocalElement = slide.querySelector("video-local-shopable");
+    if (!videoLocalElement) return;
+    let videoElement = videoLocalElement.querySelector("video");
     if (videoElement) {
-      activeSlide.querySelector(".play-button").classList.add("active");
-      videoElement.play();
+      this._playVideo(videoElement, slide);
+    } else {
+      const newVideo = loadContentVideo(videoLocalElement);
+      if (newVideo && newVideo.nodeName === "VIDEO") {
+        setTimeout(() => this._playVideo(newVideo, slide), 100);
+      }
+    }
+  }
+
+  _playVideo(video, slide) {
+    const playButton = slide.querySelector(".play-button");
+    if (playButton) playButton.classList.add("active");
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        video.play();
+      });
     }
   }
 
@@ -320,8 +340,8 @@ class ShopableItem extends HTMLElement {
 
   connectedCallback() {
     this.addEventListener("click", this.onShowPopupModal.bind(this), false);
-    this.addEventListener('focus', () => {
-      console.log('item is focused');
+    this.addEventListener("focus", () => {
+      console.log("item is focused");
     });
     if (this.classList.contains("sticky-video")) {
       const allStickyVideos = document.querySelectorAll(".sticky-video");
@@ -612,9 +632,7 @@ class ShopableItem extends HTMLElement {
   }
 
   openVideo() {
-    if (
-      this.querySelector("video")
-    ) {
+    if (this.querySelector("video")) {
       this.closest(".section-shopable-video")
         .querySelectorAll("shopable-item")
         .forEach((el) => {
@@ -635,24 +653,53 @@ class ShopableItem extends HTMLElement {
   clickMuteVideo(event) {
     event.preventDefault();
     event.stopPropagation();
-    if (this.querySelector("video").muted == false) {
-      this.querySelector("video").muted = true;
-      this.querySelector(".mute-button").classList.remove("active");
-    } else {
-      this.querySelector("video").muted = false;
-      this.querySelector(".mute-button").classList.add("active");
+    const videoLocalElement = this.querySelector("video-local-shopable");
+    if (!videoLocalElement) return;
+    let video = videoLocalElement.querySelector("video");
+    if (!video) {
+      video = loadContentVideo(videoLocalElement);
+      if (!video || video.nodeName !== "VIDEO") return;
+    }
+    video.muted = !video.muted;
+    const muteButton = this.querySelector(".mute-button");
+    if (muteButton) {
+      muteButton.classList.toggle("active", !video.muted);
     }
   }
 
   clickPlayVideo(event) {
     event.preventDefault();
     event.stopPropagation();
-    if (this.querySelector("video").paused) {
-      this.querySelector("video").play();
-      this.querySelector(".play-button").classList.add("active");
+    const videoLocalElement = this.querySelector("video-local-shopable");
+    if (!videoLocalElement) return;
+    let video = videoLocalElement.querySelector("video");
+    if (!video) {
+      video = loadContentVideo(videoLocalElement);
+      if (!video || video.nodeName !== "VIDEO") return;
+    }
+    const playButton = this.querySelector(".play-button");
+    if (video.paused) {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            if (playButton) playButton.classList.add("active");
+          })
+          .catch((error) => {
+            if (!video.muted) {
+              video.muted = true;
+              video
+                .play()
+                .then(() => {
+                  if (playButton) playButton.classList.add("active");
+                })
+                .catch();
+            }
+          });
+      }
     } else {
-      this.querySelector("video").pause();
-      this.querySelector(".play-button").classList.remove("active");
+      video.pause();
+      if (playButton) playButton.classList.remove("active");
     }
   }
 
@@ -923,7 +970,7 @@ class ShopableItem extends HTMLElement {
         const allSlides = swiperContainer.swiper.slides;
         allSlides.forEach((slide, index) => {
           const video = slide.querySelector("video");
-          const videoLocal = slide.querySelector("video-local-shopable");
+          const videoLocal = slide.querySelector("video-local");
           const btnMute = videoLocal?.querySelector(".mute-button");
           const btnMuteMobile = slide.querySelector(".mute-button-mobile");
           const buttonCloseInformation = slide.querySelector(
@@ -1054,56 +1101,31 @@ class PopupInformationHeader extends ShopableItem {
   }
 }
 customElements.define("popup-information-header", PopupInformationHeader);
-class VideoLocalShopable extends HTMLElement {
-  constructor() {
-    super();
-    this.init();
-  }
-  init() {
-    setTimeout(() => {
-      this.loadContent();
-    }, 100);
-  }
 
-  loadContentVideo(_this) {
-    if (!_this.getAttribute("loaded") && _this.querySelector("template")) {
-      const content = document.createElement("div");
-      content.appendChild(
-        _this
-          .querySelector("template")
-          .content.firstElementChild.cloneNode(true)
-      );
-      _this.setAttribute("loaded", true);
-      const video = content.querySelector("video")
-        ? content.querySelector("video")
-        : content.querySelector("iframe");
-      const deferredElement = _this.appendChild(video);
-      const alt = deferredElement.getAttribute("alt");
-      const img = deferredElement.querySelector("img");
-      if (alt && img) {
-        img.setAttribute("alt", alt);
-      }
+function loadContentVideo(videoLocalElement) {
+  if (!videoLocalElement) return null;
+
+  if (
+    !videoLocalElement.getAttribute("loaded") &&
+    videoLocalElement.querySelector("template")
+  ) {
+    const content = document.createElement("div");
+    content.appendChild(
+      videoLocalElement
+        .querySelector("template")
+        .content.firstElementChild.cloneNode(true)
+    );
+    videoLocalElement.setAttribute("loaded", true);
+    const video = content.querySelector("video")
+      ? content.querySelector("video")
+      : content.querySelector("iframe");
+    const deferredElement = videoLocalElement.appendChild(video);
+    const alt = deferredElement.getAttribute("alt");
+    const img = deferredElement.querySelector("img");
+    if (alt && img) {
+      img.setAttribute("alt", alt);
     }
+    return deferredElement;
   }
-
-  loadContent() {
-    const _this = this;
-    const handleIntersection = (entries, observer) => {
-      if (!entries[0].isIntersecting) return;
-      observer.unobserve(_this);
-      this.loadContentVideo(_this);
-      const videos = _this.querySelectorAll("video");
-      videos.forEach((video) => {
-        const dataSrc = video.dataset.src;
-        if (dataSrc) {
-          video.src = dataSrc;
-          video.removeAttribute("data-src");
-        }
-      });
-    };
-    new IntersectionObserver(handleIntersection.bind(_this), {
-      rootMargin: "0px 0px 200px 0px",
-    }).observe(_this);
-  }
+  return null;
 }
-customElements.define("video-local-shopable", VideoLocalShopable);

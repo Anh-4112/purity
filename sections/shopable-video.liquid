@@ -217,7 +217,7 @@
                             assign poster = poster_image | image_url: width: 500
                           endif
                         -%}
-                        <div class="video-thumbnail">
+                        <div class="video-thumbnail absolute" style="--aspect-ratio: {{ video_ratio }};">
                           {% render 'responsive-image',
                             type: 'banner',
                             container: section_st.section_width,
@@ -330,6 +330,7 @@
         class="sticky-video block right-0 pointer transition-drawer fixed z-10 transition-drawer w-custom"
         style="--width: 15rem"
         data-product="Product-{{ section.blocks[0].id }}"
+        tabindex="0"
       >
         {% liquid
           assign block_st = section.blocks[0].settings
@@ -364,7 +365,7 @@
           endif
         %}
         {% if poster_image != blank or local_video != blank %}
-          <video-local-shopable
+          <video-local
             class="video-item--ratio rounded block"
             style="--aspect-ratio: {{ video_ratio }};"
           >
@@ -406,7 +407,7 @@
                 {% render 'placeholder-render', type: 'collection' %}
               {% endif %}
             {% endif %}
-          </video-local-shopable>
+          </video-local>
         {% else %}
           <div
             class="video-item--ratio"
@@ -518,7 +519,7 @@
                         assign product_form_id = 'product-form-' | append: block.id
                       %}
                       {% if poster_image != blank or local_video != blank %}
-                        <video-local-shopable
+                        <video-local
                           class="video-item--ratio block w-full h-full pointer col-1025-w-custom"
                           style="--aspect-ratio: {{ video_ratio }};"
                         >
@@ -578,7 +579,7 @@
                               {% render 'placeholder-render', type: 'collection' %}
                             {% endif %}
                           {% endif %}
-                        </video-local-shopable>
+                        </video-local>
                       {% else %}
                         <div
                           class="video-item--ratio w-full col-1025-w-custom"
