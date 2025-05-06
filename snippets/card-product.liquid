@@ -13,7 +13,10 @@
   assign product_show_video_featured = theme_st.product_show_video_featured
   assign product_show_quick_add_mobile = theme_st.product_show_quick_add_mobile
   assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id
-
+  assign motion = true
+  if disable_motion
+    assign motion = false
+  endif
   if type == 'list'
     assign style_layout = ' flex gap-20'
     assign image_class = ' flex-auto w-custom rounded-10'
@@ -148,7 +151,7 @@
                     padding: padding,
                     sizes: sizes,
                     disable_lazy_loading: disable_lazy_loading,
-                    motion: true
+                    motion: motion
                   %}
                   {%- liquid
                     if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true
