@@ -1611,7 +1611,7 @@ blockquote {
   --width: 3px;
   --height: 3px;
 }
-.minicar_recommend .product-quickview-btn {
+.minicar_recommend .product-addtocart-btn {
   display: none;
 }
 .minicar_recommend .btn__quick-shop .hidden-1025 {
@@ -1847,30 +1847,32 @@ media-lightbox-popup {
   --swiper-navigation-color: #fff;
   --bg-color-custom: rgba(0, 0, 0, 0.3);
 }
-media-lightbox-popup
+:is(.active_smooth, shopable-item)
   :is(.mute-button, .play-button)
   :where(.icon-pause, .mute-close) {
   display: none;
 }
-media-lightbox-popup
+:is(.active_smooth, shopable-item)
   :is(.mute-button, .play-button).active
   :where(.icon-pause, .mute-close) {
   display: inline-block;
 }
-media-lightbox-popup
+:is(.active_smooth, shopable-item)
   :is(.mute-button, .play-button).active
   :where(.icon-play, .mute-open) {
   display: none;
 }
-.play-button-popup,
-.play-button-popup svg {
+:is(.active_smooth, shopable-item) :is(.play-button, .play-button svg) {
   color: rgb(var(--color-white)) !important;
 }
-.play-button-popup.active {
+:is(.active_smooth, shopable-item) .play-button.active {
   opacity: 0;
   transition-delay: 0.2s;
 }
-media-lightbox-popup:hover .play-button {
+:is(.active_smooth, shopable-item, .video-item--ratio):hover,
+shopable-item:focus-visible .play-button,
+:is(.active_smooth, shopable-item) .play-button.active:focus-visible,
+:is(.active_smooth, shopable-item) .play-button:focus-visible {
   opacity: 1;
   transition-delay: 0s;
 }
