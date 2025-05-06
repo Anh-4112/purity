@@ -823,6 +823,39 @@ CustomElement.observeAndPatchCustomElements({
   },
 });
 
+class MobileCollapsibleRowDetails extends CollapsibleRowDetails {
+  constructor() {
+    super();
+    this.updateOpenState();
+    window.addEventListener('resize', this.updateOpenState.bind(this));
+  }
+
+  updateOpenState() {
+    if (this.isMobileDevice()) {
+      this.open = false;
+      this.removeAttribute("open");
+    } else {
+      this.open = true;
+      this.setAttribute("open", "");
+    }
+  }
+
+  isMobileDevice() {
+    return window.matchMedia("(max-width: 768px)").matches;
+  }
+}
+
+customElements.define("mobile-collapsible-row", MobileCollapsibleRowDetails, {
+  extends: "details",
+});
+
+CustomElement.observeAndPatchCustomElements({
+  "mobile-collapsible-row": {
+    tagElement: "details",
+    classElement: MobileCollapsibleRowDetails,
+  },
+});
+
 class RecentlyViewedProducts extends HTMLElement {
   constructor() {
     super();
@@ -2226,7 +2259,7 @@ class MotionEffect extends HTMLElement {
   }
 
   get delay() {
-    return parseInt(this.dataset.animateDelay || 0) / 100;
+    return parseInt(this.dataset.animateDelay || 0) / 1000;
   }
 
   initAnimate() {

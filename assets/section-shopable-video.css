@@ -40,21 +40,8 @@
   border-radius: 50%;
   background-color: #0000004d;
 }
-.mute-button.active .mute-close,
-.mute-open,
-.play-button.active .icon-play,
-.play-button .icon-pause,
-.mute-button-mobile.active .mute-close {
-  display: none;
-}
-.mute-button.active .mute-open,
-.play-button.active .icon-pause,
-.mute-button-mobile.active .mute-open {
-  display: block;
-}
 .sticky-video {
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 10rem;
   transform: translateX(100%);
 }
 
@@ -90,23 +77,8 @@
     visibility: hidden;
     pointer-events: none;
   }
-  .smooth_loading {
-    transition-delay: 0.2s;
-  }
   .modal-shopable_content .video-item--ratio {
     max-height: 80vh;
-  }
-  .modal-shopable_content video {
-    opacity: 0;
-    transition: 0.6s;
-    transition-delay: 0.35s;
-    display: block;
-  }
-  .modal-shopable-video.active .smooth_loading {
-    opacity: 0;
-  }
-  .modal-shopable-video.active .modal-shopable_content video {
-    opacity: 1;
   }
 }
 .shopable-video__product .product__name,
@@ -122,7 +94,7 @@
   height: calc(100% + 1px);
 }
 @media (max-width: 1024.98px) {
-  .modal__close-video {
+  .active_smooth .modal__close-video {
     right: auto;
     left: 1rem;
     width: 4.6rem;
@@ -134,25 +106,27 @@
     left: auto;
     right: 1rem;
   }
-  :is(.modal-shopable-video .modal-popup-inner, .drawer__body-shopable-video) {
+  :is(.active_smooth .modal-popup-inner, .drawer__body-shopable-video) {
     border-radius: 0;
     clip-path: unset;
     height: auto;
     overflow: hidden;
   }
-  :is(.modal-shopable-video .modal-popup-inner) {
+  :is(.active_smooth .modal-popup-inner) {
     transform: translate(0) scale(0.8);
     -webkit-transform: translate(0) scale(0.8);
     opacity: 0;
     height: 100%;
     max-height: 100vh;
+    right: 0;
+    bottom: 0;
   }
   @supports (height: 100dvh) {
-    :is(.modal-shopable-video .modal-popup-inner) {
+    :is(.active_smooth .modal-popup-inner) {
       max-height: 100dvh;
     }
   }
-  .modal-shopable-video.active .modal-popup-inner {
+  .active_smooth.active .modal-popup-inner {
     transform: translate(0) scale(1);
     -webkit-transform: translate(0) scale(1);
     opacity: 1;
@@ -197,7 +171,7 @@
     pointer-events: auto;
     transform: translateY(0);
   }
-  .modal-shopable-video
+  .active_smooth
     :is(.video-item--ratio, .video-local)[style*="--aspect-ratio"]:before {
     padding-top: 100dvh;
   }
@@ -218,6 +192,9 @@
   }
   .drawer__body-shopable-video :is(.product-image, .image__media) {
     height: 100%;
+  }
+  media-lightbox-popup .media-lightbox-popup-slide {
+    height: 100% !important;
   }
 }
 

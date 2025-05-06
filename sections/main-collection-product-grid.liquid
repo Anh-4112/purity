@@ -86,7 +86,7 @@
 {%- endcapture -%}
 <div
   id="Collection-{{ section.id }}"
-  class="section-main-collection"
+  class="section-main-collection section"
   style="{{ style | strip | strip_newlines }}"
 >
   <div
@@ -486,7 +486,7 @@
                               assign banner_alt = image.alt | default: banner_alt
                             -%}
                             <div
-                              class="promotion_inner h-full"
+                              class="promotion_inner h-full color-{{ block_st.color_scheme }}"
                               style="--aspect-ratio: {% if image != blank %}{{ image.aspect_ratio }}{%- else -%}4/3{%- endif -%}"
                             >
                               <a
@@ -516,16 +516,16 @@
                               </a>
                               {%- if subheading != blank or heading != blank or button_label != blank -%}
                                 <div
-                                  class="promotion-information h-full z-1 justify-center text-center relative p-gutter-x flex column space-between gap-15 absolute inset-0 z-1"
+                                  class="promotion-information h-full z-1 justify-center text-center relative p-10 p-1025-30 flex column flex-end gap-20 gap-1025-30 absolute inset-0 z-1"
                                   style="--btn-padding-x: 1.5rem;"
                                 >
                                   {%- if subheading != blank or heading != blank or button_label != blank -%}
-                                    <div class="banner__box">
+                                    <div class="banner__box px-0 px-1025-8">
                                       {%- if subheading != blank -%}
-                                        <div class="suheading h7 mb-15">{{ subheading }}</div>
+                                        <div class="suheading h7 mb-10">{{ subheading }}</div>
                                       {%- endif -%}
                                       {%- if heading != blank -%}
-                                        <h2 class="h3 mb-10">
+                                        <h2 class="h3 mb-10 px-0 px-1025-22">
                                           {{ heading }}
                                         </h2>
                                       {%- endif -%}
@@ -629,16 +629,16 @@
                             </a>
                             {%- if subheading != blank or heading != blank or button_label != blank -%}
                               <div
-                                class="promotion-information h-full z-1 justify-center text-center relative p-gutter-x flex column space-between gap-15 absolute inset-0 z-1"
+                                class="promotion-information h-full z-1 justify-center text-center relative p-15 p-1025-30 flex column flex-end gap-20 gap-1025-30 absolute inset-0 z-1"
                                 style="--btn-padding-x: 1.5rem;"
                               >
                                 {%- if subheading != blank or heading != blank or button_label != blank -%}
-                                  <div class="banner__box">
+                                  <div class="banner__box px-0 px-1025-8">
                                     {%- if subheading != blank -%}
-                                      <div class="suheading h7 mb-15">{{ subheading }}</div>
+                                      <div class="suheading h7 mb-10">{{ subheading }}</div>
                                     {%- endif -%}
                                     {%- if heading != blank -%}
-                                      <h2 class="h3 mb-10">
+                                      <h2 class="h3 mb-10 px-0 px-1025-22">
                                         {{ heading }}
                                       </h2>
                                     {%- endif -%}
@@ -897,6 +897,13 @@
       "limit": 3,
       "name": "t:sections.main-collection.blocks.promotion.name",
       "settings": [
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "t:sections.all.colors.label",
+          "info": "t:sections.all.colors.info",
+          "default": "default-color-scheme"
+        },
         {
           "type": "image_picker",
           "id": "image",

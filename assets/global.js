@@ -415,7 +415,7 @@ class AlertNotify {
     notification.classList.remove("show");
     setTimeout(() => {
       this.container.removeChild(notification);
-    }, 300);
+    }, 300000);
   }
 
   createIcon(type) {
@@ -423,19 +423,19 @@ class AlertNotify {
     switch (type) {
       case "success":
         icon.innerHTML =
-          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
+          '<svg width="20" height="20" fill="none" class="flex-auto w-20"><use href="#icon-success"></use></svg>';
         break;
       case "error":
         icon.innerHTML =
-          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-error"></use></svg>';
+          '<svg width="20" height="20" fill="none" class="flex-auto w-20"><use href="#icon-error"></use></svg>';
         break;
       case "warning":
         icon.innerHTML =
-          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-info"></use></svg>';
+          '<svg width="20" height="20" fill="none" class="flex-auto w-20"><use href="#icon-info"></use></svg>';
         break;
       default:
         icon.innerHTML =
-          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="flex-auto"><use href="#icon-success"></use></svg>';
+          '<svg width="20" height="20" fill="none" class="flex-auto w-20"><use href="#icon-success"></use></svg>';
     }
     return icon;
   }

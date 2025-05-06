@@ -46,7 +46,7 @@
 {%- endcapture -%}
 
 <div
-  class="section__multi-content overflow-hidden section"
+  class="section__multi-content overflow-hidden section{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div
@@ -316,6 +316,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "presets": [
