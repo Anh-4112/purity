@@ -198,7 +198,7 @@
                     <video-local
                       class="video-item--ratio rounded block"
                       style="--aspect-ratio: {{ video_ratio }};"
-                      data-autoplay = "{{ autoplay_video }}"
+                      data-autoplay="{{ autoplay_video }}"
                       tabindex="0"
                     >
                       {% if local_video != blank %}
@@ -216,29 +216,15 @@
                             assign poster = poster_image | image_url: width: 500
                           endif
                         -%}
-                        <div class="video-thumbnail">
-                          {% render 'responsive-image',
-                            type: 'banner',
-                            container: section_st.section_width,
-                            image: poster_image,
-                            image_alt: image_alt,
-                            padding: column_gap_slide,
-                            column: items_per_row,
-                            motion: true,
-                            class: 'rounded'
-                          %}  
-                        </div>                      
-                        <template>
-                          <video
-                            preload="auto"
-                            loop
-                            muted
-                            playsinline
-                            poster="{{ poster }}"
-                            src="{{ source_url }}"
-                            class="rounded"
-                          ></video>
-                        </template>
+                        <video
+                          preload="auto"
+                          loop
+                          muted
+                          playsinline
+                          poster="{{ poster }}"
+                          data-src="{{ source_url }}"
+                          class="rounded"
+                        ></video>
                       {% else %}
                         {% if poster_image != blank %}
                           {% render 'responsive-image',

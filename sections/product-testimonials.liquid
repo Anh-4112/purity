@@ -266,15 +266,28 @@
                           assign video_poster = video.preview_image | image_url: width: 1100
                         -%}
                         <video-local>
-                          <video
-                            loop="true"
-                            data-src="{{ source_url }}"
-                            poster="{{ video_poster }}"
-                            playsinline="true"
-                            autoplay
-                            muted
-                            class="h-full w-full object-fit-cover"
-                          ></video>
+                          <div class="video-thumbnail">
+                            {% render 'responsive-image',
+                              type: 'banner',
+                              container: section_st.section_width,
+                              image: video_poster,
+                              image_alt: image_alt,
+                              padding: column_gap_slide,
+                              column: items_per_row,
+                              motion: true,
+                            %}
+                          </div>
+                          <template>
+                            <video
+                              loop="true"
+                              src="{{ source_url }}"
+                              poster="{{ video_poster }}"
+                              playsinline="true"
+                              autoplay
+                              muted
+                              class="h-full w-full object-fit-cover"
+                            ></video>
+                          </template>
                         </video-local>
                       {% elsif image != blank %}
                         {% render 'responsive-image',
