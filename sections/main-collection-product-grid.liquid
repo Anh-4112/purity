@@ -35,9 +35,9 @@
   assign sort_by = collection.sort_by | default: collection.default_sort_by
   if collection.url
     assign results_url = collection.url
-  else
-    assign terms = collection.terms | escape
-    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+    if collection.sort_by
+      assign results_url = collection.url | append: '?sort_by=' | append: collection.sort_by
+    endif
   endif
   assign items_per_row_tablet = items_per_row
   if items_per_row > 3

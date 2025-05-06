@@ -128,6 +128,9 @@ class MediaZoomButton extends HTMLButtonElement {
       wheelToZoom: false,
       returnFocus: true,
       zoom: false,
+      arrowPrev: false,
+      arrowNext: false,
+      close: false,
     });
     lightbox.on("contentLoad", (event) => {
       const { content } = event;
@@ -143,7 +146,39 @@ class MediaZoomButton extends HTMLButtonElement {
         content.element.appendChild(content.data.domElement.cloneNode(true));
       }
     });
-
+    lightbox.on("uiRegister", () => {
+      const { pswp } = lightbox;
+      pswp?.ui.registerElement({
+        name: "close-zoom",
+        isButton: true,
+        order: 2,
+        tagName: "button",
+        html: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="transition-short will-change"><use href="#icon-close"></use></svg>',
+        onClick: () => {
+          pswp.close();
+        },
+      });
+      pswp?.ui.registerElement({
+        name: "next",
+        ariaLabel: "Next slide",
+        order: 3,
+        isButton: true,
+        html: '<svg width="6" height="11" fill="none"><use href="#icon-next"></use></svg>',
+        onClick: (event, el) => {
+          pswp.next();
+        },
+      });
+      pswp?.ui.registerElement({
+        name: "prev",
+        ariaLabel: "Previous slide",
+        order: 1,
+        isButton: true,
+        html: '<svg width="6" height="11" fill="none"><use href="#icon-back"></use></svg>',
+        onClick: (event, el) => {
+          pswp.prev();
+        },
+      });
+    });
     lightbox.init();
 
     const index = this.closest(".media-gallery__image").getAttribute(

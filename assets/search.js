@@ -127,7 +127,7 @@ class ActionSearch extends HTMLElement {
     const searchTerm = this.input.value.trim();
     if (!searchTerm.length) {
       this.form.classList.remove("results", "on-input", "loading");
-      NextSkyTheme.trapFocus(this.querySelector(".modal-inner"));
+      NextSkyTheme.trapFocus(this);
       return;
     }
     let predictiveSearch = "predictive-search-drawer";
@@ -139,7 +139,7 @@ class ActionSearch extends HTMLElement {
       this.getSearchResults(searchTerm, predictiveSearch);
       return;
     }
-    NextSkyTheme.trapFocus(this.querySelector(".modal-inner"));
+    NextSkyTheme.trapFocus(this);
   }
 
   getSearchResults(searchTerm, predictiveSearch) {
@@ -171,7 +171,7 @@ class ActionSearch extends HTMLElement {
             )}&options%5Bprefix%5D=last`;
           });
         }
-        NextSkyTheme.trapFocus(this.querySelector(".modal-inner"));
+        NextSkyTheme.trapFocus(this);
       })
       .catch((error) => {
         this.form.classList.remove("loading", "results");
