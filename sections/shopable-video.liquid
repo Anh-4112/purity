@@ -197,7 +197,7 @@
               >
                 <div class="video_inner relative zoom-in">
                   {% if poster_image != blank or local_video != blank %}
-                    <video-local-shopable
+                    <video-local
                       class="video-item--ratio rounded block"
                       style="--aspect-ratio: {{ video_ratio }};"
                       data-autoplay="{{ autoplay_video }}"
@@ -217,28 +217,15 @@
                             assign poster = poster_image | image_url: width: 500
                           endif
                         -%}
-                        <div class="video-thumbnail">
-                          {% render 'responsive-image',
-                            type: 'banner',
-                            container: section_st.section_width,
-                            image: poster,
-                            image_alt: image_alt,
-                            padding: column_gap_slide,
-                            column: items_per_row,
-                            motion: true
-                          %}
-                        </div>
-                        <template>
-                          <video
-                            preload="auto"
-                            loop
-                            muted
-                            playsinline
-                            poster="{{ poster }}"
-                            src="{{ source_url }}"
-                            class="rounded"
-                          ></video>
-                        </template>
+                        <video
+                          preload="auto"
+                          loop
+                          muted
+                          playsinline
+                          poster="{{ poster }}"
+                          data-src="{{ source_url }}"
+                          class="rounded"
+                        ></video>
                       {% else %}
                         {% if poster_image != blank %}
                           {% render 'responsive-image',
@@ -254,7 +241,7 @@
                           {% render 'placeholder-render', type: 'collection' %}
                         {% endif %}
                       {% endif %}
-                    </video-local-shopable>
+                    </video-local>
                   {% else %}
                     <div
                       class="video-item--ratio rounded"
@@ -270,11 +257,11 @@
                         assign active = 'active'
                       endif
                     %}
-                    <div class="flex column align-center absolute z-1 bottom-15 right-15 gap-10 video_control transition">
+                    <div class="flex column align-center absolute z-1 bottom-15 right-15 gap-10 video_control">
                       {% if local_video != blank %}
                         <button
                           aria-label="{{ 'accessibility.play_button.video' | t }}"
-                          class="play-button invisible-1025 pointer border-0 inline-flex align-center justify-content-center {{ active }}"
+                          class="play-button invisible-1025 transition pointer border-0 inline-flex align-center justify-content-center {{ active }}"
                         >
                           {% render 'icon-play' %}
                           {% render 'icon-pause' %}
@@ -283,7 +270,7 @@
                       {% if local_video != blank %}
                         <button
                           aria-label="{{ 'accessibility.mute_button.video' | t }}"
-                          class="mute-button invisible-1025 pointer border-0 inline-flex align-center justify-content-center"
+                          class="mute-button invisible-1025 transition pointer border-0 inline-flex align-center justify-content-center"
                         >
                           {% render 'icon-mute-open' %}
                           {% render 'icon-mute-close' %}
@@ -364,7 +351,7 @@
           endif
         %}
         {% if poster_image != blank or local_video != blank %}
-          <video-local-shopable
+          <video-local
             class="video-item--ratio rounded block"
             style="--aspect-ratio: {{ video_ratio }};"
           >
@@ -406,7 +393,7 @@
                 {% render 'placeholder-render', type: 'collection' %}
               {% endif %}
             {% endif %}
-          </video-local-shopable>
+          </video-local>
         {% else %}
           <div
             class="video-item--ratio"
@@ -425,7 +412,7 @@
         </icon-close>
       </shopable-item>
     {% endif %}
-    <template class="template">
+    <template>
       <modal-popup
         class="modal active-modal-js modal-shopable-video active_smooth"
         role="dialog"
@@ -518,7 +505,7 @@
                         assign product_form_id = 'product-form-' | append: block.id
                       %}
                       {% if poster_image != blank or local_video != blank %}
-                        <video-local-shopable
+                        <video-local
                           class="video-item--ratio block w-full h-full pointer col-1025-w-custom"
                           style="--aspect-ratio: {{ video_ratio }};"
                         >
@@ -578,7 +565,7 @@
                               {% render 'placeholder-render', type: 'collection' %}
                             {% endif %}
                           {% endif %}
-                        </video-local-shopable>
+                        </video-local>
                       {% else %}
                         <div
                           class="video-item--ratio w-full col-1025-w-custom"
@@ -757,13 +744,9 @@
                                   {%- endif -%}
                                 </div>
                               </div>
-<<<<<<< HEAD
-                           {% if card_product.metafields.custom.short_description != blank or card_product.description != blank %}
-=======
                               {% if card_product.metafields.custom.short_description != blank
                                 or card_product.description != blank
                               %}
->>>>>>> e7965dd (STS3-515 Refactor video component references to use 'video-local-shopable' for consistency and clarity)
                                 <div class="block-product__description">
                                   {%- if card_product.metafields.custom.short_description -%}
                                     {{ card_product.metafields.custom.short_description }}
