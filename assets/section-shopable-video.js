@@ -137,7 +137,7 @@ class ShopableVideo extends SlideSection {
         if (buttonPlay && this.autoplayVideo) {
           buttonPlay.classList.add("active");
         }
-        const video = newCenterSlide.querySelector("video-local");
+        const video = newCenterSlide.querySelector("video-local-shopable");
 
         if (video) {
           if (!this._originalVideoHeight) {
@@ -263,7 +263,7 @@ class ShopableVideo extends SlideSection {
     if (!this.autoplayVideo) return;
     const centerSlide = this.querySelector(".swiper-slide.center-slide");
     if (!centerSlide) return;
-    const videoElement = centerSlide.querySelector("video-local video");
+    const videoElement = centerSlide.querySelector("video-local-shopable video");
     if (videoElement) {
       centerSlide.querySelector(".play-button").classList.add("active");
       videoElement.play();
@@ -274,7 +274,7 @@ class ShopableVideo extends SlideSection {
     this.pauseAllVideos();
     const activeSlide = this.swiper.slides[activeIndex];
     if (!activeSlide) return;
-    const videoElement = activeSlide.querySelector("video-local video");
+    const videoElement = activeSlide.querySelector("video-local-shopable video");
     if (videoElement) {
       activeSlide.querySelector(".play-button").classList.add("active");
       videoElement.play();
@@ -282,7 +282,7 @@ class ShopableVideo extends SlideSection {
   }
 
   pauseAllVideos() {
-    const videos = this.querySelectorAll("video-local video");
+    const videos = this.querySelectorAll("video-local-shopable video");
     videos.forEach((video) => {
       if (!video.paused) {
         video.pause();
@@ -320,6 +320,9 @@ class ShopableItem extends HTMLElement {
 
   connectedCallback() {
     this.addEventListener("click", this.onShowPopupModal.bind(this), false);
+    this.addEventListener('focus', () => {
+      console.log('item is focused');
+    });
     if (this.classList.contains("sticky-video")) {
       const allStickyVideos = document.querySelectorAll(".sticky-video");
       const isFirstStickyVideo = this === allStickyVideos[0];
@@ -706,7 +709,7 @@ class ShopableItem extends HTMLElement {
       videoElement._clickHandler = function (event) {
         event.preventDefault();
         event.stopPropagation();
-        const videoLocal = this.closest("video-local");
+        const videoLocal = this.closest("video-local-shopable");
         const playButton = videoLocal?.querySelector(".play-button");
         if (this.paused) {
           this.play();
@@ -853,7 +856,7 @@ class ShopableItem extends HTMLElement {
     if (!modalPopup) {
       const shopable_video = this.closest(
         ".section-shopable-video"
-      ).querySelector("template");
+      ).querySelector(".template");
       if (shopable_video) {
         const content = document.createElement("div");
         content.appendChild(
@@ -920,7 +923,7 @@ class ShopableItem extends HTMLElement {
         const allSlides = swiperContainer.swiper.slides;
         allSlides.forEach((slide, index) => {
           const video = slide.querySelector("video");
-          const videoLocal = slide.querySelector("video-local");
+          const videoLocal = slide.querySelector("video-local-shopable");
           const btnMute = videoLocal?.querySelector(".mute-button");
           const btnMuteMobile = slide.querySelector(".mute-button-mobile");
           const buttonCloseInformation = slide.querySelector(
@@ -1051,3 +1054,56 @@ class PopupInformationHeader extends ShopableItem {
   }
 }
 customElements.define("popup-information-header", PopupInformationHeader);
+class VideoLocalShopable extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    setTimeout(() => {
+      this.loadContent();
+    }, 100);
+  }
+
+  loadContentVideo(_this) {
+    if (!_this.getAttribute("loaded") && _this.querySelector("template")) {
+      const content = document.createElement("div");
+      content.appendChild(
+        _this
+          .querySelector("template")
+          .content.firstElementChild.cloneNode(true)
+      );
+      _this.setAttribute("loaded", true);
+      const video = content.querySelector("video")
+        ? content.querySelector("video")
+        : content.querySelector("iframe");
+      const deferredElement = _this.appendChild(video);
+      const alt = deferredElement.getAttribute("alt");
+      const img = deferredElement.querySelector("img");
+      if (alt && img) {
+        img.setAttribute("alt", alt);
+      }
+    }
+  }
+
+  loadContent() {
+    const _this = this;
+    const handleIntersection = (entries, observer) => {
+      if (!entries[0].isIntersecting) return;
+      observer.unobserve(_this);
+      this.loadContentVideo(_this);
+      const videos = _this.querySelectorAll("video");
+      videos.forEach((video) => {
+        const dataSrc = video.dataset.src;
+        if (dataSrc) {
+          video.src = dataSrc;
+          video.removeAttribute("data-src");
+        }
+      });
+    };
+    new IntersectionObserver(handleIntersection.bind(_this), {
+      rootMargin: "0px 0px 200px 0px",
+    }).observe(_this);
+  }
+}
+customElements.define("video-local-shopable", VideoLocalShopable);
