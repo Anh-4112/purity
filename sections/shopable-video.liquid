@@ -71,7 +71,7 @@
 {%- endcapture -%}
 
 <div
-  class="overflow-hidden section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
+  class="overflow-hidden section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' %} overflow-hidden{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -198,6 +198,7 @@
                     <video-local
                       class="video-item--ratio rounded block"
                       style="--aspect-ratio: {{ video_ratio }};"
+                      data-autoplay="{{ autoplay_video }}"
                       tabindex="0"
                     >
                       {% if local_video != blank %}
@@ -232,7 +233,8 @@
                             image: poster_image,
                             image_alt: image_alt,
                             padding: column_gap_slide,
-                            column: items_per_row
+                            column: items_per_row,
+                            motion: true
                           %}
                         {% else %}
                           {% render 'placeholder-render', type: 'collection' %}
@@ -820,6 +822,10 @@
     "groups": ["header", "footer", "custom.overlay"]
   },
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.shopable_video.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"
