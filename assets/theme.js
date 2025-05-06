@@ -2224,7 +2224,7 @@ class MotionEffect extends HTMLElement {
   }
 
   get delay() {
-    return parseInt(this.dataset.animateDelay || 0) / 100;
+    return parseInt(this.dataset.animateDelay || 0) / 1000;
   }
 
   initAnimate() {
