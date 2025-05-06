@@ -2,7 +2,7 @@
   {%- if closest.product.metafields.custom.highlights.value -%}
     <ul
       class="list-unstyled flex wrap gap-15 row-gap-20 flex-cols p-20 rounded bg-secondary"
-      style="--col-number: 2;--col-desktop: 4;"
+      style="--col-number: 2;--col-tablet: 2;--col-desktop: 4;"
     >
       {%- for highlights in closest.product.metafields.custom.highlights.value -%}
         <li class="flex column content-center fs-small" style="--width:4.5rem;">
@@ -16,7 +16,7 @@
             %}
           {% endif %}
           {%- if highlights.title -%}
-            <div class="highlights-text heading-color text-center mt-10">
+            <div class="highlights-text heading-color text-center mt-10 w-full">
               {{ highlights.title }}
             </div>
           {% endif %}
