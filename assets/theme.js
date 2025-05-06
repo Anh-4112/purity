@@ -2074,7 +2074,7 @@ class NewsletterPopup extends HTMLElement {
       NextSkyTheme.eventModal(wrapper, "open", true, null, true);
       NextSkyTheme.global.rootToFocus = wrapper;
       new LazyLoader(".image-lazy-load");
-    }, 1);
+    }, 4000);
 
     this.initNotShow(wrapper);
   }
