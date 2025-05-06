@@ -1,3 +1,4 @@
+import { LazyLoader } from "module-lazyLoad";
 import * as NextSkyTheme from "global";
 
 class FacetFiltersForm extends HTMLElement {
@@ -47,6 +48,20 @@ class FacetFiltersForm extends HTMLElement {
 
   static renderSectionFromFetch(url, event) {
     document.getElementById("ProductsGridContainer").classList.add("loading");
+    const scrollIntoView = document.querySelector("#ProductsGridContainer");
+    let offsetHeight = 0;
+    if (scrollIntoView.querySelector(".collection-steps")) {
+      offsetHeight =
+        scrollIntoView.querySelector(".collection-steps").offsetHeight + 150;
+    }
+    window.scrollTo({
+      top:
+        scrollIntoView.getBoundingClientRect().top +
+        window.scrollY -
+        110 +
+        offsetHeight,
+      behavior: "smooth",
+    });
     fetch(url)
       .then((response) => response.text())
       .then((responseText) => {
@@ -59,16 +74,32 @@ class FacetFiltersForm extends HTMLElement {
         FacetFiltersForm.renderFilters(htmlRender, event);
         FacetFiltersForm.renderProductContainer(htmlRender);
         FacetFiltersForm.renderProductCount(htmlRender);
+        new LazyLoader(".image-lazy-load");
       });
   }
 
   static renderSectionFromCache(filterDataUrl, event) {
     document.getElementById("ProductsGridContainer").classList.add("loading");
+    const scrollIntoView = document.querySelector("#ProductsGridContainer");
+    let offsetHeight = 0;
+    if (scrollIntoView.querySelector(".collection-steps")) {
+      offsetHeight =
+        scrollIntoView.querySelector(".collection-steps").offsetHeight + 150;
+    }
+    window.scrollTo({
+      top:
+        scrollIntoView.getBoundingClientRect().top +
+        window.scrollY -
+        110 +
+        offsetHeight,
+      behavior: "smooth",
+    });
     const html = FacetFiltersForm.filterData.find(filterDataUrl).html;
     const htmlRender = new DOMParser().parseFromString(html, "text/html");
     FacetFiltersForm.renderFilters(htmlRender, event);
     FacetFiltersForm.renderProductContainer(htmlRender);
     FacetFiltersForm.renderProductCount(htmlRender);
+    new LazyLoader(".image-lazy-load");
   }
 
   static renderProductContainer(htmlRender) {
@@ -181,7 +212,17 @@ class FacetFiltersForm extends HTMLElement {
 
   createSearchParams(form) {
     const formData = new FormData(form);
-    return new URLSearchParams(formData).toString();
+    const filteredFormData = new FormData();
+    for (let [key, value] of formData.entries()) {
+      if (key === "filter.v.price.gte" || key === "filter.v.price.lte") {
+        if (value !== "") {
+          filteredFormData.append(key, value);
+        }
+      } else {
+        filteredFormData.append(key, value);
+      }
+    }
+    return new URLSearchParams(filteredFormData).toString();
   }
 
   onSubmitForm(searchParams, event) {
@@ -190,35 +231,46 @@ class FacetFiltersForm extends HTMLElement {
 
   onSubmitHandler(event) {
     event.preventDefault();
+    const sortFilterForms = document.querySelectorAll(
+      "facet-filters-form form"
+    );
+    const targetForm = event.target.closest("form");
     if (event.target.closest("#FacetFiltersFormDrawer")) {
       return;
     }
-    const searchParams = this.createSearchParams(event.target.closest("form"));
-    this.onSubmitForm(searchParams, event);
-    const scrollIntoView =
-      document.querySelector("#CollectionResultsGird .facets-toolbar") ||
-      document.querySelector("#CollectionResultsGird .facets-filters-active") ||
-      document.querySelector("#CollectionResultsGird #CollectionGird");
-    scrollIntoView.scrollIntoView({
-      behavior: "smooth",
+    const forms = [];
+    const isFiltersForm = targetForm.id === "FacetFiltersForm";
+    sortFilterForms.forEach((form) => {
+      if (isFiltersForm) {
+        if (form.id === "FacetSortForm" || form.id === "FacetFiltersForm") {
+          forms.push(this.createSearchParams(form));
+        }
+      } else {
+        if (
+          form.id === "FacetSortForm" ||
+          form.id === "FacetFiltersFormDrawer"
+        ) {
+          forms.push(this.createSearchParams(form));
+        }
+      }
     });
+    this.onSubmitForm(forms.join("&"), event);
   }
 
   facetApplyFilter(event) {
     event.preventDefault();
     const drawer = document.querySelector("facet-drawer");
-    const searchParams = this.createSearchParams(
-      document.querySelector("#FacetFiltersFormDrawer")
+    const forms = [];
+    const sortFilterForms = document.querySelectorAll(
+      "facet-filters-form form"
     );
-    this.onSubmitForm(searchParams, event);
-    NextSkyTheme.eventModal(drawer, "close");
-    const scrollIntoView =
-      document.querySelector("#CollectionResultsGird .facets-toolbar") ||
-      document.querySelector("#CollectionResultsGird .facets-filters-active") ||
-      document.querySelector("#CollectionResultsGird #CollectionGird");
-    scrollIntoView.scrollIntoView({
-      behavior: "smooth",
+    sortFilterForms.forEach((form) => {
+      if (form.id === "FacetSortForm" || form.id === "FacetFiltersFormDrawer") {
+        forms.push(this.createSearchParams(form));
+      }
     });
+    this.onSubmitForm(forms.join("&"), event);
+    NextSkyTheme.eventModal(drawer, "close");
   }
 
   onActiveFilterClick(event) {
@@ -537,7 +589,6 @@ class LoadMoreProduct extends HTMLElement {
   }
 
   fetchData() {
-    const _this = this;
     const currentUrl = window.location.href;
     const param = window.location.search;
     let url = this.dataset.url;
@@ -558,6 +609,7 @@ class LoadMoreProduct extends HTMLElement {
         );
         document.querySelector(".pagination-load-more").innerHTML =
           htmlRender.querySelector(".pagination-load-more").innerHTML;
+        new LazyLoader(".image-lazy-load");
         document
           .querySelector("#CollectionGird")
           .querySelector("motion-items-effect")
