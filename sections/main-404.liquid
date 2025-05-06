@@ -27,8 +27,8 @@
           {% assign animate_delay = 25 %}
         {%- when 'image' -%}
           <div
-            class="w-custom mb-50"
-            style="{%- if image != blank -%}--aspect-ratio: {{ image.aspect_ratio }};{% else %}--aspect-ratio: 4/3;{% endif %}--width:500px;"
+            class="w-full max-w-custom mb-50"
+            style="{%- if image != blank -%}--aspect-ratio: {{ image.aspect_ratio }};{% else %}--aspect-ratio: 4/3;{% endif %};--max-width: 50rem;"
           >
             {%- assign image_alt = image.alt | escape | default: 'image' -%}
             {%- if image != blank -%}
@@ -129,7 +129,7 @@
                     href="{{ first_button_link | default: "#" }}"
                   {% endif %}
                   aria-label="{{ first_button_label }}"
-                  class="btn pointer btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} min-w-custom max-w-100{% endif %}"
+                  class="btn pointer btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} w-custom max-w-100{% endif %}"
                   {% if first_button_type != 'link' %}
                     style="--width: 25rem;"
                   {% endif %}

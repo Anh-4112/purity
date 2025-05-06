@@ -12,7 +12,7 @@
   class="color-{{ section_st.color_scheme }} gradient section stretch_width flex column content-center w-full max-w-custom-all mx-auto{% if section_st.show_divider %} border-top {% endif %}"
   style="{{ style | strip | strip_newlines }}--max-width: 78rem;--bs-gutter-x: 3rem;"
 >
-  <div class="contact_form-inner">
+  <div class="contact_form-inner w-full">
     <div class="contact_form-field w-full">
       {%- if section_st.heading != blank or section_st.description != blank -%}
         {% assign animate_delay = 25 %}
@@ -42,7 +42,8 @@
               >
             {% endif %}
             <div
-              class="short-des mt-15 prose"
+              class="short-des mt-15 prose max-w-custom mx-auto"
+              style="--max-width: 60rem;"
             >
               {{ section_st.description }}
             </div>
@@ -173,7 +174,7 @@
           class="field relative w-full flex wrap"
         >
           <textarea
-            rows="10"
+            rows="3"
             id="ContactFormMessage-{{ section.id }}"
             class="text-area field__input w-full"
             aria-required="true"
