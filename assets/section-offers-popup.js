@@ -11,6 +11,7 @@ class ScrollOffer extends HTMLElement {
 
   connectedCallback() {
     this.addEventListener("click", this.initPopup.bind(this), false);
+    this.addEventListener("keydown", this.handleKeydown.bind(this), false);
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", () => this.initialize());
     } else {
@@ -22,9 +23,16 @@ class ScrollOffer extends HTMLElement {
     const offerWrapper = document.querySelector("offer-popup");
     const slideSection = offerWrapper.querySelector("slide-section");
     NextSkyTheme.eventModal(offerWrapper, "open", false);
+    NextSkyTheme.global.rootToFocus = this;
     slideSection.swiper.update();
     const _self = this;
     _self.initMobile(slideSection);
+  }
+
+  handleKeydown(event) {
+    if (event.key === "Enter") {
+      this.initPopup();
+    }
   }
 
   initMobile(slide) {
