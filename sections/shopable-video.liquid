@@ -742,6 +742,15 @@
                                   {%- endif -%}
                                 </div>
                               </div>
+                              {% if card_product.metafields.custom.short_description != blank or card_product.description != blank %}
+                                <div class="block-product__description">
+                                  {%- if card_product.metafields.custom.short_description -%}
+                                    {{ card_product.metafields.custom.short_description }}
+                                  {%- else -%}
+                                    {{ card_product.description }}
+                                  {% endif %}
+                                </div>
+                              {% endif %}
                               {% if card_product != blank %}
                                 <div class="block-product__variant-picker">
                                   {%- render 'variant-swatches',
