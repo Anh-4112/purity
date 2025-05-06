@@ -1151,7 +1151,7 @@ blockquote {
   /* Navigation desktop */
   .submenu {
     top: auto;
-    margin-top: calc((var(--section-pb, 20) * 1px));
+    margin-top: calc((var(--section-pb, 20) * 1px) + 5px);
   }
   .submenu:not(.expanding)[open] {
     overflow: unset;
@@ -1165,7 +1165,7 @@ blockquote {
     left: 0;
     right: 0;
     top: 0;
-    height: calc((var(--section-pb, 20) * 1px));
+    height: calc((var(--section-pb, 20) * 1px) + 5px);
     transform: translateY(-100%);
     z-index: 3;
   }
@@ -1183,6 +1183,13 @@ blockquote {
   }
   .hover-action:hover .show-on-hover:not(.swiper-button-disabled) {
     opacity: 1;
+  }
+  .hover-action:hover
+    :is(
+      .swiper-button-next.swiper-button-disabled.show-on-hover,
+      .swiper-button-prev.swiper-button-disabled.show-on-hover
+    ) {
+    opacity: 0.35;
   }
   .hover-action:hover .show-on-hover {
     visibility: visible;
@@ -1209,7 +1216,7 @@ blockquote {
   .btn__quick-shop:focus-visible {
     opacity: 1;
     visibility: visible;
-    pointer-events: auto;
+    pointer-events: pointer;
   }
   .btn__quick-shop.absolute {
     --btn-padding-y: 1.5rem;
@@ -1611,7 +1618,7 @@ blockquote {
   --width: 3px;
   --height: 3px;
 }
-.minicar_recommend .product-addtocart-btn {
+.minicar_recommend :is(.product-addtocart-btn, .product-quickview-btn) {
   display: none;
 }
 .minicar_recommend .btn__quick-shop .hidden-1025 {
@@ -1849,23 +1856,23 @@ media-lightbox-popup {
 }
 :is(.active_smooth, shopable-item)
   :is(.mute-button, .play-button)
-  :where(.icon-pause, .mute-close) {
+  :where(.icon-pause, .mute-open) {
   display: none;
 }
 :is(.active_smooth, shopable-item)
   :is(.mute-button, .play-button).active
-  :where(.icon-pause, .mute-close) {
+  :where(.icon-pause, .mute-open) {
   display: inline-block;
 }
 :is(.active_smooth, shopable-item)
   :is(.mute-button, .play-button).active
-  :where(.icon-play, .mute-open) {
+  :where(.icon-play, .mute-close) {
   display: none;
 }
 :is(.active_smooth, shopable-item) :is(.play-button, .play-button svg) {
   color: rgb(var(--color-white)) !important;
 }
-:is(.active_smooth, shopable-item) .play-button.active {
+:is(.active_smooth) .play-button.active {
   opacity: 0;
   transition-delay: 0.2s;
 }

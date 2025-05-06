@@ -1260,20 +1260,18 @@ a.hover-heading-color:hover,
 
 .section {
   padding-top: clamp(
-    (var(--section-pt) * 0.75px),
+    (var(--section-pt) * 0.6px),
     calc(
-      (var(--section-pt) * 0.75px) +
-        (var(--section-pt) - (var(--section-pt) * 0.75)) *
-        var(--responsive-rate)
+      (var(--section-pt) * 0.6px) +
+        (var(--section-pt) - (var(--section-pt) * 0.6)) * var(--responsive-rate)
     ),
     calc(var(--section-pt) * 1px)
   );
   padding-bottom: clamp(
-    (var(--section-pb) * 0.75px),
+    (var(--section-pb) * 0.6px),
     calc(
-      (var(--section-pb) * 0.75px) +
-        (var(--section-pb) - (var(--section-pb) * 0.75)) *
-        var(--responsive-rate)
+      (var(--section-pb) * 0.6px) +
+        (var(--section-pb) - (var(--section-pb) * 0.6)) * var(--responsive-rate)
     ),
     calc(var(--section-pb) * 1px)
   );
@@ -1302,14 +1300,6 @@ a.hover-heading-color:hover,
 }
 .header__inner {
   grid-template: var(--header-grid-template);
-}
-@media (min-width: 1025px) {
-  .list-menu > li {
-    align-self: center;
-  }
-  .level-1 {
-    min-height: 3.5rem;
-  }
 }
 .h-full {
   height: 100%;

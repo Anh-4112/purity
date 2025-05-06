@@ -11,7 +11,7 @@
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
-    assign section_width = 'full-width px-20'
+    assign section_width = 'full-width'
   else
     assign section_width = 'fluid_container'
   endif
@@ -77,7 +77,7 @@
   <div class="{{ section_width }}">
     {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div
-        class="section-header text-{{ text_alignment }}"
+        class="section-header text-{{ text_alignment }}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}"
       >
         {%- if section_st.subheading != blank -%}
           {% if scroll_animation %}
@@ -189,7 +189,7 @@
             %}
             <div class="swiper-slide" {{ block.shopify_attributes }}>
               <shopable-item
-                class="pointer rounded block focus-inset-inside"
+                class="pointer block focus-inset-inside"
                 tabindex="0"
                 data-product="Product-{{ block.id }}"
                 data-position="{{ forloop.index | minus: 1 }}"

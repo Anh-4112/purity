@@ -5,7 +5,7 @@
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
-    assign section_width = 'full-width px-20'
+    assign section_width = 'full-width'
   else
     assign section_width = 'fluid_container'
   endif
@@ -62,7 +62,7 @@
   <div class="{{ section_width }}">
     {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div
-        class="section-header text-{{ text_alignment }}"
+        class="section-header text-{{ text_alignment }}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}"
       >
         {%- if section_st.subheading != blank -%}
           {% if scroll_animation %}
@@ -134,6 +134,7 @@
         data-tablet="{{ items_per_row_tablet }}"
         data-free-scroll="{{ data_free_scroll }}"
         style="{{ col_style | strip | strip_newlines }}"
+        data-arrow-center="true"
       >
         {% if show_navigation %}
           {%- render 'swiper-navigation', show_on_hover: true -%}

@@ -91,6 +91,7 @@
     }
     .vertical-tab .product-tabs__header-item.active {
       background-size: 100% 1px;
+      border-color: transparent;
     }
   }
 {%- endstyle -%}
@@ -202,6 +203,7 @@
                   data-free-scroll="{{ data_free_scroll }}"
                   data-slide-tab="true"
                   style="{{ col_style | strip | strip_newlines }}"
+                  data-arrow-center="true"
                 >
                   {% if show_navigation %}
                     {%- render 'swiper-navigation', show_on_hover: true -%}
