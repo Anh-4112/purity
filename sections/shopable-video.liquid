@@ -197,7 +197,7 @@
               >
                 <div class="video_inner relative zoom-in">
                   {% if poster_image != blank or local_video != blank %}
-                    <video-local
+                    <video-local-shopable
                       class="video-item--ratio rounded block"
                       style="--aspect-ratio: {{ video_ratio }};"
                       data-autoplay="{{ autoplay_video }}"
@@ -217,15 +217,28 @@
                             assign poster = poster_image | image_url: width: 500
                           endif
                         -%}
-                        <video
-                          preload="auto"
-                          loop
-                          muted
-                          playsinline
-                          poster="{{ poster }}"
-                          data-src="{{ source_url }}"
-                          class="rounded"
-                        ></video>
+                        <div class="video-thumbnail absolute" style="--aspect-ratio: {{ video_ratio }};">
+                          {% render 'responsive-image',
+                            type: 'banner',
+                            container: section_st.section_width,
+                            image: poster,
+                            image_alt: image_alt,
+                            padding: column_gap_slide,
+                            column: items_per_row,
+                            motion: true
+                          %}
+                        </div>
+                        <template>
+                          <video
+                            preload="auto"
+                            loop
+                            muted
+                            playsinline
+                            poster="{{ poster }}"
+                            src="{{ source_url }}"
+                            class="rounded"
+                          ></video>
+                        </template>
                       {% else %}
                         {% if poster_image != blank %}
                           {% render 'responsive-image',
@@ -241,7 +254,7 @@
                           {% render 'placeholder-render', type: 'collection' %}
                         {% endif %}
                       {% endif %}
-                    </video-local>
+                    </video-local-shopable>
                   {% else %}
                     <div
                       class="video-item--ratio rounded"
@@ -317,6 +330,7 @@
         class="sticky-video block right-0 pointer transition-drawer fixed z-10 transition-drawer w-custom"
         style="--width: 15rem"
         data-product="Product-{{ section.blocks[0].id }}"
+        tabindex="0"
       >
         {% liquid
           assign block_st = section.blocks[0].settings
@@ -412,7 +426,7 @@
         </icon-close>
       </shopable-item>
     {% endif %}
-    <template>
+    <template class="template">
       <modal-popup
         class="modal active-modal-js modal-shopable-video active_smooth"
         role="dialog"
