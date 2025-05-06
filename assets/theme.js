@@ -823,6 +823,39 @@ CustomElement.observeAndPatchCustomElements({
   },
 });
 
+class MobileCollapsibleRowDetails extends CollapsibleRowDetails {
+  constructor() {
+    super();
+    this.updateOpenState();
+    window.addEventListener('resize', this.updateOpenState.bind(this));
+  }
+
+  updateOpenState() {
+    if (this.isMobileDevice()) {
+      this.open = false;
+      this.removeAttribute("open");
+    } else {
+      this.open = true;
+      this.setAttribute("open", "");
+    }
+  }
+
+  isMobileDevice() {
+    return window.matchMedia("(max-width: 768px)").matches;
+  }
+}
+
+customElements.define("mobile-collapsible-row", MobileCollapsibleRowDetails, {
+  extends: "details",
+});
+
+CustomElement.observeAndPatchCustomElements({
+  "mobile-collapsible-row": {
+    tagElement: "details",
+    classElement: MobileCollapsibleRowDetails,
+  },
+});
+
 class RecentlyViewedProducts extends HTMLElement {
   constructor() {
     super();
@@ -1375,6 +1408,7 @@ class CartEstimate extends HTMLElement {
         this.cartActionAddons
           .closest(".drawer__cart-shipping")
           .classList.add("active");
+        this.cartToggleAddons.focus();
       }
     }
   }
@@ -1444,6 +1478,7 @@ class CartNote extends HTMLElement {
         this.cartActionAddons
           .closest(".drawer__cart-note")
           .classList.add("active");
+        this.cartToggleAddons.focus();
       }
     }
   }
@@ -1640,10 +1675,10 @@ class CarouselMobile extends HTMLElement {
   actionOutMobile() {
     this.classList.remove("swiper");
     this.innerHTML = this.swiperSlideInnerHtml;
-    if (this.bundle){
-      this.className = ''
+    if (this.bundle) {
+      this.className = "";
       setTimeout(() => {
-        this.classList.remove('swiper-backface-hidden')
+        this.classList.remove("swiper-backface-hidden");
       }, 100);
       return;
     }
@@ -2065,12 +2100,14 @@ class NewsletterPopup extends HTMLElement {
     content.appendChild(template.content.firstElementChild.cloneNode(true));
 
     const wrapper = NextSkyTheme.body.appendChild(
-      content.querySelector("modal-popup")
+      content.querySelector("newsletter-modal-popup")
     );
 
     setTimeout(() => {
       NextSkyTheme.eventModal(wrapper, "open", true, null, true);
-    }, 3000);
+      NextSkyTheme.global.rootToFocus = wrapper;
+      new LazyLoader(".image-lazy-load");
+    }, 4000);
 
     this.initNotShow(wrapper);
   }
@@ -2222,7 +2259,7 @@ class MotionEffect extends HTMLElement {
   }
 
   get delay() {
-    return parseInt(this.dataset.animateDelay || 0) / 100;
+    return parseInt(this.dataset.animateDelay || 0) / 1000;
   }
 
   initAnimate() {

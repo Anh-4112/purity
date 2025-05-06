@@ -42,7 +42,7 @@
 {%- endstyle -%}
 <div
   id="{{ section.id }}"
-  class="color-{{ section_st.color_scheme }} section section__media-hero"
+  class="color-{{ section_st.color_scheme }} section section__media-hero{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="relative">
@@ -110,7 +110,7 @@
         {%- render 'placeholder-render', type: 'lifestyle-2', class: 'img-placeholder h-full w-full' -%}
       </div>
     {%- endif -%}
-    <div class="section__media-hero-content container media__content relative w-full z-2 {{ desktop_content_position }} text-center">
+    <div class="section__media-hero-content container media__content relative w-full z-2 text-center">
       <scrolling-effect class="banner__box-hero-hero max-w-100 px-custom inline-block">
         {% content_for 'blocks' %}
       </scrolling-effect>
@@ -205,6 +205,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "presets": [

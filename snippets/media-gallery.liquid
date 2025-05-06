@@ -59,7 +59,7 @@
                   product: product,
                   section_st: section_st,
                   type_section: type_section,
-                  motion: true,
+                  motion: false,
                   class: ' swiper-slide'
                 %}
               </div>
@@ -85,6 +85,7 @@
                   product: product,
                   section_st: section_st,
                   thumbnail: true,
+                  motion: false,
                   type_section: type_section,
                   class: ' swiper-slide pointer'
                 %}
@@ -115,7 +116,7 @@
                 product: product,
                 section_st: section_st,
                 type_section: type_section,
-                motion: true,
+                motion: false,
                 class: ' swiper-slide'
               %}
             </div>
@@ -124,20 +125,22 @@
             ></div>
           </quick-view-gallery>
         {% else %}
-          <grid-gallery
-            id="GalleryViewer-{{ section.id }}"
-            class="grid grid-cols gap-10 grid-swiper-mobile"
-            style="{{ col | strip | strip_newlines }}"
-          >
-            {% render 'product-media',
-              images: images,
-              product: product,
-              section_st: section_st,
-              type_section: type_section,
-              motion: true,
-              class: ' grid-item'
-            %}
-          </grid-gallery>
+          <div class="free-scroll">
+            <grid-gallery
+              id="GalleryViewer-{{ section.id }}"
+              class="grid grid-cols gap-10 grid-swiper-mobile overflow-visible-mb"
+              style="{{ col | strip | strip_newlines }}"
+            >
+              {% render 'product-media',
+                images: images,
+                product: product,
+                section_st: section_st,
+                type_section: type_section,
+                motion: false,
+                class: ' grid-item'
+              %}
+            </grid-gallery>
+          </div>
       {% endcase %}
     </div>
   </media-gallery>

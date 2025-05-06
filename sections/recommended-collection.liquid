@@ -1,5 +1,7 @@
 {%- liquid
   assign section_st = section.settings
+  assign theme_st = settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -111,7 +113,7 @@
           <use href="#icon-arrow-down"></use>
         </svg>
        </span>
-      <custom-options class="title-list rounded-10 flex column gap-10 overflow-auto p-20 bg-white absolute transition-drawer z-2 shadow min-w-custom word-break left-0 opacity-0 pointer-none" style="--min-width: 21rem;">
+      <custom-options class="title-list rounded-10 flex column gap-10 overflow-auto p-20 bg-white absolute transition-short z-2 shadow min-w-custom word-break left-0 opacity-0 pointer-none" style="--min-width: 21rem;">
         {% for item in split_array %}
              <div class="title-group custom-scrollbar flex column gap-10 fs-big-2 heading-color">
           {% liquid
@@ -144,7 +146,7 @@
           <use href="#icon-arrow-down"></use>
         </svg>
       </span>
-      <custom-options class="collection-list block shadow absolute transition-drawer z-2 min-w-custom word-break left-0 opacity-0 pointer-none" style="--min-width: 21rem;">
+      <custom-options class="collection-list block shadow absolute transition-short z-2 min-w-custom word-break left-0 opacity-0 pointer-none" style="--min-width: 21rem;">
         {% for block_id in unique_block_ids %}
           <div class="collection-group custom-scrollbar flex column gap-10 fs-big-2 bg-white rounded-10 p-20 heading-color overflow-auto" id="{{ block_id }}" {% if block_id != first_block_id %}style="display: none;"{% endif %}>
             {% for item in split_collection %}
@@ -185,7 +187,7 @@
   }
 {% endstyle %}
 <div
-  class="section color-{{ section_st.color_scheme }} gradient"
+  class="section color-{{ section_st.color_scheme }} gradient{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -236,40 +238,68 @@
               %}
               {% case block.type %}
                 {% when 'heading' %}
-                  <motion-effect
-                    data-animate="fade-up"
-                    data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
-                    class="block"
-                  >
-                    <div
-                      class="block__heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
-                      style="--space-bottom: {{ block_st.spacing_bottom }};"
-                      {{ block.shopify_attributes }}
+                  {% if scroll_animation %}
+                    <motion-effect
+                      data-animate="fade-up"
+                      data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
+                      class="block"
                     >
-                      {{ block_st.heading }}
-                    </div>
-                  </motion-effect>
+                  {% endif %}
+                  <div
+                    class="block__heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
+                    style="--space-bottom: {{ block_st.spacing_bottom }};"
+                    {{ block.shopify_attributes }}
+                  >
+                    {{ block_st.heading }}
+                  </div>
+                  {% if scroll_animation %}
+                    </motion-effect>
+                  {% endif %}
                 {% when 'subheading' %}
                   <motion-effect
                     data-animate="left-to-right"
                     data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
-                    class="block"
+                    class="block ltr-motion"
                   >
                     <div
-                      class="block__highlight_text subheading_weight lh-normal inline-flex gap-5 content-center mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if block_st.background_color != "rgba(0,0,0,0)" and block_st.background_color != "transparent" and block_st.background_color != blank  %} py-8 px-15 btn-rounded{% endif %}"
+                      class="block__highlight_text subheading_weight lh-normal inline-flex gap-5 content-center mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color{% if scroll_animation == false %}{% if has_custom_background %} bg-custom py-10 px-15 btn-rounded{% endif %} inline-flex align-center gap-5{% endif %}"
                       style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
                       {{ block.shopify_attributes }}
                     >
+                      {%- if scroll_animation -%}
+                        <div class="ltr-outer inline-block">
+                          <div class="ltr-inner inline-block overflow-hidden relative{% if has_custom_background %} py-10 px-15 btn-rounded{% endif %}">
+                            <div class="ltr-inner-content">
+                              <div
+                                class="ltr-wrap inline-flex align-center gap-5{% if block_st.highlight_text_icon == 'dot' %} lh-global{% endif %}"
+                              >
+                      {%- endif -%}
                       {%- if block_st.highlight_text_icon == 'star' -%}
                         {%- render 'icon-star' -%}
                       {%- elsif block_st.highlight_text_icon == 'dot' -%}
                         {%- render 'icon-dot' -%}
                       {%- endif -%}
                       {{ block_st.highlight_text | escape }}
+                      {%- if scroll_animation -%}
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                      {%- endif -%}
                     </div>
                   </motion-effect>
                 {% when 'description' %}
-                  <motion-effect
+                  {% if scroll_animation %}
+                    <motion-effect
+                      class="block__description block relative z-2 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
+                      style="--space-bottom: {{ block_st.spacing_bottom }};"
+                      {{ block.shopify_attributes }}
+                      data-animate="fade-up"
+                      data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
+                      class="block"
+                    >
+                  {% endif %}
+                  <div
                     class="block__description block relative z-2 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %}"
                     style="--space-bottom: {{ block_st.spacing_bottom }};"
                     {{ block.shopify_attributes }}
@@ -282,7 +312,10 @@
                       | replace: '[title]', title_replace
                       | replace: '[collection]', replace_collection
                     }}
-                  </motion-effect>
+                  </div>
+                  {% if scroll_animation %}
+                    </motion-effect>
+                  {% endif %}
                 {% when 'button' %}
                   {% liquid
                     assign first_button_label = block_st.first_button_label
@@ -292,49 +325,53 @@
                     assign second_button_type = block_st.second_button_type
                   %}
                   {% if first_button_label != blank or block_st.second_button_label != blank %}
-                    <motion-effect
-                      data-animate="fade-up"
-                      data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
-                      class="block"
-                    >
-                      <div
-                        class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap gap text-center {% if section_content_alignment %} justify-content-{{ section_content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
-                        style="--space-bottom: {{ block_st.spacing_bottom }};--gap-desktop: 30px; --gap: 20px;"
+                    {% if scroll_animation %}
+                      <motion-effect
+                        data-animate="fade-up"
+                        data-animate-delay="{{ forloop.index | times: 5 | plus: 25 }}"
+                        class="block"
                       >
-                        {% if first_button_label != blank %}
-                          <a
-                            {% if url_default == blank %}
-                              role="link" aria-disabled="true"
-                            {% else %}
-                              href="{{ url_default | default: "#" }}"
-                            {% endif %}
-                            aria-label="{{ first_button_label }}"
-                            class="btn-change-url btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
-                            {% if first_button_type != 'link' %}
-                              style="--width: 20rem;"
-                            {% endif %}
-                          >
-                            {{ first_button_label }}
-                          </a>
-                        {% endif %}
-                        {% if second_button_label != blank %}
-                          <a
-                            {% if second_button_link == blank %}
-                              role="link" aria-disabled="true"
-                            {% else %}
-                              href="{{ second_button_link | default: "#" }}"
-                            {% endif %}
-                            aria-label="{{ second_button_label }}"
-                            class="btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
-                            {% if second_button_type != 'link' %}
-                              style="--width: 20rem;"
-                            {% endif %}
-                          >
-                            {{ second_button_label }}
-                          </a>
-                        {% endif %}
-                      </div>
-                    </motion-effect>
+                    {% endif %}
+                    <div
+                      class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap gap text-center {% if section_content_alignment %} justify-content-{{ section_content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
+                      style="--space-bottom: {{ block_st.spacing_bottom }};--gap-desktop: 30px; --gap: 20px;"
+                    >
+                      {% if first_button_label != blank %}
+                        <a
+                          {% if url_default == blank %}
+                            role="link" aria-disabled="true"
+                          {% else %}
+                            href="{{ url_default | default: "#" }}"
+                          {% endif %}
+                          aria-label="{{ first_button_label }}"
+                          class="btn-change-url btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
+                          {% if first_button_type != 'link' %}
+                            style="--width: 20rem;"
+                          {% endif %}
+                        >
+                          {{ first_button_label }}
+                        </a>
+                      {% endif %}
+                      {% if second_button_label != blank %}
+                        <a
+                          {% if second_button_link == blank %}
+                            role="link" aria-disabled="true"
+                          {% else %}
+                            href="{{ second_button_link | default: "#" }}"
+                          {% endif %}
+                          aria-label="{{ second_button_label }}"
+                          class="btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
+                          {% if second_button_type != 'link' %}
+                            style="--width: 20rem;"
+                          {% endif %}
+                        >
+                          {{ second_button_label }}
+                        </a>
+                      {% endif %}
+                    </div>
+                    {% if scroll_animation %}
+                      </motion-effect>
+                    {% endif %}
                   {% endif %}
               {% endcase %}
             {% endfor %}
@@ -521,6 +558,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "blocks": [

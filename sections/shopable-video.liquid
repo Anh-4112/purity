@@ -6,6 +6,7 @@
   assign section_st = section.settings
 
   assign product_image_ratio = theme_st.product_image_ratio
+  assign scroll_animation = theme_st.scroll_animation
 
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
@@ -63,13 +64,14 @@
   if remainder == 1
     assign center_slide = true
   endif
+  assign animate_delay = 25
 -%}
 {%- capture style -%}
       --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--width: 5rem;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
 
 <div
-  class="overflow-hidden section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
+  class="overflow-hidden section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' %} overflow-hidden{% endif %}{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -78,37 +80,52 @@
         class="section-header text-{{ text_alignment }}"
       >
         {%- if section_st.subheading != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="30"
-            class="block"
-          >
-          <div class="section-subheading subheading_weight">
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
+          <div class="section-subheading subheading_weight mb-10">
             {{ section_st.subheading }}
           </div>
-          </motion-effect>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.title != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="35"
-            class="block"
-          >
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
           <h2 class="block section-heading {{ header_size }}">
             {{ section_st.title }}
           </h2>
-          </motion-effect>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="40"
-            class="block"
-          >
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
           <div class="section-description mt-15 prose">
             {{ section_st.description }}
           </div>
-          </motion-effect>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -172,7 +189,6 @@
             %}
             <div class="swiper-slide" {{ block.shopify_attributes }}>
               <shopable-item
-                tabindex="0"
                 class="pointer rounded block"
                 data-product="Product-{{ block.id }}"
                 data-position="{{ forloop.index | minus: 1 }}"
@@ -182,6 +198,8 @@
                     <video-local
                       class="video-item--ratio rounded block"
                       style="--aspect-ratio: {{ video_ratio }};"
+                      data-autoplay="{{ autoplay_video }}"
+                      tabindex="0"
                     >
                       {% if local_video != blank %}
                         {%- liquid
@@ -215,7 +233,8 @@
                             image: poster_image,
                             image_alt: image_alt,
                             padding: column_gap_slide,
-                            column: items_per_row
+                            column: items_per_row,
+                            motion: true
                           %}
                         {% else %}
                           {% render 'placeholder-render', type: 'collection' %}
@@ -268,6 +287,7 @@
                     disable_badge: true,
                     disable_rate: true,
                     disable_vendor: true,
+                    disable_tag: true,
                     disable_hover_image: true,
                     show_quick_add: true,
                     disable_color_swatches: true,
@@ -393,13 +413,14 @@
     {% endif %}
     <template>
       <modal-popup
-        class="modal active-modal-js modal-shopable-video"
+        class="modal active-modal-js modal-shopable-video active_smooth"
         role="dialog"
       >
         <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
         <div
           class="modal-popup-inner modal-focus h-content h-content transition-drawer max-w-custom m-auto invisible-1025 fixed inset-0 z-20 w-full"
           style="--max-width: 80rem;"
+          tabindex="-1"
         >
           <div class="modal-nav hidden block-1025 transition">
             {%- render 'swiper-navigation' -%}
@@ -521,6 +542,7 @@
                             </div>
                             <video
                               preload="auto"
+                              class="smooth_loading-video"
                               loop
                               playsinline
                               autoplay
@@ -572,6 +594,7 @@
                             disable_quickview: true,
                             disable_badge: true,
                             disable_rate: true,
+                            disable_tag: true,
                             disable_vendor: true,
                             disable_hover_image: true,
                             show_quick_add: true,
@@ -720,6 +743,15 @@
                                   {%- endif -%}
                                 </div>
                               </div>
+                              {% if card_product.metafields.custom.short_description != blank or card_product.description != blank %}
+                                <div class="block-product__description">
+                                  {%- if card_product.metafields.custom.short_description -%}
+                                    {{ card_product.metafields.custom.short_description }}
+                                  {%- else -%}
+                                    {{ card_product.description }}
+                                  {% endif %}
+                                </div>
+                              {% endif %}
                               {% if card_product != blank %}
                                 <div class="block-product__variant-picker">
                                   {%- render 'variant-swatches',
@@ -801,6 +833,10 @@
     "groups": ["header", "footer", "custom.overlay"]
   },
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.shopable_video.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"
@@ -1020,6 +1056,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "blocks": [

@@ -1,5 +1,7 @@
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -15,7 +17,7 @@
   if text_size == 'small'
     assign text_content_size = 'h7'
   elsif text_size == 'large'
-    assign text_content_size = 'h5'
+    assign text_content_size = 'h4'
   else
     assign text_content_size = 'h6'
   endif
@@ -33,7 +35,7 @@
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--max-width: {{ section_st.content_max_width }}%;
 {%- endcapture -%}
 <div
-  class="section section-case color-{{ section_st.color_scheme }} gradient"
+  class="section section-case color-{{ section_st.color_scheme }} gradient{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }} flex column content-center">
@@ -131,15 +133,19 @@
     </div>
     {% if text != blank %}
       <div class="multimedia_with_text__text text-center max-w-custom">
-        <motion-effect
-          data-animate="fade-up"
-          data-animate-delay="30"
-          class="block"
-        >
-          <div class="text-content {{ text_content_size }} prose">
-            {{ text }}
-          </div>
-        </motion-effect>
+        {% if scroll_animation %}
+          <motion-effect
+            data-animate="fade-up"
+            data-animate-delay="30"
+            class="block"
+          >
+        {% endif %}
+        <div class="text-content {{ text_content_size }} prose">
+          {{ text }}
+        </div>
+        {% if scroll_animation %}
+          </motion-effect>
+        {% endif %}
       </div>
     {% endif %}
   </div>
@@ -324,6 +330,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "blocks": [

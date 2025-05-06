@@ -10,6 +10,7 @@ class ShopableImage extends HTMLElement {
     this.isMobile = this.innerWidth <= 767;
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.openedByKeyboard = false;
   }
 
   connectedCallback() {
@@ -97,6 +98,7 @@ class ShopableImage extends HTMLElement {
   handleKeyPress(event) {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
+      this.openedByKeyboard = true;
       if (this.isMobile) {
         this.handleMobileClick(event);
       } else {
@@ -140,7 +142,7 @@ class ShopableImage extends HTMLElement {
     tooltip.style.top = triggerRect.bottom + 10 + window.scrollY + "px";
 
     tooltip.setAttribute("tabindex", "-1");
-
+    const wasOpenedByKeyboard = this.openedByKeyboard || false;
     setTimeout(() => {
       Motion.animate(
         tooltip,
@@ -155,14 +157,17 @@ class ShopableImage extends HTMLElement {
             tooltip
               .querySelector(".group-lookbook__item-product")
               .classList.add("active");
-            const focusableElements = tooltip.querySelectorAll(
-              'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-            );
-            if (focusableElements.length > 0) {
-              focusableElements[0].focus();
-            } else {
-              tooltip.focus();
+            if (wasOpenedByKeyboard){
+              const focusableElements = tooltip.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+              );
+              if (focusableElements.length > 0) {
+                focusableElements[0].focus();
+              } else {
+                tooltip.focus();
+              }
             }
+            this.openedByKeyboard = false;
           },
         }
       );
@@ -171,7 +176,6 @@ class ShopableImage extends HTMLElement {
     this.isAnimating = false;
     this.isActive = true;
   }
-  v;
 
   closeAllOtherItems() {
     const allActiveImages = document.querySelectorAll("shopable-image.active");

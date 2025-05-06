@@ -18,6 +18,10 @@
   .faq-page .shopify-block details {
     padding: 2.4rem 0;
   }
+
+  .contact_form-field textarea {
+    min-height: 12rem;
+  }
 {% endstyle %}
 
 <section
@@ -31,13 +35,16 @@
     >
       {% if show_faqs_message %}
         <div class="contact_form-field w-full col-1025-w-custom bg-secondary p-20 p-1025-40 h-content rounded sticky-1025 top-20 transition">
-          {%- if section_st.heading != blank or section_st.description != blank or section_st.highlight_text != blank -%}
+          {%- if section_st.heading != blank
+            or section_st.description != blank
+            or section_st.highlight_text != blank
+          -%}
             <div
               class="text-{{ section_st.text_alignment }} mb-30"
             >
               {%- if section_st.highlight_text != blank -%}
                 <div
-                  class="section-subheading lh-1 mb-15 mb-md-10 py-10 px-15 btn-rounded inline-block bg-sale"
+                  class="section-subheading lh-1 mb-10 mb-md-15 py-10 px-15 btn-rounded inline-block bg-sale"
                   style="--"
                 >
                   {{ section_st.highlight_text }}
@@ -160,7 +167,7 @@
               class="field relative w-full flex wrap transition"
             >
               <textarea
-                rows="10"
+                rows="3"
                 id="ContactFormMessage-{{ section.id }}"
                 class="text-area field__input w-full mb-20 mb-md-30"
                 aria-required="true"
@@ -195,7 +202,7 @@
   </div>
 </section>
 <script type="module">
-  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
 
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
@@ -244,6 +251,10 @@
     }
   ],
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.page-faq.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

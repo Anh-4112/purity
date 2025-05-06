@@ -30,14 +30,14 @@ export class FormValidator {
       const errorMessage = validateFn(input.value.trim());
 
       if (errorMessage) {
-        errorElement.textContent = errorMessage;
+        errorElement.innerHTML = `${this.getSvgIcon()} <span>${errorMessage}</span>`;
         input.classList.add(this.options.errorClass);
         isValid = false;
       } else {
-        errorElement.textContent = "";
+        errorElement.innerHTML = "";
         input.classList.remove(this.options.errorClass);
 
-        if (errorElement.textContent === "") {
+        if (!errorElement.innerHTML.trim()) {
           this.removeErrorElement(errorElement);
         }
       }
@@ -54,10 +54,18 @@ export class FormValidator {
       errorEl = document.createElement("div");
       errorEl.className = "form-error-message warning mt-10 max-w-custom fs-small inline-flex align-center gap-10 w-full h-custom";
       errorEl.style.setProperty('--height', '5.6rem');
-      parentElement.appendChild(errorEl);
+      parentElement.insertAdjacentElement('beforeend', errorEl);
     }
 
     return errorEl;
+  }
+
+  getSvgIcon() {
+    return `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 7.5V11.6667" stroke="#79571b" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9.99962 17.8414H4.94962C2.05795 17.8414 0.849619 15.7747 2.24962 13.2497L4.84962 8.56641L7.29962 4.16641C8.78295 1.49141 11.2163 1.49141 12.6996 4.16641L15.1496 8.57474L17.7496 13.2581C19.1496 15.7831 17.933 17.8497 15.0496 17.8497H9.99962V17.8414Z" stroke="#79571b" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9.99683 14.167H10.0043" stroke="#79571b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
   }
 
   removeErrorElement(errorEl) {

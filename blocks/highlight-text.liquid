@@ -10,14 +10,22 @@
 {%- if scroll_animation -%}
   <motion-effect
     data-animate="left-to-right"
-    class="block"
+    class="block ltr-motion"
   >
 {%- endif -%}
 <div
-  class="block__highlight_text subheading_weight lh-1 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color bg-custom{% if has_custom_background %} py-10 px-15 btn-rounded{% endif %} inline-flex align-center gap-5"
+  class="block__highlight_text subheading_weight lh-1 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color{% if scroll_animation == false %}{% if has_custom_background %} bg-custom py-10 px-15 btn-rounded{% endif %} inline-flex align-center gap-5{% endif %}"
   style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
   {{ block.shopify_attributes }}
 >
+  {%- if scroll_animation -%}
+    <div class="ltr-outer inline-block">
+      <div class="ltr-inner inline-block overflow-hidden relative{% if has_custom_background %} py-10 px-15 btn-rounded{% endif %}">
+        <div class="ltr-inner-content">
+          <div
+            class="ltr-wrap inline-flex align-center gap-5{% if block_st.highlight_text_icon == 'dot' %} lh-global{% endif %}"
+          >
+  {%- endif -%}
   {%- if block_st.highlight_text_icon == 'star' -%}
     {%- render 'icon-star' -%}
   {%- elsif block_st.highlight_text_icon == 'dot' -%}
@@ -25,8 +33,13 @@
       <use href="#icon-dot"></use>
     </svg>
   {%- endif -%}
-
   {{ block_st.highlight_text | escape }}
+  {%- if scroll_animation -%}
+    </div>
+    </div>
+    </div>
+    </div>
+  {%- endif -%}
 </div>
 {%- if scroll_animation -%}
   </motion-effect>

@@ -6,6 +6,7 @@ class ShopableVideo extends SlideSection {
   constructor() {
     super();
     this.innerWidth = window.innerWidth;
+    this.autoplayVideo = this.dataset.autoplayVideo === "true";
     this.initShopableVideo();
   }
 
@@ -14,6 +15,21 @@ class ShopableVideo extends SlideSection {
       this.handleCenterSlides();
     }
     window.addEventListener("resize", this.handleResize.bind(this));
+    const mediaQuery = window.matchMedia("(max-width: 1024.98px)");
+    const handleMediaQueryChange = (mediaQuery) => {
+      if (mediaQuery.matches) {
+        this.playActiveSlideVideo(this.swiper.activeIndex);
+      } else {
+        if (!this.autoplayVideo) {
+          this.pauseAllVideos();
+        }
+        if (this.classList.contains("swiper-slide-center")) {
+          this.updateCenterSlideClass();
+        }
+      }
+    };
+    handleMediaQueryChange(mediaQuery);
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
   }
 
   handleCenterSlides() {
@@ -39,17 +55,16 @@ class ShopableVideo extends SlideSection {
   }
 
   handleResize() {
+    const useCenterSlideMode = this.classList.contains("swiper-slide-center");
     this.innerWidth = window.innerWidth;
     if (this.innerWidth >= 1025) {
-      if (this.swiper) {
+      if (this.swiper && useCenterSlideMode) {
         this.updateCenterSlideClass();
       }
     } else {
       this.resetCenterSlideEffects();
     }
-    const autoplayVideo = this.dataset.autoplayVideo === "true";
-    if (!autoplayVideo || !this.swiper) return;
-    const useCenterSlideMode = this.classList.contains("swiper-slide-center");
+    if (!this.autoplayVideo || !this.swiper) return;
     if (useCenterSlideMode) {
       if (this.innerWidth >= 1025) {
         this.playCenterSlideVideo();
@@ -76,7 +91,6 @@ class ShopableVideo extends SlideSection {
   }
 
   updateCenterSlideClass() {
-    const autoplayVideo = this.dataset.autoplayVideo === "true";
     if (!this || !this.swiper) return;
 
     if (!this._animations) {
@@ -120,7 +134,7 @@ class ShopableVideo extends SlideSection {
         allSlides[centerIndex].classList.add("center-slide");
         const newCenterSlide = allSlides[centerIndex];
         const buttonPlay = newCenterSlide.querySelector(".play-button");
-        if (buttonPlay && autoplayVideo) {
+        if (buttonPlay && this.autoplayVideo) {
           buttonPlay.classList.add("active");
         }
         const video = newCenterSlide.querySelector("video-local");
@@ -159,7 +173,7 @@ class ShopableVideo extends SlideSection {
               const nonCenterVideoInner =
                 slide.querySelector(".video-item--ratio");
               const buttonPlay = slide.querySelector(".play-button");
-              if (buttonPlay && autoplayVideo) {
+              if (buttonPlay && this.autoplayVideo) {
                 buttonPlay.classList.remove("active");
               }
               if (nonCenterVideoInner && videoHeight) {
@@ -209,8 +223,7 @@ class ShopableVideo extends SlideSection {
   }
 
   setupVideoAutoplay() {
-    const autoplayVideo = this.dataset.autoplayVideo === "true";
-    if (!autoplayVideo || !this.swiper) return;
+    if (!this.swiper) return;
     const useCenterSlideMode = this.classList.contains("swiper-slide-center");
     if (useCenterSlideMode) {
       if (this.innerWidth >= 1025) {
@@ -223,9 +236,19 @@ class ShopableVideo extends SlideSection {
     }
     this.swiper.on("slideChangeTransitionEnd", () => {
       if (useCenterSlideMode) {
-        this.playCenterSlideVideo();
+        if (this.innerWidth >= 1025) {
+          this.playCenterSlideVideo();
+        } else {
+          this.playActiveSlideVideo(this.swiper.activeIndex);
+        }
       } else {
-        this.playActiveSlideVideo(this.swiper.activeIndex);
+        if (this.innerWidth >= 1025) {
+          if (this.autoplayVideo) {
+            this.playActiveSlideVideo(this.swiper.activeIndex);
+          }
+        } else {
+          this.playActiveSlideVideo(this.swiper.activeIndex);
+        }
       }
     });
     this.addEventListener("center-slide-updated", () => {
@@ -237,10 +260,12 @@ class ShopableVideo extends SlideSection {
 
   playCenterSlideVideo() {
     this.pauseAllVideos();
+    if (!this.autoplayVideo) return;
     const centerSlide = this.querySelector(".swiper-slide.center-slide");
     if (!centerSlide) return;
     const videoElement = centerSlide.querySelector("video-local video");
     if (videoElement) {
+      centerSlide.querySelector(".play-button").classList.add("active");
       videoElement.play();
     }
   }
@@ -421,7 +446,7 @@ class ShopableItem extends HTMLElement {
         this.handleSwipeability(modalPopup, swiperContainer);
       }
     }
-    popupInfo.style.transform = '';
+    popupInfo.style.transform = "";
   }
 
   setupCloseButton() {
@@ -585,8 +610,7 @@ class ShopableItem extends HTMLElement {
 
   openVideo() {
     if (
-      this.querySelector("video") &&
-      !this.classList.contains("active-video")
+      this.querySelector("video")
     ) {
       this.closest(".section-shopable-video")
         .querySelectorAll("shopable-item")
@@ -602,9 +626,6 @@ class ShopableItem extends HTMLElement {
         });
       this.querySelector("video").muted = true;
       this.querySelector("video").play();
-      if (this.innerWidth > 1199) {
-        this.classList.add("active-video");
-      }
     }
   }
 
@@ -761,10 +782,24 @@ class ShopableItem extends HTMLElement {
         swiperContainer.swiper.slideNext();
         _self.updateCurrentSlideId(modalPopup, swiperContainer);
       });
+      nextButton.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          swiperContainer.swiper.slideNext();
+          _self.updateCurrentSlideId(modalPopup, swiperContainer);
+        }
+      });
       prevButton.addEventListener("click", (e) => {
         e.preventDefault();
         swiperContainer.swiper.slidePrev();
         _self.updateCurrentSlideId(modalPopup, swiperContainer);
+      });
+      prevButton.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          swiperContainer.swiper.slidePrev();
+          _self.updateCurrentSlideId(modalPopup, swiperContainer);
+        }
       });
       if (!swiperContainer._hasSlideChangeHandler) {
         swiperContainer.swiper.on("slideChange", () => {
@@ -773,38 +808,40 @@ class ShopableItem extends HTMLElement {
         swiperContainer._hasSlideChangeHandler = true;
       }
     }
-
+    this.updateSwiperState(modalPopup);
     modalPopup.removeAttribute("data-loading");
   }
 
   handleSwipeability(modalPopup, swiperContainer) {
     if (!modalPopup || !swiperContainer || !swiperContainer.swiper) return;
 
-    const isLargeScreen = this.innerWidth >= 1025;
-
     const hasPopupInfo =
       modalPopup.querySelector(".popup-information") !== null;
 
     const hasActivePopupInfo =
       modalPopup.querySelector(".popup-information.active") !== null;
-
-    if (isLargeScreen) {
-      if (hasPopupInfo) {
-        swiperContainer.swiper.allowTouchMove = false;
-        swiperContainer.swiper.unsetGrabCursor();
+    const mediaQuery = window.matchMedia("(max-width: 1024.98px)");
+    const handleMediaQueryChange = (mediaQuery) => {
+      if (mediaQuery.matches) {
+        if (hasActivePopupInfo) {
+          swiperContainer.swiper.allowTouchMove = false;
+          swiperContainer.swiper.unsetGrabCursor();
+        } else {
+          swiperContainer.swiper.allowTouchMove = true;
+          swiperContainer.swiper.setGrabCursor();
+        }
       } else {
-        swiperContainer.swiper.allowTouchMove = true;
-        swiperContainer.swiper.setGrabCursor();
+        if (hasPopupInfo) {
+          swiperContainer.swiper.allowTouchMove = false;
+          swiperContainer.swiper.unsetGrabCursor();
+        } else {
+          swiperContainer.swiper.allowTouchMove = true;
+          swiperContainer.swiper.setGrabCursor();
+        }
       }
-    } else {
-      if (hasActivePopupInfo) {
-        swiperContainer.swiper.allowTouchMove = false;
-        swiperContainer.swiper.unsetGrabCursor();
-      } else {
-        swiperContainer.swiper.allowTouchMove = true;
-        swiperContainer.swiper.setGrabCursor();
-      }
-    }
+    };
+    handleMediaQueryChange(mediaQuery);
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
   }
 
   onShowPopupModal(event) {
@@ -833,6 +870,7 @@ class ShopableItem extends HTMLElement {
       modalPopup.setAttribute("data-loading", "true");
       modalPopup.setAttribute("data-current", productId);
       NextSkyTheme.eventModal(modalPopup, "open", true);
+      this.openVideo();
       const swiperContainer = modalPopup.querySelector("slide-section");
       if (swiperContainer) {
         if (!swiperContainer.swiper) {
@@ -920,7 +958,7 @@ class PopupInformationHeader extends ShopableItem {
     this.startY = 0;
     this.currentY = 0;
     this.threshold = 100;
-    
+
     this.startDrag = this.startDrag.bind(this);
     this.onDrag = this.onDrag.bind(this);
     this.endDrag = this.endDrag.bind(this);
@@ -930,8 +968,12 @@ class PopupInformationHeader extends ShopableItem {
     super.connectedCallback();
     this.headerElement = this;
     if (this.headerElement) {
-      this.headerElement.addEventListener("touchstart", this.startDrag, { passive: true });
-      this.headerElement.addEventListener("touchmove", this.onDrag, { passive: false });
+      this.headerElement.addEventListener("touchstart", this.startDrag, {
+        passive: true,
+      });
+      this.headerElement.addEventListener("touchmove", this.onDrag, {
+        passive: false,
+      });
       this.headerElement.addEventListener("touchend", this.endDrag);
       this.headerElement.addEventListener("mousedown", this.startDrag);
       document.addEventListener("mousemove", this.onDrag);
@@ -944,7 +986,7 @@ class PopupInformationHeader extends ShopableItem {
       this.headerElement.removeEventListener("touchstart", this.startDrag);
       this.headerElement.removeEventListener("touchmove", this.onDrag);
       this.headerElement.removeEventListener("touchend", this.endDrag);
-      
+
       this.headerElement.removeEventListener("mousedown", this.startDrag);
       document.removeEventListener("mousemove", this.onDrag);
       document.removeEventListener("mouseup", this.endDrag);
@@ -961,11 +1003,11 @@ class PopupInformationHeader extends ShopableItem {
 
   onDrag(e) {
     if (!this.isDragging || !this.container) return;
-    
+
     e.preventDefault();
     this.currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
     const dragDistance = this.currentY - this.startY;
-    
+
     if (dragDistance > 0) {
       this.container.style.transform = `translateY(${dragDistance}px)`;
     }
@@ -974,32 +1016,36 @@ class PopupInformationHeader extends ShopableItem {
   endDrag() {
     if (!this.isDragging || !this.container) return;
     const dragDistance = this.currentY - this.startY;
-    
+
     if (dragDistance > this.threshold) {
-      const modalPopup = this.container.closest('modal-popup');
+      const modalPopup = this.container.closest("modal-popup");
       if (modalPopup) {
-        const currentId = modalPopup.getAttribute('data-current');
+        const currentId = modalPopup.getAttribute("data-current");
         if (currentId) {
           const currentItem = modalPopup.querySelector(`#${currentId}`);
           if (currentItem) {
-            const buttonCloseModal = modalPopup.querySelector('.modal__close');
-            const buttonCloseInformation = currentItem.querySelector('.modal__close-information');
-            const actionButton = modalPopup.querySelector('.popup-information__mobile');
+            const buttonCloseModal = modalPopup.querySelector(".modal__close");
+            const buttonCloseInformation = currentItem.querySelector(
+              ".modal__close-information"
+            );
+            const actionButton = modalPopup.querySelector(
+              ".popup-information__mobile"
+            );
             this.hidePopupInformation(this.container);
             if (actionButton) {
-              actionButton.classList.remove('active');
+              actionButton.classList.remove("active");
             }
             if (buttonCloseInformation && buttonCloseModal) {
-              buttonCloseInformation.classList.add('hidden-important');
-              buttonCloseInformation.classList.remove('active');
-              buttonCloseModal.classList.remove('hidden-important');
+              buttonCloseInformation.classList.add("hidden-important");
+              buttonCloseInformation.classList.remove("active");
+              buttonCloseModal.classList.remove("hidden-important");
             }
             this.updateSwiperState(modalPopup);
           }
         }
       }
     } else {
-      this.container.style.transform = '';
+      this.container.style.transform = "";
     }
     this.isDragging = false;
   }

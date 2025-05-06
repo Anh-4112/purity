@@ -13,7 +13,7 @@
   {%- assign gift_card_recipient_control_flag = 'properties[__shopify_send_gift_card_to_recipient]' -%}
   <script type="module" src="{{ 'recipient-form.js' | asset_url }}"></script>
   <recipient-form
-    class="recipient-form"
+    class="recipient-form relative"
     data-section-id="{{ section.id }}"
     data-product-variant-id="{{ product.selected_or_first_available_variant.id }}"
   >
@@ -22,21 +22,23 @@
       type="checkbox"
       name="{{ gift_card_recipient_control_flag }}"
       disabled
+      class="opacity-0 absolute top-0 left-0 z-1 pointer w-custom h-custom mx-0"
+      style="--width: 1.6rem; --height: 1.6rem;"
     >
-    <label class="recipient-checkbox" for="Recipient-checkbox-{{ section.id }}">
+    <label class="recipient-checkbox mb-20 flex gap-5 align-center pointer" for="Recipient-checkbox-{{ section.id }}">
       <svg
         width="1.6rem"
         height="1.6rem"
         viewBox="0 0 16 16"
         aria-hidden="true"
         focusable="false"
-        class="rounded-2"
+        class="checkmark"
       >
         <rect width="16" height="16" stroke="currentColor" fill="none" stroke-width="1"></rect>
       </svg>
       <svg
         aria-hidden="true"
-        class="icon icon-checkmark"
+        class="icon icon-checkmark absolute left-0 top-0 opacity-0"
         width="11"
         height="7"
         viewBox="0 0 11 7"
@@ -48,18 +50,18 @@
       <span>{{ 'recipient.form.checkbox' | t }}</span>
     </label>
     <div
-      class="product-form__recipient-error-message-wrapper"
+      class="product-form__recipient-error-message-wrapper error column align-start"
       role="alert"
       {% unless form.errors %}
         hidden
       {% endunless %}
     >
-      <h2 class="form__message" tabindex="-1" autofocus>
-        <svg width="20" height="20" viewBox="0 0 18 18" fill="none" class="flex-auto">
+      <p class="form__message flex align-center gap-5" tabindex="-1" autofocus>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <use href="#icon-error"></use>
         </svg>
         <span class="error-message">{{ 'templates.contact.form.error_heading' | t }}</span>
-      </h2>
+      </p>
 
       <ul class="gap-5">
         {%- if form.errors -%}
@@ -82,8 +84,7 @@
       class="visually-hidden"
       role="status"
     ></p>
-    <div class="recipient-fields">
-      <hr>
+    <div class="recipient-fields mt-20 pt-20 border-top">
       <div class="recipient-fields__field relative w-full flex wrap transition mb-15">
         <div class="field relative w-full flex wrap transition gap-5">
           <input
@@ -98,7 +99,7 @@
               aria-describedby="RecipientForm-email-error-{{ section.id }}"
             {% endif %}
           >
-          <label class="field__label" for="Recipient-email-{{ section.id }}">
+          <label class="field__label fs-small grey-color" for="Recipient-email-{{ section.id }}">
             <span class="recipient-email-label">{{ 'recipient.form.email_label' | t }}*</span>
             <span class="recipient-email-label optional">
               {{- 'recipient.form.email_label_optional_for_no_js_behavior' | t -}}
@@ -108,9 +109,9 @@
 
         <div
           id="RecipientForm-email-error-{{ section.id }}"
-          class="form__message{% unless form.errors contains 'email' %} hidden{% endunless %}"
+          class="form__message error{% unless form.errors contains 'email' %} hidden{% endunless %}"
         >
-          <svg width="20" height="20" fill="none">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <use href="#icon-error"></use>
           </svg>
           <span class="error-message">
@@ -136,16 +137,16 @@
               aria-describedby="RecipientForm-name-error-{{ section.id }}"
             {% endif %}
           >
-          <label class="field__label" for="Recipient-name-{{ section.id }}">
+          <label class="field__label fs-small grey-color" for="Recipient-name-{{ section.id }}">
             {{- 'recipient.form.name_label' | t -}}
           </label>
         </div>
 
         <div
           id="RecipientForm-name-error-{{ section.id }}"
-          class="form__message{% unless form.errors contains 'name' %} hidden{% endunless %}"
+          class="form__message error{% unless form.errors contains 'name' %} hidden{% endunless %}"
         >
-          <svg width="20" height="20" fill="none">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <use href="#icon-error"></use>
           </svg>
           <span class="error-message">
@@ -172,20 +173,20 @@
               aria-describedby="RecipientForm-message-error-{{ section.id }}"
             {% endif %}
           >{{ form.message }}</textarea>
-          <label class="form__label field__label" for="Recipient-message-{{ section.id }}">
+          <label class="field__label visually-hidden" for="Recipient-message-{{ section.id }}">
             {{ message_label_rendered }}
           </label>
         </div>
         {%- assign max_chars_message = 200 -%}
         {%- assign max_chars_message_rendered = 'recipient.form.max_characters' | t: max_chars: max_chars_message -%}
-        <label class="note form__label mb-10 recipient-form-field-label recipient-form-field-label--space-between">
+        <label class="note form__label mb-10 recipient-form-field-label recipient-form-field-label--space-between fs-small grey-color">
           <span>{{ max_chars_message_rendered }}</span>
         </label>
         <div
           id="RecipientForm-message-error-{{ section.id }}"
-          class="form__message{% unless form.errors contains 'message' %} hidden{% endunless %}"
+          class="form__message error{% unless form.errors contains 'message' %} hidden{% endunless %}"
         >
-          <svg width="20" height="20" fill="none">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <use href="#icon-error"></use>
           </svg>
           <span class="error-message">
@@ -212,16 +213,16 @@
               aria-describedby="RecipientForm-send_on-error-{{ section.id }}"
             {% endif %}
           >
-          <label class="form__label field__label" for="Recipient-send-on-{{ section.id }}">
+          <label class="field__label visually-hidden" for="Recipient-send-on-{{ section.id }}">
             {{ 'recipient.form.send_on_label' | t }}
           </label>
         </div>
 
         <div
           id="RecipientForm-send_on-error-{{ section.id }}"
-          class="form__message{% unless form.errors contains 'send_on' %} hidden{% endunless %}"
+          class="form__message error{% unless form.errors contains 'send_on' %} hidden{% endunless %}"
         >
-          <svg width="20" height="20" viewBox="0 0 18 18" fill="none">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <use href="#icon-error"></use>
           </svg>
           <span class="error-message">

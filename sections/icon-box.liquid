@@ -27,12 +27,13 @@
   endif
   assign column_gap_slide = 0
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
+    assign column_gap_slide = 100
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
+    assign column_gap_slide = 50
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
+    assign column_gap_slide = 30
   endif
+  assign animate_delay = 25
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -40,34 +41,67 @@
 {%- endcapture -%}
 
 {%- capture col_style -%}
-  --col-number: {{ section_st.items_per_row }};--col-tablet: 2;--col-desktop: {{ section.blocks.size }};
+  --col-number: {{ section_st.items_per_row }};--col-tablet: 2;--col-desktop: {{ section.blocks.size }};--gap: {{ column_gap_slide }}px;--gap-tablet: 20px;--gap-mobile: 10px;
 {%- endcapture -%}
 
 <div
-  class="section color-{{ section_st.color_scheme }} gradient section__icon-box"
+  class="section color-{{ section_st.color_scheme }} gradient section__icon-box{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div
     class="{{ section_width }}"
   >
-    {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
+    {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div
-        class="section-header text-{{ section_st.alignment }}"
+        class="section-header text-{{ section_st.alignment }} mb-30 mb-md-40"
       >
         {%- if section_st.subheading != blank -%}
-          <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
+          <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight fs-big-2">
             {{ section_st.subheading }}
           </div>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
-        {%- if section_st.heading != blank -%}
+        {%- if section_st.title != blank -%}
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
           <h2 class="block section-heading {{ header_size }}">
-            {{ section_st.heading }}
+            {{ section_st.title }}
           </h2>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.description != blank -%}
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
           <div class="section-description mt-15 prose">
             {{ section_st.description }}
           </div>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -93,12 +127,12 @@
             assign icon_position = section_st.icon_position
           -%}
           <div
-            class="motion-item {% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
+            class="motion-item {% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-15 gap-md-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
             style="---width: {{ section_st.icon_size }}px;"
           >
             <div
               class="icon-box__icon w-custom h-auto flex heading-color"
-              style="---width: {{ section_st.icon_size }}px; "
+              style="--width: {{ section_st.icon_size }}px; "
             >
               {% if icon_svg != 'none' %}
                 {% render 'icon_svg_list',
@@ -200,7 +234,7 @@
     },
     {
       "type": "text",
-      "id": "heading",
+      "id": "title",
       "label": "t:sections.all.content_setting.heading.label"
     },
     {
@@ -395,6 +429,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "blocks": [

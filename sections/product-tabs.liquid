@@ -1,6 +1,8 @@
 <script src="{{ 'section-vertical-product-tabs.js' | asset_url }}" defer="defer"></script>
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -93,7 +95,7 @@
   }
 {%- endstyle -%}
 <div
-  class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
+  class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -101,44 +103,22 @@
       <div class="col-left col-1025-w-custom w-full relative-1025">
         {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
           <div
-            class="section-header relative-1025 z-2"
+            class="section-header relative-1025 z-2 text-center text-1025-start"
           >
-            {% assign animate_delay = 25 %}
             {%- if section_st.subheading != blank -%}
-              {% assign animate_delay = animate_delay | plus: 5 %}
-              <motion-effect
-                data-animate="fade-up"
-                data-animate-delay="{{ animate_delay }}"
-                class="block"
-              >
-                <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
-                  {{ section_st.subheading }}
-                </div>
-              </motion-effect>
+              <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
+                {{ section_st.subheading }}
+              </div>
             {%- endif -%}
             {%- if section_st.title != blank -%}
-              {% assign animate_delay = animate_delay | plus: 5 %}
-              <motion-effect
-                data-animate="fade-up"
-                data-animate-delay="{{ animate_delay }}"
-                class="block"
-              >
-                <h2 class="block section-heading {{ header_size }}">
-                  {{ section_st.title }}
-                </h2>
-              </motion-effect>
+              <h2 class="block section-heading {{ header_size }}">
+                {{ section_st.title }}
+              </h2>
             {%- endif -%}
             {%- if section_st.description != blank -%}
-              {% assign animate_delay = animate_delay | plus: 5 %}
-              <motion-effect
-                data-animate="fade-up"
-                data-animate-delay="{{ animate_delay }}"
-                class="block"
-              >
-                <div class="section-description mt-15 prose">
-                  {{ section_st.description }}
-                </div>
-              </motion-effect>
+              <div class="section-description mt-15 prose">
+                {{ section_st.description }}
+              </div>
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -205,47 +185,51 @@
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
               >
-                <motion-items-effect>
-                  <slide-section
-                    class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
-                    data-section-id="{{ block.id }}"
-                    data-autoplay="false"
-                    data-effect="slide"
-                    data-loop="false"
-                    data-speed="500"
-                    data-spacing="{{ column_gap_slide }}"
-                    data-mobile="{{ items_per_row_mobile }}"
-                    data-desktop="{{ items_per_row }}"
-                    data-tablet="{{ items_per_row_tablet }}"
-                    data-free-scroll="{{ data_free_scroll }}"
-                    data-slide-tab="true"
-                    style="{{ col_style | strip | strip_newlines }}"
-                  >
-                    {% if show_navigation %}
-                      {%- render 'swiper-navigation', show_on_hover: true -%}
-                    {% endif %}
-                    <div class="swiper-wrapper">
-                      {%- for product in collection.products limit: items_to_show -%}
-                        {% render 'card-product',
-                          card_product: product,
-                          section_id: block.id,
-                          class: ' swiper-slide motion-item',
-                          show_video: true,
-                          container: section_width,
-                          column: items_per_row,
-                          column_mobile: items_per_row_mobile,
-                          padding: column_gap_slide,
-                          indexFor: forloop.index
-                        %}
-                      {%- endfor -%}
-                    </div>
-                    {%- if show_pagination -%}
-                      <div
-                        class="swiper-pagination"
-                      ></div>
-                    {% endif %}
-                  </slide-section>
-                </motion-items-effect>
+                {% if scroll_animation %}
+                  <motion-items-effect>
+                {% endif %}
+                <slide-section
+                  class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+                  data-section-id="{{ block.id }}"
+                  data-autoplay="false"
+                  data-effect="slide"
+                  data-loop="false"
+                  data-speed="500"
+                  data-spacing="{{ column_gap_slide }}"
+                  data-mobile="{{ items_per_row_mobile }}"
+                  data-desktop="{{ items_per_row }}"
+                  data-tablet="{{ items_per_row_tablet }}"
+                  data-free-scroll="{{ data_free_scroll }}"
+                  data-slide-tab="true"
+                  style="{{ col_style | strip | strip_newlines }}"
+                >
+                  {% if show_navigation %}
+                    {%- render 'swiper-navigation', show_on_hover: true -%}
+                  {% endif %}
+                  <div class="swiper-wrapper">
+                    {%- for product in collection.products limit: items_to_show -%}
+                      {% render 'card-product',
+                        card_product: product,
+                        section_id: block.id,
+                        class: ' swiper-slide motion-item',
+                        show_video: true,
+                        container: section_width,
+                        column: items_per_row,
+                        column_mobile: items_per_row_mobile,
+                        padding: column_gap_slide,
+                        indexFor: forloop.index
+                      %}
+                    {%- endfor -%}
+                  </div>
+                  {%- if show_pagination -%}
+                    <div
+                      class="swiper-pagination"
+                    ></div>
+                  {% endif %}
+                </slide-section>
+                {% if scroll_animation %}
+                  </motion-items-effect>
+                {% endif %}
               </div>
             {%- else -%}
               <div
@@ -253,45 +237,49 @@
                 data-block-id="{{ block.id }}"
                 {{ block.shopify_attributes }}
               >
-                <motion-items-effect>
-                  <slide-section
-                    class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
-                    data-section-id="{{ block.id }}"
-                    data-autoplay="false"
-                    data-effect="slide"
-                    data-loop="false"
-                    data-speed="500"
-                    data-spacing="{{ column_gap_slide }}"
-                    data-mobile="{{ items_per_row_mobile }}"
-                    data-desktop="{{ items_per_row }}"
-                    data-tablet="{{ items_per_row_tablet }}"
-                    data-free-scroll="{{ data_free_scroll }}"
-                    style="{{ col_style | strip | strip_newlines }}"
-                  >
-                    {% if show_navigation %}
-                      {%- render 'swiper-navigation', show_on_hover: true -%}
-                    {% endif %}
-                    <div class="swiper-wrapper">
-                      {%- for product in (1..5) -%}
-                        {% render 'card-product',
-                          section_id: block.id,
-                          class: ' swiper-slide motion-item',
-                          show_video: true,
-                          container: section_width,
-                          column: items_per_row,
-                          column_mobile: items_per_row_mobile,
-                          padding: column_gap_slide,
-                          indexFor: forloop.index
-                        %}
-                      {%- endfor -%}
-                    </div>
-                    {%- if show_pagination -%}
-                      <div
-                        class="swiper-pagination"
-                      ></div>
-                    {% endif %}
-                  </slide-section>
-                </motion-items-effect>
+                {% if scroll_animation %}
+                  <motion-items-effect>
+                {% endif %}
+                <slide-section
+                  class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+                  data-section-id="{{ block.id }}"
+                  data-autoplay="false"
+                  data-effect="slide"
+                  data-loop="false"
+                  data-speed="500"
+                  data-spacing="{{ column_gap_slide }}"
+                  data-mobile="{{ items_per_row_mobile }}"
+                  data-desktop="{{ items_per_row }}"
+                  data-tablet="{{ items_per_row_tablet }}"
+                  data-free-scroll="{{ data_free_scroll }}"
+                  style="{{ col_style | strip | strip_newlines }}"
+                >
+                  {% if show_navigation %}
+                    {%- render 'swiper-navigation', show_on_hover: true -%}
+                  {% endif %}
+                  <div class="swiper-wrapper">
+                    {%- for product in (1..5) -%}
+                      {% render 'card-product',
+                        section_id: block.id,
+                        class: ' swiper-slide motion-item',
+                        show_video: true,
+                        container: section_width,
+                        column: items_per_row,
+                        column_mobile: items_per_row_mobile,
+                        padding: column_gap_slide,
+                        indexFor: forloop.index
+                      %}
+                    {%- endfor -%}
+                  </div>
+                  {%- if show_pagination -%}
+                    <div
+                      class="swiper-pagination"
+                    ></div>
+                  {% endif %}
+                </slide-section>
+                {% if scroll_animation %}
+                  </motion-items-effect>
+                {% endif %}
               </div>
             {%- endif -%}
           {%- endfor -%}
@@ -493,6 +481,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "blocks": [

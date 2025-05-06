@@ -53,6 +53,7 @@
       {%- liquid
         assign product = all_products[item]
       -%}
+      {% if product != blank %}
       <shopable-image
         class="group-lookbook_product__item absolute"
         data-url="{{ product.url }}"
@@ -86,6 +87,7 @@
                 disable_quickview: true,
                 disable_badge: true,
                 disable_rate: true,
+                disable_tag: true,
                 disable_vendor: true,
                 disable_hover_image: true,
                 show_quick_add: false,
@@ -99,6 +101,7 @@
           </div>
         </template>
       </shopable-image>
+      {% endif %}
     {% endfor %}
   </div>
 </div>

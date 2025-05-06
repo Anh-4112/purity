@@ -1,5 +1,7 @@
 {%- liquid
   assign section_st = section.settings
+  assign theme_st = settings
+  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -50,6 +52,7 @@
   if items_per_row > 2
     assign items_per_row_tablet = items_per_row | minus: 1
   endif
+  assign animate_delay = 25
 -%}
 {%- capture style -%}
       --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -122,7 +125,7 @@
   }
 {% endstyle %}
 <div
-  class="section color-{{ section_st.color_scheme }} gradient {% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
+  class="section color-{{ section_st.color_scheme }} gradient {% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -131,37 +134,52 @@
         class="section-header text-{{ text_alignment }}"
       >
         {%- if section_st.subheading != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="30"
-            class="block"
-          >
-            <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
-              {{ section_st.subheading }}
-            </div>
-          </motion-effect>
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
+          <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
+            {{ section_st.subheading }}
+          </div>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.title != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="35"
-            class="block"
-          >
-            <h2 class="block section-heading {{ header_size }}">
-              {{ section_st.title }}
-            </h2>
-          </motion-effect>
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
+          <h2 class="block section-heading {{ header_size }}">
+            {{ section_st.title }}
+          </h2>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="40"
-            class="block"
-          >
-            <div class="section-description mt-15 prose">
-              {{ section_st.description }}
-            </div>
-          </motion-effect>
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
+          <div class="section-description mt-15 prose">
+            {{ section_st.description }}
+          </div>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -248,15 +266,28 @@
                           assign video_poster = video.preview_image | image_url: width: 1100
                         -%}
                         <video-local>
-                          <video
-                            loop="true"
-                            data-src="{{ source_url }}"
-                            poster="{{ video_poster }}"
-                            playsinline="true"
-                            autoplay
-                            muted
-                            class="h-full w-full object-fit-cover"
-                          ></video>
+                          <div class="video-thumbnail">
+                            {% render 'responsive-image',
+                              type: 'banner',
+                              container: section_st.section_width,
+                              image: video_poster,
+                              image_alt: image_alt,
+                              padding: column_gap_slide,
+                              column: items_per_row,
+                              motion: true,
+                            %}
+                          </div>
+                          <template>
+                            <video
+                              loop="true"
+                              src="{{ source_url }}"
+                              poster="{{ video_poster }}"
+                              playsinline="true"
+                              autoplay
+                              muted
+                              class="h-full w-full object-fit-cover"
+                            ></video>
+                          </template>
                         </video-local>
                       {% elsif image != blank %}
                         {% render 'responsive-image',
@@ -303,9 +334,10 @@
                             </span>
                           {%- endif %}
                         </div>
-                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %} mt-15 mt-1025-20 mx-0 rich__text-m0 border-bottom">
+                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %}{% if quote != blank and product != blank %} mt-15 mt-1025-20{% endif %} mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}">
                           {{ quote }}
                         </div>
+                      {% if product != blank %}
                         <div
                           class="testimonial-product pt-20 pt-1025-25"
                           style="--width: 5.5rem;"
@@ -317,6 +349,7 @@
                             disable_quickview: true,
                             disable_badge: true,
                             disable_rate: true,
+                            disable_tag: true,
                             disable_vendor: true,
                             disable_hover_image: true,
                             show_quick_add: true,
@@ -327,6 +360,7 @@
                             info_class: ' flex-1 mt-0 word-break'
                           %}
                         </div>
+                      {% endif %}
                       </div>
                     </div>
                   </div>
@@ -430,9 +464,10 @@
                             </span>
                           {%- endif %}
                         </div>
-                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %} mt-15 mt-1025-20 mx-0 rich__text-m0 border-bottom">
+                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %}{% if quote != blank and product != blank %} mt-15 mt-1025-20{% endif %} mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}">
                           {{ quote }}
                         </div>
+                      {% if product != blank %}
                         <div
                           class="testimonial-product pt-20 pt-1025-25"
                           style="--width: 5.5rem;"
@@ -444,6 +479,7 @@
                             disable_quickview: true,
                             disable_badge: true,
                             disable_rate: true,
+                            disable_tag: true,
                             disable_vendor: true,
                             disable_hover_image: true,
                             show_quick_add: true,
@@ -454,6 +490,7 @@
                             info_class: ' flex-1 mt-0 word-break'
                           %}
                         </div>
+                      {% endif %}
                       </div>
                     </div>
                   </div>
@@ -751,6 +788,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "blocks": [

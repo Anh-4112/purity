@@ -51,7 +51,7 @@
 {% endif %}
 <section
   id="Product-{{ section.id }}"
-  class="section section__featured-product color-{{ section_st.color_scheme }} gradient media-width-{{ desktop_media_width }}"
+  class="section section__featured-product color-{{ section_st.color_scheme }} gradient media-width-{{ desktop_media_width }}{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -62,13 +62,6 @@
       {% if product.media.size > 0 %}
         <div class="product-detail__media w-full col-md-w-custom">
           <div class="block__media-gallery sticky top-20">
-            {% if scroll_animation %}
-              <motion-effect
-                data-animate="fade-up"
-                data-animate-delay="25"
-                class="block"
-              >
-            {% endif %}
             {% render 'media-gallery',
               images: product.media,
               section_st: section_st,
@@ -76,9 +69,6 @@
               section: section,
               type_section: 'featured'
             %}
-            {% if scroll_animation %}
-              </motion-effect>
-            {% endif %}
           </div>
         </div>
       {% endif %}
@@ -96,6 +86,13 @@
       {% endif %}
       <div class="product-detail__information w-full col-md-remaining">
         <div class="sticky top-20">
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="25"
+              class="block"
+            >
+          {% endif %}
           {% content_for 'blocks', closest.product: product %}
           <a
             {% if product == blank %}
@@ -117,6 +114,9 @@
               </svg>
             {% endif %}
           </a>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -174,7 +174,6 @@
     { "type": "_promotion-alert-product" },
     { "type": "_icon-with-text-product" },
     { "type": "_ask-question-product" },
-    { "type": "_media-lightbox-product" },
     { "type": "_promotion-countdown-product" }
   ],
   "settings": [
@@ -306,6 +305,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "presets": [

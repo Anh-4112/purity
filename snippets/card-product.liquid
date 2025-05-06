@@ -13,7 +13,10 @@
   assign product_show_video_featured = theme_st.product_show_video_featured
   assign product_show_quick_add_mobile = theme_st.product_show_quick_add_mobile
   assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id
-
+  assign motion = true
+  if disable_motion
+    assign motion = false
+  endif
   if type == 'list'
     assign style_layout = ' flex gap-20'
     assign image_class = ' flex-auto w-custom rounded-10'
@@ -148,7 +151,7 @@
                     padding: padding,
                     sizes: sizes,
                     disable_lazy_loading: disable_lazy_loading,
-                    motion: true
+                    motion: motion
                   %}
                   {%- liquid
                     if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true
@@ -509,7 +512,7 @@
             <button
               type="button"
               is="button-quick-view"
-              class="pointer relative btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+              class="pointer relative overflow-hidden btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
               style="--width: 4.4rem; --height: 4.4rem;"
               data-url="{{ shop.url }}/products/{{ card_product.handle }}"
               aria-label="{{ 'products.product.quickview' | t }}"
@@ -544,7 +547,7 @@
                   id="{{ product_form_id }}-submit"
                   type="submit"
                   name="add"
-                  class="pointer relative btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                  class="pointer relative overflow-hidden btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
                   style="--width: 4.4rem; --height: 4.4rem;"
                   aria-haspopup="dialog"
                   aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"

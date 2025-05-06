@@ -1,6 +1,12 @@
 {%- liquid
   assign section_st = section.settings
 -%}
+{% style %}
+  .page-content ul{
+    margin: 0;
+    padding-inline-start: 15px;
+  }
+{% endstyle %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
@@ -15,7 +21,7 @@
       </h1>
     </div>
   </div>
-  <div class="rte section-spacing">
+  <div class="rte section-spacing page-content">
     {{ page.content }}
   </div>
 </div>
