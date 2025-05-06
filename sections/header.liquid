@@ -23,7 +23,6 @@
 {%- endcapture -%}
 
 {% style %}
-  {% if section_st.logo_position == 'left' %}
     @media only screen and (min-width: 1025px) {
       .logo-left{
         --header-grid-template: 'logo menu icon' / minmax(0, 1fr) fit-content(60%) minmax(0,1fr);
@@ -31,9 +30,7 @@
       .logo-center{
         --header-grid-template: 'menu logo icon' / minmax(0, 1fr) minmax(50px, var(--logo-width))  minmax(0,1fr);
       }
-
     }
-  {% endif %}
   {% if request.page_type == 'index' and transparent %}
     .site-header .transparent{
       background: transparent;
@@ -606,7 +603,10 @@
                             -%}
                         {%- endcase -%}
                         {%- if link.links.size > 0 or has_content -%}
-                          <details is="details-mega-menu" class="details-header-menu inline-flex level-1 animate-motion">
+                          <details
+                            is="details-mega-menu"
+                            class="details-header-menu inline-flex level-1 animate-motion"
+                          >
                             <summary
                               class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-5 space-between"
                               data-href="{{ link.url }}"
