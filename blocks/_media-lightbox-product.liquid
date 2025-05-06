@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="{{ 'section-shopable-video.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- liquid
   assign items_to_show = block.settings.items_to_show
   assign show_navigation = block.settings.show_navigation
@@ -44,7 +45,7 @@
       style="{{ style | strip | strip_newlines }}"
     >
       {% if show_navigation %}
-        {%- render 'swiper-navigation', class-custom: class_custom -%}
+        {%- render 'swiper-navigation', type: 'custom_nav' -%}
       {% endif %}
       <div class="swiper-wrapper">
         {%- for media in closest.product.metafields.custom.media_lightbox.value -%}
@@ -91,16 +92,16 @@
     {% endif %}
     <template class="media-lightbox-popup">
       <media-lightbox-popup
-        class="modal"
+        class="modal active_smooth"
         role="dialog"
       >
         <div
           class="modal-popup-inner flex column modal-focus h-content transition modal-draggable rounded max-w-custom m-auto invisible-1025 fixed right-30 bottom-30 z-22 bg-white w-full"
           tabindex="-1"
-          style="--max-width: 30rem;--width: 4.6rem; --height: 4.6rem;--swiper-navigation-size: 4.6rem;--position-arrow: static;"
+          style="--max-width: 33rem;--width: 4.6rem; --height: 4.6rem;--swiper-navigation-size: 4.6rem;--position-arrow: static;"
         >
           <button
-            class="modal__close absolute pointer btn-hover overflow-hidden btn-reset w-custom h-custom bg-white blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow color-white"
+            class="modal__close absolute pointer overflow-hidden btn-reset w-custom h-custom bg-custom blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow color-white"
             aria-label="Close"
           >
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -108,7 +109,7 @@
             </svg>
           </button>
           <slide-section
-            class="swiper"
+            class="swiper media-lightbox-popup-slide"
             data-effect="slide"
             data-direction="vertical"
             data-mousewheel="true"
@@ -118,6 +119,7 @@
             data-mobile="1"
             data-desktop="1"
             data-tablet="1"
+            style="height: 570px;"
           >
             {%- render 'swiper-navigation' -%}
             <div class="swiper-wrapper">
@@ -129,7 +131,7 @@
                       <video-lightbox-item class="h-full">
                         <button
                           aria-label="{{ 'accessibility.play_button.video' | t }}"
-                          class="play-button play-button-popup active absolute inset-0 m-auto btn-reset w-custom h-custom bg-white blur rounded-50 z-1 pointer inline-flex content-center"
+                          class="play-button transition-short opacity-0 play-button-popup active absolute inset-0 m-auto btn-reset w-custom h-custom bg-custom blur rounded-50 z-1 pointer inline-flex content-center"
                           style="--width: 5rem; --height: 5rem;"
                         >
                           {% render 'icon-play' %}
@@ -137,7 +139,7 @@
                         </button>
                         <button
                           aria-label="{{ 'accessibility.mute_button.video' | t }}"
-                          class="mute-button mute-button-popup absolute right-10 bottom-10 btn-reset bg-white blur w-custom h-custom rounded-50 z-1 pointer"
+                          class="mute-button mute-button-popup absolute right-10 bottom-10 btn-reset bg-custom blur w-custom h-custom rounded-50 z-1 pointer"
                         >
                           {% render 'icon-mute-open' %}
                           {% render 'icon-mute-close' %}
@@ -153,8 +155,12 @@
                           endfor
                           assign poster = media.preview_image | image_url: width: 500
                         -%}
+                        <div class="smooth_loading absolute inset-0 flex content-center bg-grey transition">
+                          <span class="loader"></span>
+                        </div>
                         <video
                           preload="auto"
+                          class="smooth_loading-video"
                           loop
                           muted
                           playsinline
@@ -184,10 +190,10 @@
             disable_scrolling_text: true,
             disable_color_swatches: true,
             class: ' swiper-slide bg-white rounded-10 absolute z-2',
-            style_layout: ' flex gap-10 align-center',
+            style_layout: ' flex',
             image_class: ' flex-auto w-custom rounded-0',
             image_rounded: ' rounded-0',
-            info_class: ' flex-1 mt-0',
+            info_class: ' flex-1 mt-0 px-20 py-15 align-self-center lh-normal',
             type: 'action_beside'
           %}
         </div>
