@@ -23,7 +23,7 @@
   {%- if mobile_image != blank -%} --aspect-ratio-mb: {{ mobile_image.aspect_ratio }};{%- endif -%}{% if mobile_image == blank and section_st.image != blank %}--aspect-ratio-mb: {{ section_st.image.aspect_ratio }};{% endif %}
 {%- endcapture -%}
 <div
-  class="section section__image-with-text-overlay color-{{ section_st.color_scheme }} gradient"
+  class="section section__image-with-text-overlay color-{{ section_st.color_scheme }} gradient{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -362,6 +362,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "presets": [
