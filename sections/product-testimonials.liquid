@@ -334,30 +334,34 @@
                             </span>
                           {%- endif %}
                         </div>
-                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %} mt-15 mt-1025-20 mx-0 rich__text-m0 border-bottom">
+                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %}{% if quote != blank and product != blank %} mt-15 mt-1025-20{% endif %} mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}">
                           {{ quote }}
                         </div>
-                        <div
-                          class="testimonial-product pt-20 pt-1025-25"
-                          style="--width: 5.5rem;"
-                        >
-                          {% render 'card-product',
-                            card_product: product,
-                            section_id: section.id,
-                            show_video: false,
-                            disable_quickview: true,
-                            disable_badge: true,
-                            disable_rate: true,
-                            disable_vendor: true,
-                            disable_hover_image: true,
-                            show_quick_add: true,
-                            disable_color_swatches: true,
-                            image_class: ' flex-auto w-custom rounded-10',
-                            image_rounded: ' rounded-10',
-                            style_layout: ' flex gap-15 align-center',
-                            info_class: ' flex-1 mt-0 word-break'
-                          %}
-                        </div>
+                        {% if product != blank %}
+                          <div
+                            class="testimonial-product pt-20 pt-1025-25"
+                            style="--width: 5.5rem;"
+                          >
+                            {% render 'card-product',
+                              card_product: product,
+                              section_id: section.id,
+                              show_video: false,
+                              disable_quickview: true,
+                              disable_badge: true,
+                              disable_rate: true,
+                              disable_vendor: true,
+                              disable_hover_image: true,
+                              show_quick_add: true,
+                              disable_tag: true,
+                              disable_color_swatches: true,
+                              image_class: ' flex-auto w-custom rounded-10',
+                              image_rounded: ' rounded-10',
+                              style_layout: ' flex gap-15 align-center',
+                              info_class: ' flex-1 mt-0 word-break',
+                              disable_placeholder: true
+                            %}
+                          </div>
+                        {% endif %}
                       </div>
                     </div>
                   </div>
@@ -461,30 +465,32 @@
                             </span>
                           {%- endif %}
                         </div>
-                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %} mt-15 mt-1025-20 mx-0 rich__text-m0 border-bottom">
+                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %}{% if quote != blank and product != blank %} mt-15 mt-1025-20{% endif %} mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}">
                           {{ quote }}
                         </div>
-                        <div
-                          class="testimonial-product pt-20 pt-1025-25"
-                          style="--width: 5.5rem;"
-                        >
-                          {% render 'card-product',
-                            card_product: product,
-                            section_id: section.id,
-                            show_video: false,
-                            disable_quickview: true,
-                            disable_badge: true,
-                            disable_rate: true,
-                            disable_vendor: true,
-                            disable_hover_image: true,
-                            show_quick_add: true,
-                            disable_color_swatches: true,
-                            image_class: ' flex-auto w-custom rounded-10',
-                            image_rounded: ' rounded-10',
-                            style_layout: ' flex gap-15 align-center',
-                            info_class: ' flex-1 mt-0 word-break'
-                          %}
-                        </div>
+                        {% if product != blank %}
+                          <div
+                            class="testimonial-product pt-20 pt-1025-25"
+                            style="--width: 5.5rem;"
+                          >
+                            {% render 'card-product',
+                              card_product: product,
+                              section_id: section.id,
+                              show_video: false,
+                              disable_quickview: true,
+                              disable_badge: true,
+                              disable_rate: true,
+                              disable_vendor: true,
+                              disable_hover_image: true,
+                              show_quick_add: true,
+                              disable_color_swatches: true,
+                              image_class: ' flex-auto w-custom rounded-10',
+                              image_rounded: ' rounded-10',
+                              style_layout: ' flex gap-15 align-center',
+                              info_class: ' flex-1 mt-0 word-break'
+                            %}
+                          </div>
+                        {% endif %}
                       </div>
                     </div>
                   </div>
