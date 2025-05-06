@@ -47,6 +47,7 @@ a.product-image.focus-inset:focus-visible,
 .scrolling__bar-link:focus-visible,
 .product_testimonial.focus-inset:focus-visible,
 a.scrolling-image-item.focus-inset:focus-visible,
+.banner__media .block-image:focus-visible,
 .focus-inset-inside:focus-visible {
   position: relative;
   outline: 0;
@@ -62,6 +63,7 @@ a.collection-item__media--ratio:focus-visible::after,
 a.scrolling-image-item:focus-visible::after,
 video:focus-visible + .focus-video::after,
 a.scrolling-image-item.focus-inset:focus-visible:after,
+.banner__media .block-image:focus-visible:after,
 .focus-inset-inside:focus-visible:after {
   content: "";
   position: absolute;
@@ -88,7 +90,8 @@ slide-section
   outline: 0;
 }
 .focus-inset:focus-visible,
-input[type="checkbox"]:focus-visible + .checkmark:before {
+input[type="checkbox"]:focus-visible + .checkmark:before,
+input[type="checkbox"]:focus-visible + .recipient-checkbox .checkmark {
   outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: -0.2rem;
   box-shadow: 0 0 0.2rem 0 rgba(var(--color-text), 0.3);

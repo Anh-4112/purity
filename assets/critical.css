@@ -51,7 +51,8 @@ page-loader:not([style="opacity: 1;"]) .loader {
 .swiper.flex {
   display: flex;
 }
-:where(.hidden, .no-js .no-js-hidden) {
+:where(.hidden, .no-js .no-js-hidden),
+[hidden] {
   display: none;
 }
 :where(.hidden-important) {
@@ -653,8 +654,10 @@ input[type="checkbox"]:checked + .checkmark:before {
     .btn-tag a,
     body .jdgm-write-rev-link,
     body .jdgm-write-rev-link.jdgm-write-rev-link,
-    input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev
-  )::after {
+    input.jdgm-btn.jdgm-btn--solid.jdgm-submit-rev,
+    .btn__quick-shop.bg-white
+  )::after,
+:is(body .shopify-payment-button__button--unbranded)::after {
   content: "";
   position: absolute;
   top: 0;
@@ -690,7 +693,7 @@ input[type="checkbox"]:checked + .checkmark:before {
 .btn-white {
   --btn-bg: rgb(var(--color-white));
   --btn-color: var(--btn-outline-color);
-  --btn-border-color: transparent;
+  border: 0;
 }
 :where(.btn-reset) {
   background: transparent;
@@ -1596,6 +1599,9 @@ quantity-input input {
   height: var(--input-height);
 }
 @media screen and (max-width: 767.98px) {
+  .prose br {
+    display: none;
+  }
   .grid_scroll {
     grid-template-columns: repeat(
       var(--repeat, auto-fit),
@@ -1754,6 +1760,9 @@ quantity-input input {
     width: calc(
       (100% - (var(--gap) * (var(--item-tablet) - 1))) / var(--item-tablet)
     );
+  }
+  .sticky-md {
+    position: sticky;
   }
 }
 @media (min-width: 768px) and (max-width: 1024.99px) {

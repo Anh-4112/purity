@@ -47,6 +47,7 @@
   if items_per_row > 3
     assign items_per_row_tablet = items_per_row | minus: 1
   endif
+  assign animate_delay = 25
 -%}
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -64,37 +65,52 @@
         class="section-header text-{{ text_alignment }}"
       >
         {%- if section_st.subheading != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="30"
-            class="block"
-          >
-            <div class="section-subheading h7 mb-5 mb-md-10 body_weight">
-              {{ section_st.subheading }}
-            </div>
-          </motion-effect>
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
+          <div class="section-subheading h7 mb-5 mb-md-10 body_weight">
+            {{ section_st.subheading }}
+          </div>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.title != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="35"
-            class="block"
-          >
-            <h2 class="section-heading {{ header_size }}">
-              {{ section_st.title }}
-            </h2>
-          </motion-effect>
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
+          <h2 class="section-heading {{ header_size }}">
+            {{ section_st.title }}
+          </h2>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          <motion-effect
-            data-animate="fade-up"
-            data-animate-delay="40"
-            class="block"
-          >
-            <div class="section-description mt-15 prose">
-              {{ section_st.description }}
-            </div>
-          </motion-effect>
+          {% if scroll_animation %}
+            {% assign animate_delay = animate_delay | plus: 5 %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="{{ animate_delay }}"
+              class="block"
+            >
+          {% endif %}
+          <div class="section-description mt-15 prose">
+            {{ section_st.description }}
+          </div>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
         {%- endif -%}
       </div>
     {%- endif -%}

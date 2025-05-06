@@ -94,7 +94,12 @@
     {%- form 'customer_login', novalidate: 'novalidate' -%}
       {%- if form.errors -%}
         {%- if form.errors -%}
-          <div class="form__message error flex align-center gap-10 mb-10 h-custom" tabindex="-1" autofocus style="--height: 5.6rem;">
+          <div
+            class="form__message error flex align-center gap-10 mb-10 h-custom"
+            tabindex="-1"
+            autofocus
+            style="--height: 5.6rem;"
+          >
             <div class="flex content-center">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <use href="#icon-error"></use>
@@ -214,7 +219,7 @@
   {%- endif -%}
 </div>
 <script type="module">
-  import { setupFormValidation } from '{{ "formValidation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
   import '{{ "customer.js" | asset_url }}';
 
   document.addEventListener('DOMContentLoaded', () => {

@@ -127,6 +127,7 @@ class ActionSearch extends HTMLElement {
     const searchTerm = this.input.value.trim();
     if (!searchTerm.length) {
       this.form.classList.remove("results", "on-input", "loading");
+      NextSkyTheme.trapFocus(this.querySelector(".modal-inner"));
       return;
     }
     let predictiveSearch = "predictive-search-drawer";
@@ -136,8 +137,9 @@ class ActionSearch extends HTMLElement {
     this.form.classList.add("loading", "on-input");
     if (this.predictiveSearchResults) {
       this.getSearchResults(searchTerm, predictiveSearch);
+      return;
     }
-    NextSkyTheme.trapFocus(this);
+    NextSkyTheme.trapFocus(this.querySelector(".modal-inner"));
   }
 
   getSearchResults(searchTerm, predictiveSearch) {
@@ -169,7 +171,7 @@ class ActionSearch extends HTMLElement {
             )}&options%5Bprefix%5D=last`;
           });
         }
-        NextSkyTheme.trapFocus(this);
+        NextSkyTheme.trapFocus(this.querySelector(".modal-inner"));
       })
       .catch((error) => {
         this.form.classList.remove("loading", "results");
