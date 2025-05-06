@@ -7,17 +7,8 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
+{
   "sections": {
-    "breadcrumb": {
-      "type": "breadcrumb",
-      "settings": {
-        "section_width": "fix_width",
-        "text_alignment": "start",
-        "padding_top": 20,
-        "padding_bottom": 20
-      }
-    },
     "main": {
       "type": "main-product",
       "blocks": {
@@ -116,7 +107,7 @@
           "type": "_media-lightbox-product",
           "name": "t:sections.all.product_setting.media_lightbox.name",
           "settings": {
-            "items_to_show": 5,
+            "items_to_show": 4,
             "show_navigation": true,
             "show_pagination": false
           },
@@ -132,7 +123,7 @@
           "name": "t:sections.all.product_setting.collapsible_row.name",
           "settings": {
             "heading": "Product Info",
-            "content": "<p>Collapsible content</p>",
+            "content": "{{ closest.product.description }}",
             "page": ""
           },
           "blocks": {}
@@ -142,7 +133,7 @@
           "name": "t:sections.all.product_setting.collapsible_row.name",
           "settings": {
             "heading": "How to Use",
-            "content": "<p>Collapsible content</p>",
+            "content": "<p>{{ closest.product.metafields.custom.how_to_use | metafield_tag }}</p>",
             "page": ""
           },
           "blocks": {}
@@ -152,7 +143,7 @@
           "name": "t:sections.all.product_setting.collapsible_row.name",
           "settings": {
             "heading": "Ingredients",
-            "content": "<p>Collapsible content</p>",
+            "content": "<p>{{ closest.product.metafields.custom.ingredient_highlights | metafield_tag }}</p>",
             "page": ""
           },
           "blocks": {}
@@ -215,10 +206,10 @@
         "media_position": "left",
         "enable_image_zoom": true,
         "enable_video_looping": false,
-        "enable_video_autoplay": false,
+        "enable_video_autoplay": true,
         "mobile_thumbnails": "show_thumbnail",
-        "padding_top": 48,
-        "padding_bottom": 48
+        "padding_top": 50,
+        "padding_bottom": 50
       }
     },
     "multi_content_BdffXF": {
@@ -228,6 +219,7 @@
           "type": "_image",
           "name": "t:sections.all.image.label",
           "settings": {
+            "image": "shopify://shop_images/product_detai_mul1.jpg",
             "link": "",
             "vertical_alignment": "start",
             "width": "50%"
@@ -238,6 +230,7 @@
           "type": "_image",
           "name": "t:sections.all.image.label",
           "settings": {
+            "image": "shopify://shop_images/product_detai_mul2.jpg",
             "link": "",
             "vertical_alignment": "start",
             "width": "50%"
@@ -271,45 +264,52 @@
         "image_comparison_tLNnWz": {
           "type": "image_comparison",
           "settings": {
+            "before_image": "shopify://shop_images/review_1-1.jpg",
+            "after_image": "shopify://shop_images/review_1-2.jpg",
             "rating_star": 5,
-            "testimonial_author": "Author's name",
-            "testimonial_quote": "You can add text content from press comments, reviews, or testimonials here.",
+            "testimonial_author": "Carie-Gosée H.",
+            "testimonial_quote": "I've struggled with dark spots for years, but this serum made a visible difference in just a few weeks. Love it! Highly recommend! 🥰",
             "testimonial_product": ""
           }
         },
         "testimonial_rXr6TH": {
           "type": "testimonial",
           "settings": {
+            "video_local": "shopify://files/videos/Testimonials-2.mp4",
             "rating_star": 5,
-            "testimonial_author": "Author's name",
-            "testimonial_quote": "You can add text content from press comments, reviews, or testimonials here.",
+            "testimonial_author": "Cameron Smith.",
+            "testimonial_quote": "Love the bondi boost shampoo and conditioner it actually stopped my postpartum hair fall and i see my hair growing back again. A definite 5/5.",
             "testimonial_product": ""
           }
         },
         "image_comparison_UWVWbr": {
           "type": "image_comparison",
           "settings": {
+            "before_image": "shopify://shop_images/review_4-1.jpg",
+            "after_image": "shopify://shop_images/review_4-2.jpg",
             "rating_star": 5,
-            "testimonial_author": "Author's name",
-            "testimonial_quote": "You can add text content from press comments, reviews, or testimonials here.",
+            "testimonial_author": "Carie-Gosée H.",
+            "testimonial_quote": "I've been using this shampoo for a month, and my hair feels thicker and healthier! Noticing way less hair fall in the shower. Highly recommend!  💫",
             "testimonial_product": ""
           }
         },
         "testimonial_Dtn8fc": {
           "type": "testimonial",
           "settings": {
+            "testimonial_image": "shopify://shop_images/review_5.jpg",
             "rating_star": 5,
-            "testimonial_author": "Author's name",
-            "testimonial_quote": "You can add text content from press comments, reviews, or testimonials here.",
+            "testimonial_author": "Susan Gibson.",
+            "testimonial_quote": "Feeling amazing! Love this product, my skin feels so soft after one scrub and so well priced! I can't imagine cleaning this up with out one! 🥰",
             "testimonial_product": ""
           }
         },
-        "image_comparison_Fnhtba": {
-          "type": "image_comparison",
+        "testimonial_RDd3jJ": {
+          "type": "testimonial",
           "settings": {
+            "video_local": "shopify://files/videos/Testimonials-6.mp4",
             "rating_star": 5,
-            "testimonial_author": "Author's name",
-            "testimonial_quote": "You can add text content from press comments, reviews, or testimonials here.",
+            "testimonial_author": "Célodie F.",
+            "testimonial_quote": "I received this serum and It's hydrating and a not tacky, not watery at all. It has made my skin so smooth and hydrated. 👌 🥰",
             "testimonial_product": ""
           }
         }
@@ -319,12 +319,12 @@
         "testimonial_rXr6TH",
         "image_comparison_UWVWbr",
         "testimonial_Dtn8fc",
-        "image_comparison_Fnhtba"
+        "testimonial_RDd3jJ"
       ],
       "name": "t:sections.product_testimonials.name",
       "settings": {
         "section_width": "fix_width",
-        "color_scheme": "",
+        "color_scheme": "scheme-76e16d9c-62d8-4250-9f3a-e19467efff31",
         "subheading": "Loved by 17k+ Customers",
         "title": "What They're Saying",
         "description": "",
@@ -333,7 +333,7 @@
         "image_desktop_position": "top",
         "image_ratio": "adapt",
         "show_verified_buyer": true,
-        "rating_color": "#FF9C05",
+        "rating_color": "#ff9c05",
         "items_per_row": 3,
         "column_gap": "medium",
         "show_navigation": false,
@@ -342,50 +342,60 @@
         "change_slide_every": 5,
         "reveal_slide": true,
         "items_per_row_mobile": 1.5,
-        "padding_top": 48,
-        "padding_bottom": 48
+        "padding_top": 100,
+        "padding_bottom": 100
       }
     },
-    "multi_content_xj7WND": {
+    "multi_content_HDDFiU": {
       "type": "multi-content",
       "blocks": {
-        "group_text_XwhgLk": {
+        "group_text_WVbW7h": {
           "type": "group-text",
           "name": "t:sections.all.text.label",
           "settings": {
             "color_scheme": "scheme-76e16d9c-62d8-4250-9f3a-e19467efff31",
-            "vertical_alignment": "end",
+            "vertical_alignment": "start",
             "width": "50%",
             "text_alignment": "start",
             "padding_content_inline": 60,
             "padding_content_block": 60
           },
           "blocks": {
-            "subheading_irTAAL": {
+            "icon_ePtR3Y": {
+              "type": "_icon",
+              "name": "t:sections.parallax-image.blocks.icon.name",
+              "settings": {
+                "icon_svg": "hive",
+                "icon_size": 50,
+                "spacing_bottom": 20
+              },
+              "blocks": {}
+            },
+            "subheading_DcaXef": {
               "type": "subheading",
               "name": "t:sections.all.content_setting.subheading.label",
               "settings": {
-                "subheading": "Gentle and Effective",
+                "subheading": "Glow Naturally",
                 "subheading_size": "big-2",
                 "uppercase": false,
                 "spacing_bottom": 10
               },
               "blocks": {}
             },
-            "heading_nkwwp9": {
+            "heading_kje8HJ": {
               "type": "heading",
               "settings": {
-                "heading": "Talk about your brand",
+                "heading": "Glow Formula",
                 "heading_size": "h2",
                 "uppercase": false,
                 "spacing_bottom": 30
               },
               "blocks": {}
             },
-            "description_tGtPfm": {
+            "description_467NPf": {
               "type": "description",
               "settings": {
-                "description": "<p>Expertly formulated with natural, dermatologically-tested ingredients to deeply nourish and protect your skin, helping to maintain moisture levels and leaving it smooth, refreshed, and rejuvenated throughout the day.</p>",
+                "description": "<p>Backed by years of research and clinical testing, this advanced formula uses powerful ingredients to boost skin radiance, elasticity, and texture, giving you a youthful glow while improving your complexion’s overall health.</p>",
                 "description_size": "",
                 "spacing_bottom": 0
               },
@@ -393,16 +403,21 @@
             }
           },
           "block_order": [
-            "subheading_irTAAL",
-            "heading_nkwwp9",
-            "description_tGtPfm"
+            "icon_ePtR3Y",
+            "subheading_DcaXef",
+            "heading_kje8HJ",
+            "description_467NPf"
           ]
         },
-        "image_EX4pqU": {
-          "type": "_image",
-          "name": "t:sections.all.image.label",
+        "video_kdpWNL": {
+          "type": "_video",
+          "name": "t:sections.video.name",
           "settings": {
-            "link": "",
+            "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "video_local": "shopify://files/videos/3.mp4",
+            "autoplay": true,
+            "looping": true,
+            "aspect_ratio": "adapt",
             "vertical_alignment": "start",
             "width": "50%"
           },
@@ -410,8 +425,8 @@
         }
       },
       "block_order": [
-        "group_text_XwhgLk",
-        "image_EX4pqU"
+        "group_text_WVbW7h",
+        "video_kdpWNL"
       ],
       "name": "t:sections.multi_content.name",
       "settings": {
@@ -425,17 +440,132 @@
         "enable_carousel_mobile": false,
         "items_per_row": 1,
         "equal_height_adjustment": true,
-        "padding_top": 48,
-        "padding_bottom": 48
+        "padding_top": 50,
+        "padding_bottom": 10
       }
     },
-    "video_with_text_overlay_iRdDwH": {
-      "type": "video-with-text-overlay",
+    "multi_content_xj7WND": {
+      "type": "multi-content",
       "blocks": {
-        "heading_gGQU6K": {
+        "image_TTexUt": {
+          "type": "_image",
+          "name": "t:sections.all.image.label",
+          "settings": {
+            "image": "shopify://shop_images/product_detai_mul3.jpg",
+            "link": "shopify://collections/cleansers",
+            "vertical_alignment": "start",
+            "width": "50%"
+          },
+          "blocks": {}
+        },
+        "group_text_XwhgLk": {
+          "type": "group-text",
+          "name": "t:sections.all.text.label",
+          "settings": {
+            "color_scheme": "scheme-76e16d9c-62d8-4250-9f3a-e19467efff31",
+            "vertical_alignment": "end",
+            "width": "50%",
+            "text_alignment": "start",
+            "padding_content_inline": 60,
+            "padding_content_block": 60
+          },
+          "blocks": {
+            "icon_UDjjLW": {
+              "type": "_icon",
+              "name": "t:sections.parallax-image.blocks.icon.name",
+              "settings": {
+                "icon_svg": "moon",
+                "icon_size": 50,
+                "spacing_bottom": 20
+              },
+              "blocks": {}
+            },
+            "subheading_irTAAL": {
+              "type": "subheading",
+              "name": "t:sections.all.content_setting.subheading.label",
+              "settings": {
+                "subheading": "Stronger—Fuller Hair",
+                "subheading_size": "big-2",
+                "uppercase": false,
+                "spacing_bottom": 10
+              },
+              "blocks": {}
+            },
+            "heading_nkwwp9": {
+              "type": "heading",
+              "settings": {
+                "heading": "Hair Strength",
+                "heading_size": "h2",
+                "uppercase": false,
+                "spacing_bottom": 30
+              },
+              "blocks": {}
+            },
+            "description_tGtPfm": {
+              "type": "description",
+              "settings": {
+                "description": "<p>Formulated with proven ingredients, this treatment restores hair health, prevents thinning, adds volume, and nourishes the scalp for thicker, fuller, and healthier hair.</p>",
+                "description_size": "",
+                "spacing_bottom": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "icon_UDjjLW",
+            "subheading_irTAAL",
+            "heading_nkwwp9",
+            "description_tGtPfm"
+          ]
+        }
+      },
+      "block_order": [
+        "image_TTexUt",
+        "group_text_XwhgLk"
+      ],
+      "name": "t:sections.multi_content.name",
+      "settings": {
+        "section_width": "fix_width",
+        "subheading": "",
+        "heading": "",
+        "description": "",
+        "heading_size": "medium",
+        "alignment": "start",
+        "column_gap": "medium",
+        "enable_carousel_mobile": false,
+        "items_per_row": 1,
+        "equal_height_adjustment": true,
+        "padding_top": 10,
+        "padding_bottom": 50
+      }
+    },
+    "media_hero_DjpBwc": {
+      "type": "media-hero",
+      "blocks": {
+        "heading_AeqVgV": {
           "type": "heading",
           "settings": {
-            "heading": "Talk about your brand",
+            "heading": "Say Hello! <br>\nTo Skin You'll Love",
+            "heading_size": "h0",
+            "uppercase": false,
+            "spacing_bottom": 0
+          },
+          "blocks": {}
+        },
+        "heading_AFBUUN": {
+          "type": "heading",
+          "settings": {
+            "heading": "Pure Beauty. <br>\nGently Delivered Daily",
+            "heading_size": "h0",
+            "uppercase": false,
+            "spacing_bottom": 0
+          },
+          "blocks": {}
+        },
+        "heading_XdeMgX": {
+          "type": "heading",
+          "settings": {
+            "heading": "The Inside <br>\nOut Glow You Crave",
             "heading_size": "h0",
             "uppercase": false,
             "spacing_bottom": 0
@@ -444,25 +574,18 @@
         }
       },
       "block_order": [
-        "heading_gGQU6K"
+        "heading_AeqVgV",
+        "heading_AFBUUN",
+        "heading_XdeMgX"
       ],
-      "name": "t:sections.video-with-text-overlay.name",
+      "name": "t:sections.media-hero.name",
       "settings": {
-        "section_width": "fix_width",
-        "color_scheme": "",
-        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+        "color_scheme": "scheme-b057792d-f0df-4ed0-973f-3dd88bca67d5",
+        "image": "shopify://shop_images/product_detail_banner2.jpg",
         "video_alt_text": "Video alt text",
         "overlay_opacity": 0,
-        "video_height": "adapt",
-        "desktop_content_position": "middle-center",
-        "text_alignment": "center",
-        "max_width": 100,
-        "padding_content_inline": 30,
-        "padding_content_block": 30,
-        "show_text_bellow_mobile": false,
-        "text_alignment_mobile": "start",
-        "padding_top": 48,
-        "padding_bottom": 48
+        "padding_top": 50,
+        "padding_bottom": 50
       }
     },
     "icon_box_ww37gT": {
@@ -471,25 +594,25 @@
         "icon_box_dXrMpb": {
           "type": "icon_box",
           "settings": {
-            "icon_svg": "none",
-            "heading": "This is heading text",
-            "description": "<p>Add a short description for this section.</p>"
+            "icon_svg": "cruelty",
+            "heading": "Cruelty-Free",
+            "description": "<p>We're cruelty-free, forever and always and believe kindness is always a good look.</p>"
           }
         },
         "icon_box_wfqBQX": {
           "type": "icon_box",
           "settings": {
-            "icon_svg": "none",
-            "heading": "This is heading text",
-            "description": "<p>Add a short description for this section.</p>"
+            "icon_svg": "paraben",
+            "heading": "Paraben-Free",
+            "description": "<p>Products paraben-free, always and forever, because we believe in clean, safe beauty for all.</p>"
           }
         },
         "icon_box_m63VBk": {
           "type": "icon_box",
           "settings": {
-            "icon_svg": "none",
-            "heading": "This is heading text",
-            "description": "<p>Add a short description for this section.</p>"
+            "icon_svg": "leaf",
+            "heading": "Earth-Conscious",
+            "description": "<p>Our commitment to the planet is present in every step of our product's journey and process.</p>"
           }
         }
       },
@@ -561,8 +684,8 @@
           "type": "_image",
           "name": "t:sections.all.image.label",
           "settings": {
-            "image": "shopify://shop_images/collection-list-9.jpg",
-            "link": "",
+            "image": "shopify://shop_images/product_detai_mul4.jpg",
+            "link": "shopify://collections/glow-boosters",
             "vertical_alignment": "start",
             "width": "50%"
           },
@@ -645,18 +768,16 @@
         "padding_bottom": 50
       }
     },
-    "featured_collection_dEwQVL": {
-      "type": "featured-collection",
-      "name": "t:sections.featured-collection.name",
+    "related_products_tA4kBj": {
+      "type": "related-products",
+      "name": "t:sections.related-products.name",
       "settings": {
         "section_width": "fix_width",
         "color_scheme": "",
-        "subheading": "",
         "title": "Others Also Bought",
         "description": "<p>Check out similar products people are loving. Click to explore trending styles.</p>",
         "heading_size": "medium",
         "text_alignment": "center",
-        "collection": "",
         "items_to_show": 8,
         "items_per_row": 4,
         "column_gap": "medium",
@@ -664,23 +785,23 @@
         "show_navigation": true,
         "show_pagination": false,
         "reveal_slide": false,
-        "items_per_row_mobile": 1.5,
+        "items_per_row_mobile": 1,
         "padding_top": 50,
-        "padding_bottom": 100
+        "padding_bottom": 80
       }
     }
   },
   "order": [
-    "breadcrumb",
     "main",
     "multi_content_BdffXF",
     "product_testimonials_kqXDfb",
+    "multi_content_HDDFiU",
     "multi_content_xj7WND",
-    "video_with_text_overlay_iRdDwH",
+    "media_hero_DjpBwc",
     "icon_box_ww37gT",
     "compare_products_QKrcP9",
     "1745823764c29c2d68",
     "multi_content_FxmAn6",
-    "featured_collection_dEwQVL"
+    "related_products_tA4kBj"
   ]
 }
