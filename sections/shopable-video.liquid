@@ -189,9 +189,11 @@
             %}
             <div class="swiper-slide" {{ block.shopify_attributes }}>
               <shopable-item
-                class="pointer rounded block"
+                class="pointer rounded block focus-inset-inside"
+                tabindex="0"
                 data-product="Product-{{ block.id }}"
                 data-position="{{ forloop.index | minus: 1 }}"
+                tabindex="0"
               >
                 <div class="video_inner relative zoom-in">
                   {% if poster_image != blank or local_video != blank %}
@@ -199,7 +201,6 @@
                       class="video-item--ratio rounded block"
                       style="--aspect-ratio: {{ video_ratio }};"
                       data-autoplay="{{ autoplay_video }}"
-                      tabindex="0"
                     >
                       {% if local_video != blank %}
                         {%- liquid
@@ -256,11 +257,11 @@
                         assign active = 'active'
                       endif
                     %}
-                    <div class="flex column align-center absolute z-1 bottom-15 right-15 gap-10 invisible-1025 video_control transition">
+                    <div class="flex column align-center absolute z-1 bottom-15 right-15 gap-10 video_control transition">
                       {% if local_video != blank %}
                         <button
                           aria-label="{{ 'accessibility.play_button.video' | t }}"
-                          class="play-button pointer border-0 inline-flex align-center justify-content-center {{ active }}"
+                          class="play-button invisible-1025 pointer border-0 inline-flex align-center justify-content-center {{ active }}"
                         >
                           {% render 'icon-play' %}
                           {% render 'icon-pause' %}
@@ -269,7 +270,7 @@
                       {% if local_video != blank %}
                         <button
                           aria-label="{{ 'accessibility.mute_button.video' | t }}"
-                          class="mute-button pointer  border-0 inline-flex align-center justify-content-center"
+                          class="mute-button invisible-1025 pointer border-0 inline-flex align-center justify-content-center"
                         >
                           {% render 'icon-mute-open' %}
                           {% render 'icon-mute-close' %}
@@ -511,14 +512,14 @@
                           {% if local_video != blank %}
                             <button
                               aria-label="{{ 'accessibility.play_button.video' | t }}"
-                              class="play-button play-button-popup btn-{{ block.id }} pointer border-0 absolute z-2 inline-flex align-center justify-content-center active"
+                              class="play-button transition-short opacity-0 play-button-popup btn-{{ block.id }} pointer border-0 absolute z-2 inline-flex align-center justify-content-center active"
                             >
                               {% render 'icon-play' %}
                               {% render 'icon-pause' %}
                             </button>
                             <button
                               aria-label="{{ 'accessibility.mute_button.video' | t }}"
-                              class="hidden active mute-button mute-button-popup pointer absolute z-2 right-15 bottom-15 border-0 inline-flex-1025 align-center justify-content-center"
+                              class="hidden transition-short active mute-button mute-button-popup pointer absolute z-2 right-15 bottom-15 border-0 inline-flex-1025 align-center justify-content-center"
                             >
                               {% render 'icon-mute-open' %}
                               {% render 'icon-mute-close' %}
@@ -743,7 +744,7 @@
                                   {%- endif -%}
                                 </div>
                               </div>
-                              {% if card_product.metafields.custom.short_description != blank or card_product.description != blank %}
+                           {% if card_product.metafields.custom.short_description != blank or card_product.description != blank %}
                                 <div class="block-product__description">
                                   {%- if card_product.metafields.custom.short_description -%}
                                     {{ card_product.metafields.custom.short_description }}
