@@ -197,7 +197,7 @@
                     {% assign animate_delay = 25 %}
                     <div class="sec__content-inner max-w-100">
                       {% if subheading != blank %}
-                        <div class="sec__content-subheading subheading_weight">
+                        <div class="sec__content-subheading subheading_weight heading-color mb-10 mb-1025-30">
                           {% assign animate_delay = animate_delay | plus: 5 %}
                           <motion-effect
                             data-animate="fade-up"
@@ -248,7 +248,8 @@
                                   href="{{ first_button_link | default: "#" }}"
                                 {% endif %}
                                 aria-label="{{ first_button_label }}"
-                                class="btn btn-{{ first_button_type }} inline-flex no-underline"
+                                class="btn btn-{{ first_button_type }} inline-flex no-underline w-custom max-w-100 content-center"
+                                style="--width: 20rem;"
                               >
                                 {{ first_button_label }}
                               </a>
@@ -269,7 +270,7 @@
         {%- if show_pagination -%}
           <div
             class="swiper-pagination swiper-pagination-slideshow{% if show_text_bellow_image %} swiper-pagination-bellow{% endif %}"
-            style="{% if show_text_bellow_image %}--position: absolute;--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% else %}--position: absolute;{% endif %}--swiper-pagination-bottom:3rem;--swiper-pagination-bullet-active-width: 8rem;"
+            style="{% if show_text_bellow_image %}--position: absolute;--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% else %}--position: absolute;{% endif %}--swiper-pagination-bottom: 2.4rem;--swiper-pagination-bullet-active-width: 8rem;"
           ></div>
         {% endif %}
       </slide-section>

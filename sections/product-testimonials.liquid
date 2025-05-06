@@ -334,9 +334,10 @@
                             </span>
                           {%- endif %}
                         </div>
-                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %} mt-15 mt-1025-20 mx-0 rich__text-m0 border-bottom">
+                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %}{% if quote != blank and product != blank %} mt-15 mt-1025-20{% endif %} mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}">
                           {{ quote }}
                         </div>
+                      {% if product != blank %}
                         <div
                           class="testimonial-product pt-20 pt-1025-25"
                           style="--width: 5.5rem;"
@@ -359,6 +360,7 @@
                             info_class: ' flex-1 mt-0 word-break'
                           %}
                         </div>
+                      {% endif %}
                       </div>
                     </div>
                   </div>
@@ -462,9 +464,10 @@
                             </span>
                           {%- endif %}
                         </div>
-                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %} mt-15 mt-1025-20 mx-0 rich__text-m0 border-bottom">
+                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %}{% if quote != blank and product != blank %} mt-15 mt-1025-20{% endif %} mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}">
                           {{ quote }}
                         </div>
+                      {% if product != blank %}
                         <div
                           class="testimonial-product pt-20 pt-1025-25"
                           style="--width: 5.5rem;"
@@ -487,6 +490,7 @@
                             info_class: ' flex-1 mt-0 word-break'
                           %}
                         </div>
+                      {% endif %}
                       </div>
                     </div>
                   </div>

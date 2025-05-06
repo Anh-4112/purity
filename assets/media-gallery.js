@@ -56,7 +56,7 @@ class GridGallery extends MediaGallery {
     this.classList.remove("grid", "grid-cols", "stacked");
     const html = this.MediaGalleryHtml.replaceAll("grid-item", "swiper-slide");
     const wrapper = `<div class='swiper-wrapper'>${html}</div> <div
-      class="swiper-pagination"
+      class="swiper-pagination bg-white blur shadow fs-small heading-color lh-normal rounded"
     ></div> `;
     this.innerHTML = wrapper;
     this.initSlideMediaGallery("gird");

@@ -27,11 +27,11 @@
   endif
   assign column_gap_slide = 0
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
+    assign column_gap_slide = 100
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
+    assign column_gap_slide = 50
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
+    assign column_gap_slide = 30
   endif
   assign animate_delay = 25
 %}
@@ -41,7 +41,7 @@
 {%- endcapture -%}
 
 {%- capture col_style -%}
-  --col-number: {{ section_st.items_per_row }};--col-tablet: 2;--col-desktop: {{ section.blocks.size }};
+  --col-number: {{ section_st.items_per_row }};--col-tablet: 2;--col-desktop: {{ section.blocks.size }};--gap: {{ column_gap_slide }}px;--gap-tablet: 20px;--gap-mobile: 10px;
 {%- endcapture -%}
 
 <div
@@ -53,7 +53,7 @@
   >
     {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div
-        class="section-header text-{{ section_st.alignment }}"
+        class="section-header text-{{ section_st.alignment }} mb-30 mb-md-40"
       >
         {%- if section_st.subheading != blank -%}
           {% if scroll_animation %}
@@ -127,8 +127,8 @@
             assign icon_position = section_st.icon_position
           -%}
           <div
-            class="motion-item {% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
-            style="--width: {{ section_st.icon_size }}px;"
+            class="motion-item {% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-15 gap-md-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
+            style="---width: {{ section_st.icon_size }}px;"
           >
             <div
               class="icon-box__icon w-custom h-auto flex heading-color"

@@ -18,18 +18,9 @@
   .modal-offer-wrapper .modal__close svg {
     rotate: 180deg;
   }
-  scroll-offer {
-    position: fixed;
-    bottom: 3rem;
-    left: 3rem;
-    z-index: 10;
-    --btn-radius: 3rem;
-  }
-
   .padding-block {
     padding: 1.5rem 3rem;
   }
-
   .modal-offer-wrapper .modal__close {
     left: 50%;
     transform: translate(-50%, -25px);
@@ -44,12 +35,10 @@
     touch-action: auto !important;
   }
   icon-close-offer {
-    width: 2.6rem;
-    height: 2.6rem;
     top: -1.8rem;
   }
 {% endstyle %}
-<scroll-offer class="block" style="opacity: 0;">
+<scroll-offer class="block fixed left-10 left-md-30 z-5" style="opacity: 0;">
   <div
     class="subheading_weight pointer lh-normal inline-flex align-center {% if section_st.uppercase %} uppercase{% endif %} fs-{{ section_st.highlight_text_size }} text-color bg-custom{% if section_st.background_color != "rgba(0,0,0,0)" and section_st.background_color != "transparent" and section_st.background_color != blank  %} padding-block btn-rounded{% endif %}"
     style="--color-text: {{ section_st.text_color }};--bg-color-custom: {{ section_st.background_color }};"
@@ -63,7 +52,10 @@
     {%- endif -%}
     {{ section_st.highlight_text | escape }}
   </div>
-  <icon-close-offer class="absolute pointer shadow border inline-flex mx-auto rounded-50 overflow-hidden content-center heading-color bg-white">
+  <icon-close-offer
+    class="absolute pointer shadow border inline-flex mx-auto rounded-50 overflow-hidden content-center heading-color bg-white w-custom h-custom"
+    style="--width: 2.6rem; --height: 2.6rem;"
+  >
     <svg width="8" height="8" viewBox="0 0 13 14" fill="none">
       <use href="#icon-close" />
     </svg>
