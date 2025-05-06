@@ -2067,12 +2067,14 @@ class NewsletterPopup extends HTMLElement {
     content.appendChild(template.content.firstElementChild.cloneNode(true));
 
     const wrapper = NextSkyTheme.body.appendChild(
-      content.querySelector("modal-popup")
+      content.querySelector("newsletter-modal-popup")
     );
 
     setTimeout(() => {
       NextSkyTheme.eventModal(wrapper, "open", true, null, true);
-    }, 3000);
+      NextSkyTheme.global.rootToFocus = wrapper;
+      new LazyLoader(".image-lazy-load");
+    }, 1);
 
     this.initNotShow(wrapper);
   }

@@ -29,14 +29,15 @@
 <newsletter-popup data-enable="{{ show_page }}" data-section-id="{{ section.id }}">
   <template>
     <div class="newsletter-popup">
-      <modal-popup
+      <newsletter-modal-popup
         class="modal active-modal-js modal-newsletter-popup"
         role="dialog"
       >
         <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
         <div
-          class="modal-popup-inner invisible h-content modal-body modal-draggable transition rounded max-w-custom m-auto fixed inset-0 z-15 w-full bg-white"
+          class="modal-popup-inner modal-focus invisible h-content modal-body modal-draggable transition rounded max-w-custom m-auto fixed inset-0 z-15 w-full bg-white"
           style="--max-width: 60rem;"
+          tabindex="-1"
         >
           <button
             is="button-close-model"
@@ -153,7 +154,7 @@
             </div>
           </div>
         </div>
-      </modal-popup>
+      </newsletter-modal-popup>
     </div>
   </template>
 </newsletter-popup>
