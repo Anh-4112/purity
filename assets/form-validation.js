@@ -62,9 +62,9 @@ export class FormValidator {
 
   getSvgIcon() {
     return `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10 7.5V11.6667" stroke="#9F2923" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M9.99962 17.8414H4.94962C2.05795 17.8414 0.849619 15.7747 2.24962 13.2497L4.84962 8.56641L7.29962 4.16641C8.78295 1.49141 11.2163 1.49141 12.6996 4.16641L15.1496 8.57474L17.7496 13.2581C19.1496 15.7831 17.933 17.8497 15.0496 17.8497H9.99962V17.8414Z" stroke="#9F2923" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M9.99683 14.167H10.0043" stroke="#9F2923" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 7.5V11.6667" stroke="#79571b" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9.99962 17.8414H4.94962C2.05795 17.8414 0.849619 15.7747 2.24962 13.2497L4.84962 8.56641L7.29962 4.16641C8.78295 1.49141 11.2163 1.49141 12.6996 4.16641L15.1496 8.57474L17.7496 13.2581C19.1496 15.7831 17.933 17.8497 15.0496 17.8497H9.99962V17.8414Z" stroke="#79571b" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9.99683 14.167H10.0043" stroke="#79571b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`;
   }
 
