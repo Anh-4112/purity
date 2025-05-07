@@ -55,7 +55,7 @@
 {%- endcapture -%}
 {%- capture col_style -%}
   --col-number: 1;--col-tablet: 2;--col-desktop: {{ section_st.post_per_row_desktop }};
-  {% if column_gap_slide < 20 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 40px;--gap-desktop: {{  column_gap_slide }}px;{% endif %}
+  {% if column_gap_slide < 20 %}--gap: {{ column_gap_slide }}px;{% else %}--gap: 40px;--gap-desktop: {{  column_gap_slide }}px;{% endif %};--row-gap: clamp(3rem, 5vw ,6rem);
 {%- endcapture -%}
 
 <div
@@ -66,7 +66,7 @@
   <div class="{{ section_width }}">
     {%- if section_st.title != blank or section_st.description != blank -%}
       <div
-        class="section-header text-{{ text_alignment }}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}"
+        class="section-header mb-40 text-{{ text_alignment }}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}"
       >
         {% assign animate_delay = 25 %}
         {%- if section_st.title != blank -%}
@@ -78,7 +78,7 @@
               class="block"
             >
           {%- endif -%}
-          <h2 class="section-heading mb-10 {{ header_size }}">
+          <h2 class="section-heading mb-15 {{ header_size }}">
             {{ section_st.title }}
           </h2>
           {%- if scroll_animation -%}
@@ -110,7 +110,7 @@
             <li class="post-tags">
               <a
                 href="{{ blog.url }}"
-                class="btn btn-outline heading-style capitalize border text-color inline-block blog-tag-list {{ active }}"
+                class="btn btn-outline heading-style capitalize border text-color inline-block blog-tag-list px-1025-40 {{ active }}"
                 aria-label="{{ 'blogs.article.label_all' | t }}"
               >
                 {{- 'blogs.article.label_all' | t -}}
@@ -169,7 +169,7 @@
                         </svg>
                       {% endif %}
                       {% if block.settings.form_title != blank %}
-                        <h3 class="subscribe-title mt-15 mb-10">
+                        <h3 class="subscribe-title mt-20 mb-10">
                           {{ block.settings.form_title }}
                         </h3>
                       {% endif %}

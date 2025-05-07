@@ -6,10 +6,10 @@
 -%}
 {%- if request.page_type == 'index' -%}
   <h1
-    class="header__logo inline-flex align-center color-inherit{% if section_st.logo_position =='center' %} text-center content-center{% endif %}"
+    class="header__logo inline-flex align-center color-inherit{% if section_st.logo_position =='center' %} text-center content-center{% else %} justify-center flex-1025-start{% endif %}"
   >
 {%- else -%}
-  <div class="header__logo{% if section_st.logo_position =='center' %} text-center{% endif %}">
+  <div class="header__logo inline-flex{% if section_st.logo_position =='center' %} text-center content-center{% else %} justify-center flex-1025-start{% endif %}">
 {%- endif -%}
 <a
   href="{{ routes.root_url }}"
