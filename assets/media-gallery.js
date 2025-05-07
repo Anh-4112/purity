@@ -1,4 +1,5 @@
 import { SlideSection } from "module-slide";
+import { LazyLoader } from "module-lazyLoad";
 import PhotoSwipeLightbox from "module-photoSwipeLightbox";
 import { CustomElement } from "module-safariElementPatch";
 
@@ -60,6 +61,7 @@ class GridGallery extends MediaGallery {
     ></div> `;
     this.innerHTML = wrapper;
     this.initSlideMediaGallery("gird");
+    new LazyLoader(".image-lazy-load");
   }
 
   actionOutMobile() {
@@ -70,6 +72,7 @@ class GridGallery extends MediaGallery {
       this.classList.add("stacked");
     }
     this.innerHTML = this.MediaGalleryHtml;
+    new LazyLoader(".image-lazy-load");
   }
 }
 
