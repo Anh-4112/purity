@@ -72,6 +72,7 @@ class VideoLocalLightbox extends HTMLElement {
         .querySelector("slide-section");
       const slideIndex = parseInt(position);
       swiperContainer.swiper.slideTo(slideIndex, 0, false);
+      new LazyLoader(".image-lazy-load");
       NextSkyTheme.global.rootToFocus = this;
     } else {
       const swiperContainer = document

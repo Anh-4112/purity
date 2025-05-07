@@ -827,7 +827,7 @@ class MobileCollapsibleRowDetails extends CollapsibleRowDetails {
   constructor() {
     super();
     this.updateOpenState();
-    window.addEventListener('resize', this.updateOpenState.bind(this));
+    window.addEventListener("resize", this.updateOpenState.bind(this));
   }
 
   updateOpenState() {
@@ -911,7 +911,7 @@ class RecentlyViewedProducts extends HTMLElement {
     };
 
     new IntersectionObserver(handleIntersection.bind(this), {
-      rootMargin: "0px 0px 400px 0px",
+      rootMargin: "0px 0px 100px 0px",
     }).observe(this);
   }
 }

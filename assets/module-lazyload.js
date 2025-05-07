@@ -127,7 +127,6 @@ export class LazyLoader {
     this.lazyImages = document.querySelectorAll(selector);
     this.rootMargin = rootMargin;
     this.observer = null;
-
     this.init();
   }
 
@@ -156,9 +155,10 @@ export class LazyLoader {
             if (imgSrcset) {
               imgElement.setAttribute("srcset", imgSrcset);
               imgElement.removeAttribute("data-srcset");
+              imgElement.classList.remove("image-lazy-load");
               imgElement.classList.add("image-lazy-loaded");
-              observer.unobserve(imgElement);
             }
+            observer.unobserve(imgElement);
           }
         });
       },
@@ -178,10 +178,10 @@ export class LazyLoader {
     window.addEventListener("scroll", () => {
       this.lazyImages.forEach((imgElement) => {
         const imgSrcset = imgElement.dataset.srcset;
-
         if (imgSrcset) {
           imgElement.setAttribute("srcset", imgSrcset);
           imgElement.removeAttribute("data-srcset");
+          imgElement.classList.remove("image-lazy-load");
           imgElement.classList.add("image-lazy-loaded");
         }
       });
