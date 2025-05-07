@@ -325,102 +325,115 @@
         </div>
       {% endif %}
     {% endif %}
-    {% if sticky and section.blocks[0].settings.local_video != blank %}
-      <shopable-item
-        class="sticky-video block right-0 pointer transition-drawer fixed z-10 transition-drawer w-custom"
-        style="--width: 15rem"
-        data-product="Product-{{ section.blocks[0].id }}"
-        tabindex="0"
-      >
-        {% liquid
-          assign block_st = section.blocks[0].settings
-          assign local_video = block_st.local_video
-          assign poster_image = block_st.poster_image
-          assign video_ratio = '3/4'
-          if section_st.video_ratio != 'adapt'
-            case section_st.video_ratio
-              when 'square'
-                assign video_ratio = '1/1'
-              when 'landscape'
-                assign video_ratio = '4/3'
-              when 'portrait'
-                assign video_ratio = '3/4'
-            endcase
-          else
-            assign video_ratio = '15/23'
-          endif
-
-          assign image_alt = poster_image.alt
-          if image_alt == blank
-            assign image_alt = 'general.image.image_alt_default' | t
-          endif
-
-          assign video_alt = local_video.alt
-          if video_alt == blank
-            assign video_alt = 'accessibility.video' | t
-          endif
-        %}
-        {% if poster_image != blank or local_video != blank %}
-          <video-local
-            class="video-item--ratio rounded block"
-            style="--aspect-ratio: {{ video_ratio }};"
-          >
-            {% if local_video != blank %}
-              {%- liquid
-                assign source = local_video.sources
-                assign source_url = ''
-                for s in source
-                  if s.format == 'mp4'
-                    assign source_url = s.url
-                    break
-                  endif
-                endfor
-                assign poster = local_video.preview_image | image_url: width: 500
-                if poster_image != blank
-                  assign poster = poster_image | image_url: width: 500
-                endif
-              -%}
-              <video
-                preload="auto"
-                loop
-                muted
-                playsinline
-                autoplay
-                poster="{{ poster }}"
-                data-src="{{ source_url }}"
-              ></video>
-            {% else %}
-              {% if poster_image != blank %}
-                {% render 'responsive-image',
-                  type: 'banner',
-                  container: section_st.section_width,
-                  image: poster_image,
-                  image_alt: image_alt,
-                  padding: column_gap_slide,
-                  column: items_per_row
-                %}
-              {% else %}
-                {% render 'placeholder-render', type: 'collection' %}
-              {% endif %}
-            {% endif %}
-          </video-local>
-        {% else %}
-          <div
-            class="video-item--ratio"
-            style="--aspect-ratio: {{ video_ratio }};"
-          >
-            {% render 'placeholder-render', type: 'collection' %}
-          </div>
-        {% endif %}
-        <icon-close
-          class="shopable-sticky__close pointer-none inline-flex rounded-50 overflow-hidden absolute top-0 right-0 w-custom h-custom content-center color-white bg-dark"
-          style="--width: 2.8rem;--height: 2.8rem"
+    {% if sticky == 'desktop_only' or sticky == 'all_screens' %}
+      {% if section.blocks[0].settings.local_video != blank %}
+        <shopable-item
+          class="sticky-video {% if sticky == 'desktop_only' %}hidden block-md{% else %}block{% endif %} right-0 pointer transition-drawer fixed z-10 transition-drawer w-custom"
+          style="--width: 15rem"
+          data-product="Product-{{ section.blocks[0].id }}"
+          tabindex="0"
         >
-          <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-            <use href="#icon-close" />
-          </svg>
-        </icon-close>
-      </shopable-item>
+          {% liquid
+            assign block_st = section.blocks[0].settings
+            assign local_video = block_st.local_video
+            assign poster_image = block_st.poster_image
+            assign video_ratio = '3/4'
+            if section_st.video_ratio != 'adapt'
+              case section_st.video_ratio
+                when 'square'
+                  assign video_ratio = '1/1'
+                when 'landscape'
+                  assign video_ratio = '4/3'
+                when 'portrait'
+                  assign video_ratio = '3/4'
+              endcase
+            else
+              assign video_ratio = '15/23'
+            endif
+            assign image_alt = poster_image.alt
+            if image_alt == blank
+              assign image_alt = 'general.image.image_alt_default' | t
+            endif
+
+            assign video_alt = local_video.alt
+            if video_alt == blank
+              assign video_alt = 'accessibility.video' | t
+            endif
+          %}
+          {% if poster_image != blank or local_video != blank %}
+            <video-local
+              class="video-item--ratio rounded block"
+              style="--aspect-ratio: {{ video_ratio }};"
+            >
+              {% if local_video != blank %}
+                {%- liquid
+                  assign source = local_video.sources
+                  assign source_url = ''
+                  for s in source
+                    if s.format == 'mp4'
+                      assign source_url = s.url
+                      break
+                    endif
+                  endfor
+                  assign poster = local_video.preview_image | image_url: width: 500
+                  if poster_image != blank
+                    assign poster = poster_image | image_url: width: 500
+                  endif
+                -%}
+                <div class="video-thumbnail absolute" style="--aspect-ratio: {{ video_ratio }};">
+                  {% render 'responsive-image',
+                    type: 'banner',
+                    container: section_st.section_width,
+                    image: poster,
+                    image_alt: image_alt,
+                    padding: column_gap_slide,
+                    column: items_per_row
+                  %}
+                </div>
+                <template>
+                  <video
+                    preload="auto"
+                    loop
+                    muted
+                    playsinline
+                    autoplay
+                    poster="{{ poster }}"
+                    src="{{ source_url }}"
+                  ></video>
+                </template>
+              {% else %}
+                {% if poster_image != blank %}
+                  {% render 'responsive-image',
+                    type: 'banner',
+                    container: section_st.section_width,
+                    image: poster_image,
+                    image_alt: image_alt,
+                    padding: column_gap_slide,
+                    column: items_per_row
+                  %}
+                {% else %}
+                  {% render 'placeholder-render', type: 'collection' %}
+                {% endif %}
+              {% endif %}
+            </video-local>
+          {% else %}
+            <div
+              class="video-item--ratio"
+              style="--aspect-ratio: {{ video_ratio }};"
+            >
+              {% render 'placeholder-render', type: 'collection' %}
+            </div>
+          {% endif %}
+          <icon-close
+            class="shopable-sticky__close pointer-none inline-flex rounded-50 overflow-hidden absolute top-0 right-0 w-custom h-custom content-center color-white bg-dark"
+            style="--width: 2.8rem;--height: 2.8rem"
+          >
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+              <use href="#icon-close" />
+            </svg>
+          </icon-close>
+        </shopable-item>
+      {% endif %}
     {% endif %}
     <template class="template">
       <modal-popup
@@ -976,10 +989,24 @@
       "default": false
     },
     {
-      "type": "checkbox",
+      "type": "select",
       "id": "sticky",
       "label": "t:sections.shopable_video.settings.enable_sticky.label",
-      "default": false
+      "options": [
+        {
+          "value": "disable",
+          "label": "t:sections.shopable_video.settings.enable_sticky.option_1.label"
+        },
+        {
+          "value": "desktop_only",
+          "label": "t:sections.shopable_video.settings.enable_sticky.option_2.label"
+        },
+        {
+          "value": "all_screens",
+          "label": "t:sections.shopable_video.settings.enable_sticky.option_3.label"
+        }
+      ],
+      "default": "disable"
     },
     {
       "type": "header",

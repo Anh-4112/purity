@@ -678,28 +678,37 @@ class ShopableItem extends HTMLElement {
       if (!video || video.nodeName !== "VIDEO") return;
     }
     const playButton = this.querySelector(".play-button");
-    if (video.paused) {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            if (playButton) playButton.classList.add("active");
-          })
-          .catch((error) => {
-            if (!video.muted) {
-              video.muted = true;
-              video
-                .play()
-                .then(() => {
-                  if (playButton) playButton.classList.add("active");
-                })
-                .catch();
-            }
-          });
+    const muteButton = this.querySelector(".mute-button");
+    
+    const allShopableItems = this.closest('shopable-video').querySelectorAll("shopable-item");
+    allShopableItems.forEach(item => {
+      if (item !== this) {
+        const otherVideoElement = item.querySelector("video-local-shopable video");
+        const otherPlayButton = item.querySelector(".play-button");
+        const otherMuteButton = item.querySelector(".mute-button");
+        
+        if (otherVideoElement && !otherVideoElement.paused) {
+          otherVideoElement.pause();
+          if (otherPlayButton) otherPlayButton.classList.remove("active");
+          if (otherMuteButton) otherMuteButton.classList.remove("active");
+        }
       }
+    });
+    
+    if (video.paused) {
+      video.muted = false;
+      video
+        .play()
+        .then(() => {
+          if (playButton) playButton.classList.add("active");
+          if (muteButton) muteButton.classList.add("active");
+        })
+        .catch();
     } else {
+      video.muted = true;
       video.pause();
       if (playButton) playButton.classList.remove("active");
+      if (muteButton) muteButton.classList.remove("active");
     }
   }
 
