@@ -539,6 +539,9 @@ input[type="checkbox"]:checked + .checkmark:before {
 .z-2 {
   z-index: 2;
 }
+.z-8 {
+  z-index: 8;
+}
 .z-10 {
   z-index: 10;
 }
@@ -935,14 +938,16 @@ a.hover-heading-color:hover,
 :where(.gap-5) {
   gap: 0.5rem;
 }
+:where(.gap-6) {
+  gap: 0.6rem;
+}
 :where(.gap-10) {
   --gap: 1rem;
   --gap-desktop: 1rem;
   gap: var(--gap);
 }
 :where(.gap-15) {
-  --gap: 1.5rem;
-  gap: var(--gap);
+  gap: 1.5rem;
 }
 :where(.gap-20) {
   --gap: 2rem;
@@ -1295,7 +1300,7 @@ body:not(.template-index) .transparent-logo {
   font-weight: var(--menu-weight);
 }
 .list-menu {
-  gap: 1rem 3.5rem;
+  gap: 1rem 0;
 }
 .top-left {
   align-self: baseline;
@@ -1534,9 +1539,7 @@ slide-section variant-input {
   padding-bottom: 1px;
 }
 variant-input label.disable:not(.color-swatch-label) {
-  cursor: not-allowed;
   background-color: #f9f9f9;
-  pointer-events: none;
 }
 variant-input label.disable:after {
   content: "";
@@ -1767,6 +1770,9 @@ quantity-input input {
   }
 }
 @media (min-width: 1025px) {
+  .level-1 {
+    padding-inline: 1.75rem;
+  }
   .swiper:not([class*="initialized"]) .swiper-slide {
     width: calc(
       (100% - (var(--gap-desktop, var(--gap)) * (var(--item-desktop) - 1))) /
@@ -2025,7 +2031,9 @@ th {
 .drawer {
   --delay: 0.05s;
 }
-
+.draw-mb {
+  max-width: 90%;
+}
 @media (min-width: 576px) {
   .modal-inner,
   .draw-mb {

@@ -3,10 +3,10 @@
 -%}
 {% if link.links.size > 0 %}
   {%- if type == 'classic' -%}
-    <div class="submenu classic pointer-none transition invisible z-5{% if menu_mobile == blank %} {{ dropdowns_animation }} absolute submenu-desktop{% else %} bg-white sub-mb absolute inset-0 drawer drawer-right-mb overflow-hidden flex column{% endif %}">
+    <div class="submenu classic pointer-none transition z-5{% if menu_mobile == blank %} {{ dropdowns_animation }} absolute submenu-desktop invisible{% else %} bg-white sub-mb absolute inset-0 drawer drawer-right-mb overflow-hidden flex column{% endif %}">
       <div class="menu-container py-1025-30 bg-white custom-scrollbar overflow-auto">
         {%- if menu_mobile != blank -%}
-          <div class="submenu-header heading-color flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3 mb-10">
+          <div class="submenu-header heading-color flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3 mb-12">
             <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
               <button
                 class="pointer btn-reset flex align-center gap-25 heading-color"
@@ -32,7 +32,7 @@
         {%- endif -%}
   {%- else -%}
     {%- if menu_mobile != blank -%}
-      <div class="submenu-header heading-color flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3 mb-10">
+      <div class="submenu-header heading-color flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3 mb-12">
         <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
           <button
             class="pointer btn-reset flex align-center gap-25 heading-color"
@@ -57,13 +57,13 @@
       </div>
     {%- endif -%}
   {%- endif -%}
-  <ul class="menu list-unstyled{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% elsif menu_mobile != blank %} px-gutter-x py-12{% endif %}">
+  <ul class="menu list-unstyled{% if type == 'classic' %} flex column gap-15{% endif %}{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% endif %}{% if type != 'classic' and menu_mobile != blank %} px-gutter-x pb-10{% else %} p-gutter-x{% endif %}">
     {% for child_link in link.links %}
-      <li class="menu-link{% if child_link.links.size > 0 %} have-child{% if menu_mega == blank %} relative{% endif %}{% else %} py-6{% endif %}{% if menu_mega == blank and menu_mobile == blank %} px-20{% endif %}">
+      <li class="menu-link{% if child_link.links.size > 0 %} have-child{% if menu_mega == blank %} relative{% endif %}{% endif %}{% if menu_mega == blank and menu_mobile == blank %} px-30{% endif %}{% if menu_mobile != blank %} overflow-hidden{% endif %}">
         {%- if child_link.links.size > 0 -%}
           {% if menu_mega != blank %}
             <a
-              class="menu__item level-2 heading-style h6 border-animation relative"
+              class="menu__item level-2 heading-style h6 outlined-border relative"
               href="{{ link.url }}"
               aria-label="{{ grandchild_link.title }}"
             >
@@ -80,28 +80,28 @@
               {% endif %}
             >
               <summary
-                class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %}{% if menu_mobile != blank %} fs-18 heading-style py-10{% else %} py-6{% endif %} flex align-center gap-5 space-between inside-out-hover"
+                class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %}{% if menu_mobile != blank %} fs-18 heading-style py-10{% endif %} flex align-center gap-5 space-between inside-out-hover"
                 aria-label="{{ child_link.title }}"
               >
-                <span class="menu__title border-animation relative">
+                <span class="menu__title outlined-border relative">
                   {{- child_link.title -}}
                 </span>
                 <span
                   class="toggle-menu w-30 h-custom inline-flex flex-end align-center"
                   style="--height: 30px;"
                 >
-                  <svg class="icon icon-down icon-rotate transition-short" width="9" height="6" viewBox="0 0 9 6">
+                  <svg class="icon icon-down icon-rotate transition-short" width="11" height="6" viewBox="0 0 11 6">
                     <use href="#icon-arrow-down" />
                   </svg>
                 </span>
               </summary>
             </details>
           {% endif %}
-          <ul class="sub-children-menu list-unstyled overflow-hidden-mb{% if menu_mega == blank and menu_mobile == blank %} overflow-hidden{% endif %}{% if menu_mega != blank and menu_mobile == blank %} mt-1025-20{% endif %}">
+          <ul class="sub-children-menu list-unstyled flex column gap-15 overflow-hidden-mb{% if menu_mega == blank and menu_mobile == blank %} overflow-hidden{% endif %}{% if menu_mega != blank and menu_mobile == blank %} mt-1025-20{% endif %}">
             {% for grandchild_link in child_link.links %}
-              <li class="menu-link py-6{% if menu_mega == blank and menu_mobile == blank %} px-10{% endif %}">
+              <li class="menu-link{% if menu_mega == blank and menu_mobile == blank %} px-10{% endif %}">
                 <a
-                  class="menu__item level-3 border-animation relative"
+                  class="menu__item level-3 outlined-border relative"
                   href="{{ grandchild_link.url }}"
                   aria-label="{{ grandchild_link.title }}"
                 >
@@ -112,7 +112,7 @@
           </ul>
         {%- else -%}
           <a
-            class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %}{% if menu_mobile != blank %} fs-18 heading-style{% endif %} border-animation relative{% if menu_mega != blank %} heading-style h6{% endif %}"
+            class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %}{% if menu_mobile != blank %} fs-18 heading-style{% endif %} outlined-border relative{% if menu_mega != blank %} heading-style h6{% endif %}"
             aria-label="{{ child_link.title }}"
             href="{{ child_link.url }}"
           >
@@ -128,7 +128,7 @@
   {%- endif -%}
 {%- else -%}
   {%- if menu_mobile != blank -%}
-    <div class="submenu-header heading-color flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3 mb-10">
+    <div class="submenu-header heading-color flex align-center space-between px-gutter-x py-20 border-bottom sticky top-0 bg-white z-3 mb-12">
       <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
         <button
           class="pointer btn-reset flex align-center gap-25 heading-color"
