@@ -69,9 +69,8 @@ if (!customElements.get("pickup-availability")) {
         setTimeout(() => {
           if (button) {
             button.addEventListener("click", (evt) => {
-              document
-                .querySelector("pickup-availability-drawer")
-                .show(evt.target);
+              document.querySelector("pickup-availability-drawer").show();
+              NextSkyTheme.global.rootToFocus = button;
             });
           }
         }, 800);
@@ -88,8 +87,7 @@ if (!customElements.get("pickup-availability-drawer")) {
         super();
       }
 
-      show(focusElement) {
-        this.focusElement = focusElement;
+      show() {
         NextSkyTheme.eventModal(this, "open");
       }
     }

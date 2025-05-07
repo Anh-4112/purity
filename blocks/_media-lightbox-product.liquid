@@ -5,12 +5,10 @@
   assign show_pagination = block.settings.show_pagination
 
   assign items_per_row_tablet = items_to_show
-  assign items_per_row_mb =
-  assign class_custom = ''
+  assign items_per_row_mb = ''
   if items_to_show > 3
     assign items_per_row_tablet = items_to_show | minus: 1
     assign items_per_row_mb = items_to_show | minus: 1.5
-    assign class_custom = 'hidden block-md'
   else
     assign items_per_row_tablet = items_to_show
     assign items_per_row_mb = items_per_row_tablet
@@ -45,7 +43,7 @@
       style="{{ style | strip | strip_newlines }}"
     >
       {% if show_navigation %}
-        {%- render 'swiper-navigation', type: 'custom_nav' -%}
+        {%- render 'swiper-navigation' -%}
       {% endif %}
       <div class="swiper-wrapper">
         {%- for media in closest.product.metafields.custom.media_lightbox.value -%}
@@ -96,7 +94,7 @@
         role="dialog"
       >
         <div
-          class="modal-popup-inner flex column modal-focus h-content transition modal-draggable rounded max-w-custom m-auto invisible-1025 fixed right-30 bottom-30 z-22 bg-white w-full"
+          class="modal-popup-inner flex column modal-focus h-content transition modal-draggable rounded max-w-custom m-auto invisible-1025 fixed right-30 bottom-30 z-10 bg-white w-full"
           tabindex="-1"
           style="--max-width: 33rem;--width: 4.6rem; --height: 4.6rem;--swiper-navigation-size: 4.6rem;--position-arrow: static;"
         >

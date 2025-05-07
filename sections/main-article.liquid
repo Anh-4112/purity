@@ -401,7 +401,7 @@
                       tabindex="-1"
                       autofocus
                     >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
                         <use href="#icon-error"></use>
                       </svg>
                       {{ 'templates.contact.form.error_heading' | t }}
@@ -429,7 +429,7 @@
                   {%- elsif form.posted_successfully? -%}
                     <div class="form-status form__message success mb-15" role="status">
                       <div class="form-status flex  align-center gap-10" tabindex="-1" autofocus>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
                           <use href="#icon-success">
                         </svg>
                         {{ post_message | t }}
@@ -467,7 +467,9 @@
                         {%- if form.errors contains 'author' -%}
                           <small id="CommentForm-author-error">
                             <span class="form__message error">
-                              {%- render 'icon-error' -%}
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
+                                <use href="#icon-error"></use>
+                              </svg>
                               {{- 'blogs.article.name' | t }}
                               {{ form.errors.messages.author }}.</span
                             >
@@ -499,7 +501,9 @@
                         {%- if form.errors contains 'email' -%}
                           <small id="CommentForm-email-error">
                             <span class="form__message error">
-                              {%- render 'icon-error' -%}
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
+                                <use href="#icon-error"></use>
+                              </svg>
                               {{- 'blogs.article.email' | t }}
                               {{ form.errors.messages.email }}.</span
                             >
@@ -529,7 +533,9 @@
                     {%- if form.errors contains 'body' -%}
                       <small id="CommentForm-body-error">
                         <span class="form__message error">
-                          {%- render 'icon-error' -%}
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
+                            <use href="#icon-error"></use>
+                          </svg>
                           {{- 'blogs.article.message' | t }}
                           {{ form.errors.messages.body }}.</span
                         >

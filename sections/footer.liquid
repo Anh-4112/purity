@@ -134,7 +134,9 @@
                               class="newsletter-form__message form__message error fs-small inline-flex align-center gap-10 mt-10"
                               id="ContactFooter-error"
                             >
-                              {%- render 'icon-error' -%}
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
+                                <use href="#icon-error"></use>
+                              </svg>
                               <span>
                                 {{- form.errors.translated_fields.email | capitalize }}
                                 {{ form.errors.messages.email -}}
@@ -148,7 +150,9 @@
                             id="ContactFooter-success"
                             tabindex="-1"
                           >
-                            {%- render 'icon-success' -%}
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
+                              <use href="#icon-success">
+                            </svg>
                             <span>{{- 'newsletter.success' | t }}</span>
                           </div>
                         {%- else -%}
@@ -169,7 +173,7 @@
                       open
                     >
                       <summary class="collapsible-row__summary pointer-md-none pb-20">
-                        <h6 class="footer__block-heading flex space-between align-center collapsible-heading relative">
+                        <h3 class="footer__block-heading h6 flex space-between align-center collapsible-heading relative">
                           <span>
                             {{- block_st.heading | default: block_st.menu.title | escape -}}
                           </span>
@@ -178,7 +182,7 @@
                               <span class="icon_plus-animation heading-color"> </span>
                             </span>
                           {%- endif -%}
-                        </h6>
+                        </h3>
                       </summary>
                       {%- if block_st.menu != blank -%}
                         <ul class="footer__block-content menu-list-footer collapsible-row__content list-unstyled overflow-hidden-mb">
@@ -187,7 +191,7 @@
                               <a
                                 href="{{ link.url }}"
                                 aria-label="{{ link.title }}"
-                                class="{% if link.active %}list-menu__item--active{% endif %}"
+                                class="{% if link.active %}list-menu__item--active{% endif %} outlined-border"
                               >
                                 {{ link.title }}
                               </a>
@@ -205,14 +209,14 @@
                   >
                     {%- if block_st.store_heading != blank -%}
                       <summary class="collapsible-row__summary pointer-md-none pb-20">
-                        <h6 class="footer__block-heading flex space-between align-center collapsible-heading relative">
+                        <h3 class="footer__block-heading h6 flex space-between align-center collapsible-heading relative">
                           <span>
                             {{ block_st.store_heading | escape }}
                           </span>
                           <span class="open-children-toggle icon transition hidden-md">
                             <span class="icon_plus-animation heading-color"> </span>
                           </span>
-                        </h6>
+                        </h3>
                       </summary>
                     {%- endif -%}
                     <div
