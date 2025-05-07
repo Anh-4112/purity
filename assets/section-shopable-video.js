@@ -756,7 +756,7 @@ class ShopableItem extends HTMLElement {
       videoElement._clickHandler = function (event) {
         event.preventDefault();
         event.stopPropagation();
-        const videoLocal = this.closest("video-local-shopable");
+        const videoLocal = this.closest("video-local");
         const playButton = videoLocal?.querySelector(".play-button");
         if (this.paused) {
           this.play();
