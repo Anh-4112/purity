@@ -227,7 +227,6 @@
                                   <a
                                     href="{{ item.url }}"
                                     class="cart-item__link block rounded-10 focus-inset-inside word-break align-self-start"
-                                    aria-hidden="true"
                                     arial-label="{{ item.product.title | escape }}"
                                   >
                                     <div
@@ -589,7 +588,7 @@
                           <span class="visually-hidden">{{ 'general.button.close' | t }}</span>
                         </button>
                       </div>
-                      <div class="cart-addons-content overflow-hidden h-0 fs-small">
+                      <div class="cart-addons-content overflow-hidden h-0 fs-small visibility-hidden">
                         <div class="cart-addons-content-inner">
                           <p class="heading-color">{{ 'sections.cart.gift.info' | t }}</p>
                           {%- if select_product_gift_wrap != blank -%}
@@ -675,7 +674,7 @@
               {%- endif -%}
               {%- if show_cart_note -%}
                 <cart-note-element
-                  class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-16"
+                  class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible visibility-hidden bg-white drawer-spacing z-16"
                   style="--padding-block-desktop: 2rem;--padding-inline-desktop: 3rem;"
                 >
                   <div class="cart-addons-element">
@@ -725,7 +724,7 @@
               {%- endif -%}
               {%- if show_estimate_shipping -%}
                 <cart-estimate-element
-                  class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-16"
+                  class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible visibility-hidden bg-white drawer-spacing z-16"
                   style="--padding-block-desktop: 2rem;--padding-inline-desktop: 3rem;"
                 >
                   <form>
