@@ -81,7 +81,6 @@
       <toggle-menu class="mobile-menu-toggle hidden-1025">
         <button
           class="btn-reset btn-toggle text-start pointer heading-color transparent-color"
-          aria-controls="Menu-Drawer"
           aria-label="{{ 'accessibility.toggle_menu' | t }}"
         >
           <svg width="22" height="22" fill="none">
@@ -221,7 +220,7 @@
                                             assign description = last_block.settings[promotion_description]
                                             assign button_label = last_block.settings[promotion_button_label]
                                             assign banner_link = last_block.settings[promotion_button_link]
-                                            assign banner_default = 'accessibility.promotion_banner'
+                                            assign banner_default = 'accessibility.promotion_banner' | t
                                             assign image_alt = image.alt | default: banner_default | escape
                                           -%}
                                           <div class="banner__item slideIn-animate rounded">
@@ -650,7 +649,7 @@
                                               assign description = last_block.settings[promotion_description]
                                               assign button_label = last_block.settings[promotion_button_label]
                                               assign banner_link = last_block.settings[promotion_button_link]
-                                              assign banner_default = 'accessibility.promotion_banner'
+                                              assign banner_default = 'accessibility.promotion_banner' | t
                                               assign banner_alt = image.alt | default: banner_default | escape
                                             -%}
                                             <div class="banner__item">

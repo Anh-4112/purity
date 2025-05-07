@@ -47,6 +47,9 @@
     data-thumb-direction="{% if desktop_layout == 'thumbnail_left' %}vertical{% else %}horizontal{% endif %}"
     data-auto-play-video="{% if enable_video_autoplay %}true{% else %}false{% endif %}"
   >
+    <a class="skip-to-content-link button visually-hidden quick-add-hidden" href="#ProductInfo-{{ section.id }}">
+      {{ 'accessibility.skip_to_product_info' | t }}
+    </a>
     <div class="product__media-gallery product-{{ layout }} {{ desktop_layout }}{% if desktop_layout == 'thumbnail_left' %} flex-md{% if media_position == 'right' %} flex-start{% else %} flex-end{% endif %} relative overflow-hidden{% endif %}">
       {% case layout %}
         {% when 'thumbnail' %}

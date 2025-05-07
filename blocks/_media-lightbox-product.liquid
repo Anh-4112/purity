@@ -5,12 +5,10 @@
   assign show_pagination = block.settings.show_pagination
 
   assign items_per_row_tablet = items_to_show
-  assign items_per_row_mb =
-  assign class_custom = ''
+  assign items_per_row_mb = ''
   if items_to_show > 3
     assign items_per_row_tablet = items_to_show | minus: 1
     assign items_per_row_mb = items_to_show | minus: 1.5
-    assign class_custom = 'hidden block-md'
   else
     assign items_per_row_tablet = items_to_show
     assign items_per_row_mb = items_per_row_tablet
