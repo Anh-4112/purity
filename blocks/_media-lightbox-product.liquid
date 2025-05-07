@@ -45,7 +45,7 @@
       style="{{ style | strip | strip_newlines }}"
     >
       {% if show_navigation %}
-        {%- render 'swiper-navigation', type: 'custom_nav' -%}
+        {%- render 'swiper-navigation' -%}
       {% endif %}
       <div class="swiper-wrapper">
         {%- for media in closest.product.metafields.custom.media_lightbox.value -%}
@@ -96,7 +96,7 @@
         role="dialog"
       >
         <div
-          class="modal-popup-inner flex column modal-focus h-content transition modal-draggable rounded max-w-custom m-auto invisible-1025 fixed right-30 bottom-30 z-22 bg-white w-full"
+          class="modal-popup-inner flex column modal-focus h-content transition modal-draggable rounded max-w-custom m-auto invisible-1025 fixed right-30 bottom-30 z-10 bg-white w-full"
           tabindex="-1"
           style="--max-width: 33rem;--width: 4.6rem; --height: 4.6rem;--swiper-navigation-size: 4.6rem;--position-arrow: static;"
         >

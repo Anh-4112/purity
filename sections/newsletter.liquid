@@ -72,7 +72,7 @@
     <div
       class="newsletter__form-container flex column text-{{ text_alignment }} justify-content-{{ text_alignment }}"
     >
-      {%- form 'customer', class: 'newsletter__form flex', id: 'NewsletterForm--{{ section.id }}' -%}
+      {%- form 'customer', class: 'newsletter__form flex wrap', id: 'NewsletterForm--{{ section.id }}' -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
         <div class="flex gap-10 wrap w-full justify-content-{{ text_alignment }}">
           <input
@@ -123,17 +123,24 @@
           </button>
         </div>
         {%- if form.errors -%}
-          <small class="newsletter__message newsletter__message--error" id="Newsletter-error--{{ section.id }}">
+          <small
+            class="newsletter__message newsletter__message--error error mt-10"
+            id="Newsletter-error--{{ section.id }}"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <use href="#icon-error"></use>
+            </svg>
             {{- form.errors.translated_fields.email | capitalize }}
             {{ form.errors.messages.email -}}
           </small>
         {%- endif -%}
         {%- if form.posted_successfully? -%}
           <div
-            class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex align-center gap-10"
+            class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex align-center gap-10 mt-10"
             id="Newsletter-success--{{ section.id }}"
             tabindex="-1"
           >
+            {%- render 'icon-success' -%}
             {{- 'newsletter.success' | t }}
           </div>
         {%- endif -%}
