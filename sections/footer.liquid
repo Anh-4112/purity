@@ -131,7 +131,9 @@
                               class="newsletter-form__message form__message error fs-small inline-flex align-center gap-10 mt-10"
                               id="ContactFooter-error"
                             >
-                              {%- render 'icon-error' -%}
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
+                                <use href="#icon-error"></use>
+                              </svg>
                               <span>
                                 {{- form.errors.translated_fields.email | capitalize }}
                                 {{ form.errors.messages.email -}}
@@ -145,7 +147,9 @@
                             id="ContactFooter-success"
                             tabindex="-1"
                           >
-                            {%- render 'icon-success' -%}
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
+                              <use href="#icon-success">
+                            </svg>
                             <span>{{- 'newsletter.success' | t }}</span>
                           </div>
                         {%- else -%}
