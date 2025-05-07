@@ -1,7 +1,6 @@
+{{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
 {%- liquid
-  assign theme_st = settings
   assign section_st = section.settings
-  assign scroll_animation = theme_st.scroll_animation
   assign rounded = ' rounded'
   assign section_width = section_st.section_width
   if section_st.section_width == 'fix_width'
@@ -33,51 +32,29 @@
 
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
-  
+  {% if heading_size == 'large' %}--font-size: 40;{% endif %}
   {%- endcapture -%}
 
 <div
-  class="color-{{ section_st.color_scheme }} section gradient section__video{% if section_st.show_divider %} border-top{% endif %}"
+  class="color-{{ section_st.color_scheme }} section gradient section__video"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     {%- if section_st.heading != blank or section_st.description != blank -%}
-      {% assign animate_delay = 25 %}
-      <div class="section-header text-{{ section_st.text_alignment }}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}">
+      <div class="section-header text-{{ section_st.text_alignment }}">
         {%- if section_st.heading != blank -%}
-          {%- if scroll_animation -%}
-            <motion-effect
-              data-animate="fade-up"
-              data-animate-delay="{{ animate_delay }}"
-              class="block"
-            >
-          {%- endif -%}
           <h2
             class="section-heading {{ header_size }}"
           >
             {{ section_st.heading }}
           </h2>
-          {%- if scroll_animation -%}
-            </motion-effect>
-          {%- endif -%}
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          {% assign animate_delay = animate_delay | plus: 5 %}
-          {%- if scroll_animation -%}
-            <motion-effect
-              data-animate="fade-up"
-              data-animate-delay="{{ animate_delay }}"
-              class="block"
-            >
-          {%- endif -%}
           <div
-            class="section-description mt-15 prose"
+            class="section-description"
           >
             {{ section_st.description }}
           </div>
-          {%- if scroll_animation -%}
-            </motion-effect>
-          {%- endif -%}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -128,7 +105,7 @@
         assign poster = section_st.video_poster | default: section_st.video_local.preview_image
       %}
       <div
-        class="video-thumbnail z-2 absolute banner__media overflow-hidden{{rounded}}"
+        class="video-thumbnail z-3 absolute banner__media overflow-hidden{{rounded}}"
         style="{% if section_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ aspect_ratio }}{% else %}--aspect-ratio: 16/9;{% endif %}"
       >
         {%- if poster != null -%}
@@ -136,14 +113,7 @@
             assign image_alt_default = 'general.image.image_alt_default' | t
             assign image_alt = poster.alt | default: image_alt_default | escape
           -%}
-          {% render 'responsive-image',
-            type: 'other',
-            container: section_width,
-            image: section_st.video_poster,
-            image_alt: image_alt,
-            animate: 'zoom-out-small',
-            motion: true
-          %}
+          {% render 'responsive-image', type: 'other', container: section_width, image: poster, image_alt: image_alt %}
         {%- else -%}
           {%- render 'placeholder-render', type: 'lifestyle-1' -%}
         {%- endif -%}
@@ -164,7 +134,6 @@
           section_st.video_local
           | video_tag: image_size: '1100x', autoplay: true, controls: true, muted: true, alt: alt, class: rounded
         }}
-        <span class="focus-video absolute inset-0 pointer-none"></span>
       </template>
       <noscript>
         {% liquid
@@ -179,7 +148,6 @@
           section_st.video_local
           | video_tag: image_size: '1100x', autoplay: autoplay, controls: true, muted: muted, alt: alt, class: rounded
         }}
-        <span class="focus-video absolute inset-0 pointer-none"></span>
       </noscript>
       {%- if section_st.autoplay -%}
         </video-local>
@@ -199,6 +167,10 @@
     "groups": ["header", "footer", "custom.overlay"]
   },
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.video.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"
@@ -366,16 +338,6 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
-    },
-    {
-      "type": "header",
-      "content": "t:sections.all.divider.section_divider_heading"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_divider",
-      "label": "t:sections.all.divider.show_divider",
-      "default": false
     }
   ],
   "presets": [

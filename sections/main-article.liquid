@@ -248,77 +248,84 @@
             {%- endif -%}
           {%- when 'related' -%}
             {% liquid
-              assign aspect_ratio = '1/1'
-              case block_st.image_ratio
-                when 'adapt'
-                  assign aspect_ratio = 'adapt'
-                when 'square'
-                  assign aspect_ratio = '1/1'
-                when 'portrait'
-                  assign aspect_ratio = '3/4'
-                else
-                  assign aspect_ratio = '4/3'
-              endcase
+              assign current_id = article.id
+              assign related_articles = blog.articles | where: 'id', current_id
             %}
-            <div
-              {{ block.shopify_attributes }}
-              class="blog-post-related py-60 mt-20 color-{{ block_st.color_scheme_related }}"
-            >
-              <div class="border-0">
-                <div class="relate__header text-center mb-40">
-                  {%- if block_st.related_heading != blank -%}
-                    <h2 class="relate__heading mb-10">
-                      {{ block_st.related_heading }}
-                    </h2>
-                  {%- endif -%}
-                  {%- if block_st.related_description != blank -%}
-                    <div class="relate__description prose">
-                      {{ block_st.related_description }}
-                    </div>
-                  {%- endif -%}
-                </div>
-                <div class="blog-posts-main">
-                  {%- if blog.articles.size > 0 -%}
-                    {% liquid
-                      assign current_id = article.id
-                    -%}
-                    <slide-section
-                      data-desktop="3"
-                      data-tablet="2"
-                      data-loop="true"
-                      data-autoplay="false"
-                      data-mobile="1"
-                      class="round-on-top swiper"
-                      style="--item-desktop: 3;--item-tablet: 2;--item-mb: 1;"
-                    >
-                      <div class="swiper-wrapper">
-                        {%- for article in blog.articles limit: 8 -%}
-                          {%- liquid
-                            if article.id == current_id
-                              continue
-                            endif
-                          -%}
-                          {% render 'article-card',
-                            article: article,
-                            media_aspect_ratio: aspect_ratio,
-                            show_image: true,
-                            show_cate: block_st.show_category,
-                            show_date: block_st.show_date,
-                            show_author: block_st.show_author,
-                            show_excerpt: block_st.show_excerpt,
-                            indexFor: forloop.index,
-                            class: ' swiper-slide'
-                          %}
-                        {%- endfor -%}
+            {% assign related_articles = blog.articles | where: 'id', current_id %}
+            {% if blog.articles.size > 1 and blog.articles != related_articles %}
+              {% liquid
+                assign aspect_ratio = '1/1'
+                case block_st.image_ratio
+                  when 'adapt'
+                    assign aspect_ratio = 'adapt'
+                  when 'square'
+                    assign aspect_ratio = '1/1'
+                  when 'portrait'
+                    assign aspect_ratio = '3/4'
+                  else
+                    assign aspect_ratio = '4/3'
+                endcase
+              %}
+              <div
+                {{ block.shopify_attributes }}
+                class="blog-post-related py-60 mt-20 color-{{ block_st.color_scheme_related }}"
+              >
+                <div class="border-0">
+                  <div class="relate__header text-center mb-40">
+                    {%- if block_st.related_heading != blank -%}
+                      <h2 class="relate__heading mb-10">
+                        {{ block_st.related_heading }}
+                      </h2>
+                    {%- endif -%}
+                    {%- if block_st.related_description != blank -%}
+                      <div class="relate__description prose">
+                        {{ block_st.related_description }}
                       </div>
-                      <div class="swiper-pagination"></div>
-                    </slide-section>
-                  {%- else -%}
-                    <p>{{ 'blogs.article.empty' | t }}</p>
-                  {%- endif -%}
+                    {%- endif -%}
+                  </div>
+                  <div class="blog-posts-main">
+                    {%- if blog.articles.size > 0 -%}
+                      {% liquid
+                        assign current_id = article.id
+                      -%}
+                      <slide-section
+                        data-desktop="3"
+                        data-tablet="2"
+                        data-loop="true"
+                        data-autoplay="false"
+                        data-mobile="1"
+                        class="round-on-top swiper"
+                        style="--item-desktop: 3;--item-tablet: 2;--item-mb: 1;"
+                      >
+                        <div class="swiper-wrapper">
+                          {%- for article in blog.articles limit: 8 -%}
+                            {%- liquid
+                              if article.id == current_id
+                                continue
+                              endif
+                            -%}
+                            {% render 'article-card',
+                              article: article,
+                              media_aspect_ratio: aspect_ratio,
+                              show_image: true,
+                              show_cate: block_st.show_category,
+                              show_date: block_st.show_date,
+                              show_author: block_st.show_author,
+                              show_excerpt: block_st.show_excerpt,
+                              indexFor: forloop.index,
+                              class: ' swiper-slide'
+                            %}
+                          {%- endfor -%}
+                        </div>
+                        <div class="swiper-pagination"></div>
+                      </slide-section>
+                    {%- else -%}
+                      <p>{{ 'blogs.article.empty' | t }}</p>
+                    {%- endif -%}
+                  </div>
                 </div>
               </div>
-            </div>
+            {% endif %}
         {%- endcase -%}
       {%- endfor -%}
       <div class="container-min single__post-content-inner mt-30">

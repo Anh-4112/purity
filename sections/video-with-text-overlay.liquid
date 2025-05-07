@@ -1,6 +1,5 @@
 {{ 'banner.css' | asset_url | stylesheet_tag }}
 {% liquid
-  assign theme_st = settings
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
@@ -14,14 +13,6 @@
 %}
 {%- capture style -%}
   --overlay-opacity: {{ section_st.overlay_opacity }}%; --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
-{%- endcapture -%}
-{%- capture sizes -%}
-  {% if section_st.full_width -%}
-    100vw
-  {%- else -%}
-    (min-width: {{ theme_st.page_width }}px) {{ theme_st.page_width | minus: 100 }}px, (min-width: 750px)
-    calc(100vw - 10rem), 100vw
-  {%- endif %}
 {%- endcapture -%}
 {%- style -%}
   @media (min-aspect-ratio: 16/9) {
@@ -58,7 +49,6 @@
           style="--aspect-ratio: 16/9;"
         >
           {% liquid
-            assign poster = section_st.video_poster | image_url: width: 1100
             assign video_id = section_st.video_url.id
           %}
           <div class="video-foreground iframe-video video-has-bg">
@@ -93,29 +83,26 @@
             style="--aspect-ratio: {{ section_st.video_local.aspect_ratio }}"
           {% endif %}
         >
-          {% liquid
-            assign poster = section_st.video_local.preview_image | default: section_st.video_poster | image_url: width: 1100
-            assign source = section_st.video_local.sources
-            assign source_url = ''
-            for s in source
-              if s.format == 'mp4'
-                assign source_url = s.url
-                break
-              endif
-            endfor
-          %}
+          {%- liquid
+            assign image_alt_default = 'general.image.image_alt_default' | t
+            assign image_alt = section_st.video_alt_text | default: image_alt_default | escape
+            assign poster = section_st.video_poster | default: section_st.video_local.preview_image
+          -%}
+          <div class="video-thumbnail z-3 banner__media overflow-hidden rounded w-full h-full">
+            {% render 'responsive-image',
+              type: 'product',
+              image: poster,
+              image_alt: image_alt,
+              class: 'rounded-10 w-full h-full'
+            %}
+          </div>
           <div class="video-foreground video-has-bg h-{{ video_height }}">
-            <video
-              class="video-with-text w-full"
-              loop="true"
-              data-src="{{ source_url }}"
-              poster="{{ poster }}"
-              playsinline="true"
-              size="{{ sizes }}"
-              muted
-              autoplay
-              title="{{ section_st.video_alt_text | escape }}"
-            ></video>
+            <template>
+              {{
+                section_st.video_local
+                | video_tag: image_size: '1100x', autoplay: true, controls: true, muted: true, alt: image_alt
+              }}
+            </template>
           </div>
         </video-local>
       {%- else -%}
@@ -173,7 +160,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "t:sections.all.how_to_use"
+      "content": "t:sections.video-with-text-overlay.how_to_use"
     },
     {
       "type": "header",
