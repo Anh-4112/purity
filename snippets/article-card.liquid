@@ -46,13 +46,13 @@
         class="card__content{% if is_featured_blog %} col-1025-remaining flex column p-30 p-1025-50 bg-secondary text-{{ content_alignment }} align-{{ content_alignment }} justify-content-{{ vertical_alignment }}{% endif %}"
       >
         {%- if show_tags or show_cate -%}
-          <ul class="list-unstyle p-0 m-0 mb-10 flex wrap gap-5{% if is_featured_blog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}{% if isPageBlog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
+          <ul class="list-unstyled p-0 m-0 mb-10 flex wrap gap-5{% if is_featured_blog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}{% if isPageBlog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
             {%- if show_cate -%}
               {% assign blog_name = article.handle | split: '/' | first %}
               {% if blog_name != blank %}
                 <li class="blog-meta-tag blog-cate inline-flex align-center">
                   <a
-                    class="post-tags blog-cate inline-block bg-sale btn-rounded fs-13 px-15 py-4 pointer"
+                    class="post-tags blog-cate inline-block bg-sale btn-rounded fs-13 px-15 py-4 pointer "
                     href="{{ blog.url }}"
                     aria-label="blog category"
                   >
@@ -76,7 +76,7 @@
             {% endif %}
           </ul>
         {%- endif -%}
-        <div class="card__heading lh-normal mb-10 {% if is_featured_blog %}h2{% else %}h4{% endif %}">
+        <div class="card__heading lh-heading mb-12 {% if is_featured_blog %}h2{% else %}h4{% endif %}">
           <a
             href="{{ article.url }}"
             class="heading-color remove-underline outlined-border"
@@ -95,7 +95,7 @@
             </p>
           {%- endif -%}
         {%- endif -%}
-        <div class="article-card__info fs-13 grey-color capitalize list-unstyled inline-flex align-center gap-15{% if is_featured_blog %} mb-20 text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
+        <div class="article-card__info fs-small grey-color capitalize list-unstyled inline-flex align-center gap-15{% if is_featured_blog %} mb-20 text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
           {%- if show_date -%}
             <div class="post-date">
               {{- article.published_at | date: '%d %b %Y' -}}
@@ -117,7 +117,7 @@
         </div>
         {%- if show_excerpt and is_featured_blog == true -%}
           {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
-            <p class="article-card__excerpt rte-width rte mb-35 text-truncate header-color">
+            <p class="article-card__excerpt rte-width rte mb-40 text-truncate header-color">
               {%- if article.excerpt.size > 0 -%}
                 {{ article.excerpt | strip_html | truncatewords: 20 }}
               {%- else -%}

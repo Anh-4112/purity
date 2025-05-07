@@ -88,21 +88,17 @@
               >
                 <div
                   class="relative blog-posts-items_inner h-{{ block.settings.image_height }} relative overflow-hidden media"
-                  {% if block.settings.image_height == 'adapt' %}
-                    style="--aspect-ratio:{{ article.image.aspect_ratio }}"
-                  {% endif %}
+                  style="{% if block.settings.image_height == 'adapt' %}--aspect-ratio:{{ article.image.aspect_ratio }}{% else %}--aspect-ratio:auto{% endif %}"
                 >
                   {%- liquid
                     assign alt_default = 'accessibility.promotion_banner' | t
                     assign alt = article.image.alt | default: alt_default | escape
                   -%}
                   {% render 'responsive-image',
-                    type: 'other',
+                    type: 'banner',
                     image_alt: alt,
                     container: section_width,
                     image: article.image,
-                    animate: 'zoom-out-small',
-                    motion: true,
                     class: 'rounded absolute h-full inset-0 object-fit-cover'
                   %}
                 </div>
@@ -211,7 +207,7 @@
                         >
                           <use href="#icon-back" />
                         </svg>
-                        {{ 'blogs.article.previous_post' | t }}
+                        <span>{{ 'blogs.article.previous_post' | t }}</span>
                       </div>
                       <div class="text-title d-none block-md fs-20 heading-style">
                         {{ blog.previous_article.title }}
@@ -262,7 +258,7 @@
             %}
             <div
               {{ block.shopify_attributes }}
-              class="blog-post-related py-60 mt-20 color-{{ block_st.color_scheme_related }}"
+              class="blog-post-related py-60 mt-30 color-{{ block_st.color_scheme_related }}"
             >
               <div class="border-0">
                 <div class="relate__header text-center mb-40">
@@ -360,7 +356,7 @@
                           class="article-template__comments-comment flex mb-20 pb-20 pb-1025-30 mb-1025-30 border-bottom-dashed last-0"
                         >
                           <div class="comment-content">
-                            <div class="comment-content mb-10">
+                            <div class="comment-content mb-20">
                               {{ comment.content }}
                             </div>
                             <div class="article-card__info flex wrap gap-10">
@@ -388,9 +384,15 @@
                     endif
                   -%}
                   <div class="section__header-comment text-center mb-30">
-                    <h2 class="section__heading-comment">
+                    <h2 class="section__heading-comment mb-15">
                       {{ 'blogs.article.comment_form_title' | t }}
                     </h2>
+                    {%- if blog.moderated? -%}
+                      <p class="article-template__comment-warning">
+                        {{ 'blogs.article.moderated' | t }}
+                        <span class="required-field">{{ 'customer.account.form_blog' | t }}</span>
+                      </p>
+                    {%- endif -%}
                   </div>
                   {%- if form.errors -%}
                     <div
@@ -534,13 +536,6 @@
                       </small>
                     {%- endif -%}
                   </div>
-                  {%- if blog.moderated? -%}
-                    <p class="article-template__comment-warning">
-                      {{ 'blogs.article.moderated' | t }}
-                      <span class="required-field">{{ 'customer.account.required' | t }}</span>
-                    </p>
-                  {%- endif -%}
-
                   <div class="comment-action text-center mt-30">
                     <button
                       type="submit"

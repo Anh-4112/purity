@@ -22,6 +22,9 @@
     .footer__middle {
       --section-pb: 0;
     }
+    .menu-list-footer li:last-child {
+      margin-bottom: 30px;
+    }
   }
 </style>
 <footer
@@ -61,14 +64,14 @@
             >
               {%- case block.type -%}
                 {%- when 'newsletter_block' -%}
-                  <div class="footer-block__newsletter border-bottom border-bottom-md-0 pb-30">
+                  <div class="footer-block__newsletter pb-30 pb-1025-0">
                     <div
                       class="footer-block__newsletter-inner"
                     >
                       {%- if block_st.heading != blank or block_st.description != blank -%}
                         <div class="footer-block__newsletter-heading">
                           {%- if block_st.heading != blank -%}
-                            <h6 class="footer__block-heading flex space-between align-center collapsible-title relative py-20">
+                            <h6 class="footer__block-heading flex space-between align-center collapsible-title relative pb-10 pb-1025-20">
                               {{- block_st.heading | escape -}}
                             </h6>
                           {%- endif -%}
@@ -161,24 +164,24 @@
                 {%- when 'menu_block' -%}
                   {%- if block_st.menu != blank or block_st.heading != blank -%}
                     <details
-                      class="mobile-collapsible-row border-bottom border-bottom-md-0 detail-open"
+                      class="mobile-collapsible-row detail-open"
                       is="mobile-collapsible-row"
                       open
                     >
-                      <summary class="collapsible-row__summary pointer-md-none py-20">
-                        <h6 class="footer__block-heading flex space-between align-center collapsible-heading">
+                      <summary class="collapsible-row__summary pointer-md-none pb-20">
+                        <h6 class="footer__block-heading flex space-between align-center collapsible-heading relative">
                           <span>
                             {{- block_st.heading | default: block_st.menu.title | escape -}}
                           </span>
                           {%- if block_st.menu != blank -%}
-                            <svg class="icon icon-down icon-rotate transition-short hidden-md" width="10" height="6">
-                              <use href="#icon-arrow-down"></use>
-                            </svg>
+                            <span class="open-children-toggle icon transition hidden-md">
+                              <span class="icon_plus-animation heading-color"> </span>
+                            </span>
                           {%- endif -%}
                         </h6>
                       </summary>
                       {%- if block_st.menu != blank -%}
-                        <ul class="footer__block-content collapsible-row__content list-unstyled overflow-hidden-mb">
+                        <ul class="footer__block-content menu-list-footer collapsible-row__content list-unstyled overflow-hidden-mb">
                           {%- for link in block_st.menu.links -%}
                             <li class="mb-10">
                               <a
@@ -196,26 +199,26 @@
                   {%- endif -%}
                 {%- when 'contact_bar_block' -%}
                   <details
-                    class="mobile-collapsible-row border-bottom border-bottom-md-0 detail-open"
+                    class="mobile-collapsible-row detail-open"
                     is="mobile-collapsible-row"
                     open
                   >
                     {%- if block_st.store_heading != blank -%}
-                      <summary class="collapsible-row__summary pointer-md-none py-20">
+                      <summary class="collapsible-row__summary pointer-md-none pb-20">
                         <h6 class="footer__block-heading flex space-between align-center collapsible-heading relative">
                           <span>
                             {{ block_st.store_heading | escape }}
                           </span>
-                          <svg class="icon icon-down icon-rotate transition-short hidden-md" width="10" height="6">
-                            <use href="#icon-arrow-down"></use>
-                          </svg>
+                          <span class="open-children-toggle icon transition hidden-md">
+                            <span class="icon_plus-animation heading-color"> </span>
+                          </span>
                         </h6>
                       </summary>
                     {%- endif -%}
                     <div
                       class="collapsible-row__content overflow-hidden-mb"
                     >
-                      <div class="pb-20 flex column gap-25">
+                      <div class="pb-30 pb-1025-0 flex column gap-25">
                         {%- if block_st.store_address or block_st.store_email or block_st.store_phone %}
                           <div class="footer_store-infor flex column">
                             {%- if block_st.store_address != blank -%}

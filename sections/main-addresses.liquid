@@ -263,11 +263,11 @@
           {%- for address in customer.addresses -%}
             <div id="EditAddress_{{ address.id }}" style="display: none;">
               <div class="your-addresses border mt-30 p-30 grey-bg rounded-10">
-                <h3 class="title-default edit-address-title text-left mt-0">
+                <h3 class="title-default edit-address-title text-left mt-0 mb-20">
                   {{ 'customer.addresses.edit_address' | t }}: {{ address.first_name }}
                   {{ address.last_name }}
                   {% if address == customer.default_address %}
-                    <span class="default">{{ 'customer.addresses.default' | t }}</span>
+                    <span class="fs-big-2 grey-color">{{ 'customer.addresses.default' | t }}</span>
                   {% endif %}
                 </h3>
                 {% form 'customer_address',
