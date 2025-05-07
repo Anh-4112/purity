@@ -1,0 +1,97 @@
+.image-comparison {
+    will-change: clip-path;
+}
+
+.slider {
+    cursor: grab;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: drop-shadow(2px 0 3px rgba(0, 0, 0, 0.4));
+    will-change: transform, background-color;
+}
+
+.handle {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    touch-action: none;
+}
+
+.slider:focus-visible {
+    outline: none;
+}
+
+.slider:focus-visible .handle {
+    outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
+    outline-offset: -0.2rem;
+    transition: none;
+}
+
+.handle:active {
+    cursor: grabbing;
+}
+
+.media-top {
+    border-top-left-radius: var(--img-rounded);
+    border-top-right-radius: var(--img-rounded);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.media-left {
+    border-top-left-radius: var(--img-rounded);
+    border-top-right-radius: 0;
+    border-bottom-left-radius: var(--img-rounded);
+    border-bottom-right-radius: 0;
+}
+
+.rounded-bottom {
+    border-bottom-left-radius: var(--img-rounded);
+    border-bottom-right-radius: var(--img-rounded);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+@media screen and (max-width: 1024.98px) {
+    .media-left {
+        border-top-left-radius: var(--img-rounded);
+        border-top-right-radius: var(--img-rounded);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
+
+.max-w-custom-all {
+    max-width: var(--max-width);
+}
+
+.play-button svg {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.play-button svg path {
+    fill: #ffffff;
+}
+
+.play-button {
+    width: 4.6rem;
+    height: 4.6rem !important;
+    border-radius: 50%;
+    background-color: #0000004d;
+}
+
+@media screen and (min-width: 1025px) {
+    .play-button {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    :is(video-local:hover) .play-button,
+    .play-button:focus-visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}

@@ -1854,29 +1854,29 @@ media-lightbox-popup {
   --swiper-navigation-color: #fff;
   --bg-color-custom: rgba(0, 0, 0, 0.3);
 }
-:is(.active_smooth, shopable-item)
+:is(.active_smooth, shopable-item, video-local)
   :is(.mute-button, .play-button, .mute-button-mobile)
   :where(.icon-pause, .mute-open) {
   display: none;
 }
-:is(.active_smooth, shopable-item)
+:is(.active_smooth, shopable-item, video-local)
   :is(.mute-button, .play-button, .mute-button-mobile).active
   :where(.icon-pause, .mute-open) {
   display: inline-block;
 }
-:is(.active_smooth, shopable-item)
+:is(.active_smooth, shopable-item, video-local)
   :is(.mute-button, .play-button, .mute-button-mobile).active
   :where(.icon-play, .mute-close) {
   display: none;
 }
-:is(.active_smooth, shopable-item) :is(.play-button, .play-button svg) {
+:is(.active_smooth, shopable-item, video-local) :is(.play-button, .play-button svg) {
   color: rgb(var(--color-white)) !important;
 }
 :is(.active_smooth) .play-button.active {
   opacity: 0;
   transition-delay: 0.2s;
 }
-:is(.active_smooth, shopable-item, .video-item--ratio):hover,
+:is(.active_smooth, shopable-item, .video-item--ratio, video-local):hover,
 shopable-item:focus-visible .play-button,
 :is(.active_smooth, shopable-item) .play-button.active:focus-visible,
 :is(.active_smooth, shopable-item) .play-button:focus-visible {
