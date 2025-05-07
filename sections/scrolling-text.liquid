@@ -40,7 +40,7 @@
   }
 {% endstyle %}
 <div
-  class="section__scrolling-text color-{{ section_st.color_scheme }} gradient section"
+  class="section__scrolling-text color-{{ section_st.color_scheme }} gradient section{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -118,7 +118,10 @@
                       class="w-custom w-custom-mb h-full rounded flex content-center"
                       style="--width-mb:{{ block_st.image_width_mb }}px;--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
                     >
-                      {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full object-fit-cover' %}
+                      {% render 'placeholder-render',
+                        type: 'collection',
+                        class: 'img-placeholder h-full w-full object-fit-cover'
+                      %}
                     </div>
                   {%- endif -%}
                 </a>
@@ -381,6 +384,16 @@
           "label": "t:sections.scrolling_text.settings.blocks.image.image_width.label",
           "default": 80,
           "unit": "px"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.all.divider.section_divider_heading"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_divider",
+          "label": "t:sections.all.divider.show_divider",
+          "default": false
         }
       ]
     }
