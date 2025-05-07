@@ -750,25 +750,27 @@ class ShopableItem extends HTMLElement {
   clickPlayVideoPopup(slide) {
     const videoElement = slide.querySelector("video");
     if (videoElement) {
+      const videoLocal = videoElement.closest("video-local");
+      const playButton = videoLocal?.querySelector(".play-button-popup");
       if (videoElement._clickHandler) {
         videoElement.removeEventListener("click", videoElement._clickHandler);
+        playButton.removeEventListener("click", videoElement._clickHandler);
       }
       videoElement._clickHandler = function (event) {
         event.preventDefault();
         event.stopPropagation();
-        const videoLocal = this.closest("video-local");
-        const playButton = videoLocal?.querySelector(".play-button");
-        if (this.paused) {
-          this.play();
+        if (videoElement.paused) {
+          videoElement.play();
           if (playButton) playButton.classList.add("active");
           if (videoLocal) videoLocal.classList.remove("active");
         } else {
-          this.pause();
+          videoElement.pause();
           if (playButton) playButton.classList.remove("active");
           if (videoLocal) videoLocal.classList.add("active");
         }
       };
       videoElement.addEventListener("click", videoElement._clickHandler);
+      playButton.addEventListener("click", videoElement._clickHandler);
     }
   }
 
