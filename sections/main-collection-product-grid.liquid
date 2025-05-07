@@ -153,7 +153,7 @@
                             {% endif %}
                             aria-label="{{ button_label }}"
                             class="block banner__media rounded"
-                            style="--aspect-ratio: {% if image != blank %}{{ ratio }}{%- else -%}4/3{%- endif -%}"
+                            style="--aspect-ratio: {% if image != blank %}{{ image.aspect_ratio }}{%- else -%}4/3{%- endif -%}"
                           >
                             {%- liquid
                               assign banner_alt = 'sections.collection_template.promotion_banner' | t
@@ -193,6 +193,7 @@
                                   {% endif %}
                                   aria-label="{{ button_label }}"
                                   class="btn-link border-animation inline-block mt-10 pointer"
+                                  style="--btn-link-color: #000000;"
                                 >
                                   {{ button_label }}
                                 </a>
