@@ -1,3 +1,4 @@
+{{ 'section-product-testimonials.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign section_st = section.settings
   assign theme_st = settings
@@ -61,69 +62,6 @@
 {%- capture col_style -%}
   --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};
 {%- endcapture -%}
-{% style %}
-  .image-comparison {
-    will-change: clip-path;
-  }
-  .slider {
-    cursor: grab;
-    left: 50%;
-    transform: translateX(-50%);
-    filter: drop-shadow(2px 0 3px rgba(0, 0, 0, 0.4));
-    will-change: transform, background-color;
-  }
-
-  .handle {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    cursor: grab;
-    touch-action: none;
-  }
-
-  .slider:focus-visible {
-    outline: none;
-  }
-
-  .slider:focus-visible .handle {
-    outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
-    outline-offset: -0.2rem;
-    transition: none;
-  }
-
-  .handle:active {
-    cursor: grabbing;
-  }
-  .media-top {
-    border-top-left-radius: var(--img-rounded);
-    border-top-right-radius: var(--img-rounded);
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .media-left {
-    border-top-left-radius: var(--img-rounded);
-    border-top-right-radius: 0;
-    border-bottom-left-radius: var(--img-rounded);
-    border-bottom-right-radius: 0;
-  }
-  .rounded-bottom {
-    border-bottom-left-radius: var(--img-rounded);
-    border-bottom-right-radius: var(--img-rounded);
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-  }
-  @media screen and (max-width: 1024.98px) {
-    .media-left {
-      border-top-left-radius: var(--img-rounded);
-      border-top-right-radius: var(--img-rounded);
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-  }
-  .max-w-custom-all {
-    max-width: var(--max-width);
-  }
-{% endstyle %}
 <div
   class="section color-{{ section_st.color_scheme }} gradient {% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
@@ -273,8 +211,7 @@
                               image: video_poster,
                               image_alt: image_alt,
                               padding: column_gap_slide,
-                              column: items_per_row,
-                              motion: true
+                              column: items_per_row
                             %}
                           </div>
                           <template>
@@ -288,6 +225,13 @@
                               class="h-full w-full object-fit-cover"
                             ></video>
                           </template>
+                          <button
+                            aria-label="{{ 'accessibility.play_button.video' | t }}"
+                            class="play-button absolute invisible-1025 bottom-10 right-10 z-2 transition pointer border-0 inline-flex align-center justify-content-center active"
+                          >
+                            {% render 'icon-play' %}
+                            {% render 'icon-pause' %}
+                          </button>
                         </video-local>
                       {% elsif image != blank %}
                         {% render 'responsive-image',
@@ -518,6 +462,10 @@
   },
   "max_blocks": 6,
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.product_testimonials.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

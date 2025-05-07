@@ -1109,6 +1109,13 @@ class VideoLocal extends HTMLElement {
       ) {
         deferredElement.play();
       }
+      if (this.querySelector(".play-button")) {
+        this.querySelector(".play-button").addEventListener(
+          "click",
+          this.clickPlayVideo.bind(this),
+          false
+        );
+      }
     }
   }
 
@@ -1130,6 +1137,18 @@ class VideoLocal extends HTMLElement {
     new IntersectionObserver(handleIntersection.bind(_this), {
       rootMargin: "0px 0px 200px 0px",
     }).observe(_this);
+  }
+
+  clickPlayVideo(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.querySelector("video").paused) {
+      this.querySelector("video").play();
+      this.querySelector(".play-button").classList.add("active");
+    } else {
+      this.querySelector("video").pause();
+      this.querySelector(".play-button").classList.remove("active");
+    }
   }
 }
 customElements.define("video-local", VideoLocal);
@@ -1927,6 +1946,7 @@ class ImageComparison extends HTMLElement {
   }
 
   handleKeyDown(event) {
+    if (!this.slider.matches(':focus')) return;
     let moveBy = 0;
 
     if (event.key === "ArrowLeft") {
@@ -2107,7 +2127,7 @@ class NewsletterPopup extends HTMLElement {
       NextSkyTheme.eventModal(wrapper, "open", true, null, true);
       NextSkyTheme.global.rootToFocus = wrapper;
       new LazyLoader(".image-lazy-load");
-    }, 4000);
+    }, 6000);
 
     this.initNotShow(wrapper);
   }

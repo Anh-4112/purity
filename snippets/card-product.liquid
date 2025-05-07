@@ -21,7 +21,8 @@
     assign style_layout = ' flex gap-20'
     assign image_class = ' flex-auto w-custom rounded-10'
     assign image_rounded = ' rounded-10'
-    assign info_class = ' flex-1 mt-0'
+    assign info_class = ' flex-1 mt-0 product-motion-info'
+    assign product_name_class = ' inline-block outlined-border'
   endif
 %}
 {% if card_product and card_product != empty %}
@@ -246,7 +247,7 @@
                 <button
                   type="button"
                   is="button-quick-view"
-                  class="absolute inset-x-15 bottom-15 z-2 btn btn__quick-shop shadow btn-white invisible-1025 flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                  class="absolute inset-x-15 bottom-15 z-2 btn btn__quick-shop shadow btn-white invisible-1025 flex content-center text-center{% if product_show_quick_add_mobile == blank %} d-none flex-1025{% endif %}"
                   data-url="{{ shop.url }}/products/{{ card_product.handle }}"
                   aria-label="{{ 'products.product.quickview' | t }}"
                 >
@@ -283,7 +284,7 @@
                       id="{{ product_form_id }}-submit"
                       type="submit"
                       name="add"
-                      class="btn btn__quick-shop shadow btn-white invisible-1025 absolute inset-x-15 bottom-15 z-2 flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                      class="btn btn__quick-shop shadow btn-white invisible-1025 absolute inset-x-15 bottom-15 z-2 flex content-center text-center{% if product_show_quick_add_mobile == blank %} d-none flex-1025{% endif %}"
                       aria-haspopup="dialog"
                       aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
                       aria-live="polite"
@@ -372,7 +373,7 @@
         {% endif %}
         <a
           aria-label="{{ card_product.title }}"
-          class="product__name heading-style block"
+          class="product__name heading-style block{{ product_name_class }}"
           href="{{ card_product.url }}"
         >
           {{- card_product.title -}}
@@ -434,7 +435,7 @@
                   disabled
                 {% endif %}
               >
-                <span class="product-addtocart-btn hidden-on-load border-animation hidden block-1025">
+                <span class="product-addtocart-btn hidden-on-load border-animation d-none block-1025">
                   {%- if card_product.selected_or_first_available_variant.available -%}
                     {{ 'products.product.add_to_cart' | t }}
                   {%- else -%}
@@ -479,7 +480,7 @@
                 id="{{ product_form_id }}-submit"
                 type="submit"
                 name="add"
-                class="btn w-full btn-primary flex content-center text-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                class="btn w-full btn-primary flex content-center text-center{% if product_show_quick_add_mobile == blank %} d-none flex-1025{% endif %}"
                 aria-haspopup="dialog"
                 aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
                 aria-live="polite"
@@ -512,7 +513,7 @@
             <button
               type="button"
               is="button-quick-view"
-              class="pointer relative overflow-hidden btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+              class="pointer relative overflow-hidden btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} d-none flex-1025{% endif %}"
               style="--width: 4.4rem; --height: 4.4rem;"
               data-url="{{ shop.url }}/products/{{ card_product.handle }}"
               aria-label="{{ 'products.product.quickview' | t }}"
@@ -547,7 +548,7 @@
                   id="{{ product_form_id }}-submit"
                   type="submit"
                   name="add"
-                  class="pointer relative overflow-hidden btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} hidden flex-1025{% endif %}"
+                  class="pointer relative overflow-hidden btn__quick-shop bg-white rounded-50 btn-reset shadow w-custom h-custom inline-flex content-center{% if product_show_quick_add_mobile == blank %} d-none flex-1025{% endif %}"
                   style="--width: 4.4rem; --height: 4.4rem;"
                   aria-haspopup="dialog"
                   aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"

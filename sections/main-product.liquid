@@ -37,13 +37,6 @@
     >
       {% if product.media.size > 0 %}
         <div class="product-detail__media w-full col-md-w-custom">
-          {% if scroll_animation %}
-            <motion-effect
-              data-animate="fade-up"
-              data-animate-delay="25"
-              class="block"
-            >
-          {% endif %}
           {% render 'media-gallery',
             images: product.media,
             section_st: section_st,
@@ -51,12 +44,12 @@
             section: section,
             desktop_layout: desktop_layout
           %}
-          {% if scroll_animation %}
-            </motion-effect>
-          {% endif %}
         </div>
       {% endif %}
-      <div class="product-detail__information w-full{% if product.media.size > 0 %} col-md-remaining{% endif %}">
+      <div
+        id="ProductInfo-{{ section.id }}"
+        class="product-detail__information w-full{% if product.media.size > 0 %} col-md-remaining{% endif %}"
+      >
         <div class="sticky top-20">
           {% if scroll_animation %}
             <motion-effect

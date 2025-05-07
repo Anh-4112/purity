@@ -81,7 +81,6 @@
       <toggle-menu class="mobile-menu-toggle hidden-1025">
         <button
           class="btn-reset btn-toggle text-start pointer heading-color transparent-color"
-          aria-controls="Menu-Drawer"
           aria-label="{{ 'accessibility.toggle_menu' | t }}"
         >
           <svg width="22" height="22" fill="none">
@@ -172,10 +171,10 @@
                           endif
                         -%}
                         <div
-                          class="mega-menu submenu z-2 pointer-none transition invisible submenu-desktop overflow-auto {{ dropdowns_animation }} border-top inset-x-0 absolute{% if dropdowns_animation != 'fade-in-down' %} z-2 bg-white shadow{% endif %}"
+                          class="mega-menu submenu z-5 pointer-none transition invisible submenu-desktop overflow-auto {{ dropdowns_animation }} border-top inset-x-0 absolute{% if dropdowns_animation != 'fade-in-down' %} z-2 bg-white shadow{% endif %}"
                           style="--col-mega-width: {{ mega_width }}%; --gap: 20px; --delay: 0.05s;"
                         >
-                          <div class="menu-container bg-white shadow py-40 custom-scrollbar overflow-auto">
+                          <div class="menu-container bg-white py-40 custom-scrollbar overflow-auto">
                             <div class="container flex wrap gap">
                               {%- if link.links.size > 0 -%}
                                 <div
@@ -221,7 +220,7 @@
                                             assign description = last_block.settings[promotion_description]
                                             assign button_label = last_block.settings[promotion_button_label]
                                             assign banner_link = last_block.settings[promotion_button_link]
-                                            assign banner_default = 'accessibility.promotion_banner'
+                                            assign banner_default = 'accessibility.promotion_banner' | t
                                             assign image_alt = image.alt | default: banner_default | escape
                                           -%}
                                           <div class="banner__item slideIn-animate rounded">
@@ -365,7 +364,7 @@
                       </details>
                     {%- else -%}
                       <a
-                        class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight no-underline"
+                        class="menu__item level-1 transparent-menu heading-color inline-block{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight no-underline"
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
@@ -399,7 +398,7 @@
                       </details>
                     {%- else -%}
                       <a
-                        class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight no-underline"
+                        class="menu__item level-1 transparent-menu heading-color inline-block{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight no-underline"
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
@@ -436,7 +435,7 @@
                     </details>
                   {%- else -%}
                     <a
-                      class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight no-underline"
+                      class="menu__item level-1 transparent-menu heading-color inline-block{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight no-underline"
                       href="{{ link.url }}"
                       aria-label="{{ link.title }}"
                     >
@@ -650,7 +649,7 @@
                                               assign description = last_block.settings[promotion_description]
                                               assign button_label = last_block.settings[promotion_button_label]
                                               assign banner_link = last_block.settings[promotion_button_link]
-                                              assign banner_default = 'accessibility.promotion_banner'
+                                              assign banner_default = 'accessibility.promotion_banner' | t
                                               assign banner_alt = image.alt | default: banner_default | escape
                                             -%}
                                             <div class="banner__item">
@@ -821,9 +820,9 @@
                         {%- endif -%}
                       {%- else -%}
                         {%- if link.links.size > 0 -%}
-                          <details is="details-mega-menu" class="details-header-menu inline-flex animate-motion">
+                          <details is="details-mega-menu" class="details-header-menu inline-flex w-full animate-motion">
                             <summary
-                              class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-5 space-between"
+                              class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex w-full align-center gap-5 space-between"
                               data-href="{{ link.url }}"
                               aria-label="{{ link.title }}"
                             >
@@ -848,7 +847,7 @@
                           </details>
                         {%- else -%}
                           <a
-                            class="menu__item level-1 transparent-menu heading-color no-underline{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight"
+                            class="menu__item level-1 transparent-menu heading-color  inline-block{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight"
                             href="{{ link.url }}"
                             aria-label="{{ link.title }}"
                           >
@@ -949,6 +948,10 @@
   "name": "t:sections.header.name",
   "class": "site-header",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.header.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

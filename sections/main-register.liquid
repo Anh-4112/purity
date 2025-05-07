@@ -24,7 +24,7 @@
         {%- if form.errors -%}
           <div class="form__message error flex align-center gap-10 mb-10" tabindex="-1" autofocus>
             <div class="flex content-center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
                 <use href="#icon-error"></use>
               </svg>
             </div>
@@ -109,7 +109,7 @@
         </div>
         {%- if form.errors contains 'email' -%}
           <span id="RegisterForm-email-error" class="form__message error flex align-center gap-10 mb-10">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
               <use href="#icon-error"></use>
             </svg>
             {{ form.errors.translated_fields.email | capitalize }}
@@ -154,7 +154,7 @@
             class="error form__message fs-small inline-flex align-center gap-10 mb-10 w-full h-custom"
             style="--height: 5.6rem;"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
               <use href="#icon-error"></use>
             </svg>
             {{ form.errors.translated_fields.password | capitalize }}
