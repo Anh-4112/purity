@@ -39,6 +39,7 @@
           media-gallery="{{ featured_media.media_type }}"
         {% else %}
           style="--aspect-ratio: {{ ratio }}"
+          tabindex="0"
         {% endif %}
       >
         {% if thumbnail == true %}
@@ -102,6 +103,7 @@
           media-gallery="{{ featured_media.media_type }}"
         {% endif %}
         style="--aspect-ratio: {{ ratio }}"
+        tabindex="0"
       >
         {%- liquid
           assign source = featured_media.sources
@@ -175,6 +177,7 @@
           media-gallery="{{ featured_media.media_type }}"
         {% else %}
           style="--aspect-ratio: {{ ratio }}"
+          tabindex="0"
         {% endif %}
       >
         {% if thumbnail == true %}
@@ -230,6 +233,8 @@
         style="--aspect-ratio: {{ ratio }}"
         {% if thumbnail != true %}
           media-gallery="{{ featured_media.media_type }}"
+        {% else %}
+          tabindex="0"
         {% endif %}
       >
         {% render 'responsive-image',
@@ -280,6 +285,7 @@
             media-gallery="{{ image.media_type }}"
           {% else %}
             style="--aspect-ratio: {{ ratio }}"
+            tabindex="0"
           {% endif %}
         >
           {% if thumbnail == true %}
@@ -343,6 +349,7 @@
             media-gallery="{{ image.media_type }}"
           {% else %}
             style="--aspect-ratio: {{ ratio }}"
+            tabindex="0"
           {% endif %}
         >
           {%- liquid
@@ -416,9 +423,9 @@
           {% if thumbnail != true %}
             data-position="{{ media_position }}"
             media-gallery="{{ image.media_type }}"
-          {% endif %}
-          {% if thumbnail == true %}
+          {% else %}
             style="--aspect-ratio: {{ ratio }}"
+            tabindex="0"
           {% endif %}
         >
           {% if thumbnail == true %}
@@ -473,6 +480,8 @@
           {% if thumbnail != true %}
             data-position="{{ media_position }}"
             media-gallery="{{ image.media_type }}"
+          {% else %}
+            tabindex="0"
           {% endif %}
           style="--aspect-ratio: {{ ratio }}"
         >
