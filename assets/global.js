@@ -396,7 +396,7 @@ class AlertNotify {
     notification.classList.add("notification", type);
     const icon = this.createIcon(type);
     const text = document.createElement("span");
-    text.classList.add("error-message", "ms-5");
+    text.classList.add("error-message");
     text.innerHTML = message;
     notification.appendChild(icon.firstElementChild);
     notification.appendChild(text);
@@ -415,7 +415,7 @@ class AlertNotify {
     notification.classList.remove("show");
     setTimeout(() => {
       this.container.removeChild(notification);
-    }, 300000);
+    }, 300);
   }
 
   createIcon(type) {

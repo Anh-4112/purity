@@ -1123,7 +1123,8 @@ blockquote {
   .border-animation:is(:hover, .active),
   .detail-open:not(.mobile-collapsible-row) .outlined-border,
   .outlined-border:hover,
-  .hover-effect:hover :is(.border-animation, .outlined-border) {
+  .hover-effect:hover :is(.border-animation, .outlined-border),
+  .hover-effect:hover + .product-motion-info .outlined-border {
     background-size: 100% var(--height, 1px);
     background-position: left bottom;
   }
@@ -1674,6 +1675,7 @@ bundle-progress-bar .progress {
     padding: 1.5rem;
     background-color: var(--color-background-2);
     border-radius: var(--img-rounded);
+    align-items: center;
   }
   .mini-cart .show_quick_add-mb {
     padding-right: 6.5rem;
@@ -1681,13 +1683,14 @@ bundle-progress-bar .progress {
   .mini-cart .product__information {
     margin-top: 0;
   }
-  .mini-cart .btn__quick-shop {
+  .mini-cart .show_quick_add-mb .btn__quick-shop {
     left: auto;
     top: 0;
     bottom: 0;
     display: inline-flex;
     align-items: center;
     overflow: visible;
+    margin: auto;
   }
   .drawer__cart-recommendations {
     padding-top: 0;

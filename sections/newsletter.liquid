@@ -127,7 +127,7 @@
             class="newsletter__message newsletter__message--error error mt-10"
             id="Newsletter-error--{{ section.id }}"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
               <use href="#icon-error"></use>
             </svg>
             {{- form.errors.translated_fields.email | capitalize }}
@@ -140,7 +140,9 @@
             id="Newsletter-success--{{ section.id }}"
             tabindex="-1"
           >
-            {%- render 'icon-success' -%}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
+              <use href="#icon-success">
+            </svg>
             {{- 'newsletter.success' | t }}
           </div>
         {%- endif -%}
