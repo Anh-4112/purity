@@ -48,11 +48,18 @@
       assign ratio = '3/4'
     endif
   endif
+  assign column_gap_slide = 0
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 30
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 20
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 10
+  endif
 -%}
 
 <div
   class="flex wrap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
-  id="{{ forloop.index }}"
 >
   <div class="image-with-text__media-item w-full w-1025-50-percent">
     <div
