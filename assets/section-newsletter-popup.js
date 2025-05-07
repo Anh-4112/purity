@@ -1,0 +1,162 @@
+import { LazyLoader } from "module-lazyLoad";
+import * as NextSkyTheme from "global";
+class NewsletterPopup extends HTMLElement {
+  constructor() {
+    super();
+    this.enable = this.dataset.enable;
+    this.initialized = false;
+    this.sectionId = this.dataset.sectionId;
+  }
+
+  connectedCallback() {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => this.init());
+    } else {
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(() => this.init());
+      } else {
+        setTimeout(() => this.init(), 100);
+      }
+    }
+  }
+
+  init() {
+    if (window.Shopify && window.Shopify.designMode) {
+      const _self = this;
+      document.addEventListener("shopify:section:select", (event) => {
+        _self.actionDesignMode(event);
+      });
+      document.addEventListener("shopify:section:load", (event) => {
+        _self.createPopup();
+      });
+      document.addEventListener("shopify:section:deselect", () => {
+        _self.closePopup();
+      });
+    }
+    if (this.initialized) return;
+    this.initialized = true;
+
+    const urlChecked = this.checkUrlParameters();
+    if (urlChecked) {
+      return;
+    }
+    const getCookie = NextSkyTheme.getCookie("newsletter_popup");
+    if (
+      (this.enable === "show-on-homepage" || this.enable === "show-all-page") &&
+      getCookie === null
+    ) {
+      this.schedulePopupWithModalCheck();
+    }
+  }
+
+  schedulePopupWithModalCheck() {
+    const popupDelay = 6000;
+    setTimeout(() => {
+      const activeModal = NextSkyTheme.root.classList.contains("open-modal");
+      if (!activeModal) {
+        this.createPopup();
+      }
+    }, popupDelay - 100);
+  }
+
+  actionDesignMode(event) {
+    const _self = this;
+    const currentTarget = event.target;
+    const wrapper = document.querySelector("newsletter-modal-popup");
+    const template = currentTarget.querySelector("template");
+    if (
+      JSON.parse(currentTarget.dataset.shopifyEditorSection).id ===
+      this.sectionId
+    ) {
+      if (!wrapper) {
+        _self.createPopup(template);
+      }
+    } else {
+      if (wrapper) {
+        _self.closePopup();
+      }
+    }
+  }
+
+  createPopup(templateDesignMode) {
+    let template;
+    let timeShowPopup = 0;
+    if (window.Shopify && window.Shopify.designMode) {
+      const existingPopup = document.querySelector("newsletter-modal-popup");
+      if (existingPopup) {
+        existingPopup.remove();
+      }
+    }
+    if (window.Shopify && window.Shopify.designMode) {
+      template = templateDesignMode;
+      timeShowPopup = 0;
+    } else {
+      template = this.querySelector("template");
+      timeShowPopup = 100;
+    }
+    if (!template) return;
+    const content = document.createElement("div");
+    content.appendChild(template.content.firstElementChild.cloneNode(true));
+    const wrapper = NextSkyTheme.body.appendChild(
+      content.querySelector("newsletter-modal-popup")
+    );
+
+    setTimeout(() => {
+      NextSkyTheme.eventModal(wrapper, "open", true, null, true);
+      NextSkyTheme.global.rootToFocus = wrapper;
+      new LazyLoader(".image-lazy-load");
+    }, timeShowPopup);
+
+    this.initNotShow(wrapper);
+  }
+
+  closePopup() {
+    const wrapper = document.querySelector("newsletter-modal-popup");
+    if (wrapper) {
+      NextSkyTheme.eventModal(wrapper, "close", true);
+    }
+  }
+
+  checkUrlParameters() {
+    const urlInfo = window.location.href;
+    const newURL = location.href.split("?")[0];
+
+    if (urlInfo.indexOf("customer_posted=true") >= 1) {
+      NextSkyTheme.setCookie("newsletter_popup", "true", 1);
+      NextSkyTheme.notifier.show(message.newsletter.success, "success", 4000);
+      window.history.pushState("object", document.title, newURL);
+      return true;
+    }
+
+    if (
+      urlInfo.indexOf("contact%5Btags%5D=newsletter&form_type=customer") >= 1
+    ) {
+      NextSkyTheme.notifier.show(message.newsletter.error, "error", 4000);
+      window.history.pushState("object", document.title, newURL);
+      return false;
+    }
+
+    return false;
+  }
+
+  initNotShow(modal) {
+    const notShow = modal?.querySelector(".newsletter-action");
+    if (!notShow) return;
+    const _self = this;
+
+    notShow.addEventListener("click", () => {
+        _self.eventNotShow(modal);
+    });
+    notShow.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        _self.eventNotShow(modal);
+      }
+    });
+  }
+
+  eventNotShow(modal) {
+    NextSkyTheme.setCookie("newsletter_popup", "true", 1);
+    NextSkyTheme.eventModal(modal, "close", true);
+  }
+}
+customElements.define("newsletter-popup", NewsletterPopup);
