@@ -10,6 +10,7 @@ class ScrollOffer extends HTMLElement {
     this.scrollThreshold = 300;
     this.initialized = false;
     this.cookieName = "scroll_offer_hidden";
+    this.sectionId = this.dataset.sectionId;
     const slideSection = document.querySelector("offer-slide");
     const drawerContent = document.querySelector(".drawer__content");
     this.initMobile(slideSection, drawerContent);
@@ -25,12 +26,27 @@ class ScrollOffer extends HTMLElement {
     }
     if (window.Shopify && window.Shopify.designMode) {
       const _self = this;
-      document.addEventListener("shopify:section:select", () => {
-        _self.initPopup();
+      document.addEventListener("shopify:section:select", (event) => {
+        _self.actionDesignMode(event);
       });
       document.addEventListener("shopify:section:deselect", () => {
         _self.closePopup();
       });
+    }
+  }
+
+  actionDesignMode(event) {
+    const _self = this;
+    const currentTarget = event.target;
+    const offerWrapper = document.querySelector("offer-popup");
+    if (
+      JSON.parse(currentTarget.dataset.shopifyEditorSection).id ===
+      this.sectionId
+    ) {
+      _self.initPopup();
+
+    } else {
+      _self.closePopup();
     }
   }
 
