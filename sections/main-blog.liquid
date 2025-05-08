@@ -64,45 +64,26 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    {%- if section_st.title != blank or section_st.description != blank -%}
-      <div
-        class="section-header mb-40 text-{{ text_alignment }}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}"
-      >
-        {% assign animate_delay = 25 %}
-        {%- if section_st.title != blank -%}
-          {% assign animate_delay = animate_delay | plus: 5 %}
-          {%- if scroll_animation -%}
-            <motion-effect
-              data-animate="fade-up"
-              data-animate-delay="{{ animate_delay }}"
-              class="block"
-            >
-          {%- endif -%}
-          <h2 class="section-heading mb-15 {{ header_size }}">
-            {{ section_st.title }}
-          </h2>
-          {%- if scroll_animation -%}
-            </motion-effect>
-          {%- endif -%}
-        {%- endif -%}
-        {%- if section_st.description != blank -%}
-          {% assign animate_delay = animate_delay | plus: 5 %}
-          {%- if scroll_animation -%}
-            <motion-effect
-              data-animate="fade-up"
-              data-animate-delay="{{ animate_delay }}"
-              class="block"
-            >
-          {%- endif -%}
-          <div class="section-description prose">
-            {{ section_st.description }}
-          </div>
-          {%- if scroll_animation -%}
-            </motion-effect>
-          {%- endif -%}
-        {%- endif -%}
-      </div>
-    {%- endif -%}
+    <div
+      class="section-header mb-40 text-{{ text_alignment }}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}"
+    >
+      {% assign animate_delay = 25 %}
+
+      {% assign animate_delay = animate_delay | plus: 5 %}
+      {%- if scroll_animation -%}
+        <motion-effect
+          data-animate="fade-up"
+          data-animate-delay="{{ animate_delay }}"
+          class="block"
+        >
+      {%- endif -%}
+      <h2 class="section-heading mb-15 {{ header_size }}">
+        {{ blog.title }}
+      </h2>
+      {%- if scroll_animation -%}
+        </motion-effect>
+      {%- endif -%}
+    </div>
     {%- if blog.articles.size > 0 -%}
       {%- paginate blog.articles by section_st.maximum_posts_to_show -%}
         {%- if section_st.show_all_tags -%}
@@ -353,16 +334,6 @@
     {
       "type": "header",
       "content": "t:sections.all.content_header.label"
-    },
-    {
-      "type": "text",
-      "id": "title",
-      "label": "t:sections.all.content_setting.heading.label"
-    },
-    {
-      "type": "richtext",
-      "id": "description",
-      "label": "t:sections.all.content_setting.description.label"
     },
     {
       "type": "select",
