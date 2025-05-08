@@ -6,7 +6,7 @@
     >
       {%- for highlights in closest.product.metafields.custom.highlights.value -%}
         <li class="flex column content-center fs-small" style="--width:4.5rem;">
-          {% assign image_alt = highlights.title | default: closest.product.title | escape %}
+          {% assign image_alt = highlights.icon.alt | default: closest.product.title | escape %}
           {%- if highlights.icon -%}
             {% render 'responsive-image',
               type: 'other',

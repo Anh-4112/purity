@@ -190,8 +190,6 @@
                         class="recommend-search__item"
                         href="{{ link_search_keyword }}{{ search_keywords }}"
                         aria-label="{{ search_keywords }}"
-                        role="option"
-                        aria-selected="false"
                       >
                         {{ search_keywords }}
                       </a>
@@ -202,10 +200,7 @@
             </div>
           {%- endif -%}
           {%- if search_product_recommended != blank or predictive_search_enabled != false -%}
-            <div
-              class="search-content{% if search_type == 'popup' %} grow-1{% endif %}"
-              role="listbox"
-            >
+            <div class="search-content{% if search_type == 'popup' %} grow-1{% endif %}">
               {%- if predictive_search_enabled != false -%}
                 <div
                   class="predictive-search pt-20 mt-20 border-top empty-hidden{% if search_type != 'popup' %} pt-1025-30 mt-1025-30{% else %} mt-1025-50 pt-1025-0 border-1025-0{% endif %}"
