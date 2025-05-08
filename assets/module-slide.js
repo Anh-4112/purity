@@ -153,7 +153,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
   let watchOverflow = true;
   let loop = true;
   let speed = 300;
-  let spaceBetween = 10;
+  let spaceBetween = _this?.dataset.spacing ? _this?.dataset.spacing : 10;
   let mousewheel = false;
   let itemMobile = gallery == "thumbnail" ? 5 : 1;
   let direction = _this.dataset.thumbDirection
@@ -196,6 +196,13 @@ function initSlideMedia(_this, gallery, thumbnail) {
       loop = false;
       speed = 150;
     }
+  } else if (gallery == "OfferSlide") {
+    swiperElement = _this;
+    itemMobile = "auto";
+    direction = "vertical";
+    mousewheel = true;
+    loop = false;
+    speed = 150;
   }
   const swiperSlide = new Swiper(swiperElement, {
     slidesPerView: itemMobile,
@@ -203,7 +210,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
     autoplay: false,
     mousewheel: mousewheel,
     speed: speed,
-    direction: "horizontal",
+    direction: gallery == "OfferSlide" ? direction : "horizontal",
     loop: loop,
     watchSlidesProgress: watchSlidesProgress,
     watchSlidesVisibility: watchSlidesVisibility,
