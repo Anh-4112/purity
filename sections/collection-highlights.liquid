@@ -46,7 +46,7 @@
       <div class="section-header section-header__in-section hidden-1025 d-block text-{{ section_st.text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}">
         {% assign animate_delay = 25 %}
         {%- if section_st.subheading != blank -%}
-          {% assign animate_delay = animate_delay | plus: 5 %}
+          {% assign animate_delay = animate_delay | plus: 50 %}
           {% if scroll_animation %}
             <motion-effect
               data-animate="fade-up"
@@ -62,7 +62,7 @@
           {% endif %}
         {%- endif -%}
         {%- if section_st.title != blank -%}
-          {% assign animate_delay = animate_delay | plus: 5 %}
+          {% assign animate_delay = animate_delay | plus: 50 %}
           {% if scroll_animation %}
             <motion-effect
               data-animate="fade-up"
@@ -78,7 +78,7 @@
           {% endif %}
         {%- endif -%}
         {%- if section_st.description != blank -%}
-          {% assign animate_delay = animate_delay | plus: 5 %}
+          {% assign animate_delay = animate_delay | plus: 50 %}
           {% if scroll_animation %}
             <motion-effect
               data-animate="fade-up"
