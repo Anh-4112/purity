@@ -2060,21 +2060,21 @@ th {
 .draw-mb {
   max-width: 90%;
 }
+:where(.rounded-start, .draw-mb:not(.drawer-left)) {
+  border-top-left-radius: var(--img-rounded);
+  border-bottom-left-radius: var(--img-rounded);
+}
+.drawer-left {
+  border-top-right-radius: var(--img-rounded);
+  border-bottom-right-radius: var(--img-rounded);
+}
+menu-drawer .modal-inner {
+  overflow-x: hidden;
+}
 @media (min-width: 576px) {
   .modal-inner,
   .draw-mb {
     max-width: var(--drawer-width, 48rem);
-  }
-  :where(.rounded-start, .draw-mb:not(.drawer-left)) {
-    border-top-left-radius: var(--img-rounded);
-    border-bottom-left-radius: var(--img-rounded);
-  }
-  .drawer-left {
-    border-top-right-radius: var(--img-rounded);
-    border-bottom-right-radius: var(--img-rounded);
-  }
-  menu-drawer .modal-inner {
-    overflow-x: hidden;
   }
 }
 @media (min-width: 1025px) {
