@@ -26,15 +26,14 @@
 {% endstyle %}
 <div
   class="color-{{ block_st.color_scheme }} gradient block__image-with-text-offer"
-  style="--col-width: {{ block_st.desktop_image_width }}%;"
 >
   <div
-    class="flex gap{% if block_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
+    class="flex gap column"
     style="--gap: {{column_gap}}px;"
   >
-    <div class="image-with-text__media-item w-50-percent col-1025-w-custom">
+    <div class="image-with-text__media-item">
       <div
-        class="image-with-text__media banner__media {{ radius_image_class }} h-full"
+        class="image-with-text__media banner__media {{ radius_image_class }} h-full w-full"
         {% if block_st.image != blank %}
           style="--aspect-ratio: {{ block_st.image.aspect_ratio }}";
         {% else %}
@@ -59,7 +58,7 @@
         {% endif %}
       </div>
     </div>
-    <div class="w-50-percent col-1025-remaining flex text-{{ section_st.content_alignment }}">
+    <div class="flex text-{{ section_st.content_alignment }}">
       <div
         class="offer_pop_up image-with-text__wrapper w-full flex bg-custom {{ radius_image_class }}"
         style="--bg-color-custom: {{ block_st.background_color }};"

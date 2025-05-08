@@ -103,9 +103,9 @@
           <symbol id="icon-next" viewBox="0 0 6 11" fill="none">
             <path fill="currentColor" d="M1.278 10.721a.688.688 0 0 1-.528.229.688.688 0 0 1-.527-.229.669.669 0 0 1-.229-.51c0-.21.077-.392.229-.544l3.973-3.973L.223 1.721a.669.669 0 0 1-.229-.51c0-.21.077-.392.229-.544C.363.527.539.456.75.456c.211 0 .387.07.528.21l4.5 4.5a.744.744 0 0 1 .228.546c0 .199-.076.369-.228.51l-4.5 4.5Z"/>
           </symbol>
-          <symbol id="icon-cart" viewBox="0 0 16 16" fill="none">
-            <path d="M4.98547 1.40039H11.0071C13.8506 1.40039 14.1349 2.75445 14.3273 4.40657L15.08 10.7936C15.3225 12.8886 14.6869 14.6003 11.7598 14.6003H4.24114C1.30561 14.6003 0.670002 12.8886 0.920902 10.7936L1.67361 4.40657C1.8576 2.75445 2.14195 1.40039 4.98547 1.40039Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M5.59961 4.55147C5.59961 6.15156 6.93711 6.7998 7.99961 6.7998C9.06211 6.7998 10.3996 6.15156 10.3996 4.55147" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+          <symbol id="icon-cart" viewBox="0 0 22 22" fill="none">
+            <path d="M6.85649 1.9248H15.1362C19.046 1.9248 19.437 3.78663 19.7015 6.0583L20.7365 14.8405C21.0699 17.7211 20.196 20.0747 16.1711 20.0747H5.83303C1.79669 20.0747 0.922718 17.7211 1.2677 14.8405L2.30267 6.0583C2.55567 3.78663 2.94664 1.9248 6.85649 1.9248Z" stroke="black" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M7.69922 6.25864C7.69922 8.45876 9.53828 9.3501 10.9992 9.3501C12.4602 9.3501 14.2992 8.45876 14.2992 6.25864" stroke="black" stroke-width="1.8" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
           </symbol>
         </svg>
         <nav class="header__menu hidden block-1025">
@@ -149,9 +149,9 @@
                         -%}
                     {%- endcase -%}
                     {%- if link.links.size > 0 or has_content -%}
-                      <details is="details-mega-menu" class="details-header-menu level-1 inline animate-motion">
+                      <details is="details-mega-menu" class="details-header-menu level-1 inline-block animate-motion">
                         <summary
-                          class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-5 space-between"
+                          class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-6 space-between"
                           data-href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
@@ -171,7 +171,7 @@
                           endif
                         -%}
                         <div
-                          class="mega-menu submenu z-5 pointer-none transition invisible submenu-desktop overflow-auto {{ dropdowns_animation }} border-top inset-x-0 absolute{% if dropdowns_animation != 'fade-in-down' %} z-2 bg-white shadow{% endif %}"
+                          class="mega-menu submenu z-5 pointer-none transition invisible submenu-desktop overflow-auto {{ dropdowns_animation }} border-top inset-x-0 absolute{% if dropdowns_animation != 'fade-in-down' %} z-2 bg-white{% endif %}"
                           style="--col-mega-width: {{ mega_width }}%; --gap: 20px; --delay: 0.05s;"
                         >
                           <div class="menu-container bg-white py-40 custom-scrollbar overflow-auto">
@@ -302,7 +302,7 @@
                                         data-loop="false"
                                         data-speed="500"
                                         data-spacing="20"
-                                        data-mobile="1"
+                                        data-mobile="2"
                                         data-desktop="{{ product_column }}"
                                         data-tablet="{{ product_column }}"
                                       >
@@ -335,7 +335,7 @@
                                         data-loop="false"
                                         data-speed="500"
                                         data-spacing="20"
-                                        data-mobile="1"
+                                        data-mobile="2"
                                         data-desktop="{{ collection_column }}"
                                         data-tablet="{{ collection_column }}"
                                       >
@@ -373,9 +373,9 @@
                     {%- endif -%}
                   {%- else -%}
                     {%- if link.links.size > 0 -%}
-                      <details is="details-mega-menu" class="details-header-menu level-1 inline animate-motion">
+                      <details is="details-mega-menu" class="details-header-menu level-1 inline-block animate-motion">
                         <summary
-                          class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-5 space-between"
+                          class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-6 space-between"
                           data-href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >
@@ -410,9 +410,9 @@
               {%- else -%}
                 <li>
                   {%- if link.links.size > 0 -%}
-                    <details is="details-mega-menu" class="details-header-menu level-1 inline animate-motion">
+                    <details is="details-mega-menu" class="details-header-menu level-1 inline-block animate-motion">
                       <summary
-                        class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-5 space-between"
+                        class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-6 space-between"
                         data-href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
@@ -517,7 +517,7 @@
       style="--modal-width: 100%;"
     >
       <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
-      <div class="modal-inner invisible draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-15 left-0 bg-white">
+      <div class="modal-inner invisible draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-15 left-0 bg-white overflow-hidden">
         <div class="drawer__body h-full">
           <div class="drawer__content flex column h-full max-height-mb-menu">
             <nav class="header__menu-mobile overflow-y-auto overflow-x-hidden w-full h-full grow-1">
@@ -606,33 +606,39 @@
                         {%- if link.links.size > 0 or has_content -%}
                           <details
                             is="details-mega-menu"
-                            class="details-header-menu level-1 inline animate-motion"
+                            class="details-header-menu level-1"
                           >
                             <summary
-                              class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-5 space-between"
+                              class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-6 space-between"
                               data-href="{{ link.url }}"
                               aria-label="{{ link.title }}"
                             >
                               {{ link.title }}
                               {% if settings.rtl %}
-                                <svg class="icon-down block hidden-1025" width="6" height="11">
+                                <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
                                   <use href="#icon-back" />
                                 </svg>
                               {% else %}
-                                <svg class="icon-down block hidden-1025" width="6" height="11">
+                                <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
                                   <use href="#icon-next" />
                                 </svg>
                               {% endif %}
                             </summary>
-                            <div class="submenu pointer-none absolute inset-0 z-2 bg-white flex column transition invisible sub-mb absolute inset-0 drawer drawer-right-mb overflow-hidden">
+                            <div class="submenu pointer-none absolute inset-0 z-2 bg-white flex column transition sub-mb absolute inset-0 drawer drawer-right-mb overflow-hidden">
                               <div class="overflow-y-auto overflow-x-hidden custom-scrollbar pb-20">
                                 {%- render 'horizontal-menu', section_st: section_st, menu_mobile: true, link: link -%}
                                 {%- if has_content -%}
                                   {%- case last_block.type -%}
                                     {%- when 'menu_mega' -%}
+                                      {%- liquid
+                                        assign count = 0
+                                        for item in last_block.settings.collection
+                                          assign count = count | plus: 1
+                                        endfor
+                                      -%}
                                       <div
-                                        class="mega-banner flex column flex-cols gap p-gutter-x"
-                                        style="--col-number: 1;--gap:24px;"
+                                        class="mega-banner flex wrap flex-cols gap-10 row-gap-20 p-gutter-x"
+                                        style="{% if last_block.settings.banner_column > 1 %}--col-number: 2{% else %}--col-number: 1;{% endif %};--col-tablet: 2;"
                                       >
                                         {%- for i in (1..5) -%}
                                           {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}
@@ -730,35 +736,25 @@
                                         {%- liquid
                                           assign heading = last_block.settings.heading
                                           assign product_column = last_block.settings.product_column
+                                          assign count = 0
+                                          for item in last_block.settings.product_list
+                                            assign count = count | plus: 1
+                                          endfor
                                         -%}
                                         {%- if heading != blank -%}
                                           <h4 class="section-heading mb-20">
                                             {{ heading }}
                                           </h4>
                                         {%- endif -%}
-                                        <div class="free-scroll">
-                                          <slide-section
-                                            class="swiper hover-action overflow-visible-mb"
-                                            data-section-id="{{ section.id }}"
-                                            data-autoplay="false"
-                                            data-effect="slide"
-                                            data-loop="false"
-                                            data-speed="500"
-                                            data-spacing="20"
-                                            data-mobile="1.5"
-                                            data-desktop="{{ product_column }}"
-                                            data-tablet="{{ product_column }}"
-                                            data-free-scroll="true"
-                                          >
-                                            {%- render 'swiper-navigation', show_on_hover: true -%}
-                                            <div class="swiper-wrapper">
-                                              {%- liquid
-                                                for product in last_block.settings.product_list
-                                                  render 'card-product', card_product: product, section_id: section.id, class: ' swiper-slide', show_video: false, container: section_width, column: product_column, column_mobile: 1, padding: 20, indexFor: forloop.index
-                                                endfor
-                                              -%}
-                                            </div>
-                                          </slide-section>
+                                        <div
+                                          class="flex wrap flex-cols gap-10 row-gap-20"
+                                          style="{% if count > 1 %}--col-number: 2{% else %}--col-number: 1;{% endif %};--col-tablet: 2;"
+                                        >
+                                          {%- liquid
+                                            for product in last_block.settings.product_list
+                                              render 'card-product', card_product: product, section_id: section.id, show_video: false, container: section_width, column: product_column, column_mobile: 1, padding: 20, indexFor: forloop.index
+                                            endfor
+                                          -%}
                                         </div>
                                       </div>
                                     {%- when 'menu_collection' -%}
@@ -766,42 +762,30 @@
                                         {%- liquid
                                           assign heading = last_block.settings.heading
                                           assign collection_column = last_block.settings.collection_column
+                                          assign count = 0
+                                          for item in last_block.settings.collection
+                                            assign count = count | plus: 1
+                                          endfor
                                         -%}
                                         {%- if heading != blank -%}
                                           <h4 class="section-heading mb-20">
                                             {{ heading }}
                                           </h4>
                                         {%- endif -%}
-                                        <div class="free-scroll">
-                                          <slide-section
-                                            class="swiper hover-action overflow-visible-mb"
-                                            data-section-id="{{ section.id }}"
-                                            data-autoplay="false"
-                                            data-effect="slide"
-                                            data-loop="false"
-                                            data-speed="500"
-                                            data-spacing="20"
-                                            data-mobile="1.5"
-                                            data-desktop="{{ collection_column }}"
-                                            data-tablet="{{ collection_column }}"
-                                            data-free-scroll="true"
-                                          >
-                                            {%- render 'swiper-navigation', show_on_hover: true -%}
-                                            <div class="swiper-wrapper">
-                                              {% for collection in last_block.settings.collection %}
-                                                <div class="collection-item swiper-slide">
-                                                  {% render 'collection-item',
-                                                    card_collection: collection,
-                                                    section: section,
-                                                    container: section_width,
-                                                    column: collection_column,
-                                                    column_mobile: 1,
-                                                    padding: 20
-                                                  %}
-                                                </div>
-                                              {% endfor %}
-                                            </div>
-                                          </slide-section>
+                                        <div
+                                          class="flex wrap flex-cols gap-10 row-gap-20"
+                                          style="{% if count > 1 %}--col-number: 2{% else %}--col-number: 1;{% endif %};--col-tablet: 2;"
+                                        >
+                                          {% for collection in last_block.settings.collection %}
+                                            {% render 'collection-item',
+                                              card_collection: collection,
+                                              section: section,
+                                              container: section_width,
+                                              column: collection_column,
+                                              column_mobile: 1,
+                                              padding: 20
+                                            %}
+                                          {% endfor %}
                                         </div>
                                       </div>
                                   {%- endcase -%}
@@ -811,7 +795,7 @@
                           </details>
                         {%- else -%}
                           <a
-                            class="menu__item no-underline py-10 fs-18{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight"
+                            class="menu__item no-underline py-10 fs-big-2 heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight"
                             href="{{ link.url }}"
                             aria-label="{{ link.title }}"
                           >
@@ -828,11 +812,11 @@
                             >
                               {{ link.title }}
                               {% if settings.rtl %}
-                                <svg class="icon-down block hidden-1025" width="6" height="11">
+                                <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
                                   <use href="#icon-back" />
                                 </svg>
                               {% else %}
-                                <svg class="icon-down block hidden-1025" width="6" height="11">
+                                <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
                                   <use href="#icon-next" />
                                 </svg>
                               {% endif %}
@@ -847,7 +831,7 @@
                           </details>
                         {%- else -%}
                           <a
-                            class="menu__item level-1 transparent-menu heading-color  inline-block{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight"
+                            class="menu__item level-1 transparent-menu heading-color inline-block{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight"
                             href="{{ link.url }}"
                             aria-label="{{ link.title }}"
                           >
@@ -859,19 +843,19 @@
                   {%- else -%}
                     <li class="py-10">
                       {%- if link.links.size > 0 -%}
-                        <details is="details-mega-menu" class="details-header-menu level-1 inline animate-motion">
+                        <details is="details-mega-menu" class="details-header-menu level-1">
                           <summary
-                            class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-5 space-between"
+                            class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-6 space-between"
                             data-href="{{ link.url }}"
                             aria-label="{{ link.title }}"
                           >
                             {{ link.title }}
                             {% if settings.rtl %}
-                              <svg class="icon-down block hidden-1025" width="6" height="11">
+                              <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
                                 <use href="#icon-back" />
                               </svg>
                             {% else %}
-                              <svg class="icon-down block hidden-1025" width="6" height="11">
+                              <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
                                 <use href="#icon-next" />
                               </svg>
                             {% endif %}
@@ -886,7 +870,7 @@
                         </details>
                       {%- else -%}
                         <a
-                          class="menu__item no-underline{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight"
+                          class="menu__item no-underline{% if settings.menu_uppercase %} uppercase{% endif %} fs-big-2 heading-color menu_weight"
                           href="{{ link.url }}"
                           aria-label="{{ link.title }}"
                         >

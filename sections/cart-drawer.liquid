@@ -208,7 +208,7 @@
                             <div class="cart-item_inner flex gap-20 transition">
                               {% if item.image %}
                                 <div
-                                  class="cart-item__media flex-auto w-custom"
+                                  class="cart-item__media flex-auto w-custom hover-effect"
                                   style="--width: 10rem;"
                                 >
                                   {%- liquid
@@ -227,7 +227,6 @@
                                   <a
                                     href="{{ item.url }}"
                                     class="cart-item__link block rounded-10 focus-inset-inside word-break align-self-start"
-                                    aria-hidden="true"
                                     arial-label="{{ item.product.title | escape }}"
                                   >
                                     <div
@@ -247,7 +246,7 @@
                                 </div>
                               {% endif %}
                               <div
-                                class="cart-item__details-info flex column{% if item.image %} flex-auto w-custom{% else %} flex-1{% endif %}"
+                                class="cart-item__details-info product-motion-info flex column{% if item.image %} flex-auto w-custom{% else %} flex-1{% endif %}"
                                 style="--width: calc(100% - 12rem);"
                               >
                                 <div
@@ -257,7 +256,7 @@
                                   <div class="flex gap-10 space-between">
                                     <a
                                       href="{{ item.url }}"
-                                      class="block word-break lh-normal heading-style mb-5 w-full"
+                                      class="inline-block outlined-border word-break lh-normal heading-style mb-5"
                                       arial-label="{{ item.product.title | escape }}"
                                     >
                                       {{- item.product.title | escape -}}
@@ -605,7 +604,7 @@
                           <span class="visually-hidden">{{ 'general.button.close' | t }}</span>
                         </button>
                       </div>
-                      <div class="cart-addons-content overflow-hidden h-0 fs-small">
+                      <div class="cart-addons-content overflow-hidden h-0 fs-small visibility-hidden">
                         <div class="cart-addons-content-inner">
                           <p class="heading-color">{{ 'sections.cart.gift.info' | t }}</p>
                           {%- if select_product_gift_wrap != blank -%}
@@ -661,7 +660,9 @@
                                             class: 'lh-normal inline-block'
                                           -%}
                                         </div>
-                                        {{ product.description }}
+                                        <div class="text-truncate" style="--line-clamp: 1;">
+                                          {{ product.description }}
+                                        </div>
                                       </div>
                                     </label>
                                   </li>
@@ -688,7 +689,10 @@
                 {% endif %}
               {%- endif -%}
               {%- if show_cart_note -%}
-                <cart-note-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-16">
+                <cart-note-element
+                  class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible visibility-hidden bg-white drawer-spacing z-16"
+                  style="--padding-block-desktop: 2rem;--padding-inline-desktop: 3rem;"
+                >
                   <div class="cart-addons-element">
                     <div class="cart-addons-title flex space-between gap-10 mb-10 py-12">
                       <span class="title h7">{{ 'sections.cart.note.title' | t }}</span>
@@ -735,7 +739,10 @@
                 </cart-note-element>
               {%- endif -%}
               {%- if show_estimate_shipping -%}
-                <cart-estimate-element class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible bg-white drawer-spacing z-16">
+                <cart-estimate-element
+                  class="block drawer-bottom transition-drawer top-rounded fixed bottom-0 inset-x-0 invisible visibility-hidden bg-white drawer-spacing z-16"
+                  style="--padding-block-desktop: 2rem;--padding-inline-desktop: 3rem;"
+                >
                   <form>
                     <div class="cart-addons-title flex space-between gap-10 mb-10 py-12">
                       <span class="title h7">{{ 'sections.cart.shipping.estimate_shipping_title' | t }}</span>
