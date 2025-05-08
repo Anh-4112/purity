@@ -9,6 +9,15 @@ class VideoLocalLightbox extends HTMLElement {
   init() {
     this.loadContent();
     this.addEventListener("click", this.onButtonClick);
+    this.addEventListener(
+      "keypress",
+      function (event) {
+        if (event.key === "Enter") {
+          this.onButtonClick.bind(this)(event);
+        }
+      }.bind(this),
+      false
+    );
   }
 
   loadContentVideo(_this) {
@@ -65,7 +74,6 @@ class VideoLocalLightbox extends HTMLElement {
       NextSkyTheme.body.appendChild(
         content.querySelector("media-lightbox-popup")
       );
-
       document.querySelector("media-lightbox-popup")?.open();
       const swiperContainer = document
         .querySelector("media-lightbox-popup")

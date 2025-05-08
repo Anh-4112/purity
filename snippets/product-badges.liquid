@@ -50,11 +50,11 @@
                 assign product_avail = true
               endif
               if p.inventory_management == null
-                assign product_management = null
+                assign product_management = 'null'
               endif
               assign compare_at_price = prod[0].compare_at_price
               assign price = prod[0].price
-              if product_management != null
+              if product_management != 'null'
                 if product_qty < 1
                   if product_avail == true
                     assign pre_order = true
@@ -81,12 +81,12 @@
               assign product_avail = true
             endif
             if variant.inventory_management == null
-              assign product_management = null
+              assign product_management = false
             endif
           endfor
           assign compare_at_price = card_product.variants[0].compare_at_price
           assign price = card_product.variants[0].price
-          if product_management != null
+          if product_management
             if product_qty < 1
               if product_avail == true
                 assign pre_order = true
@@ -125,7 +125,13 @@
           endif
         else
           if product_qty < 1
-            assign pre_order = true
+            if product_avail == true
+              assign pre_order = true
+            else
+              assign pre_order = false
+            endif
+          else
+            assign pre_order = false
           endif
           assign sold_out = false
         endif
@@ -156,7 +162,6 @@
       assign sale = true
     endif
   endif
-
   assign product_create_at = card_product.created_at | date: '%s'
   assign now_timestamp = 'now' | date: '%s'
   assign diff_seconds = now_timestamp | minus: product_create_at
