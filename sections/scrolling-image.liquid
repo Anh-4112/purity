@@ -41,7 +41,6 @@
       <div class="section-header section-header__in-section d-block text-{{ section_st.text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}">
         {%- if section_st.subheading != blank -%}
           {% if scroll_animation %}
-            {% assign animate_delay = animate_delay | plus: 50 %}
             <motion-effect
               data-animate="fade-up"
               data-animate-delay="{{ animate_delay }}"

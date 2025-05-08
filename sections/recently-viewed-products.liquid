@@ -68,7 +68,6 @@
         {%- if section_st.title != blank or section_st.description != blank -%}
           <div class="section-header text-{{ text_alignment }}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}">
             {%- if section_st.title != blank -%}
-              {% assign animate_delay = animate_delay | plus: 50 %}
               {% if scroll_animation %}
                 <motion-effect
                   data-animate="fade-up"
