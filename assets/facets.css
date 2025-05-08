@@ -13,7 +13,6 @@
     --row-gap: 4rem;
   }
 }
-
 price-range .field.rounded-5.gap-0.flex-nowrap.flex-1 {
   flex: 0 0 auto;
   width: calc((100% - 31px) / 2);
@@ -100,7 +99,6 @@ price-range .field.rounded-5.gap-0.flex-nowrap.flex-1 {
   border: 1px solid var(--color-dark);
   width: 17px;
 }
-
 .price-range .range-slider::-webkit-slider-runnable-track {
   background: var(--accent-color-second, #dfdfdf);
   border: none;
@@ -109,7 +107,61 @@ price-range .field.rounded-5.gap-0.flex-nowrap.flex-1 {
   height: 3px;
   width: 100%;
 }
-
+.facet-color {
+  --checkmark_width: 3.2rem;
+  --checkmark_rounded: 50%;
+  --checkmark_top: 0;
+}
+.facet-color .input_checkbox {
+  left: 6px;
+  top: 6px;
+}
+.color-filter-label::before {
+  content: "";
+  display: inline-flex;
+  width: var(--checkmark_width, 28px);
+  height: var(--checkmark_width, 28px);
+  border-radius: var(--checkmark_rounded, 50%);
+  background-color: var(--swatch-background, rgb(var(--color-white)));
+  position: absolute;
+  left: 2px;
+  top: var(--checkmark_top, 2px);
+  transition: var(--bls-transition);
+  z-index: 1;
+}
+.color-checkmark:before {
+  --checkmark_rounded: 50%;
+  --checkmark_width: 2.4rem;
+  opacity: 0;
+}
+input[type="checkbox"]:checked + .color-checkmark:before {
+  opacity: 1;
+}
+.facet-color:has(input[type="checkbox"]:checked) .color-swatch-label:before {
+  --shadow-position: 4px;
+}
+.facet-color:has(input[type="checkbox"]:checked) .color-swatch-label {
+  --color-border: var(--color-dark);
+}
+.color-checkmark:after {
+  z-index: 2;
+}
+.color-swatch-label.filter-swatch {
+  position: unset;
+}
+.color-swatch-label.filter-swatch:before {
+  width: var(--color-swatch-width, 2.6rem);
+  height: var(--color-swatch-height, 2.6rem);
+  left: 2px;
+  top: 2px;
+}
+.filter-swatch:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+}
 .price-range .range-slider::-moz-range-progress,
 .price-range .range-slider::-moz-range-track {
   border: none;
@@ -118,20 +170,22 @@ price-range .field.rounded-5.gap-0.flex-nowrap.flex-1 {
   height: 3px;
   width: 100%;
 }
-
 .price-range .range-slider::-moz-range-progress {
   background-color: rgba(0, 0, 0, 0.7);
 }
-
 .price-range .range-slider::-moz-range-track {
   background-color: var(--accent-color-second, #dfdfdf);
 }
-
 .price-range .range-slider::-webkit-slider-runnable-track {
   background: none;
 }
-
 .price-range .range-slider::-moz-range-progress,
 .price-range .range-slider::-moz-range-track {
   background: none;
+}
+@media (min-width: 1025px) and (max-width: 1199px) {
+  .vertical-filter {
+    --col-width: 23rem !important;
+    --gap-desktop: 3rem !important;
+  }
 }

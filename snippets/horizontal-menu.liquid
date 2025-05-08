@@ -59,7 +59,7 @@
       </div>
     {%- endif -%}
   {%- endif -%}
-  <ul class="menu list-unstyled{% if type == 'classic' and menu_mobile == blank %} flex column gap-15{% endif %}{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% endif %}{% if type != 'classic' and menu_mobile != blank %} px-gutter-x pb-10 pt-12{% else %} px-gutter-x pt-12{% endif %}">
+  <ul class="menu list-unstyled{% if type == 'classic' and menu_mobile == blank %} flex column gap-15{% endif %}{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% endif %}{% if type != 'classic' and menu_mobile != blank %} px-gutter-x pb-10 pt-12{% endif %}{% if menu_mobile != blank %} px-gutter-x pt-12{% endif %}">
     {% for child_link in link.links %}
       <li class="menu-link{% if child_link.links.size > 0 %} have-child{% if menu_mega == blank %} relative{% endif %}{% endif %}{% if menu_mega == blank and menu_mobile == blank %} px-30{% endif %}{% if menu_mobile != blank %} overflow-hidden{% endif %}">
         {%- if child_link.links.size > 0 -%}

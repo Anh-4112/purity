@@ -76,6 +76,9 @@ page-loader:not([style="opacity: 1;"]) .loader {
   .stretch_width {
     --bs-gutter-x: 3rem;
   }
+  .px-1025-22 {
+    padding-inline: clamp(5px, 8vw, 2.2rem);
+  }
 }
 summary {
   cursor: pointer;
@@ -593,6 +596,9 @@ input[type="checkbox"]:checked + .checkmark:before {
 }
 .left-15 {
   left: 1.5rem;
+}
+.left-20 {
+  left: 2rem;
 }
 .bottom-15 {
   bottom: 1.5rem;
@@ -1548,7 +1554,8 @@ slide-section variant-input {
 variant-input label.disable:not(.color-swatch-label) {
   background-color: #f9f9f9;
 }
-variant-input label.disable:after {
+variant-input label.disable:after,
+.facet-color .color-swatch-label.disabled:after {
   content: "";
   position: absolute;
   top: 0;
@@ -1917,7 +1924,7 @@ quantity-input input {
   }
   .pt-1025-30 {
     padding-top: 3rem;
-  }  
+  }
   .pb-1025-0 {
     padding-bottom: 0;
   }
@@ -1938,9 +1945,6 @@ quantity-input input {
   }
   .px-1025-20 {
     padding-inline: 2rem;
-  }
-  .px-1025-22 {
-    padding-inline: 2.2rem;
   }
   .px-1025-30 {
     padding-inline: 3rem;
@@ -2140,7 +2144,7 @@ th {
   padding-bottom: 10rem;
   max-width: 64rem !important;
 }
-.shopify-policy__container ul{
+.shopify-policy__container ul {
   margin: 0;
   padding-inline-start: 15px;
 }
