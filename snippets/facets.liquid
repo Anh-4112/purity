@@ -90,8 +90,8 @@
                       </li>
                     {%- else -%}
                       <li class="facets__item flex gap-10 pointer word-break">
-                        <div class="facet-checkbox flex gap-10 relative p-2">
-                          <div class="input_checkbox relative">
+                        <div class="facet-checkbox facet-color flex align-center gap-10 relative p-2">
+                          <div class="input_checkbox absolute fs-0 left-0 top-0">
                             <input
                               type="checkbox"
                               name="{{ value.param_name }}"
@@ -107,7 +107,7 @@
                             >
                             <span
                               class="checkmark color-checkmark relative pointer-none inline-flex w-custom h-custom"
-                              style="  --check_position: 56%;"
+                              style="  --check_position: 50%;"
                             ></span>
                           </div>
                           {%- liquid
@@ -134,13 +134,16 @@
                             endif
                           -%}
                           <label
-                            class="color-filter-label pointer{% if is_swatch_image %} swatch-image{% endif %} filter-swatch{% if value.count == 0 and value.active == false %} disabled{% endif %}"
+                            class="color-swatch-label pointer{% if is_swatch_image %} swatch-image{% endif %} filter-swatch{% if value.count == 0 and value.active == false %} disabled{% endif %}"
                             for="Filter-{{ filter.param_name | escape }}-{{ filter_layout }}-{{ forloop.index }}"
                             style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }};{% endif %}{% if color_swatch_shape == 'round' %}--radius: 50%;{% else %}--radius: 3px;{% endif %}"
                           >
+                            <span class="visually-hidden">{{ value.label }}</span>
+                          </label>
+                          <div class="inline-flex align-center gap-10{% if value.count == 0 and value.active == false %} disabled{% endif %}">
                             {{ value.label }}
                             <span class="count nowrap grey-color">({{ value.count }})</span>
-                          </label>
+                          </div>
                         </div>
                       </li>
                     {%- endif -%}
