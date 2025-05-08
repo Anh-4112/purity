@@ -331,7 +331,7 @@
                       >
                         {%- for option in collection.sort_options -%}
                           <filter-sort
-                            class="block transition text-color py-4"
+                            class="block transition text-color py-4 pointer"
                             value="{{ option.value | escape }}"
                             {% if option.value == sort_by %}
                               selected="selected"
@@ -434,7 +434,7 @@
             {%- if collection.products.size == 0 -%}
               <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
                 <div class="title-wrapper text-center">
-                  <h2 class="title title--primary">
+                  <h2 class="title title--primary mt-50">
                     {{ 'sections.collection_template.no_products_found' | t -}}
                     <br>
                     {{
