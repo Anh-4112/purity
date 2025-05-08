@@ -44,6 +44,13 @@
   --col-number: {{ section_st.items_per_row }};
   --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
+{% style %}
+  @media (max-width: 1024.99px) {
+    .is-equal-one .col-md-w-custom-50 {
+      --col-width: 100% !important;
+    }
+  }
+{% endstyle %}
 <div
   class="section__multi-content overflow-hidden section{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
@@ -106,7 +113,7 @@
       </div>
     {%- endif -%}
     <div
-      class="promotion-banner__blocks relative"
+      class="promotion-banner__blocks relative{% if section.blocks.size == 1 %} is-equal-one{% endif %}"
     >
       <carousel-mobile
         class="promotion-banner__blocks row-gap gap-{{ section_st.column_gap }}{% if section_st.enable_carousel_mobile %} grid-cols grid promotion-banner__carousel{% else %} flex column flex-md-row wrap cols{% endif %}"
