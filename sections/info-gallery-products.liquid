@@ -115,9 +115,9 @@
       {%- endif -%}
       <div class="info-gallery__wrapper">
         <ul
-          class="info-gallery__list list-unstyled flex column flex-md-row gap-5"
+          class="info-gallery__list list-unstyled flex column flex-md-row gap"
           role="list"
-          style="--flex-gallery: {{ product.metafields.custom.info_gallery.value.count }}"
+          style="--flex-gallery: {{ product.metafields.custom.info_gallery.value.count }};--gap-desktop: 2rem;--gap: 0.5rem;"
         >
           {%- for info_gallery in product.metafields.custom.info_gallery.value -%}
             <li class="info-gallery__card flex-1 transition relative{% if forloop.index == 2 %} active{% endif %}">
