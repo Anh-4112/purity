@@ -72,55 +72,51 @@
     <div
       class="newsletter__form-container flex column text-{{ text_alignment }} justify-content-{{ text_alignment }}"
     >
-      {%- form 'customer', class: 'newsletter__form flex wrap', id: 'NewsletterForm--{{ section.id }}' -%}
+      {%- form 'customer',
+        id: 'NewsletterForm--{{ section.id }}',
+        class: 'newsletter__form flex',
+        novalidate: 'novalidate'
+      -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
-        <div class="flex gap-10 wrap w-full justify-content-{{ text_alignment }}">
-          <input
-            id="NewsletterForm--{{ section.id }}"
-            type="email"
-            required
-            name="contact[email]"
-            autocomplete="email"
-            aria-required="true"
-            autocorrect="off"
-            autocapitalize="off"
-            value="{% if customer %}{{ customer.email }}{% endif %}"
-            placeholder="{% if section_st.email_placeholder != blank %}{{section_st.email_placeholder}}{% else %}{{ 'newsletter.label' | t }}{% endif %}"
-            class="newsletter__input"
-            {% if form.errors %}
-              aria-invalid="true"
-              aria-describedby="Newsletter-error--{{ section.id }}"
-            {% elsif form.posted_successfully? %}
-              aria-describedby="Newsletter-success--{{ section.id }}"
-            {% endif %}
-            pattern=".+\.[a-zA-Z]{2,6}"
-          >
-          <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
-            {{ 'newsletter.label' | t }}
-          </label>
-          <button
-            type="submit"
-            name="commit"
-            class="btn btn-primary newsletter__button"
-            aria-label="{%- if button_label != blank -%}{{ button_label }} {%- else -%} {{ 'subscribe.button_label' | t }} {% endif %}"
-          >
-            <span class="hidden-on-load">
-              {%- if button_label != blank -%}
-                {{ button_label }}
-              {%- else -%}
-                {{ 'newsletter.button_label' | t }}
-              {% endif -%}
-            </span>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              class="spin opacity-0 pointer-none icon-load absolute"
+        <div class="field relative field relative w-full flex wrap gap-10 justify-content-{{ text_alignment }}">
+          <div class="flex gap-10">
+            <input
+              id="NewsletterForm--{{ section.id }}"
+              type="email"
+              required
+              name="contact[email]"
+              autocomplete="email"
+              aria-required="true"
+              autocorrect="off"
+              autocapitalize="off"
+              value="{% if customer %}{{ customer.email }}{% endif %}"
+              placeholder="{% if section_st.email_placeholder != blank %}{{section_st.email_placeholder}}{% else %}{{ 'newsletter.label' | t }}{% endif %}"
+              class="newsletter__input"
+              {% if form.errors %}
+                aria-invalid="true"
+                aria-describedby="Newsletter-error--{{ section.id }}"
+              {% elsif form.posted_successfully? %}
+                aria-describedby="Newsletter-success--{{ section.id }}"
+              {% endif %}
+              pattern=".+\.[a-zA-Z]{2,6}"
             >
-              <use href="#icon-load"></use>
-            </svg>
-          </button>
+            <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
+              {{ 'newsletter.label' | t }}
+            </label>
+            <button
+              class="btn btn-primary newsletter__button"
+              aria-label="{%- if button_label != blank -%}{{ button_label }}{%- else -%}{{ 'subscribe.button_label' | t }}{% endif %}"
+            >
+              <span class="hidden-on-load transition-short">
+                {%- if button_label != blank -%}
+                  {{ button_label }}
+                {%- else -%}
+                  {{ 'newsletter.button_label' | t }}
+                {% endif -%}
+              </span>
+              {%- render 'loader' -%}
+            </button>
+          </div>
         </div>
         {%- if form.errors -%}
           <small
@@ -151,18 +147,19 @@
   </div>
 </div>
 <script type="module">
-  import { setupFormValidation } from '{{ "form-Validation.js" | asset_url }}';
-
+  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form.newsletter__form',
       fields: {
-        email: (value) =>
-          !value
+        'contact[email]': (value) => {
+          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          return !value
             ? '{{ "customer.validate.email" | t }}'
-            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            : !emailRegex.test(value)
             ? '{{ "customer.validate.email_invalid" | t }}'
-            : '',
+            : '';
+        },
       },
     });
   });
