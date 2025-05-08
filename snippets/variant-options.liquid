@@ -8,10 +8,6 @@
   assign count = 0
   assign color_limit = color_limit | plus: 0
   assign hidden_colors = 0
-  assign variants_available = product.variants | map: 'available'
-  assign variants_option_one = product.variants | map: 'option1'
-  assign variants_option_two = product.variants | map: 'option2'
-  assign variants_option_three = product.variants | map: 'option3'
 -%}
 {%- for value in option.values -%}
   {%- liquid
@@ -21,22 +17,9 @@
     assign op = 'option' | append: option.position
     assign variants = product.variants | where: op, value
     assign disable_variant = true
-    for option1_name in variants_option_one
-      case option.position
-        when 1
-          if variants_option_one[forloop.index0] == value and variants_available[forloop.index0]
-            assign disable_variant = false
-          endif
-        when 2
-          if option1_name == product.selected_or_first_available_variant.option1 and variants_option_two[forloop.index0] == value and variants_available[forloop.index0]
-            assign disable_variant = false
-          endif
-        when 3
-          if option1_name == product.selected_or_first_available_variant.option1 and variants_option_two[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option_three[forloop.index0] == value and variants_available[forloop.index0]
-            assign disable_variant = false
-          endif
-      endcase
-    endfor
+    if value.available
+      assign disable_variant = false
+    endif
     if scope == 'item'
       for variant in variants
         assign inventory_quantity = variant.inventory_quantity | plus: inventory_quantity
