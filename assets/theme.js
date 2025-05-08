@@ -411,6 +411,7 @@ class ToggleMenu extends HTMLElement {
         ),
       100
     );
+    new LazyLoader(".image-lazy-load");
     CustomElement.observeAndPatchCustomElements({
       "button-close-model": {
         tagElement: "button",
@@ -1946,7 +1947,7 @@ class ImageComparison extends HTMLElement {
   }
 
   handleKeyDown(event) {
-    if (!this.slider.matches(':focus')) return;
+    if (!this.slider.matches(":focus")) return;
     let moveBy = 0;
 
     if (event.key === "ArrowLeft") {

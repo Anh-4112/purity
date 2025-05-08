@@ -74,6 +74,7 @@
       {% endif %}
       {% if product == blank %}
         <div
+          id="ProductInfo-{{ section.id }}"
           class="product-detail__media w-full col-md-w-custom rounded"
           style="--aspect-ratio: {% if product_image_ratio == 'adapt' -%}1/1{%- elsif product_image_ratio == 'square' -%}1/1{%- elsif product_image_ratio == 'portrait' -%}3/4{%- elsif product_image_ratio == 'landscape' -%}4/3{%- endif -%}"
         >
@@ -84,7 +85,7 @@
           -%}
         </div>
       {% endif %}
-      <div class="product-detail__information w-full col-md-remaining">
+      <div id="ProductInfo-{{ section.id }}" class="product-detail__information w-full col-md-remaining">
         <div class="sticky top-20">
           {% if scroll_animation %}
             <motion-effect
@@ -177,6 +178,10 @@
     { "type": "_promotion-countdown-product" }
   ],
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.featured-product.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

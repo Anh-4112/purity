@@ -22,7 +22,7 @@
   assign show_mobile = section_st.show_mobile
 -%}
 
-{%- capture style -%}--section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.marquee_speed }}s;--swiper-navigation-color:rgba(var(--color-text-rgb), 0.5);--swiper-navigation-size: 3rem;--swiper-navigation-sides-offset: 1rem;{%- endcapture -%}
+{%- capture style -%}--section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--speed: {{ section_st.marquee_speed }}s;--swiper-navigation-color:rgba(var(--color-text-rgb), 0.5);--swiper-navigation-size: 3rem;--swiper-navigation-sides-offset: 0rem;{%- endcapture -%}
 {%- capture col_style -%}
   {% if section_st.space_between_text < 15 %}--gap: {{ section_st.space_between_text}}px;{% else %}--gap: clamp(4rem, calc({{ section_st.space_between_text}} * var(--responsive-rate)), calc({{ section_st.space_between_text}}*1px));{% endif %}
 {%- endcapture -%}
@@ -252,7 +252,7 @@
       "id": "scrolling_size",
       "options": [
         {
-          "value": "13",
+          "value": "small",
           "label": "t:sections.all.content_header.heading_size.options__1.label"
         },
         {
@@ -264,7 +264,7 @@
           "label": "t:sections.all.content_header.heading_size.options__3.label"
         }
       ],
-      "default": "13",
+      "default": "small",
       "label": "t:sections.all.content_header.heading_size.size"
     },
     {

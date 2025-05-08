@@ -124,6 +124,7 @@
           class="color-swatch-label pointer {{ color_swatch_shape }} {% if disable_variant %} disable{% endif %}{% if is_swatch_image %} swatch-image{% endif %}"
           style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }};{% endif %}{% if color_swatch_shape == 'round' %}--radius: 50%;{% else %}--radius: 3px;{% endif %}"
           for="{{ section.id }}-product-{{ product.id }}-{{ option.position }}-value-{{ value.id }}"
+          aria-label="{{ value }}"
         >
           <span class="hidden">{{ value }}</span>
         </label>

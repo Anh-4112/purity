@@ -183,11 +183,11 @@
             <rect width="22" height="22" fill="#111" rx="2"/><path fill="#fff" d="M15.4 8.063 12.104 6.16a1.203 1.203 0 0 0-1.2 0L7.6 8.063A1.198 1.198 0 0 0 7 9.1v3.8a1.194 1.194 0 0 0 .6 1.037l3.304 1.903a1.203 1.203 0 0 0 1.2 0l3.296-1.903A1.198 1.198 0 0 0 16 12.9V9.1a1.193 1.193 0 0 0-.6-1.037Zm-4.096 7.087L8 13.247a.4.4 0 0 1-.2-.347V9.1a.398.398 0 0 1 .2-.347l3.304-1.903a.401.401 0 0 1 .2-.052c.07 0 .139.018.2.052L15 8.753c.064.036.115.09.148.155l-3.152 1.803a1.005 1.005 0 0 0-.492.873v3.626a.437.437 0 0 1-.2-.06Z"/>
           </svg>
         {% else %}
-          <div class="responsive-image media-model" style="--aspect-ratio: {{ ratio }}" media-model>
+          <div class="responsive-image media-model" style="--aspect-ratio: 1;" media-model>
             <product-model
               class="deferred-media media media--transparent"
               data-media-id="{{ featured_media.id }}"
-              style="--aspect-ratio: {{ ratio }}"
+              style="--aspect-ratio: 1;"
             >
               <button id="Deferred-Poster-Modal-{{ featured_media.id }}" class="deferred-media__poster" type="button">
                 <span class="deferred-media__poster-button motion-reduce wh-55 bg-white shadow inline-flex content-center absolute z-1 rounded-50 transition">
@@ -245,7 +245,6 @@
             is="media-zoom-button"
             class="hover-action media-zoom-button btn-reset zoom-in transition absolute inset-0 pointer"
             aria-label="{{ 'products.product.zoom_button' | t }}"
-            tabindex="-1"
           >
             <span class="show-on-hover invisible absolute pointer blur transition top-15{% if settings.rtl %} left-15{% else %} right-15{% endif %}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center shadow bg-white wh-55{% if desktop_layout == 'thumbnail_left' or desktop_layout == 'thumbnail_bottom' %} invisible show-on-hover{% endif %}">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -416,8 +415,7 @@
           {% if thumbnail != true %}
             data-position="{{ media_position }}"
             media-gallery="{{ image.media_type }}"
-          {% endif %}
-          {% if thumbnail == true %}
+          {% else %}
             style="--aspect-ratio: {{ ratio }}"
           {% endif %}
         >
@@ -427,11 +425,11 @@
               <rect width="22" height="22" fill="#111" rx="2"/><path fill="#fff" d="M15.4 8.063 12.104 6.16a1.203 1.203 0 0 0-1.2 0L7.6 8.063A1.198 1.198 0 0 0 7 9.1v3.8a1.194 1.194 0 0 0 .6 1.037l3.304 1.903a1.203 1.203 0 0 0 1.2 0l3.296-1.903A1.198 1.198 0 0 0 16 12.9V9.1a1.193 1.193 0 0 0-.6-1.037Zm-4.096 7.087L8 13.247a.4.4 0 0 1-.2-.347V9.1a.398.398 0 0 1 .2-.347l3.304-1.903a.401.401 0 0 1 .2-.052c.07 0 .139.018.2.052L15 8.753c.064.036.115.09.148.155l-3.152 1.803a1.005 1.005 0 0 0-.492.873v3.626a.437.437 0 0 1-.2-.06Z"/>
             </svg>
           {% else %}
-            <div class="responsive-image media-model" style="--aspect-ratio: {{ ratio }}" media-model>
+            <div class="responsive-image media-model" style="--aspect-ratio: 1;" media-model>
               <product-model
                 class="deferred-media media media--transparent"
                 data-media-id="{{ image.id }}"
-                style="--aspect-ratio: {{ ratio }}"
+                style="--aspect-ratio: 1;"
               >
                 <button id="Deferred-Poster-Modal-{{ image.id }}" class="deferred-media__poster" type="button">
                   <span class="deferred-media__poster-button motion-reduce wh-55 bg-white shadow inline-flex content-center absolute z-1 rounded-50 transition">
@@ -489,7 +487,6 @@
               is="media-zoom-button"
               class="btn-reset media-zoom-button zoom-in transition absolute inset-0"
               aria-label="{{ 'products.product.zoom_button' | t }}"
-              tabindex="-1"
             >
               <span class="show-on-hover invisible absolute pointer blur transition top-15{% if settings.rtl %} left-15{% else %} right-15{% endif %}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center shadow bg-white wh-55{% if desktop_layout == 'thumbnail_left' or desktop_layout == 'thumbnail_bottom' %} invisible show-on-hover{% endif %}">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">

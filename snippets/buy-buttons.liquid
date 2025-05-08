@@ -10,22 +10,27 @@
     if show_dynamic_checkout and gift_card_recipient_feature_active == false
       assign show_dynamic_checkout_active = true
     endif
+    if type_form == 'sticky-add-cart'
+      assign include_id = '-sticky-add-cart'
+    endif
   -%}
   <div class="product__submit-form">
     <product-form
-      id="Product-form-{{ section.id }}"
+      id="Product-form-{{ section.id }}{{ include_id }}"
       class="block product-form flex-1"
       data-hide-errors="{{ gift_card_recipient_feature_active }}"
-      data-section-id="{{ section.id }}"
+      data-section-id="{{ section.id }}{{ include_id }}"
     >
+      {%- if type_form != 'sticky-add-cart' -%}
       <div class="product-form__error-message-wrapper" role="alert" hidden>
         <div class="form__message error mb-15">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
             <use href="#icon-error"></use>
           </svg>
           <span class="product-form__error-message"></span>
+          </div>
         </div>
-      </div>
+      {%- endif -%}
       {%- form 'product',
         product,
         id: product_form_id,
@@ -45,11 +50,11 @@
         {%- endif -%}
         <div class="product-form__buttons flex column gap-20">
           <div class="product__submit-form-cart flex wrap gap-10">
-            <label class="visually-hidden" for="Quantity-{{ section.id }}">
+            <label class="visually-hidden" for="Quantity-{{ section.id }}{{ include_id }}">
               {{- 'products.product.quantity.label' | t -}}
             </label>
             <quantity-input
-              id="Quantity-Form-{{ section.id }}"
+              id="Quantity-Form-{{ section.id }}{{ include_id }}"
               class="input-rounded quantity flex input-style px-0{{ class_quantity }}"
             >
               <button
@@ -69,7 +74,7 @@
                 style="--input-padding: 0;--width: 4.7rem;--input-border-radius: 0;--input-bg: transparent;--input-height: auto;"
                 type="number"
                 name="quantity"
-                id="Quantity-{{ section.id }}"
+                id="Quantity-{{ section.id }}{{ include_id }}"
                 min="{{ product.selected_or_first_available_variant.quantity_rule.min | default: '1' }}"
                 {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
                   max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
@@ -92,27 +97,37 @@
               </button>
             </quantity-input>
             <div class="button_buy-now grow-1 shrink-1">
+              {%- liquid
+                assign check_against_inventory = true
+                if product.selected_or_first_available_variant.inventory_management != 'shopify' or product.selected_or_first_available_variant.inventory_policy == 'continue'
+                  assign check_against_inventory = false
+                endif
+                if product.selected_or_first_available_variant.quantity_rule.min > product.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+                  assign quantity_rule_soldout = true
+                endif
+              -%}
               <button
-                id="ProductSubmitButton-{{ section.id }}"
+                id="ProductSubmitButton-{{ section.id }}{{ include_id }}"
                 type="submit"
                 name="add"
                 class="btn{{ class_btn }}{% if type == 'primary' %} btn-primary{% else %} btn-outline{% endif %} w-full relative product_submit_button product-form__submit word-wrap relative"
-                {% if product.selected_or_first_available_variant.available == false %}
+                {% if product.selected_or_first_available_variant.available == false
+                  or quantity_rule_soldout
+                  or product.selected_or_first_available_variant == null
+                %}
                   disabled
                 {% endif %}
               >
                 <span class="btn-label hidden-on-load transition-short">
-                  {%- if product.selected_or_first_available_variant.inventory_management == null -%}
-                    {{ 'products.product.add_to_cart' | t }}
+                  {%- if product.selected_or_first_available_variant == null -%}
+                    {{ 'products.product.unavailable' | t }}
+                  {%- elsif product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
+                    {{ 'products.product.sold_out' | t }}
                   {%- else -%}
-                    {%- if product.selected_or_first_available_variant.available == false -%}
-                      {{ 'products.product.sold_out' | t }}
+                    {%- if product.selected_or_first_available_variant.inventory_quantity < 1 -%}
+                      {{ 'products.product.pre_order' | t }}
                     {%- else -%}
-                      {%- if product.selected_or_first_available_variant.inventory_quantity < 1 -%}
-                        {{ 'products.product.pre_order' | t }}
-                      {%- else -%}
-                        {{ 'products.product.add_to_cart' | t }}
-                      {%- endif -%}
+                      {{ 'products.product.add_to_cart' | t }}
                     {%- endif -%}
                   {%- endif -%}
                 </span>

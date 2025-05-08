@@ -58,14 +58,12 @@
           type: 'banner',
           container: section_st.section_width,
           image: image,
+          motion: false,
           image_alt: alt
         %}
       </div>
     {%- elsif video_local != null -%}
-      <video-local
-        class="block video-section sticky top-0 left-0 w-full banner__media-hero h-full-screen"
-        `
-      >
+      <video-local class="block video-section sticky top-0 left-0 w-full banner__media-hero h-full-screen">
         {% liquid
           assign preview_image = video_local.preview_image | image_url: width: 1100
           assign source = video_local.sources
@@ -107,7 +105,7 @@
       <div
         class="banner__media-hero h-full-screen sticky top-0 left-0 placeholder"
       >
-        {%- render 'placeholder-render', type: 'lifestyle-2', class: 'img-placeholder h-full w-full' -%}
+        {%- render 'placeholder-render', motion: false, type: 'lifestyle-2', class: 'img-placeholder h-full w-full' -%}
       </div>
     {%- endif -%}
     <div class="section__media-hero-content container media__content relative w-full z-2 text-center">
@@ -141,7 +139,11 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "t:sections.all.how_to_use"
+      "content": "t:sections.media-hero.how_to_use"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.general"
     },
     {
       "type": "color_scheme",

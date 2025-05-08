@@ -1,9 +1,11 @@
 {%- liquid
   assign theme_st = settings
   assign scroll_animation = theme_st.scroll_animation
-  assign motion = true
+  if motion == false
+    assign scroll_animation = false
+  endif
 -%}
-{% if motion and scroll_animation %}
+{% if scroll_animation %}
   <motion-effect
     data-animate="zoom-out-small"
     class="block{{ class_motion }}"
@@ -63,6 +65,6 @@
     endcase
   endif
 -%}
-{% if motion and scroll_animation %}
+{% if scroll_animation %}
   </motion-effect>
 {% endif %}

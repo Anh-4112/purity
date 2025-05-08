@@ -166,29 +166,32 @@ class VariantInput extends HTMLElement {
       )?.textContent;
       if (selectedVariant) {
         const variant = JSON.parse(selectedVariant);
-        if (variant.id) {
-          const newUrl = new URL(window.location.href);
-          newUrl.searchParams.set("variant", variant.id);
-          window.history.replaceState(
-            { path: newUrl.toString() },
-            "",
-            newUrl.toString()
-          );
-          const stickyAddCart = queryDocument.querySelector("sticky-add-cart");
-          if (stickyAddCart) {
-            _this.updateStickyAddCart(stickyAddCart, queryParsed, variant);
-          }
+        const variantId = variant && variant.id ? variant.id : "";
+        const newUrl = new URL(window.location.href);
+        if (variantId) {
+          newUrl.searchParams.set("variant", variantId);
+        } else {
+          newUrl.searchParams.delete("variant");
+        }
+        window.history.replaceState(
+          { path: newUrl.toString() },
+          "",
+          newUrl.toString()
+        );
+        const stickyAddCart = queryDocument.querySelector("sticky-add-cart");
+        if (stickyAddCart) {
+          _this.updateStickyAddCart(stickyAddCart, queryParsed, variantId);
+        }
 
-          const bought_together = document.querySelector(
-            `.bought-together-products-list`
-          );
+        const bought_together = document.querySelector(
+          `.bought-together-products-list`
+        );
 
-          if (bought_together) {
-            const current_product =
-              bought_together.querySelector(`.current-product`);
-            current_product.querySelector(`input[name="items[][id]"]`).value =
-              variant.id;
-          }
+        if (bought_together && variantId) {
+          const current_product =
+            bought_together.querySelector(`.current-product`);
+          current_product.querySelector(`input[name="items[][id]"]`).value =
+            variantId;
         }
       }
     }
@@ -269,9 +272,9 @@ class VariantInput extends HTMLElement {
       });
   }
 
-  async updateStickyAddCart(stickyAddCart, queryParsed, variant) {
-    if (stickyAddCart.querySelector("select")) {
-      stickyAddCart.querySelector("select").value = variant.id;
+  async updateStickyAddCart(stickyAddCart, queryParsed, variantId = null) {
+    if (stickyAddCart.querySelector("select") && variantId) {
+      stickyAddCart.querySelector("select").value = variantId;
     }
     const newStickyAddCart = queryParsed.querySelector("sticky-add-cart");
     const currentPrice = stickyAddCart.querySelector(".product__price");

@@ -47,6 +47,9 @@
     data-thumb-direction="{% if desktop_layout == 'thumbnail_left' %}vertical{% else %}horizontal{% endif %}"
     data-auto-play-video="{% if enable_video_autoplay %}true{% else %}false{% endif %}"
   >
+    <a class="skip-to-content-link button visually-hidden quick-add-hidden" href="#ProductInfo-{{ section.id }}">
+      {{ 'accessibility.skip_to_product_info' | t }}
+    </a>
     <div class="product__media-gallery product-{{ layout }} {{ desktop_layout }}{% if desktop_layout == 'thumbnail_left' %} flex-md{% if media_position == 'right' %} flex-start{% else %} flex-end{% endif %} relative overflow-hidden{% endif %}">
       {% case layout %}
         {% when 'thumbnail' %}
@@ -93,16 +96,21 @@
             </div>
           </div>
         {% when 'stack' %}
-          <grid-gallery id="GalleryViewer-{{ section.id }}" class="grid gap-10 stacked stacked-swiper-mobile">
-            {% render 'product-media',
-              images: images,
-              product: product,
-              section_st: section_st,
-              type_section: type_section,
-              motion: true,
-              class: ' grid-item'
-            %}
-          </grid-gallery>
+          <div class="free-scroll">
+            <grid-gallery
+              id="GalleryViewer-{{ section.id }}"
+              class="grid gap-10 stacked stacked-swiper-mobile overflow-visible-mb"
+            >
+              {% render 'product-media',
+                images: images,
+                product: product,
+                section_st: section_st,
+                type_section: type_section,
+                motion: true,
+                class: ' grid-item'
+              %}
+            </grid-gallery>
+          </div>
         {% when 'quick_view' %}
           <quick-view-gallery
             id="GalleryViewer-{{ section.id }}"
