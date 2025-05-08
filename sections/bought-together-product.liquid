@@ -66,18 +66,18 @@
     <div class="{{ section_width }}">
       <div
         class="bought-together-products__wrapper flex gap wrap"
-        style="--col-width: clamp(27rem, 17vw, 42rem);--gap-desktop: 5rem;--gap: 2rem;"
+        style="--col-width: clamp(27rem, 22vw, 42rem);--gap-desktop: 5rem;--gap: 2rem;"
         data-price="{{ product.selected_or_first_available_variant.price }}"
       >
         <div class="box-total col-1025-w-custom w-full">
-          <div class="sticky-md top-30 rounded border p-30 text-{{ text_alignment }}">
+          <div class="sticky-md top-30 rounded border p-30 p-1025-50 text-{{ text_alignment }}">
             {%- if section_st.heading != blank
               or section_st.description != blank
               or section_st.subheading != blank
               or section_st.highlight_text != blank
             -%}
               <div
-                class="section-header"
+                class="section-header mb-30 mb-1025-50"
               >
                 {% if section_st.highlight_text != blank %}
                   <div
@@ -239,6 +239,7 @@
                 section_id: section.id,
                 disable_badge: true,
                 disable_hover_image: true,
+                disable_tag: true,
                 disable_show_video: true,
                 disable_quickview: true,
                 variant_swatch: true,
