@@ -39,7 +39,6 @@
           media-gallery="{{ featured_media.media_type }}"
         {% else %}
           style="--aspect-ratio: {{ ratio }}"
-          tabindex="0"
         {% endif %}
       >
         {% if thumbnail == true %}
@@ -103,7 +102,6 @@
           media-gallery="{{ featured_media.media_type }}"
         {% endif %}
         style="--aspect-ratio: {{ ratio }}"
-        tabindex="0"
       >
         {%- liquid
           assign source = featured_media.sources
@@ -177,7 +175,6 @@
           media-gallery="{{ featured_media.media_type }}"
         {% else %}
           style="--aspect-ratio: {{ ratio }}"
-          tabindex="0"
         {% endif %}
       >
         {% if thumbnail == true %}
@@ -233,8 +230,6 @@
         style="--aspect-ratio: {{ ratio }}"
         {% if thumbnail != true %}
           media-gallery="{{ featured_media.media_type }}"
-        {% else %}
-          tabindex="0"
         {% endif %}
       >
         {% render 'responsive-image',
@@ -250,7 +245,6 @@
             is="media-zoom-button"
             class="hover-action media-zoom-button btn-reset zoom-in transition absolute inset-0 pointer"
             aria-label="{{ 'products.product.zoom_button' | t }}"
-            tabindex="-1"
           >
             <span class="show-on-hover invisible absolute pointer blur transition top-15{% if settings.rtl %} left-15{% else %} right-15{% endif %}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center shadow bg-white wh-55{% if desktop_layout == 'thumbnail_left' or desktop_layout == 'thumbnail_bottom' %} invisible show-on-hover{% endif %}">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -285,7 +279,6 @@
             media-gallery="{{ image.media_type }}"
           {% else %}
             style="--aspect-ratio: {{ ratio }}"
-            tabindex="0"
           {% endif %}
         >
           {% if thumbnail == true %}
@@ -349,7 +342,6 @@
             media-gallery="{{ image.media_type }}"
           {% else %}
             style="--aspect-ratio: {{ ratio }}"
-            tabindex="0"
           {% endif %}
         >
           {%- liquid
@@ -425,7 +417,6 @@
             media-gallery="{{ image.media_type }}"
           {% else %}
             style="--aspect-ratio: {{ ratio }}"
-            tabindex="0"
           {% endif %}
         >
           {% if thumbnail == true %}
@@ -480,8 +471,6 @@
           {% if thumbnail != true %}
             data-position="{{ media_position }}"
             media-gallery="{{ image.media_type }}"
-          {% else %}
-            tabindex="0"
           {% endif %}
           style="--aspect-ratio: {{ ratio }}"
         >
@@ -498,7 +487,6 @@
               is="media-zoom-button"
               class="btn-reset media-zoom-button zoom-in transition absolute inset-0"
               aria-label="{{ 'products.product.zoom_button' | t }}"
-              tabindex="-1"
             >
               <span class="show-on-hover invisible absolute pointer blur transition top-15{% if settings.rtl %} left-15{% else %} right-15{% endif %}{% if settings.rounded_button > 0 %} rounded-50{% endif %} inline-flex content-center shadow bg-white wh-55{% if desktop_layout == 'thumbnail_left' or desktop_layout == 'thumbnail_bottom' %} invisible show-on-hover{% endif %}">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
