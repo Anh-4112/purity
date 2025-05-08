@@ -595,7 +595,7 @@
                           class="product-item product-item-promotion relative motion-item"
                         >
                           <div
-                            class="promotion_inner h-full"
+                            class="promotion_inner h-full color-{{ block_st.color_scheme }}"
                             style="--aspect-ratio:  {% if image != blank %}{{ ratio }}{%- else -%}4/3{%- endif -%}"
                           >
                             {%- liquid
@@ -630,7 +630,7 @@
                             </a>
                             {%- if subheading != blank or heading != blank or button_label != blank -%}
                               <div
-                                class="promotion-information h-full z-1 justify-center text-center relative p-15 p-1025-30 flex column flex-end gap-20 gap-1025-30 absolute inset-0 z-1"
+                                class="promotion-information h-full z-1 justify-center text-center relative p-10 p-1025-30 flex column flex-end gap-20 gap-1025-30 absolute inset-0 z-1"
                                 style="--btn-padding-x: 1.5rem;"
                               >
                                 {%- if subheading != blank or heading != blank or button_label != blank -%}
@@ -697,7 +697,7 @@
                       -}}
                     </p>
                     <div
-                      class="load-more-progress-bar relative mx-auto h-custom rounded max-w-custom bg-custom"
+                      class="load-more-progress-bar relative mx-auto h-custom rounded max-w-custom-all bg-custom"
                       style="--percent: {{ amount_products | divided_by: collection_products_count | times: 100 }}%; --amount: {{ amount_products }}; --count: {{ amount_products }};--height: 3px;--img-rounded: 5px;--max-width: 32rem;--bg-color-custom: #e5e5e5;"
                     ></div>
                   </div>

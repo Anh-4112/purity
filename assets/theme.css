@@ -751,6 +751,9 @@ blockquote {
   }
 }
 @media (min-width: 768px) {
+  .inline-flex-md {
+    display: inline-flex;
+  }
   .fixed-md {
     position: fixed;
   }
@@ -1221,6 +1224,7 @@ blockquote {
   }
   .btn__quick-shop.absolute {
     --btn-padding-y: 1.5rem;
+    --btn-padding-x: 1rem;
     transform: translateY(50%);
     transition: var(--transition);
   }
@@ -1719,9 +1723,12 @@ quickview-drawer .media-zoom-button span {
   display: none;
 }
 @media (min-width: 768px) {
+  .quickview_inner .draggable-modal {
+    display: none;
+  }
   .modal-inner.quickview_inner {
     --slide-out: 100%;
-    width: 44rem;
+    width: clamp(34rem, 40vw, 44rem);
     transform: translateX(var(--slide-out, -100%)) translateY(0);
     -webkit-transform: translateX(var(--slide-out, -100%)) translateY(0);
     will-change: transform;
@@ -1730,6 +1737,7 @@ quickview-drawer .media-zoom-button span {
     max-height: 100vh;
     border-radius: 0;
     clip-path: unset;
+    overflow: visible;
   }
   quickview-drawer .draggable-modal {
     display: none;
