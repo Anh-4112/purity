@@ -1,4 +1,6 @@
 import * as NextSkyTheme from "global";
+import { LazyLoader } from "module-lazyLoad";
+import { SlideSection } from "module-slide";
 class ShopableImage extends HTMLElement {
   constructor() {
     super();
@@ -168,6 +170,7 @@ class ShopableImage extends HTMLElement {
               }
             }
             this.openedByKeyboard = false;
+            new LazyLoader(".image-lazy-load");
           },
         }
       );
@@ -266,3 +269,67 @@ class ShopableImage extends HTMLElement {
 }
 
 customElements.define("shopable-image", ShopableImage);
+
+class ShopableImageSlide extends SlideSection {
+  constructor() {
+    super();
+    this.slideActive = false;
+  }
+
+  init() {
+    super.init();
+    this.setupSwiperClickHandler();
+  }
+
+  setupSwiperClickHandler() {
+    if (!this.swiper) {
+      return;
+    }
+    this.swiper.on('slideChange', () => {
+      this.closeAllTooltips();
+    });
+    this.swiper.el.addEventListener('click', (event) => {
+      if (!event.target.closest('.swiper-button-next') && 
+          !event.target.closest('.swiper-button-prev') &&
+          !event.target.closest('.swiper-pagination')) {
+        if (!event.target.closest('shopable-image') && 
+            !event.target.closest('.icon-dot')) {
+          this.closeAllTooltips();
+        }
+      }
+    });
+  }
+
+  closeAllTooltips() {
+    const allActiveImages = document.querySelectorAll("shopable-image.active");
+    allActiveImages.forEach((item) => {
+      item.classList.remove("active");
+      const itemDot = item.querySelector(".icon-dot");
+      if (itemDot) itemDot.classList.remove("active");
+      if (typeof item.isActive !== "undefined") item.isActive = false;
+      if (typeof item.isAnimating !== "undefined") item.isAnimating = false;
+    });
+
+    const tooltip = document.querySelector(".product-tooltip");
+    if (tooltip) {
+      Motion.animate(
+        tooltip,
+        {
+          opacity: 0,
+          y: 20,
+        },
+        {
+          duration: 0.3,
+          easing: "ease-in",
+          onComplete: () => {
+            if (tooltip.parentNode) {
+              tooltip.parentNode.removeChild(tooltip);
+            }
+          },
+        }
+      );
+    }
+  }
+}
+
+customElements.define("shopable-image-slide", ShopableImageSlide);
