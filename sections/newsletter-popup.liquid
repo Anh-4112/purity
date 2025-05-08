@@ -1,3 +1,4 @@
+<script type="module" src="{{ 'section-newsletter-popup.js' | asset_url }}" defer="defer"></script>
 {% liquid
   assign section_st = section.settings
   assign enable_on_homepage = section_st.enable_on_homepage
@@ -10,8 +11,10 @@
   else
     assign show_page = 'show-all-page'
   endif
+  assign design_mode = false
   if request.design_mode
     assign show_page = ''
+    assign design_mode = true
   endif
   assign heading = section_st.newsletter_heading
   assign short_desc = section_st.newsletter_sub_title
@@ -86,6 +89,9 @@
                       {%- if heading != blank -%}
                         <div
                           class="section-heading h3"
+                          {% if design_mode %}
+                            data-live-text-setting="section.{{ section.id }}.newsletter_heading"
+                          {% endif %}
                         >
                           {{ heading }}
                         </div>
@@ -93,6 +99,9 @@
                       {%- if short_desc != blank -%}
                         <div
                           class="section-description mt-10 prose"
+                          {% if design_mode %}
+                            data-live-text-setting="section.{{ section.id }}.newsletter_sub_title"
+                          {% endif %}
                         >
                           {{ short_desc }}
                         </div>
@@ -129,7 +138,12 @@
                           class="btn btn-primary newsletter__button w-full"
                           aria-label="{%- if button_label != blank -%}{{ button_label }} {%- else -%} {{ 'subscribe.button_label' | t }} {% endif %}"
                         >
-                          <span class="hidden-on-load">
+                          <span 
+                            class="hidden-on-load" 
+                            {% if design_mode %}
+                              data-live-text-setting="section.{{ section.id }}.newsletter_button_label"
+                            {% endif %}
+                          >
                             {%- if button_label != blank -%}
                               {{ button_label }}
                             {%- else -%}
@@ -165,6 +179,10 @@
   "tag": "section",
   "class": "overlay-section overlay-newsletter",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.newsletter_popup.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.newsletter_popup.header.heading"
