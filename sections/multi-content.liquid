@@ -45,7 +45,7 @@
   --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
 {% style %}
-  .isEqualOne .col-md-w-custom-50 {
+  .is-equal-one .col-md-w-custom-50 {
     --col-width: 100%!important;
   }
 {% endstyle %}
@@ -111,7 +111,7 @@
       </div>
     {%- endif -%}
     <div
-      class="promotion-banner__blocks relative{% if section.blocks.size == 1 %} isEqualOne{% endif %}"
+      class="promotion-banner__blocks relative{% if section.blocks.size == 1 %} is-equal-one{% endif %}"
     >
       <carousel-mobile
         class="promotion-banner__blocks row-gap gap-{{ section_st.column_gap }}{% if section_st.enable_carousel_mobile %} grid-cols grid promotion-banner__carousel{% else %} flex column flex-md-row wrap cols{% endif %}"
