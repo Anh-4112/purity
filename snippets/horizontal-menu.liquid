@@ -15,7 +15,9 @@
                 <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
                   <use href="#icon-back" />
                 </svg>
-                <span class="fs-18 menu_weight">{{- link.title -}}</span>
+                <span class="fs-18 menu_weight{% if menu_mobile != blank %} text-start{% endif %}">
+                  {{- link.title -}}
+                </span>
               </button>
             </div>
             <button
@@ -41,7 +43,7 @@
             <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
               <use href="#icon-back" />
             </svg>
-            <span class="fs-18 menu_weight">{{- link.title -}}</span>
+            <span class="fs-18 menu_weight{% if menu_mobile != blank %} text-start{% endif %}">{{- link.title -}}</span>
           </button>
         </div>
         <button
@@ -57,7 +59,7 @@
       </div>
     {%- endif -%}
   {%- endif -%}
-  <ul class="menu list-unstyled{% if type == 'classic' %} flex column gap-15{% endif %}{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% endif %}{% if type != 'classic' and menu_mobile != blank %} px-gutter-x pb-10{% else %} p-gutter-x{% endif %}">
+  <ul class="menu list-unstyled{% if type == 'classic' and menu_mobile == blank %} flex column gap-15{% endif %}{% if type != 'classic' and menu_mobile == blank %} sub-menu-mega flex wrap flex-cols gap row-gap-30{% endif %}{% if type != 'classic' and menu_mobile != blank %} px-gutter-x pb-10 pt-12{% endif %}{% if menu_mobile != blank %} px-gutter-x pt-12{% endif %}">
     {% for child_link in link.links %}
       <li class="menu-link{% if child_link.links.size > 0 %} have-child{% if menu_mega == blank %} relative{% endif %}{% endif %}{% if menu_mega == blank and menu_mobile == blank %} px-30{% endif %}{% if menu_mobile != blank %} overflow-hidden{% endif %}">
         {%- if child_link.links.size > 0 -%}
@@ -112,7 +114,7 @@
           </ul>
         {%- else -%}
           <a
-            class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %}{% if menu_mobile != blank %} fs-18 heading-style{% endif %} outlined-border relative{% if menu_mega != blank %} heading-style h6{% endif %}"
+            class="menu__item level-2{% if type != 'classic' %} fs-18 heading-style{% endif %}{% if menu_mobile != blank %} fs-18 heading-style py-10 block{% endif %} outlined-border relative{% if menu_mega != blank %} heading-style h6{% endif %}"
             aria-label="{{ child_link.title }}"
             href="{{ child_link.url }}"
           >
@@ -137,7 +139,7 @@
           <svg class="icon-back min-w-custom" width="8" height="14" viewBox="0 0 8 14" fill="none">
             <use href="#icon-back" />
           </svg>
-          <span class="fs-18 menu_weight">{{- link.title -}}</span>
+          <span class="fs-18 menu_weight{% if menu_mobile != blank %} text-start{% endif %}">{{- link.title -}}</span>
         </button>
       </div>
       <button

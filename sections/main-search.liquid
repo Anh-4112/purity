@@ -275,7 +275,7 @@
                       <div class="facet-filters__select">
                         {%- for option in search.sort_options -%}
                           <filter-sort
-                            class="block transition text-color py-4"
+                            class="block transition text-color py-4 pointer"
                             value="{{ option.value | escape }}"
                             {% if option.value == sort_by %}
                               selected="selected"
@@ -461,7 +461,7 @@
                       -}}
                     </p>
                     <div
-                      class="load-more-progress-bar relative mx-auto h-custom rounded max-w-custom bg-custom"
+                      class="load-more-progress-bar relative mx-auto h-custom rounded max-w-custom-all bg-custom"
                       style="--percent: {{ amount_products | divided_by: collection_products_count | times: 100 }}%; --amount: {{ amount_products }}; --count: {{ amount_products }};--height: 3px;--img-rounded: 5px;--max-width: 32rem;--bg-color-custom: #e5e5e5;"
                     ></div>
                   </div>
@@ -486,7 +486,7 @@
             {%- elsif search.results.size == 0 and search.filters != empty -%}
               <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
                 <div class="title-wrapper text-center">
-                  <h2 class="title title--primary">
+                  <h2 class="title title--primary mt-50">
                     {{ 'sections.collection_template.no_products_found' | t -}}
                     <br>
                     {{

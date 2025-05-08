@@ -1690,6 +1690,7 @@ class CarouselMobile extends HTMLElement {
     const wrapper = `<div class='swiper-wrapper custom-padding-carousel-mobile'>${html}</div><div class="swiper-pagination" style="--swiper-pagination-bottom: 0"></div>`;
     this.innerHTML = wrapper;
     initSlide(this);
+    new LazyLoader(".image-lazy-load");
   }
 
   actionOutMobile() {
@@ -1709,6 +1710,7 @@ class CarouselMobile extends HTMLElement {
       this.classList.add("grid", "grid-cols");
       this.classList.remove("flex", "column", "flex-md-row", "wrap", "cols");
     }
+    new LazyLoader(".image-lazy-load");
   }
 }
 customElements.define("carousel-mobile", CarouselMobile);
