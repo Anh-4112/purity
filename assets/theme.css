@@ -1466,6 +1466,9 @@ blockquote {
   [open] ~ .sub-children-menu {
     margin-bottom: 2rem;
   }
+  .sub-children-menu > li:first-child {
+    margin-top: 8px;
+  }
   .menu__item:is(.level-1, .level-2),
   .level-1 > .menu__item {
     font-size: calc(var(--body-font-size) + 2px);
@@ -1515,6 +1518,9 @@ blockquote {
   gap: 1rem;
   font-weight: var(--subheading_weight, 500);
   line-height: normal;
+}
+:is(.success, .warning, .error) :is([hidden], .hidden) {
+  display: none;
 }
 .success,
 .message-success {
