@@ -45,8 +45,10 @@
   --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
 {% style %}
-  .is-equal-one .col-md-w-custom-50 {
-    --col-width: 100%!important;
+  @media (max-width: 1024.99px) {
+    .is-equal-one .col-md-w-custom-50 {
+      --col-width: 100% !important;
+    }
   }
 {% endstyle %}
 <div
