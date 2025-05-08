@@ -181,9 +181,9 @@
                 {% liquid
                   if filter.max_value.value
                     if uses_comma_decimals
-                      assign max_price = filter.range_max | money_without_currency | replace: ',', '.'
+                      assign max_price = filter.max_value.value | money_without_currency | replace: ',', '.'
                     else
-                      assign max_price = filter.range_max | money_without_currency | replace: ',', ''
+                      assign max_price = filter.max_value.value | money_without_currency | replace: ',', ''
                     endif
                   else
                     assign max_price = filter.range_max | money_without_currency | replace: ',', ''
@@ -255,9 +255,9 @@
                       type="number"
                       min="0"
                       {% if uses_comma_decimals %}
-                        max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                        max="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
                       {% else %}
-                        max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                        max="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
                       {% endif %}
                     >
                     <label
@@ -306,7 +306,7 @@
                   <input
                     id="Filter-range-{{ filter.label | escape }}-{{ filter_layout }}-LTE"
                     type="range"
-                    value="{{ range_from }}"
+                    value="{{ max_price }}"
                     min="0"
                     class="range-slider range-slider-max"
                     tabindex="-1"

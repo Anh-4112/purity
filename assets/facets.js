@@ -214,13 +214,7 @@ class FacetFiltersForm extends HTMLElement {
     const formData = new FormData(form);
     const filteredFormData = new FormData();
     for (let [key, value] of formData.entries()) {
-      if (key === "filter.v.price.gte" || key === "filter.v.price.lte") {
-        if (value !== "") {
-          filteredFormData.append(key, value);
-        }
-      } else {
-        filteredFormData.append(key, value);
-      }
+      filteredFormData.append(key, value);
     }
     return new URLSearchParams(filteredFormData).toString();
   }
@@ -336,7 +330,6 @@ class PriceRangeDrag extends HTMLElement {
     var rangeInput2 = inputRange[1];
     var minInput = inputNum[0];
     var maxInput = inputNum[1];
-
     rangeInput.addEventListener("input", function () {
       minInput.value = rangeInput.value;
       if (parseInt(minInput.value) > parseInt(maxInput.value)) {
@@ -351,6 +344,10 @@ class PriceRangeDrag extends HTMLElement {
         parseInt(rangeInput2.max) == rangeInput2.value
           ? Number(rangeInput2.max).toFixed(2)
           : rangeInput2.value;
+      minInput.value =
+        parseInt(rangeInput.max) == rangeInput.value
+          ? Number(rangeInput.max).toFixed(2)
+          : rangeInput.value;
       if (parseInt(maxInput.value) < parseInt(minInput.value)) {
         minInput.value = Number(maxInput.value);
         rangeInput.value = Number(maxInput.value);
@@ -408,7 +405,6 @@ class PriceRange extends PriceRangeDrag {
     var rangeInput2 = inputRange[1];
     var minInput = inputNum[0];
     var maxInput = inputNum[1];
-
     minInput.addEventListener("input", function () {
       if (minInput.value < Number(minInput.min) || minInput.value == "") {
         minInput.value = maxInput.min;
