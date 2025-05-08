@@ -335,11 +335,6 @@ class BundleCartRemoveButton extends HTMLElement {
   }
 
   connectedCallback() {
-    this.setAttribute("role", "button");
-    if (!this.hasAttribute("tabindex")) {
-      this.setAttribute("tabindex", "0");
-    }
-
     this.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
