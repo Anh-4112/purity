@@ -32,6 +32,9 @@
   if all_product <= products_to_show
     assign products_to_show = all_product
   endif
+  if all_product == 0 and collection.filters.size == 0
+    assign enable_filtering = false
+  endif
   assign sort_by = collection.sort_by | default: collection.default_sort_by
   if collection.url
     assign results_url = collection.url
@@ -365,7 +368,7 @@
             {% endif %}
           </div>
           <div class="facets-filters-active">
-            {% if current_tags.size > 0 or total_active_values > 0 %}
+            {% if total_active_values > 0 %}
               <div class="filters-count active-facets flex wrap gap-10 mb-30 fs-small">
                 {%- for filter in collection.filters -%}
                   {%- for value in filter.active_values -%}
