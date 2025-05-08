@@ -45,7 +45,6 @@ class SectionSelected extends HTMLElement {
 
     this.titleItems.forEach((item, index) => {
       item.setAttribute("tabindex", "0");
-      item.setAttribute("role", "option");
       item.setAttribute("id", `title-item-${index}`);
 
       item.addEventListener("click", () => this.selectTitle(item));
@@ -73,7 +72,6 @@ class SectionSelected extends HTMLElement {
 
     this.collectionItems.forEach((item, index) => {
       item.setAttribute("tabindex", "0");
-      item.setAttribute("role", "option");
       item.setAttribute("id", `collection-item-${index}`);
 
       item.addEventListener("click", () => this.selectCollection(item));
@@ -108,7 +106,12 @@ class SectionSelected extends HTMLElement {
     });
 
     document.addEventListener("click", (event) => {
-      if (!this.contains(event.target)) {
+      if (!event.target.closest("select-options")) {
+        this.closeAllDropdowns();
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
         this.closeAllDropdowns();
       }
     });
@@ -117,12 +120,10 @@ class SectionSelected extends HTMLElement {
   setupAccessibility() {
     if (this.titleSelect) {
       this.titleSelectText.setAttribute("tabindex", "0");
-      this.titleList?.setAttribute("tabindex", "-1");
     }
 
     if (this.collectionSelect) {
       this.collectionSelectText.setAttribute("tabindex", "0");
-      this.collectionList?.setAttribute("tabindex", "-1");
     }
   }
 
@@ -188,6 +189,7 @@ class SectionSelected extends HTMLElement {
     const url = item.getAttribute("data-url");
 
     this.collectionSelectText.textContent = title;
+    this.collectionSelectText.appendChild(this.createSvgIcon());
     this.collectionSelectText.setAttribute("data-url", url);
 
     if (this.firstButton && url) {
