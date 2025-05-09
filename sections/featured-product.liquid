@@ -122,24 +122,6 @@
       </div>
     </div>
   </div>
-  {%- unless product.has_only_default_variant -%}
-    <script type="application/json" class="productVariantsQty">
-      [
-      {%- for variant in product.variants -%}
-        {%- assign op = variant.option1 | replace: '"', '\"' -%}
-        {%- liquid
-            assign id = '"id":' | append: variant.id
-            assign option = '"option":"' | append: op | append: '"'
-            assign quantity = '"qty":' | append: variant.inventory_quantity
-            assign available = '"available":' | append: variant.available
-            assign mamagement = '"mamagement":"' | append: variant.inventory_management | append: '"'
-        -%}
-        { {{ id }},{{ option }},{{ quantity }},{{ available }},{{ mamagement }}}
-        {%- unless forloop.last -%},{%- endunless forloop.last -%}
-      {%- endfor -%}
-      ]
-    </script>
-  {%- endunless -%}
   {%- if first_3d_model -%}
     <script type="application/json" id="ProductJSON-{{ product.id }}">
       {{ product.media | where: 'media_type', 'model' | json }}

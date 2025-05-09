@@ -15,6 +15,10 @@
         assign ratio = '3/4'
     endcase
   endif
+  assign fetchpriority = 'auto'
+  if type_section == 'featured' or type_section == 'quick_view'
+    assign fetchpriority = 'auto'
+  endif
 %}
 {% if product.selected_or_first_available_variant.featured_media != null %}
   {%- assign featured_media = product.selected_or_first_available_variant.featured_media -%}
@@ -26,7 +30,11 @@
       endif
     endif
     assign image_alt = featured_media.alt | default: 'product' | escape
+    if media_position == 1
+      assign fetchpriority = 'high'
+    endif
   %}
+  {{ fetchpriority }}
   {%- case featured_media.media_type -%}
     {%- when 'external_video' -%}
       {% liquid
@@ -237,6 +245,7 @@
           image: featured_media,
           image_alt: image_alt,
           motion: motion,
+          fetchpriority: fetchpriority,
           class: 'rounded-10'
         %}
         {% if thumbnail != true and enable_image_zoom %}
@@ -264,9 +273,15 @@
       endif
     endif
     assign image_alt = image.alt | default: 'product' | escape
+    assign fetchpriority = 'auto'
   %}
   {%- unless image.id == product.selected_or_first_available_variant.featured_media.id -%}
-    {% assign media_position = media_position | default: 0 | plus: 1 %}
+    {% liquid
+      assign media_position = media_position | default: 0 | plus: 1
+      if media_position == 1
+        assign fetchpriority = 'high'
+      endif
+    %}
     {%- case image.media_type -%}
       {%- when 'external_video' -%}
         {% liquid
@@ -479,6 +494,7 @@
             image: image,
             image_alt: image_alt,
             motion: motion,
+            fetchpriority: fetchpriority,
             class: 'rounded-10'
           %}
           {% if thumbnail != true and enable_image_zoom %}
