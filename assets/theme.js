@@ -1173,6 +1173,30 @@ class VideoProduct extends VideoLocal {
 }
 customElements.define("video-product", VideoProduct);
 
+class VideoLocalScroll extends VideoLocal {
+  constructor() {
+    super();
+    this.init();
+    this.isScrollInitialized = false;
+  }
+
+  init() {
+    if (!this.isScrollInitialized) {
+      this.isScrollInitialized = true;
+      window.addEventListener('scroll', this.checkScroll.bind(this), { passive: true });
+    }
+  }
+  
+  checkScroll() {
+    if (window.scrollY > 10) {
+      this.loadContentVideo(this);
+      window.removeEventListener('scroll', this.checkScroll);
+    }
+  }
+}
+
+customElements.define("video-local-scroll", VideoLocalScroll);
+
 class VideoProductGallery extends VideoLocal {
   constructor() {
     super();

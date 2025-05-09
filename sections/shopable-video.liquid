@@ -360,7 +360,7 @@
             endif
           %}
           {% if poster_image != blank or local_video != blank %}
-            <video-local
+            <video-local-scroll
               class="video-item--ratio rounded block"
               style="--aspect-ratio: {{ video_ratio }};"
             >
@@ -414,7 +414,7 @@
                   {% render 'placeholder-render', type: 'collection' %}
                 {% endif %}
               {% endif %}
-            </video-local>
+            </video-local-scroll>
           {% else %}
             <div
               class="video-item--ratio"
