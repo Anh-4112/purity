@@ -458,6 +458,13 @@ class ButtonCloseModel extends HTMLButtonElement {
   }
   onClick(e) {
     NextSkyTheme.eventModal(this, "close");
+    const details = this.closest(".details-header-menu");
+    if (details) {
+      details.classList.remove("detail-open"),
+        this.removeAttribute("open"),
+        this.firstElementChild.removeAttribute("open"),
+        this.lastElementChild.removeAttribute("open");
+    }
   }
 }
 customElements.define("button-close-model", ButtonCloseModel, {
@@ -821,10 +828,11 @@ class MobileCollapsibleRowDetails extends CollapsibleRowDetails {
   constructor() {
     super();
     this.updateOpenState();
-    window.addEventListener("resize", this.updateOpenState.bind(this));
+    window.addEventListener("resize", this.updateOpenState.bind(this)); // Lắng nghe sự kiện resize
   }
 
   updateOpenState() {
+    // Kiểm tra nếu đang ở chế độ mobile (width <= 768px) hoặc qua matchMedia
     if (this.isMobileDevice()) {
       this.open = false;
       this.removeAttribute("open");
@@ -835,7 +843,7 @@ class MobileCollapsibleRowDetails extends CollapsibleRowDetails {
   }
 
   isMobileDevice() {
-    return window.matchMedia("(max-width: 768px)").matches;
+    return window.matchMedia("(max-width: 768px)").matches || window.innerWidth <= 768;
   }
 }
 
@@ -849,6 +857,7 @@ CustomElement.observeAndPatchCustomElements({
     classElement: MobileCollapsibleRowDetails,
   },
 });
+
 
 class RecentlyViewedProducts extends HTMLElement {
   constructor() {
