@@ -236,7 +236,7 @@
                                                 role="link" aria-disabled="true"
                                               {% endif %}
                                               arial-label="{{ image_alt }}"
-                                              class="banner__inner hover-effect{% if last_block.settings.content_position != 'bellow' %} flex relative align-{{ last_block.settings.content_position }}{% endif %}"
+                                              class="banner__inner hover-effect focus-inset-inside{% if last_block.settings.content_position != 'bellow' %} flex relative align-{{ last_block.settings.content_position }}{% endif %}"
                                               {% if last_block.settings.content_position != 'bellow' %}
                                                 style="--aspect-ratio: {{ image.aspect_ratio }};"
                                               {% endif %}
@@ -311,7 +311,6 @@
                                         data-desktop="{{ product_column }}"
                                         data-tablet="{{ product_column }}"
                                       >
-                                        {%- render 'swiper-navigation', show_on_hover: true -%}
                                         <div class="swiper-wrapper">
                                           {%- liquid
                                             for product in last_block.settings.product_list
@@ -319,6 +318,7 @@
                                             endfor
                                           -%}
                                         </div>
+                                        <div class="swiper-pagination"></div>
                                       </slide-section>
                                     </div>
                                   {%- when 'menu_collection' -%}
@@ -359,6 +359,7 @@
                                             </div>
                                           {% endfor %}
                                         </div>
+                                        <div class="swiper-pagination"></div>
                                       </slide-section>
                                     </div>
                                 {%- endcase -%}
