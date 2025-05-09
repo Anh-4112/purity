@@ -6,6 +6,36 @@
   visibility: visible;
   pointer-events: auto;
 }
+.section__slideshow .swiper-pagination-bullet {
+  --swiper-pagination-color: rgba(0, 0, 0, 0.3);
+  transition: all 0.3s;
+}
+.section__slideshow .swiper-pagination-bullet:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  width: 0;
+  background: var(--color-dark, #000);
+  border-radius: 10px;
+  transition: all 0.3s;
+}
+.section__slideshow .swiper-pagination-bullet-active:after {
+  opacity: 1;
+  transition: opacity 0.3s;
+  animation: process_loading var(--auto-speed, 0.3s) infinite ease;
+  -webkit-animation: process_loading var(--auto-speed, 0.3s) infinite ease;
+}
+@keyframes process_loading {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
 @media screen and (max-width: 767.98px) {
   .swiper-pagination.swiper-pagination-bellow {
     position: var(--swiper-pagination-position, absolute);
