@@ -25,7 +25,7 @@ export class LazyLoadEventHover {
     );
   }
   _preloadAllScriptsJs() {
-    // this.initLazyLoadImage();
+    this.initLazyLoadImage();
   }
 
   initLazyLoadImage() {
@@ -131,8 +131,8 @@ export class LazyLoader {
   }
 
   init() {
-    // this.createObserver();
-    // this.observeImages();
+    this.createObserver();
+    this.observeImages();
     // this.addScrollListener();
   }
 
