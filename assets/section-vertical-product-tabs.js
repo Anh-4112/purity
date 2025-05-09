@@ -365,6 +365,7 @@ class SuitableFinder extends ProductTabs {
     this._sizeDot = this.dataset.sizeDot;
     this._isMobile = "ontouchstart" in window || navigator.maxTouchPoints > 0;
     this._isDragging = false;
+    this._isManuallyDragging = false;
 
     this.handleDotMouseDown = this.handleDotMouseDown.bind(this);
     this.handleDotMouseMove = this.handleDotMouseMove.bind(this);
@@ -494,8 +495,9 @@ class SuitableFinder extends ProductTabs {
   handleDotMouseDown(event) {
     event.preventDefault();
     this._isDragging = true;
+    this._isManuallyDragging = true; 
     this._dot.style.cursor = "grabbing";
-
+    this._dot.style.transition = "none";
     document.addEventListener("mousemove", this.handleDotMouseMove);
     document.addEventListener("mouseup", this.handleDotMouseUp);
 
@@ -509,7 +511,7 @@ class SuitableFinder extends ProductTabs {
 
   handleDotMouseMove(event) {
     if (!this._isDragging) return;
-
+    console.log('event :>> ', event);
     if (this._animationFrameId) {
       cancelAnimationFrame(this._animationFrameId);
     }
@@ -526,6 +528,11 @@ class SuitableFinder extends ProductTabs {
         Math.min(rangeSliderRect.width - dotWidth, newPosition)
       );
 
+      this._rangeSlider.style.setProperty(
+        "--progress-width",
+        `${newPosition}px`
+      );
+
       const dotCenter = newPosition + dotWidth / 2;
       this.activateTabWhileDragging(dotCenter);
     });
@@ -536,7 +543,6 @@ class SuitableFinder extends ProductTabs {
 
     let closestTab = null;
     let minDistance = Infinity;
-    let activationThreshold = 30;
 
     this._tabPositions.forEach((item) => {
       const distance = Math.abs(item.position - position);
@@ -560,7 +566,7 @@ class SuitableFinder extends ProductTabs {
     }
   }
 
-  handleDotMouseUp(event) {
+  handleDotMouseUp() {
     if (!this._isDragging) return;
 
     this._isDragging = false;
@@ -568,6 +574,10 @@ class SuitableFinder extends ProductTabs {
 
     document.removeEventListener("mousemove", this.handleDotMouseMove);
     document.removeEventListener("mouseup", this.handleDotMouseUp);
+
+    setTimeout(() => {
+      this._isManuallyDragging = false;
+    }, 50);
 
     const activeTab = this.querySelector(".product-tabs__header-item.active");
     if (activeTab) {
@@ -580,7 +590,8 @@ class SuitableFinder extends ProductTabs {
 
     event.preventDefault();
     this._isDragging = true;
-
+    this._isManuallyDragging = true;
+    this._dot.style.transition = "none";
     document.addEventListener("touchmove", this.handleDotTouchMove, {
       passive: false,
     });
@@ -616,6 +627,11 @@ class SuitableFinder extends ProductTabs {
         Math.min(rangeSliderRect.width - dotWidth, newPosition)
       );
 
+      this._rangeSlider.style.setProperty(
+        "--progress-width",
+        `${newPosition}px`
+      );
+
       const dotCenter = newPosition + dotWidth / 2;
       this.activateTabWhileDragging(dotCenter);
     });
@@ -628,6 +644,10 @@ class SuitableFinder extends ProductTabs {
 
     document.removeEventListener("touchmove", this.handleDotTouchMove);
     document.removeEventListener("touchend", this.handleDotTouchEnd);
+    
+    setTimeout(() => {
+      this._isManuallyDragging = false;
+    }, 50);
 
     const activeTab = this.querySelector(".product-tabs__header-item.active");
     if (activeTab) {
@@ -677,6 +697,7 @@ class SuitableFinder extends ProductTabs {
   }
 
   updateDotPosition(activeTab, animate = true) {
+    if (this._isManuallyDragging) return;
     if (!this._dot || !activeTab || !this._rangeSlider) return;
 
     let targetTab = activeTab;
@@ -695,7 +716,7 @@ class SuitableFinder extends ProductTabs {
     const tabCenter = tabRect.left + tabRect.width / 2;
     const relativeCenterX = tabCenter - rangeSliderRect.left;
     const adjustedPosition = relativeCenterX - dotWidth / 2;
-
+    this,this._dot.style.transition = "all 0.3s ease"
     this._rangeSlider.style.setProperty(
       "--progress-width",
       `${adjustedPosition}px`
@@ -711,7 +732,7 @@ class SuitableFinder extends ProductTabs {
   updateTabDisplay(blockId, animate = true) {
     super.updateTabDisplay(blockId, animate);
 
-    if (this._rangeSlider) {
+    if (this._rangeSlider && !this._isManuallyDragging) {
       const activeTab = this.querySelector(".product-tabs__header-item.active");
       if (activeTab) {
         this.updateDotPosition(activeTab, this._isInitialized && animate);
