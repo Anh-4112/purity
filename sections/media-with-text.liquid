@@ -104,16 +104,29 @@
                 endfor
                 assign video_poster = video.preview_image | image_url: width: 1100
               -%}
-              <video-local>
-                <video
-                  loop
-                  data-src="{{ source_url }}"
-                  poster="{{ video_poster }}"
-                  playsinline
-                  autoplay
-                  muted
-                ></video>
-              </video-local>
+              <video-local-scroll>
+                <div class="video-thumbnail">
+                  {% render 'responsive-image',
+                    type: 'banner',
+                    container: section_st.section_width,
+                    image: video_poster,
+                    image_alt: image_alt,
+                    padding: column_gap_slide,
+                    column: section.blocks.size,
+                    motion: true
+                  %}
+                </div>
+                <template>
+                  <video
+                    loop
+                    src="{{ source_url }}"
+                    poster="{{ video_poster }}"
+                    playsinline
+                    autoplay
+                    muted
+                  ></video>
+                </template>
+              </video-local-scroll>
             {%- elsif media != blank -%}
               {% render 'responsive-image',
                 type: 'banner',
