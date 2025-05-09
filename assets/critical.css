@@ -157,7 +157,10 @@ summary::-webkit-details-marker {
     hr,
     figure,
     p,
-    pre
+    pre,
+    table,
+    image,
+    video
   ) {
   margin-bottom: 1em;
 }
@@ -172,9 +175,15 @@ summary::-webkit-details-marker {
     .heading-color,
     .hover-heading-color:hover,
     [aria-current="true"],
-    strong
+    strong,
+    blockquote
   ) {
   color: inherit;
+}
+.rte blockquote {
+  background: #f5f5f5;
+  padding: 3rem 2em;
+  border-radius: var(--img-rounded);
 }
 :is(.rte, announcement-bar, .tax-note, .product__tax, .prose) a {
   text-decoration: underline;
