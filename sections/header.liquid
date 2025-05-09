@@ -58,7 +58,7 @@
       left: 0;
       width: 100%;
       top: 100%;
-      height: calc(100% + 30px);
+      height: 32px;
       background: inherit;
       z-index: -2;
     }
@@ -236,7 +236,7 @@
                                                 role="link" aria-disabled="true"
                                               {% endif %}
                                               arial-label="{{ image_alt }}"
-                                              class="banner__inner hover-effect{% if last_block.settings.content_position != 'bellow' %} flex relative align-{{ last_block.settings.content_position }}{% endif %}"
+                                              class="banner__inner hover-effect focus-inset-inside{% if last_block.settings.content_position != 'bellow' %} flex relative align-{{ last_block.settings.content_position }}{% endif %}"
                                               {% if last_block.settings.content_position != 'bellow' %}
                                                 style="--aspect-ratio: {{ image.aspect_ratio }};"
                                               {% endif %}
@@ -311,7 +311,6 @@
                                         data-desktop="{{ product_column }}"
                                         data-tablet="{{ product_column }}"
                                       >
-                                        {%- render 'swiper-navigation', show_on_hover: true -%}
                                         <div class="swiper-wrapper">
                                           {%- liquid
                                             for product in last_block.settings.product_list
@@ -319,6 +318,7 @@
                                             endfor
                                           -%}
                                         </div>
+                                        <div class="swiper-pagination"></div>
                                       </slide-section>
                                     </div>
                                   {%- when 'menu_collection' -%}
@@ -344,7 +344,6 @@
                                         data-desktop="{{ collection_column }}"
                                         data-tablet="{{ collection_column }}"
                                       >
-                                        {%- render 'swiper-navigation', show_on_hover: true -%}
                                         <div class="swiper-wrapper">
                                           {% for collection in last_block.settings.collection %}
                                             <div class="collection-item swiper-slide">
@@ -359,6 +358,7 @@
                                             </div>
                                           {% endfor %}
                                         </div>
+                                        <div class="swiper-pagination"></div>
                                       </slide-section>
                                     </div>
                                 {%- endcase -%}
