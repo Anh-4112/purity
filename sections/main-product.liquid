@@ -1,5 +1,3 @@
-{{ 'main-product.css' | asset_url | stylesheet_tag }}
-{{ 'judgeme-review.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign theme_st = settings
   assign section_st = section.settings
@@ -24,7 +22,7 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--col-width: {{ desktop_media_width }}%;
 {%- endcapture -%}
-<script type="module" src="{{ 'main-product.js' | asset_url }}"></script>
+
 <section
   id="Product-{{ section.id }}"
   class="section sec__main-product media-width-{{ desktop_media_width }}"
@@ -171,6 +169,9 @@
     </sticky-add-cart>
   {% endif %}
 </section>
+{{ 'main-product.css' | asset_url | stylesheet_tag }}
+{{ 'judgeme-review.css' | asset_url | stylesheet_tag }}
+<script type="module" src="{{ 'main-product.js' | asset_url }}"></script>
 {% schema %}
 {
   "name": "t:sections.main-product.name",

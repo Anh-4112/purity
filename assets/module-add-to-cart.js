@@ -1,4 +1,5 @@
 import * as NextSkyTheme from "global";
+import { LazyLoader } from "module-lazyLoad";
 
 export class ProductForm extends HTMLElement {
   constructor() {
@@ -219,6 +220,7 @@ export class ProductForm extends HTMLElement {
         ".drawer__body"
       );
       this.cart.querySelector(".drawer__body").innerHTML = drawerBody.innerHTML;
+      new LazyLoader(".image-lazy-load");
       NextSkyTheme.trapFocus(this.cart);
     } else {
       this.getSectionsToRender().forEach((section, index) => {
@@ -275,6 +277,7 @@ export class ProductForm extends HTMLElement {
         ".main-cart__wrapper"
       );
       this.cart.closest(".main-cart__wrapper").innerHTML = drawerBody.innerHTML;
+      new LazyLoader(".image-lazy-load");
     } else {
       this.getSectionsToRender().forEach((section, index) => {
         const sectionElement = section.selector
