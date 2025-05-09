@@ -25,7 +25,7 @@ export class LazyLoadEventHover {
     );
   }
   _preloadAllScriptsJs() {
-    this.initLazyLoadImage();
+    // this.initLazyLoadImage();
   }
 
   initLazyLoadImage() {
