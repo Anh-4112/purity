@@ -151,7 +151,7 @@ class VariantInput extends HTMLElement {
   }
 
   updateProductInfo(parsedHTML, sectionId, eventTarget, blockId, _this) {
-    const template = parsedHTML.querySelector("template");
+    const template = parsedHTML.querySelector(".template");
     let queryParsed, queryDocument;
     if (template && blockId) {
       const content = document.createElement("div");
