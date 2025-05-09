@@ -177,7 +177,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
     watchOverflow = false;
   } else if (gallery == "gird") {
     swiperElement = _this;
-    itemMobile = 1.5;
+    itemMobile = 1;
   } else if (gallery == "QuickView" || gallery == "CartUpSell") {
     swiperElement = _this;
     spaceBetween = 10;
