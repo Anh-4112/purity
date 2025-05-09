@@ -131,8 +131,8 @@ export class LazyLoader {
   }
 
   init() {
-    this.createObserver();
-    this.observeImages();
+    // this.createObserver();
+    // this.observeImages();
     // this.addScrollListener();
   }
 
