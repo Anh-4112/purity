@@ -15,9 +15,9 @@
         assign ratio = '3/4'
     endcase
   endif
-  assign fetchpriority = 'auto'
+  assign fetchpriority = 'low'
   if type_section == 'featured' or type_section == 'quick_view'
-    assign fetchpriority = 'auto'
+    assign fetchpriority = 'low'
   endif
 %}
 {% if product.selected_or_first_available_variant.featured_media != null %}
