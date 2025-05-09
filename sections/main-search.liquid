@@ -1,4 +1,5 @@
 {%- liquid
+  assign theme_st = settings
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
@@ -7,6 +8,7 @@
   else
     assign section_width = 'fluid_container'
   endif
+  assign scroll_animation = theme_st.scroll_animation
   assign items_per_row = section_st.items_per_row
   assign pagination_type = section_st.pagination_type
   assign filter_layout = section_st.filter_layout
@@ -14,9 +16,18 @@
   assign enable_sorting = section_st.enable_sorting
   assign show_product_counts = section_st.show_product_counts
   assign enable_filtering = section_st.enable_filtering
+  assign search_empty = true
   assign all_product = search.results_count
   if all_product <= products_to_show
     assign products_to_show = all_product
+  endif
+  if all_product == 0 and search.filters.size == 0
+    assign enable_filtering = false
+  elsif search.filters.size > 0
+    assign search_empty = false
+  endif
+  if search.performed and search.results_count > 0
+    assign search_empty = false
   endif
   assign sort_by = search.sort_by | default: search.default_sort_by
   if search.url
@@ -64,7 +75,7 @@
 {% endstyle %}
 <div
   id="Search-{{ section.id }}"
-  class="section-main-search{% unless search.performed and search.results_count > 0 %} template-search--empty{% endunless %}"
+  class="section-main-search{% if search_empty %} template-search--empty{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="title-wrapper-with-link text-center page-title{{ section_width }}">
@@ -72,6 +83,13 @@
       {%- render 'breadcrumbs' -%}
     </div>
     <div class="page-header my-60">
+      {% if scroll_animation %}
+        <motion-effect
+          data-animate="fade-up"
+          data-animate-delay="25"
+          class="block"
+        >
+      {% endif %}
       {%- if terms -%}
         {% if search.performed and search.results_count > 0 %}
           <h1>{{ 'templates.search.title' | t }}</h1>
@@ -85,6 +103,9 @@
           {{ 'templates.search.title_no_search' | t }}
         </h1>
       {%- endif -%}
+      {% if scroll_animation %}
+        </motion-effect>
+      {% endif %}
       <div class="search-form container">
         <action-search class="block mt-30">
           <div class="search-form">
@@ -309,7 +330,7 @@
             {% endif %}
           </div>
           <div class="facets-filters-active">
-            {% if current_tags.size > 0 or total_active_values > 0 %}
+            {% if total_active_values > 0 %}
               <div class="filters-count active-facets flex wrap gap-10 mb-30 fs-small">
                 {%- for filter in search.filters -%}
                   {%- for value in filter.active_values -%}
@@ -375,7 +396,29 @@
             {% endif %}
           </div>
           <div id="CollectionGird" class="collection__gird relative">
-            {%- if search.performed and search.results_count > 0 -%}
+            {%- if search.results.size == 0 and search.filters != empty -%}
+              <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
+                <div class="title-wrapper text-center">
+                  <h2 class="title title--primary mt-50">
+                    {{ 'sections.collection_template.no_products_found' | t -}}
+                    <br>
+                    {{
+                      'sections.collection_template.use_fewer_filters_html'
+                      | t: link: results_url, class: 'heading-color remove-underline border-animation'
+                    }}
+                  </h2>
+                  <a
+                    href="{{ routes.all_products_collection_url }}"
+                    aria-label="{{- 'general.continue_shopping' | t -}}"
+                  >
+                    {{- 'general.continue_shopping' | t -}}
+                  </a>
+                </div>
+              </div>
+            {%- else -%}
+              {% if scroll_animation %}
+                <motion-items-effect>
+              {% endif %}
               <div
                 class="collection grid-cols grid gap row-gap-30"
                 id="product-grid"
@@ -391,6 +434,7 @@
                         container: section_width,
                         column: items_per_row,
                         column_mobile: 2,
+                        class: ' motion-item',
                         padding: column_gap_slide,
                         indexFor: forloop.index
                       %}
@@ -404,7 +448,7 @@
                         show_excerpt: true,
                         show_cate: true,
                         show_tags: true,
-                        class: ' grid-card-item',
+                        class: ' grid-card-item motion-item',
                         container: section_width,
                         column: items_per_row,
                         column_mobile: 2,
@@ -412,9 +456,7 @@
                         indexFor: forloop.index
                       %}
                     {%- when 'page' -%}
-                      <div
-                        class="page-card-wrapper"
-                      >
+                      <div class="page-card-wrapper motion-item">
                         <div
                           class="card-page"
                           style="--ratio-percent: 100%;"
@@ -436,6 +478,9 @@
                   {%- endcase -%}
                 {%- endfor -%}
               </div>
+              {% if scroll_animation %}
+                </motion-items-effect>
+              {% endif %}
               {%- liquid
                 assign paginate_size = paginate.parts.size | times: 1
                 assign cur_page = paginate.current_page | times: 1
@@ -446,14 +491,10 @@
                 assign collection_products_count = search.results_count | times: 1.0
               -%}
               {%- if pagination_type == 'button' or pagination_type == 'infinity' -%}
-                <loadmore-button
-                  data-pagination="{{ pagination_type }}"
-                  data-all-products="{{ all_product }}"
-                  data-limit="{{ products_to_show }}"
-                  data-url="?page={{ paginate.current_page | plus: 1 }}"
+                <div
                   class="pagination-load-more mt-60 block text-center"
                 >
-                  <div class="paginate-progress">
+                  <div class="paginate-progress {{amount_products}}">
                     <p class="counting_product load-more-amount mb-20">
                       {{-
                         'sections.collection_template.product_count.one'
@@ -466,7 +507,11 @@
                     ></div>
                   </div>
                   {% if all_product > products_to_show and amount_products < all_product %}
-                    <button
+                    <loadmore-button
+                      data-limit="{{ products_to_show }}"
+                      data-pagination="{{ pagination_type }}"
+                      data-limit="{{ products_to_show }}"
+                      data-url="?page={{ paginate.current_page | plus: 1 }}"
                       class="relative btn btn-primary inline-flex content-center pointer transition w-custom max-w-100 mt-25"
                       style="--width: 20rem;"
                       aria-label="{{ 'sections.collection_template.load_more' | t }}"
@@ -475,33 +520,14 @@
                         {{- 'sections.collection_template.load_more' | t -}}
                       </span>
                       {%- render 'loader' -%}
-                    </button>
+                    </loadmore-button>
                   {% endif %}
-                </loadmore-button>
+                </div>
               {%- else -%}
                 {%- if paginate.pages > 1 -%}
                   {% render 'pagination', paginate: paginate, anchor: '' %}
                 {%- endif -%}
               {%- endif -%}
-            {%- elsif search.results.size == 0 and search.filters != empty -%}
-              <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
-                <div class="title-wrapper text-center">
-                  <h2 class="title title--primary mt-50">
-                    {{ 'sections.collection_template.no_products_found' | t -}}
-                    <br>
-                    {{
-                      'sections.collection_template.use_fewer_filters_html'
-                      | t: link: results_url, class: 'heading-color remove-underline border-animation'
-                    }}
-                  </h2>
-                  <a
-                    href="{{ routes.all_products_collection_url }}"
-                    aria-label="{{- 'general.continue_shopping' | t -}}"
-                  >
-                    {{- 'general.continue_shopping' | t -}}
-                  </a>
-                </div>
-              </div>
             {%- endif -%}
             <div
               class="loading-filter opacity-0 pointer-none absolute inset-0 bg-white transition"
