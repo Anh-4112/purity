@@ -458,13 +458,6 @@ class ButtonCloseModel extends HTMLButtonElement {
   }
   onClick(e) {
     NextSkyTheme.eventModal(this, "close");
-    const details = this.closest(".details-header-menu");
-    if (details) {
-      details.classList.remove("detail-open"),
-        this.removeAttribute("open"),
-        this.firstElementChild.removeAttribute("open"),
-        this.lastElementChild.removeAttribute("open");
-    }
   }
 }
 customElements.define("button-close-model", ButtonCloseModel, {
