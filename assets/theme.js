@@ -828,11 +828,10 @@ class MobileCollapsibleRowDetails extends CollapsibleRowDetails {
   constructor() {
     super();
     this.updateOpenState();
-    window.addEventListener("resize", this.updateOpenState.bind(this)); // Lắng nghe sự kiện resize
+    window.addEventListener("resize", this.updateOpenState.bind(this));
   }
 
   updateOpenState() {
-    // Kiểm tra nếu đang ở chế độ mobile (width <= 768px) hoặc qua matchMedia
     if (this.isMobileDevice()) {
       this.open = false;
       this.removeAttribute("open");
@@ -843,7 +842,7 @@ class MobileCollapsibleRowDetails extends CollapsibleRowDetails {
   }
 
   isMobileDevice() {
-    return window.matchMedia("(max-width: 768px)").matches || window.innerWidth <= 768;
+    return window.matchMedia("(max-width: 768px)").matches;
   }
 }
 
@@ -857,7 +856,6 @@ CustomElement.observeAndPatchCustomElements({
     classElement: MobileCollapsibleRowDetails,
   },
 });
-
 
 class RecentlyViewedProducts extends HTMLElement {
   constructor() {
