@@ -21,7 +21,7 @@
   endif
 %}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--auto-speed: {{ change_slide_every }}s;
 {%- endcapture -%}
 <div
   id="{{ section.id }}"
@@ -220,7 +220,7 @@
                         </div>
                       {% endif %}
                       {% if description != blank %}
-                        <div class="sec__content-des mt-10">
+                        <div class="sec__content-des mt-10 prose">
                           {% assign animate_delay = animate_delay | plus: 50 %}
                           <motion-effect
                             data-animate="fade-up"
@@ -306,7 +306,7 @@
           "label": "t:sections.all.layout.full_width"
         }
       ],
-      "default": "fix_width",
+      "default": "full_width",
       "label": "t:sections.all.layout.label"
     },
     {

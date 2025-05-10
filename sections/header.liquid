@@ -23,54 +23,62 @@
 {%- endcapture -%}
 
 {% style %}
-    @media only screen and (min-width: 1025px) {
-      .logo-left{
-        --header-grid-template: 'logo menu icon' / minmax(0, 1fr) fit-content(60%) minmax(0,1fr);
+      @media only screen and (min-width: 1025px) {
+        .logo-left{
+          --header-grid-template: 'logo menu icon' / minmax(0, 1fr) fit-content(60%) minmax(0,1fr);
+        }
+        .logo-center{
+          --header-grid-template: 'menu logo icon' / minmax(0, 1fr) minmax(50px, var(--logo-width))  minmax(0,1fr);
+        }
       }
-      .logo-center{
-        --header-grid-template: 'menu logo icon' / minmax(0, 1fr) minmax(50px, var(--logo-width))  minmax(0,1fr);
+    {% if request.page_type == 'index' and transparent %}
+      .site-header .transparent{
+        background: transparent;
+        transition: background 0.3s ease-in-out;
       }
-    }
-  {% if request.page_type == 'index' and transparent %}
-    .site-header .transparent{
-      background: transparent;
-      transition: background 0.3s ease-in-out;
-    }
-    .transparent-color,.heading-color.transparent-color{
-      --color-text: {{ section_st.header_text_icon_transparent }};
-      --color-heading: {{ section_st.header_text_icon_transparent }};
-      color: var(--color-text);
-    }
-    @media (min-width: 1025px) {
-      .transparent-menu{
+      .transparent-color,.heading-color.transparent-color{
         --color-text: {{ section_st.header_text_icon_transparent }};
         --color-heading: {{ section_st.header_text_icon_transparent }};
+        color: var(--color-text);
       }
-      .header__action .button-localization{
-        color: {{ section_st.header_text_icon_transparent }};
+      @media (min-width: 1025px) {
+        .transparent-menu{
+          --color-text: {{ section_st.header_text_icon_transparent }};
+          --color-heading: {{ section_st.header_text_icon_transparent }};
+        }
+        .header__action .button-localization{
+          color: {{ section_st.header_text_icon_transparent }};
+        }
       }
+  @media (min-width: 992px) {
+   body:has(.header-wrapper.transparent) .h-full_screen {
+      min-height: 100vh;
     }
-  {% endif %}
-    {% if section_st.enable_rounded_style %}
-      announcement-bar:after {
-      content: '';
-      position: absolute;
-      left: 0;
-      width: 100%;
-      top: 100%;
-      height: calc(100% + 30px);
-      background: inherit;
-      z-index: -2;
+    body:has(.header-wrapper.transparent) .section-announcement-bar ~ .content-for-layout .h-full_screen {
+      min-height: calc(100vh - var(--height-bar, 46px));
     }
-   .section-announcement-bar + .site-header .section-rounded{
-      border-radius: 1.5rem 1.5rem 0 0;
-    }
-    @media (min-width: 1025px) {
-      .section-announcement-bar + .site-header .section-rounded{
-        border-radius: 3rem 3rem 0 0;
+  }
+    {% endif %}
+      {% if section_st.enable_rounded_style %}
+        announcement-bar:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 100%;
+        top: 100%;
+        height: 32px;
+        background: inherit;
+        z-index: -2;
       }
-    }
-  {% endif %}
+     .section-announcement-bar + .site-header .section-rounded{
+        border-radius: 1.5rem 1.5rem 0 0;
+      }
+      @media (min-width: 1025px) {
+        .section-announcement-bar + .site-header .section-rounded{
+          border-radius: 3rem 3rem 0 0;
+        }
+      }
+    {% endif %}
 {% endstyle %}
 
 <header
@@ -228,7 +236,7 @@
                                             assign banner_default = 'accessibility.promotion_banner' | t
                                             assign image_alt = image.alt | default: banner_default | escape
                                           -%}
-                                          <div class="banner__item slideIn-animate rounded">
+                                          <div class="banner__item slideIn-animate{% if last_block.settings.content_position != 'bellow' %} rounded{% endif %}">
                                             <a
                                               {% if banner_link != blank %}
                                                 href="{{ banner_link }}"
@@ -236,7 +244,7 @@
                                                 role="link" aria-disabled="true"
                                               {% endif %}
                                               arial-label="{{ image_alt }}"
-                                              class="banner__inner hover-effect{% if last_block.settings.content_position != 'bellow' %} flex relative align-{{ last_block.settings.content_position }}{% endif %}"
+                                              class="banner__inner hover-effect focus-inset-inside{% if last_block.settings.content_position != 'bellow' %} flex relative align-{{ last_block.settings.content_position }}{% endif %}"
                                               {% if last_block.settings.content_position != 'bellow' %}
                                                 style="--aspect-ratio: {{ image.aspect_ratio }};"
                                               {% endif %}
@@ -311,7 +319,6 @@
                                         data-desktop="{{ product_column }}"
                                         data-tablet="{{ product_column }}"
                                       >
-                                        {%- render 'swiper-navigation', show_on_hover: true -%}
                                         <div class="swiper-wrapper">
                                           {%- liquid
                                             for product in last_block.settings.product_list
@@ -319,6 +326,7 @@
                                             endfor
                                           -%}
                                         </div>
+                                        <div class="swiper-pagination"></div>
                                       </slide-section>
                                     </div>
                                   {%- when 'menu_collection' -%}
@@ -344,7 +352,6 @@
                                         data-desktop="{{ collection_column }}"
                                         data-tablet="{{ collection_column }}"
                                       >
-                                        {%- render 'swiper-navigation', show_on_hover: true -%}
                                         <div class="swiper-wrapper">
                                           {% for collection in last_block.settings.collection %}
                                             <div class="collection-item swiper-slide">
@@ -359,6 +366,7 @@
                                             </div>
                                           {% endfor %}
                                         </div>
+                                        <div class="swiper-pagination"></div>
                                       </slide-section>
                                     </div>
                                 {%- endcase -%}

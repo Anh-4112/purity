@@ -2,7 +2,7 @@
   assign theme_st = settings
 %}
 <!doctype html>
-<html class="no-js{% if theme_st.rtl %} rtl{% endif %}" lang="{{ request.locale.iso_code }}">
+<html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -154,7 +154,7 @@
         --transition: all 0.4s;
         --duration-short: 0.2s;
         --duration-long: 0.5s;
-        --transition-drawer: all var(--timming, 0.35s) var(--timing-function, cubic-bezier(.5, -.03, .34, .83));
+        --transition-drawer: all var(--timming, 0.35s) ease;
         --overlay-bg: rgba(0, 0, 0, 0.60);
         --responsive-ratio: 0.7;
         --gap: 2rem;
@@ -222,7 +222,6 @@
     {% endstyle %}
     {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
-    {% if theme_st.rtl %}{{ 'rtl.css' | asset_url | stylesheet_tag: preload: true }}{% endif %}
     <script defer="defer" src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
     <script defer="defer" src="{{ 'motion.js' | asset_url }}"></script>
     <script type="importmap">
@@ -235,7 +234,8 @@
           "module-lazyLoad": "{{ 'module-lazyload.js' | asset_url }}",
           "module-variantSwatch": "{{ 'module-variant-swatch.js' | asset_url }}",
           "module-safariElementPatch": "{{ 'safari-element-patch.js' | asset_url }}",
-          "module-photoSwipeLightbox": "{{ 'photoswipe-lightbox.min.js' | asset_url }}"
+          "module-photoSwipeLightbox": "{{ 'photoswipe-lightbox.min.js' | asset_url }}",
+          "vertical-product-tabs" : "{{ 'section-vertical-product-tabs.js' | asset_url }}"
         }
       }
     </script>

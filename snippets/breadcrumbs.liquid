@@ -4,7 +4,7 @@
     <ul class="navigation__breadcrumb-list list-unstyled my-0 px-0 fs-small flex wrap">
       <li class="bls__breadcrumb-item dash-between flex align-center flex align-center">
         <a
-          class="navigation__breadcrumb-link heading-color subheading_weight"
+          class="navigation__breadcrumb-link word-break heading-color subheading_weight"
           href="{{ routes.root_url }}"
           aria-label="{{- 'general.breadcrumb.home' | t -}}"
         >
@@ -14,7 +14,7 @@
       {%- case t -%}
         {%- when 'page' -%}
           <li class="navigation__breadcrumb-item dash-between flex align-center">
-            <span class="navigation__breadcrumb-link" aria-current="page">
+            <span class="navigation__breadcrumb-link word-break" aria-current="page">
               {{- page.title -}}
             </span>
           </li>
@@ -25,7 +25,7 @@
             </li>
           {%- endif -%}
           <li class="navigation__breadcrumb-item dash-between flex align-center">
-            <span class="navigation__breadcrumb-link" aria-current="page">
+            <span class="navigation__breadcrumb-link word-break" aria-current="page">
               {{- product.title -}}
             </span>
           </li>
@@ -35,13 +35,13 @@
               {{ collection.title | link_to: collection.url }}
             </li>
             <li class="navigation__breadcrumb-item dash-between flex align-center">
-              <span class="navigation__breadcrumb-link" aria-current="page">
+              <span class="navigation__breadcrumb-link word-break" aria-current="page">
                 {{- current_tags | join: ' + ' -}}
               </span>
             </li>
           {%- else -%}
             <li class="navigation__breadcrumb-item dash-between flex align-center">
-              <span class="navigation__breadcrumb-link" aria-current="page">
+              <span class="navigation__breadcrumb-link word-break" aria-current="page">
                 {{- collection.title -}}
               </span>
             </li>
@@ -52,13 +52,13 @@
               {{ blog.title | link_to: blog.url }}
             </li>
             <li class="navigation__breadcrumb-item dash-between flex align-center">
-              <span class="navigation__breadcrumb-link" aria-current="page">
+              <span class="navigation__breadcrumb-link word-break" aria-current="page">
                 {{- current_tags | join: ' + ' -}}
               </span>
             </li>
           {%- else -%}
             <li class="navigation__breadcrumb-item dash-between flex align-center">
-              <span class="navigation__breadcrumb-link" aria-current="page">
+              <span class="navigation__breadcrumb-link word-break" aria-current="page">
                 {{- blog.title -}}
               </span>
             </li>
@@ -68,13 +68,13 @@
             {{ blog.title | link_to: blog.url }}
           </li>
           <li class="navigation__breadcrumb-item dash-between flex align-center">
-            <span class="navigation__breadcrumb-link" aria-current="page">
+            <span class="navigation__breadcrumb-link word-break" aria-current="page">
               {{- article.title -}}
             </span>
           </li>
         {%- else -%}
           <li class="navigation__breadcrumb-item dash-between flex align-center">
-            <span class="navigation__breadcrumb-link" aria-current="page">
+            <span class="navigation__breadcrumb-link word-break" aria-current="page">
               {{- page_title -}}
             </span>
           </li>

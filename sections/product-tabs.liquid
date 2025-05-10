@@ -1,4 +1,4 @@
-<script src="{{ 'section-vertical-product-tabs.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'section-vertical-product-tabs.js' | asset_url }}" defer="defer" type="module"></script>
 {%- liquid
   assign theme_st = settings
   assign section_st = section.settings
@@ -83,7 +83,7 @@
       z-index: 2;
     }
     .vertical-tab .product-tabs__header-item {
-      background-image: linear-gradient(to right, #000 100%, transparent 0%);
+      background-image: linear-gradient(to right, var(--color-heading) 100%, transparent 0%);
       background-position: 0 100%;
       background-repeat: no-repeat;
       background-size: 0% 1px;
@@ -343,14 +343,14 @@
     {
       "type": "text",
       "id": "title",
-      "default": "Tailored for You",
+      "default": "Vertical product tabs",
       "label": "t:sections.all.content_setting.heading.label"
     },
     {
       "type": "text",
       "id": "subheading",
       "label": "t:sections.all.content_setting.subheading.label",
-      "default": "Check These Out"
+      "default": "Subheading"
     },
     {
       "type": "richtext",
@@ -438,7 +438,7 @@
     {
       "type": "checkbox",
       "id": "reveal_slide",
-      "default": false,
+      "default": true,
       "label": "t:sections.all.carousel.reveal_slide.label"
     },
     {

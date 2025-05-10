@@ -45,6 +45,7 @@
           {% render 'responsive-image', type: 'product', image: featured_media, image_alt: image_alt, motion: motion %}
         {% else %}
           <video-product-gallery
+            class="block"
             {% if enable_video_autoplay %}
               auto-play
             {% endif %}
@@ -96,7 +97,7 @@
         muted autoplay
       {%- endcapture -%}
       <div
-        class="hover-action media-gallery__local-video{{ class }} w-full"
+        class="hover-action media-gallery__local-video rounded-10{{ class }} w-full"
         {% if thumbnail != true %}
           data-position="{{ media_position }}"
           media-gallery="{{ featured_media.media_type }}"
@@ -127,6 +128,7 @@
           </svg>
         {% else %}
           <video-product-gallery
+            class="block"
             {% if enable_video_autoplay %}
               auto-play
             {% endif %}
@@ -285,6 +287,7 @@
             {% render 'responsive-image', type: 'product', image: image, image_alt: image_alt, motion: motion %}
           {% else %}
             <video-product-gallery
+              class="block"
               {% if enable_video_autoplay %}
                 auto-play
               {% endif -%}
@@ -368,6 +371,7 @@
             </svg>
           {% else %}
             <video-product-gallery
+              class="block"
               {% if enable_video_autoplay %}
                 auto-play
               {% endif %}
@@ -467,7 +471,7 @@
         </div>
       {%- else -%}
         <div
-          class="hover-action media-gallery__image{{ class }}"
+          class="hover-action media-gallery__image rounded-10{{ class }}"
           {% if thumbnail != true %}
             data-position="{{ media_position }}"
             media-gallery="{{ image.media_type }}"

@@ -198,11 +198,7 @@ summary::-webkit-details-marker {
 :where(.h0) {
   --size: clamp(4rem, calc(4rem + (70 - 40) * var(--responsive-rate)), 7rem);
 }
-:where(h1, .h1),
-.h1-size {
-  --size: clamp(4rem, calc(4rem + (50 - 40) * var(--responsive-rate)), 5rem);
-}
-:where(h2, .h2) {
+:where(h2) {
   --size: clamp(3rem, calc(3rem + (40 - 30) * var(--responsive-rate)), 4rem);
 }
 :where(h3, .h3) {
@@ -211,6 +207,13 @@ summary::-webkit-details-marker {
     calc(2.4rem + (30 - 24) * var(--responsive-rate)),
     3rem
   );
+}
+:where(h1, .h1),
+.h1-size {
+  --size: clamp(4rem, calc(4rem + (50 - 40) * var(--responsive-rate)), 5rem);
+}
+:where(.h2) {
+  --size: clamp(3rem, calc(3rem + (40 - 30) * var(--responsive-rate)), 4rem);
 }
 :where(h4, .h4) {
   --size: clamp(2rem, calc(2rem + (24 - 20) * var(--responsive-rate)), 2.4rem);
@@ -235,6 +238,9 @@ summary::-webkit-details-marker {
 :where(img) {
   max-width: 100%;
   height: auto;
+}
+iframe {
+  max-width: 100%;
 }
 video {
   max-width: 100%;
@@ -847,6 +853,7 @@ a.hover-heading-color:hover,
 }
 :where(.rounded-50) {
   border-radius: 50%;
+  clip-path: inset(0 0 0 0 round 50%);
 }
 .rounded-style .rounded-3 {
   border-radius: 3px;
@@ -1793,8 +1800,11 @@ quantity-input input {
   }
 }
 @media (min-width: 1025px) {
-  .level-1 {
+  .logo-left .level-1 {
     padding-inline: 1.75rem;
+  }
+  .logo-center .level-1 {
+    padding-inline-end: 3.5rem;
   }
   .swiper:not([class*="initialized"]) .swiper-slide {
     width: calc(

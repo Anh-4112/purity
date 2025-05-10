@@ -241,6 +241,18 @@ export class ProductForm extends HTMLElement {
                 ".cart-count"
               ).innerHTML;
           }
+          const nav_bar_mobile_id = document.querySelector("#cart-icon-bubble-mobile");
+          if (
+            nav_bar_mobile_id &&
+            nav_bar_mobile_id.querySelector(".cart-count") &&
+            sectionElement.querySelector(".cart-count")
+          ) {
+            nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
+              this.getSectionDOM(
+                parsedState.sections[section.id],
+                ".cart-count"
+              ).innerHTML;
+          }
         } else if (index === 2) {
           const progress = this.getSectionDOM(
             parsedState.sections[section.id],
@@ -287,6 +299,14 @@ export class ProductForm extends HTMLElement {
           const nav_bar_id = document.getElementById("cart-icon-bubble");
           if (nav_bar_id && nav_bar_id.querySelector(".cart-count")) {
             nav_bar_id.querySelector(".cart-count").innerHTML =
+              this.getSectionDOM(
+                parsedState.sections[section.id],
+                ".cart-count"
+              ).innerHTML;
+          }
+          const nav_bar_mobile_id = document.getElementById("cart-icon-bubble-mobile");
+          if (nav_bar_mobile_id && nav_bar_mobile_id.querySelector(".cart-count")) {
+            nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
               this.getSectionDOM(
                 parsedState.sections[section.id],
                 ".cart-count"
@@ -582,6 +602,15 @@ class CartGiftWrap extends HTMLElement {
                     ".cart-count"
                   ).innerHTML;
               }
+
+              const nav_bar_mobile_id = document.querySelector("#cart-icon-bubble-mobile");
+              if (nav_bar_mobile_id && nav_bar_mobile_id.querySelector(".cart-count")) {
+                nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
+                  this.getSectionDOM(
+                    parsedState.sections[section.id],
+                    ".cart-count"
+                  ).innerHTML;
+              }
             } else if (
               index === 2 &&
               sectionElement.querySelector(".progress")
@@ -751,6 +780,16 @@ class CartDrawer extends HTMLElement {
           sectionElement.querySelector(".cart-count")
         ) {
           nav_bar_id.querySelector(".cart-count").innerHTML =
+            sectionElement.querySelector(".cart-count").innerHTML;
+        }
+
+        const nav_bar_mobile_id = document.querySelector("#cart-icon-bubble-mobile");
+        if (
+          nav_bar_mobile_id &&
+          nav_bar_mobile_id.querySelector(".cart-count") &&
+          sectionElement.querySelector(".cart-count")
+        ) {
+          nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
             sectionElement.querySelector(".cart-count").innerHTML;
         }
       }

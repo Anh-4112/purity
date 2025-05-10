@@ -1,4 +1,4 @@
-<script type="module" src="{{ 'section-vertical-product-tabs.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'section-suitable-products-finder.js' | asset_url }}" defer="defer" type="module"></script>
 {%- liquid
   assign theme_st = settings
   assign section_st = section.settings
@@ -22,7 +22,7 @@
   if heading_size == 'small'
     assign header_size = 'h3'
   elsif heading_size == 'large'
-    assign header_size = 'h1'
+    assign header_size = 'h1-size'
   endif
 
   assign items_per_row_mobile = section_st.items_per_row_mobile
@@ -169,6 +169,9 @@
                 if collection_title == blank
                   assign collection_title = collections[block_st.collection].title
                 endif
+                if collection_title == blank
+                  assign collection_title = 'sections.collection_list.sample_name' | t
+                endif
                 assign image = block_st.collection_image | default: block_st.collection.image
                 assign collection_media = collections[block_st.collection].featured_image
                 if image.alt != blank
@@ -251,6 +254,9 @@
               assign collection_title = block_st.collection_title
               if collection_title == blank
                 assign collection_title = collections[block_st.collection].title
+              endif
+              if collection_title == blank
+                assign collection_title = 'sections.collection_list.sample_name' | t
               endif
               assign image = block_st.collection_image | default: block_st.collection.image
               assign collection_media = collections[block_st.collection].featured_image
@@ -339,7 +345,7 @@
           >
             <div class="bg-custom overflow-hidden h-custom btn-rounded"></div>
             <span
-              class="product-tabs__dot pointer absolute w-custom h-custom inline-flex content-center transition-drawer"
+              class="product-tabs__dot pointer absolute w-custom h-custom inline-flex content-center"
               style="--width: 3.6rem; --height: 3.6rem"
             >
               <svg width="26" height="26" fill="none">

@@ -32,7 +32,7 @@
 >
   <div class="{{ section_width }}">
     <div
-      class="main-product flex wrap gap{% if media_position == 'right' %} row-reverse-md{% endif %}"
+      class="main-product flex wrap gap{% if media_position == 'right' %} row-reverse-md{% endif %}{% if desktop_layout == 'stack' %} stack_media{% endif %}"
       style="--gap: var(--bs-gutter-x); --gap-desktop: 10px;"
     >
       {% if product.media.size > 0 %}
