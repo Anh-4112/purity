@@ -81,6 +81,8 @@
         -webkit-transform: translateX(-20px) translateY(0);
         transform: translateX(-20px) translateY(0);
       }
+    }
+    @media screen and (min-width: 1015px) {
       .info-gallery__label {
         inset-inline-start: 40px;
         inset-block-start: 40px;
@@ -145,7 +147,7 @@
               </div>
               {%- if info_gallery.subheading or info_gallery.heading or info_gallery.description -%}
                 <div class="info-gallery__info absolute inset-0 flex">
-                  <div class="sec__content w-full flex {{ desktop_content_position }} text-md-{{ content_alignment }} p-30 p-1025-40 relative z-2">
+                  <div class="sec__content w-full flex {{ desktop_content_position }} text-md-{{ content_alignment }} p-20 p-1025-40 relative z-2">
                     {% assign animate_delay = 25 %}
                     <div class="prose max-w-100">
                       {%- if info_gallery.subheading -%}
