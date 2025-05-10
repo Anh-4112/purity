@@ -37,7 +37,7 @@ function initSlide(_this) {
       itemTablet = 3;
     }
   }
-  if (direction == "vertical" && heightAuto) {
+  if (direction == "vertical" || heightAuto) {
     _this.style.maxHeight = _this.offsetHeight + "px";
   }
   let nextEl = _this.querySelector(".swiper-button-next");
@@ -116,6 +116,20 @@ function initSlide(_this) {
           loadSlideVideo(video);
         });
       },
+      resize: function () {
+      if (heightAuto) {
+        const items = _this.querySelectorAll(".announcement-bar__content-inner");
+        if (items.length === 0) return;
+        let maxHeight = items[0].offsetHeight;
+        for (let i = 1; i < items.length; i++) {
+          const itemHeight = items[i].offsetHeight;
+          if (itemHeight > maxHeight) {
+            maxHeight = itemHeight;
+          }
+        }
+        _this.style.maxHeight = maxHeight + 'px';
+      }
+    }
     },
   });
 }

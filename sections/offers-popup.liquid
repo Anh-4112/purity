@@ -24,6 +24,24 @@
   icon-close-offer {
     top: -1.8rem;
   }
+  .drawer-content__offer{
+    cursor: grab;
+    user-select: none;
+    scroll-behavior: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .drawer-content__offer:active {
+    cursor: grabbing;
+  }
+  .drawer-content__offer::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+  .drawer-content__offer {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 {% endstyle %}
 {% if section_st.highlight_text != blank %}
   <scroll-offer data-section-id="{{ section.id }}" class="hidden block-md fixed left-10 left-md-30 z-5" style="opacity: 0;" tabindex="0">
@@ -78,26 +96,10 @@
             </svg>
           </button>
         </div>
-        <div class="drawer__content drawer-spacing">
-          <div class="hidden block-md offer-content__desktop">
-            <offer-slide
-              class="swiper smooth_scroll"
-              data-section-id="{{ section.id }}"
-              data-autoplay="false"
-              data-effect="slide"
-              data-loop="false"
-              data-speed="500"
-              data-spacing="{{ column_gap_slide }}"
-              data-mobile="1"
-              data-desktop="2"
-              data-tablet="2"
-            >
-              <div class="swiper-wrapper">
-                {% content_for 'blocks' %}
-              </div>
-            </offer-slide>
-          </div>
-          <div class="flex column grow-1 gap-{{ column_gap_slide }} offer-content__mobile hidden-md"></div>
+        <div class="drawer__content drawer-content__offer drawer-spacing overflow-y-auto">
+          <offer-slide class="flex column grow-1 gap-{{ column_gap_slide }} offer-content__mobile">
+            {% content_for 'blocks' %}
+          </offer-slide>
         </div>
       </div>
     </div>
