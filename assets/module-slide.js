@@ -309,7 +309,6 @@ class SlideSection extends HTMLElement {
         initSlide(this);
       } else {
         if (this.classList.contains("lazy-loading-swiper-before")) {
-          console.log("xxxxx");
           initSlide(this);
         } else {
           this.classList.add("lazy-loading-swiper-after");
