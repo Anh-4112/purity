@@ -1183,14 +1183,16 @@ class VideoLocalScroll extends VideoLocal {
   init() {
     if (!this.isScrollInitialized) {
       this.isScrollInitialized = true;
-      window.addEventListener('scroll', this.checkScroll.bind(this), { passive: true });
+      window.addEventListener("scroll", this.checkScroll.bind(this), {
+        passive: true,
+      });
     }
   }
-  
+
   checkScroll() {
     if (window.scrollY > 10) {
       this.loadContentVideo(this);
-      window.removeEventListener('scroll', this.checkScroll);
+      window.removeEventListener("scroll", this.checkScroll);
     }
   }
 }
@@ -2781,5 +2783,83 @@ class DraggableModal extends HTMLElement {
     }
   }
 }
-
 customElements.define("draggable-modal", DraggableModal);
+
+class ButtonQuickView extends HTMLButtonElement {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  get sectionId() {
+    return document.querySelector("quickview-drawer")
+      ? document
+          .querySelector("quickview-drawer")
+          .getAttribute("data-section-id")
+      : null;
+  }
+
+  init() {
+    this.addEventListener("click", this.onClick.bind(this), false);
+    this.addEventListener(
+      "keypress",
+      function (event) {
+        if (event.key === "Enter") {
+          this.onClick.bind(this)(event);
+        }
+      }.bind(this),
+      false
+    );
+  }
+
+  async onClick(e) {
+    e.preventDefault();
+    if (this.dataset.url) {
+      this.setAttribute("aria-disabled", true);
+      this.classList.add("loading");
+      if (!this.sectionId) {
+        window.location.href = this.dataset.url;
+        return;
+      }
+      await (import(importJs.mediaGallery), import(importJs.productModel));
+      this.fetchUrl();
+    }
+  }
+
+  fetchUrl() {
+    fetch(`${this.dataset.url}?section_id=${this.sectionId}`)
+      .then((response) => response.text())
+      .then((text) => {
+        const html = NextSkyTheme.parser.parseFromString(text, "text/html");
+        document.querySelector(".quickview-product").innerHTML =
+          html.querySelector(".quickview-product").innerHTML;
+      })
+      .finally(async () => {
+        this.classList.remove("loading");
+        this.removeAttribute("aria-disabled");
+        NextSkyTheme.eventModal(
+          document.querySelector("quickview-drawer"),
+          "open",
+          false,
+          "delay",
+          true
+        );
+        NextSkyTheme.global.rootToFocus = this;
+        new LazyLoader(".image-lazy-load");
+        await (import(importJs.mediaLightboxGallery),
+        import(importJs.countdownTimer));
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+}
+customElements.define("button-quick-view", ButtonQuickView, {
+  extends: "button",
+});
+CustomElement.observeAndPatchCustomElements({
+  "button-quick-view": {
+    tagElement: "button",
+    classElement: ButtonQuickView,
+  },
+});
