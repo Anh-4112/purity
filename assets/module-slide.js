@@ -22,6 +22,7 @@ function initSlide(_this) {
     : "bullets";
   const autoItem = _this?.dataset.itemMobile === "true";
   let arrowCenterImage = _this?.dataset.arrowCenterImage === "true";
+  const mutedVideo = _this?.dataset.mutedVideo === "true";
   spacing = Number(spacing);
   autoPlaySpeed = Number(autoPlaySpeed);
   speed = Number(speed);
@@ -109,6 +110,27 @@ function initSlide(_this) {
         }
         if (_this.querySelector(".slide-video-1")) {
           loadSlideVideo(_this.querySelector(".slide-video-1"));
+        }
+      },
+      slideChange: function () {
+        const currentSlide = this.slides[this.activeIndex];
+        if (mutedVideo) {
+          this.slides.forEach((slide, index) => {
+            if (index != this.activeIndex) {
+              const video = slide.querySelector("video");
+              video.muted = true;
+              video.pause();
+              slide.querySelector(".mute-button").classList.remove("active");
+              slide.querySelector(".play-button").classList.remove("active");
+            }
+          });
+          const video = currentSlide.querySelector("video");
+          video.muted = false;
+          currentSlide.querySelector(".mute-button").classList.add("active");
+          if (video.paused) {
+            video.play();
+            currentSlide.classList.add("active");
+          }
         }
       },
       slideChangeTransitionEnd: function () {
