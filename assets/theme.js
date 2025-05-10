@@ -742,6 +742,7 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
       (this.summaryElement = null),
       (this.contentElement = null),
       (this._open = false),
+      (this._hiddenMobile = false),
       (this.content = null),
       this.init();
   }
@@ -764,6 +765,7 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
     this.summaryElement = this.firstElementChild;
     this.contentElement = this.lastElementChild;
     this._open = this.hasAttribute("open");
+    this._hiddenMobile = this.hasAttribute("hidden-mobile");
     this.content = this.querySelector(".collapsible-row__content");
     this.summaryElement.addEventListener(
       "click",
@@ -777,12 +779,20 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
   }
 
   async initialize() {
-    if (this.content) {
-      Motion.animate(
-        this.content,
-        this._open ? { height: "auto" } : { height: 0 },
-        { duration: 0 }
-      );
+    if (this._hiddenMobile && window.innerWidth <= 767) {
+      this.removeAttribute("open"), this.classList.remove("detail-open");
+      this._open = false;
+      if (this.content) {
+        Motion.animate(this.content, { height: 0 }, { duration: 0 });
+      }
+    } else {
+      if (this.content) {
+        Motion.animate(
+          this.content,
+          this._open ? { height: "auto" } : { height: 0 },
+          { duration: 0 }
+        );
+      }
     }
   }
 
@@ -814,39 +824,6 @@ CustomElement.observeAndPatchCustomElements({
   "collapsible-row": {
     tagElement: "details",
     classElement: CollapsibleRowDetails,
-  },
-});
-
-class MobileCollapsibleRowDetails extends CollapsibleRowDetails {
-  constructor() {
-    super();
-    this.updateOpenState();
-    window.addEventListener("resize", this.updateOpenState.bind(this));
-  }
-
-  updateOpenState() {
-    if (this.isMobileDevice()) {
-      this.open = false;
-      this.removeAttribute("open");
-    } else {
-      this.open = true;
-      this.setAttribute("open", "");
-    }
-  }
-
-  isMobileDevice() {
-    return window.matchMedia("(max-width: 768px)").matches;
-  }
-}
-
-customElements.define("mobile-collapsible-row", MobileCollapsibleRowDetails, {
-  extends: "details",
-});
-
-CustomElement.observeAndPatchCustomElements({
-  "mobile-collapsible-row": {
-    tagElement: "details",
-    classElement: MobileCollapsibleRowDetails,
   },
 });
 
