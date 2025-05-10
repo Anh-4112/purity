@@ -2840,3 +2840,28 @@ CustomElement.observeAndPatchCustomElements({
     classElement: ButtonQuickView,
   },
 });
+
+class SelectContact extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  init() {
+    const text = this.getAttribute("text");
+    if (text) {
+      const options = text.split(",").map((item) => item.trim());
+      const selectElement = this.closest(
+        ".field-contact-subject"
+      ).querySelector("select");
+      options.forEach((optionText) => {
+        const option = document.createElement("option");
+        option.value = optionText.toLowerCase();
+        option.textContent =
+          optionText.charAt(0).toUpperCase() + optionText.slice(1);
+        selectElement.appendChild(option);
+      });
+    }
+  }
+}
+customElements.define("select-contact", SelectContact);
