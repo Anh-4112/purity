@@ -117,19 +117,21 @@ function initSlide(_this) {
         });
       },
       resize: function () {
-      if (heightAuto) {
-        const items = _this.querySelectorAll(".announcement-bar__content-inner");
-        if (items.length === 0) return;
-        let maxHeight = items[0].offsetHeight;
-        for (let i = 1; i < items.length; i++) {
-          const itemHeight = items[i].offsetHeight;
-          if (itemHeight > maxHeight) {
-            maxHeight = itemHeight;
+        if (heightAuto) {
+          const items = _this.querySelectorAll(
+            ".announcement-bar__content-inner"
+          );
+          if (items.length === 0) return;
+          let maxHeight = items[0].offsetHeight;
+          for (let i = 1; i < items.length; i++) {
+            const itemHeight = items[i].offsetHeight;
+            if (itemHeight > maxHeight) {
+              maxHeight = itemHeight;
+            }
           }
+          _this.style.maxHeight = maxHeight + "px";
         }
-        _this.style.maxHeight = maxHeight + 'px';
-      }
-    }
+      },
     },
   });
 }
@@ -307,6 +309,7 @@ class SlideSection extends HTMLElement {
         initSlide(this);
       } else {
         if (this.classList.contains("lazy-loading-swiper-before")) {
+          console.log("xxxxx");
           initSlide(this);
         } else {
           this.classList.add("lazy-loading-swiper-after");
@@ -318,22 +321,7 @@ class SlideSection extends HTMLElement {
   }
 
   initSlideMediaGallery(gallery, thumbnail = null) {
-    let swiperSlide = null;
-    if (document.body.classList.contains("template-index")) {
-      let pos = window.pageYOffset;
-      if (pos > 10 || document.body.classList.contains("swiper-lazy")) {
-        swiperSlide = initSlideMedia(this, gallery, thumbnail);
-      } else {
-        if (this.classList.contains("lazy-loading-swiper-before")) {
-          swiperSlide = initSlideMedia(this, gallery, thumbnail);
-        } else {
-          this.classList.add("lazy-loading-swiper-after");
-        }
-      }
-    } else {
-      swiperSlide = initSlideMedia(this, gallery, thumbnail);
-    }
-    return swiperSlide;
+    return initSlideMedia(this, gallery, thumbnail);
   }
 }
 if (!customElements.get("slide-section")) {

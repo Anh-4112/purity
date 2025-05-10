@@ -1,3 +1,4 @@
+import { initSlide } from "module-slide";
 export class LazyLoadEventHover {
   constructor(e) {
     (this.triggerEventsJs = e),
@@ -26,6 +27,7 @@ export class LazyLoadEventHover {
   }
   _preloadAllScriptsJs() {
     this.initLazyLoadImage();
+    this.initLazySlideSection();
   }
 
   initLazyLoadImage() {
@@ -47,6 +49,16 @@ export class LazyLoadEventHover {
         imgElement.removeAttribute("data-srcset");
         imgElement.classList.add("lazy-loaded");
       }
+    });
+  }
+
+  initLazySlideSection() {
+    const loadingSwiper = document.querySelectorAll(
+      ".lazy-loading-swiper-after"
+    );
+    loadingSwiper.forEach((el) => {
+      el.classList.remove("lazy-loading-swiper-after");
+      initSlide(el);
     });
   }
 
