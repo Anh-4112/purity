@@ -464,6 +464,14 @@ blockquote {
 .z-22 {
   z-index: 22;
 }
+
+.z-30 {
+  z-index: 30;
+}
+
+.z-31 {
+  z-index: 31;
+}
 .z-auto {
   z-index: auto;
 }
@@ -574,14 +582,15 @@ blockquote {
     border-radius: var(--img-rounded) var(--img-rounded) 0 0;
     clip-path: inset(0 0 0 0 round var(--img-rounded) var(--img-rounded) 0 0);
   }
-  :is(.modal-popup-inner, .modal-inner:not(.draw-mb)).h-content {
-    height: auto;
-  }
   @supports (height: 100dvh) {
     .modal-popup-inner,
     .modal-inner:not(.draw-mb) {
       max-height: calc(100dvh - 100px);
     }
+  }
+  .modal.active {
+    opacity: 1;
+    pointer-events: auto;
   }
   .modal.active .modal-popup-inner {
     opacity: 1;
@@ -967,10 +976,14 @@ blockquote {
     max-height: 80vh;
     transition: 0.2s;
   }
-  .modal.active .modal-popup-inner {
-    transform: scale(1);
+  .modal.active {
     opacity: 1;
     pointer-events: auto;
+  }
+  .modal.active .modal-popup-inner {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
   }
   .remove-after:not(.active) .modal-popup-inner {
     animation: zoomOut var(--transition)
