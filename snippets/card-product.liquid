@@ -287,8 +287,7 @@
                       name="add"
                       class="btn btn__quick-shop shadow btn-white invisible-1025 absolute inset-x-15 bottom-15 z-2 flex content-center text-center{% if product_show_quick_add_mobile == blank %} d-none flex-1025{% endif %}"
                       aria-haspopup="dialog"
-                      aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
-                      aria-live="polite"
+                      aria-label="{{ 'products.product.add_to_cart' | t }}"
                       data-sold-out-message="true"
                       {% if card_product.selected_or_first_available_variant.available == false %}
                         disabled

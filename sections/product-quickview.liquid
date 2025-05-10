@@ -2,7 +2,6 @@
 {%- liquid
   assign section_st = section.settings
 -%}
-<script type="module" src="{{ 'quickview-product.js' | asset_url }}"></script>
 <quickview-drawer
   id="Product-{{ section.id }}"
   data-section-id="{{ section.id }}"
@@ -12,6 +11,9 @@
   <modal-overlay class="modal-overlay invisible transition-drawer pointer z-15"></modal-overlay>
   <div
     class="modal-inner invisible quickview_inner modal-body modal-draggable color-default transition-drawer drawer drawer-right fixed right-0 z-20 inset-y-0 w-full{% if product.media.size > 0 %} rounded-0{% endif %}"
+    role="dialog"
+    aria-modal="true"
+    aria-label="{{ 'products.product.quickview' | t }}"
     tabindex="-1"
   >
     <button

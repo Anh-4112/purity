@@ -287,9 +287,9 @@ class SlideSection extends HTMLElement {
   }
 
   init() {
-    if (document.body.classList.contains("index")) {
+    if (document.body.classList.contains("template-index")) {
       let pos = window.pageYOffset;
-      if (pos > 0 || document.body.classList.contains("swiper-lazy")) {
+      if (pos > 10 || document.body.classList.contains("swiper-lazy")) {
         initSlide(this);
       } else {
         if (this.classList.contains("lazy-loading-swiper-before")) {
@@ -305,9 +305,9 @@ class SlideSection extends HTMLElement {
 
   initSlideMediaGallery(gallery, thumbnail = null) {
     let swiperSlide = null;
-    if (document.body.classList.contains("index")) {
+    if (document.body.classList.contains("template-index")) {
       let pos = window.pageYOffset;
-      if (pos > 0 || document.body.classList.contains("swiper-lazy")) {
+      if (pos > 10 || document.body.classList.contains("swiper-lazy")) {
         swiperSlide = initSlideMedia(this, gallery, thumbnail);
       } else {
         if (this.classList.contains("lazy-loading-swiper-before")) {

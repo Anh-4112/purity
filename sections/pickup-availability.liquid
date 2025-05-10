@@ -60,14 +60,13 @@
     </div>
   </pickup-availability-preview>
 
-  <pickup-availability-drawer
-    class="pickup-availability-drawer modal pointer-none active-modal-js"
-    role="dialog"
-    aria-label="{{ 'products.product.pickup_availability.view_store_info' | t }}"
-  >
+  <pickup-availability-drawer class="pickup-availability-drawer modal pointer-none active-modal-js">
     <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
     <div
       class="modal-inner invisible overflow-auto custom-scrollbar draw-mb drawer-right-mb color-default transition-drawer w-full drawer-right fixed z-15 inset-y-0 right-0 bg-white"
+      role="dialog"
+      aria-modal="true"
+      aria-label="{{ 'products.product.pickup_availability.view_store_info' | t }}"
       tabindex="-1"
     >
       <div class="pickup-availability-header drawer-spacing flex align-center space-between gap-15 border-bottom">
