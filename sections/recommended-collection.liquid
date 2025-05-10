@@ -103,6 +103,11 @@
   .recommend-prose {
     line-height: 3;
   }
+  @media screen and (max-width: 767.98px) {
+    .recommend_collections_buttons {
+        justify-content: center;
+    }
+  }
 {% endstyle %}
 {% capture title_replace %}
   <select-options class="title-select relative px-15 pointer lh-global">
@@ -337,7 +342,7 @@
                       >
                     {% endif %}
                     <div
-                      class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap gap text-center {% if section_content_alignment %} justify-content-{{ section_content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
+                      class="block__buttons recommend_collections_buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap gap text-center {% if section_content_alignment %} justify-content-{{ section_content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
                       style="--space-bottom: {{ block_st.spacing_bottom }};--gap-desktop: 30px; --gap: 20px;"
                     >
                       {% if first_button_label != blank %}
@@ -348,7 +353,7 @@
                             href="{{ url_default | default: "#" }}"
                           {% endif %}
                           aria-label="{{ first_button_label }}"
-                          class="btn-change-url btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
+                          class="btn-change-url btn-{{ first_button_type }}{% if first_button_type == "link" %} align-self-center border-animation{% else %} btn w-full w-md-custom max-w-100{% endif %} pointer"
                           {% if first_button_type != 'link' %}
                             style="--width: 20rem;"
                           {% endif %}
@@ -364,7 +369,7 @@
                             href="{{ second_button_link | default: "#" }}"
                           {% endif %}
                           aria-label="{{ second_button_label }}"
-                          class="btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} btn w-custom max-w-100{% endif %} pointer"
+                          class="btn-{{ second_button_type }}{% if second_button_type == "link" %} align-self-center border-animation{% else %} btn w-full w-md-custom max-w-100{% endif %} pointer"
                           {% if second_button_type != 'link' %}
                             style="--width: 20rem;"
                           {% endif %}
