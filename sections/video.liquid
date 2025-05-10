@@ -64,27 +64,23 @@
           class="video-has-bg video-section relative{{ rounded }}"
           style="{% if section_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ aspect_ratio }}{% else %}--aspect-ratio: 16/9;{% endif %}"
         >
-          {% liquid
-            assign autoplay_val = section_st.autoplay | default: false | plus: 0
-            assign mute_val = autoplay_val
-
-            if section_st.video_url.type == 'youtube'
-              assign src_url = 'https://www.youtube.com/embed/' | append: video_id | append: '?autoplay=' | append: autoplay_val | append: '&mute=' | append: mute_val | append: '&playsinline=1'
-              assign iframe_class = 'js-youtube no-js-hidden w-full h-full'
-            else
-              assign src_url = 'https://player.vimeo.com/video/' | append: video_id | append: '?autoplay=' | append: autoplay_val | append: '&muted=' | append: mute_val
-              assign iframe_class = 'vimeo-video js-vimeo no-js-hidden bg-dark w-full h-full'
-            endif
-          %}
-
-          <iframe
-            src="{{ src_url }}"
-            class="{{ iframe_class }}"
-            allow="autoplay; encrypted-media"
-            title="{{ section_st.alt_description | escape }}"
-            allowfullscreen
-            frameborder="0"
-          ></iframe>
+          {%- if section_st.video_url.type == 'youtube' -%}
+            <iframe
+              src="https://www.youtube.com/embed/{{ video_id }}?autoplay={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&mute={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&playsinline=1"
+              class="js-youtube no-js-hidden"
+              allow="autoplay; encrypted-media"
+              title="{{ section_st.alt_description | escape }}"
+              allowfullscreen
+            ></iframe>
+          {%- else -%}
+            <iframe
+              src="https://player.vimeo.com/video/{{ video_id }}?autoplay={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&muted={% if section_st.autoplay -%}1{% else %}0{%- endif -%}"
+              class="js-vimeo no-js-hidden"
+              allow="autoplay; encrypted-media"
+              title="{{ section_st.alt_description | escape }}"
+              allowfullscreen
+            ></iframe>
+          {%- endif -%}
         </div>
       </video-section>
     {%- elsif section_st.video_local != null -%}
