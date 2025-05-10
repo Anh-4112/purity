@@ -24,7 +24,7 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--col-width: {{ desktop_media_width }}%;
 {%- endcapture -%}
-<script type="module" src="{{ 'main-product.js' | asset_url }}"></script>
+
 <section
   id="Product-{{ section.id }}"
   class="section sec__main-product media-width-{{ desktop_media_width }}"
@@ -66,33 +66,6 @@
       </div>
     </div>
   </div>
-  {% unless product == empty %}
-    <script
-      type="application/json"
-      data-product-json
-      class="productJson"
-    >
-      {{ product | json }}
-    </script>
-  {% endunless %}
-  {%- unless product.has_only_default_variant -%}
-    <script type="application/json" class="productVariantsQty">
-      [
-      {%- for variant in product.variants -%}
-        {%- assign op = variant.option1 | replace: '"', '\"' -%}
-        {%- liquid
-            assign id = '"id":' | append: variant.id
-            assign option = '"option":"' | append: op | append: '"'
-            assign quantity = '"qty":' | append: variant.inventory_quantity
-            assign available = '"available":' | append: variant.available
-            assign mamagement = '"mamagement":"' | append: variant.inventory_management | append: '"'
-        -%}
-        { {{ id }},{{ option }},{{ quantity }},{{ available }},{{ mamagement }}}
-        {%- unless forloop.last -%},{%- endunless forloop.last -%}
-      {%- endfor -%}
-      ]
-    </script>
-  {%- endunless -%}
   <script type="application/ld+json">
     {
       "@context": "http://schema.org/",
@@ -198,6 +171,7 @@
     </sticky-add-cart>
   {% endif %}
 </section>
+<script type="module" src="{{ 'main-product.js' | asset_url }}"></script>
 {% schema %}
 {
   "name": "t:sections.main-product.name",
