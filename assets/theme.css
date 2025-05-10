@@ -1190,7 +1190,7 @@ blockquote {
   .btn__quick-shop:focus-visible {
     opacity: 1;
     visibility: visible;
-    pointer-events: pointer;
+    pointer-events: auto;
   }
   .btn__quick-shop.absolute {
     --btn-padding-y: 1.5rem;
@@ -1712,6 +1712,10 @@ cart-gift-wrap-element.open .cart-addons-content {
   }
 }
 @media (min-width: 1025px) {
+  .drawer__cart-recommendations {
+    padding-bottom: 0;
+    width: var(--max-width);
+  }
   .minicar_recommend .product__information {
     text-align: center;
   }
@@ -1907,7 +1911,7 @@ shopable-item:focus-visible .play-button,
   transition-delay: 0s;
 }
 media-lightbox-popup .mute-button-popup {
-  bottom: 125px;
+  bottom: 120px;
 }
 media-lightbox-popup .swiper-actions {
   position: absolute;
@@ -1955,7 +1959,7 @@ media-lightbox-popup .btn__quick-shop {
   margin-inline-end: 1.5rem;
 }
 media-lightbox-popup .product__name {
-  --line-clamp: 2;
+  --line-clamp: 1;
   display: -webkit-box;
   -webkit-line-clamp: var(--line-clamp);
   -webkit-box-orient: vertical;

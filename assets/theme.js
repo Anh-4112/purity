@@ -1183,14 +1183,16 @@ class VideoLocalScroll extends VideoLocal {
   init() {
     if (!this.isScrollInitialized) {
       this.isScrollInitialized = true;
-      window.addEventListener('scroll', this.checkScroll.bind(this), { passive: true });
+      window.addEventListener("scroll", this.checkScroll.bind(this), {
+        passive: true,
+      });
     }
   }
-  
+
   checkScroll() {
     if (window.scrollY > 10) {
       this.loadContentVideo(this);
-      window.removeEventListener('scroll', this.checkScroll);
+      window.removeEventListener("scroll", this.checkScroll);
     }
   }
 }
@@ -1653,8 +1655,8 @@ class CartUpSellProduct extends SlideSection {
   actionOutMobile() {
     this.initSlideMediaGallery("CartUpSell");
     this.style.maxHeight =
-      this.closest(".drawer__body").offsetHeight - 140 + "px";
-    this.style.minHeight = "calc(100vh - 140px)";
+      this.closest(".drawer__body").offsetHeight - 110 + "px";
+    this.style.minHeight = "calc(100vh - 110px)";
   }
 }
 customElements.define("cart-upsell-product", CartUpSellProduct);

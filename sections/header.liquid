@@ -651,7 +651,7 @@
                                       -%}
                                       <div
                                         class="mega-banner flex wrap flex-cols gap-10 row-gap-20 p-gutter-x"
-                                        style="{% if last_block.settings.banner_column > 1 %}--col-number: 1;{% else %}--col-number: 1;{% endif %};--col-tablet: 2;"
+                                        style="{% if last_block.settings.content_position != 'bellow' %}--col-number: 1;{% else %}--col-number: 2;{% endif %};--col-tablet: 2;"
                                       >
                                         {%- for i in (1..5) -%}
                                           {%- capture promotion -%}promotion_image_{{ i }}{%- endcapture -%}

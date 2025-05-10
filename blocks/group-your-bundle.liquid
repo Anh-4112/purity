@@ -1,3 +1,4 @@
+{{ 'product-bundle.css' | asset_url | stylesheet_tag }}
 {% liquid
   assign theme_st = settings
   assign block_st = block.settings
@@ -29,82 +30,8 @@
     assign ratio = '3/4'
   endif
 %}
-{% style %}
-  .product_bundle .product-item {
-    --input-height: 4rem;
-    --btn-padding-y: 1rem;
-    --btn-padding-x: 1.5rem;
-  }
-  .bundle-sticky {
-    border-color: var(--color-heading);
-    pointer-events: auto;
-  }
-  .skeleton-product__info {
-    height: 1rem;
-    border-radius: 10px;
-    background: var(--color-background-2);
-    margin-bottom: 1rem;
-  }
-  @media (min-width: 1025px) {
-    .product_bundle .product-item {
-      --input-height: 5.2rem;
-      --btn-padding-y: 1.5rem;
-      --btn-padding-x: 3rem;
-    }
-    .bundle-sticky {
-      position: sticky;
-      inset-block-start: 3rem;
-    }
-  }
-  @media screen and (max-width: 1024.98px) {
-    .bundle-header{
-      text-align: left;
-    }
-    .bundle-title{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .bundle-content{
-      height: 0;
-    }
-    .bundle-sidebar{
-      margin-top: 3rem;
-      position: sticky;
-      z-index: 11;
-      inset-block-end: 0;
-      padding-block-start: 60vh;
-      padding-block-start: 60lvh;
-    }
-    .product_bundle > .col-1025-remaining{
-      margin-block-end: -60vh;
-      margin-block-end: -60lvh;
-    }
-    .product_bundle .bundle-sticky{
-      backdrop-filter: blur(20px);
-      background-color: rgb(255 255 255 / 80%);
-      margin-inline: calc(var(--bs-gutter-x)* -1);
-      padding: 2rem 2rem;
-      border-radius: 15px 15px 0 0;
-      border: 0;
-      gap: 2rem;
-      box-shadow: 5px 0px 30px 0px rgba(0, 0, 0, 0.08);
-    }
-    .bundle-items__wrapper {
-      overflow-x: hidden;
-      overflow-y: auto;
-      scroll-behavior: smooth;
-      scroll-snap-type: y mandatory;
-      scrollbar-color: auto;
-      scrollbar-width: thin;
-      padding-inline-end: 1rem;
-      margin-inline-end: -1rem;
-      max-height: 300px;
-    }
-  }
-{% endstyle %}
 <div
-  class="bundle-sticky border rounded p-20 p-1025-40 flex column gap-20 gap-1025-30"
+  class="bundle-sticky border rounded p-20 p-1025-40 flex column gap-20 gap-1025-30 sticky-1025 top-30"
   style="--border-height: 2px;"
   data-enable-quantity="{{ enable_quantity }}"
 >
@@ -120,10 +47,10 @@
         {%- endif -%}
         <span
           class="toggle-bundle w-30 h-custom hidden-1025 inline-flex flex-end align-center"
-          style="--height: 30px;"
+          style="--height: 40px;"
         >
-          <svg class="icon icon-down icon-rotate transition-short" width="9" height="6" viewBox="0 0 9 6">
-            <use href="#icon-arrow-down" />
+          <svg class="icon icon-down icon-rotate transition-short" width="12" height="8" fill="none">
+            <path fill="currentColor" fill-opacity=".85" d="M.26 2.023A.763.763 0 0 1 0 1.44.85.85 0 0 1 .26.819c.161-.16.362-.24.603-.24.24 0 .441.08.602.24L6 5.354 10.535.819c.16-.16.361-.24.602-.24.24 0 .442.08.602.24A.85.85 0 0 1 12 1.44a.763.763 0 0 1-.26.582L6.601 7.16A.785.785 0 0 1 6 7.42a.785.785 0 0 1-.602-.26L.261 2.023Z"/>
           </svg>
         </span>
       </div>
@@ -137,7 +64,10 @@
   <div class="bundle-content flex column gap-20 gap-1025-30">
     {% if show_progress_bar %}
       <bundle-progress-bar data-minimum="{{ section_st.minimum }}" data-section-id="{{ section.id }}">
-        <div class="progress-bar rounded-10 h-custom bg-grey relative" style="--height: 6px;">
+        <div
+          class="progress-bar rounded-10 h-custom bg-grey relative"
+          style="--height: 6px;--accent-color-second: var(--color-border);"
+        >
           <div class="progress rounded-10 h-custom absolute left-0 inset-y-0 transition"></div>
         </div>
       </bundle-progress-bar>
@@ -149,7 +79,7 @@
             <figure
               class="skeleton-product__media rounded-10 media relative overflow-hidden align-self-start bg-secondary flex-auto w-custom"
               data-product-bundle-variant-media
-              style="--aspect-ratio: {{ ratio }};--width: 10rem;"
+              style="--aspect-ratio: {{ ratio }};--width: clamp(8rem, 6vw, 10rem);"
             ></figure>
             <div
               class="skeleton-product__details grow-1 flex column justify-center"
@@ -196,7 +126,7 @@
       <span class="hidden-on-load transition-short">{{ 'products.product.add_all_to_cart' | t }}</span>
       {%- render 'loader' -%}
     </button-submit-bundle>
-    <div class="bundle-footer flex column gap-10">
+    <div class="bundle-footer flex column gap-10 d-none flex-1025">
       {% content_for 'blocks' %}
     </div>
   </div>
@@ -265,10 +195,10 @@
       "label": "t:sections.product-bundle.settings.your_bundle.settings.show_progress_bar.label"
     },
     {
-        "type": "checkbox",
-        "id": "enable_quantity",
-        "label": "t:sections.product-bundle.settings.discount.edit_quantity",
-        "default": true
+      "type": "checkbox",
+      "id": "enable_quantity",
+      "label": "t:sections.product-bundle.settings.discount.edit_quantity",
+      "default": true
     }
   ],
   "blocks": [

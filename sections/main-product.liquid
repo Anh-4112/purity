@@ -32,7 +32,7 @@
 >
   <div class="{{ section_width }}">
     <div
-      class="main-product flex wrap gap{% if media_position == 'right' %} row-reverse-md{% endif %}{% if desktop_layout == 'stack' %} stack_media{% endif %}"
+      class="main-product flex wrap gap{% if media_position == 'right' %} row-reverse-md{% endif %}{% if desktop_layout == 'stack' %} stack_media{% else %} main_product-media{% endif %}"
       style="--gap: var(--bs-gutter-x); --gap-desktop: 10px;"
     >
       {% if product.media.size > 0 %}
@@ -112,7 +112,7 @@
   </script>
   {% if enable_sticky_desktop %}
     {%- assign product_form_id = 'sticky-addcart-form-' | append: section.id -%}
-    <sticky-add-cart class="sticky-add-cart opacity-0 amimate_show-hide transition-drawer fixed bottom-0 inset-x-0 bg-white z-5 shadow">
+    <sticky-add-cart class="sticky-add-cart opacity-0 amimate_show-hide transition-drawer fixed bottom-0 inset-x-0 bg-white z-10 shadow">
       <div class="{{ section_width }}">
         <div
           class="sticky-add-cart__inner flex gap-10 space-between align-center py-10"
@@ -162,7 +162,7 @@
                 type_form: 'sticky-add-cart',
                 type: 'primary',
                 class_btn: ' min-w-1025-custom text-center',
-                class_quantity: ' d-none flex-1025'
+                class_quantity: ' flex'
               -%}
             </div>
           </div>
