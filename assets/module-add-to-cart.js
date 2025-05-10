@@ -1,4 +1,5 @@
 import * as NextSkyTheme from "global";
+import { LazyLoader } from "module-lazyLoad";
 
 export class ProductForm extends HTMLElement {
   constructor() {
@@ -219,6 +220,7 @@ export class ProductForm extends HTMLElement {
         ".drawer__body"
       );
       this.cart.querySelector(".drawer__body").innerHTML = drawerBody.innerHTML;
+      new LazyLoader(".image-lazy-load");
       NextSkyTheme.trapFocus(this.cart);
     } else {
       this.getSectionsToRender().forEach((section, index) => {
@@ -236,6 +238,18 @@ export class ProductForm extends HTMLElement {
             sectionElement.querySelector(".cart-count")
           ) {
             nav_bar_id.querySelector(".cart-count").innerHTML =
+              this.getSectionDOM(
+                parsedState.sections[section.id],
+                ".cart-count"
+              ).innerHTML;
+          }
+          const nav_bar_mobile_id = document.querySelector("#cart-icon-bubble-mobile");
+          if (
+            nav_bar_mobile_id &&
+            nav_bar_mobile_id.querySelector(".cart-count") &&
+            sectionElement.querySelector(".cart-count")
+          ) {
+            nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
               this.getSectionDOM(
                 parsedState.sections[section.id],
                 ".cart-count"
@@ -275,6 +289,7 @@ export class ProductForm extends HTMLElement {
         ".main-cart__wrapper"
       );
       this.cart.closest(".main-cart__wrapper").innerHTML = drawerBody.innerHTML;
+      new LazyLoader(".image-lazy-load");
     } else {
       this.getSectionsToRender().forEach((section, index) => {
         const sectionElement = section.selector
@@ -287,6 +302,14 @@ export class ProductForm extends HTMLElement {
           const nav_bar_id = document.getElementById("cart-icon-bubble");
           if (nav_bar_id && nav_bar_id.querySelector(".cart-count")) {
             nav_bar_id.querySelector(".cart-count").innerHTML =
+              this.getSectionDOM(
+                parsedState.sections[section.id],
+                ".cart-count"
+              ).innerHTML;
+          }
+          const nav_bar_mobile_id = document.getElementById("cart-icon-bubble-mobile");
+          if (nav_bar_mobile_id && nav_bar_mobile_id.querySelector(".cart-count")) {
+            nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
               this.getSectionDOM(
                 parsedState.sections[section.id],
                 ".cart-count"
@@ -582,6 +605,15 @@ class CartGiftWrap extends HTMLElement {
                     ".cart-count"
                   ).innerHTML;
               }
+
+              const nav_bar_mobile_id = document.querySelector("#cart-icon-bubble-mobile");
+              if (nav_bar_mobile_id && nav_bar_mobile_id.querySelector(".cart-count")) {
+                nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
+                  this.getSectionDOM(
+                    parsedState.sections[section.id],
+                    ".cart-count"
+                  ).innerHTML;
+              }
             } else if (
               index === 2 &&
               sectionElement.querySelector(".progress")
@@ -751,6 +783,16 @@ class CartDrawer extends HTMLElement {
           sectionElement.querySelector(".cart-count")
         ) {
           nav_bar_id.querySelector(".cart-count").innerHTML =
+            sectionElement.querySelector(".cart-count").innerHTML;
+        }
+
+        const nav_bar_mobile_id = document.querySelector("#cart-icon-bubble-mobile");
+        if (
+          nav_bar_mobile_id &&
+          nav_bar_mobile_id.querySelector(".cart-count") &&
+          sectionElement.querySelector(".cart-count")
+        ) {
+          nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
             sectionElement.querySelector(".cart-count").innerHTML;
         }
       }

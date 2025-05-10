@@ -131,7 +131,7 @@
       <img
         {% if fetchpriority == 'high' %}
           srcset="{{ srcset_image }}"
-          loading="lazy"
+          loading="eager"
           fetchpriority="high"
         {% elsif fetchpriority == 'low' %}
           data-srcset="{{ srcset_image }}"
@@ -160,13 +160,17 @@
     {%- endcapture -%}
     <img
       {% if fetchpriority == 'high' %}
-        srcset="{{ srcset_image }}"
-        loading="lazy"
+        data-srcset="{{ srcset_image }}"
+        loading="eager"
         fetchpriority="high"
       {% elsif fetchpriority == 'low' %}
         data-srcset="{{ srcset_image }}"
         loading="lazy"
         fetchpriority="low"
+      {% elsif fetchpriority == 'auto' %}
+        data-srcset="{{ srcset_image }}"
+        loading="lazy"
+        fetchpriority="auto"
       {% else %}
         data-srcset="{{ srcset_image }}"
         loading="lazy"
@@ -175,9 +179,8 @@
       src="{{ image | image_url: width: image_size }}"
       alt="{{ image_alt }}"
       class="image-lazy-load {{ class }}"
-      loading="lazy"
-      width="{{ image.width }}"
-      height="{{ image.height }}"
+      width="{{ image.width | default: '80' }}"
+      height="{{ image.height | default: '80' }}"
       is="lazy-loading-img"
       style="--point:{{ image.presentation.focal_point }}"
     >
@@ -199,7 +202,7 @@
           image
           | image_url: width: image.width
           | image_tag:
-            loading: 'lazy',
+            loading: 'eager',
             width: image.width,
             height: image.height,
             sizes: sizes,
@@ -230,7 +233,7 @@
         image
         | image_url: width: image.width
         | image_tag:
-          loading: 'lazy',
+          loading: 'eager',
           width: image.width,
           height: image.height,
           sizes: sizes,

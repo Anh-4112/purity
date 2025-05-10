@@ -41,22 +41,18 @@
         >
           {%- liquid
             assign alt = collection.image.alt | default: collection.title | escape
+            if use_collection_image and collection.image
+              assign background_image = collection.image | default: background_image
+            endif
           -%}
-          {%- if use_collection_image and collection.image -%}
+          {%- if background_image != blank -%}
             {% render 'responsive-image',
-              type: 'other',
-              container: section_width,
-              image: collection.image,
-              image_alt: alt,
-              animate: 'zoom-out-small',
-              motion: true
-            %}
-          {%- elsif background_image != blank -%}
-            {% render 'responsive-image',
-              type: 'other',
+              type: 'banner',
               container: section_width,
               image: background_image,
+              image_mobile: background_image,
               image_alt: alt,
+              fetchpriority: 'high',
               animate: 'zoom-out-small',
               motion: true
             %}

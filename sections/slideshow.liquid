@@ -21,11 +21,11 @@
   endif
 %}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--auto-speed: {{ change_slide_every }}s;
 {%- endcapture -%}
 <div
   id="{{ section.id }}"
-  class="gradient color-{{ color_scheme }} section__slideshow section"
+  class="gradient color-{{ color_scheme }} section__slideshow section{% if slide_auto_change %} autoplay{% endif %}"
   style="{{ style | strip | strip_newlines }}"
   data-id="{{ section.id }}"
 >
@@ -208,7 +208,7 @@
                         </div>
                       {% endif %}
                       {% if heading != blank %}
-                        <div class="sec__content-heading mb-10 {{ heading_size }}">
+                        <div class="sec__content-heading {{ heading_size }}">
                           {% assign animate_delay = animate_delay | plus: 50 %}
                           <motion-effect
                             data-animate="fade-up"
@@ -220,7 +220,7 @@
                         </div>
                       {% endif %}
                       {% if description != blank %}
-                        <div class="sec__content-des">
+                        <div class="sec__content-des mt-10 prose">
                           {% assign animate_delay = animate_delay | plus: 50 %}
                           <motion-effect
                             data-animate="fade-up"
@@ -285,6 +285,10 @@
     "groups": ["header", "footer", "custom.overlay"]
   },
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.slideshow.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

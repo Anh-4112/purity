@@ -6,6 +6,42 @@
   visibility: visible;
   pointer-events: auto;
 }
+.slideshow .mt-50 {
+  margin-top: clamp(2rem, 4.3vw, 5rem);
+}
+.autoplay .swiper-pagination-bullet {
+  --swiper-pagination-color: rgba(0, 0, 0, 0.3);
+  transition: all 0.3s;
+}
+.autoplay .swiper-pagination-bullet:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  width: 0;
+  height: 6px;
+  margin: auto;
+  background: var(--color-dark, #000);
+  border-radius: 10px;
+  transition: all 0.3s;
+}
+.autoplay .swiper-pagination-bullet-active:after {
+  opacity: 1;
+  transition: opacity 0.3s;
+  animation: process_loading var(--auto-speed, 0.3s) forwards ease;
+  -webkit-animation: process_loading var(--auto-speed, 0.3s) forwards ease;
+}
+
+@keyframes process_loading {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
 @media screen and (max-width: 767.98px) {
   .swiper-pagination.swiper-pagination-bellow {
     position: var(--swiper-pagination-position, absolute);
