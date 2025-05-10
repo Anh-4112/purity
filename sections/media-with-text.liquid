@@ -104,8 +104,8 @@
                 endfor
                 assign video_poster = video.preview_image | image_url: width: 1100
               -%}
-              <video-local-scroll>
-                <div class="video-thumbnail">
+              <video-local-scroll style="--aspect-ratio: {{ ratio }};" class="absolute">
+                <div class="video-thumbnail absolute" style="--aspect-ratio: {{ ratio }}">
                   {% render 'responsive-image',
                     type: 'banner',
                     container: section_st.section_width,
