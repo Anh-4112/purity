@@ -21,12 +21,12 @@
   assign animate_delay = 25
 -%}
 {%- capture style -%}
-  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }}; --col-width: clamp(30%, 40vw, 46rem);
+  --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }}; --col-width: clamp(30%, 30vw, 46rem);
 {%- endcapture -%}
 {% style %}
- build-your-routine .disabled{
-  pointer-events: none;
- }
+  build-your-routine .disabled {
+    pointer-events: none;
+  }
 {% endstyle %}
 <div
   class="section color-{{ section_st.color_scheme }} gradient"

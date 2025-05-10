@@ -1632,8 +1632,8 @@ class CartUpSellProduct extends SlideSection {
   actionOutMobile() {
     this.initSlideMediaGallery("CartUpSell");
     this.style.maxHeight =
-      this.closest(".drawer__body").offsetHeight - 140 + "px";
-    this.style.minHeight = "calc(100vh - 140px)";
+      this.closest(".drawer__body").offsetHeight - 110 + "px";
+    this.style.minHeight = "calc(100vh - 110px)";
   }
 }
 customElements.define("cart-upsell-product", CartUpSellProduct);

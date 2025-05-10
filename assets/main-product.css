@@ -101,10 +101,20 @@
   .product__media-gallery grid-gallery .swiper-pagination-custom {
     left: 3.5rem;
   }
+  sticky-add-cart
+    variant-swatch-select
+    + .sticky-sticky__buy-buttons
+    quantity-input {
+    display: none;
+  }
 }
 @media (min-width: 1025px) {
-  .main-product .product-detail__information {
-    padding-inline: clamp(4rem, 4vw, 8rem);
+  .main_product-media .product-detail__information {
+    padding-inline-start: clamp(4rem, 4vw, 8rem);
+  }
+  .main_product-media.row-reverse-md .product-detail__information {
+    padding-inline-start: 0;
+    padding-inline-end: clamp(4rem, 4vw, 8rem);
   }
 }
 video-product-gallery iframe,
@@ -156,4 +166,7 @@ video-product-gallery iframe,
 }
 .sticky__item-info variant-swatch-select select {
   width: 100%;
+}
+.template-product .mobile-navigation-bar {
+  display: none;
 }

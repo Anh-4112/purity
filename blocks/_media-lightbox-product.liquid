@@ -18,6 +18,9 @@
   --swiper-navigation-size: 3.6rem;--gap: 1rem; --gap-desktop: 1rem;--item-desktop: {{ items_to_show }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mb }};
 {%- endcapture -%}
 {% style %}
+  .media-lightbox-popup-slide {
+    --height: calc(var(--max-width) * (57 / 33));
+  }
   @media screen and (max-width: 767.98px) {
     .free-scroll {
       padding-inline: var(--bs-gutter-x, 1.5rem);
@@ -96,7 +99,7 @@
         <div
           class="modal-popup-inner flex column modal-focus h-content transition modal-draggable rounded max-w-custom m-auto invisible-1025 fixed right-30 bottom-30 z-10 bg-white w-full"
           tabindex="-1"
-          style="--max-width: 33rem;--width: 4.6rem; --height: 4.6rem;--swiper-navigation-size: 4.6rem;--position-arrow: static;"
+          style="--max-width: clamp(25rem, 14vw, 33rem);--width: 4.6rem; --height: 4.6rem;--swiper-navigation-size: 4.6rem;--position-arrow: static;"
         >
           <button
             class="modal__close absolute pointer overflow-hidden btn-reset w-custom h-custom bg-custom blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow color-white"
@@ -107,7 +110,7 @@
             </svg>
           </button>
           <slide-section
-            class="swiper media-lightbox-popup-slide"
+            class="swiper media-lightbox-popup-slide w-full h-custom"
             data-effect="slide"
             data-direction="vertical"
             data-mousewheel="true"
@@ -117,16 +120,15 @@
             data-mobile="1"
             data-desktop="1"
             data-tablet="1"
-            style="height: 570px;"
           >
             {%- render 'swiper-navigation' -%}
             <div class="swiper-wrapper">
               {%- for media in closest.product.metafields.custom.media_lightbox.value -%}
                 <div class="swiper-slide">
                   {%- assign image_alt = media.alt | default: closest.product.title | escape -%}
-                  <div class="media-lightbox-item h-full">
+                  <div class="media-lightbox-item w-full h-full">
                     {% if media.media_type == 'video' -%}
-                      <video-lightbox-item class="h-full">
+                      <video-lightbox-item class="w-full h-full">
                         <button
                           aria-label="{{ 'accessibility.play_button.video' | t }}"
                           class="play-button transition-short opacity-0 play-button-popup active absolute inset-0 m-auto btn-reset w-custom h-custom bg-custom blur rounded-50 z-1 pointer inline-flex content-center"
@@ -158,7 +160,7 @@
                         </div>
                         <video
                           preload="auto"
-                          class="smooth_loading-video"
+                          class="smooth_loading-video w-full"
                           loop
                           muted
                           playsinline

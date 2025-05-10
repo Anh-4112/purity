@@ -1,0 +1,95 @@
+.product_bundle .product-item {
+  --input-height: 4rem;
+  --btn-padding-y: 1rem;
+  --btn-padding-x: 1.5rem;
+}
+.bundle-sticky {
+  border-color: var(--color-heading);
+  pointer-events: auto;
+}
+.skeleton-product__info {
+  height: 1rem;
+  border-radius: 10px;
+  background: var(--color-background-2);
+  margin-bottom: 1rem;
+}
+@media (min-width: 1025px) {
+  .product_bundle .product-item {
+    --input-height: 5.2rem;
+    --btn-padding-y: 1.5rem;
+    --btn-padding-x: 3rem;
+  }
+}
+@media (min-width: 1025px) and (max-width: 1199.99px) {
+  build-your-routine.gap-large {
+    --gap: 20px;
+  }
+  .bundle-sticky {
+    padding: 3rem;
+  }
+  .gap-1025-30 {
+    gap: 2rem;
+  }
+}
+@media screen and (max-width: 1024.98px) {
+  .bundle-header {
+    text-align: left;
+  }
+  .bundle-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bundle-content {
+    height: 0;
+  }
+  .bundle-sidebar {
+    margin-top: 3rem;
+    position: sticky;
+    z-index: 11;
+    inset-block-end: -1px;
+    padding-block-start: 60vh;
+    padding-block-start: 60lvh;
+  }
+  .product_bundle > .col-1025-remaining {
+    margin-block-end: -60vh;
+    margin-block-end: -60lvh;
+  }
+  .product_bundle .bundle-sticky {
+    --color-background-2: #ffffff3b;
+    --color-text: rgb(var(--color-white));
+    --color-heading: rgb(var(--color-white));
+    color: var(--color-text);
+    background-color: var(--color-primary);
+    margin-inline: calc(var(--bs-gutter-x) * -1);
+    padding: 2rem 2rem 3.5rem;
+    border-radius: 15px 15px 0 0;
+    border: 0;
+    gap: 2rem;
+    box-shadow: 5px 0px 30px 0px rgba(0, 0, 0, 0.08);
+  }
+  .bundle-content .divider {
+    --color-border: #ffffff5e;
+  }
+  button-submit-bundle.btn-primary {
+    --btn-bg: rgb(var(--color-white));
+    --btn-color: var(--color-primary);
+  }
+  button-submit-bundle.btn-primary.disabled {
+    opacity: 0.8;
+  }
+  quantity-input-bundle {
+    --color-heading: #000;
+  }
+  .bundle-items__wrapper {
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    scrollbar-color: auto;
+    scrollbar-width: thin;
+    padding-inline-end: 1rem;
+    margin-inline-end: -1rem;
+    max-height: 300px;
+  }
+}
