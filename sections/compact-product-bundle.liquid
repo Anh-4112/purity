@@ -104,6 +104,11 @@
               assign position_top = block_st.position_top
               assign position_left = block_st.position_left
               assign product = block_st.product
+              if product.title == blank
+                assign aria_label = 'onboarding.product_title' | t
+              else
+                assign aria_label = product.title
+              endif
             %}
             <div
               class="absolute bundle-products-link z-2 flex justify-center overflow-hidden"
@@ -113,7 +118,7 @@
             >
               <div class="bundle-products-hotspot pointer relative">
                 <a
-                  aria-label="{{ product.title }}"
+                  aria-label="{{ aria_label }}"
                   class="product__name heading-style inline-flex w-custom h-custom pointer content-center rounded-50"
                   style="--width: 4.6rem;--height: 4.6rem;"
                   {% if product.url != blank %}
