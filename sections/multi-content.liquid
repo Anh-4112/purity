@@ -34,6 +34,10 @@
   elsif heading_size == 'large'
     assign header_size = 'h1'
   endif
+  assign data_free_scroll = 'false'
+  if section_st.items_per_row > 1 and section_st.items_per_row < 2
+    assign data_free_scroll = 'true'
+  endif
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -52,7 +56,7 @@
   }
 {% endstyle %}
 <div
-  class="section__multi-content overflow-hidden section{% if section_st.show_divider %} border-top{% endif %}"
+  class="section__multi-content overflow-hidden section{% if section_st.show_divider %} border-top{% endif %}{% if data_free_scroll == 'true' and section_st.enable_carousel_mobile %} overflow-hidden{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div
@@ -115,8 +119,11 @@
     <div
       class="promotion-banner__blocks relative{% if section.blocks.size == 1 %} is-equal-one{% endif %}"
     >
+      {% if data_free_scroll == 'true' and section_st.enable_carousel_mobile %}
+        <div class="free-scroll">
+      {% endif %}
       <carousel-mobile
-        class="promotion-banner__blocks row-gap gap-{{ section_st.column_gap }}{% if section_st.enable_carousel_mobile %} grid-cols grid promotion-banner__carousel{% else %} flex column flex-md-row wrap cols{% endif %}"
+        class="promotion-banner__blocks row-gap gap-{{ section_st.column_gap }}{% if section_st.enable_carousel_mobile %} grid-cols grid promotion-banner__carousel{% else %} flex column flex-md-row wrap cols{% endif %}{% if data_free_scroll == 'true' and section_st.enable_carousel_mobile %} overflow-visible-mb{% endif %}"
         data-multicontent="true"
         data-flex="true"
         data-enable-carousel-mobile="{{ section_st.enable_carousel_mobile }}"
@@ -126,6 +133,9 @@
       >
         {% content_for 'blocks' %}
       </carousel-mobile>
+      {% if data_free_scroll == 'true' and section_st.enable_carousel_mobile %}
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>

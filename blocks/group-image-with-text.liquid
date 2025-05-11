@@ -17,7 +17,7 @@
 
 <div class="group__block--image-with-text w-full h-full flex align-{{ block_st.vertical_alignment_group }}">
   <div
-    class="w-full color-{{ block_st.color_scheme }} gradient flex relative{% if section_st.equal_height_adjustment %} h-full{% else %} h-content{% endif %}{% if block_st.content_position != 'overlay' %} flex column{% endif %}"
+    class="w-full color-{{ block_st.color_scheme }} gradient flex relative{% if section_st.equal_height_adjustment %} h-full{% else %} h-content{% endif %}{% if block_st.content_position != 'overlay' %} flex column{% else %} hover-effect{% endif %}"
     {% if block_st.content_position == 'overlay' %}
       style="
         {%- if block_st.image != blank or mobile_image != blank or video != blank -%}
@@ -279,7 +279,8 @@
     },
     {
       "type": "header",
-      "content": "t:sections.multi_content.blocks.bellow_image"
+      "content": "t:sections.multi_content.blocks.bellow_image",
+      "info": "t:sections.multi_content.blocks.info_bellow"
     },
     {
       "type": "checkbox",
