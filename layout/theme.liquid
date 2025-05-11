@@ -235,7 +235,7 @@
           "module-variantSwatch": "{{ 'module-variant-swatch.js' | asset_url }}",
           "module-safariElementPatch": "{{ 'safari-element-patch.js' | asset_url }}",
           "module-photoSwipeLightbox": "{{ 'photoswipe-lightbox.min.js' | asset_url }}",
-          "vertical-product-tabs" : "{{ 'section-vertical-product-tabs.js' | asset_url }}"
+          "vertical-product-tabs": "{{ 'section-vertical-product-tabs.js' | asset_url }}"
         }
       }
     </script>
@@ -333,6 +333,10 @@
         productModel: "{{ 'product-model.js' | asset_url }}",
         mediaLightboxGallery: "{{ 'media-lightbox-gallery.js' | asset_url }}",
         countdownTimer: "{{ 'countdown-timer.js' | asset_url }}",
+      };
+      window.validate = {
+        email_invalid: `{{ "customer.validate.email" | t }}`,
+        emailRegex: `{{ 'customer.validate.email_invalid' | t }}`,
       };
     </script>
   </body>

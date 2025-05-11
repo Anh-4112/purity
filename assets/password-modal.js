@@ -128,7 +128,6 @@ class NewsletterPopupPassword extends HTMLElement {
     const submitButton = form.querySelector('.password-button'); 
     const passwordInput = form.querySelector('#Password'); 
     if (!form || !submitButton || !passwordInput) {
-      console.log('Form, button, or password input not found');
       return;
     }
 
@@ -137,8 +136,6 @@ class NewsletterPopupPassword extends HTMLElement {
     };
 
     submitButton.addEventListener('click', function (e) {
-      console.log('Submit button clicked');
-
       const errorMessage = validatePassword(passwordInput.value);
 
       if (errorMessage) {
