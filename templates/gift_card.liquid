@@ -80,6 +80,8 @@
           --color-heading: {{ scheme.settings.heading_color }};
           --color-heading-rgb:{{ scheme.settings.heading_color.red }}, {{ scheme.settings.heading_color.green }}, {{ scheme.settings.heading_color.blue }};
           --color-border: {{ scheme.settings.border_color }};
+          --color-grey: rgba(var(--color-text-rgb), 0.85);
+          --color-grey-light: rgba(var(--color-text-rgb), 0.2);
           /* Button primary */
           --btn-primary-color: {{ scheme.settings.btn_primary_color }};
           --btn-primary-hover-color: {{ scheme.settings.btn_primary_hover_color }};
@@ -146,10 +148,8 @@
         --bs-gutter-y: 0;
         --color-white: 255, 255, 255;
         --color-dark: #000;
-        --color-grey: rgba(var(--color-text-rgb), 0.6);
         --sale-bg-rgb: {{ theme_st.sale_background.red }}, {{ theme_st.sale_background.green }}, {{ theme_st.sale_background.blue }};;
          --sale-color: {{ theme_st.sale_color }};
-        --color-grey-light: rgba(var(--color-text-rgb), 0.2);
         --responsive-rate: ((100vw - 575px) / (1410 - 575));
 
         --transition: all 0.4s;
@@ -233,7 +233,7 @@
           "module-addToCart": "{{ 'module-add-to-cart.js' | asset_url }}",
           "module-lazyLoad": "{{ 'module-lazyload.js' | asset_url }}",
           "module-safariElementPatch": "{{ 'safari-element-patch.js' | asset_url }}",
-          "vertical-product-tabs" : "{{ 'section-vertical-product-tabs.js' | asset_url }}"
+          "vertical-product-tabs": "{{ 'section-vertical-product-tabs.js' | asset_url }}"
         }
       }
     </script>

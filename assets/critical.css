@@ -2173,3 +2173,38 @@ menu-drawer .modal-inner {
   margin: 0;
   padding-inline-start: 15px;
 }
+range-slider span {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: var(--progress-width);
+}
+.hidden_range .product-tabs__header-item {
+  opacity: 0.5;
+  transition: var(--transition);
+}
+.hidden_range .product-tabs__header-item.active {
+  opacity: 1;
+}
+.product-tabs__header-item:is(.selected, .hovered)
+  .product-tabs__header-image
+  > * {
+  transform: scale(1.1);
+}
+.product-tabs__header-item .product-tabs__header-image > * {
+  transition: var(--transition-drawer);
+}
+@media screen and (max-width: 767.98px) {
+  .product-tabs__header-content {
+    max-width: 100%;
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .tab-image {
+    opacity: 0.5;
+  }
+  .tab-image.active {
+    opacity: 1;
+  }
+}

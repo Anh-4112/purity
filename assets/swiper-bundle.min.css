@@ -352,6 +352,7 @@
   align-items: center;
   margin-top: 3rem;
   padding-bottom: 0.5rem;
+  --swiper-pagination-color: var(--color-heading);
 }
 .show-swiper-actions {
   position: relative;
@@ -440,7 +441,11 @@
   overflow: hidden;
 }
 .swiper-pagination-bullet:not(.swiper-pagination-bullet-active):before {
-  background: radial-gradient(circle, #000 0 3px, transparent 3px 100%);
+  background: radial-gradient(
+    circle,
+    var(--color-heading) 0 3px,
+    transparent 3px 100%
+  );
   border-radius: 50%;
 }
 button.swiper-pagination-bullet {
