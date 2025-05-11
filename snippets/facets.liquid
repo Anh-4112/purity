@@ -15,7 +15,7 @@
   <form
     id="{% if filter_layout == 'drawer' %}FacetFiltersFormDrawer{% else %}FacetFiltersForm{% endif %}"
     class="flex column gap grow-1 filters-form{% if filter_layout == 'drawer' %} drawer-spacing{% endif %}"
-    style="--gap: 2rem;--checkmark_width: 2rem;--checkmark_rounded: 3px;--checkmark_top: 3px;--check_position: 45%;"
+    style="--gap: 2rem;--checkmark_width: 2rem;--checkmark_rounded: 3px;--checkmark_top: 3px;--check_position: 55%;"
   >
     {%- if results.terms -%}
       <input type="hidden" name="q" value="{{ results.terms | escape }}">
@@ -77,7 +77,7 @@
                             {% endif %}
                           >
                           <span
-                            class="checkmark relative rounded-50 pointer-none inline-flexw-custom h-custom"
+                            class="checkmark relative rounded-3 pointer-none inline-flex w-custom h-custom"
                           ></span>
                         </div>
                         <label
@@ -202,7 +202,7 @@
                   class="facets__price flex align-center gap-10 heading-color"
                   style="--input-height: 50px;--input-padding: 0 20px 0 35px;"
                 >
-                  <div class="relative grow-1">
+                  <div class="relative flex-1 grow-1">
                     <span class="field-currency absolute inset-y-0 left-20 flex align-center">
                       {{- cart.currency.symbol -}}
                     </span>
@@ -232,7 +232,6 @@
                       {{- 'products.facets.from' | t -}}
                     </label>
                   </div>
-
                   <svg
                     width="9"
                     height="2"
@@ -243,7 +242,7 @@
                   >
                     <use href="#icon-minus"></use>
                   </svg>
-                  <div class="field relative grow-1">
+                  <div class="field relative flex-1 grow-1">
                     <span class="field-currency absolute inset-y-0 left-20 flex align-center">
                       {{- cart.currency.symbol -}}
                     </span>

@@ -23,7 +23,7 @@
 %}
 {% style %}
   @media (min-width: 768px) {
-    .image-with-text__media,
+    newsletter-popup .image-with-text__media,
     .newsletter_inner {
       max-height: 80vh;
     }
@@ -33,11 +33,11 @@
   <template>
     <div class="newsletter-popup">
       <newsletter-modal-popup
-        class="modal active-modal-js modal-newsletter-popup"
+        class="modal active-modal-js modal-newsletter-popup fixed inset-0 z-31 flex align-center invisible"
       >
         <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
         <div
-          class="modal-popup-inner modal-focus invisible h-content modal-body modal-draggable transition rounded max-w-custom m-auto fixed inset-0 z-15 w-full bg-white"
+          class="modal-popup-inner invisible modal-focus modal-body modal-draggable transition rounded max-w-custom m-auto w-full bg-white z-15"
           style="--max-width: 68rem;"
           tabindex="-1"
         >
