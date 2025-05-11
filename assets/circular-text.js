@@ -10,8 +10,13 @@ class SpinningTextElement extends HTMLElement {
     const speed = this.dataset.speed || 8;
     const direction = this.dataset.direction || 'normal';
     const uppercase = this.dataset.uppercase === 'true';
-
-    const unit = rawText.trim() + ' • ';
+    let trimmedText = rawText.trim();
+    let size = trimmedText.length;
+    if (size == 0) return;
+    while (trimmedText.length < 15) {
+      trimmedText += ' • ' + trimmedText;
+    }
+    const unit = trimmedText + ' • ';
     const displayText = ((unit + unit));
     const finalText = uppercase ? displayText.toUpperCase() : displayText;
 
@@ -29,7 +34,7 @@ class SpinningTextElement extends HTMLElement {
     const circumference = measure.offsetWidth*2;
     document.body.removeChild(measure);
 
-    const radius = circumference / (2 * Math.PI);
+    const radius = circumference / (2 * Math.PI) - 27.5;
     const diameter = Math.ceil(radius * 2);
 
     this.style.width = `${diameter}px`;

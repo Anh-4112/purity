@@ -30,7 +30,7 @@
             data-index="{{ forloop.index }}{% if filter_layout == 'drawer' %}-drawer{% endif %}"
           >
             <details class="collapsible-row detail-open" is="collapsible-row" open>
-              <summary class="collapsible-row__summary h6 mb-20">
+              <summary class="collapsible-row__summary h6">
                 <span class="inline-flex">
                   {{- filter.label | escape }}
                   <span class="facets__selected{% if filter.active_values.size == 0 %} hidden{% else %} inline-flex{% endif %}">
@@ -55,7 +55,7 @@
                   endfor
                 -%}
                 <ul
-                  class="facets__list list-unstyled flex gap-custom column"
+                  class="facets__list list-unstyled flex gap-custom column mt-20"
                   style="{% if is_color_option == false %}--gap: 12;{% else %}--gap: 10;--color-swatch-width: 3.2rem;--color-swatch-height: 3.2rem;{% endif %}"
                   role="list"
                 >
@@ -162,7 +162,7 @@
           %}
           <action-filter class="js-filter block" data-index="{{ forloop.index }}">
             <details class="collapsible-row detail-open" is="collapsible-row" open>
-              <summary class="collapsible-row__summary h6 mb-20">
+              <summary class="collapsible-row__summary h6">
                 <span>{{- filter.label | escape }} </span
                 ><span class="open-children-toggle transition">
                   <span class="icon_plus-animation heading-color"> </span>
@@ -172,7 +172,7 @@
                 id="Facet-{{ forloop.index }}-{{ filter_layout }}-{{ section.id }}"
                 class="collapsible-row__content filter-attribute overflow-hidden"
               >
-                <div class="mb-20">
+                <div class="mt-20 mb-20">
                   {%- assign max_price_amount = filter.range_max | money | strip_html | escape -%}
                   <span class="facets__selected">
                     {{- 'products.facets.max_price' | t: price: max_price_amount -}}
