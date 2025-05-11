@@ -89,12 +89,7 @@ class ScrollOffer extends HTMLElement {
     contentAppend.classList.add("flex-1", "offer-mobile");
     contentAppend.innerHTML = `
       <div class="mobile_icon inline-flex column content-center heading-color gap-3">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3.9889 14.6624L2.46891 13.1424C1.84891 12.5224 1.84891 11.5024 2.46891 10.8824L3.9889 9.36234C4.2489 9.10234 4.4589 8.59233 4.4589 8.23233V6.08231C4.4589 5.20231 5.1789 4.48233 6.0589 4.48233H8.2089C8.5689 4.48233 9.0789 4.27236 9.3389 4.01236L10.8589 2.49234C11.4789 1.87234 12.4989 1.87234 13.1189 2.49234L14.6389 4.01236C14.8989 4.27236 15.4089 4.48233 15.7689 4.48233H17.9189C18.7989 4.48233 19.5189 5.20231 19.5189 6.08231V8.23233C19.5189 8.59233 19.7289 9.10234 19.9889 9.36234L21.5089 10.8824C22.1289 11.5024 22.1289 12.5224 21.5089 13.1424L19.9889 14.6624C19.7289 14.9224 19.5189 15.4324 19.5189 15.7924V17.9423C19.5189 18.8223 18.7989 19.5424 17.9189 19.5424H15.7689C15.4089 19.5424 14.8989 19.7524 14.6389 20.0124L13.1189 21.5324C12.4989 22.1524 11.4789 22.1524 10.8589 21.5324L9.3389 20.0124C9.0789 19.7524 8.5689 19.5424 8.2089 19.5424H6.0589C5.1789 19.5424 4.4589 18.8223 4.4589 17.9423V15.7924C4.4589 15.4224 4.2489 14.9124 3.9889 14.6624Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M9 15.002L15 9.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M14.4945 14.502H14.5035" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M9.49451 9.50195H9.50349" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+<svg width="20" height="20" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.326 12.217 2.059 10.95a1.338 1.338 0 0 1 0-1.883L3.326 7.8c.217-.216.392-.641.392-.941V5.067c0-.733.6-1.333 1.333-1.333h1.792c.3 0 .725-.175.941-.392l1.267-1.267a1.338 1.338 0 0 1 1.883 0l1.267 1.267c.217.217.642.392.942.392h1.791c.734 0 1.334.6 1.334 1.333V6.86c0 .3.175.725.391.941l1.267 1.267a1.338 1.338 0 0 1 0 1.883l-1.267 1.267c-.216.217-.391.642-.391.942v1.791c0 .734-.6 1.334-1.334 1.334h-1.791c-.3 0-.725.175-.942.392l-1.267 1.266a1.338 1.338 0 0 1-1.883 0l-1.267-1.267a1.537 1.537 0 0 0-.941-.391H5.05c-.733 0-1.333-.6-1.333-1.334V13.16c0-.309-.175-.734-.392-.942ZM7.5 12.5l5-5"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.08 12.083h.008M7.912 7.917h.008"/></svg>
         ${window.content.offer.title}
       </div>
     `;

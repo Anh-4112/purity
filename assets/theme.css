@@ -566,12 +566,16 @@ blockquote {
 .open-modal {
   overflow: hidden;
 }
+.modal_type_popup.remove-after {
+  opacity: 1;
+  pointer-events: auto;
+}
 @media (max-width: 1024.89px) {
   .btn-close-model {
     transform: translateY(calc(-100% + 60px));
     -webkit-transform: translateY(calc(-100% + 60px));
   }
-  .modal-popup {
+  .modal_type_popup {
     align-items: flex-end;
   }
   .modal-popup-inner,
@@ -589,10 +593,6 @@ blockquote {
     .modal-inner:not(.draw-mb) {
       max-height: calc(100dvh - 100px);
     }
-  }
-  .modal.active {
-    opacity: 1;
-    pointer-events: auto;
   }
   .modal.active .modal-popup-inner {
     opacity: 1;
@@ -978,10 +978,6 @@ blockquote {
     max-height: 80vh;
     transition: 0.2s;
   }
-  .modal.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
   .modal.active .modal-popup-inner {
     opacity: 1;
     pointer-events: auto;
@@ -1301,7 +1297,7 @@ blockquote {
   .footer_bottom-inner {
     border-top: 0;
   }
-  .mobile-sticky-bar-enabled   .footer_bottom-inner {
+  .mobile-sticky-bar-enabled .footer_bottom-inner {
     padding-bottom: 6rem;
   }
   .w-custom-mb {
@@ -2005,17 +2001,59 @@ media-lightbox-popup .product__name {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
-
 .media-left {
   border-top-left-radius: var(--img-rounded);
   border-top-right-radius: 0;
   border-bottom-left-radius: var(--img-rounded);
   border-bottom-right-radius: 0;
 }
-
 .rounded-bottom {
   border-bottom-left-radius: var(--img-rounded);
   border-bottom-right-radius: var(--img-rounded);
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+.mute-button svg,
+.play-button svg,
+.mute-button-mobile svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.mute-button svg path,
+.play-button svg path,
+.mute-button-mobile svg path {
+  fill: #ffffff;
+}
+.mute-button,
+.play-button,
+.mute-button-mobile {
+  width: 4.6rem;
+  height: 4.6rem !important;
+  border-radius: 50%;
+  background-color: #0000004d;
+}
+
+.play-button-popup {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+
+@media screen and (min-width: 1025px) {
+  .video_control > * {
+    transform: translateX(10px);
+    will-change: transform;
+  }
+  :is(shopable-item:hover, shopable-item:focus-visible)
+    :is(.video_control > *, .play-button),
+  :is(.video_control > *, shopable-item .play-button):focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  :is(shopable-item:hover, shopable-item:focus-visible) .video_control > *,
+  .video_control > *:focus-visible {
+    transform: translateX(0);
+  }
 }
