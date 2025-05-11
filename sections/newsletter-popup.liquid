@@ -111,30 +111,35 @@
                     class="newsletter__form-container flex column gap-20"
                   >
                     {%- assign newsletter_popup_id = 'NewsletterForm--' | append: section.id -%}
-                    {%- form 'customer', class: 'newsletter__form flex', id: newsletter_popup_id -%}
+                    {%- form 'customer',
+                      class: 'newsletter__form newsletter__form--popup flex',
+                      id: newsletter_popup_id,
+                      novalidate: 'novalidate'
+                    -%}
                       <input type="hidden" name="contact[tags]" value="newsletter">
-                      <div class="flex gap-15 wrap w-full">
-                        <input
-                          id="NewsletterForm--{{ section.id }}"
-                          type="email"
-                          required
-                          class="w-full"
-                          name="contact[email]"
-                          autocomplete="email"
-                          aria-required="true"
-                          autocorrect="off"
-                          autocapitalize="off"
-                          value="{% if customer %}{{ customer.email }}{% endif %}"
-                          placeholder="{% if email_placeholder != blank %}{{ email_placeholder }}{% else %}{{ 'newsletter.label' | t }}{% endif %}"
-                          pattern=".+\.[a-zA-Z]{2,6}"
-                        >
-                        <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
-                          {{ 'newsletter.label' | t }}
-                        </label>
+                      <div class="flex gap-15 column w-full">
+                        <div class="field relative flex wrap w-full">
+                          <input
+                            id="NewsletterForm--{{ section.id }}"
+                            type="email"
+                            required
+                            class="w-full newsletter-form-popup-input"
+                            name="contact[email]"
+                            autocomplete="email"
+                            aria-required="true"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            value="{% if customer %}{{ customer.email }}{% endif %}"
+                            placeholder="{% if email_placeholder != blank %}{{ email_placeholder }}{% else %}{{ 'newsletter.label' | t }}{% endif %}"
+                            pattern=".+\.[a-zA-Z]{2,6}"
+                          >
+                          <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
+                            {{ 'newsletter.label' | t }}
+                          </label>
+                        </div>
                         <button
-                          type="submit"
                           name=" {{ 'newsletter.button_label' | t }}"
-                          class="btn btn-primary newsletter__button w-full"
+                          class="btn w-full button-newletter-popup btn-primary newsletter__button w-full"
                           aria-label="{%- if button_label != blank -%}{{ button_label }} {%- else -%} {{ 'subscribe.button_label' | t }} {% endif %}"
                         >
                           <span
