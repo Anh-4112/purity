@@ -100,6 +100,7 @@ function initSlide(_this) {
               oH.push(e.offsetHeight / 2);
             });
             const max = Math.max(...oH);
+            console.log(max);
             const arrowsOffset = "--arrows-offset-top: " + max + "px";
             if (_this.querySelectorAll(".swiper-arrow")) {
               _this.querySelectorAll(".swiper-arrow").forEach((arrow) => {
@@ -114,7 +115,7 @@ function initSlide(_this) {
       },
       slideChange: function () {
         const currentSlide = this.slides[this.activeIndex];
-        if (mutedVideo) {
+        if (mutedVideo && currentSlide) {
           this.slides.forEach((slide, index) => {
             if (index != this.activeIndex) {
               const video = slide.querySelector("video");
@@ -227,7 +228,14 @@ function initSlideMedia(_this, gallery, thumbnail) {
       }
     }
     direction = "horizontal";
-    if (window.innerWidth >= 768) {
+    if (gallery == "QuickView" && window.innerWidth >= 768) {
+      itemMobile = "auto";
+      direction = "vertical";
+      mousewheel = true;
+      loop = false;
+      speed = 150;
+    }
+    if (gallery == "CartUpSell" && window.innerWidth > 1024) {
       itemMobile = "auto";
       direction = "vertical";
       mousewheel = true;
@@ -325,20 +333,7 @@ class SlideSection extends HTMLElement {
   }
 
   init() {
-    if (document.body.classList.contains("template-index")) {
-      let pos = window.pageYOffset;
-      if (pos > 10 || document.body.classList.contains("swiper-lazy")) {
-        initSlide(this);
-      } else {
-        if (this.classList.contains("lazy-loading-swiper-before")) {
-          initSlide(this);
-        } else {
-          this.classList.add("lazy-loading-swiper-after");
-        }
-      }
-    } else {
-      initSlide(this);
-    }
+    initSlide(this);
   }
 
   initSlideMediaGallery(gallery, thumbnail = null) {
