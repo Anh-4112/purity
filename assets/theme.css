@@ -571,11 +571,13 @@ blockquote {
     transform: translateY(calc(-100% + 60px));
     -webkit-transform: translateY(calc(-100% + 60px));
   }
+  .modal-popup {
+    align-items: flex-end;
+  }
   .modal-popup-inner,
   .modal-inner:not(.draw-mb) {
     max-width: unset;
     max-height: calc(100vh - 100px);
-    height: 100vh;
     overflow: auto;
     margin: unset;
     top: auto;
@@ -1637,6 +1639,7 @@ blockquote {
   --btn-padding-x: 0;
   width: 44px;
   height: 44px;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -1697,17 +1700,15 @@ cart-gift-wrap-element.open .cart-addons-content {
   }
   .mini-cart .product-item__inner {
     padding: 1.5rem;
+    padding-right: 6.5rem;
     background-color: var(--color-background-2);
     border-radius: var(--img-rounded);
     align-items: center;
   }
-  .mini-cart .show_quick_add-mb {
-    padding-right: 6.5rem;
-  }
   .mini-cart .product__information {
     margin-top: 0;
   }
-  .mini-cart .show_quick_add-mb .btn__quick-shop {
+  .mini-cart .btn__quick-shop {
     left: auto;
     top: 0;
     bottom: 0;
