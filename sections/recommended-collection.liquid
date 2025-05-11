@@ -105,7 +105,10 @@
   }
   @media screen and (max-width: 767.98px) {
     .recommend_collections_buttons {
-        justify-content: center;
+      justify-content: center;
+    }
+    .recommended_collection .recommend__collection-inner {
+      flex-direction: column-reverse;
     }
   }
 {% endstyle %}
@@ -201,7 +204,7 @@
 >
   <div class="{{ section_width }}">
     <div
-      class="flex wrap gap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
+      class="flex wrap gap recommend__collection-inner{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
       style="{{ col_style | strip | strip_newlines }}"
     >
       <div class="image-with-text__media-item w-full col-1025-w-custom">

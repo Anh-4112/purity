@@ -1,7 +1,7 @@
 {% liquid
   assign section_st = section.settings
   assign block_st = block.settings
-  assign padding_content_class = 'px-20 py-20 py-1025-40'
+  assign padding_content_class = 'p-20 p-1025-30'
   assign image_ratio = section_st.image_ratio
   assign ratio = '3/4'
   if image_ratio != 'adapt'
@@ -20,26 +20,8 @@
       assign ratio = '4/3'
     endif
   endif
-  assign show_border = false
-  if block_st.background_color == 'rgba(0,0,0,0)' or block_st.background_color == 'transparent' or block_st.background_color == blank or block_st.background_color == '#fff' or block_st.background_color == '#ffffff'
-    assign show_border = true
-  endif
+  assign show_border = true
 %}
-{% style %}
-  @media screen and (min-width: 767.98px) {
-    .offer_pop_up .block__buttons a {
-    min-width: 16rem;
-    width: auto;
-  }
-  }
-  .offer_pop_up .block__highlight_text {
-    font-weight: 600;
-  }
-  .border-content{
-    border: 1px solid var(--color-border);
-    border-top: 0;
-  }
-{% endstyle %}
 <div
   class="color-{{ block_st.color_scheme }} gradient block__image-with-text-offer"
 >
@@ -49,7 +31,7 @@
     <div class="image-with-text__media-item">
       <div
         class="image-with-text__media banner__media media-top h-full w-full"
-        style="--aspect-ratio: {{ ratio }};";
+        style="--aspect-ratio: {{ ratio }};"
       >
         {%- liquid
           assign alt = 'general.image.image_alt_default' | t
@@ -58,24 +40,17 @@
           endif
         -%}
         {%- if block_st.image != blank -%}
-          {% render 'responsive-image',
-            type: 'other',
-            container: 'full-width',
-            image: block_st.image,
-            image_alt: alt
-          %}
+          {% render 'responsive-image', type: 'other', container: 'full-width', image: block_st.image, image_alt: alt %}
         {% else %}
           {% render 'placeholder-render', type: 'collection-6', class: 'img-placeholder h-full w-full', motion: false %}
         {% endif %}
       </div>
     </div>
-    <div class="flex text-{{ section_st.content_alignment }}{% if show_border %} border-content rounded-bottom{% endif %}">
+    <div class="flex text-{{ section_st.content_alignment }}{% if show_border %} border-content border border-top-0 rounded-bottom{% endif %}">
       <div
-        class="rounded-bottom offer_pop_up image-with-text__wrapper w-full flex bg-custom"
-        style="--bg-color-custom: {{ block_st.background_color }};"
+        class="rounded-bottom offer_pop_up image-with-text__wrapper w-full flex"
       >
-        <div class="rounded-bottom image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }}"
-        >
+        <div class="rounded-bottom image-with-text__text-item-inner w-full {{ padding_content_class }}">
           {% content_for 'blocks' %}
         </div>
       </div>
@@ -89,13 +64,7 @@
   "class": "swiper-slide",
   "blocks": [
     {
-      "type": "@app"
-    },
-    {
       "type": "heading"
-    },
-    {
-      "type": "highlight-text"
     },
     {
       "type": "subheading"
@@ -123,43 +92,6 @@
       "type": "image_picker",
       "id": "image",
       "label": "t:sections.all.image.label"
-    },
-    {
-      "type": "range",
-      "id": "desktop_image_width",
-      "min": 35,
-      "max": 70,
-      "step": 1,
-      "unit": "%",
-      "default": 50,
-      "label": "t:sections.all.image.width",
-      "info": "t:sections.all.image.info_width"
-    },
-    {
-      "type": "select",
-      "id": "image_desktop_position",
-      "options": [
-        {
-          "value": "left",
-          "label": "t:sections.all.image.desktop_position.left"
-        },
-        {
-          "value": "right",
-          "label": "t:sections.all.image.desktop_position.right"
-        }
-      ],
-      "default": "left",
-      "label": "t:sections.all.image.desktop_position.label",
-      "info": "t:sections.all.image.desktop_position.info"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.all.content_setting.label"
-    },
-    {
-      "type": "color",
-      "id": "background_color",
-      "label": "t:sections.image-with-text.settings.background_color"
     }
   ],
   "presets": [

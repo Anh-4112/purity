@@ -269,16 +269,16 @@
                         assign active = 'active'
                       endif
                     %}
+                    {% if local_video != blank %}
+                      <button
+                        aria-label="{{ 'accessibility.play_button.video' | t }}"
+                        class="play-button play-button-popup invisible-1025 absolute transition pointer border-0 inline-flex align-center justify-content-center {{ active }}"
+                      >
+                        {% render 'icon-play' %}
+                        {% render 'icon-pause' %}
+                      </button>
+                    {% endif %}
                     <div class="flex column align-center absolute z-1 bottom-15 right-15 gap-10 video_control">
-                      {% if local_video != blank %}
-                        <button
-                          aria-label="{{ 'accessibility.play_button.video' | t }}"
-                          class="play-button invisible-1025 transition pointer border-0 inline-flex align-center justify-content-center {{ active }}"
-                        >
-                          {% render 'icon-play' %}
-                          {% render 'icon-pause' %}
-                        </button>
-                      {% endif %}
                       {% if local_video != blank %}
                         <button
                           aria-label="{{ 'accessibility.mute_button.video' | t }}"
@@ -436,7 +436,7 @@
     {% endif %}
     <template class="template">
       <modal-popup
-        class="modal active-modal-js modal-shopable-video active_smooth invisible-1025 fixed inset-0 z-20 flex align-center"
+        class="modal modal-popup modal_type_popup active-modal-js modal-shopable-video active_smooth invisible-1025 fixed inset-0 z-20 flex align-center"
         role="dialog"
       >
         <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
