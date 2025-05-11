@@ -28,6 +28,11 @@
   elsif heading_size == 'large'
     assign header_size = 'h1'
   endif
+
+  assign loop = false
+  if section_st.looping
+    assign loop = true
+  endif
 -%}
 
 {%- capture style -%}
@@ -36,7 +41,7 @@
   {%- endcapture -%}
 
 <div
-  class="color-{{ section_st.color_scheme }} section gradient section__video"
+  class="color-{{ section_st.color_scheme }} section gradient section__video{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -66,7 +71,7 @@
         >
           {%- if section_st.video_url.type == 'youtube' -%}
             <iframe
-              src="https://www.youtube.com/embed/{{ video_id }}?autoplay={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&mute={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&playsinline=1"
+              src="https://www.youtube.com/embed/{{ video_id }}?autoplay={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&loop={% if loop %}1{% else %}0{% endif %}&playlist={{ video_id }}&mute={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&playsinline=1"
               class="js-youtube no-js-hidden"
               allow="autoplay; encrypted-media"
               title="{{ section_st.alt_description | escape }}"
@@ -74,7 +79,7 @@
             ></iframe>
           {%- else -%}
             <iframe
-              src="https://player.vimeo.com/video/{{ video_id }}?autoplay={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&muted={% if section_st.autoplay -%}1{% else %}0{%- endif -%}"
+              src="https://player.vimeo.com/video/{{ video_id }}?autoplay={% if section_st.autoplay -%}1{% else %}0{%- endif -%}&loop={% if loop %}1{% else %}0{% endif %}&muted={% if section_st.autoplay -%}1{% else %}0{%- endif -%}"
               class="js-vimeo no-js-hidden"
               allow="autoplay; encrypted-media"
               title="{{ section_st.alt_description | escape }}"
@@ -128,7 +133,14 @@
       <template>
         {{
           section_st.video_local
-          | video_tag: image_size: '1100x', autoplay: true, controls: true, muted: true, alt: alt, class: rounded
+          | video_tag:
+            image_size: '1100x',
+            autoplay: true,
+            loop: loop,
+            controls: true,
+            muted: true,
+            alt: alt,
+            class: rounded
         }}
       </template>
       <noscript>
@@ -142,7 +154,14 @@
         %}
         {{
           section_st.video_local
-          | video_tag: image_size: '1100x', autoplay: autoplay, controls: true, muted: muted, alt: alt, class: rounded
+          | video_tag:
+            image_size: '1100x',
+            autoplay: autoplay,
+            loop: loop,
+            controls: true,
+            muted: muted,
+            alt: alt,
+            class: rounded
         }}
       </noscript>
       {%- if section_st.autoplay -%}
@@ -292,6 +311,12 @@
       "default": false
     },
     {
+      "type": "checkbox",
+      "id": "looping",
+      "label": "t:sections.video.settings.looping.label",
+      "default": false
+    },
+    {
       "type": "select",
       "id": "aspect_ratio",
       "options": [
@@ -334,6 +359,16 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 48
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.divider.section_divider_heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
     }
   ],
   "presets": [
