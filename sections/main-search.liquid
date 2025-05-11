@@ -201,11 +201,13 @@
                 <facet-drawer
                   id="{{ section.id }}"
                   class="modal pointer-none active-modal-js"
-                  data-focus-item="FacetsDrawer"
                 >
                   <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
                   <div
                     class="modal-inner invisible draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-15 left-0 bg-white"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="{{ 'products.facets.filter' | t }}"
                     tabindex="-1"
                   >
                     <div class="drawer__body flex h-full column">
@@ -544,9 +546,13 @@
 </div>
 {% schema %}
 {
-  "name": "t:sections.main-collection.name",
+  "name": "t:sections.main-search.name",
   "class": "section",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.main-search.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

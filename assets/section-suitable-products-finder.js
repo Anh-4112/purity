@@ -26,6 +26,11 @@ if (!customElements.get("suitable-finder")) {
             super.connectedCallback()
           );
         }
+
+        this._lastThrottleTime = 0;
+        this._throttleDelay = 50;
+        this._lastHoveredTab = null;
+        this._debounceTimer = null;
       }
 
       connectedCallback() {
@@ -158,7 +163,6 @@ if (!customElements.get("suitable-finder")) {
 
       handleDotMouseMove(event) {
         if (!this._isDragging) return;
-        console.log("event :>> ", event);
         if (this._animationFrameId) {
           cancelAnimationFrame(this._animationFrameId);
         }
@@ -187,6 +191,9 @@ if (!customElements.get("suitable-finder")) {
 
       activateTabWhileDragging(position) {
         if (!this._tabPositions.length) return;
+        const now = Date.now();
+        if (now - this._lastThrottleTime < this._throttleDelay) return;
+        this._lastThrottleTime = now;
 
         let closestTab = null;
         let minDistance = Infinity;
@@ -199,16 +206,21 @@ if (!customElements.get("suitable-finder")) {
           }
         });
 
-        this._tabs.forEach((tab) => {
-          tab.classList.remove("hovered");
-        });
-
-        if (closestTab) {
+        if (closestTab && this._lastHoveredTab !== closestTab.tab) {
+          this._tabs.forEach((tab) => {
+            tab.classList.remove("hovered");
+          });
           closestTab.tab.classList.add("hovered");
-
+          this._lastHoveredTab = closestTab.tab;
+          clearTimeout(this._debounceTimer);
           if (this.selectedTab !== closestTab.blockId) {
-            this.selectedTab = closestTab.blockId;
-            this._lastActivatedTab = closestTab.blockId;
+            const targetBlockId = closestTab.blockId;
+            this._debounceTimer = setTimeout(() => {
+              if (this._isDragging) {
+                this.selectedTab = targetBlockId;
+                this._lastActivatedTab = targetBlockId;
+              }
+            }, 200);
           }
         }
       }
@@ -236,7 +248,6 @@ if (!customElements.get("suitable-finder")) {
 
       handleDotTouchStart(event) {
         if (event.touches.length !== 1) return;
-
         event.preventDefault();
         this._isDragging = true;
         this._isManuallyDragging = true;
@@ -256,7 +267,6 @@ if (!customElements.get("suitable-finder")) {
 
       handleDotTouchMove(event) {
         if (!this._isDragging || event.touches.length !== 1) return;
-
         event.preventDefault();
 
         if (this._animationFrameId) {

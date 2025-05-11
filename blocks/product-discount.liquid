@@ -35,7 +35,7 @@
   --col-desktop: {{ items_per_row }};--col-number:2;--col-tablet: {{items_per_row_tablet}};--col-mobile: 2;--row-gap: 3rem;--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
 {% if scroll_animation %}
-  <motion-items-effect>
+  <motion-items-effect class="block sticky-1025 top-30">
 {% endif %}
 <div
   class="grid grid-cols gap"
@@ -62,11 +62,7 @@
     {% endfor %}
   {% else %}
     {% for i in (1..6) %}
-      {% render 'card-product',
-        section_id: section.id,
-        class: ' grid-card-item motion-item',
-        indexFor: forloop.index
-      %}
+      {% render 'card-product', section_id: section.id, class: ' grid-card-item motion-item', indexFor: forloop.index %}
     {% endfor %}
   {% endif %}
 </div>

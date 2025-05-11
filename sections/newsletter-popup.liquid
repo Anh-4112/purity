@@ -23,7 +23,7 @@
 %}
 {% style %}
   @media (min-width: 768px) {
-    .image-with-text__media,
+    newsletter-popup .image-with-text__media,
     .newsletter_inner {
       max-height: 80vh;
     }
@@ -33,11 +33,11 @@
   <template>
     <div class="newsletter-popup">
       <newsletter-modal-popup
-        class="modal active-modal-js modal-newsletter-popup"
+        class="modal modal-popup active-modal-js modal-newsletter-popup fixed inset-0 z-31 flex align-center invisible"
       >
         <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
         <div
-          class="modal-popup-inner modal-focus invisible h-content modal-body modal-draggable transition rounded max-w-custom m-auto fixed inset-0 z-15 w-full bg-white"
+          class="modal-popup-inner invisible modal-focus modal-body modal-draggable transition rounded max-w-custom m-auto w-full bg-white z-15"
           style="--max-width: 68rem;"
           tabindex="-1"
         >
@@ -56,15 +56,13 @@
               <use href="#icon-close"></use>
             </svg>
           </button>
-          <div
-            class="drawer__body drawer__body-item h-full"
-          >
+          <div class="drawer__body drawer__body-item h-full">
             <div
               class="flex gap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
               style="--col-width: {% if banner_image != blank %}{{ section_st.desktop_image_width }}{% else %}0{% endif %}%;--gap-desktop: 0px;--gap: 0px;"
             >
               {% if banner_image != blank %}
-                <div class="image-with-text__media-item w-full col-md-w-custom block-md hidden">
+                <div class="image-with-text__media-item w-full col-1025-w-custom block-1025 hidden">
                   <div
                     class="image-with-text__media banner__media h-full hidden block-md"
                     style="--aspect-ratio: {{ banner_image.aspect_ratio }}"
@@ -81,8 +79,8 @@
                   </div>
                 </div>
               {% endif %}
-              <div class="newsletter_inner w-full col-md-remaining relative flex">
-                <div class="newsletter_content-inner flex column gap-20 max-h-100 p-gutter-x p-md-40 overflow-y-auto custom-scrollbar align-self-center">
+              <div class="newsletter_inner w-full col-1025-remaining relative flex">
+                <div class="newsletter_content-inner w-full flex column gap-20 max-h-100 p-gutter-x p-md-40 overflow-y-auto custom-scrollbar align-self-center">
                   {%- if heading != blank or short_desc != blank -%}
                     <div class="newsletter-header">
                       {%- if heading != blank -%}

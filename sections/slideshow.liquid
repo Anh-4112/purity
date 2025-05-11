@@ -25,7 +25,7 @@
 {%- endcapture -%}
 <div
   id="{{ section.id }}"
-  class="gradient color-{{ color_scheme }} section__slideshow section"
+  class="gradient color-{{ color_scheme }} section__slideshow section{% if slide_auto_change %} autoplay{% endif %}"
   style="{{ style | strip | strip_newlines }}"
   data-id="{{ section.id }}"
 >
@@ -269,7 +269,7 @@
         {%- if show_pagination -%}
           <div
             class="swiper-pagination swiper-pagination-slideshow{% if show_text_bellow_image %} swiper-pagination-bellow{% endif %}"
-            style="{% if show_text_bellow_image %}--position: absolute;--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% else %}--position: absolute;{% endif %}--swiper-pagination-bottom: 2.4rem;--swiper-pagination-bullet-active-width: 8rem;"
+            style="{% if show_text_bellow_image %}--position: absolute;--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% else %}--position: absolute;{% endif %}--swiper-pagination-bottom: 1.6rem;--swiper-pagination-bullet-active-width: 8rem;"
           ></div>
         {% endif %}
       </slide-section>
@@ -285,6 +285,10 @@
     "groups": ["header", "footer", "custom.overlay"]
   },
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.slideshow.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.all.general"

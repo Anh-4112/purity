@@ -230,7 +230,7 @@ class ProductTabs extends HTMLElement {
           this.toggleAccordion(tab, true);
         }
         const position = tab.dataset.position;
-        if (slideSectionHeader) {
+        if (slideSectionHeader && slideSectionHeader.swiper) {
           slideSectionHeader.swiper.slideToLoop(position - 1, 170, true);
         }
       }

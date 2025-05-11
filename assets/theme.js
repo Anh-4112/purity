@@ -742,6 +742,7 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
       (this.summaryElement = null),
       (this.contentElement = null),
       (this._open = false),
+      (this._hiddenMobile = false),
       (this.content = null),
       this.init();
   }
@@ -764,6 +765,7 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
     this.summaryElement = this.firstElementChild;
     this.contentElement = this.lastElementChild;
     this._open = this.hasAttribute("open");
+    this._hiddenMobile = this.hasAttribute("hidden-mobile");
     this.content = this.querySelector(".collapsible-row__content");
     this.summaryElement.addEventListener(
       "click",
@@ -777,12 +779,20 @@ class CollapsibleRowDetails extends HTMLDetailsElement {
   }
 
   async initialize() {
-    if (this.content) {
-      Motion.animate(
-        this.content,
-        this._open ? { height: "auto" } : { height: 0 },
-        { duration: 0 }
-      );
+    if (this._hiddenMobile && window.innerWidth <= 767) {
+      this.removeAttribute("open"), this.classList.remove("detail-open");
+      this._open = false;
+      if (this.content) {
+        Motion.animate(this.content, { height: 0 }, { duration: 0 });
+      }
+    } else {
+      if (this.content) {
+        Motion.animate(
+          this.content,
+          this._open ? { height: "auto" } : { height: 0 },
+          { duration: 0 }
+        );
+      }
     }
   }
 
@@ -814,39 +824,6 @@ CustomElement.observeAndPatchCustomElements({
   "collapsible-row": {
     tagElement: "details",
     classElement: CollapsibleRowDetails,
-  },
-});
-
-class MobileCollapsibleRowDetails extends CollapsibleRowDetails {
-  constructor() {
-    super();
-    this.updateOpenState();
-    window.addEventListener("resize", this.updateOpenState.bind(this));
-  }
-
-  updateOpenState() {
-    if (this.isMobileDevice()) {
-      this.open = false;
-      this.removeAttribute("open");
-    } else {
-      this.open = true;
-      this.setAttribute("open", "");
-    }
-  }
-
-  isMobileDevice() {
-    return window.matchMedia("(max-width: 768px)").matches;
-  }
-}
-
-customElements.define("mobile-collapsible-row", MobileCollapsibleRowDetails, {
-  extends: "details",
-});
-
-CustomElement.observeAndPatchCustomElements({
-  "mobile-collapsible-row": {
-    tagElement: "details",
-    classElement: MobileCollapsibleRowDetails,
   },
 });
 
@@ -1183,14 +1160,16 @@ class VideoLocalScroll extends VideoLocal {
   init() {
     if (!this.isScrollInitialized) {
       this.isScrollInitialized = true;
-      window.addEventListener('scroll', this.checkScroll.bind(this), { passive: true });
+      window.addEventListener("scroll", this.checkScroll.bind(this), {
+        passive: true,
+      });
     }
   }
-  
+
   checkScroll() {
     if (window.scrollY > 10) {
       this.loadContentVideo(this);
-      window.removeEventListener('scroll', this.checkScroll);
+      window.removeEventListener("scroll", this.checkScroll);
     }
   }
 }
@@ -1653,8 +1632,8 @@ class CartUpSellProduct extends SlideSection {
   actionOutMobile() {
     this.initSlideMediaGallery("CartUpSell");
     this.style.maxHeight =
-      this.closest(".drawer__body").offsetHeight - 140 + "px";
-    this.style.minHeight = "calc(100vh - 140px)";
+      this.closest(".drawer__body").offsetHeight - 110 + "px";
+    this.style.minHeight = "calc(100vh - 110px)";
   }
 }
 customElements.define("cart-upsell-product", CartUpSellProduct);
@@ -2781,5 +2760,108 @@ class DraggableModal extends HTMLElement {
     }
   }
 }
-
 customElements.define("draggable-modal", DraggableModal);
+
+class ButtonQuickView extends HTMLButtonElement {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  get sectionId() {
+    return document.querySelector("quickview-drawer")
+      ? document
+          .querySelector("quickview-drawer")
+          .getAttribute("data-section-id")
+      : null;
+  }
+
+  init() {
+    this.addEventListener("click", this.onClick.bind(this), false);
+    this.addEventListener(
+      "keypress",
+      function (event) {
+        if (event.key === "Enter") {
+          this.onClick.bind(this)(event);
+        }
+      }.bind(this),
+      false
+    );
+  }
+
+  async onClick(e) {
+    e.preventDefault();
+    if (this.dataset.url) {
+      this.setAttribute("aria-disabled", true);
+      this.classList.add("loading");
+      if (!this.sectionId) {
+        window.location.href = this.dataset.url;
+        return;
+      }
+      await (import(importJs.mediaGallery), import(importJs.productModel));
+      this.fetchUrl();
+    }
+  }
+
+  fetchUrl() {
+    fetch(`${this.dataset.url}?section_id=${this.sectionId}`)
+      .then((response) => response.text())
+      .then((text) => {
+        const html = NextSkyTheme.parser.parseFromString(text, "text/html");
+        document.querySelector(".quickview-product").innerHTML =
+          html.querySelector(".quickview-product").innerHTML;
+      })
+      .finally(async () => {
+        this.classList.remove("loading");
+        this.removeAttribute("aria-disabled");
+        NextSkyTheme.eventModal(
+          document.querySelector("quickview-drawer"),
+          "open",
+          false,
+          "delay",
+          true
+        );
+        NextSkyTheme.global.rootToFocus = this;
+        new LazyLoader(".image-lazy-load");
+        await (import(importJs.mediaLightboxGallery),
+        import(importJs.countdownTimer));
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+}
+customElements.define("button-quick-view", ButtonQuickView, {
+  extends: "button",
+});
+CustomElement.observeAndPatchCustomElements({
+  "button-quick-view": {
+    tagElement: "button",
+    classElement: ButtonQuickView,
+  },
+});
+
+class SelectContact extends HTMLElement {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  init() {
+    const text = this.getAttribute("text");
+    if (text) {
+      const options = text.split(",").map((item) => item.trim());
+      const selectElement = this.closest(
+        ".field-contact-subject"
+      ).querySelector("select");
+      options.forEach((optionText) => {
+        const option = document.createElement("option");
+        option.value = optionText.toLowerCase();
+        option.textContent =
+          optionText.charAt(0).toUpperCase() + optionText.slice(1);
+        selectElement.appendChild(option);
+      });
+    }
+  }
+}
+customElements.define("select-contact", SelectContact);

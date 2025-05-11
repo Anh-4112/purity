@@ -28,6 +28,9 @@
     <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
     <div
       class="modal-inner invisible draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 z-15 inset-y-0 w-full"
+      role="dialog"
+      aria-modal="true"
+      aria-label="{{ 'sections.cart.title' | t }}"
       tabindex="-1"
     >
       <div class="drawer__body h-full flex column bg-white rounded-start">
@@ -931,6 +934,10 @@
   "tag": "section",
   "class": "overlay-section overlay-cart",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.cart-drawer.how_to_use"
+    },
     {
       "type": "header",
       "content": "t:sections.cart-drawer.settings.info"

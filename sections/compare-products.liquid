@@ -39,6 +39,12 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
   {% style %}
+    .compare-table-products {
+      position: relative;
+      isolation: isolate;
+      overflow-x: auto;
+      min-width: 100%;
+    }
     .compare-field {
       --field-heading: 13rem;
       flex: 0 0 auto;
@@ -49,6 +55,8 @@
     }
     .field-heading.compare-field {
       width: var(--field-heading);
+      align-items: center;
+      display: flex;
     }
     @media (min-width: 768px) {
       .compare-field {
@@ -83,12 +91,12 @@
           {%- endif -%}
         </div>
       {%- endif -%}
-      <div class="compare-table-products overflow-auto border rounded">
-        <div class="compare-row flex flex-nowrap compare-row-basic">
-          <div class="compare-field flex wrap align-center word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
+      <div class="compare-table-products border rounded max-w-100">
+        <div class="compare-row flex compare-row-basic">
+          <div class="compare-field word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
             {{ 'products.product.product_compare' | t }}
           </div>
-          <div class="compare-field flex wrap align-center gap-20 word-break p-20 current-product bg-secondary">
+          <div class="compare-field word-break p-20 current-product bg-secondary">
             {%- liquid
               assign p_media = product.featured_media
               assign ratio = '3/4'
@@ -221,7 +229,7 @@
                 continue
               endif
             -%}
-            <div class="compare-field flex wrap align-center word-break p-20">
+            <div class="compare-field word-break p-20">
               {%- liquid
                 assign p_media = items.featured_media
                 assign ratio = '3/4'
@@ -350,11 +358,11 @@
           {%- endfor -%}
         </div>
         {%- if show_price -%}
-          <div class="compare-row flex flex-nowrap compare-row-price">
-            <div class="compare-field flex wrap align-center word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
+          <div class="compare-row flex compare-row-price">
+            <div class="compare-field word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
               {{ 'products.product.price.label' | t }}
             </div>
-            <div class="compare-field flex wrap align-center word-break p-20 current-product bg-secondary">
+            <div class="compare-field word-break p-20 current-product bg-secondary">
               {%- render 'price', scope: 'item', product: product -%}
             </div>
             {%- for items in product.metafields.custom.compare_items.value -%}
@@ -363,18 +371,18 @@
                   continue
                 endif
               -%}
-              <div class="compare-field flex wrap align-center word-break p-20">
+              <div class="compare-field word-break p-20">
                 {%- render 'price', scope: 'item', product: items -%}
               </div>
             {%- endfor -%}
           </div>
         {%- endif -%}
         {%- if show_ratings -%}
-          <div class="compare-row flex flex-nowrap compare-row-review">
-            <div class="compare-field flex wrap align-center word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
+          <div class="compare-row flex compare-row-review">
+            <div class="compare-field word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
               {{ 'products.product.ratings' | t }}
             </div>
-            <div class="compare-field flex wrap align-center word-break p-20 current-product bg-secondary">
+            <div class="compare-field word-break p-20 current-product bg-secondary">
               {%- liquid
                 render 'review', review_star: true, product: product
               -%}
@@ -385,7 +393,7 @@
                   continue
                 endif
               -%}
-              <div class="compare-field flex wrap align-center word-break p-20">
+              <div class="compare-field word-break p-20">
                 {%- liquid
                   render 'review', review_star: true, product: items
                 -%}
@@ -394,11 +402,11 @@
           </div>
         {%- endif -%}
         {%- if show_vendor -%}
-          <div class="compare-row flex flex-nowrap compare-row-vendor">
-            <div class="compare-field flex wrap align-center word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
+          <div class="compare-row flex compare-row-vendor">
+            <div class="compare-field word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
               {{ 'products.product.vendor' | t }}
             </div>
-            <div class="compare-field flex wrap align-center word-break p-20 current-product bg-secondary">
+            <div class="compare-field word-break p-20 current-product bg-secondary">
               {%- if product.vendor -%}
                 {{ product.vendor }}
               {%- else -%}
@@ -411,7 +419,7 @@
                   continue
                 endif
               -%}
-              <div class="compare-field flex wrap align-center word-break p-20">
+              <div class="compare-field word-break p-20">
                 {%- if items.vendor -%}
                   {{ items.vendor }}
                 {%- else -%}
@@ -422,11 +430,11 @@
           </div>
         {%- endif -%}
         {%- if show_color -%}
-          <div class="compare-row flex flex-nowrap compare-row-color">
-            <div class="compare-field flex wrap align-center word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
+          <div class="compare-row flex compare-row-color">
+            <div class="compare-field word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
               {{ 'products.product.color' | t }}
             </div>
-            <div class="compare-field flex wrap align-center word-break p-20 current-product bg-secondary">
+            <div class="compare-field word-break p-20 current-product bg-secondary">
               {%- if product.has_only_default_variant -%}
                 <span>-</span>
               {%- else -%}
@@ -456,7 +464,7 @@
                   continue
                 endif
               -%}
-              <div class="compare-field flex wrap align-center word-break p-20">
+              <div class="compare-field word-break p-20">
                 {%- if items.has_only_default_variant -%}
                   <span>-</span>
                 {%- else -%}
@@ -484,11 +492,11 @@
           </div>
         {%- endif -%}
         {%- if show_size -%}
-          <div class="compare-row flex flex-nowrap compare-row-size">
-            <div class="compare-field flex wrap align-center word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
+          <div class="compare-row flex compare-row-size">
+            <div class="compare-field word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
               {{ 'products.product.size' | t }}
             </div>
-            <div class="compare-field flex wrap align-center word-break p-20 current-product bg-secondary">
+            <div class="compare-field word-break p-20 current-product bg-secondary">
               {%- if product.has_only_default_variant -%}
                 <span>-</span>
               {%- else -%}
@@ -532,7 +540,7 @@
                   continue
                 endif
               -%}
-              <div class="compare-field flex wrap align-center word-break p-20">
+              <div class="compare-field word-break p-20">
                 {%- if items.has_only_default_variant -%}
                   <span>-</span>
                 {%- else -%}
@@ -574,11 +582,11 @@
           </div>
         {%- endif -%}
         {%- if show_highlights -%}
-          <div class="compare-row flex flex-nowrap compare-row-highlights">
-            <div class="compare-field flex wrap align-center word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
+          <div class="compare-row flex compare-row-highlights">
+            <div class="compare-field word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
               {{ 'products.product.highlights' | t }}
             </div>
-            <div class="compare-field flex wrap align-center word-break p-20 current-product bg-secondary">
+            <div class="compare-field word-break p-20 current-product bg-secondary">
               {%- if product.metafields.custom.ingredient_highlights -%}
                 {{ product.metafields.custom.ingredient_highlights }}
               {%- else -%}
@@ -591,7 +599,7 @@
                   continue
                 endif
               -%}
-              <div class="compare-field flex wrap align-center word-break p-20">
+              <div class="compare-field word-break p-20">
                 {%- if items.metafields.custom.ingredient_highlights -%}
                   {{ items.metafields.custom.ingredient_highlights }}
                 {%- else -%}
@@ -602,12 +610,12 @@
           </div>
         {%- endif -%}
         {%- if show_availability -%}
-          <div class="compare-row flex flex-nowrap compare-row-availability">
-            <div class="compare-field flex wrap align-center word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
+          <div class="compare-row flex compare-row-availability">
+            <div class="compare-field word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
               {{ 'products.product.availability' | t }}
             </div>
             <div
-              class="compare-field flex wrap align-center word-break p-20 current-product bg-secondary gap-custom"
+              class="compare-field word-break p-20 current-product bg-secondary gap-custom"
               style="--gap: 8;"
             >
               {%- if product.available -%}
@@ -628,7 +636,7 @@
                   continue
                 endif
               -%}
-              <div class="compare-field flex wrap align-center word-break p-20 gap-custom" style="--gap: 8;">
+              <div class="compare-field word-break p-20 gap-custom" style="--gap: 8;">
                 {%- if items.available -%}
                   <svg width="12" height="10" fill="none">
                     <path fill="#008A00" d="M10.86.86 4 7.718l-2.86-2.86a.69.69 0 0 0-.484-.187.617.617 0 0 0-.453.187.661.661 0 0 0-.203.485c0 .177.068.328.203.453L3.531 9.14A.636.636 0 0 0 4 9.328a.636.636 0 0 0 .469-.187l7.328-7.344A.594.594 0 0 0 12 1.344a.661.661 0 0 0-.203-.485.636.636 0 0 0-.469-.187.67.67 0 0 0-.469.187Z"/>

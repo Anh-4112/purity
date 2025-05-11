@@ -1,5 +1,4 @@
 import * as NextSkyTheme from "global";
-import { SlideSection } from "module-slide";
 import { LazyLoader } from "module-lazyLoad";
 
 class ScrollOffer extends HTMLElement {
@@ -11,9 +10,7 @@ class ScrollOffer extends HTMLElement {
     this.initialized = false;
     this.cookieName = "scroll_offer_hidden";
     this.sectionId = this.dataset.sectionId;
-    const slideSection = document.querySelector("offer-slide");
-    const drawerContent = document.querySelector(".drawer__content");
-    this.initMobile(slideSection, drawerContent);
+    this.initMobile();
   }
 
   connectedCallback() {
@@ -38,13 +35,11 @@ class ScrollOffer extends HTMLElement {
   actionDesignMode(event) {
     const _self = this;
     const currentTarget = event.target;
-    const offerWrapper = document.querySelector("offer-popup");
     if (
       JSON.parse(currentTarget.dataset.shopifyEditorSection).id ===
       this.sectionId
     ) {
       _self.initPopup();
-
     } else {
       _self.closePopup();
     }
@@ -65,24 +60,12 @@ class ScrollOffer extends HTMLElement {
     NextSkyTheme.eventModal(offerWrapper, "close", false);
   }
 
-  initMobile(slide, drawerContent) {
+  initMobile() {
     const mediaQuery = window.matchMedia("(max-width: 767.98px)");
-    const dataAppend = slide.querySelectorAll(
-      ".swiper-slide .block__image-with-text-offer"
-    );
     const _self = this;
-    const offerMobile = document.querySelector(".offer-content__mobile");
     const handleMediaQueryChange = (mediaQuery) => {
       if (mediaQuery.matches) {
-        dataAppend.forEach((item) => {
-          const clone = item.cloneNode(true);
-          offerMobile.appendChild(clone);
-        });
-        drawerContent.classList.add("overflow-y-auto", "custom-scrollbar");
         _self.mobileAppend();
-      } else {
-        offerMobile.innerHTML = "";
-        drawerContent.classList.remove("overflow-y-auto", "custom-scrollbar");
       }
     };
     handleMediaQueryChange(mediaQuery);
@@ -177,6 +160,7 @@ class ScrollOffer extends HTMLElement {
       this.hide();
     }
   }
+
   show() {
     if (this.checkIfHidden()) return;
     this.isVisible = true;
@@ -231,40 +215,107 @@ class ScrollOffer extends HTMLElement {
 
 customElements.define("scroll-offer", ScrollOffer);
 
-class OfferSlide extends SlideSection {
+class OfferSlide extends HTMLElement {
   constructor() {
     super();
   }
 
-  init() {
-    let width = window.innerWidth;
-    window.addEventListener("resize", () => {
-      const newWidth = window.innerWidth;
-      if (newWidth <= 1024 && width > 1024) {
-        this.actionOnMobile();
-      }
-      if (newWidth > 1024 && width <= 1024) {
-        this.actionOutMobile();
-      }
-      width = newWidth;
+  connectedCallback() {
+    this.enableDragToScroll(this.closest(".drawer__content"));
+  }
+
+  enableDragToScroll(element) {
+    let isDown = false;
+    let startX, startY, scrollLeft, scrollTop;
+
+    element.addEventListener("mousedown", (e) => {
+      isDown = true;
+      element.classList.add("active");
+      startX = e.pageX - element.offsetLeft;
+      startY = e.pageY - element.offsetTop;
+      scrollLeft = element.scrollLeft;
+      scrollTop = element.scrollTop;
     });
-    if (width <= 1024) {
-      this.actionOnMobile();
-    } else {
-      this.actionOutMobile();
-    }
-  }
 
-  actionOnMobile() {
-    this.initSlideMediaGallery("OfferSlide");
-    this.style.maxHeight = "auto";
-    this.style.minHeight = "auto";
-  }
+    element.addEventListener("mouseleave", () => {
+      isDown = false;
+      element.classList.remove("active");
+    });
 
-  actionOutMobile() {
-    this.initSlideMediaGallery("OfferSlide");
-    this.style.maxHeight = this.closest(".drawer__body").offsetHeight + "px";
-    this.style.minHeight = "100vh";
+    element.addEventListener("mouseup", () => {
+      isDown = false;
+      element.classList.remove("active");
+    });
+
+    element.addEventListener("mousemove", (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const isHorizontalScroll =
+        element.scrollWidth > element.clientWidth &&
+        element.scrollHeight <= element.clientHeight;
+      const isVerticalScroll =
+        element.scrollHeight > element.clientHeight &&
+        element.scrollWidth <= element.clientWidth;
+
+      const x = e.pageX - element.offsetLeft;
+      const y = e.pageY - element.offsetTop;
+
+      const walkX = (x - startX) * 2.5;
+      const walkY = (y - startY) * 2.5;
+
+      if (isHorizontalScroll || (!isHorizontalScroll && !isVerticalScroll)) {
+        element.scrollLeft = scrollLeft - walkX;
+      }
+
+      if (isVerticalScroll || (!isHorizontalScroll && !isVerticalScroll)) {
+        element.scrollTop = scrollTop - walkY;
+      }
+    });
+
+    element.addEventListener("touchstart", (e) => {
+      isDown = true;
+      element.classList.add("active");
+      startX = e.touches[0].pageX - element.offsetLeft;
+      startY = e.touches[0].pageY - element.offsetTop;
+      scrollLeft = element.scrollLeft;
+      scrollTop = element.scrollTop;
+    });
+
+    element.addEventListener("touchend", () => {
+      isDown = false;
+      element.classList.remove("active");
+    });
+
+    element.addEventListener(
+      "touchmove",
+      (e) => {
+        if (!isDown) return;
+
+        const isHorizontalScroll =
+          element.scrollWidth > element.clientWidth &&
+          element.scrollHeight <= element.clientHeight;
+        const isVerticalScroll =
+          element.scrollHeight > element.clientHeight &&
+          element.scrollWidth <= element.clientWidth;
+
+        const x = e.touches[0].pageX - element.offsetLeft;
+        const y = e.touches[0].pageY - element.offsetTop;
+
+        const walkX = (x - startX) * 2.5;
+        const walkY = (y - startY) * 2.5;
+
+        if (isHorizontalScroll || (!isHorizontalScroll && !isVerticalScroll)) {
+          element.scrollLeft = scrollLeft - walkX;
+        }
+
+        if (isVerticalScroll || (!isHorizontalScroll && !isVerticalScroll)) {
+          element.scrollTop = scrollTop - walkY;
+        }
+
+        e.preventDefault();
+      },
+      { passive: false }
+    );
   }
 }
 customElements.define("offer-slide", OfferSlide);

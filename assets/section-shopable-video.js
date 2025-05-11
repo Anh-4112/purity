@@ -340,9 +340,6 @@ class ShopableItem extends HTMLElement {
 
   connectedCallback() {
     this.addEventListener("click", this.onShowPopupModal.bind(this), false);
-    this.addEventListener("focus", () => {
-      console.log("item is focused");
-    });
     if (this.classList.contains("sticky-video")) {
       const allStickyVideos = document.querySelectorAll(".sticky-video");
       const isFirstStickyVideo = this === allStickyVideos[0];

@@ -705,6 +705,10 @@ input[type="checkbox"]:checked + .checkmark:before {
   opacity: 0.6;
   cursor: not-allowed;
 }
+input[type="checkbox"].opacity-0:where([disabled], .disabled),
+input[type="checkbox"].opacity-0:is([disabled], .disabled) {
+  opacity: 0;
+}
 a[role="link"],
 a[role="link"].pointer {
   cursor: not-allowed;
@@ -857,7 +861,6 @@ a.hover-heading-color:hover,
 }
 .rounded-style .rounded-3 {
   border-radius: 3px;
-  clip-path: inset(0 0 0 0 round 3px);
 }
 .rounded-style :where(.rounded-5) {
   border-radius: 5px;
@@ -1728,6 +1731,9 @@ quantity-input input {
   }
   .mb-md-50 {
     margin-bottom: 5rem;
+  }
+  .p-md-20 {
+    padding: 2rem;
   }
   .p-md-40 {
     padding: 4rem;
