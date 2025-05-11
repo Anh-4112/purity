@@ -23,11 +23,12 @@ function initSlide(_this) {
   const autoItem = _this?.dataset.itemMobile === "true";
   let arrowCenterImage = _this?.dataset.arrowCenterImage === "true";
   const mutedVideo = _this?.dataset.mutedVideo === "true";
+  const pauseOnMouseEnter = _this?.dataset.pauseOnMouseEnter === "true";
   spacing = Number(spacing);
   autoPlaySpeed = Number(autoPlaySpeed);
   speed = Number(speed);
   if (autoplay) {
-    autoplay = { delay: autoPlaySpeed };
+    autoplay = { delay: autoPlaySpeed, pauseOnMouseEnter: pauseOnMouseEnter };
   }
   if (!itemTablet) {
     if (itemDesktop < 2) {
