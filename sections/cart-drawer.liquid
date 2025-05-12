@@ -26,9 +26,10 @@
 {%- if request.page_type != 'cart' -%}
   <cart-drawer
     id="{{ section.id }}"
-    class="cart-drawer block modal visibility-hidden invisible fixed inset-0 z-15 active-modal-js"
+    class="cart-drawer block modal visibility-hidden invisible fixed inset-0 z-15 active-modal-js content-hidden"
     data-section-id="{{ section.id }}"
     data-cart-type="{{ add_cart_type }}"
+    drawer
   >
     <modal-overlay class="modal-overlay pointer"></modal-overlay>
     <div

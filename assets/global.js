@@ -175,7 +175,7 @@ var getScrollBarWidth = (function () {
   };
 })();
 
-export function eventModal(
+export async function eventModal(
   element,
   event,
   removeElementAfter = false,
@@ -184,6 +184,7 @@ export function eventModal(
 ) {
   if (event == "open") {
     root.classList.add("open-modal");
+    element.classList.remove("content-hidden");
     element.classList.add("active");
     if (removeElementAfter) {
       element.classList.add("remove-after");
@@ -222,9 +223,10 @@ export function eventModal(
     const focus_item = modal_element.hasAttribute("data-focus-item")
       ? modal_element.getAttribute("data-focus-item")
       : "";
+    const modalDrawer = modal_element.hasAttribute("drawer");
     if (modal_element.classList.contains("delay")) {
       if (modal_element.querySelector(".model_media")) {
-        setTimeout(() => {
+        await setTimeout(() => {
           modal_element.classList.remove("active", "delay");
           if (active_modal.length <= 1) {
             removeModalAction(modal_element);
@@ -239,7 +241,7 @@ export function eventModal(
       modal_element.classList.remove("active");
     }
     if (modal_element.classList.contains("remove-after")) {
-      setTimeout(() => {
+      await setTimeout(() => {
         if (focus_item && focus_item == "FacetsDrawer") {
           document
             .getElementById(focus_item)
@@ -252,6 +254,13 @@ export function eventModal(
           modal_element.remove();
         }
       }, 600);
+    }
+    if (modalDrawer) {
+      setTimeout(() => {
+        if (!modal_element.classList.contains("active")) {
+          modal_element.classList.add("content-hidden");
+        }
+      }, 1000);
     }
     if (!modal_element.classList.contains("delay")) {
       if (active_modal.length <= 1) {
