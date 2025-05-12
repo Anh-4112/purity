@@ -15,6 +15,8 @@ if (!customElements.get("bundle-products")) {
             false
           );
           e.addEventListener("mouseleave", _this.onMouseout.bind(_this), false);
+          e.addEventListener("focus", _this.onMouseoverPopup.bind(_this), false);
+          e.addEventListener("blur", _this.onMouseout.bind(_this), false);
         });
         this.item.forEach((e) => {
           e.addEventListener(
@@ -23,10 +25,13 @@ if (!customElements.get("bundle-products")) {
             false
           );
           e.addEventListener("mouseleave", _this.onMouseout.bind(_this), false);
+          e.addEventListener("focus", _this.onMouseoverItem.bind(_this), false);
+          e.addEventListener("blur", _this.onMouseout.bind(_this), false);
         });
       }
 
       onMouseoverPopup(e) {
+        console.log('e :>> ', e);
         const target = e.target;
         if (window.innerWidth >= 768) {
           if (

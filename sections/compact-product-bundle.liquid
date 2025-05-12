@@ -116,10 +116,10 @@
               data-product-position="{{ forloop.index }}"
               {{ block.shopify_attributes }}
             >
-              <div class="bundle-products-hotspot pointer relative">
+              <div class="pointer relative">
                 <a
                   aria-label="{{ aria_label }}"
-                  class="product__name heading-style inline-flex w-custom h-custom pointer content-center rounded-50"
+                  class="bundle-products-hotspot product__name heading-style inline-flex w-custom h-custom pointer content-center rounded-50"
                   style="--width: 4.6rem;--height: 4.6rem;"
                   {% if product.url != blank %}
                     href="{{ product.url }}"
@@ -221,6 +221,7 @@
               <bundle-item
                 data-product-position="{{ forloop.index }}"
                 style="--width: 8rem;"
+                tabindex="0"
                 class="bundle-item switch-slide__mobile border-bottom-md block last-0 py-20-md{% if forloop.first %} pt-0{% endif %} transition"
               >
                 {% render 'card-product',

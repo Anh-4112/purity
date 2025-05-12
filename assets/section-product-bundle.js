@@ -462,6 +462,7 @@ class BundleCartRemoveButton extends HTMLElement {
       );
       if (!isInBundle) {
         button.classList.remove("disabled");
+        button.textContent = window.cartStrings?.add_to_bundle;
       }
     });
   }
