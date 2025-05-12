@@ -50,7 +50,7 @@ class NewsletterPopup extends HTMLElement {
   }
 
   schedulePopupWithModalCheck() {
-    const popupDelay = 6000;
+    const popupDelay = 100;
     setTimeout(() => {
       const activeModal = NextSkyTheme.root.classList.contains("open-modal");
       if (!activeModal) {
@@ -106,26 +106,6 @@ class NewsletterPopup extends HTMLElement {
       NextSkyTheme.global.rootToFocus = wrapper;
       new LazyLoader(".image-lazy-load");
     }, timeShowPopup);
-
-    const form = document.querySelector('.newsletter__form--popup');
-    const submitButton = form.querySelector('.button-newletter-popup'); 
-    const passwordInput = form.querySelector('.newsletter-form-popup-input');
-    if (!form || !submitButton || !passwordInput) {
-      return;
-    }
-
-    submitButton.addEventListener('click', function (e) {
-
-      if(passwordInput.value != "") {
-      const spinner = submitButton?.querySelector(".icon-load");
-      const text = submitButton?.querySelector(".hidden-on-load.transition-short");
-
-      submitButton?.classList.add("loading");
-      spinner?.classList.remove("opacity-0", "pointer-none");
-      text?.classList.add("opacity-0");
-      }
-    });
-
     this.initNotShow(wrapper);
   }
 
