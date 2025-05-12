@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="field">
-      {%- form 'create_customer', novalidate: 'novalidate' -%}
+      {%- form 'create_customer' -%}
         {%- if form.errors -%}
           <div class="form__message error flex align-center gap-10 mb-10" tabindex="-1" autofocus>
             <div class="flex content-center">
@@ -187,34 +187,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form[action*="/account"]',
-      fields: {
-        'customer[first_name]': (value) => {
-          const invalidChars = /<.*?>|javascript:/i;
-          return !value
-            ? '{{ 'customer.validate.first_name' | t }}'
-            : invalidChars.test(value)
-            ? '{{ "customer.validate.invalid" | t }}'
-            : '';
-        },
-        'customer[last_name]': (value) => {
-          const invalidChars = /<.*?>|javascript:/i;
-          return !value
-            ? '{{ 'customer.validate.last_name' | t }}'
-            : invalidChars.test(value)
-            ? '{{ "customer.validate.invalid" | t }}'
-            : '';
-        },
-        'customer[email]': (value) => {
-          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-          return !value
-            ? '{{ "customer.validate.email" | t }}'
-            : !emailRegex.test(value)
-            ? '{{ "customer.validate.email_invalid" | t }}'
-            : '';
-        },
-        'customer[password]': (value) =>
-          !value ? '{{ 'customer.validate.password' | t }}' : value.length < 6 ? '{{ 'customer.validate.min_password' | t }}' : '',
-      },
     });
   });
 </script>

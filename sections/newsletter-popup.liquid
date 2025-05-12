@@ -111,8 +111,7 @@
                     {%- assign newsletter_popup_id = 'NewsletterForm--' | append: section.id -%}
                     {%- form 'customer',
                       class: 'newsletter__form newsletter__form--popup flex',
-                      id: newsletter_popup_id,
-                      novalidate: 'novalidate'
+                      id: newsletter_popup_id
                     -%}
                       <input type="hidden" name="contact[tags]" value="newsletter">
                       <div class="flex gap-15 column w-full">
@@ -136,6 +135,7 @@
                           </label>
                         </div>
                         <button
+                          type="submit"
                           name=" {{ 'newsletter.button_label' | t }}"
                           class="btn w-full button-newletter-popup btn-primary newsletter__button w-full"
                           aria-label="{%- if button_label != blank -%}{{ button_label }} {%- else -%} {{ 'subscribe.button_label' | t }} {% endif %}"

@@ -16,7 +16,7 @@
       class="block"
     >
   {%- endif -%}
-  {%- form 'customer', class: 'form-password-page', novalidate: 'novalidate' -%}
+  {%- form 'customer', class: 'form-password-page' -%}
     <input
       type="hidden"
       name="contact[tags]"
@@ -26,12 +26,12 @@
       class="field relative flex wrap gap-10 justify-content-{{ section_st.text_align }}"
       style="--max-width: 51rem;"
     >
-      <label for="email_contact" class="visually-hidden">
+      <label for="email_contact--{{ block.id }}" class="visually-hidden">
         {{ 'customer.login_page.email' | t }}
         <span class="required">*</span>
       </label>
       <input
-        id="email_contact"
+        id="email_contact--{{ block.id }}"
         type="email"
         required
         name="contact[email]"
@@ -47,7 +47,8 @@
         {% endif %}
       >
       <button
-        class="password__subcribe-button btn btn-primary w-custom pointer"
+        type="submit"
+        class="btn pointer btn-primary relative word-wrap relative"
         style="--width: 20rem;"
       >
         <span class="hidden-on-load"> {{ block.settings.btn_label }}</span>
@@ -90,16 +91,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form.form-password-page',
-      fields: {
-        'contact[email]': (value) => {
-          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-          return !value
-            ? '{{ "customer.validate.email" | t }}'
-            : !emailRegex.test(value)
-            ? '{{ "customer.validate.email_invalid" | t }}'
-            : '';
-        },
-      },
     });
   });
 </script>

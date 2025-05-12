@@ -73,7 +73,7 @@
       class="newsletter__form-container flex column text-{{ text_alignment }} justify-content-{{ text_alignment }}"
     >
       {%- assign newsletter_id = 'NewsletterForm--' | append: section.id -%}
-      {%- form 'customer', id: newsletter_id, class: 'newsletter__form flex column', novalidate: 'novalidate' -%}
+      {%- form 'customer', id: newsletter_id, class: 'newsletter__form flex column' -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
         <div class="field relative field relative w-full flex wrap gap-10 justify-content-{{ text_alignment }}">
           <div class="flex wrap gap-10">
@@ -148,16 +148,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form.newsletter__form',
-      fields: {
-        'contact[email]': (value) => {
-          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-          return !value
-            ? '{{ "customer.validate.email" | t }}'
-            : !emailRegex.test(value)
-            ? '{{ "customer.validate.email_invalid" | t }}'
-            : '';
-        },
-      },
     });
   });
 </script>
