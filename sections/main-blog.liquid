@@ -161,14 +161,14 @@
                       {% endif %}
                     </div>
                   {% endif %}
-                  {% form 'customer', class: 'subscribe-form', novalidate: 'novalidate' %}
+                  {% form 'customer', class: 'subscribe-form' %}
                     <input type="hidden" name="contact[tags]" value="subscribe">
                     <div class="subscribe-form__field-wrapper flex flex column gap-10">
                       <div class="field relative w-full transition">
                         <div class="input-group flex gap-10 mb-15">
                           <div class="relative flex-1">
                             <input
-                              id="subscribeForm--{{ block.id }}"
+                              id="subscribeForm-blog--{{ block.id }}"
                               type="email"
                               name="contact[email]"
                               class="field__input w-full"
@@ -187,7 +187,7 @@
                               placeholder="{{ 'subscribe.label' | t }}"
                               required
                             >
-                            <label class="visually-hidden" for="subscribeForm--{{ block.id }}">
+                            <label class="visually-hidden" for="subscribeForm-blog--{{ block.id }}">
                               {{- 'subscribe.label' | t -}}
                             </label>
                           </div>
@@ -272,14 +272,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form.subscribe-form',
-      fields: {
-        'contact[email]': (value) =>
-          !value
-            ? '{{ "customer.validate.email" | t }}'
-            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-            ? '{{ "customer.validate.email_invalid" | t }}'
-            : '',
-      },
     });
   });
 </script>
