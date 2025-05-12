@@ -28,7 +28,7 @@ if (!customElements.get("suitable-finder")) {
         }
 
         this._lastThrottleTime = 0;
-        this._throttleDelay = 50;
+        this._throttleDelay = 20;
         this._lastHoveredTab = null;
         this._debounceTimer = null;
       }
@@ -220,7 +220,7 @@ if (!customElements.get("suitable-finder")) {
                 this.selectedTab = targetBlockId;
                 this._lastActivatedTab = targetBlockId;
               }
-            }, 200);
+            }, 100);
           }
         }
       }
