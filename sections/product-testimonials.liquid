@@ -202,7 +202,7 @@
                           endfor
                           assign video_poster = video.preview_image | image_url: width: 1100
                         -%}
-                        <video-local>
+                        <video-local-scroll>
                           <div class="video-thumbnail">
                             {% render 'responsive-image',
                               type: 'banner',
@@ -231,7 +231,7 @@
                             {% render 'icon-play' %}
                             {% render 'icon-pause' %}
                           </button>
-                        </video-local>
+                        </video-local-scroll>
                       {% elsif image != blank %}
                         {% render 'responsive-image',
                           type: 'banner',

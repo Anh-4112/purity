@@ -42,7 +42,7 @@ class ShopableVideo extends SlideSection {
         this.updateCenterSlideClass();
         this.swiper.on("slideChange", () => {
           if (this.innerWidth >= 1025) {
-            this.updateCenterSlideClass();
+            this.updateCenterSlideClass(true);
           }
         });
         this.swiper.on("breakpoint", () => {
@@ -90,7 +90,7 @@ class ShopableVideo extends SlideSection {
     });
   }
 
-  updateCenterSlideClass() {
+  updateCenterSlideClass(immediate = false) {
     if (!this || !this.swiper) return;
 
     if (!this._animations) {
@@ -192,7 +192,10 @@ class ShopableVideo extends SlideSection {
         if (newCenterSlide !== previousCenterSlide) {
           this.dispatchEvent(
             new CustomEvent("center-slide-updated", {
-              detail: { centerSlide: newCenterSlide },
+              detail: { 
+                centerSlide: newCenterSlide,
+                immediate: immediate === true
+              },
             })
           );
         }
@@ -237,60 +240,86 @@ class ShopableVideo extends SlideSection {
     this.swiper.on("slideChangeTransitionEnd", () => {
       if (useCenterSlideMode) {
         if (this.innerWidth >= 1025) {
-          this.playCenterSlideVideo();
+          this.playCenterSlideVideo({immediate: true});
         } else {
-          this.playActiveSlideVideo(this.swiper.activeIndex);
+          this.playActiveSlideVideo(this.swiper.activeIndex, {
+            immediate: true,
+          });
         }
       } else {
         if (this.innerWidth >= 1025) {
           if (this.autoplayVideo) {
-            this.playActiveSlideVideo(this.swiper.activeIndex);
+            this.playActiveSlideVideo(this.swiper.activeIndex, {
+              immediate: true,
+            });
           }
         } else {
-          this.playActiveSlideVideo(this.swiper.activeIndex);
+          this.playActiveSlideVideo(this.swiper.activeIndex, {
+            immediate: true,
+          });
         }
       }
     });
-    this.addEventListener("center-slide-updated", () => {
+    this.addEventListener("center-slide-updated", (event) => {
       if (useCenterSlideMode) {
-        this.playCenterSlideVideo();
+        const immediate = event.detail?.immediate === true;
+        console.log('immediate :>> ', event.detail);
+        this.playCenterSlideVideo({ immediate: immediate });
       }
     });
   }
 
-  playCenterSlideVideo() {
+  playCenterSlideVideo(options = {}) {
     this.pauseAllVideos();
     if (!this.autoplayVideo) return;
 
     const centerSlide = this.querySelector(".swiper-slide.center-slide");
     if (!centerSlide) return;
 
-    this._playSlideVideo(centerSlide);
+    this._playSlideVideo(centerSlide, options);
   }
 
-  playActiveSlideVideo(activeIndex) {
+  playActiveSlideVideo(activeIndex, options = {}) {
     this.pauseAllVideos();
     const activeSlide = this.swiper?.slides[activeIndex];
     if (!activeSlide) return;
 
-    this._playSlideVideo(activeSlide);
+    this._playSlideVideo(activeSlide, options);
   }
 
-  _playSlideVideo(slide) {
+  _playSlideVideo(slide, options = {}) {
     const videoLocalElement = slide.querySelector("video-local-shopable");
     if (!videoLocalElement) return;
     let videoElement = videoLocalElement.querySelector("video");
-    if (videoElement) {
-      this._playVideo(videoElement, slide);
-    } else {
-      const newVideo = loadContentVideo(videoLocalElement);
-      if (newVideo && newVideo.nodeName === "VIDEO") {
-        setTimeout(() => this._playVideo(newVideo, slide), 100);
+
+    if (options.immediate) {
+      if (videoElement) {
+        this._playVideo(videoElement, slide);
+      } else {
+        const newVideo = loadContentVideo(videoLocalElement);
+        if (newVideo && newVideo.nodeName === "VIDEO") {
+          setTimeout(() => this._playVideo(newVideo, slide), 100);
+        }
       }
+      return;
     }
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 10) {
+        if (videoElement) {
+          this._playVideo(videoElement, slide);
+        } else {
+          const newVideo = loadContentVideo(videoLocalElement);
+          if (newVideo && newVideo.nodeName === "VIDEO") {
+            setTimeout(() => this._playVideo(newVideo, slide), 100);
+          }
+        }
+      }
+    });
   }
 
   _playVideo(video, slide) {
+    if (!this.autoplayVideo) return;
     const playButton = slide.querySelector(".play-button");
     if (playButton) playButton.classList.add("active");
     const playPromise = video.play();
@@ -676,14 +705,17 @@ class ShopableItem extends HTMLElement {
     }
     const playButton = this.querySelector(".play-button");
     const muteButton = this.querySelector(".mute-button");
-    
-    const allShopableItems = this.closest('shopable-video').querySelectorAll("shopable-item");
-    allShopableItems.forEach(item => {
+
+    const allShopableItems =
+      this.closest("shopable-video").querySelectorAll("shopable-item");
+    allShopableItems.forEach((item) => {
       if (item !== this) {
-        const otherVideoElement = item.querySelector("video-local-shopable video");
+        const otherVideoElement = item.querySelector(
+          "video-local-shopable video"
+        );
         const otherPlayButton = item.querySelector(".play-button");
         const otherMuteButton = item.querySelector(".mute-button");
-        
+
         if (otherVideoElement && !otherVideoElement.paused) {
           otherVideoElement.pause();
           if (otherPlayButton) otherPlayButton.classList.remove("active");
@@ -691,7 +723,7 @@ class ShopableItem extends HTMLElement {
         }
       }
     });
-    
+
     if (video.paused) {
       video.muted = false;
       video

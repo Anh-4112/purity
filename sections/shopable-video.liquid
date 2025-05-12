@@ -181,8 +181,12 @@
                 assign image_alt = 'general.image.image_alt_default' | t
               endif
 
-              assign video_alt = local_video.alt
-              if video_alt == blank
+              assign video_alt = block_st.video_alt_text
+              if video_alt != blank
+                assign video_alt = video_alt | escape
+              else local_video.alt
+                assign video_alt = local_video.alt | escape
+              else
                 assign video_alt = 'accessibility.video' | t
               endif
             %}
@@ -236,6 +240,7 @@
                             poster="{{ poster }}"
                             src="{{ source_url }}"
                             class="rounded"
+                            title="{{ video_alt }}"
                           ></video>
                         </template>
                       {% else %}
@@ -354,10 +359,14 @@
               assign image_alt = 'general.image.image_alt_default' | t
             endif
 
-            assign video_alt = local_video.alt
-            if video_alt == blank
-              assign video_alt = 'accessibility.video' | t
-            endif
+              assign video_alt = block_st.video_alt_text
+              if video_alt != blank
+                assign video_alt = video_alt | escape
+              else local_video.alt
+                assign video_alt = local_video.alt | escape
+              else
+                assign video_alt = 'accessibility.video' | t
+              endif
           %}
           {% if poster_image != blank or local_video != blank %}
             <video-local-scroll
@@ -398,6 +407,7 @@
                     autoplay
                     poster="{{ poster }}"
                     src="{{ source_url }}"
+                    title="{{ video_alt }}"
                   ></video>
                 </template>
               {% else %}
@@ -519,8 +529,12 @@
                           assign image_alt = 'general.image.image_alt_default' | t
                         endif
 
-                        assign video_alt = local_video.alt
-                        if video_alt == blank
+                        assign video_alt = block_st.video_alt_text
+                        if video_alt != blank
+                          assign video_alt = video_alt | escape
+                        else local_video.alt
+                          assign video_alt = local_video.alt | escape
+                        else
                           assign video_alt = 'accessibility.video' | t
                         endif
 
@@ -572,6 +586,7 @@
                               poster="{{ poster }}"
                               data-src="{{ source_url }}"
                               class="z-1"
+                              title="{{ video_alt }}"
                             ></video>
                           {% else %}
                             {% if poster_image != blank %}
@@ -1126,6 +1141,13 @@
           "type": "video",
           "id": "local_video",
           "label": "t:sections.shopable_video.blocks.settings.local_video.label"
+        },
+        {
+          "type": "text",
+          "id": "video_alt_text",
+          "label": "t:sections.video.settings.alt_description.label",
+          "info": "t:sections.video.settings.alt_description.info",
+          "default": "Video alt text"
         }
       ]
     }
