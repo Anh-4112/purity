@@ -61,19 +61,41 @@
               endif
             endfor
             assign video_poster = video.preview_image | image_url: width: 1100
+
+            assign image_alt = image.alt
+            if image_alt == blank
+              assign image_alt = 'general.image.image_alt_default' | t
+            endif
           -%}
           <video-local>
-            <video
-              class="{% if block_st.content_position == 'overlay' %} h-full w-full object-fit-cover{% endif %}"
-              loop="true"
-              data-src="{{ source_url }}"
-              poster="{{ video_poster }}"
-              playsinline="true"
-              autoplay
-              title="{{ 'accessibility.video' | t }}"
-              aria-label="{{ 'accessibility.video' | t }}"
-              muted
-            ></video>
+            <div class="video-thumbnail">
+              {% render 'responsive-image',
+                type: 'banner',
+                container: section_st.section_width,
+                image: video_poster,
+                image_alt: image_alt
+              %}
+            </div>
+            <template>
+              <video
+                loop="true"
+                src="{{ source_url }}"
+                poster="{{ video_poster }}"
+                playsinline="true"
+                autoplay
+                muted
+                class="h-full w-full object-fit-cover"
+              ></video>
+            </template>
+            {% if block_st.content_position == 'bellow' %}
+              <button
+                aria-label="{{ 'accessibility.play_button.video' | t }}"
+                class="play-button absolute invisible-1025 bottom-10 right-10 z-2 transition pointer border-0 inline-flex align-center justify-content-center active"
+              >
+                {% render 'icon-play' %}
+                {% render 'icon-pause' %}
+              </button>
+            {% endif %}
           </video-local>
         {%- else %}
           {%- liquid

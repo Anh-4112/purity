@@ -1,18 +1,21 @@
+{{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
 {% liquid
   assign section_st = section.settings
   assign block_st = block.settings
-  assign video_local = block_st.video_local
-  assign poster = block_st.cover_image | default: block_st.video_local.preview_image | image_url: width: 1100
+  assign poster = block_st.cover_image | default: block_st.video_local.preview_image
   assign video_id = block_st.video_id | default: block_st.video_url.id
   assign autoplay = false
   assign loop = false
   assign muted = false
-  if block_st.autoplay
-    assign autoplay = true
-    assign muted = true
-  endif
   if block_st.looping
     assign loop = true
+  endif
+
+  assign aspect_ratio = block_st.aspect_ratio
+  if aspect_ratio != 'adapt'
+    assign aspect_ratio = block_st.aspect_ratio
+  else
+    assign aspect_ratio = block_st.video_local.aspect_ratio
   endif
 %}
 
@@ -23,92 +26,122 @@
 {%- endstyle -%}
 
 <div class="multi-content__block w-full h-full flex align-{{ block_st.vertical_alignment }}">
-  <video-local
-    class="w-full video-section relative{% if section_st.equal_height_adjustment %} h-full{% endif %} rounded"
-  >
-    <div
-      class="video-has-bg block video-section relative z-3{% if section_st.equal_height_adjustment %} h-full{% endif %}"
-      style="
-        {%- if block_st.video_local != null -%}
-          {% if block_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ block_st.aspect_ratio }}{% else %}--aspect-ratio: {{ block_st.video_local.aspect_ratio }}{% endif %}
-        {%- endif -%}
-        {%- if block_st.video_local == null -%}
-          {%- if block_st.aspect_ratio != 'adapt' -%}--aspect-ratio: {{ block_st.aspect_ratio }}{%- else -%}--aspect-ratio: 16/9{%- endif -%}
-         {%- endif -%}
-      "
+  {%- if block_st.video_local == null and block_st.video_url != null -%}
+    <video-section
+      class="video-section w-full block relative overflow-hidden rounded{% if section_st.equal_height_adjustment %} h-full{% endif %}"
     >
-      {%- if block_st.video_local == null and block_st.video_url != null -%}
-        {% liquid
-          if block_st.video_url.type == 'youtube'
-            assign video_base_url = 'https://www.youtube.com/embed/'
-            assign video_class = 'js-youtube w-full h-full'
-            assign mute_param = 'mute'
-          else
-            assign video_base_url = 'https://player.vimeo.com/video/'
-            assign video_class = 'js-vimeo vimeo-video bg-dark w-full h-full'
-            assign mute_param = 'muted'
-          endif
-        %}
-        <iframe
-          src="{{ video_base_url }}{{ video_id }}?autoplay={% if block_st.autoplay %}1{% else %}0{% endif %}&loop={% if block_st.looping %}1{% else %}0{% endif %}&{{ mute_param }}={% if block_st.autoplay %}1{% else %}0{% endif %}&playsinline=1"
-          class="{{ video_class }}"
-          allow="autoplay; encrypted-media"
-          allowfullscreen
-          frameborder="0"
-          title="{{ 'accessibility.video' | t }}"
-          aria-label="{{ 'accessibility.video' | t }}"
-        ></iframe>
-
-      {%- else -%}
-        {% liquid
-          assign poster = block_st.video_local.preview_image
-          assign image_alt_default = 'general.image.image_alt_default' | t
-        %}
-        <div
-          class="video-thumbnail z-2 absolute banner__media overflow-hidden"
-        >
-          {%- if poster != null -%}
-            {% render 'responsive-image',
-              type: 'other',
-              image: poster,
-              image_alt: image_alt_default,
-              animate: 'zoom-out-small',
-              motion: true
-            %}
-          {%- else -%}
-            {%- render 'placeholder-render', type: 'lifestyle-1' -%}
+      <div
+        class="video-has-bg w-full h-full block video-section relative z-3"
+        style="
+          {%- if block_st.video_local != null -%}
+            {% if block_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ block_st.aspect_ratio }}{% else %}--aspect-ratio: {{ block_st.video_local.aspect_ratio }}{% endif %}
           {%- endif -%}
+          {%- if block_st.video_local == null -%}
+            {%- if block_st.aspect_ratio != 'adapt' -%}--aspect-ratio: {{ block_st.aspect_ratio }}{%- else -%}--aspect-ratio: 16/9{%- endif %}
+          {%- endif -%}
+        "
+      >
+        {%- if block_st.video_url.type == 'youtube' -%}
+          <iframe
+            src="https://www.youtube.com/embed/{{ video_id }}?autoplay={% if block_st.autoplay -%}1{% else %}0{%- endif -%}&loop={% if loop %}1{% else %}0{% endif %}&playlist={{ video_id }}&mute={% if block_st.autoplay -%}1{% else %}0{%- endif -%}&playsinline=1"
+            class="js-youtube no-js-hidden"
+            allow="autoplay; encrypted-media"
+            title="{{ block_st.alt_description | escape }}"
+            allowfullscreen
+          ></iframe>
+        {%- else -%}
+          <iframe
+            src="https://player.vimeo.com/video/{{ video_id }}?autoplay={% if block_st.autoplay -%}1{% else %}0{%- endif -%}&loop={% if loop %}1{% else %}0{% endif %}&muted={% if block_st.autoplay -%}1{% else %}0{%- endif -%}"
+            class="js-vimeo no-js-hidden"
+            allow="autoplay; encrypted-media"
+            title="{{ block_st.alt_description | escape }}"
+            allowfullscreen
+          ></iframe>
+        {%- endif -%}
+      </div>
+    </video-section>
+
+  {%- elsif block_st.video_local != null -%}
+    {%- if block_st.autoplay -%}
+      <video-local
+        class="w-full video-section block relative overflow-hidden{% if section_st.equal_height_adjustment %} h-full{% endif %} rounded"
+        style="--aspect-ratio: {{ aspect_ratio }}"
+      >
+    {%- else -%}
+      <video-local-play
+        class="w-full video-section block relative overflow-hidden{% if section_st.equal_height_adjustment %} h-full{% endif %} rounded"
+        style="--aspect-ratio: {{ aspect_ratio }}"
+      >
+    {%- endif -%}
+
+    <div
+      class="video-thumbnail z-3 absolute banner__media overflow-hidden"
+      style="{% if block_st.aspect_ratio != 'adapt' %}--aspect-ratio: {{ aspect_ratio }}{% else %}--aspect-ratio: 16/9;{% endif %}"
+    >
+      {%- if poster != null -%}
+        {%- liquid
+          assign image_alt_default = 'general.image.image_alt_default' | t
+          assign image_alt = poster.alt | default: image_alt_default | escape
+        -%}
+        {% render 'responsive-image', type: 'other', image: poster, image_alt: image_alt %}
+      {%- else -%}
+        {%- render 'placeholder-render', type: 'lifestyle-1' -%}
+      {%- endif -%}
+
+      {%- if block_st.autoplay == blank -%}
+        <div class="deferred-media__poster-button absolute z-3 flex content-center wh-55">
+          <button
+            class="play-button p-0 btn-white w-full h-full rounded-50 border-0 flex content-center pointer shadow transition"
+            type="button"
+            aria-label="{{ 'sections.video.alt_text' | t }}"
+          >
+            {% render 'icon-play' %}
+          </button>
         </div>
-        <template>
-          {{
-            video_local
-            | video_tag:
-              autoplay: autoplay,
-              alt: image_alt_default,
-              controls: true,
-              muted: muted,
-              poster: poster,
-              loop: loop,
-              class: 'focus-inset'
-          }}
-          <span class="focus-video absolute inset-0 pointer-none"></span>
-        </template>
-        {{
-          video_local
-          | video_tag:
-            autoplay: autoplay,
-            controls: true,
-            alt: image_alt_default,
-            muted: muted,
-            poster: poster,
-            loop: loop,
-            class: 'focus-inset'
-        }}
-        <span class="focus-video absolute inset-0 pointer-none"></span>
       {%- endif -%}
     </div>
-  </video-local>
+    <template>
+      {{
+        block_st.video_local
+        | video_tag:
+          image_size: '1100x',
+          alt: image_alt_default,
+          autoplay: true,
+          loop: loop,
+          controls: true,
+          muted: true
+      }}
+      <span class="focus-video absolute inset-0 pointer-none"></span>
+    </template>
+    <noscript>
+      {% liquid
+        assign autoplay = false
+        assign muted = false
+        if section_st.autoplay
+          assign autoplay = true
+          assign muted = true
+        endif
+      %}
+      {{
+        block.video_local
+        | video_tag:
+          image_size: '1100x',
+          alt: image_alt_default,
+          autoplay: autoplay,
+          loop: loop,
+          controls: true,
+          muted: muted
+      }}
+      <span class="focus-video absolute inset-0 pointer-none"></span>
+    </noscript>
+    {%- if block_st.autoplay -%}
+      </video-local>
+    {%- else -%}
+      </video-local-play>
+    {%- endif -%}
+  {%- endif -%}
 </div>
+
 {% schema %}
 {
   "name": "t:sections.video.name",
