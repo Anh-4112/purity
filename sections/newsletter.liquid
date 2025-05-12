@@ -72,16 +72,13 @@
     <div
       class="newsletter__form-container flex column text-{{ text_alignment }} justify-content-{{ text_alignment }}"
     >
-      {%- form 'customer',
-        id: 'NewsletterForm--{{ section.id }}',
-        class: 'newsletter__form flex',
-        novalidate: 'novalidate'
-      -%}
+      {%- assign newsletter_id = 'NewsletterForm--' | append: section.id -%}
+      {%- form 'customer', id: newsletter_id, class: 'newsletter__form flex', novalidate: 'novalidate' -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
         <div class="field relative field relative w-full flex wrap gap-10 justify-content-{{ text_alignment }}">
           <div class="flex wrap gap-10">
             <input
-              id="NewsletterForm--{{ section.id }}"
+              id="newsletter_id"
               type="email"
               required
               name="contact[email]"
@@ -100,7 +97,7 @@
               {% endif %}
               pattern=".+\.[a-zA-Z]{2,6}"
             >
-            <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
+            <label class="visually-hidden" for="newsletter_id">
               {{ 'newsletter.label' | t }}
             </label>
             <button
