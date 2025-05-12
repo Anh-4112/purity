@@ -63,16 +63,16 @@ class NewsletterPopup extends HTMLElement {
     const _self = this;
     const currentTarget = event.target;
     const wrapper = document.querySelector("newsletter-modal-popup");
-    const template = currentTarget.querySelector("template");
+    const template = currentTarget.querySelector("newsletter-modal-popup");
     if (
       JSON.parse(currentTarget.dataset.shopifyEditorSection).id ===
       this.sectionId
     ) {
-      if (!wrapper) {
+      if (!wrapper.classList.contains("active")) {
         _self.createPopup(template);
       }
     } else {
-      if (wrapper) {
+      if (wrapper.classList.contains("active")) {
         _self.closePopup();
       }
     }
@@ -83,56 +83,30 @@ class NewsletterPopup extends HTMLElement {
     let timeShowPopup = 0;
     if (window.Shopify && window.Shopify.designMode) {
       const existingPopup = document.querySelector("newsletter-modal-popup");
-      if (existingPopup) {
-        existingPopup.remove();
+      if (existingPopup.classList.contains("active")) {
+        NextSkyTheme.eventModal(existingPopup, "close", false);
       }
     }
     if (window.Shopify && window.Shopify.designMode) {
       template = templateDesignMode;
       timeShowPopup = 0;
     } else {
-      template = this.querySelector("template");
+      template = this.querySelector("newsletter-modal-popup");
       timeShowPopup = 100;
     }
     if (!template) return;
-    const content = document.createElement("div");
-    content.appendChild(template.content.firstElementChild.cloneNode(true));
-    const wrapper = NextSkyTheme.body.appendChild(
-      content.querySelector("newsletter-modal-popup")
-    );
-
     setTimeout(() => {
-      NextSkyTheme.eventModal(wrapper, "open", true, null, true);
-      NextSkyTheme.global.rootToFocus = wrapper;
+      NextSkyTheme.eventModal(template, "open", false, null, true);
+      NextSkyTheme.global.rootToFocus = template;
       new LazyLoader(".image-lazy-load");
     }, timeShowPopup);
-
-    const form = document.querySelector('.newsletter__form--popup');
-    const submitButton = form.querySelector('.button-newletter-popup'); 
-    const passwordInput = form.querySelector('.newsletter-form-popup-input');
-    if (!form || !submitButton || !passwordInput) {
-      return;
-    }
-
-    submitButton.addEventListener('click', function (e) {
-
-      if(passwordInput.value != "") {
-      const spinner = submitButton?.querySelector(".icon-load");
-      const text = submitButton?.querySelector(".hidden-on-load.transition-short");
-
-      submitButton?.classList.add("loading");
-      spinner?.classList.remove("opacity-0", "pointer-none");
-      text?.classList.add("opacity-0");
-      }
-    });
-
-    this.initNotShow(wrapper);
+    this.initNotShow(template);
   }
 
   closePopup() {
     const wrapper = document.querySelector("newsletter-modal-popup");
-    if (wrapper) {
-      NextSkyTheme.eventModal(wrapper, "close", true);
+    if (wrapper.classList.contains("active")) {
+      NextSkyTheme.eventModal(wrapper, "close", false);
     }
   }
 
@@ -164,7 +138,7 @@ class NewsletterPopup extends HTMLElement {
     const _self = this;
 
     notShow.addEventListener("click", () => {
-        _self.eventNotShow(modal);
+      _self.eventNotShow(modal);
     });
     notShow.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
