@@ -2163,6 +2163,14 @@ menu-drawer .modal-inner {
     transform: translateY(100%);
     will-change: transform;
   }
+  .product-tabs__header-item:is(.selected, .hovered)
+    .product-tabs__header-image
+    > * {
+    transform: scale(1.1);
+  }
+  .product-tabs__header-item .product-tabs__header-image > * {
+    transition: var(--transition-drawer);
+  }
 }
 .shopify-policy__container {
   padding-top: 10rem;
@@ -2185,14 +2193,6 @@ range-slider span {
 }
 .hidden_range .product-tabs__header-item.active {
   opacity: 1;
-}
-.product-tabs__header-item:is(.selected, .hovered)
-  .product-tabs__header-image
-  > * {
-  transform: scale(1.1);
-}
-.product-tabs__header-item .product-tabs__header-image > * {
-  transition: var(--transition-drawer);
 }
 @media screen and (max-width: 767.98px) {
   .product-tabs__header-content {
