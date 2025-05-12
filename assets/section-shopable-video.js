@@ -263,7 +263,6 @@ class ShopableVideo extends SlideSection {
     this.addEventListener("center-slide-updated", (event) => {
       if (useCenterSlideMode) {
         const immediate = event.detail?.immediate === true;
-        console.log('immediate :>> ', event.detail);
         this.playCenterSlideVideo({ immediate: immediate });
       }
     });
