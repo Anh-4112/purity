@@ -87,13 +87,15 @@
                 class="h-full w-full object-fit-cover"
               ></video>
             </template>
-            <button
-              aria-label="{{ 'accessibility.play_button.video' | t }}"
-              class="play-button absolute invisible-1025 bottom-10 right-10 z-2 transition pointer border-0 inline-flex align-center justify-content-center active"
-            >
-              {% render 'icon-play' %}
-              {% render 'icon-pause' %}
-            </button>
+            {% if block_st.content_position == 'bellow' %}
+              <button
+                aria-label="{{ 'accessibility.play_button.video' | t }}"
+                class="play-button absolute invisible-1025 bottom-10 right-10 z-2 transition pointer border-0 inline-flex align-center justify-content-center active"
+              >
+                {% render 'icon-play' %}
+                {% render 'icon-pause' %}
+              </button>
+            {% endif %}
           </video-local>
         {%- else %}
           {%- liquid
