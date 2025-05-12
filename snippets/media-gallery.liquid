@@ -53,7 +53,11 @@
     <div class="product__media-gallery product-{{ layout }} {{ desktop_layout }}{% if desktop_layout == 'thumbnail_left' %} flex-md{% if media_position == 'right' %} flex-start{% else %} flex-end{% endif %} relative overflow-hidden{% endif %}">
       {% case layout %}
         {% when 'thumbnail' %}
-          <div id="GalleryMainViewer-{{ section.id }}" class="media-main-swiper">
+          <div
+            id="GalleryMainViewer-{{ section.id }}"
+            class="media-main-swiper"
+            style="--item-desktop: 1;--item-tablet: 1;--item-mb: 1;"
+          >
             <div class="swiper-wrapper-main swiper hover-action">
               {%- render 'swiper-navigation', show_on_hover: true -%}
               <div class="swiper-wrapper">
