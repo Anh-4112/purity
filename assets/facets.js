@@ -129,6 +129,7 @@ class FacetFiltersForm extends HTMLElement {
       "facets-filters-active",
       "select-custom.facet-filters",
       "pagination-load-more",
+      "facet-drawer",
     ];
     blocksToUpdate.forEach(updateContent);
   }

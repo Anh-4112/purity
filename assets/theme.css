@@ -641,10 +641,13 @@ blockquote {
   z-index: 1;
   pointer-events: none;
 }
-.modal.visibility-hidden.active {
+.modal.invisible.active {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
+}
+.content-hidden {
+  content-visibility: hidden;
 }
 .active .modal-overlay,
 .modal.active .modal-inner,
@@ -798,6 +801,9 @@ blockquote {
   }
   .pointer-md-none {
     pointer-events: none;
+  }
+  .py-md-0 {
+    padding-block: 0;
   }
 }
 @media (min-width: 1025px) {
@@ -1498,6 +1504,7 @@ blockquote {
 .button-localization.opened + .disclosure__list-wrapper {
   opacity: 1;
   pointer-events: auto;
+  visibility: visible;
 }
 .disclosure__list {
   max-height: 50vh;
@@ -1744,7 +1751,7 @@ quickview-drawer .media-zoom-button span {
   display: none;
 }
 @media (min-width: 768px) {
-  .quickview_inner .draggable-modal {
+  .quickview_inner draggable-modal {
     display: none;
   }
   .modal-inner.quickview_inner {
@@ -1759,9 +1766,6 @@ quickview-drawer .media-zoom-button span {
     border-radius: 0;
     clip-path: unset;
     overflow: visible;
-  }
-  quickview-drawer .draggable-modal {
-    display: none;
   }
   .product-detail__media {
     transition: transform 0.5s cubic-bezier(0.24, 0.25, 0, 1);
@@ -2063,4 +2067,7 @@ media-lightbox-popup .product__name {
   .video_control > *:focus-visible {
     transform: translateX(0);
   }
+}
+cart-drawer {
+  display: block;
 }

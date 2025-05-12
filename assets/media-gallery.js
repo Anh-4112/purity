@@ -55,10 +55,12 @@ class GridGallery extends MediaGallery {
   actionOnMobile() {
     this.classList.add("swiper");
     this.classList.remove("grid", "grid-cols", "stacked");
-    const html = this.MediaGalleryHtml.replaceAll("grid-item", "swiper-slide");
-    const wrapper = `<div class='swiper-wrapper'>${html}</div> <div
-      class="swiper-pagination bg-white blur shadow fs-small heading-color lh-normal rounded"
-    ></div> `;
+    const actions = this.querySelector(".swiper-actions").outerHTML;
+    const pagination = this.querySelector(".swiper-pagination").outerHTML;
+    const html = this.MediaGalleryHtml.replaceAll("grid-item", "swiper-slide")
+      .replaceAll(actions, "")
+      .replaceAll(pagination, "");
+    const wrapper = `${actions}<div class='swiper-wrapper'>${html}</div>${pagination}`;
     this.innerHTML = wrapper;
     this.initSlideMediaGallery("gird");
     new LazyLoader(".image-lazy-load");
@@ -69,7 +71,7 @@ class GridGallery extends MediaGallery {
     if (this.classList.contains("grid-swiper-mobile")) {
       this.classList.add("grid", "grid-cols");
     } else {
-      this.classList.add("stacked");
+      this.classList.add("stacked", "grid");
     }
     this.innerHTML = this.MediaGalleryHtml;
     new LazyLoader(".image-lazy-load");

@@ -2039,6 +2039,13 @@ class AskQuestion extends HTMLButtonElement {
   }
   init() {
     this.addEventListener("click", this.onClick.bind(this), false);
+
+    const urlInfo = window.location.href;
+    const newURL = location.href.split("?")[0];
+    if (urlInfo.indexOf("contact_posted=true#ContactFormAsk") >= 1) {
+      NextSkyTheme.notifier.show(message.ask_question.success, "success", 4000);
+      window.history.pushState("object", document.title, newURL);
+    }
   }
   onClick(e) {
     const ask_question = e.target

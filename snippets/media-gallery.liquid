@@ -40,7 +40,7 @@
     onload="this.media='all'"
   >
 {% endif %}
-<div class="block__media-gallery sticky top-20">
+<div class="block__media-gallery sticky-1025 top-20">
   <media-gallery
     class="media-gallery block"
     data-section-id="{{ section.id }}"
@@ -53,7 +53,11 @@
     <div class="product__media-gallery product-{{ layout }} {{ desktop_layout }}{% if desktop_layout == 'thumbnail_left' %} flex-md{% if media_position == 'right' %} flex-start{% else %} flex-end{% endif %} relative overflow-hidden{% endif %}">
       {% case layout %}
         {% when 'thumbnail' %}
-          <div id="GalleryMainViewer-{{ section.id }}" class="media-main-swiper">
+          <div
+            id="GalleryMainViewer-{{ section.id }}"
+            class="media-main-swiper"
+            style="--item-desktop: 1;--item-tablet: 1;--item-mb: 1;"
+          >
             <div class="swiper-wrapper-main swiper hover-action">
               {%- render 'swiper-navigation', show_on_hover: true -%}
               <div class="swiper-wrapper">
@@ -101,6 +105,7 @@
             class="grid gap-10 stacked stacked-swiper-mobile overflow-visible-mb grid_scroll"
             style="{{ col | strip | strip_newlines }}"
           >
+            {%- render 'swiper-navigation', class-custom: 'hidden-md absolute', show_on_hover: true -%}
             {% render 'product-media',
               images: images,
               product: product,
@@ -109,6 +114,7 @@
               motion: true,
               class: ' grid-item'
             %}
+            <div class="swiper-pagination bg-white blur shadow fs-small heading-color lh-normal rounded"></div>
           </grid-gallery>
         {% when 'quick_view' %}
           <quick-view-gallery
@@ -116,7 +122,7 @@
             class="swiper smooth_scroll hover-action{% if product.media.size > 0 %} overflow-visible-mb{% endif %}"
             style="--gap: 10px;--gap-desktop: 10px;"
           >
-            {%- render 'swiper-navigation', class-custom: 'hidden block-1025 vertical-arrow', show_on_hover: true -%}
+            {%- render 'swiper-navigation', class-custom: 'vertical-arrow', show_on_hover: true -%}
             <div class="swiper-wrapper">
               {% render 'product-media',
                 images: images,
@@ -137,6 +143,7 @@
             class="grid grid-cols gap-10 grid-swiper-mobile overflow-visible-mb grid_scroll"
             style="{{ col | strip | strip_newlines }}"
           >
+            {%- render 'swiper-navigation', class-custom: 'hidden-md absolute' -%}
             {% render 'product-media',
               images: images,
               product: product,
@@ -145,6 +152,9 @@
               motion: true,
               class: ' grid-item'
             %}
+            <div
+              class="swiper-pagination bg-white blur shadow fs-small heading-color lh-normal rounded hidden-md"
+            ></div>
           </grid-gallery>
       {% endcase %}
     </div>
