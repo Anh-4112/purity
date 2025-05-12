@@ -2674,7 +2674,9 @@ class DraggableModal extends HTMLElement {
   connectedCallback() {
     this.modalElement = this.closest(".active-modal-js");
     if (!this.modalElement) return;
-
+    if (window.innerWidth >= 1025) {
+      return;
+    }
     this.addEventListener("touchstart", this.startDrag, { passive: true });
     this.addEventListener("mousedown", this.startDrag);
     document.addEventListener("touchmove", this.onDrag, { passive: false });
