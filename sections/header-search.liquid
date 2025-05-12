@@ -58,14 +58,14 @@
 <script type="module" src="{{ 'search.js' | asset_url }}"></script>
 <action-search
   id="{{ section.id }}"
-  class="block modal visibility-hidden invisible fixed inset-0 z-15 pointer-none active-modal-js content-hidden{% if search_type == 'drawer' %} search-type-drawer{% else %} search-type-popup{% endif %}"
+  class="block modal transition-drawer fixed inset-0 z-15 pointer-none active-modal-js content-hidden{% if search_type == 'drawer' %} search-type-drawer{% else %} search-type-popup{% endif %}"
   data-section-id="{{ section.id }}"
   data-type="{{ search_type }}"
   drawer
 >
   <modal-overlay class="modal-overlay pointer"></modal-overlay>
   <div
-    class="modal-inner draw-mb drawer-right-mb color-default transition-drawer drawer{% if search_type != 'popup' %} drawer-right{% else %} drawer-top{% endif %} fixed right-0 inset-y-0 z-2 bg-white w-full"
+    class="modal-inner draw-mb transition-drawer drawer-right-mb color-default transition-drawer drawer{% if search_type != 'popup' %} drawer-right{% else %} drawer-top{% endif %} fixed right-0 inset-y-0 z-2 bg-white w-full"
     role="dialog"
     aria-modal="true"
     aria-label="{{ 'general.search.name' | t }}"
