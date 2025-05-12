@@ -220,6 +220,14 @@ export class ProductForm extends HTMLElement {
         ".drawer__body"
       );
       this.cart.querySelector(".drawer__body").innerHTML = drawerBody.innerHTML;
+
+      const sectionElement = document.getElementById("cart-icon-bubble");
+      if (sectionElement) {
+        sectionElement.innerHTML = this.cart.getSectionInnerHTML(
+          parsedState.sections["cart-icon-bubble"]
+        );
+        this.cart.updateCartIcon(sectionElement);
+      }
       new LazyLoader(".image-lazy-load");
       NextSkyTheme.trapFocus(this.cart);
     } else {
@@ -243,7 +251,9 @@ export class ProductForm extends HTMLElement {
                 ".cart-count"
               ).innerHTML;
           }
-          const nav_bar_mobile_id = document.querySelector("#cart-icon-bubble-mobile");
+          const nav_bar_mobile_id = document.querySelector(
+            "#cart-icon-bubble-mobile"
+          );
           if (
             nav_bar_mobile_id &&
             nav_bar_mobile_id.querySelector(".cart-count") &&
@@ -307,8 +317,13 @@ export class ProductForm extends HTMLElement {
                 ".cart-count"
               ).innerHTML;
           }
-          const nav_bar_mobile_id = document.getElementById("cart-icon-bubble-mobile");
-          if (nav_bar_mobile_id && nav_bar_mobile_id.querySelector(".cart-count")) {
+          const nav_bar_mobile_id = document.getElementById(
+            "cart-icon-bubble-mobile"
+          );
+          if (
+            nav_bar_mobile_id &&
+            nav_bar_mobile_id.querySelector(".cart-count")
+          ) {
             nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
               this.getSectionDOM(
                 parsedState.sections[section.id],
@@ -606,8 +621,13 @@ class CartGiftWrap extends HTMLElement {
                   ).innerHTML;
               }
 
-              const nav_bar_mobile_id = document.querySelector("#cart-icon-bubble-mobile");
-              if (nav_bar_mobile_id && nav_bar_mobile_id.querySelector(".cart-count")) {
+              const nav_bar_mobile_id = document.querySelector(
+                "#cart-icon-bubble-mobile"
+              );
+              if (
+                nav_bar_mobile_id &&
+                nav_bar_mobile_id.querySelector(".cart-count")
+              ) {
                 nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
                   this.getSectionDOM(
                     parsedState.sections[section.id],
@@ -761,56 +781,70 @@ class CartDrawer extends HTMLElement {
         ".drawer__body"
       );
       this.querySelector(".drawer__body").innerHTML = drawerBody.innerHTML;
+
+      const sectionElement = document.getElementById("cart-icon-bubble");
+      if (sectionElement) {
+        sectionElement.innerHTML = this.getSectionInnerHTML(
+          parsedState.sections["cart-icon-bubble"]
+        );
+        this.updateCartIcon(sectionElement);
+      }
       return;
+    } else {
+      this.getSectionsToRender().forEach((section, index) => {
+        const sectionElement = section.selector
+          ? document.querySelector(section.selector)
+          : document.getElementById(section.id);
+        if (!sectionElement) {
+          return;
+        }
+        sectionElement.innerHTML = this.getSectionInnerHTML(
+          parsedState.sections[section.id],
+          section.selector
+        );
+        if (index === 1) {
+          this.updateCartIcon(sectionElement);
+        }
+        if (index === 2) {
+          const progress = this.getSectionDOM(
+            parsedState.sections[section.id],
+            ".progress"
+          );
+          if (sectionElement.querySelector(".progress")) {
+            sectionElement
+              .querySelector(".progress")
+              .setAttribute(
+                "data-total-order",
+                progress.getAttribute("data-total-order")
+              );
+          }
+        }
+      });
+    }
+  }
+
+  updateCartIcon(sectionElement) {
+    const nav_bar_id = document.querySelector("#cart-icon-bubble");
+    if (
+      nav_bar_id &&
+      nav_bar_id.querySelector(".cart-count") &&
+      sectionElement.querySelector(".cart-count")
+    ) {
+      nav_bar_id.querySelector(".cart-count").innerHTML =
+        sectionElement.querySelector(".cart-count").innerHTML;
     }
 
-    this.getSectionsToRender().forEach((section, index) => {
-      const sectionElement = section.selector
-        ? document.querySelector(section.selector)
-        : document.getElementById(section.id);
-      if (!sectionElement) {
-        return;
-      }
-      sectionElement.innerHTML = this.getSectionInnerHTML(
-        parsedState.sections[section.id],
-        section.selector
-      );
-      if (index === 1) {
-        const nav_bar_id = document.querySelector("#cart-icon-bubble");
-        if (
-          nav_bar_id &&
-          nav_bar_id.querySelector(".cart-count") &&
-          sectionElement.querySelector(".cart-count")
-        ) {
-          nav_bar_id.querySelector(".cart-count").innerHTML =
-            sectionElement.querySelector(".cart-count").innerHTML;
-        }
-
-        const nav_bar_mobile_id = document.querySelector("#cart-icon-bubble-mobile");
-        if (
-          nav_bar_mobile_id &&
-          nav_bar_mobile_id.querySelector(".cart-count") &&
-          sectionElement.querySelector(".cart-count")
-        ) {
-          nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
-            sectionElement.querySelector(".cart-count").innerHTML;
-        }
-      }
-      if (index === 2) {
-        const progress = this.getSectionDOM(
-          parsedState.sections[section.id],
-          ".progress"
-        );
-        if (sectionElement.querySelector(".progress")) {
-          sectionElement
-            .querySelector(".progress")
-            .setAttribute(
-              "data-total-order",
-              progress.getAttribute("data-total-order")
-            );
-        }
-      }
-    });
+    const nav_bar_mobile_id = document.querySelector(
+      "#cart-icon-bubble-mobile"
+    );
+    if (
+      nav_bar_mobile_id &&
+      nav_bar_mobile_id.querySelector(".cart-count") &&
+      sectionElement.querySelector(".cart-count")
+    ) {
+      nav_bar_mobile_id.querySelector(".cart-count").innerHTML =
+        sectionElement.querySelector(".cart-count").innerHTML;
+    }
   }
 
   getSectionInnerHTML(html, selector = ".shopify-section") {

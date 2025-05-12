@@ -101,7 +101,6 @@ function initSlide(_this) {
               oH.push(e.offsetHeight / 2);
             });
             const max = Math.max(...oH);
-            console.log(max);
             const arrowsOffset = "--arrows-offset-top: " + max + "px";
             if (_this.querySelectorAll(".swiper-arrow")) {
               _this.querySelectorAll(".swiper-arrow").forEach((arrow) => {

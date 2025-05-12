@@ -236,7 +236,6 @@ class MediaZoomButton extends HTMLButtonElement {
     });
     lightbox.loadAndOpen(index - 1, dataSource);
     lightbox.on("pointerDown", (e) => {
-      console.log(lightbox.pswp);
       lightbox.pswp.currSlide.data.mediaType != "image" && e.preventDefault();
     });
   }
