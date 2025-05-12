@@ -96,7 +96,7 @@
           <div class="compare-field word-break p-20 field-heading sticky left-0 bg-white z-2 heading-style">
             {{ 'products.product.product_compare' | t }}
           </div>
-          <div class="compare-field word-break p-20 current-product bg-secondary">
+          <div class="compare-field word-break p-20 current-product bg-secondary flex column gap-20">
             {%- liquid
               assign p_media = product.featured_media
               assign ratio = '3/4'
@@ -229,7 +229,7 @@
                 continue
               endif
             -%}
-            <div class="compare-field word-break p-20">
+            <div class="compare-field word-break p-20 flex column gap-20">
               {%- liquid
                 assign p_media = items.featured_media
                 assign ratio = '3/4'
