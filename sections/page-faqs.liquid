@@ -62,7 +62,7 @@
               {%- endif -%}
             </div>
           {%- endif -%}
-          {%- form 'contact', id: 'contact_faq', class: 'isolate field', novalidate: 'novalidate' -%}
+          {%- form 'contact', id: 'contact_faq', class: 'isolate field' -%}
             {%- if form.posted_successfully? -%}
               <div
                 class="form-status form-status form__message success mb-10 flex align-center gap-10 mb-10"
@@ -115,6 +115,7 @@
                   class="field__input w-full"
                   autocomplete="name"
                   type="text"
+                  required
                   id="ContactFormName-faq--{{ section.id }}"
                   name="contact[name]"
                   value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
@@ -175,7 +176,6 @@
                 required
                 name="contact[body]"
                 placeholder="{{ section_st.message }}*"
-                required
               >
           {{- form.body -}}
           </textarea>
@@ -207,33 +207,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form#contact_faq',
-      fields: {
-        'contact[name]': (value) => {
-          const invalidChars = /<.*?>|javascript:/i;
-          return !value
-            ? '{{ "customer.validate.name" | t }}'
-            : invalidChars.test(value)
-            ? '{{ "customer.validate.invalid" | t }}'
-            : '';
-        },
-        'contact[email]': (value) => {
-          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-          return !value
-            ? '{{ "customer.validate.email" | t }}'
-            : !emailRegex.test(value)
-            ? '{{ "customer.validate.email_invalid" | t }}'
-            : '';
-        },
-        'contact[subject]': (value) => (!value ? '{{ "customer.validate.subject" | t }}' : ''),
-        'contact[body]': (value) => {
-          const invalidChars = /<.*?>|javascript:/i;
-          return !value
-            ? '{{ "customer.validate.message" | t }}'
-            : invalidChars.test(value)
-            ? '{{ "customer.validate.invalid" | t }}'
-            : '';
-        },
-      },
     });
   });
 </script>
