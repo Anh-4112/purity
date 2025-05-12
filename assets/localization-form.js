@@ -134,8 +134,7 @@ class DraggableLocalization extends HTMLElement {
 
   connectedCallback() {
     if (!this.localizationForm) return;
-
-    this.addEventListener('touchstart', this.startDrag, { passive: true });
+    this.addEventListener('touchstart', this.startDrag, { passive: true, capture: true });
     this.addEventListener('mousedown', this.startDrag);
     document.addEventListener('touchmove', this.onDrag, { passive: false });
     document.addEventListener('mousemove', this.onDrag);
@@ -156,7 +155,7 @@ class DraggableLocalization extends HTMLElement {
   }
 
   startDrag(e) {
-    if (!this.panelWrapper || this.panelWrapper.hasAttribute('hidden')) return;
+    if (!this.panelWrapper) return;
     this.isDragging = true;
     this.startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
     this.currentY = this.startY;
