@@ -385,7 +385,7 @@
                 </div>
               {%- endif -%}
               <div class="comment-content">
-                {% form 'new_comment', article, id: 'commentArticle', novalidate: 'novalidate' %}
+                {% form 'new_comment', article, id: 'commentArticle' %}
                   {%- liquid
                     assign post_message = 'blogs.article.success'
                     if blog.moderated? and comment.status == 'unapproved'
@@ -605,16 +605,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form#commentArticle',
-      fields: {
-        'comment[email]': (value) =>
-          !value
-            ? '{{ "customer.validate.email" | t }}'
-            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-            ? '{{ "customer.validate.email_invalid" | t }}'
-            : '',
-        'comment[author]': (value) => (!value ? '{{ 'customer.validate.name' | t }}' : ''),
-        'comment[body]': (value) => (!value ? '{{ 'customer.validate.comment' | t }}' : ''),
-      },
     });
   });
 </script>
