@@ -127,7 +127,7 @@
         <input
           type="email"
           name="customer[email]"
-          id="CustomerEmail"
+          id="CustomerEmail-login--{{ section.id }}"
           autocomplete="email"
           autocorrect="off"
           autocapitalize="off"
@@ -138,7 +138,7 @@
           required
           class="w-full fs-small-1 heading-color{% if form.errors contains 'form' %} border{% endif %}"
         >
-        <label for="CustomerEmail" class="visually-hidden">
+        <label for="CustomerEmail-login--{{ section.id }}" class="visually-hidden">
           {{ 'customer.login_page.email' | t }}
           <span class="required">*</span>
         </label>
@@ -151,7 +151,7 @@
               type="password"
               value=""
               name="customer[password]"
-              id="CustomerPassword"
+              id="CustomerPassword-login--{{ section.id }}"
               autocomplete="current-password"
               {% if form.errors contains 'form' %}
                 aria-invalid="true"
@@ -171,7 +171,7 @@
                 <use href="#icon-show-password"></use>
               </svg>
             </show-pass-word>
-            <label for="CustomerPassword" class="visually-hidden">
+            <label for="CustomerPassword-login--{{ section.id }}" class="visually-hidden">
               {{ 'customer.login_page.password' | t }}
               <span class="required">*</span>
             </label>

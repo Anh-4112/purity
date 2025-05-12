@@ -115,12 +115,12 @@
                   class="field__input w-full"
                   autocomplete="name"
                   type="text"
-                  id="ContactFormName-{{ section.id }}"
+                  id="ContactFormName-faq--{{ section.id }}"
                   name="contact[name]"
                   value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
                   placeholder="{{ section_st.name }} *"
                 >
-                <label class="field__label visually-hidden" for="ContactFormName-{{ section.id }}">
+                <label class="field__label visually-hidden" for="ContactFormName-faq--{{ section.id }}">
                   {{ 'templates.contact.form.name' | t -}}
                 </label>
               </div>
@@ -128,7 +128,7 @@
                 <input
                   autocomplete="email"
                   type="email"
-                  id="ContactFormEmail-{{ section.id }}"
+                  id="ContactFormEmail-faq--{{ section.id }}"
                   class="field__input w-full"
                   name="contact[email]"
                   spellcheck="false"
@@ -143,7 +143,7 @@
                   placeholder="{{ section_st.email_placeholder }} *"
                   required
                 >
-                <label class="field__label visually-hidden" for="ContactFormEmail-{{ section.id }}">
+                <label class="field__label visually-hidden" for="ContactFormEmail-faq--{{ section.id }}">
                   {{ 'templates.contact.form.email' | t }}
                   <span class="required">*</span></label
                 >
@@ -168,7 +168,7 @@
             >
               <textarea
                 rows="3"
-                id="ContactFormMessage-{{ section.id }}"
+                id="ContactFormMessage-faq--{{ section.id }}"
                 class="text-area field__input w-full"
                 aria-required="true"
                 aria-invalid="true"
@@ -179,7 +179,7 @@
               >
           {{- form.body -}}
           </textarea>
-              <label class="form__label field__label visually-hidden" for="ContactFormMessage-{{ section.id }}">
+              <label class="form__label field__label visually-hidden" for="ContactFormMessage-faq--{{ section.id }}">
                 {{ 'templates.contact.form.comment' | t }}
                 <span class="required">*</span>
               </label>

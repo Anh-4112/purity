@@ -126,7 +126,7 @@ class NewsletterPopupPassword extends HTMLElement {
     }, timeShowPopup);
     const form = document.querySelector('.password-form-popup');
     const submitButton = form.querySelector('.password-button'); 
-    const passwordInput = form.querySelector('#Password');
+    const passwordInput = form.querySelector('#Password--storefront');
   if (!form || !submitButton || !passwordInput) {
       return;
     }

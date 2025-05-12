@@ -47,13 +47,13 @@
       {%- endif -%}
 
       <div class="field w-full">
-        <label for="password" class="mb-5">
+        <label for="password-active--{{ section.id }}" class="mb-5">
           {{ 'customer.activate_account.password' | t }}
         </label>
         <input
           type="password"
           name="customer[password]"
-          id="password"
+          id="password-active--{{ section.id }}"
           autocomplete="new-password"
           placeholder="{{ 'customer.activate_account.password' | t }}"
           {% if form.errors contains 'password' %}
