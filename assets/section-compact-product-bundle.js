@@ -31,7 +31,6 @@ if (!customElements.get("bundle-products")) {
       }
 
       onMouseoverPopup(e) {
-        console.log('e :>> ', e);
         const target = e.target;
         if (window.innerWidth >= 768) {
           if (
