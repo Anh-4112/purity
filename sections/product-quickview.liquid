@@ -5,12 +5,12 @@
 <quickview-drawer
   id="Product-{{ section.id }}"
   data-section-id="{{ section.id }}"
-  class="modal pointer-none active-modal-js"
+  class="modal visibility-hidden invisible fixed inset-0 z-20 transition-drawer  pointer-none active-modal-js"
   style="--drawer-width: 82rem;--col-width: clamp(25%, 12vw, 300px);"
 >
-  <modal-overlay class="modal-overlay invisible transition-drawer pointer z-16"></modal-overlay>
+  <modal-overlay class="modal-overlay pointer"></modal-overlay>
   <div
-    class="modal-inner invisible visibility-hidden quickview_inner modal-body modal-draggable color-default transition-drawer drawer drawer-right fixed right-0 z-20 inset-y-0 w-full{% if product.media.size > 0 %} rounded-0{% endif %}"
+    class="modal-inner quickview_inner modal-body modal-draggable color-default transition-drawer drawer drawer-right fixed right-0 z-2 inset-y-0 w-full{% if product.media.size > 0 %} rounded-0{% endif %}"
     role="dialog"
     aria-modal="true"
     aria-label="{{ 'products.product.quickview' | t }}"

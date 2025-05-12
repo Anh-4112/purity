@@ -21,13 +21,13 @@
 {%- if request.page_type != 'cart' -%}
   <cart-drawer
     id="{{ section.id }}"
-    class="cart-drawer block modal active-modal-js"
+    class="cart-drawer block modal visibility-hidden invisible fixed inset-0 z-15 transition-drawer active-modal-js"
     data-section-id="{{ section.id }}"
     data-cart-type="{{ add_cart_type }}"
   >
-    <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
+    <modal-overlay class="modal-overlay pointer"></modal-overlay>
     <div
-      class="modal-inner invisible visibility-hidden draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 z-15 inset-y-0 w-full"
+      class="modal-inner draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 inset-y-0 z-2 w-full"
       role="dialog"
       aria-modal="true"
       aria-label="{{ 'sections.cart.title' | t }}"
