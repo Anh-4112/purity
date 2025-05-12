@@ -299,23 +299,25 @@
   right: var(--swiper-navigation-sides-offset, 10px);
   left: auto;
 }
-.vertical-arrow .swiper-button-disabled {
-  display: none;
-}
-.vertical-arrow .swiper-button-prev {
-  --arrows-offset-top: 4rem;
-  right: auto;
-  left: 50%;
-  transform: translateX(-50%) rotate(90deg);
-  transition: 0.3s;
-}
-.vertical-arrow .swiper-button-next {
-  --arrows-offset-top: auto;
-  bottom: 20px;
-  right: auto;
-  left: 50%;
-  transform: translateX(-50%) rotate(90deg);
-  transition: 0.3s;
+@media (min-width: 768px) {
+  .vertical-arrow .swiper-button-disabled {
+    display: none;
+  }
+  .vertical-arrow .swiper-button-prev {
+    --arrows-offset-top: 4rem;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+    transition: 0.3s;
+  }
+  .vertical-arrow .swiper-button-next {
+    --arrows-offset-top: auto;
+    bottom: 20px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+    transition: 0.3s;
+  }
 }
 .swiper-button-lock {
   display: none;
