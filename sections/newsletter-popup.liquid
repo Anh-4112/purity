@@ -110,14 +110,13 @@
                   >
                     {%- assign newsletter_popup_id = 'NewsletterForm--' | append: section.id -%}
                     {%- form 'customer',
-                      class: 'newsletter__form newsletter__form--popup flex',
-                      id: newsletter_popup_id
+                      class: 'newsletter__form newsletter__form--popup flex'
                     -%}
                       <input type="hidden" name="contact[tags]" value="newsletter">
                       <div class="flex gap-15 column w-full">
                         <div class="field relative flex wrap w-full">
                           <input
-                            id="NewsletterForm--{{ section.id }}"
+                            id="{{ newsletter_popup_id }}"
                             type="email"
                             required
                             class="w-full newsletter-form-popup-input"
