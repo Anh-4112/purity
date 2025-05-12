@@ -91,7 +91,7 @@
         {{ 'customer.recover_password.success' | t }}
       </div>
     {%- endif -%}
-    {%- form 'customer_login', novalidate: 'novalidate' -%}
+    {%- form 'customer_login' -%}
       {%- if form.errors -%}
         {%- if form.errors -%}
           <div
@@ -225,34 +225,10 @@
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form[action*="/account/login"]',
-      fields: {
-        'customer[email]': (value) => {
-          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-          return !value
-            ? '{{ "customer.validate.email" | t }}'
-            : !emailRegex.test(value)
-            ? '{{ "customer.validate.email_invalid" | t }}'
-            : '';
-        },
-        'customer[password]': (value) =>
-          !value
-            ? '{{ "customer.validate.password" | t }}'
-            : value.length < 6
-            ? '{{ "customer.validate.min_password" | t }}'
-            : '',
-      },
     });
 
     setupFormValidation({
       formSelector: 'form[action*="/account/recover"]',
-      fields: {
-        email: (value) =>
-          !value
-            ? '{{ "customer.validate.email" | t }}'
-            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-            ? '{{ "customer.validate.email_invalid" | t }}'
-            : '',
-      },
     });
   });
 </script>

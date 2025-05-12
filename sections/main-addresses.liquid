@@ -33,7 +33,7 @@
             {{ 'customer.addresses.add_new' | t }}
           </button>
           <div class="form-add-addresses mt-30 grey-bg p-30 rounded-10" id="AddAddress">
-            {% form 'customer_address', customer.new_address, id: 'Newaddress_form', novalidate: 'novalidate' %}
+            {% form 'customer_address', customer.new_address, id: 'Newaddress_form' %}
               <div class="customer-form__new-wrapper">
                 <div
                   class="address-form my-3 customer-form__new"
@@ -270,12 +270,7 @@
                     <span class="fs-big-2 grey-color">{{ 'customer.addresses.default' | t }}</span>
                   {% endif %}
                 </h3>
-                {% form 'customer_address',
-                  address,
-                  id: edit_address_id,
-                  novalidate: 'novalidate',
-                  class: 'edit_addressform'
-                %}
+                {% form 'customer_address', address, id: edit_address_id, class: 'edit_addressform' %}
                   <div class="customer-form__edit-wrapper">
                     <div class="address-form my-3 bls-customer-form__edit">
                       <div class="field relative form-group mb-15 flex column">
@@ -474,67 +469,9 @@
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form#Newaddress_form',
-      fields: {
-        'address[first_name]': (value) => {
-          const invalidChars = /<.*?>|javascript:/i;
-          return !value
-            ? '{{ 'customer.validate.first_name' | t }}'
-            : invalidChars.test(value)
-            ? '{{ "customer.validate.invalid" | t }}'
-            : '';
-        },
-        'address[last_name]': (value) => {
-          const invalidChars = /<.*?>|javascript:/i;
-          return !value
-            ? '{{ 'customer.validate.last_name' | t }}'
-            : invalidChars.test(value)
-            ? '{{ "customer.validate.invalid" | t }}'
-            : '';
-        },
-        'address[address1]': (value) => {
-          const invalidChars = /<.*?>|javascript:/i;
-          return !value
-            ? '{{ 'customer.validate.address_1' | t }}'
-            : invalidChars.test(value)
-            ? '{{ "customer.validate.invalid" | t }}'
-            : '';
-        },
-        'address[city]': (value) => (!value ? '{{ 'customer.validate.city' | t }}' : ''),
-        'address[country]': (value) => (!value ? '{{ 'customer.validate.country' | t }}' : ''),
-        'address[zip]': (value) => (!value ? '{{ 'customer.validate.postal' | t }}' : ''),
-      },
     });
     setupFormValidation({
       formSelector: 'form.edit_addressform',
-      fields: {
-    'address[first_name]': (value) => {
-          const invalidChars = /<.*?>|javascript:/i;
-          return !value
-            ? '{{ 'customer.validate.first_name' | t }}'
-            : invalidChars.test(value)
-            ? '{{ "customer.validate.invalid" | t }}'
-            : '';
-        },
-        'address[last_name]': (value) => {
-          const invalidChars = /<.*?>|javascript:/i;
-          return !value
-            ? '{{ 'customer.validate.last_name' | t }}'
-            : invalidChars.test(value)
-            ? '{{ "customer.validate.invalid" | t }}'
-            : '';
-        },
-        'address[address1]': (value) => {
-          const invalidChars = /<.*?>|javascript:/i;
-          return !value
-            ? '{{ 'customer.validate.address_1' | t }}'
-            : invalidChars.test(value)
-            ? '{{ "customer.validate.invalid" | t }}'
-            : '';
-        },
-        'address[city]': (value) => (!value ? '{{ 'customer.validate.city' | t }}' : ''),
-        'address[country]': (value) => (!value ? '{{ 'customer.validate.country' | t }}' : ''),
-        'address[zip]': (value) => (!value ? '{{ 'customer.validate.postal' | t }}' : ''),
-      },
     });
   });
 </script>

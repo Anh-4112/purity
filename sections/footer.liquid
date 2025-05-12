@@ -82,11 +82,7 @@
                           {%- endif -%}
                         </div>
                       {%- endif -%}
-                      {%- form 'customer',
-                        id: 'ContactFooter',
-                        class: 'footer__newsletter newsletter-form',
-                        novalidate: 'novalidate'
-                      -%}
+                      {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
                         <input type="hidden" name="contact[tags]" value="newsletter">
                         <div class="newsletter-form__field-wrapper mb-20">
                           <div class="field relative">
@@ -363,16 +359,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form#ContactFooter',
-      fields: {
-        'contact[email]': (value) => {
-          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-          return !value
-            ? '{{ "customer.validate.email" | t }}'
-            : !emailRegex.test(value)
-            ? '{{ "customer.validate.email_invalid" | t }}'
-            : '';
-        },
-      },
     });
   });
 </script>
