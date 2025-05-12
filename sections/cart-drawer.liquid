@@ -18,6 +18,11 @@
   assign select_product_recommendation = theme_st.select_product_recommendation
   assign add_cart_type = theme_st.cart_type
 %}
+{% style %}
+  .drawer__empty-collections .collection-item__description {
+    opacity: 0.8;
+  }
+{% endstyle %}
 {%- if request.page_type != 'cart' -%}
   <cart-drawer
     id="{{ section.id }}"
