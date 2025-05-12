@@ -71,7 +71,7 @@ class GridGallery extends MediaGallery {
     if (this.classList.contains("grid-swiper-mobile")) {
       this.classList.add("grid", "grid-cols");
     } else {
-      this.classList.add("stacked");
+      this.classList.add("stacked", "grid");
     }
     this.innerHTML = this.MediaGalleryHtml;
     new LazyLoader(".image-lazy-load");
