@@ -153,6 +153,14 @@
               assign show_verified_buyer = section_st.show_verified_buyer
               assign image_desktop_position = section_st.image_desktop_position
               assign image_ratio = section_st.image_ratio
+              assign video_alt = block_st.video_alt_text
+              if video_alt != blank
+                assign video_alt = video_alt | escape
+              else local_video.alt
+                assign video_alt = video.alt | escape
+              else
+                assign video_alt = 'accessibility.video' | t
+              endif
               assign ratio = '3/4'
               if image_ratio != 'adapt'
                 case image_ratio
@@ -222,6 +230,7 @@
                               autoplay
                               muted
                               class="h-full w-full object-fit-cover"
+                              title="{{ video_alt }}"
                             ></video>
                           </template>
                           <button
@@ -766,6 +775,13 @@
           "id": "video_local",
           "label": "t:sections.video.settings.video_local.label",
           "info": "t:sections.all.video.info"
+        },
+        {
+          "type": "text",
+          "id": "video_alt_text",
+          "label": "t:sections.video.settings.alt_description.label",
+          "info": "t:sections.video.settings.alt_description.info",
+          "default": "Video alt text"
         },
         {
           "type": "header",
