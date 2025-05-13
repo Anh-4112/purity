@@ -2197,7 +2197,16 @@ class MotionEffect extends HTMLElement {
     return parseInt(this.dataset.animateDelay || 0) / 1000;
   }
 
+  get delayMedia() {
+    return this.closest(".block__media-gallery")
+      ? this.closest(".block__media-gallery").classList.contains("insert")
+      : false;
+  }
+
   initAnimate() {
+    if (this.delayMedia) {
+      return;
+    }
     switch (this.animateEffect) {
       case "left-to-right":
         this.leftToRightInitial();
@@ -2256,6 +2265,9 @@ class MotionEffect extends HTMLElement {
   }
 
   async initAnimateEffect() {
+    if (this.delayMedia) {
+      return;
+    }
     switch (this.animateEffect) {
       case "left-to-right":
         this.leftToRight();
