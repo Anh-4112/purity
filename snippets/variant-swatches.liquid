@@ -54,7 +54,6 @@
       </fieldset>
     </variant-input>
   {% endif %}
-
 {% elsif scope == 'variant_swatch' %}
   {%- if product.variants.size > 1 -%}
     {% liquid
@@ -151,7 +150,10 @@
             endif
           endfor
         -%}
-        <fieldset class="product-card-variant-js product-variants__input m-0 p-0 border-0 relative">
+        <fieldset
+          class="product-card-variant-js product-variants__input m-0 p-0 border-0 relative"
+          id="fieldset-{{ section.id }}-product-{{ product.id }}-position-{{ forloop.index0 }}"
+        >
           <div class="product-variants-info mb-10{%- if has_size -%}{% if size_guide_page != blank or product.metafields.custom.size_chart != blank or collection_size_chart != '' %} flex wrap gap-5 space-between{% endif %}{% endif %}">
             <legend class="form__label p-0">
               <span class="heading-style">{{ option.name }}:</span> <span class="option_value">{{ value }}</span>
