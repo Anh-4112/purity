@@ -64,8 +64,6 @@
 {%- capture col_style -%}
   --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }};  --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};
 {%- endcapture -%}
-{% style %}
-{% endstyle %}
 <div
   class="section color-{{ section_st.color_scheme }} gradient {% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %} overflow-hidden-mb{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
@@ -324,7 +322,7 @@
               max="{{ section.blocks.size }}"
               value="1"
               step="1"
-              class="m-0 w-full max-w-custom-md relative bg-custom btn-rounded"
+              class="m-0 w-full max-w-custom-md relative bg-custom btn-rounded custom-range"
             >
           </range-slider>
         {%- endif -%}

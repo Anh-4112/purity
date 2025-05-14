@@ -50,23 +50,45 @@ if (!customElements.get("suitable-finder")) {
       }
 
       fineTuneSliderPositions() {
+        const isMobile = window.innerWidth < 767.98;
         const marginRight = this._spacingHeader;
         const numTabs = this._tabButtons.length;
-        const totalMarginSpace = marginRight * (numTabs - 1);
-        const tabWidth =
-          (this._tabHeaderContent.offsetWidth - totalMarginSpace) / numTabs;
-        const tabCenters = [];
-        let currentPosition = tabWidth / 2;
-        const thumbWidth = parseInt(this._sizeDot);
-        this._rangeSlider.style.setProperty(
-          "--progress-width",
-          `${currentPosition - thumbWidth / 2}px`
-        );
-        for (let i = 0; i < numTabs; i++) {
+        const tabHeaderWidth = this._tabHeaderContent.offsetWidth;
+        let tabCenters = [];
+        if (isMobile) {
+          const tabWidths = Array.from(this._tabButtons).map(
+            (button) => button.offsetWidth
+          );
+          const totalTabWidth = tabWidths.reduce(
+            (sum, width) => sum + width,
+            0
+          );
+          const remainingSpace = tabHeaderWidth - totalTabWidth;
+          const gapBetweenTabs =
+            numTabs > 1 ? remainingSpace / (numTabs - 1) : 0;
+          let currentPosition = tabWidths[0] / 2;
           tabCenters.push(currentPosition);
-          currentPosition += tabWidth;
-          if (i < numTabs - 1) {
-            currentPosition += marginRight;
+          for (let i = 1; i < numTabs; i++) {
+            currentPosition +=
+              tabWidths[i - 1] / 2 + gapBetweenTabs + tabWidths[i] / 2;
+            tabCenters.push(currentPosition);
+          }
+        } else {
+          const totalMarginSpace = marginRight * (numTabs - 1);
+          const tabWidth =
+            (tabHeaderWidth - totalMarginSpace) / numTabs;
+          let currentPosition = tabWidth / 2;
+          const thumbWidth = parseInt(this._sizeDot);
+          this._rangeSlider.style.setProperty(
+            "--progress-width",
+            `${currentPosition - thumbWidth / 2}px`
+          );
+          for (let i = 0; i < numTabs; i++) {
+            tabCenters.push(currentPosition);
+            currentPosition += tabWidth;
+            if (i < numTabs - 1) {
+              currentPosition += marginRight;
+            }
           }
         }
         window.tabCenters = tabCenters;
@@ -132,7 +154,9 @@ if (!customElements.get("suitable-finder")) {
             const newTabValue = closestTabIndex + 1;
             this._tabRange.value = newTabValue;
             this._tabRange.setAttribute("value", newTabValue);
-            const tabId = this.querySelector(`[data-tab-id=tab-${newTabValue}]`);
+            const tabId = this.querySelector(
+              `[data-tab-id=tab-${newTabValue}]`
+            );
             const blockId = tabId.dataset.blockId;
             this.updateTabDisplay(blockId, true);
             this.positionThumbExactly();
