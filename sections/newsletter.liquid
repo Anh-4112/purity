@@ -127,7 +127,7 @@
             {{ form.errors.messages.email -}}
           </small>
         {%- endif -%}
-        {%- if true -%}
+        {%- if form.posted_successfully? -%}
           <div
             class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex gap-10 mt-10 align-self-{{ text_alignment }}"
             id="Newsletter-success--{{ section.id }}"
