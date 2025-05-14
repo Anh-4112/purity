@@ -4,6 +4,7 @@ class PaginateLoadmore extends HTMLElement {
     super();
     this.initLoadMore();
   }
+
   initLoadMore() {
     const count = document.getElementById('load-more-container').getAttribute('data-count');
     this.querySelectorAll(".actions-load-more").forEach((loadMore) => {
@@ -33,6 +34,7 @@ class PaginateLoadmore extends HTMLElement {
       }
     });
   }
+
   loadMorePosts(target, count) {
     const loadMore_url = target.getAttribute("href");
     const _this = this;
@@ -55,6 +57,15 @@ class PaginateLoadmore extends HTMLElement {
             .getElementById("section__content-items")
             .appendChild(prodNode)
         );
+
+        const images = document.querySelectorAll('#section__content-items img');
+        images.forEach((img) => {
+          if (img.hasAttribute('data-srcset')) {
+            img.setAttribute('srcset', img.getAttribute('data-srcset'));
+            img.removeAttribute('data-srcset');
+          }
+        });
+
         const load_more = resultNodes.querySelector(".actions-load-more");
         document.querySelector(".load-more-amount").innerHTML =
           resultNodes.querySelector(".load-more-amount").textContent;
@@ -70,15 +81,17 @@ class PaginateLoadmore extends HTMLElement {
         throw error;
       });
   }
+
   toggleLoading(event, loading) {
     if (event) {
       const method = loading ? "add" : "remove";
       event.classList[method]("loading");
     }
   }
+
   updateProgressBar(count) {
     var amount = document.querySelectorAll('#section__content-items .item-load').length;
-    var percent =(amount / count) * 100 ; 
+    var percent = (amount / count) * 100;
     var progressBar = document.querySelector('.load-more-progress-bar');
     progressBar.style.setProperty('--percent', percent + '%');
     progressBar.style.setProperty('--amount', amount);
@@ -86,6 +99,7 @@ class PaginateLoadmore extends HTMLElement {
 }
 
 customElements.define("loadmore-button", PaginateLoadmore);
+
 
 class LoadMoreButtonCollection extends HTMLElement {
   constructor() {
