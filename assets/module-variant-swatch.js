@@ -173,11 +173,13 @@ class VariantInput extends HTMLElement {
         } else {
           newUrl.searchParams.delete("variant");
         }
-        window.history.replaceState(
-          { path: newUrl.toString() },
-          "",
-          newUrl.toString()
-        );
+        if (_this.closest(".sec__main-product")) {
+          window.history.replaceState(
+            { path: newUrl.toString() },
+            "",
+            newUrl.toString()
+          );
+        }
         const stickyAddCart = queryDocument.querySelector("sticky-add-cart");
         if (stickyAddCart) {
           _this.updateStickyAddCart(stickyAddCart, queryParsed, variantId);
@@ -195,16 +197,37 @@ class VariantInput extends HTMLElement {
         }
       }
     }
-    const updateContent = (blockClass) => {
+    const updateContent = async (blockClass) => {
       const source = queryParsed.querySelector(`.${blockClass}`);
       const destination = queryDocument.querySelector(`.${blockClass}`);
       if (source && destination) {
-        destination.innerHTML = source.innerHTML;
-        if (blockClass == "block-product__variant-picker") {
-          if (eventTarget) {
-            destination
-              .querySelector(`input[value="${eventTarget.value}"]:checked`)
-              .focus({ focusVisible: true });
+        if (blockClass == "block__media-gallery") {
+          destination.classList.add("insert");
+          await Motion.animate(
+            destination,
+            { opacity: [1, 0] },
+            { duration: 0.2, easing: "ease-in", fill: "forwards" }
+          ).finished;
+          destination.innerHTML = source.innerHTML;
+          Motion.animate(
+            destination,
+            { opacity: [0, 1] },
+            { duration: 0.4, easing: "ease-in" }
+          );
+          new LazyLoader(".image-lazy-load");
+        } else {
+          await (destination.innerHTML = source.innerHTML);
+          if (blockClass == "block-product__variant-picker") {
+            if (
+              eventTarget &&
+              destination.querySelector(
+                `input[value="${eventTarget.value}"]:checked`
+              )
+            ) {
+              destination
+                .querySelector(`input[value="${eventTarget.value}"]:checked`)
+                .focus({ focusVisible: true });
+            }
           }
         }
       }
@@ -212,9 +235,9 @@ class VariantInput extends HTMLElement {
 
     const blocksToUpdate = [
       "block__media-gallery",
+      "block-product__variant-picker",
       "block-product__badges",
       "block-product__price",
-      "block-product__variant-picker",
       "block-product__inventory",
       "block-product__buttons",
       "block-product__pickup",

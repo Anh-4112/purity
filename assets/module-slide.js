@@ -119,18 +119,22 @@ function initSlide(_this) {
           this.slides.forEach((slide, index) => {
             if (index != this.activeIndex) {
               const video = slide.querySelector("video");
-              video.muted = true;
-              video.pause();
-              slide.querySelector(".mute-button").classList.remove("active");
-              slide.querySelector(".play-button").classList.remove("active");
+              if (video) {
+                video.muted = true;
+                video.pause();
+                slide.querySelector(".mute-button").classList.remove("active");
+                slide.querySelector(".play-button").classList.remove("active");
+              }
             }
           });
           const video = currentSlide.querySelector("video");
-          video.muted = false;
-          currentSlide.querySelector(".mute-button").classList.add("active");
-          if (video.paused) {
-            video.play();
-            currentSlide.classList.add("active");
+          if (video) {
+            video.muted = false;
+            currentSlide.querySelector(".mute-button").classList.add("active");
+            if (video.paused) {
+              video.play();
+              currentSlide.classList.add("active");
+            }
           }
         }
       },
@@ -286,10 +290,22 @@ function initSlideMedia(_this, gallery, thumbnail) {
         const currentSlide = this.slides[this.activeIndex];
         if (currentSlide) {
           if (gallery !== "thumbnail") {
+            const gallery =
+              currentSlide.closest("grid-gallery") ||
+              currentSlide.closest("quick-view-gallery");
+            const actions = gallery
+              ? gallery.querySelector(".swiper-actions")
+              : false;
             if (currentSlide.classList.contains("media-gallery__model")) {
               this.allowTouchMove = false;
+              if (actions) {
+                actions.classList.remove("hidden");
+              }
             } else {
               this.allowTouchMove = true;
+              if (actions) {
+                actions.classList.add("hidden");
+              }
             }
           }
         }
@@ -305,12 +321,10 @@ function initSlideMedia(_this, gallery, thumbnail) {
             if (video.tagName === "VIDEO") {
               video.play();
             } else if (video.tagName === "IFRAME") {
-              // Play Vimeo
               if (video.src.includes("vimeo")) {
                 const vimeoPlayer = new Vimeo.Player(video);
                 vimeoPlayer.play();
               }
-              // Play YouTube
               if (video.src.includes("youtube")) {
                 video.contentWindow.postMessage(
                   '{"event":"command","func":"playVideo","args":""}',

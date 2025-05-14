@@ -13,6 +13,8 @@
     assign items_per_row_tablet = items_to_show
     assign items_per_row_mb = items_per_row_tablet
   endif
+  assign autoplay_video = 'autoplay'
+  assign video_index = 1
 -%}
 {%- capture style -%}
   --swiper-navigation-size: 3.6rem;--gap: 1rem; --gap-desktop: 1rem;--item-desktop: {{ items_to_show }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mb }};
@@ -57,6 +59,11 @@
                 tabindex="0"
                 data-position="{{ forloop.index | minus: 1 }}"
                 class="fs-0 rounded-10 w-full h-full flex content-center focus-inset-inside"
+                {% if media.media_type == 'video' -%}
+                  data-video-index="{{ video_index }}"
+                  {%- assign video_index = video_index | plus: 1 -%}
+                {% endif %}
+                {{ autoplay_video }}
               >
                 {% if media.media_type == 'video' -%}
                   <div class="video-thumbnail">
@@ -65,15 +72,10 @@
                   <template>
                     {{
                       media
-                      | video_tag:
-                        image_size: '1100x',
-                        autoplay: true,
-                        loop: true,
-                        controls: false,
-                        muted: true,
-                        alt: image_alt
+                      | video_tag: image_size: '1100x', autoplay: true, controls: false, muted: true, alt: image_alt
                     }}
                   </template>
+                  {%- assign autoplay_video = '' -%}
                 {% else %}
                   {% render 'responsive-image', type: 'banner', image: media, image_alt: image_alt, class="rounded-10" %}
                 {% endif %}
@@ -194,8 +196,8 @@
             style_layout: ' flex',
             image_class: ' flex-auto w-custom rounded-0',
             image_rounded: ' rounded-0',
-            info_class: ' flex-1 mt-0 px-15 py-15 align-self-center lh-normal',
-            type: 'action_beside'
+            info_class: ' flex-1 mt-0 px-15 py-15 lh-normal',
+            type: 'action_bellow'
           %}
         </div>
       </media-lightbox-popup>

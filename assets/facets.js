@@ -332,7 +332,14 @@ class PriceRangeDrag extends HTMLElement {
     var minInput = inputNum[0];
     var maxInput = inputNum[1];
     rangeInput.addEventListener("input", function () {
-      minInput.value = rangeInput.value;
+      maxInput.value =
+        parseInt(rangeInput2.max) == rangeInput2.value
+          ? Number(rangeInput2.max).toFixed(2)
+          : rangeInput2.value;
+      minInput.value =
+        parseInt(rangeInput.max) == rangeInput.value
+          ? Number(rangeInput.max).toFixed(2)
+          : rangeInput.value;
       if (parseInt(minInput.value) > parseInt(maxInput.value)) {
         maxInput.value = Number(minInput.value);
         rangeInput2.value = Number(minInput.value);
