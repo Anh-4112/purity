@@ -14,12 +14,17 @@
 {% style %}
   .modal-offer-wrapper .modal__close svg {
     rotate: 180deg;
+    margin-right: 5px;
   }
   .padding-block {
-    padding: 1.5rem 3rem;
+    padding: 1.2rem 2rem;
   }
   icon-close-offer {
-    top: -1.8rem;
+    top: -1rem;
+    right: -1rem;
+    border: none;
+    background: rgba(255, 255, 255, 0.60);
+    backdrop-filter: blur(3px);
   }
   .offer_pop_up .block__buttons > a {
     width: 100%;
@@ -51,7 +56,7 @@
       {{ section_st.highlight_text | escape }}
     </div>
     <icon-close-offer
-      class="absolute pointer shadow border inline-flex mx-auto rounded-50 overflow-hidden content-center heading-color bg-white w-custom h-custom"
+      class="absolute pointer shadow border inline-flex mx-auto rounded-50 overflow-hidden content-center heading-color w-custom h-custom"
       style="--width: 2.6rem; --height: 2.6rem;"
     >
       <svg width="8" height="8" viewBox="0 0 13 14" fill="none">
@@ -70,7 +75,7 @@
       tabindex="-1"
     >
       <div class="drawer__body h-full flex column bg-white rounded-start">
-        <div class="drawer__header drawer-spacing border-bottom align-center flex gap-10 space-between">
+        <div class="drawer__header drawer-spacing border-bottom align-center flex gap-10 space-between" style="--padding-block-desktop: 2.2rem;--padding-inline-desktop: 3rem;">
           <div class="drawer__heading h5">
             {{ section_st.highlight_text | escape }}
           </div>

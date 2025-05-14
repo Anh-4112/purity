@@ -36,7 +36,7 @@
     >
       {% if use_collection_image or background_image != blank %}
         <div
-          class="banner__media absolute inset-0 h-{{ image_height }}{% if section_st.full_width != 'full_width' %} rounded{% endif %}"
+          class="banner__media overlay-bg absolute inset-0 h-{{ image_height }}{% if section_st.full_width != 'full_width' %} rounded{% endif %}"
           style="--aspect-ratio: {%- if image_height == 'adapt' and use_collection_image and collection.image -%}{{ collection.image.aspect_ratio }}{% elsif section_st.image != blank and image_height == 'adapt' %}{{ section_st.image.aspect_ratio }}{%- else -%} 7/2{%- endif -%}"
         >
           {%- liquid
