@@ -177,7 +177,7 @@ class ShopableVideo extends SlideSection {
                 buttonPlay.classList.remove("active");
               }
               if (nonCenterVideoInner && videoHeight) {
-                const targetHeight = videoHeight - 50;
+                const targetHeight = videoHeight - 100;
                 const marginTop = Math.max(0, (videoHeight - targetHeight) / 2);
                 this._setVideoEffectWithMargin(
                   nonCenterVideoInner,
@@ -192,9 +192,9 @@ class ShopableVideo extends SlideSection {
         if (newCenterSlide !== previousCenterSlide) {
           this.dispatchEvent(
             new CustomEvent("center-slide-updated", {
-              detail: { 
+              detail: {
                 centerSlide: newCenterSlide,
-                immediate: immediate === true
+                immediate: immediate === true,
               },
             })
           );
@@ -240,7 +240,7 @@ class ShopableVideo extends SlideSection {
     this.swiper.on("slideChangeTransitionEnd", () => {
       if (useCenterSlideMode) {
         if (this.innerWidth >= 1025) {
-          this.playCenterSlideVideo({immediate: true});
+          this.playCenterSlideVideo({ immediate: true });
         } else {
           this.playActiveSlideVideo(this.swiper.activeIndex, {
             immediate: true,
@@ -347,6 +347,7 @@ customElements.define("shopable-video", ShopableVideo);
 class ShopableItem extends HTMLElement {
   constructor() {
     super();
+    this.isModalOpen = false;
     if (this.querySelector(".mute-button")) {
       this.querySelector(".mute-button").addEventListener(
         "click",
@@ -559,7 +560,7 @@ class ShopableItem extends HTMLElement {
     };
 
     const shopableVideoObserver = new IntersectionObserver((entries) => {
-      if (this.getStickyHiddenCookie()) {
+      if (this.getStickyHiddenCookie() || this.isModalOpen) {
         return;
       }
       entries.forEach((entry) => {
@@ -584,7 +585,7 @@ class ShopableItem extends HTMLElement {
     }, options);
 
     const firstSectionsObserver = new IntersectionObserver((entries) => {
-      if (this.getStickyHiddenCookie()) {
+      if (this.getStickyHiddenCookie() || this.isModalOpen) {
         return;
       }
       if (window.scrollY > 100) {
@@ -629,9 +630,7 @@ class ShopableItem extends HTMLElement {
   }
 
   handleScroll(firstSections, shopableVideoSection) {
-    if (this.getStickyHiddenCookie()) {
-      return;
-    }
+    if (this.getStickyHiddenCookie() || this.isModalOpen) return;
     if (window.scrollY <= 0) {
       this.classList.remove("active");
       return;
@@ -952,10 +951,41 @@ class ShopableItem extends HTMLElement {
         NextSkyTheme.global.rootToFocus = this;
         modalPopup = document.querySelector("modal-popup");
         this.setupMobileActionButton(modalPopup);
+        const rootElement = document.documentElement;
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === "class") {
+              const isModalOpen = rootElement.classList.contains("open-modal");
+              this.isModalOpen = isModalOpen;
+
+              if (isModalOpen) {
+                this.classList.remove("active");
+                if (this._scrollHandler) {
+                  window.removeEventListener("scroll", this._scrollHandler);
+                }
+              } else {
+                if (this._scrollHandler) {
+                  window.addEventListener("scroll", this._scrollHandler, {
+                    passive: true,
+                  });
+                }
+                if (!this.getStickyHiddenCookie()) {
+                  this.classList.add("active");
+                }
+              }
+            }
+          });
+        });
+
+        observer.observe(rootElement, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
       }
     }
 
     if (modalPopup) {
+      this.isModalOpen = true;
       modalPopup.setAttribute("data-loading", "true");
       modalPopup.setAttribute("data-current", productId);
       NextSkyTheme.eventModal(modalPopup, "open", true);
