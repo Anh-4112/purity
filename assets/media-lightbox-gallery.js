@@ -58,12 +58,12 @@ class VideoLocalLightbox extends HTMLElement {
         .play();
     } else {
       if (videoIndex.querySelector("video")) {
+        videoIndex.querySelector("video").play();
+      } else {
         lightboxItems
           .querySelector(`video-local-lightbox[data-video-index="1"]`)
           .querySelector("video")
           .play();
-      } else {
-        videoIndex.querySelector("video").play();
       }
     }
   }

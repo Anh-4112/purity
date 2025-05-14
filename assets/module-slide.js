@@ -133,7 +133,9 @@ function initSlide(_this) {
             currentSlide.querySelector(".mute-button").classList.add("active");
             if (video.paused) {
               video.play();
-              currentSlide.classList.add("active");
+              currentSlide
+                .querySelector(".play-button")
+                .classList.add("active");
             }
           }
         }
