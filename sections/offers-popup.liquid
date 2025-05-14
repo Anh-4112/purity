@@ -23,7 +23,7 @@
     top: -1rem;
     right: -1rem;
     border: none;
-    background: rgba(255, 255, 255, 0.60);
+    background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(3px);
   }
   .offer_pop_up .block__buttons > a {
@@ -65,7 +65,7 @@
     </icon-close-offer>
   </scroll-offer>
   <offer-popup
-    class="modal-offer-wrapper modal transition-drawer invisible fixed inset-0 z-21 active-modal-js relative content-hidden"
+    class="modal-offer-wrapper modal transition-drawer invisible fixed inset-0 z-21 active-modal-js content-hidden"
     drawer
   >
     <modal-overlay class="modal-overlay pointer"></modal-overlay>
@@ -75,7 +75,10 @@
       tabindex="-1"
     >
       <div class="drawer__body h-full flex column bg-white rounded-start">
-        <div class="drawer__header drawer-spacing border-bottom align-center flex gap-10 space-between" style="--padding-block-desktop: 2.2rem;--padding-inline-desktop: 3rem;">
+        <div
+          class="drawer__header drawer-spacing border-bottom align-center flex gap-10 space-between"
+          style="--padding-block-desktop: 2.2rem;--padding-inline-desktop: 3rem;"
+        >
           <div class="drawer__heading h5">
             {{ section_st.highlight_text | escape }}
           </div>

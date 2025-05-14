@@ -342,7 +342,7 @@
           {%- endif -%}
         </div>
       {%- endif -%}
-      <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}{% if type == 'action_bellow' %} flex wrap align-end space-between{% endif %}">
+      <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}{% if type == 'action_bellow' %} flex wrap column space-between gap-5{% endif %}">
         {% if product_show_tag and disable_tag != true and card_product.tags != blank %}
           <div class="product__tag grey-color mb-8 fs-13 lh-normal">
             <ul
@@ -384,8 +384,8 @@
             render 'review', review_star: true, product: card_product, scope: 'item'
           -%}
         {%- endif -%}
-        {% if disable_price != true %}
-          <div class="product__price heading-color mt-5{% if type == 'action_bellow' %} grow-0{% endif %}">
+        {% if disable_price != true and type != 'action_bellow' %}
+          <div class="product__price heading-color mt-5">
             {%- render 'price', scope: 'item', product: card_product -%}
           </div>
         {% endif %}
@@ -456,6 +456,79 @@
             {%- endform -%}
           </product-form>
         {%- endif -%}
+        {% if type == 'action_bellow' %}
+          <div class="flex wrap gap-5 align-center space-between">
+            {% if disable_price != true %}
+              <div class="product__price heading-color">
+                {%- render 'price', scope: 'item', product: card_product -%}
+              </div>
+            {% endif %}
+            {%- if product_enable_quickview
+              and disable_quickview != true
+              and card_product.metafields.custom.external_affiliate == blank
+            -%}
+              {%- liquid
+                assign qty_rules = false
+                if card_product.selected_or_first_available_variant.quantity_rule.template > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1
+                  assign qty_rules = true
+                endif
+              -%}
+              {%- if card_product.variants.size > 1 or qty_rules -%}
+                <button
+                  type="button"
+                  is="button-quick-view"
+                  class="btn__quick-shop action_bellow btn-reset static pointer inline-flex content-center"
+                  data-url="{{ shop.url }}/products/{{ card_product.handle }}"
+                  aria-label="{{ 'products.product.quickview' | t }}"
+                >
+                  <span class="relative loading-feedback btn btn-primary">
+                    <span class="product-addtocart-btn hidden-on-load">
+                      {{ 'products.product.add' | t }}
+                    </span>
+                    {%- render 'loader' -%}
+                  </span>
+                </button>
+              {%- else -%}
+                <product-form class="quick-add">
+                  {%- form 'product',
+                    card_product,
+                    id: product_form_id,
+                    class: 'form',
+                    novalidate: 'novalidate',
+                    data-type: 'add-to-cart-form'
+                  -%}
+                    <input
+                      type="hidden"
+                      name="id"
+                      value="{{ card_product.selected_or_first_available_variant.id }}"
+                      disabled
+                    >
+                    <button
+                      id="{{ product_form_id }}-submit"
+                      type="submit"
+                      name="add"
+                      class="btn__quick-shop action_bellow btn-reset pointer static inline-flex content-center"
+                      aria-haspopup="dialog"
+                      aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
+                      aria-live="polite"
+                      data-sold-out-message="true"
+                      {% if card_product.selected_or_first_available_variant.available == false %}
+                        disabled
+                      {% endif %}
+                    >
+                      <span class="relative loading-feedback btn btn-primary ">
+                        <span class="product-addtocart-btn hidden-on-load">
+                          {{ 'products.product.add' | t }}
+                        </span>
+                        {%- render 'loader' -%}
+                      </span>
+                    </button>
+                  {%- endform -%}
+                </product-form>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        {% endif %}
         {%- if type == 'custom' -%}
           <product-form-bundle
             class="quick-add mt-10 mt-1025-15 block"
@@ -497,78 +570,6 @@
             {%- endform -%}
           </product-form-bundle>
         {%- endif -%}
-        {% if type == 'action_bellow' %}
-          {%- if product_enable_quickview
-            and disable_quickview != true
-            and card_product.metafields.custom.external_affiliate == blank
-          -%}
-            {%- liquid
-              assign qty_rules = false
-              if card_product.selected_or_first_available_variant.quantity_rule.template > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1
-                assign qty_rules = true
-              endif
-            -%}
-            {%- if card_product.variants.size > 1 or qty_rules -%}
-              <button
-                type="button"
-                is="button-quick-view"
-                class="btn__quick-shop action_bellow btn-reset static pointer inline-flex content-center mt-5"
-                data-url="{{ shop.url }}/products/{{ card_product.handle }}"
-                aria-label="{{ 'products.product.quickview' | t }}"
-              >
-                <span class="relative loading-feedback btn btn-primary">
-                  <span class="product-addtocart-btn hidden-on-load">
-                    <svg width="10" height="10" viewBox="0 0 10 12" fill="none">
-                      <use href="#icon-plus"></use>
-                    </svg>
-                    {{ 'products.product.add' | t }}
-                  </span>
-                  {%- render 'loader' -%}
-                </span>
-              </button>
-            {%- else -%}
-              <product-form class="quick-add">
-                {%- form 'product',
-                  card_product,
-                  id: product_form_id,
-                  class: 'form',
-                  novalidate: 'novalidate',
-                  data-type: 'add-to-cart-form'
-                -%}
-                  <input
-                    type="hidden"
-                    name="id"
-                    value="{{ card_product.selected_or_first_available_variant.id }}"
-                    disabled
-                  >
-                  <button
-                    id="{{ product_form_id }}-submit"
-                    type="submit"
-                    name="add"
-                    class="btn__quick-shop action_bellow btn-reset pointer static inline-flex content-center mt-5"
-                    aria-haspopup="dialog"
-                    aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
-                    aria-live="polite"
-                    data-sold-out-message="true"
-                    {% if card_product.selected_or_first_available_variant.available == false %}
-                      disabled
-                    {% endif %}
-                  >
-                    <span class="relative loading-feedback btn btn-primary ">
-                      <span class="product-addtocart-btn hidden-on-load">
-                        <svg width="10" height="10" viewBox="0 0 10 12" fill="none">
-                          <use href="#icon-plus"></use>
-                        </svg>
-                        {{ 'products.product.add' | t }}
-                      </span>
-                      {%- render 'loader' -%}
-                    </span>
-                  </button>
-                {%- endform -%}
-              </product-form>
-            {%- endif -%}
-          {%- endif -%}
-        {% endif %}
       </div>
       {% if type == 'action_beside' %}
         {%- if product_enable_quickview
@@ -680,7 +681,7 @@
           </div>
         </a>
       </div>
-      <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}{% if type == 'action_bellow' %} flex wrap align-end space-between{% endif %}">
+      <div class="product__information mt-15 text-{{ product_alignment }}{{ info_class }}{% if type == 'action_bellow' %} flex wrap column space-between gap-5{% endif %}">
         <a
           draggable="false"
           aria-disabled="true"

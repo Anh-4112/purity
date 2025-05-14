@@ -21,7 +21,7 @@
 {%- endcapture -%}
 {% style %}
   .media-lightbox-popup-slide {
-    --height: calc(var(--max-width) * (57 / 33));
+    --height: 57rem;
   }
   @media screen and (max-width: 767.98px) {
     .free-scroll {
@@ -101,7 +101,7 @@
         <div
           class="modal-popup-inner invisible-1025 flex column modal-focus transition modal-draggable rounded max-w-custom m-auto bg-white w-full"
           tabindex="-1"
-          style="--max-width: clamp(25rem, 14vw, 33rem);--width: 4.6rem; --height: 4.6rem;--swiper-navigation-size: 4.6rem;--position-arrow: static;"
+          style="--max-width: 33rem;--width: 4.6rem; --height: 4.6rem;--swiper-navigation-size: 4.6rem;--position-arrow: static;"
         >
           <button
             class="modal__close absolute pointer overflow-hidden btn-reset w-custom h-custom bg-custom blur inline-flex content-center absolute z-3 top-10 right-10 rounded-50 shadow color-white"
@@ -134,7 +134,7 @@
                       <video-lightbox-item class="w-full h-full">
                         <button
                           aria-label="{{ 'accessibility.play_button.video' | t }}"
-                          class="play-button transition-short opacity-0 play-button-popup active absolute inset-0 m-auto btn-reset w-custom h-custom bg-custom blur rounded-50 z-1 pointer inline-flex content-center"
+                          class="play-button transition-short opacity-0 absolute m-auto btn-reset w-custom h-custom bg-custom blur rounded-50 z-1 pointer inline-flex content-center active"
                           style="--width: 5rem; --height: 5rem;"
                         >
                           {% render 'icon-play' %}
