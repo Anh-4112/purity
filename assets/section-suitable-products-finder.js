@@ -8,29 +8,11 @@ if (!customElements.get("suitable-finder")) {
         this._dot = this.querySelector(".product-tabs__dot");
         this._rangeSlider = this.querySelector("range-slider");
         this._sizeDot = this.dataset.sizeDot;
-        this._isMobile =
-          "ontouchstart" in window || navigator.maxTouchPoints > 0;
-        this._isDragging = false;
-        this._isManuallyDragging = false;
-
-        this.handleDotMouseDown = this.handleDotMouseDown.bind(this);
-        this.handleDotMouseMove = this.handleDotMouseMove.bind(this);
-        this.handleDotMouseUp = this.handleDotMouseUp.bind(this);
-        this.handleDotTouchStart = this.handleDotTouchStart.bind(this);
-        this.handleDotTouchMove = this.handleDotTouchMove.bind(this);
-        this.handleDotTouchEnd = this.handleDotTouchEnd.bind(this);
-        this.handleResize = this.handleResize.bind(this);
-        this._isInitialized = false;
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", () =>
-            super.connectedCallback()
-          );
-        }
-
-        this._lastThrottleTime = 0;
-        this._throttleDelay = 20;
-        this._lastHoveredTab = null;
-        this._debounceTimer = null;
+        this._spacingHeader = parseInt(this.dataset.spacing);
+        this._tabRange = this.querySelector("input[type=range]");
+        this._tabButtons = this.querySelectorAll(
+          ".product-tabs__header-item-js"
+        );
       }
 
       connectedCallback() {
@@ -44,391 +26,118 @@ if (!customElements.get("suitable-finder")) {
             "--width-range-slider",
             offsetWidth + "px"
           );
-
-          requestAnimationFrame(() => {
-            this.setupDraggableDot();
-            const activeTab = this.querySelector(
-              ".product-tabs__header-item.active"
-            );
-            if (activeTab) {
-              this.updateDotPosition(activeTab, false);
-
-              requestAnimationFrame(() => {
-                if (this._dot) {
-                  this._isInitialized = true;
-                }
-              });
-            }
-          });
         }
 
         window.addEventListener("resize", this.handleResize, { passive: true });
-      }
 
-      setupEventListeners() {
-        this._tabs.forEach((tab) => {
-          tab.addEventListener("click", (event) => {
-            if (event.target.closest(".product-tabs__header-description")) {
-              return;
-            }
-            const description = tab.querySelector(
-              ".product-tabs__header-description"
-            );
-            if (
-              tab.classList.contains("active") &&
-              description &&
-              description.textContent.trim().length > 0
-            ) {
-              this.toggleAccordion(tab);
-            } else {
-              const blockId = tab.dataset.blockId;
-              if (blockId !== this.selectedTab) {
-                this.selectedTab = blockId;
-                if (this._rangeSlider) {
-                  this.updateDotPosition(tab, this._isInitialized);
-                }
-              }
-            }
-          });
-
-          tab.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              const description = tab.querySelector(
-                ".product-tabs__header-description"
-              );
-              if (
-                tab.classList.contains("active") &&
-                description &&
-                description.textContent.trim().length > 0
-              ) {
-                this.toggleAccordion(tab);
-              } else {
-                const blockId = tab.dataset.blockId;
-                if (blockId !== this.selectedTab) {
-                  this.selectedTab = blockId;
-                  if (this._rangeSlider) {
-                    this.updateDotPosition(tab, true);
-                  }
-                }
-              }
-            }
-          });
+        this._tabRange.addEventListener("input", (e) => {
+          const tabNumber = parseInt(e.target.value);
+          e.target.setAttribute("value", tabNumber);
+          const tabId = this.querySelector(`[data-tab-id=tab-${tabNumber}]`);
+          const blockId = tabId.dataset.blockId;
+          this.updateTabDisplay(blockId, true);
         });
+        this._tabRange.addEventListener(
+          "input",
+          this.positionThumbExactly.bind(this)
+        );
+        this._tabRange.addEventListener(
+          "change",
+          this.positionThumbExactly.bind(this)
+        );
+        this.fineTuneSliderPositions();
+        this.enableTrackClickNavigation();
       }
 
-      setupDraggableDot() {
-        if (!this._dot) return;
-        this._dot.style.cursor = "grab";
-        this._dot.addEventListener("mousedown", this.handleDotMouseDown);
-        this._dot.addEventListener("touchstart", this.handleDotTouchStart, {
-          passive: false,
-        });
-        this.calculateTabPositions();
-      }
-
-      calculateTabPositions() {
-        this._tabPositions = [];
-        if (!this._rangeSlider) return;
-        const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
-
-        this.tabs.forEach((tab) => {
-          const tabRect = tab.getBoundingClientRect();
-          const tabCenter =
-            tabRect.left + tabRect.width / 2 - rangeSliderRect.left;
-          this._tabPositions.push({
-            tab: tab,
-            position: tabCenter,
-            blockId: tab.dataset.blockId,
-          });
-        });
-      }
-
-      handleDotMouseDown(event) {
-        event.preventDefault();
-        this._isDragging = true;
-        this._isManuallyDragging = true;
-        this._dot.style.cursor = "grabbing";
-        this._dot.style.transition = "none";
-        document.addEventListener("mousemove", this.handleDotMouseMove);
-        document.addEventListener("mouseup", this.handleDotMouseUp);
-
-        this._startPosition = event.clientX;
-
-        const computedLeft = window.getComputedStyle(this._dot).left;
-        this._currentPosition = parseInt(computedLeft) || 0;
-
-        this.calculateTabPositions();
-      }
-
-      handleDotMouseMove(event) {
-        if (!this._isDragging) return;
-        if (this._animationFrameId) {
-          cancelAnimationFrame(this._animationFrameId);
-        }
-
-        this._animationFrameId = requestAnimationFrame(() => {
-          const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
-          const dotWidth = parseInt(this._sizeDot || 26, 10);
-
-          let newPosition =
-            this._currentPosition + (event.clientX - this._startPosition);
-
-          newPosition = Math.max(
-            0,
-            Math.min(rangeSliderRect.width - dotWidth, newPosition)
-          );
-
-          this._rangeSlider.style.setProperty(
-            "--progress-width",
-            `${newPosition}px`
-          );
-
-          const dotCenter = newPosition + dotWidth / 2;
-          this.activateTabWhileDragging(dotCenter);
-        });
-      }
-
-      activateTabWhileDragging(position) {
-        if (!this._tabPositions.length) return;
-        const now = Date.now();
-        if (now - this._lastThrottleTime < this._throttleDelay) return;
-        this._lastThrottleTime = now;
-
-        let closestTab = null;
-        let minDistance = Infinity;
-
-        this._tabPositions.forEach((item) => {
-          const distance = Math.abs(item.position - position);
-          if (distance < minDistance) {
-            minDistance = distance;
-            closestTab = item;
-          }
-        });
-
-        if (closestTab && this._lastHoveredTab !== closestTab.tab) {
-          this._tabs.forEach((tab) => {
-            tab.classList.remove("hovered");
-          });
-          closestTab.tab.classList.add("hovered");
-          this._lastHoveredTab = closestTab.tab;
-          clearTimeout(this._debounceTimer);
-          if (this.selectedTab !== closestTab.blockId) {
-            const targetBlockId = closestTab.blockId;
-            this._debounceTimer = setTimeout(() => {
-              if (this._isDragging) {
-                this.selectedTab = targetBlockId;
-                this._lastActivatedTab = targetBlockId;
-              }
-            }, 100);
+      fineTuneSliderPositions() {
+        const marginRight = this._spacingHeader;
+        const numTabs = this._tabButtons.length;
+        const totalMarginSpace = marginRight * (numTabs - 1);
+        const tabWidth =
+          (this._tabHeaderContent.offsetWidth - totalMarginSpace) / numTabs;
+        const tabCenters = [];
+        let currentPosition = tabWidth / 2;
+        const thumbWidth = parseInt(this._sizeDot);
+        this._rangeSlider.style.setProperty(
+          "--progress-width",
+          `${currentPosition - thumbWidth / 2}px`
+        );
+        for (let i = 0; i < numTabs; i++) {
+          tabCenters.push(currentPosition);
+          currentPosition += tabWidth;
+          if (i < numTabs - 1) {
+            currentPosition += marginRight;
           }
         }
+        window.tabCenters = tabCenters;
       }
 
-      handleDotMouseUp() {
-        if (!this._isDragging) return;
-
-        this._isDragging = false;
-        this._dot.style.cursor = "grab";
-
-        document.removeEventListener("mousemove", this.handleDotMouseMove);
-        document.removeEventListener("mouseup", this.handleDotMouseUp);
-
-        setTimeout(() => {
-          this._isManuallyDragging = false;
-        }, 50);
-
-        const activeTab = this.querySelector(
-          ".product-tabs__header-item.active"
-        );
-        if (activeTab) {
-          this.updateDotPosition(activeTab, false);
-        }
-      }
-
-      handleDotTouchStart(event) {
-        if (event.touches.length !== 1) return;
-        event.preventDefault();
-        this._isDragging = true;
-        this._isManuallyDragging = true;
-        this._dot.style.transition = "none";
-        document.addEventListener("touchmove", this.handleDotTouchMove, {
-          passive: false,
-        });
-        document.addEventListener("touchend", this.handleDotTouchEnd);
-
-        this._startPosition = event.touches[0].clientX;
-
-        const computedLeft = window.getComputedStyle(this._dot).left;
-        this._currentPosition = parseInt(computedLeft) || 0;
-
-        this.calculateTabPositions();
-      }
-
-      handleDotTouchMove(event) {
-        if (!this._isDragging || event.touches.length !== 1) return;
-        event.preventDefault();
-
-        if (this._animationFrameId) {
-          cancelAnimationFrame(this._animationFrameId);
-        }
-
-        this._animationFrameId = requestAnimationFrame(() => {
-          const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
-          const dotWidth = parseInt(this._sizeDot || 26, 10);
-
-          let newPosition =
-            this._currentPosition +
-            (event.touches[0].clientX - this._startPosition);
-
-          newPosition = Math.max(
-            0,
-            Math.min(rangeSliderRect.width - dotWidth, newPosition)
-          );
-
+      positionThumbExactly() {
+        const tabNumber = parseInt(this._tabRange.value);
+        const index = tabNumber - 1;
+        if (window.tabCenters && window.tabCenters[index]) {
+          const exactPosition = window.tabCenters[index];
+          const thumbWidth = parseInt(this._sizeDot);
           this._rangeSlider.style.setProperty(
             "--progress-width",
-            `${newPosition}px`
+            `${exactPosition - thumbWidth / 2}px`
           );
-
-          const dotCenter = newPosition + dotWidth / 2;
-          this.activateTabWhileDragging(dotCenter);
-        });
-      }
-
-      handleDotTouchEnd(event) {
-        if (!this._isDragging) return;
-
-        this._isDragging = false;
-
-        document.removeEventListener("touchmove", this.handleDotTouchMove);
-        document.removeEventListener("touchend", this.handleDotTouchEnd);
-
-        setTimeout(() => {
-          this._isManuallyDragging = false;
-        }, 50);
-
-        const activeTab = this.querySelector(
-          ".product-tabs__header-item.active"
-        );
-        if (activeTab) {
-          this.updateDotPosition(activeTab, false);
         }
       }
 
       handleResize() {
         super.handleResize();
-        this.tabContents.forEach((content) => {
-          if (content.classList.contains("active")) {
-            const slideSection = content.querySelector("slide-section");
-            if (
-              slideSection &&
-              slideSection.swiper &&
-              slideSection.swiper.initialized
-            ) {
-              slideSection.swiper.update();
-            }
-          }
-        });
-
-        if (!this._rangeSlider) return;
-
-        if (
-          this._rangeSlider.offsetParent === null ||
-          !this.isInViewport(this._rangeSlider)
-        ) {
-          return;
-        }
-
-        this.calculateTabPositions();
-
-        const activeTab = this.querySelector(
-          ".product-tabs__header-item.active"
-        );
-        if (activeTab) {
-          this.updateDotPosition(activeTab, false);
-        }
-      }
-
-      isInViewport(element) {
-        const rect = element.getBoundingClientRect();
-        return (
-          rect.top <=
-            (window.innerHeight || document.documentElement.clientHeight) &&
-          rect.bottom >= 0
-        );
-      }
-
-      updateDotPosition(activeTab, animate = true) {
-        if (this._isManuallyDragging) return;
-        if (!this._dot || !activeTab || !this._rangeSlider) return;
-
-        let targetTab = activeTab;
-        if (!activeTab.classList.contains("product-tabs__header-item-js")) {
-          const jsTab =
-            activeTab.querySelector(".product-tabs__header-item-js.active") ||
-            this.querySelector(".product-tabs__header-item-js.active");
-          if (jsTab) {
-            targetTab = jsTab;
-          }
-        }
-
-        const dotWidth = parseInt(this._sizeDot || 26, 10);
-        const rangeSliderRect = this._rangeSlider.getBoundingClientRect();
-        const tabRect = targetTab.getBoundingClientRect();
-        const tabCenter = tabRect.left + tabRect.width / 2;
-        const relativeCenterX = tabCenter - rangeSliderRect.left;
-        const adjustedPosition = relativeCenterX - dotWidth / 2;
-        this, (this._dot.style.transition = "all 0.3s ease");
-        this._rangeSlider.style.setProperty(
-          "--progress-width",
-          `${adjustedPosition}px`
-        );
-
-        if (!animate || !this._isInitialized) {
-          if (!animate) {
-            void this._dot.offsetWidth;
-          }
-        }
+        this.fineTuneSliderPositions();
+        this.positionThumbExactly();
       }
 
       updateTabDisplay(blockId, animate = true) {
         super.updateTabDisplay(blockId, animate);
-
-        if (this._rangeSlider && !this._isManuallyDragging) {
-          const activeTab = this.querySelector(
-            ".product-tabs__header-item.active"
-          );
-          if (activeTab) {
-            this.updateDotPosition(activeTab, this._isInitialized && animate);
-          }
-        }
+        const activeTab = this.querySelector(
+          `.product-tabs__header-item-js[data-block-id=${blockId}]`
+        );
+        const tabNumber = activeTab.dataset.position;
+        this._tabRange.value = tabNumber;
+        this._tabRange.setAttribute("value", tabNumber);
+        this.positionThumbExactly(tabNumber);
       }
 
-      disconnectedCallback() {
-        super.disconnectedCallback();
+      enableTrackClickNavigation() {
+        this._rangeSlider.addEventListener("click", (e) => {
+          if (e.target === this._tabRange) {
+            const sliderRect = this._tabRange.getBoundingClientRect();
+            const clickX = e.clientX;
 
-        if (this._animationFrameId) {
-          cancelAnimationFrame(this._animationFrameId);
-        }
+            let relativePos = (clickX - sliderRect.left) / sliderRect.width;
+            relativePos = Math.max(0, Math.min(relativePos, 1));
 
-        if (this._dot) {
-          this._dot.removeEventListener("mousedown", this.handleDotMouseDown);
-          this._dot.removeEventListener("touchstart", this.handleDotTouchStart);
-        }
+            const tabCenters = window.tabCenters || [];
+            if (tabCenters.length === 0) return;
 
-        document.removeEventListener("mousemove", this.handleDotMouseMove);
-        document.removeEventListener("mouseup", this.handleDotMouseUp);
-        document.removeEventListener("touchmove", this.handleDotTouchMove);
-        document.removeEventListener("touchend", this.handleDotTouchEnd);
+            const relativeCenters = tabCenters.map(
+              (center) => center / sliderRect.width
+            );
 
-        window.removeEventListener("resize", this.handleResize, {
-          passive: true,
+            let closestTabIndex = 0;
+            let minDistance = Math.abs(relativeCenters[0] - relativePos);
+
+            for (let i = 1; i < relativeCenters.length; i++) {
+              const distance = Math.abs(relativeCenters[i] - relativePos);
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestTabIndex = i;
+              }
+            }
+
+            const newTabValue = closestTabIndex + 1;
+            this._tabRange.value = newTabValue;
+            this._tabRange.setAttribute("value", newTabValue);
+            const tabId = this.querySelector(`[data-tab-id=tab-${newTabValue}]`);
+            const blockId = tabId.dataset.blockId;
+            this.updateTabDisplay(blockId, true);
+            this.positionThumbExactly();
+          }
         });
-        window.removeEventListener(
-          "scroll",
-          this.calculateTabPositions.bind(this)
-        );
       }
     }
   );
