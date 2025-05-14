@@ -20,29 +20,44 @@ class VideoLocalLightbox extends HTMLElement {
     );
   }
 
-  loadContentVideo(_this) {
+  async loadContentVideo(_this) {
     if (!_this.getAttribute("loaded") && _this.querySelector("template")) {
-      const content = document.createElement("div");
-      content.appendChild(
-        _this
-          .querySelector("template")
-          .content.firstElementChild.cloneNode(true)
-      );
       _this.setAttribute("loaded", true);
-      const video = content.querySelector("video")
-        ? content.querySelector("video")
-        : content.querySelector("iframe");
-      const deferredElement = _this.appendChild(video);
+      const div = document.createElement("div");
+      div.innerHTML = _this
+        .querySelector("template")
+        .content.firstElementChild.cloneNode(true).outerHTML;
+      const videoElement = div.querySelector("video");
+      if (!_this.hasAttribute("autoplay")) {
+        videoElement.autoplay = false;
+      }
+      _this.appendChild(videoElement);
       _this.thumb = _this.querySelector(".video-thumbnail");
       if (_this.thumb) {
         _this.thumb.remove();
       }
-      if (
-        deferredElement.nodeName == "VIDEO" &&
-        deferredElement.getAttribute("autoplay")
-      ) {
-        deferredElement.play();
-      }
+      videoElement.addEventListener("ended", (event) =>
+        this.changeVideo(event)
+      );
+    }
+  }
+
+  changeVideo(event) {
+    const currentTarget = event.currentTarget;
+    const index = parseInt(
+      this.closest("video-local-lightbox").getAttribute("data-video-index")
+    );
+    const lightboxItems = currentTarget.closest(".media-lightbox-slide");
+    const videoIndex = lightboxItems.querySelector(
+      `video-local-lightbox[data-video-index="${index + 1}"]`
+    );
+    if (!videoIndex) {
+      lightboxItems
+        .querySelector(`video-local-lightbox[data-video-index="1"]`)
+        .querySelector("video")
+        .play();
+    } else {
+      videoIndex.querySelector("video").play();
     }
   }
 
