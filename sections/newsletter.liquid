@@ -31,7 +31,7 @@
   <div class="{{ section_width }}">
     {%- if section_st.heading != blank or section_st.description != blank -%}
       {% assign animate_delay = 25 %}
-      <div class="section-header text-{{ text_alignment }}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}">
+      <div class="section-header text-{{ text_alignment }}">
         {%- if section_st.heading != blank -%}
           {%- if scroll_animation -%}
             <motion-effect
@@ -88,7 +88,7 @@
               autocapitalize="off"
               value="{% if customer %}{{ customer.email }}{% endif %}"
               placeholder="{% if section_st.email_placeholder != blank %}{{section_st.email_placeholder}}{% else %}{{ 'newsletter.label' | t }}{% endif %}"
-              class="newsletter__input"
+              class="newsletter__input grow-1"
               {% if form.errors %}
                 aria-invalid="true"
                 aria-describedby="Newsletter-error--{{ section.id }}"
@@ -129,12 +129,12 @@
         {%- endif -%}
         {%- if form.posted_successfully? -%}
           <div
-            class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex align-center gap-10 mt-10"
+            class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex gap-10 mt-10 align-self-{{ text_alignment }}"
             id="Newsletter-success--{{ section.id }}"
             tabindex="-1"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
-              <use href="#icon-success">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="flex-auto w-20">
+              <use href="#icon-success"></use>
             </svg>
             {{- 'newsletter.success' | t }}
           </div>

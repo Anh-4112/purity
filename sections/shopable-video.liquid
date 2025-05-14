@@ -77,7 +77,7 @@
   <div class="{{ section_width }}">
     {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div
-        class="section-header text-{{ text_alignment }}{% if section_st.section_width == 'full_width' %} px-gutter-x{% endif %}"
+        class="section-header text-{{ text_alignment }}"
       >
         {%- if section_st.subheading != blank -%}
           {% if scroll_animation %}
@@ -184,7 +184,7 @@
               assign video_alt = block_st.video_alt_text
               if video_alt != blank
                 assign video_alt = video_alt | escape
-              else local_video.alt
+              else
                 assign video_alt = local_video.alt | escape
               else
                 assign video_alt = 'accessibility.video' | t
@@ -359,14 +359,14 @@
               assign image_alt = 'general.image.image_alt_default' | t
             endif
 
-              assign video_alt = block_st.video_alt_text
-              if video_alt != blank
-                assign video_alt = video_alt | escape
-              else local_video.alt
-                assign video_alt = local_video.alt | escape
-              else
-                assign video_alt = 'accessibility.video' | t
-              endif
+            assign video_alt = block_st.video_alt_text
+            if video_alt != blank
+              assign video_alt = video_alt | escape
+            else
+              assign video_alt = local_video.alt | escape
+            else
+              assign video_alt = 'accessibility.video' | t
+            endif
           %}
           {% if poster_image != blank or local_video != blank %}
             <video-local-scroll
@@ -532,7 +532,7 @@
                         assign video_alt = block_st.video_alt_text
                         if video_alt != blank
                           assign video_alt = video_alt | escape
-                        else local_video.alt
+                        else
                           assign video_alt = local_video.alt | escape
                         else
                           assign video_alt = 'accessibility.video' | t
@@ -624,12 +624,12 @@
                             {% render 'icon-mute-close' %}
                           </button>
                         {% endif %}
-                        <div class="flex align-center space-between popup-information__mobile z-2 w-full shadow rounded-10 overflow-hidden bg-white pe-20">
+                        <div class="flex align-center space-between popup-information__mobile z-2 w-full shadow rounded-10 overflow-hidden bg-white relative z-2">
                           {% render 'card-product',
                             card_product: card_product,
                             section_id: section.id,
                             show_video: false,
-                            disable_quickview: true,
+                            disable_quickview: false,
                             disable_badge: true,
                             disable_rate: true,
                             disable_tag: true,
@@ -639,23 +639,18 @@
                             disable_color_swatches: true,
                             class: ' z-2',
                             style_layout: ' flex',
-                            image_class: ' flex-auto w-custom rounded-0 w-full-1025',
+                            image_class: ' flex-auto w-custom rounded-0',
                             image_rounded: ' rounded-0',
-                            info_class: ' flex-1 mt-0 px-20 py-15 align-self-center'
+                            info_class: ' flex-1 mt-0 px-15 py-15 lh-normal',
+                            type: 'action_bellow'
                           %}
                           <button
-                            class="btn-shopable__action-mobile btn__quick-shop bg-white btn-reset border z-2 flex"
+                            class="btn-shopable__action-mobile opacity-0 absolute z-2 inset-0"
                             name="{{ 'products.product.shop_now' | t }}"
                           >
-                            <svg
-                              width="16"
-                              height="16"
-                              class="hidden-1025 hidden-on-load transition-short heading-color"
-                              viewBox="0 0 16 16"
-                              fill="none"
-                            >
-                              <use href="#icon-cart" />
-                            </svg>
+                            <span class="visually-hidden visually-hidden--inline">
+                              {{ 'products.product.add' | t }}
+                            </span>
                           </button>
                         </div>
                       </div>

@@ -80,15 +80,15 @@ class StickyAddCart extends HTMLElement {
     const _this = this;
     this.main = document.querySelector(".main-product-section");
     if (!this.main) return;
-    const primaryBtn = this.main.querySelector(".product-detail__buy-buttons");
+    const primaryBtn = this.main.querySelector(".block-product__buttons");
     const footer = document.querySelector("footer");
     if (!primaryBtn) return;
     var isVisible = true;
     window.addEventListener("scroll", function () {
-      var buttonRect = primaryBtn.getBoundingClientRect();
-      var viewportHeight = window.innerHeight;
+      const buttonRect = primaryBtn.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
       if (footer) {
-        var footerRect = footer.getBoundingClientRect();
+        const footerRect = footer.getBoundingClientRect();
         if (footerRect.top < window.innerHeight - 100) {
           _this.classList.remove("show-sticky-cart");
           isVisible = true;
