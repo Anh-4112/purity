@@ -38,14 +38,14 @@
     class="{{ section_width }}"
   >
     <div
-      class="relative flex wrap overlay-bg h-{{ video_height }}{% if show_text_bellow_mobile %} column flex-md-row text-bellow-mb{% endif %}"
+      class="relative flex wrap h-{{ video_height }}{% if show_text_bellow_mobile %} column flex-md-row text-bellow-mb{% endif %}"
       {% if video_height == 'full_screen' or video_height == 'adapt' %}
         style=" {%- if section_st.video_local != blank %}--aspect-ratio: {{ section_st.video_local.aspect_ratio }};{% else %}--aspect-ratio: 16/9{% endif %}"
       {% endif %}
     >
       {%- if section_st.video_local == null and section_st.video_url != null -%}
         <video-section
-          class="block video-section overflow-hidden w-full banner__media banner absolute inset-0{% if section_width != "full-width" %} rounded{% endif %} h-{{ video_height }}"
+          class="block video-section overlay-bg overflow-hidden w-full banner__media banner absolute inset-0{% if section_width != "full-width" %} rounded{% endif %} h-{{ video_height }}"
           style="--aspect-ratio: 16/9;"
         >
           {% liquid
@@ -78,7 +78,7 @@
         </video-section>
       {%- elsif section_st.video_local != null -%}
         <video-local
-          class="block video-section overflow-hidden w-full banner__media banner absolute inset-0{% if section_width != "full-width" %} rounded{% endif %} h-{{ video_height }}"
+          class="block video-section overlay-bg overflow-hidden w-full banner__media banner absolute inset-0{% if section_width != "full-width" %} rounded{% endif %} h-{{ video_height }}"
           {% if video_height == 'adapt' or video_height == 'full_screen' or video_height == 'base_on_content' %}
             style="--aspect-ratio: {{ section_st.video_local.aspect_ratio }}"
           {% endif %}
@@ -100,14 +100,14 @@
             <template>
               {{
                 section_st.video_local
-                | video_tag: image_size: '1100x', autoplay: true, controls: true, muted: true, alt: image_alt
+                | video_tag: image_size: '1100x', autoplay: true, controls: true, muted: true, alt: image_alt, loop: true
               }}
             </template>
           </div>
         </video-local>
       {%- else -%}
         <div
-          class="banner__media h-{{ video_height }} placeholder absolute inset-0{% if section_width != "full-width" %} rounded{% endif %}"
+          class="banner__media overlay-bg h-{{ video_height }} placeholder absolute inset-0{% if section_width != "full-width" %} rounded{% endif %}"
           style="--aspect-ratio: 3/2"
         >
           {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}

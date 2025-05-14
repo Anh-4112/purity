@@ -18,6 +18,8 @@ if (!customElements.get("product-form-bundle")) {
         event.preventDefault();
         if (this.submitButton.getAttribute("aria-disabled") === "true") return;
         this.submitButton.classList.add("disabled");
+        this.submitButton.setAttribute("aria-disabled", true);
+        this.submitButton.setAttribute("disabled", true);
         this.submitButton.textContent = window.cartStrings?.added_to_bundle;
         const formData = new FormData(this.form);
         const variantId = formData.get("id");

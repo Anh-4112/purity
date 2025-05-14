@@ -127,13 +127,15 @@
        </span>
       <custom-options class="title-list visibility-hidden rounded-10 flex column gap-10 overflow-auto p-20 bg-white absolute transition-short z-2 shadow min-w-custom word-break left-0 opacity-0 pointer-none" style="--min-width: 21rem;">
         {% for item in split_array %}
-             <div class="title-group custom-scrollbar flex gap-10 fs-big-2 heading-color">
+             <div class="title-group custom-scrollbar flex gap-10 fs-big-2">
           {% liquid
             assign title_parts = item | split: '::'
             assign title = title_parts[0]
             assign block_id = title_parts[1]
           %}
-            <span class="title-item lh-normal outlined-border" data-block-id="{{ block_id }}">{{ title }}</span>
+            <div>
+              <span class="title-item lh-normal hover-heading-color outlined-border" data-block-id="{{ block_id }}">{{ title }}</span>
+            </div>
           </div>
         {% endfor %}
       </custom-options>
@@ -160,7 +162,7 @@
       </span>
       <custom-options class="collection-list block shadow absolute visibility-hidden transition-short z-2 min-w-custom word-break left-0 opacity-0 pointer-none" style="--min-width: 21rem;">
         {% for block_id in unique_block_ids %}
-          <div class="collection-group custom-scrollbar flex column gap-10 fs-big-2 bg-white rounded-10 p-20 heading-color overflow-auto" id="{{ block_id }}" {% if block_id != first_block_id %}style="display: none;"{% endif %}>
+          <div class="collection-group custom-scrollbar flex column gap-10 fs-big-2 bg-white rounded-10 p-20 overflow-auto" id="{{ block_id }}" {% if block_id != first_block_id %}style="display: none;"{% endif %}>
             {% for item in split_collection %}
               {% liquid
                 assign item_parts = item | split: '::'
@@ -169,7 +171,9 @@
                 assign item_url = item_parts[2]
               %}
               {% if item_block_id == block_id %}
-                <span class="collection-item lh-normal" data-url="{{ item_url }}">{{ item_title }}</span>
+                <div>
+                  <span class="collection-item  hover-heading-color lh-global outlined-border text" data-url="{{ item_url }}">{{ item_title }}</span>
+                </div>
               {% endif %}
             {% endfor %}
           </div>

@@ -29,14 +29,27 @@
         {%- case block.type -%}
           {%- when 'heading' -%}
             <div {{ block.shopify_attributes }} class="container-min single__post-header page-title">
-              {% if block_st.show_category %}
-                <a
-                  class="blog-category pointer inline-block bg-sale btn-rounded fs-13 px-15 py-4"
-                  href="{{ blog.url }}"
-                  aria-label="{{ blog.title }}"
-                >
-                  {{ blog.title }}
-                </a>
+              {% if block_st.show_category or block_st.tag %}
+                <ul class="flex wrap align-center list-unstyled gap-10">
+                  {% if block_st.show_category %}
+                    <li class="blog-tag inline-block bg-sale btn-rounded">
+                      <a
+                        class="blog-category fs-13 px-15 py-4 pointer"
+                        href="{{ blog.url }}"
+                        aria-label="{{ blog.title }}"
+                      >
+                        {{ blog.title }}
+                      </a>
+                    </li>
+                  {% endif %}
+                  {% if block.settings.show_tags and article.tags.size > 0 %}
+                    {% for tag in article.tags limit: 8 %}
+                      <li class="blog-tag pointer inline-block bg-sale btn-rounded fs-13 px-15 py-4">
+                        {{- tag | link_to_tag: tag -}}
+                      </li>
+                    {% endfor %}
+                  {%- endif %}
+                </ul>
               {% endif %}
               <h1 class="article-template__title mt-10 mb-10" itemprop="headline">
                 {{ article.title | escape }}
@@ -126,7 +139,7 @@
                     <span class="heading-style">{{ 'blogs.article.tags' | t }}:</span>
                     <ul class="flex wrap align-center list-unstyled gap-10">
                       {% for tag in article.tags limit: 8 %}
-                        <li class="transition fs-small text-color btn-tag p-0 lh-global btn body-weight">
+                        <li class="transition fs-small text-color btn-tag p-0 lh-global body-weight">
                           {{- tag | link_to_tag: tag -}}
                         </li>
                       {% endfor %}
@@ -141,8 +154,8 @@
                       <span class="heading-style">{{ 'blogs.article.share' | t }}:</span>
                       <ul class="list-social flex list-unstyled gap-10 lh-1">
                         <li class="list-social__item">
-                          <a
-                            class="btn-sharing w-40 h-40 inline-flex content-center hover-icon-zoom pointer"
+                          <button
+                            class="btn-sharing w-40 h-40 inline-flex content-center hover-icon-zoom pointer btn-reset text-color"
                             role="link"
                             aria-label="{{ 'blogs.article.share' | t }}"
                             data-name="twitter"
@@ -152,11 +165,11 @@
                             <span class="tooltip-content visually-hidden rounded-5 fs-small tooltip-bottom">
                               {{- 'blogs.article.sharing.twitter' | t -}}
                             </span>
-                          </a>
+                          </button>
                         </li>
                         <li class="list-social__item">
-                          <a
-                            class="btn-sharing w-40 h-40 inline-flex content-center hover-icon-zoom pointer"
+                          <button
+                            class="btn-sharing w-40 h-40 inline-flex content-center hover-icon-zoom pointer btn-reset text-color"
                             role="link"
                             aria-label="{{ 'blogs.article.share' | t }}"
                             data-name="facebook"
@@ -166,11 +179,11 @@
                             <span class="tooltip-content visually-hidden tooltip-bottom">
                               {{- 'blogs.article.sharing.facebook' | t -}}
                             </span>
-                          </a>
+                          </button>
                         </li>
                         <li class="list-social__item lh-1">
-                          <a
-                            class="btn-sharing w-40 h-40 inline-flex content-center hover-icon-zoom pointer"
+                          <button
+                            class="btn-sharing w-40 h-40 inline-flex content-center hover-icon-zoom pointer btn-reset text-color"
                             role="link"
                             aria-label="{{ 'blogs.article.share' | t }}"
                             data-name="pinterest"
@@ -180,7 +193,7 @@
                             <span class="tooltip-content visually-hidden tooltip-bottom">
                               {{- 'blogs.article.sharing.pinterest' | t -}}
                             </span>
-                          </a>
+                          </button>
                         </li>
                       </ul>
                     </div>
@@ -291,7 +304,7 @@
                         data-mobile="1"
                         class="round-on-top swiper hover-action"
                         style="--item-desktop: 3;--item-tablet: 2;--item-mb: 1;"
-                        data-arrow-center-image-image="true"
+                        data-arrow-center-image="true"
                       >
                         <div class="swiper-wrapper">
                           {%- for article in blog.articles limit: 8 -%}
@@ -306,6 +319,7 @@
                               show_image: true,
                               show_cate: block_st.show_category,
                               show_date: block_st.show_date,
+                              show_tags: block_st.show_tags,
                               show_author: block_st.show_author,
                               show_excerpt: block_st.show_excerpt,
                               indexFor: forloop.index,
@@ -702,6 +716,12 @@
           "id": "show_category",
           "default": true,
           "label": "t:sections.all.blog_setting.show_category"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_tags",
+          "default": false,
+          "label": "t:sections.all.blog_setting.show_tags"
         },
         {
           "type": "checkbox",
