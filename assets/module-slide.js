@@ -231,7 +231,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
       const items = _this.querySelectorAll(".swiper-slide");
       const itemsToShow = Array.from(items);
       if (itemsToShow.length > 1) {
-        itemMobile = 1.5;
+        itemMobile = 2;
       }
     }
     direction = "horizontal";
