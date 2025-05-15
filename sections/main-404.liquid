@@ -27,7 +27,7 @@
           {% assign animate_delay = 25 %}
         {%- when 'image' -%}
           <div
-            class="w-full max-w-custom mb-50"
+            class="w-full max-w-custom mb-50 rounded"
             style="{%- if image != blank -%}--aspect-ratio: {{ image.aspect_ratio }};{% else %}--aspect-ratio: 4/3;{% endif %};--max-width: 50rem;"
           >
             {%- assign image_alt = image.alt | escape | default: 'image' -%}
@@ -116,7 +116,7 @@
               >
             {%- endif -%}
             <div
-              class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap text-center gap-15"
+              class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap text-center gap-15 content-center"
               style="--space-bottom: {{ block_st.spacing_bottom }};"
             >
               {% if first_button_label != blank %}
