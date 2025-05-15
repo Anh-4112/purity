@@ -807,13 +807,15 @@ a.hover-heading-color:hover,
 :where(.flex-start, .justify-content-left) {
   justify-content: flex-start;
 }
-.align-self-end, .align-self-right {
+.align-self-end,
+.align-self-right {
   align-self: flex-end;
 }
 .align-self-center {
   align-self: center;
 }
-.align-self-start, .align-self-left {
+.align-self-start,
+.align-self-left {
   align-self: flex-start;
 }
 .flex-auto {
@@ -1463,6 +1465,7 @@ body:not(.template-index) .transparent-logo {
 :is([class*="product__badges-"], .rating-total) {
   padding: 4px 14px;
   line-height: 20px;
+  will-change: opacity, transform;
 }
 .product__name {
   font-size: var(--product-name-size, 1.6rem);
@@ -2113,7 +2116,7 @@ menu-drawer .modal-inner {
     transform: translateX(var(--slide-out, -100%)) translateY(0);
     -webkit-transform: translateX(var(--slide-out, -100%)) translateY(0);
     top: 0;
-    will-change: transform, opacity;
+    will-change: transform;
     max-height: 100vh;
   }
   :where(.drawer-left) {

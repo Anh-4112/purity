@@ -2197,6 +2197,10 @@ class MotionEffect extends HTMLElement {
     return parseInt(this.dataset.animateDelay || 0) / 1000;
   }
 
+  get delayLoad() {
+    return this.classList.contains("animate-delay");
+  }
+
   get delayMedia() {
     return this.closest(".block__media-gallery")
       ? this.closest(".block__media-gallery").classList.contains("insert")
@@ -2204,7 +2208,7 @@ class MotionEffect extends HTMLElement {
   }
 
   initAnimate() {
-    if (this.delayMedia) {
+    if (this.delayMedia || this.delayLoad) {
       return;
     }
     switch (this.animateEffect) {
@@ -2265,7 +2269,7 @@ class MotionEffect extends HTMLElement {
   }
 
   async initAnimateEffect() {
-    if (this.delayMedia) {
+    if (this.delayMedia || this.delayLoad) {
       return;
     }
     switch (this.animateEffect) {

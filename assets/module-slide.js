@@ -51,7 +51,7 @@ function initSlide(_this) {
     prevEl = swiperControls.querySelector(".swiper-button-prev");
     paginationSwiper = swiperControls.querySelector(".swiper-pagination");
   }
-  new Swiper(_this, {
+  const swiper = new Swiper(_this, {
     slidesPerView: freeMode ? "auto" : autoItem ? "auto" : itemMobile,
     spaceBetween: freeMode ? spacing : spacing >= 10 ? 10 : spacing,
     mousewheel: mousewheel,
@@ -163,6 +163,7 @@ function initSlide(_this) {
       },
     },
   });
+  return swiper;
 }
 
 function loadSlideVideo(_this) {
@@ -230,7 +231,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
       const items = _this.querySelectorAll(".swiper-slide");
       const itemsToShow = Array.from(items);
       if (itemsToShow.length > 1) {
-        itemMobile = 1.5;
+        itemMobile = 2;
       }
     }
     direction = "horizontal";
