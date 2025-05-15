@@ -646,9 +646,6 @@ blockquote {
   opacity: 1;
   pointer-events: auto;
 }
-.content-hidden > * {
-  content-visibility: hidden;
-}
 .active .modal-overlay,
 .open.drawer-bottom {
   pointer-events: auto;
@@ -1001,6 +998,9 @@ blockquote {
   }
   .pb-1025-30 {
     padding-bottom: 3rem;
+  }
+  .content-hidden > * {
+    content-visibility: hidden;
   }
 }
 .bg-transparent {
@@ -1950,10 +1950,7 @@ media-lightbox-popup {
 :is(.play-button, .play-button svg) {
   color: rgb(var(--color-white)) !important;
 }
-:is(.active_smooth) .play-button.active {
-  opacity: 0;
-  transition-delay: 0.2s;
-}
+
 :is(video-lightbox-item, shopable-item, .video-item--ratio, video-local):hover
   .play-button,
 shopable-item:focus-visible .play-button,
@@ -1961,6 +1958,14 @@ shopable-item:focus-visible .play-button,
 :is(.active_smooth, shopable-item) .play-button:focus-visible {
   opacity: 1;
   transition-delay: 0s;
+  pointer-events: auto;
+}
+@media (max-width: 1024.98px) {
+  :is(video-lightbox-item, shopable-item, .video-item--ratio, video-local)
+    .play-button.active {
+    opacity: 0;
+    transition-delay: 0.4s;
+  }
 }
 media-lightbox-popup .mute-button-popup {
   bottom: 125px;
@@ -1997,6 +2002,35 @@ media-lightbox-popup .product-item {
   width: auto;
   height: auto;
   --width: 7.5rem;
+}
+video-lightbox-item .play-button {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  transform: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  background-color: transparent;
+  backdrop-filter: unset;
+}
+video-lightbox-item .play-button:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background-color: #0000004d;
+  width: 4.6rem;
+  height: 4.6rem;
+  border-radius: 50%;
+  z-index: 1;
+}
+video-lightbox-item .play-button svg {
+  z-index: 2;
 }
 .smooth_loading {
   transition-delay: 0.2s;
@@ -2047,7 +2081,7 @@ media-lightbox-popup .product-item {
 .play-button,
 .mute-button-mobile {
   width: 4.6rem;
-  height: 4.6rem !important;
+  height: 4.6rem;
   border-radius: 50%;
   background-color: #0000004d;
 }
