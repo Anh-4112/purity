@@ -1,4 +1,5 @@
 {{ 'banner.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'slideshow-section.js' | asset_url }}" defer="defer" type="module"></script>
 {% liquid
   assign section_st = section.settings
   if section_st.section_width == 'fix_width'
@@ -31,7 +32,7 @@
 >
   <div class="{{ section_width }}">
     {% if section.blocks.size > 0 %}
-      <slide-section
+      <slideshow-section
         id="swiper-{{ section.id }}"
         class="swiper hover-action lazy-loading-swiper-before"
         data-section-id="{{ section.id }}"
@@ -102,6 +103,10 @@
                 if forloop.first
                   assign fetchpriority = 'high'
                 endif
+              endif
+              assign animate = ' animate-delay'
+              if forloop.first
+                assign animate = ''
               endif
               assign image_alt = image.alt | default: heading | escape
             %}
@@ -178,7 +183,7 @@
                         image_alt: image_alt,
                         fetchpriority: fetchpriority,
                         motion: true,
-                        class_motion: ' w-full h-full'
+                        class_motion: ' w-full h-full{{ animate }}'
                       %}
                     {% endif %}
                   {%- else -%}
@@ -186,7 +191,7 @@
                       type: 'lifestyle-2',
                       index: forloop.index,
                       class: 'img-placeholder h-full w-full',
-                      class_motion: ' w-full h-full'
+                      class_motion: ' w-full h-full{{ animate }}'
                     -%}
                   {% endif %}
                 </div>
@@ -202,7 +207,7 @@
                           <motion-effect
                             data-animate="fade-up"
                             data-animate-delay="{{ animate_delay }}"
-                            class="block"
+                            class="block{{ animate }}"
                           >
                             {{ subheading | escape }}
                           </motion-effect>
@@ -214,7 +219,7 @@
                           <motion-effect
                             data-animate="fade-up"
                             data-animate-delay="{{ animate_delay }}"
-                            class="block"
+                            class="block{{ animate }}"
                           >
                             {{ heading }}
                           </motion-effect>
@@ -226,7 +231,7 @@
                           <motion-effect
                             data-animate="fade-up"
                             data-animate-delay="{{ animate_delay }}"
-                            class="block"
+                            class="block{{ animate }}"
                           >
                             {{ description }}
                           </motion-effect>
@@ -239,7 +244,7 @@
                             <motion-effect
                               data-animate="fade-up"
                               data-animate-delay="{{ animate_delay }}"
-                              class="block"
+                              class="block{{ animate }}"
                             >
                               <a
                                 {% if first_button_link == blank %}
@@ -273,7 +278,7 @@
             style="{% if show_text_bellow_image %}--position: absolute;--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% else %}--position: absolute;{% endif %}--swiper-pagination-bottom: 1.6rem;--swiper-pagination-bullet-active-width: 8rem;"
           ></div>
         {% endif %}
-      </slide-section>
+      </slideshow-section>
     {% endif %}
   </div>
 </div>

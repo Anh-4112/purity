@@ -24,7 +24,11 @@
     </svg>
     <div class="flex justify-center align-center column mb-60">
       <h1 class="customer__title">{{ 'customer.account.order_detail' | t }}</h1>
-      <a href="{{ routes.account_url }}" aria-label="{{ 'customer.account.return' | t }}" class="flex align-center gap-10 mt-15 underline">
+      <a
+        href="{{ routes.account_url }}"
+        aria-label="{{ 'customer.account.return' | t }}"
+        class="flex align-center gap-10 mt-15 underline"
+      >
         {{- 'customer.account.return' | t -}}
       </a>
     </div>
@@ -104,12 +108,19 @@
                           {%- endif -%}
                         </div>
                       {%- endunless -%}
-  
+
                       {%- if line_item.line_level_discount_allocations != blank -%}
                         <ul role="list" class="list-unstyled" aria-label="{{ 'customer.order.discount' | t }}">
                           {%- for discount_allocation in line_item.line_level_discount_allocations -%}
                             <li>
-                              <svg class="icon-discount mr-10" aria-hidden="true" width="12" height="12" focusable="false" viewBox="0 0 12 12">
+                              <svg
+                                class="icon-discount mr-10"
+                                aria-hidden="true"
+                                width="12"
+                                height="12"
+                                focusable="false"
+                                viewBox="0 0 12 12"
+                              >
                                 <use href="#icon-discount" />
                               </svg>
                               {{- discount_allocation.discount_application.title }} (-
@@ -119,12 +130,12 @@
                           {%- endfor -%}
                         </ul>
                       {%- endif -%}
-  
+
                       {%- if line_item.fulfillment -%}
                         <div class="fulfillment">
                           {%- assign created_at = line_item.fulfillment.created_at | time_tag: format: 'date' -%}
                           <span>{{ 'customer.order.fulfilled_at_html' | t: date: created_at }}</span>
-  
+
                           {%- if line_item.fulfillment.tracking_url -%}
                             <a
                               href="{{ line_item.fulfillment.tracking_url }}"
@@ -305,7 +316,9 @@
               {%- endfor -%}
               {%- if order.total_duties -%}
                 <tr role="row">
-                  <td id="RowDuties" role="rowheader" scope="row" colspan="4">{{ 'customer.order.total_duties' | t }}</td>
+                  <td id="RowDuties" role="rowheader" scope="row" colspan="4">
+                    {{ 'customer.order.total_duties' | t }}
+                  </td>
                   <td headers="RowDuties" role="cell" data-label="{{ 'customer.order.total_duties' | t }}">
                     {{ order.total_duties | money }}
                   </td>
@@ -345,7 +358,7 @@
         </div>
       </div>
       <div class="w-full col-md-w-custom">
-        <div class="sticky-1025 top-20 transition">
+        <div class="sticky-md top-20 transition">
           <div class="mb-30">
             <h2 class="h3 mb-15">{{ 'customer.order.billing_address' | t }}</h2>
             <p>

@@ -33,15 +33,13 @@
             class="product-detail__media w-full w-md-custom py-md-20 bg-white fixed-md inset-y-0 left-0 px-gutter-x px-1025-20 z-1 overflow-hidden-mb"
             style="--width: 34rem;"
           >
-            <div class="free-scroll h-full">
-              {% render 'media-gallery',
-                images: product.media,
-                section_st: section_st,
-                product: product,
-                section: section,
-                type_section: 'quick_view'
-              %}
-            </div>
+            {% render 'media-gallery',
+              images: product.media,
+              section_st: section_st,
+              product: product,
+              section: section,
+              type_section: 'quick_view'
+            %}
           </div>
         {% endif %}
         <div
@@ -49,7 +47,7 @@
           class="product-detail__information w-full bg-white px-gutter-x px-1025-20 z-2"
           style="--space-bottom: 20;"
         >
-          <div class="sticky-1025 top-20 py-20-md">
+          <div class="sticky-md top-20 py-20-md">
             {% content_for 'blocks', closest.product: product %}
             <a
               {% if product == blank %}

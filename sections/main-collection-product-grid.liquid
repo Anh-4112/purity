@@ -94,7 +94,7 @@
 >
   <div
     id="ProductsGridContainer"
-    class="{{ section_width }} section filter-layout {{ filter_layout }}-filter{% if enable_filtering and filter_layout == 'vertical' %} flex gap{% endif %}"
+    class="{{ section_width }} section filter-layout {{ filter_layout }}-filter{% if enable_filtering and filter_layout == 'vertical' %} flex gap{% endif %}{% if show_step %} overflow-hidden{% endif %}"
     {% if enable_filtering and filter_layout == 'vertical' %}
       style="--col-width: 30rem;--gap-desktop: 6rem;--gap: 3rem;"
     {% endif %}
@@ -122,94 +122,96 @@
               {% if scroll_animation %}
                 <motion-items-effect>
               {% endif %}
-              <slide-section
-                class="swiper"
-                data-section-id="{{ section.id }}"
-                data-autoplay="false"
-                data-effect="slide"
-                data-loop="false"
-                data-speed="500"
-                data-spacing="{{ column_gap_slide }}"
-                data-mobile="1.3"
-                data-desktop="3"
-                data-tablet="2"
-                data-arrow-center="true"
-              >
-                <div class="swiper-wrapper">
-                  {%- for block in section.blocks -%}
-                    {%- liquid
-                      assign block_st = block.settings
-                      assign image = block_st.image
-                      assign heading = block_st.heading
-                      assign description = block_st.description
-                      assign button_label = block_st.button_label
-                      assign button_link = block_st.button_link
-                    -%}
-                    {%- if block.type == 'steps' -%}
-                      <div class="swiper-slide motion-item">
-                        <div class="product__promotion-banner hover-effect">
-                          <a
-                            {% if button_link == blank %}
-                              role="link" aria-disabled="true"
-                            {% else %}
-                              href="{{ button_link | default: "#" }}"
-                            {% endif %}
-                            aria-label="{{ button_label }}"
-                            class="block banner__media rounded"
-                            style="--aspect-ratio: {% if image != blank %}{{ image.aspect_ratio }}{%- else -%}4/3{%- endif -%}"
-                          >
-                            {%- liquid
-                              assign banner_alt = 'sections.collection_template.promotion_banner' | t
-                              assign banner_alt = heading | default: banner_alt
-                              assign banner_alt = image.alt | default: banner_alt
-                            -%}
-                            {%- if image -%}
-                              {% render 'responsive-image',
-                                type: 'product',
-                                image: image,
-                                image_alt: banner_alt,
-                                container: section_width,
-                                column: items_per_row,
-                                column_mobile: 2,
-                                padding: column_gap_slide,
-                                motion: true,
-                                class: 'center_swiper-arrow'
-                              %}
-                            {%- else -%}
-                              {% render 'placeholder-render', type: 'product' %}
+              <div class="free-scroll">
+                <slide-section
+                  class="swiper overflow-visible-mb"
+                  data-section-id="{{ section.id }}"
+                  data-autoplay="false"
+                  data-effect="slide"
+                  data-loop="false"
+                  data-speed="500"
+                  data-spacing="{{ column_gap_slide }}"
+                  data-mobile="1.3"
+                  data-desktop="3"
+                  data-tablet="2"
+                  data-arrow-center="true"
+                >
+                  <div class="swiper-wrapper">
+                    {%- for block in section.blocks -%}
+                      {%- liquid
+                        assign block_st = block.settings
+                        assign image = block_st.image
+                        assign heading = block_st.heading
+                        assign description = block_st.description
+                        assign button_label = block_st.button_label
+                        assign button_link = block_st.button_link
+                      -%}
+                      {%- if block.type == 'steps' -%}
+                        <div class="swiper-slide motion-item">
+                          <div class="product__promotion-banner hover-effect">
+                            <a
+                              {% if button_link == blank %}
+                                role="link" aria-disabled="true"
+                              {% else %}
+                                href="{{ button_link | default: "#" }}"
+                              {% endif %}
+                              aria-label="{{ button_label }}"
+                              class="block banner__media rounded"
+                              style="--aspect-ratio: {% if image != blank %}{{ image.aspect_ratio }}{%- else -%}4/3{%- endif -%}"
+                            >
+                              {%- liquid
+                                assign banner_alt = 'sections.collection_template.promotion_banner' | t
+                                assign banner_alt = heading | default: banner_alt
+                                assign banner_alt = image.alt | default: banner_alt
+                              -%}
+                              {%- if image -%}
+                                {% render 'responsive-image',
+                                  type: 'product',
+                                  image: image,
+                                  image_alt: banner_alt,
+                                  container: section_width,
+                                  column: items_per_row,
+                                  column_mobile: 2,
+                                  padding: column_gap_slide,
+                                  motion: true,
+                                  class: 'center_swiper-arrow'
+                                %}
+                              {%- else -%}
+                                {% render 'placeholder-render', type: 'product' %}
+                              {%- endif -%}
+                            </a>
+                            {%- if heading != blank or description != blank -%}
+                              <div class="promotion-information mt-20">
+                                {%- if heading != blank -%}
+                                  <div class="heading h7">{{ heading }}</div>
+                                {%- endif -%}
+                                {%- if description != blank -%}
+                                  <div class="description heading-color">{{ description }}</div>
+                                {%- endif -%}
+                                {%- if button_label != blank -%}
+                                  <a
+                                    {% if button_link == blank %}
+                                      role="link" aria-disabled="true"
+                                    {% else %}
+                                      href="{{ button_link | default: "#" }}"
+                                    {% endif %}
+                                    aria-label="{{ button_label }}"
+                                    class="btn-link border-animation inline-block mt-10 pointer"
+                                    style="--btn-link-color: #000000;"
+                                  >
+                                    {{ button_label }}
+                                  </a>
+                                {%- endif -%}
+                              </div>
                             {%- endif -%}
-                          </a>
-                          {%- if heading != blank or description != blank -%}
-                            <div class="promotion-information mt-20">
-                              {%- if heading != blank -%}
-                                <div class="heading h7">{{ heading }}</div>
-                              {%- endif -%}
-                              {%- if description != blank -%}
-                                <div class="description heading-color">{{ description }}</div>
-                              {%- endif -%}
-                              {%- if button_label != blank -%}
-                                <a
-                                  {% if button_link == blank %}
-                                    role="link" aria-disabled="true"
-                                  {% else %}
-                                    href="{{ button_link | default: "#" }}"
-                                  {% endif %}
-                                  aria-label="{{ button_label }}"
-                                  class="btn-link border-animation inline-block mt-10 pointer"
-                                  style="--btn-link-color: #000000;"
-                                >
-                                  {{ button_label }}
-                                </a>
-                              {%- endif -%}
-                            </div>
-                          {%- endif -%}
+                          </div>
                         </div>
-                      </div>
-                    {%- endif -%}
-                  {%- endfor -%}
-                </div>
-                <div class="swiper-pagination"></div>
-              </slide-section>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                  <div class="swiper-pagination"></div>
+                </slide-section>
+              </div>
               {% if scroll_animation %}
                 </motion-items-effect>
               {% endif %}
