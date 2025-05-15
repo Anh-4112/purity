@@ -178,7 +178,8 @@
             <free-ship-progress-bar
               data-fe-unavailable="{% if free_shipping_message != blank %}{{ free_shipping_message }}{% else %}{{ 'sections.cart.free_shipping_html' | t }}{% endif %}"
               data-fe-available="{{ 'sections.cart.free_shipping_available' | t }}"
-              class="free-shipping-bar drawer-spacing"
+              class="free-shipping-bar drawer-spacing pt-20"
+              style="--padding-block-desktop: 2rem;"
             >
               <div class="progress-bar-message text-center heading-style"></div>
               <div
@@ -194,7 +195,7 @@
             </free-ship-progress-bar>
           {%- endif -%}
           <div class="cart-drawer-inner overflow-y-auto custom-scrollbar grow-1 flex column">
-            <cart-items class="block drawer-spacing grow-1 mb-10 pt-12">
+            <cart-items class="block drawer-spacing grow-1 mb-10 pt-0" style="--padding-block-desktop: 1rem;">
               <form
                 action="{{ routes.cart_url }}"
                 id="CartDrawer-Form"
@@ -262,7 +263,7 @@
                                   <div class="flex gap-10 space-between">
                                     <a
                                       href="{{ item.url }}"
-                                      class="inline-block outlined-border word-break lh-normal heading-style mb-5"
+                                      class="inline-block outlined-border word-break lh-global heading-style"
                                       arial-label="{{ item.product.title | escape }}"
                                     >
                                       {{- item.product.title | escape -}}

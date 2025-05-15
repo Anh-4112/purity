@@ -105,6 +105,7 @@ class ScrollOffer extends HTMLElement {
   handleKeydown(event) {
     if (event.key === "Enter") {
       this.initPopup();
+      console.log("display");
     }
   }
 
@@ -123,6 +124,13 @@ class ScrollOffer extends HTMLElement {
         e.preventDefault();
         e.stopPropagation();
         this.hideAndSetCookie();
+      });
+      closeButton.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          e.stopPropagation();
+          this.hideAndSetCookie();
+        }
       });
     }
 

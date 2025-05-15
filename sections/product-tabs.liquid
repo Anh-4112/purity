@@ -125,7 +125,7 @@
         {%- endif -%}
         {%- if section.blocks.size > 0 -%}
           <div
-            class="product-tabs__header hidden-scrollbar flex column-1025 gap overflow-x-scroll-mb relative-1025 z-2"
+            class="product-tabs__header hidden-scrollbar flex column-1025 gap overflow-x-scroll-mb relative-1025 z-2 justify-start flex-md-center"
             style="--row-gap: 0;--gap-desktop: 0; --gap: 30px;"
           >
             {%- for block in section.blocks -%}
@@ -203,7 +203,6 @@
                   data-free-scroll="{{ data_free_scroll }}"
                   data-slide-tab="true"
                   style="{{ col_style | strip | strip_newlines }}"
-                  data-arrow-center-image="true"
                 >
                   {% if show_navigation %}
                     {%- render 'swiper-navigation', show_on_hover: true -%}
