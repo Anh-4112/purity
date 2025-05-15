@@ -27,7 +27,7 @@
   <localization-form class="no-js-hidden">
     {%- assign form_id = 'localization-language-' | append: section.id -%}
     {% form 'localization', id: form_id %}
-      <div class="disclosure flex content-center text-center relative">
+      <div class="disclosure flex content-center text-center relative" style="--color-heading: #000000;--color-dark: #444444;">
         <button
           type="button"
           class="button button-localization lhgvcxh-global inline-flex align-center gap-10 btn-reset color-inherit show-overlay fs-small body_weight pointer text-start"
@@ -44,7 +44,7 @@
         </button>
 
         <div
-          class="disclosure__list-wrapper block invisible bg-white z-3 fs-small body_weight absolute left-0 shadow transition-short"
+          class="disclosure__list-wrapper block invisible bg-white color-dark z-3 fs-small body_weight absolute left-0 shadow transition-short"
           hidden="true"
         >
           <draggable-localization class="block hidden-1025 relative pointer"> </draggable-localization>
@@ -56,7 +56,7 @@
               <li class="disclosure__item" tabindex="-1">
                 <a
                   href="{{ routes.root_url }}"
-                  class="disclosure__item-inner block py-5"
+                  class="disclosure__item-inner block py-10"
                   {% if language.iso_code == localization.language.iso_code %}
                     aria-current="true"
                   {% endif %}
