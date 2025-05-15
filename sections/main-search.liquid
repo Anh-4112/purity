@@ -271,7 +271,7 @@
                 <form class="facets-vertical-form relative" id="FacetSortForm">
                   {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
                   <div class="select-custom facet-filters heading-color py-10">
-                    <select-sorter class="select-selected flex gap-5 align-center pointer rotate-animate">
+                    <select-sorter class="select-selected flex gap-10 align-center pointer rotate-animate">
                       <label>
                         {{- 'products.facets.sort_by_label' | t }}
                       </label>
@@ -296,10 +296,13 @@
                       id="SortBy"
                       style="--min-width: 22rem;"
                     >
-                      <div class="facet-filters__select">
+                      <div
+                        class="facet-filters__select flex column gap"
+                        style="--gap-desktop: 8px; --gap: 8px;"
+                      >
                         {%- for option in search.sort_options -%}
                           <filter-sort
-                            class="block transition text-color py-4 pointer"
+                            class="block text-color pointer align-self-start outlined-border"
                             value="{{ option.value | escape }}"
                             {% if option.value == sort_by %}
                               selected="selected"

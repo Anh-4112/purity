@@ -94,7 +94,7 @@
 >
   <div
     id="ProductsGridContainer"
-    class="{{ section_width }} section filter-layout {{ filter_layout }}-filter{% if enable_filtering and filter_layout == 'vertical' %} flex gap{% endif %}{% if show_step %} overflow-hidden{% endif %}"
+    class="{{ section_width }} section filter-layout {{ filter_layout }}-filter{% if enable_filtering and filter_layout == 'vertical' %} flex gap{% endif %}{% if show_step %} overflow-hidden-mb{% endif %}"
     {% if enable_filtering and filter_layout == 'vertical' %}
       style="--col-width: 30rem;--gap-desktop: 6rem;--gap: 3rem;"
     {% endif %}
@@ -309,7 +309,7 @@
                 <form class="facets-vertical-form relative" id="FacetSortForm">
                   {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
                   <div class="select-custom facet-filters heading-color py-10">
-                    <select-sorter class="select-selected flex gap-5 align-center pointer rotate-animate">
+                    <select-sorter class="select-selected flex gap-10 align-center pointer rotate-animate">
                       <label>
                         {{- 'products.facets.sort_by_label' | t }}
                       </label>
@@ -335,11 +335,12 @@
                       style="--min-width: 22rem;"
                     >
                       <div
-                        class="facet-filters__select"
+                        class="facet-filters__select flex column gap"
+                        style="--gap-desktop: 8px; --gap: 8px;"
                       >
                         {%- for option in collection.sort_options -%}
                           <filter-sort
-                            class="block transition text-color py-4 pointer"
+                            class="block text-color pointer align-self-start outlined-border"
                             value="{{ option.value | escape }}"
                             {% if option.value == sort_by %}
                               selected="selected"
