@@ -827,47 +827,6 @@ CustomElement.observeAndPatchCustomElements({
   },
 });
 
-
-class CollapsibleRowDetailsWithFirstOpenCheck extends CollapsibleRowDetails {
-  constructor() {
-    super();
-  }
-
-  set open(value) {
-    const firstDetails = document.querySelector('details');
-    if (firstDetails === this && this.hasAttribute('open')) {
-      super.open = value;
-    } else {
-      this._open = false;
-      this.removeAttribute('open');
-      this.classList.remove('detail-open');
-      if (this.content) {
-        Motion.animate(this.content, { height: 0 }, { duration: 0 });
-      }
-    }
-  }
-
-  onSummaryClicked(event) {
-    event.preventDefault();
-    const firstDetails = document.querySelector('details');
-    if (firstDetails === this && this.hasAttribute('open')) {
-      this.open = !this.open;
-    }
-  }
-}
-
-customElements.define('collapsible-row-first-open', CollapsibleRowDetailsWithFirstOpenCheck, {
-  extends: 'details',
-});
-
-CustomElement.observeAndPatchCustomElements({
-  'collapsible-row-first-open': {
-    tagElement: 'details',
-    classElement: CollapsibleRowDetailsWithFirstOpenCheck,
-  },
-});
-
-
 class RecentlyViewedProducts extends HTMLElement {
   constructor() {
     super();
