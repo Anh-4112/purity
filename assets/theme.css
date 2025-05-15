@@ -10,11 +10,11 @@ input[type="number"] {
 :where(input, textarea)::-ms-input-placeholder {
   /* Microsoft Edge */
   opacity: 1;
-  color: var(--input-placeholder-color);
+  color: var(var(--input-placeholder-color), #666666);
   font-size: calc(var(--body-font-size) - 1px);
 }
 :where(input, textarea)::placeholder {
-  color: var(--input-placeholder-color);
+  color: var(var(--input-placeholder-color), #666666);
   font-size: calc(var(--body-font-size) - 1px);
 } /* Chrome, Safari, Edge */
 input[type="search"]::-webkit-search-cancel-button {
