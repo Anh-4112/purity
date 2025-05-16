@@ -10,16 +10,13 @@
   else
     assign section_width = 'fluid_container'
   endif
-  assign column_gap_slide = 0
+  assign column_gap_desktop = 0
   if section_st.column_gap == 'large'
     assign column_gap_desktop = 80
-    assign column_gap_slide = 20
   elsif section_st.column_gap == 'medium'
     assign column_gap_desktop = 50
-    assign column_gap_slide = 20
   elsif section_st.column_gap == 'small'
     assign column_gap_desktop = 30
-    assign column_gap_slide = 10
   endif
 
   assign heading_size = section_st.heading_size
@@ -96,7 +93,7 @@
     {%- endif -%}
     <div
       class="collection-highlight__blocks relative flex wrap gap"
-      style="--gap: {{ column_gap_slide }}px;--gap-desktop: {{ column_gap_desktop }}px;--col-width: {{ highlight_collection_width }}%;--row-gap: 3rem;"
+      style="--gap-desktop: {{ column_gap_desktop }}px;--col-width: {{ highlight_collection_width }}%;--row-gap: 3rem;"
     >
       {% content_for 'blocks' %}
     </div>
