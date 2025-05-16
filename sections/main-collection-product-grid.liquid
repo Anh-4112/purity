@@ -94,7 +94,7 @@
 >
   <div
     id="ProductsGridContainer"
-    class="{{ section_width }} section filter-layout {{ filter_layout }}-filter{% if enable_filtering and filter_layout == 'vertical' %} flex gap{% endif %}{% if show_step %} overflow-hidden-mb{% endif %}"
+    class="{{ section_width }} filter-layout {{ filter_layout }}-filter{% if enable_filtering and filter_layout == 'vertical' %} flex gap{% endif %}{% if show_step %} overflow-hidden-mb{% endif %}"
     {% if enable_filtering and filter_layout == 'vertical' %}
       style="--col-width: 30rem;--gap-desktop: 6rem;--gap: 3rem;"
     {% endif %}
@@ -236,6 +236,7 @@
                 <facet-drawer
                   id="{{ section.id }}"
                   class="modal invisible transition-drawer fixed inset-0 z-15 pointer-none active-modal-js content-hidden"
+                  style="--drawer-width: 45rem;"
                   drawer
                 >
                   <modal-overlay class="modal-overlay pointer"></modal-overlay>
@@ -382,7 +383,7 @@
                       <facet-remove>
                         <a
                           href="{{ value.url_to_remove }}"
-                          class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal"
+                          class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal hover-heading-color"
                         >
                           {{ value.label | escape }}
                           <span class="active-facets__button-inner">
@@ -401,7 +402,7 @@
                         <facet-remove>
                           <a
                             href="{{ filter.url_to_remove }}"
-                            class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal"
+                            class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal hover-heading-color"
                           >
                             {%- if filter.min_value.value -%}
                               {{ filter.min_value.value | money }}
@@ -430,7 +431,7 @@
                   <facet-remove class="active-facets__button-wrapper">
                     <a
                       href="{{ results_url }}"
-                      class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal"
+                      class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal hover-heading-color"
                     >
                       <span>{{ 'products.facets.clear_all' | t }}</span>
                     </a>
@@ -453,6 +454,7 @@
                   </h2>
                   <a
                     href="{{ routes.all_products_collection_url }}"
+                    class="inline-block btn btn-primary mt-30"
                     aria-label="{{- 'general.continue_shopping' | t -}}"
                   >
                     {{- 'general.continue_shopping' | t -}}

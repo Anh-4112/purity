@@ -22,7 +22,7 @@
   }
   .banner__box-hero-hero {
     padding-block: 50vh 25vh;
-    max-width: clamp(42rem, 50vw, 64rem);
+    max-width: clamp(62rem, 75vw, 90rem);
     word-wrap: break-word;
     height: fit-content;
   }
@@ -38,6 +38,9 @@
     height: 100%;
     width: 100%;
     object-fit: cover;
+  }
+  .banner__box-hero-hero .h0 {
+    --size: clamp(6rem, calc(6rem + (90 - 60) * var(--responsive-rate)), 9rem);
   }
 {%- endstyle -%}
 <div
@@ -109,7 +112,7 @@
       </div>
     {%- endif -%}
     <div class="section__media-hero-content container media__content relative w-full z-2 text-center">
-      <scrolling-effect class="banner__box-hero-hero max-w-100 px-custom inline-block">
+      <scrolling-effect class="banner__box-hero-hero max-w-100 px-custom inline-block prose">
         {% content_for 'blocks' %}
       </scrolling-effect>
     </div>
