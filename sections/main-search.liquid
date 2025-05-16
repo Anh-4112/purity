@@ -200,7 +200,8 @@
                 </button>
                 <facet-drawer
                   id="{{ section.id }}"
-                  class="modal invisible transition-drawer fixed z-15 inset-0 pointer-none active-modal-js content-hidden"
+                  class="modal invisible transition-drawer fixed inset-0 z-15 pointer-none active-modal-js content-hidden"
+                  style="--drawer-width: 45rem;"
                   drawer
                 >
                   <modal-overlay class="modal-overlay pointer"></modal-overlay>
@@ -415,6 +416,7 @@
                   </h2>
                   <a
                     href="{{ routes.all_products_collection_url }}"
+                    class="inline-block btn btn-primary mt-30"
                     aria-label="{{- 'general.continue_shopping' | t -}}"
                   >
                     {{- 'general.continue_shopping' | t -}}

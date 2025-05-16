@@ -1513,6 +1513,9 @@ body:not(.template-index) .transparent-logo {
   [data-free-scroll="false"].reveal_on_scroll {
     overflow: hidden;
   }
+  .modal.invisible {
+    will-change: opacity;
+  }
 }
 .shopify-payment-button__more-options.shopify-payment-button__skeleton {
   width: 100%;
@@ -2076,10 +2079,12 @@ th {
 }
 :where(.drawer-left-mb) {
   transform: translateX(-100%);
+  -webkit-transform: translateX(-100%);
   will-change: transform;
 }
 .drawer-right-mb {
   transform: translateX(100%);
+  -webkit-transform: translateX(100%);
   will-change: transform;
 }
 .drawer-bottom {

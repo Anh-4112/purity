@@ -98,7 +98,7 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    top: calc(100% + 3px);
+    top: calc(100% - 2px);
   }
   .recommend-prose {
     line-height: 3;
@@ -113,7 +113,7 @@
   }
 {% endstyle %}
 {% capture title_replace %}
-  <select-options class="title-select relative px-15 pointer lh-global">
+  <select-options class="title-select relative px-15 pointer lh-global inline-flex">
     {% if split_array.size > 0 %}
       {% liquid
         assign first_item = split_array[0]
@@ -145,7 +145,7 @@
   </select-options>
 {% endcapture %}
 {% capture replace_collection %}
-  <select-options class="collection-select relative px-15 pointer lh-global">
+  <select-options class="collection-select relative px-15 pointer lh-global inline-flex">
     {% if split_collection.size > 0 %}
       {% liquid
         assign first_item = split_collection[0]
