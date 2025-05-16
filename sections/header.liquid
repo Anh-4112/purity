@@ -36,13 +36,13 @@
         background: transparent;
         transition: background 0.3s ease-in-out;
       }
-      .transparent-color,.heading-color.transparent-color{
+     .site-header:not(.section-header-sticky) :is(.transparent-color,.heading-color.transparent-color){
         --color-text: {{ section_st.header_text_icon_transparent }};
         --color-heading: {{ section_st.header_text_icon_transparent }};
         color: var(--color-text);
       }
       @media (min-width: 1025px) {
-        .transparent-menu{
+        .site-header:not(.section-header-sticky) .transparent-menu{
           --color-text: {{ section_st.header_text_icon_transparent }};
           --color-heading: {{ section_st.header_text_icon_transparent }};
         }
