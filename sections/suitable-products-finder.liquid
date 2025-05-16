@@ -56,7 +56,6 @@
   assign total_gap_size = 30 | times: total_gap
   assign image_collection_width = section_st.image_collection_width
   assign width_range_slider = image_collection_width | times: block_size | plus: total_gap_size
-  assign space_left = image_collection_width | minus: size_dot_range_slider | divided_by: 2
   assign animate_delay = 25
 -%}
 {%- capture style -%} --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--image-collection-width: {{ image_collection_width }}px;--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
@@ -314,7 +313,7 @@
         {%- if section_st.show_range_slider -%}
           <range-slider
             class="relative w-full max-w-custom-md block"
-            style="--thumb-size:{{ size_dot_range_slider }}px;--bg-color-custom: {{ section_st.range_slider_background }};--progress-width: {{ space_left }}px;--width-range-slider: {{ width_range_slider }}px;--max-width: var(--width-range-slider);--height: 4px;"
+            style="--thumb-size:{{ size_dot_range_slider }}px;--bg-color-custom: {{ section_st.range_slider_background }};--width-range-slider: {{ width_range_slider }}px;--max-width: var(--width-range-slider);--height: 4px;"
           >
             <input
               type="range"

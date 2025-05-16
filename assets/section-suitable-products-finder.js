@@ -75,14 +75,8 @@ if (!customElements.get("suitable-finder")) {
           }
         } else {
           const totalMarginSpace = marginRight * (numTabs - 1);
-          const tabWidth =
-            (tabHeaderWidth - totalMarginSpace) / numTabs;
+          const tabWidth = (tabHeaderWidth - totalMarginSpace) / numTabs;
           let currentPosition = tabWidth / 2;
-          const thumbWidth = parseInt(this._sizeDot);
-          this._rangeSlider.style.setProperty(
-            "--progress-width",
-            `${currentPosition - thumbWidth / 2}px`
-          );
           for (let i = 0; i < numTabs; i++) {
             tabCenters.push(currentPosition);
             currentPosition += tabWidth;
@@ -92,6 +86,32 @@ if (!customElements.get("suitable-finder")) {
           }
         }
         window.tabCenters = tabCenters;
+        this.updateSliderStyles(tabCenters);
+      }
+
+      updateSliderStyles(tabCenters) {
+        let styleEl = document.getElementById("slider-thumb-styles");
+        if (!styleEl) {
+          styleEl = document.createElement("style");
+          styleEl.id = "slider-thumb-styles";
+          this.appendChild(styleEl);
+        }
+
+        const thumbWidth = parseInt(this._sizeDot);
+        let css = "";
+
+        tabCenters.forEach((center, index) => {
+          const tabValue = index + 1;
+          css += `
+          .custom-range[value="${tabValue}"]::-webkit-slider-thumb {
+            left: ${center - thumbWidth}px !important;
+          }
+          .custom-range[value="${tabValue}"]::-moz-range-thumb {
+            left: ${center - thumbWidth}px !important;
+          }
+          `;
+        });
+        styleEl.textContent = css;
       }
 
       positionThumbExactly() {
@@ -99,11 +119,24 @@ if (!customElements.get("suitable-finder")) {
         const index = tabNumber - 1;
         if (window.tabCenters && window.tabCenters[index]) {
           const exactPosition = window.tabCenters[index];
-          const thumbWidth = parseInt(this._sizeDot);
           this._rangeSlider.style.setProperty(
             "--progress-width",
-            `${exactPosition - thumbWidth / 2}px`
+            `${exactPosition}px`
           );
+          let thumbStyle = document.getElementById("exact-thumb-position");
+          if (!thumbStyle) {
+            thumbStyle = document.createElement("style");
+            thumbStyle.id = "exact-thumb-position";
+            this.appendChild(thumbStyle);
+          }
+
+          const cssRule = `
+            .custom-range[value="${tabNumber}"]::before {
+              left: ${exactPosition}px !important;
+            }
+          `;
+
+          thumbStyle.textContent = cssRule;
         }
       }
 
