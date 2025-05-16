@@ -139,7 +139,7 @@
               {%- for block in section.blocks -%}
                 <div
                   {{ block.shopify_attributes }}
-                  class="blog-subscribe flex column justify-center p-30 p-1025-40 text-center rounded blog-subscribe bg-secondary"
+                  class="blog-subscribe flex column justify-center p-30{% if section_st.post_per_row_desktop < 4 %} p-1025-40{% else %} p-1025-20{% endif %} text-center rounded blog-subscribe bg-secondary"
                   id="blocks blog-subscribe-{{ block.id }}"
                 >
                   {% if block.settings.form_title != blank or block.settings.form_description != blank %}
@@ -408,9 +408,9 @@
       "type": "range",
       "id": "post_per_row_desktop",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "step": 1,
-      "default": 4,
+      "default": 3,
       "label": "t:sections.main-blog.settings.post_per_row_desktop.label"
     },
     {

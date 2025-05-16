@@ -32,7 +32,7 @@
               {% if block_st.show_category or block_st.show_tags %}
                 <ul class="flex wrap align-center list-unstyled gap-10">
                   {% if block_st.show_category %}
-                    <li class="blog-tag inline-block bg-sale btn-rounded">
+                    <li class="blog-meta-link blog-tag inline-block bg-sale btn-rounded">
                       <a
                         class="blog-category fs-13 px-15 py-4 pointer"
                         href="{{ blog.url }}"
@@ -44,7 +44,7 @@
                   {% endif %}
                   {% if block.settings.show_tags and article.tags.size > 0 %}
                     {% for tag in article.tags limit: 8 %}
-                      <li class="blog-tag pointer inline-block bg-sale btn-rounded fs-13 px-15 py-4">
+                      <li class="blog-meta-link blog-tag pointer inline-block bg-sale btn-rounded fs-13">
                         {{- tag | link_to_tag: tag -}}
                       </li>
                     {% endfor %}
@@ -428,34 +428,38 @@
                         <use href="#icon-error"></use>
                       </svg>
                       {{ 'templates.contact.form.error_heading' | t }}
+                      <ul class="gap-5">
+                        {%- for field in form.errors -%}
+                          <li>
+                            <a
+                              href="#CommentForm-{{ field }}"
+                              class="link color-inherit"
+                              aria-label="{{ 'blogs.article.message' | t }}"
+                            >
+                              {%- if form.errors.translated_fields[field] contains 'author' -%}
+                                {{ 'blogs.article.name' | t }}
+                              {%- elsif form.errors.translated_fields[field] contains 'body' -%}
+                                {{ 'blogs.article.message' | t }}
+                              {%- else -%}
+                                {{ form.errors.translated_fields[field] }}
+                              {%- endif -%}
+                              {{ form.errors.messages[field] }}
+                            </a>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
                     </div>
-                    <ul class="gap-5">
-                      {%- for field in form.errors -%}
-                        <li>
-                          <a
-                            href="#CommentForm-{{ field }}"
-                            class="link color-inherit"
-                            aria-label="{{ 'blogs.article.message' | t }}"
-                          >
-                            {%- if form.errors.translated_fields[field] contains 'author' -%}
-                              {{ 'blogs.article.name' | t }}
-                            {%- elsif form.errors.translated_fields[field] contains 'body' -%}
-                              {{ 'blogs.article.message' | t }}
-                            {%- else -%}
-                              {{ form.errors.translated_fields[field] }}
-                            {%- endif -%}
-                            {{ form.errors.messages[field] }}
-                          </a>
-                        </li>
-                      {%- endfor -%}
-                    </ul>
                   {%- elsif form.posted_successfully? -%}
                     <div class="form-status form__message success mb-15" role="status">
-                      <div class="form-status flex  align-center gap-10" tabindex="-1" autofocus>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                          <use href="#icon-success">
-                        </svg>
-                        {{ post_message | t }}
+                      <div class="form-status flex align-center gap-10" tabindex="-1" autofocus>
+                        <div class="flex-1 flex content-center">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <use href="#icon-success">
+                          </svg>
+                        </div>
+                        <div>
+                          {{ post_message | t }}
+                        </div>
                       </div>
                     </div>
                   {%- endif -%}

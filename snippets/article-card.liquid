@@ -8,7 +8,7 @@
         style="--col-width: 66%;--gap: 0px;"
       {% endif %}
     >
-      <div class="{% if is_featured_blog %}col-1025-w-custom{% else %}article_post-image mb-20{% endif %}">
+      <div class="{% if is_featured_blog %}col-1025-w-custom{% else %}article_post-image mb-20{% endif %} blog-meta-link">
         {%- if show_image == true and article.image -%}
           {%- liquid
             assign alt = article.title | escape
@@ -46,13 +46,13 @@
         class="card__content{% if is_featured_blog %} col-1025-remaining flex column p-30 p-1025-50 bg-secondary text-{{ content_alignment }} align-{{ content_alignment }} justify-content-{{ vertical_alignment }}{% endif %}"
       >
         {%- if show_tags or show_cate -%}
-          <ul class="list-unstyled p-0 m-0 mb-10 flex wrap gap-5{% if is_featured_blog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}{% if isPageBlog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
+          <ul class="list-meta-article list-unstyled p-0 m-0 mb-10 flex wrap gap-5{% if is_featured_blog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}{% if isPageBlog %} text-{{ content_alignment }} justify-content-{{ content_alignment }}{% endif %}">
             {%- if show_cate -%}
               {% assign blog_name = article.handle | split: '/' | first %}
               {% if blog_name != blank %}
-                <li class="blog-meta-tag blog-cate inline-flex align-center">
+                <li class="blog-meta-link blog-cate inline-flex align-center">
                   <a
-                    class="post-tags blog-cate inline-block bg-sale btn-rounded fs-13 px-15 py-4 pointer"
+                    class="inline-block bg-sale btn-rounded fs-13 px-15 py-4 pointer"
                     href="{{ blog.url }}"
                     aria-label="blog category"
                   >
@@ -64,7 +64,7 @@
             {% if show_tags %}
               {% if article.tags.size > 0 %}
                 {% for tag in article.tags limit: 5 %}
-                  <li class="blog-tag bg-sale inline-flex align-center inline-block color-white btn-rounded fs-13 px-15 py-4 relative pointer-none">
+                  <li class="blog-meta-link blog-tag bg-sale inline-flex align-center inline-block color-white btn-rounded fs-13 relative pointer-none">
                     {% if current_tags contains tag %}
                       {{ tag }}
                     {% else %}

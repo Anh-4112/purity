@@ -140,7 +140,6 @@ class ScrollOffer extends HTMLElement {
   handleKeydown(event) {
     if (event.key === "Enter") {
       this.initPopup();
-      console.log("display");
     }
   }
 
