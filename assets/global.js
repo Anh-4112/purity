@@ -274,6 +274,8 @@ export async function eventModal(
 
 function removeModalAction(modal_element) {
   root.classList.remove("open-modal");
+  root.classList.remove("open-modal-shopable-video");
+  root.classList.remove("open-modal-offer-popup");
   root.style.removeProperty("padding-right");
   modal_element
     .querySelectorAll("button")

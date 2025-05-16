@@ -51,12 +51,11 @@
     assign column_gap_mb = 5
   endif
   assign block_size = section.blocks.size
-  assign size_dot_range_slider = 36
+  assign size_dot_range_slider = 40
   assign total_gap = block_size | minus: 1
   assign total_gap_size = 30 | times: total_gap
   assign image_collection_width = section_st.image_collection_width
   assign width_range_slider = image_collection_width | times: block_size | plus: total_gap_size
-  assign space_left = image_collection_width | minus: size_dot_range_slider | divided_by: 2
   assign animate_delay = 25
 -%}
 {%- capture style -%} --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--image-collection-width: {{ image_collection_width }}px;--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
@@ -124,6 +123,7 @@
     {%- endif -%}
     <suitable-finder
       data-size-dot="{{ size_dot_range_slider }}"
+      data-spacing="30"
     >
       <div class="product-tabs__header flex column align-center type-{{ section_st.media_type }} mb-40 mb-md-50">
         <slide-section
@@ -262,6 +262,7 @@
                 data-block-id="{{ block.id }}"
                 tabindex="0"
                 data-position="{{ forloop.index }}"
+                data-tab-id="tab-{{ forloop.index }}"
                 {{ block.shopify_attributes }}
               >
                 <div
@@ -311,18 +312,17 @@
         </div>
         {%- if section_st.show_range_slider -%}
           <range-slider
-            class="relative w-full max-w-custom block"
-            style="--bg-color-custom: {{ section_st.range_slider_background }};--progress-width: {{ space_left }}px;--width-range-slider: {{ width_range_slider }}px;--max-width: var(--width-range-slider);--height: 4px;"
+            class="relative w-full max-w-custom-md block"
+            style="--thumb-size:{{ size_dot_range_slider }}px;--bg-color-custom: {{ section_st.range_slider_background }};--width-range-slider: {{ width_range_slider }}px;--max-width: var(--width-range-slider);--height: 4px;"
           >
-            <div class="bg-custom overflow-hidden h-custom btn-rounded"></div>
-            <span
-              class="product-tabs__dot pointer absolute w-custom h-custom inline-flex content-center"
-              style="--width: 3.6rem; --height: 3.6rem"
+            <input
+              type="range"
+              min="1"
+              max="{{ section.blocks.size }}"
+              value="1"
+              step="1"
+              class="m-0 w-full max-w-custom-md relative bg-custom custom-range"
             >
-              <svg width="26" height="26" fill="none">
-                <circle cx="13" cy="13" r="11.5" fill="#000" stroke="#fff" stroke-width="3"/><circle cx="13" cy="13" r="3" fill="#fff"/>
-              </svg>
-            </span>
           </range-slider>
         {%- endif -%}
       </div>

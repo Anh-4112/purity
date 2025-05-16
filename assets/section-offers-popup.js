@@ -36,7 +36,7 @@ class ScrollOffer extends HTMLElement {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.attributeName === "class") {
-            const isModalOpen = rootElement.classList.contains("open-modal");
+            const isModalOpen = rootElement.classList.contains("open-modal-offer-popup");
             this.isPopupOpen = isModalOpen;
   
             if (isModalOpen) {
@@ -83,6 +83,7 @@ class ScrollOffer extends HTMLElement {
       NextSkyTheme.eventModal(offerWrapper, "close", false);
     }
     NextSkyTheme.eventModal(offerWrapper, "open", false);
+    document.documentElement.classList.add("open-modal-offer-popup");
     NextSkyTheme.global.rootToFocus = this;
     new LazyLoader(".image-lazy-load");
   }
@@ -157,6 +158,11 @@ class ScrollOffer extends HTMLElement {
         e.preventDefault();
         e.stopPropagation();
         this.hideAndSetCookie();
+      });
+      closeButton.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          this.hideAndSetCookie();
+        }
       });
     }
 

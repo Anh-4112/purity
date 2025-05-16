@@ -1782,6 +1782,9 @@ quantity-input input {
   .sticky-md {
     position: sticky;
   }
+  .max-w-custom-md {
+    max-width: var(--max-width);
+  }
 }
 @media (min-width: 768px) and (max-width: 1024.99px) {
   .col-md-w-custom-50 {
@@ -2222,4 +2225,80 @@ range-slider span {
   .tab-image.active {
     opacity: 1;
   }
+}
+
+range-slider {
+  --height: 4px;
+  --thumb-border: 4px;
+  width: 100%;
+  display: block;
+  position: relative;
+}
+
+.custom-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: var(--height);
+  background: var(--bg-color-custom);
+  border-radius: 9999px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Thumb styling */
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  opacity: 0;
+}
+
+.custom-range::-moz-range-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  opacity: 0;
+}
+
+.custom-range::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: var(--progress-width);
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  transform: translate(-50%, -50%);
+  background: transparent
+  url("data:image/svg+xml,%3Csvg%20width%3D%2726%27%20height%3D%2726%27%20fill%3D%27none%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Ccircle%20cx%3D%2713%27%20cy%3D%2713%27%20r%3D%2711.5%27%20fill%3D%27%23000%27%20stroke%3D%27%23fff%27%20stroke-width%3D%273%27/%3E%3Ccircle%20cx%3D%2713%27%20cy%3D%2713%27%20r%3D%273%27%20fill%3D%27%23fff%27/%3E%3C/svg%3E")
+  no-repeat center;
+  box-shadow: unset;
+  background-size: 26px 26px;
+  backface-visibility: hidden;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: 0;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: left;
+}
+
+.custom-range:active::before {
+  transform: translate(-50%, -50%) scale(1.1);
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s;
+}
+
+/* Track fallback for Firefox */
+.custom-range::-moz-range-track {
+  background: var(--bg-color-custom);
+  height: var(--height);
+  border-radius: 9999px;
+}
+
+.custom-range {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }

@@ -103,6 +103,14 @@
                   endif
                 endfor
                 assign video_poster = video.preview_image | image_url: width: 1100
+                assign video_alt = block_st.video_alt_text
+                if video_alt != blank
+                  assign video_alt = video_alt | escape
+                else
+                  assign video_alt = video.alt | escape
+                else
+                  assign video_alt = 'accessibility.video' | t
+                endif
               -%}
               <video-local-scroll style="--aspect-ratio: {{ ratio }};" class="absolute">
                 <div class="video-thumbnail absolute" style="--aspect-ratio: {{ ratio }}">
@@ -124,6 +132,7 @@
                     playsinline
                     autoplay
                     muted
+                    title="{{ video_alt }}"
                   ></video>
                 </template>
               </video-local-scroll>
@@ -370,6 +379,13 @@
           "id": "video",
           "label": "t:sections.all.video.label",
           "info": "t:sections.all.video.info"
+        },
+        {
+          "type": "text",
+          "id": "video_alt_text",
+          "label": "t:sections.video.settings.alt_description.label",
+          "info": "t:sections.video.settings.alt_description.info",
+          "default": "Video alt text"
         }
       ]
     }
