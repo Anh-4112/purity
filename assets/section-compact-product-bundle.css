@@ -4,8 +4,8 @@
 @media (min-width: 1025px) {
   .bundle-products__body .product__information {
     position: relative;
-    width: calc(100% - 4.4rem - 8rem);
-    padding-inline-end: 11rem;
+    width: calc(100% - 15rem);
+    padding-inline-end: 15rem;
     padding-bottom: 2rem;
   }
   .bundle-products__body :is(.product__price, .product-item__price) {
@@ -13,7 +13,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    max-width: 12rem;
+    max-width: 15rem;
     margin-top: 0;
   }
   .bundle-products__body .product__price .card-product-price {
@@ -28,7 +28,7 @@
     calc(-1 * var(--position-top))
   );
 }
-.bundle-products-hotspot:focus-visible{
+.bundle-products-hotspot:focus-visible {
   outline: 0.2rem solid rgba(var(--color-heading-rgb), 0.9);
   outline-offset: -2px;
 }
@@ -43,6 +43,9 @@
   border-radius: 50%;
   z-index: -1;
   animation: ripple 1s infinite;
+}
+.bundle-products__image .icon-dot.rounded-50 {
+  clip-path: unset;
 }
 @keyframes ripple {
   0% {
@@ -73,14 +76,17 @@ bundle-item product-form.quick-add button {
   opacity: 1;
   pointer-events: visible;
 }
-.bundle-products.is-hover .bundle-products-link.active .icon-dot {
-  transform: scale(1.2);
-}
 .bundle-products .bundle-item .add-cart-bundle:is(:focus, :focus-visible) {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0rem);
+}
+@media (min-width: 1025px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .bundle-products.is-hover .bundle-products-link.active .icon-dot {
+    background: var(--color-dark);
+    color: rgb(var(--color-white));
+  }
 }
 @media screen and (min-width: 1025px) {
   .bundle-products .bundle-item .add-cart-bundle {

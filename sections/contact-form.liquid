@@ -135,6 +135,7 @@
                 {% endif %}
                 placeholder="{{ section_st.email_placeholder }} *"
                 required
+                pattern=".+\.[a-zA-Z]{2,6}"
               >
               <label class="field__label visually-hidden" for="ContactFormEmail-{{ section.id }}">
                 {{ 'templates.contact.form.email' | t }}
@@ -163,7 +164,7 @@
               name="contact[subject]"
               required
             >
-              <option value="" disabled selected>{{ 'templates.contact.subject.name' | t }}</option>
+              <option value="" disabled selected>{{ 'templates.contact.subject.name' | t }} *</option>
             </select>
             <select-contact text="{{ section_st.option_select }}"></select-contact>
             <label for="ContactFormSubject-{{ section.id }}" class="visually-hidden">

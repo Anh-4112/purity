@@ -353,6 +353,7 @@ mark {
 }
 /* Style the checkmark/indicator */
 .checkmark:before {
+  --color-border: #c4c4c4;
   content: "";
   display: inline-flex;
   width: var(--checkmark_width, 28px);
@@ -416,8 +417,8 @@ input[type="checkbox"]:checked + .checkmark:before {
   max-width: var(--max-width);
 }
 .cart-count {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 2rem;
+  height: 2rem;
   right: 0;
   top: 5px;
   line-height: 1;
@@ -1512,6 +1513,9 @@ body:not(.template-index) .transparent-logo {
   [data-free-scroll="false"].reveal_on_scroll {
     overflow: hidden;
   }
+  .modal.invisible {
+    will-change: opacity;
+  }
 }
 .shopify-payment-button__more-options.shopify-payment-button__skeleton {
   width: 100%;
@@ -1816,10 +1820,10 @@ quantity-input input {
 }
 @media (min-width: 1025px) {
   .logo-left .level-1 {
-    padding-inline: 1.75rem;
+    padding-inline: clamp(1.2rem, 1vw, 1.75rem);
   }
   .logo-center .level-1 {
-    padding-inline-end: 3.5rem;
+    padding-inline-end: clamp(2.4rem, 2vw, 3.5rem);
   }
   .swiper:not([class*="initialized"]) .swiper-slide {
     width: calc(
@@ -2078,10 +2082,12 @@ th {
 }
 :where(.drawer-left-mb) {
   transform: translateX(-100%);
+  -webkit-transform: translateX(-100%);
   will-change: transform;
 }
 .drawer-right-mb {
   transform: translateX(100%);
+  -webkit-transform: translateX(100%);
   will-change: transform;
 }
 .drawer-bottom {

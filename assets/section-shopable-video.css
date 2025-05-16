@@ -23,7 +23,7 @@
   transform: translateX(100%);
 }
 .sticky-video.active {
-  transform: translateX(-3rem);
+  transform: translateX(var(--bs-gutter-x));
 }
 @media screen and (min-width: 768px) {
   .sticky-video {
@@ -31,6 +31,9 @@
   }
 }
 @media screen and (min-width: 1025px) {
+  .sticky-video.active {
+    transform: translateX(-3rem);
+  }
   .modal-nav {
     --swiper-navigation-sides-offset: 0;
     opacity: 0;

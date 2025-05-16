@@ -17,6 +17,7 @@ function initSlide(_this) {
   const effect = _this?.dataset.effect ? _this?.dataset.effect : "slide";
   const row = _this?.dataset.row ? _this?.dataset.row : 1;
   let spacing = _this?.dataset.spacing ? _this?.dataset.spacing : 30;
+  let spacingMobile = spacing;
   const pagination = _this?.dataset.pagination
     ? _this?.dataset.pagination
     : "bullets";
@@ -25,6 +26,7 @@ function initSlide(_this) {
   const mutedVideo = _this?.dataset.mutedVideo === "true";
   const pauseOnMouseEnter = _this?.dataset.pauseOnMouseEnter === "true";
   spacing = Number(spacing);
+  spacingMobile = Number(spacingMobile);
   autoPlaySpeed = Number(autoPlaySpeed);
   speed = Number(speed);
   if (autoplay) {
@@ -38,6 +40,13 @@ function initSlide(_this) {
     } else {
       itemTablet = 3;
     }
+  }
+  if (spacingMobile > 15) {
+    spacingMobile = 15;
+  } else if (spacingMobile > 10) {
+    spacingMobile = 10;
+  } else if (spacingMobile > 5) {
+    spacingMobile = 5;
   }
   if (direction == "vertical" || heightAuto) {
     _this.style.maxHeight = _this.offsetHeight + "px";
@@ -53,7 +62,7 @@ function initSlide(_this) {
   }
   const swiper = new Swiper(_this, {
     slidesPerView: freeMode ? "auto" : autoItem ? "auto" : itemMobile,
-    spaceBetween: freeMode ? spacing : spacing >= 10 ? 10 : spacing,
+    spaceBetween: spacingMobile,
     mousewheel: mousewheel,
     autoplay: autoplay,
     direction: direction,
@@ -84,7 +93,7 @@ function initSlide(_this) {
     breakpoints: {
       768: {
         slidesPerView: itemTablet,
-        spaceBetween: spacing >= 30 ? 30 : spacing,
+        spaceBetween: spacing,
       },
       1025: {
         slidesPerView: itemDesktop,
@@ -200,6 +209,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
   let loop = true;
   let speed = 300;
   let spaceBetween = _this?.dataset.spacing ? _this?.dataset.spacing : 10;
+  let spacingMobile = spaceBetween;
   let mousewheel = false;
   let itemMobile = gallery == "thumbnail" ? 5 : 1;
   let direction = _this.dataset.thumbDirection
@@ -257,9 +267,16 @@ function initSlideMedia(_this, gallery, thumbnail) {
     loop = false;
     speed = 150;
   }
+  if (spacingMobile > 15) {
+    spacingMobile = 15;
+  } else if (spacingMobile > 10) {
+    spacingMobile = 10;
+  } else if (spacingMobile > 5) {
+    spacingMobile = 5;
+  }
   const swiperSlide = new Swiper(swiperElement, {
     slidesPerView: itemMobile,
-    spaceBetween: spaceBetween,
+    spaceBetween: spacingMobile,
     autoplay: false,
     mousewheel: mousewheel,
     speed: speed,
@@ -275,6 +292,7 @@ function initSlideMedia(_this, gallery, thumbnail) {
     breakpoints: {
       768: {
         direction: direction,
+        spaceBetween: spaceBetween,
       },
     },
     pagination: {

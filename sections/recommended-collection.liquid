@@ -30,11 +30,11 @@
   endif
   if column_gap_slide == 0 and has_custom_background
     if section_st.image_desktop_position == 'left'
-      assign radius_image_class = 'rounded-1025-left rounded-top-mb'
-      assign radius_content_class = 'rounded-1025-right rounded-bottom-mb'
+      assign radius_image_class = 'rounded-1025-left rounded-bottom-mb'
+      assign radius_content_class = 'rounded-1025-right rounded-top-mb'
     else
-      assign radius_image_class = 'rounded-1025-right rounded-top-mb'
-      assign radius_content_class = 'rounded-1025-left rounded-bottom-mb'
+      assign radius_image_class = 'rounded-1025-right rounded-bottom-mb'
+      assign radius_content_class = 'rounded-1025-left rounded-top-mb'
     endif
     if section_st.section_width == 'full_width'
       assign radius_image_class = ''
@@ -98,7 +98,7 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    top: calc(100% + 3px);
+    top: calc(100% - 2px);
   }
   .recommend-prose {
     line-height: 3;
@@ -113,7 +113,7 @@
   }
 {% endstyle %}
 {% capture title_replace %}
-  <select-options class="title-select relative px-15 pointer lh-global">
+  <select-options class="title-select relative px-15 pointer lh-global inline-flex">
     {% if split_array.size > 0 %}
       {% liquid
         assign first_item = split_array[0]
@@ -145,7 +145,7 @@
   </select-options>
 {% endcapture %}
 {% capture replace_collection %}
-  <select-options class="collection-select relative px-15 pointer lh-global">
+  <select-options class="collection-select relative px-15 pointer lh-global inline-flex">
     {% if split_collection.size > 0 %}
       {% liquid
         assign first_item = split_collection[0]

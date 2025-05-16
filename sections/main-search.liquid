@@ -159,7 +159,7 @@
   </div>
   <div
     id="ProductsGridContainer"
-    class="{{ section_width }} filter-layout {{ filter_layout }}-filter{% if enable_filtering and filter_layout == 'vertical' %} flex gap{% endif %} search__results-value"
+    class="{{ section_width }} section filter-layout {{ filter_layout }}-filter{% if enable_filtering and filter_layout == 'vertical' %} flex gap{% endif %} search__results-value"
     {% if enable_filtering and filter_layout == 'vertical' %}
       style="--col-width: 30rem;--gap-desktop: 6rem;--gap: 3rem;"
     {% endif %}
@@ -200,7 +200,8 @@
                 </button>
                 <facet-drawer
                   id="{{ section.id }}"
-                  class="modal invisible transition-drawer fixed z-15 inset-0 pointer-none active-modal-js content-hidden"
+                  class="modal invisible transition-drawer fixed inset-0 z-15 pointer-none active-modal-js content-hidden"
+                  style="--drawer-width: 45rem;"
                   drawer
                 >
                   <modal-overlay class="modal-overlay pointer"></modal-overlay>
@@ -271,7 +272,7 @@
                 <form class="facets-vertical-form relative" id="FacetSortForm">
                   {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
                   <div class="select-custom facet-filters heading-color py-10">
-                    <select-sorter class="select-selected flex gap-5 align-center pointer rotate-animate">
+                    <select-sorter class="select-selected flex gap-10 align-center pointer rotate-animate">
                       <label>
                         {{- 'products.facets.sort_by_label' | t }}
                       </label>
@@ -296,10 +297,13 @@
                       id="SortBy"
                       style="--min-width: 22rem;"
                     >
-                      <div class="facet-filters__select">
+                      <div
+                        class="facet-filters__select flex column gap"
+                        style="--gap-desktop: 8px; --gap: 8px;"
+                      >
                         {%- for option in search.sort_options -%}
                           <filter-sort
-                            class="block transition text-color py-4 pointer"
+                            class="block text-color pointer align-self-start outlined-border"
                             value="{{ option.value | escape }}"
                             {% if option.value == sort_by %}
                               selected="selected"
@@ -412,6 +416,7 @@
                   </h2>
                   <a
                     href="{{ routes.all_products_collection_url }}"
+                    class="inline-block btn btn-primary mt-30"
                     aria-label="{{- 'general.continue_shopping' | t -}}"
                   >
                     {{- 'general.continue_shopping' | t -}}

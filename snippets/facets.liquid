@@ -31,9 +31,12 @@
           >
             <details class="collapsible-row detail-open" is="collapsible-row" open>
               <summary class="collapsible-row__summary h6">
-                <span class="inline-flex">
+                <span class="inline-flex gap align-center" style="--gap-desktop: 6px;--gap: 6px;">
                   {{- filter.label | escape }}
-                  <span class="facets__selected{% if filter.active_values.size == 0 %} hidden{% else %} inline-flex{% endif %}">
+                  <span
+                    class="facets__selected{% if filter.active_values.size == 0 %} hidden{% else %} inline-flex flex-auto w-custom h-custom rounded-50 bg-dark color-white fs-12 content-center{% endif %}"
+                    style="--width: 2.3rem; --height: 2.3rem;"
+                  >
                     {{ filter.active_values.size -}}
                   </span>
                 </span>
@@ -333,7 +336,10 @@
     {% endif %}
   </form>
   {% if filter_layout == 'drawer' %}
-    <div class="filter-action-bottom sticky bottom-0 bg-white drawer-spacing shadow z-1">
+    <div
+      class="filter-action-bottom sticky bottom-0 bg-white drawer-spacing shadow z-1"
+      style="--padding-block-desktop: 2rem;"
+    >
       <facet-apply-canvas
         class="btn btn-primary w-full block text-center"
         tabindex="0"

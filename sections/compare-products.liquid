@@ -58,6 +58,9 @@
       align-items: center;
       display: flex;
     }
+    .compare-table-products .compare-row:last-child .compare-field {
+      border-bottom: none;
+    }
     @media (min-width: 768px) {
       .compare-field {
         --field-heading: 16.8rem;
@@ -212,7 +215,6 @@
                     {% render 'placeholder-render' %}
                   </div>
                 {%- endif -%}
-                {% render 'product-badges', scope: 'item', card_product: product %}
               </a>
             </div>
             <a
