@@ -51,7 +51,7 @@
     assign column_gap_mb = 5
   endif
   assign block_size = section.blocks.size
-  assign size_dot_range_slider = 36
+  assign size_dot_range_slider = 40
   assign total_gap = block_size | minus: 1
   assign total_gap_size = 30 | times: total_gap
   assign image_collection_width = section_st.image_collection_width
@@ -314,7 +314,7 @@
         {%- if section_st.show_range_slider -%}
           <range-slider
             class="relative w-full max-w-custom-md block"
-            style="--bg-color-custom: {{ section_st.range_slider_background }};--progress-width: {{ space_left }}px;--width-range-slider: {{ width_range_slider }}px;--max-width: var(--width-range-slider);--height: 4px;"
+            style="--thumb-size:{{ size_dot_range_slider }}px;--bg-color-custom: {{ section_st.range_slider_background }};--progress-width: {{ space_left }}px;--width-range-slider: {{ width_range_slider }}px;--max-width: var(--width-range-slider);--height: 4px;"
           >
             <input
               type="range"
