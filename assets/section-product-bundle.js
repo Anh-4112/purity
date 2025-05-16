@@ -121,8 +121,16 @@ if (!customElements.get("product-form-bundle")) {
         );
         if (bundleItems.length >= minimum) {
           submitButton.classList.remove("disabled");
+          console.log("Bundle button enabled");
+
+          submitButton.removeAttribute("aria-disabled");
+          submitButton.removeAttribute("disabled");
         } else {
           submitButton.classList.add("disabled");
+          console.log("Bundle button disabled");
+          submitButton.setAttribute("aria-disabled", true);
+          submitButton.setAttribute("disabled", true);
+          submitButton.setAttribute("tabindex", -1);
         }
 
         const buttonAddBundle = this.bundle.querySelectorAll(
@@ -131,6 +139,8 @@ if (!customElements.get("product-form-bundle")) {
         if (bundleItems.length >= maximum) {
           buttonAddBundle.forEach((button) => {
             button.classList.add("disabled");
+            button.setAttribute("disabled", true);
+            button.setAttribute("aria-disabled", true);
           });
         }
       }
@@ -171,6 +181,9 @@ class ButtonSubmitBundle extends HTMLElement {
     this.submitButton = this;
     this.sectionId = this.dataset.sectionId;
     this.addEventListener("click", this.onSubmitHandler.bind(this));
+    this.setAttribute("aria-disabled", true);
+    this.setAttribute("disabled", true);
+    this.setAttribute("tabindex", -1);
     this.cart = document.querySelector("cart-drawer");
     this.wrapper = this.closest("build-your-routine");
     this.minimum = this.wrapper.dataset.minimum;
@@ -312,6 +325,8 @@ class ButtonSubmitBundle extends HTMLElement {
     bundleBtnAddCart.forEach((button) => {
       if (button.classList.contains("disabled")) {
         button.classList.remove("disabled");
+        button.removeAttribute("disabled");
+        button.removeAttribute("aria-disabled");
         button.textContent = window.cartStrings?.add_to_bundle;
       }
     });
@@ -321,9 +336,16 @@ class ButtonSubmitBundle extends HTMLElement {
     }
 
     if (itemCount >= this.minimum) {
+      console.log("Bundle button enabled");
       this.classList.remove("disabled");
+      this.removeAttribute("aria-disabled");
+      this.removeAttribute("disabled");
+      this.setAttribute("tabindex", 0);
     } else {
       this.classList.add("disabled");
+      this.setAttribute("aria-disabled", true);
+      this.setAttribute("disabled", true);
+      this.setAttribute("tabindex", -1);
     }
   }
 }
@@ -464,6 +486,8 @@ class BundleCartRemoveButton extends HTMLElement {
       );
       if (!isInBundle) {
         button.classList.remove("disabled");
+        button.removeAttribute("disabled");
+        button.removeAttribute("aria-disabled");
         button.textContent = window.cartStrings?.add_to_bundle;
       }
     });
@@ -765,21 +789,21 @@ class BundleHeader extends HTMLElement {
   }
 
   init() {
-  const mediaQuery = window.matchMedia('(max-width: 1024.98px)');
-  const handleMediaQueryChange = (mediaQuery) => {
-    if (mediaQuery.matches) {
-      this.style.pointerEvents = "auto";
-      this._content.style.height = 0;
-      Motion.press(this._title, (event) => {
-        this.onHeaderClicked(event);
-      });
-    }else{
-      this.style.pointerEvents = "none";
-      this._content.style.height = "auto";
-    }
-  };
-  handleMediaQueryChange(mediaQuery);
-  mediaQuery.addEventListener('change', handleMediaQueryChange);
+    const mediaQuery = window.matchMedia("(max-width: 1024.98px)");
+    const handleMediaQueryChange = (mediaQuery) => {
+      if (mediaQuery.matches) {
+        this.style.pointerEvents = "auto";
+        this._content.style.height = 0;
+        Motion.press(this._title, (event) => {
+          this.onHeaderClicked(event);
+        });
+      } else {
+        this.style.pointerEvents = "none";
+        this._content.style.height = "auto";
+      }
+    };
+    handleMediaQueryChange(mediaQuery);
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
   }
 
   onHeaderClicked(event) {
@@ -794,10 +818,10 @@ class BundleHeader extends HTMLElement {
       this._content,
       isOpen
         ? {
-            height: "auto"
+            height: "auto",
           }
         : {
-            height: 0
+            height: 0,
           },
       transition
     );
