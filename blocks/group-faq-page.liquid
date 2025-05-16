@@ -8,7 +8,7 @@
   .group__faqs-content .shopify-block:last-of-type details {
     padding-bottom: 0;
   }
-  .group__faqs-content .shopify-block:last-of-type .section__faq-items{
+  .group__faqs-content .shopify-block:last-of-type .section__faq-items {
     border-bottom: 0;
   }
 {% endstyle %}
@@ -16,15 +16,26 @@
   class="group__faqs-content w-full"
 >
   <div class="w-full{% if block_st.framed %} rounded border  p-20 p-1025-40{% endif %}">
-      <h2
-        class="heading-letter-spacing mb-25"
-        {{ block.shopify_attributes }}
-      >
-        <span>{{ block_st.heading }}</span>
-      </h2>
+    <h2
+      class="heading-letter-spacing mb-25"
+      {{ block.shopify_attributes }}
+    >
+      <span>{{ block_st.heading }}</span>
+    </h2>
     {% content_for 'blocks' %}
   </div>
 </div>
+<script>
+  const faqContainer_item = document.querySelector('.group__faqs-content');
+  if (faqContainer_item) {
+    const firstDetails_item = faqContainer_item.querySelector('details');
+
+    if (firstDetails_item) {
+      firstDetails_item.classList.add('detail-open');
+      firstDetails_item.setAttribute('open', '');
+    }
+  }
+</script>
 {% schema %}
 {
   "name": "t:sections.faq.name",
