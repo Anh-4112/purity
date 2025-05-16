@@ -10,6 +10,7 @@ class ScrollOffer extends HTMLElement {
     this.initialized = false;
     this.cookieName = "scroll_offer_hidden";
     this.sectionId = this.dataset.sectionId;
+    this.isPopupOpen = false;
     this.initMobile();
   }
 
@@ -21,6 +22,7 @@ class ScrollOffer extends HTMLElement {
     } else {
       this.initialize();
     }
+
     if (window.Shopify && window.Shopify.designMode) {
       const _self = this;
       document.addEventListener("shopify:section:select", (event) => {
@@ -28,6 +30,36 @@ class ScrollOffer extends HTMLElement {
       });
       document.addEventListener("shopify:section:deselect", () => {
         _self.closePopup();
+      });
+    }else{
+      const rootElement = document.documentElement;
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === "class") {
+            const isModalOpen = rootElement.classList.contains("open-modal-offer-popup");
+            this.isPopupOpen = isModalOpen;
+  
+            if (isModalOpen) {
+              this.hide();
+              if (this._scrollHandler) {
+                window.removeEventListener(
+                  "scroll",
+                  this.handleScroll.bind(this)
+                );
+              }
+            } else {
+              if (this._scrollHandler) {
+                window.addEventListener("scroll", this.handleScroll.bind(this));
+              }
+              this.handleScroll();
+            }
+          }
+        });
+      });
+  
+      observer.observe(rootElement, {
+        attributes: true,
+        attributeFilter: ["class"],
       });
     }
   }
@@ -51,6 +83,7 @@ class ScrollOffer extends HTMLElement {
       NextSkyTheme.eventModal(offerWrapper, "close", false);
     }
     NextSkyTheme.eventModal(offerWrapper, "open", false);
+    document.documentElement.classList.add("open-modal-offer-popup");
     NextSkyTheme.global.rootToFocus = this;
     new LazyLoader(".image-lazy-load");
   }
@@ -58,6 +91,8 @@ class ScrollOffer extends HTMLElement {
   closePopup() {
     const offerWrapper = document.querySelector("offer-popup");
     NextSkyTheme.eventModal(offerWrapper, "close", false);
+    this.isPopupOpen = false;
+    this.handleScroll();
   }
 
   initMobile() {
@@ -124,6 +159,11 @@ class ScrollOffer extends HTMLElement {
         e.stopPropagation();
         this.hideAndSetCookie();
       });
+      closeButton.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          this.hideAndSetCookie();
+        }
+      });
     }
 
     this.style.opacity = "0";
@@ -147,7 +187,7 @@ class ScrollOffer extends HTMLElement {
   }
 
   handleScroll() {
-    if (this.checkIfHidden()) return;
+    if (this.checkIfHidden() || this.isPopupOpen) return;
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     if (scrollTop > this.scrollThreshold && !this.isVisible) {
       this.show();
