@@ -17,6 +17,7 @@ if (!customElements.get("suitable-finder")) {
 
       connectedCallback() {
         super.connectedCallback();
+        if (!this._tabRange) return
         this._tabHeaderContent = this.querySelector(
           ".product-tabs__header-content"
         );
@@ -148,6 +149,7 @@ if (!customElements.get("suitable-finder")) {
 
       updateTabDisplay(blockId, animate = true) {
         super.updateTabDisplay(blockId, animate);
+        if (!this._tabRange) return
         const activeTab = this.querySelector(
           `.product-tabs__header-item-js[data-block-id=${blockId}]`
         );
