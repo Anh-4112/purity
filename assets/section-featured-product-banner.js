@@ -1,3 +1,21 @@
+function throttle(func, delay) {
+  let lastCall = 0;
+  let timeout;
+  return function (...args) {
+    const now = Date.now();
+    if (now - lastCall < delay) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        lastCall = now;
+        func.apply(this, args);
+      }, delay - (now - lastCall));
+    } else {
+      lastCall = now;
+      func.apply(this, args);
+    }
+  };
+}
+
 if (!customElements.get("media-effect")) {
   customElements.define(
     "media-effect",
@@ -17,10 +35,24 @@ if (!customElements.get("media-effect")) {
         this.isVisible = false;
         this.autoAnimateTimeout = null;
         this.lastAutoAnimateTime = 0;
+        this.lastAnimationTimestamp = 0;
+        this.mouseThrottleDelay = 8;
+        this.animationThrottleDelay = 16;
+        this.lastMouseX = 0;
+        this.lastMouseY = 0;
+        this.mouseLerpFactor = 0.6;
 
         this.pointerX = null;
         this.pointerY = null;
         this.initialPositions = [];
+
+        this.boundOnMouseEnter = this.onMouseEnter.bind(this);
+        this.boundOnMouseLeave = this.onMouseLeave.bind(this);
+        this.throttledMouseMove = throttle(
+          this.onMouseMove.bind(this),
+          this.mouseThrottleDelay
+        );
+        this.boundApplySpringAnimation = this.applySpringAnimation.bind(this);
       }
 
       connectedCallback() {
@@ -51,18 +83,11 @@ if (!customElements.get("media-effect")) {
         }
         this.setupElementStyles();
         this.setupInitialPositions();
-        this.container.addEventListener(
-          "mouseenter",
-          this.onMouseEnter.bind(this)
-        );
-        this.container.addEventListener(
-          "mouseleave",
-          this.onMouseLeave.bind(this)
-        );
-        this.container.addEventListener(
-          "mousemove",
-          this.onMouseMove.bind(this)
-        );
+
+        this.container.addEventListener("mouseenter", this.boundOnMouseEnter);
+        this.container.addEventListener("mouseleave", this.boundOnMouseLeave);
+        this.container.addEventListener("mousemove", this.throttledMouseMove);
+
         this.setupScrollObserver();
         this.initialized = true;
       }
@@ -70,8 +95,20 @@ if (!customElements.get("media-effect")) {
       setupMotionValues() {
         this.pointerX = Motion.motionValue(0);
         this.pointerY = Motion.motionValue(0);
-        this.pointerX.on("change", () => this.scheduleSpringAnimation());
-        this.pointerY.on("change", () => this.scheduleSpringAnimation());
+
+        let animationScheduled = false;
+        const scheduleOnce = () => {
+          if (!animationScheduled && this.isHovering) {
+            animationScheduled = true;
+            this.scheduleSpringAnimation();
+            requestAnimationFrame(() => {
+              animationScheduled = false;
+            });
+          }
+        };
+
+        this.pointerX.on("change", scheduleOnce);
+        this.pointerY.on("change", scheduleOnce);
       }
 
       setupInitialPositions() {
@@ -84,17 +121,18 @@ if (!customElements.get("media-effect")) {
         });
       }
 
+      scheduleThrottledSpringAnimation() {
+        if (!this.isHovering) return;
+        this.scheduleSpringAnimation();
+      }
+
       scheduleSpringAnimation() {
         if (!this.isHovering) return;
+
         if (typeof Motion !== "undefined" && Motion.frame) {
-          Motion.frame.postRender(() => this.applySpringAnimation());
+          Motion.frame.postRender(this.boundApplySpringAnimation);
         } else {
-          if (this.animationId) {
-            cancelAnimationFrame(this.animationId);
-          }
-          this.animationId = requestAnimationFrame(() =>
-            this.applySpringAnimation()
-          );
+          requestAnimationFrame(this.boundApplySpringAnimation);
         }
       }
 
@@ -395,13 +433,55 @@ if (!customElements.get("media-effect")) {
       }
 
       onMouseMove(event) {
+        if (!this.isHovering) return;
+
         this.updateMousePosition(event);
 
         if (this.pointerX && this.pointerY) {
-          this.pointerX.set(event.clientX);
-          this.pointerY.set(event.clientY);
+          const currentX = event.clientX;
+          const currentY = event.clientY;
+
+          if (this.lastMouseX && this.lastMouseY) {
+            const lerpX =
+              this.lastMouseX +
+              (currentX - this.lastMouseX) * this.mouseLerpFactor;
+            const lerpY =
+              this.lastMouseY +
+              (currentY - this.lastMouseY) * this.mouseLerpFactor;
+
+            this.pointerX.set(lerpX);
+            this.pointerY.set(lerpY);
+          } else {
+            this.pointerX.set(currentX);
+            this.pointerY.set(currentY);
+          }
+
+          this.lastMouseX = currentX;
+          this.lastMouseY = currentY;
+
+          if (!this.animationActive) {
+            this.animationActive = true;
+            this.scheduleSpringAnimation();
+          }
         } else {
           this.startAnimation();
+        }
+      }
+
+      startAnimation() {
+        if (!this.isHovering || (this.pointerX && this.pointerY)) return;
+
+        this.animationActive = true;
+        if (this.animationId) {
+          cancelAnimationFrame(this.animationId);
+        }
+        this.animationId = requestAnimationFrame(() => this._updateAnimation());
+      }
+
+      _updateAnimation() {
+        if (!this.isHovering) {
+          this.animationActive = false;
+          return;
         }
       }
 
@@ -414,7 +494,10 @@ if (!customElements.get("media-effect")) {
       }
 
       startAnimation() {
-        if (!this.isHovering || (this.pointerX && this.pointerY)) return;
+        if (!this.isHovering || (this.pointerX && this.pointerY)) {
+          this.animationRunning = false;
+          return;
+        }
 
         const centerX = this.bounds.width / 2;
         const centerY = this.bounds.height / 2;
@@ -430,37 +513,51 @@ if (!customElements.get("media-effect")) {
           element.style.transform = `translate(${moveX}px, ${moveY}px)`;
         });
 
-        this.animationId = requestAnimationFrame(
-          this.startAnimation.bind(this)
-        );
+        this.animationId = requestAnimationFrame(() => {
+          this.startAnimation();
+        });
       }
 
       disconnectedCallback() {
         if (this.container) {
-          this.container.removeEventListener("mouseenter", this.onMouseEnter);
-          this.container.removeEventListener("mouseleave", this.onMouseLeave);
-          this.container.removeEventListener("mousemove", this.onMouseMove);
+          this.container.removeEventListener(
+            "mouseenter",
+            this.boundOnMouseEnter
+          );
+          this.container.removeEventListener(
+            "mouseleave",
+            this.boundOnMouseLeave
+          );
+          this.container.removeEventListener(
+            "mousemove",
+            this.throttledMouseMove
+          );
         }
 
         if (this.animationId) {
           cancelAnimationFrame(this.animationId);
+          this.animationId = null;
         }
 
         if (this.autoAnimateTimeout) {
           clearTimeout(this.autoAnimateTimeout);
+          this.autoAnimateTimeout = null;
         }
 
         if (this.pointerX) {
           this.pointerX.clearListeners();
+          this.pointerX = null;
         }
 
         if (this.pointerY) {
           this.pointerY.clearListeners();
+          this.pointerY = null;
         }
       }
     }
   );
 }
+
 if (!customElements.get("content-effect")) {
   customElements.define(
     "content-effect",
@@ -474,7 +571,7 @@ if (!customElements.get("content-effect")) {
 
       connectedCallback() {
         const mediaQuery = window.matchMedia("(max-width: 1024.98px)");
-        const handleMediaQueryChange = (mediaQuery) => {
+        const handleMediaQueryChange = throttle((mediaQuery) => {
           if (mediaQuery.matches) {
             this.initializeMobile();
           } else {
@@ -495,9 +592,12 @@ if (!customElements.get("content-effect")) {
             this.classList.add("block");
             this.classList.remove("flex");
           }
-        };
+        }, 100);
+
         handleMediaQueryChange(mediaQuery);
-        mediaQuery.addEventListener("change", handleMediaQueryChange);
+        mediaQuery.addEventListener("change", () =>
+          handleMediaQueryChange(mediaQuery)
+        );
       }
 
       initialize() {
@@ -562,6 +662,7 @@ if (!customElements.get("content-effect")) {
             }
           });
         }, options);
+        this.observer = observer;
         observer.observe(this);
       }
 
@@ -595,6 +696,7 @@ if (!customElements.get("content-effect")) {
       disconnectedCallback() {
         if (this.observer) {
           this.observer.disconnect();
+          this.observer = null;
         }
       }
     }
