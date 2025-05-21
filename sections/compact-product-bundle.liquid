@@ -55,11 +55,6 @@
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
-{% style %}
-  bundle-item.last-0:last-of-type {
-    padding-top: 2rem;
-  }
-{% endstyle %}
 <div
   class="section__bundle-product overflow-hidden section color-{{ section_st.color_scheme }}{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
