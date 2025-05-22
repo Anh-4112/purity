@@ -41,12 +41,12 @@
   {%- if scroll_animation -%}
     <motion-effect data-animate="fade-up" class="block">
   {%- endif -%}
-  <div id="circular-text-{{ block_id }}" class="relative flex justify-center items-center">
+  <div id="circular-text-{{ block_id }}" class="relative flex justify-center items-center heading-style">
     <svg id="circleSvg-{{ block_id }}">
       <defs>
         <path id="circle-{{ block_id }}" />
       </defs>
-      <text class="{{ rotation_class }}{% if block_st.uppercase %} uppercase{% endif %}" font-size="17">
+      <text class="{{ rotation_class }}{% if block_st.uppercase %} uppercase{% endif %}" font-size="15">
         <textPath xlink:href="#circle-{{ block_id }}" id="textPath-{{ block_id }}">
           {{ text | escape }}
         </textPath>

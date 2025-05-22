@@ -3,7 +3,7 @@ export class CircularText {
     this.sectionId = sectionId;
     this.text = uppercase ? text.toUpperCase() : text;
     this.uppercase = uppercase;
-    this.fontSize = 17;
+    this.fontSize = 15;
     this.svg = document.getElementById(`circleSvg-${sectionId}`);
     this.textPath = document.getElementById(`textPath-${sectionId}`);
     this.path = document.getElementById(`circle-${sectionId}`);
@@ -12,7 +12,7 @@ export class CircularText {
   measureTextWidth() {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
-    context.font = `${this.fontSize}px Arial${this.uppercase ? ' uppercase' : ''}`;
+    context.font = `${this.fontSize}px ${this.uppercase ? ' uppercase' : ''}`;
     const textWidth = context.measureText(this.text).width * 1.05; 
     return textWidth;
   }
