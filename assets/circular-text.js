@@ -1,73 +1,46 @@
-
-class SpinningTextElement extends HTMLElement {
-  connectedCallback() {
-    this.render();
-    this.observe();
+export class CircularText {
+  constructor(sectionId, text, uppercase) {
+    this.sectionId = sectionId;
+    this.text = uppercase ? text.toUpperCase() : text;
+    this.uppercase = uppercase;
+    this.fontSize = 15;
+    this.svg = document.getElementById(`circleSvg-${sectionId}`);
+    this.textPath = document.getElementById(`textPath-${sectionId}`);
+    this.path = document.getElementById(`circle-${sectionId}`);
   }
 
-  render() {
-    const rawText = this.dataset.text || '';
-    const speed = this.dataset.speed || 8;
-    const direction = this.dataset.direction || 'normal';
-    const uppercase = this.dataset.uppercase === 'true';
-    let trimmedText = rawText.trim();
-    let size = trimmedText.length;
-    if (size == 0) return;
-    while (trimmedText.length < 15) {
-      trimmedText += ' • ' + trimmedText;
-    }
-    const unit = trimmedText + ' • ';
-    const displayText = ((unit + unit));
-    const finalText = uppercase ? displayText.toUpperCase() : displayText;
-
-    const circle = this.querySelector('.spinning-text__circle');
-    const content = this.querySelector('.spinning-text__content');
-    if (!circle || !content) return;
-
-    const measure = document.createElement('span');
-    measure.style.visibility = 'hidden';
-    measure.style.position = 'absolute';
-    measure.style.whiteSpace = 'nowrap';
-    measure.textContent = finalText;
-    document.body.appendChild(measure);
-
-    const circumference = measure.offsetWidth*2;
-    document.body.removeChild(measure);
-
-    const radius = circumference / (2 * Math.PI) - 27.5;
-    const diameter = Math.ceil(radius * 2);
-
-    this.style.width = `${diameter}px`;
-    this.style.height = `${diameter}px`;
-    circle.style.width = '100%';
-    circle.style.height = '100%';
-
-    circle.style.animation = `spinning-text__rotate ${speed}s linear infinite`;
-    circle.style.animationDirection = direction;
-
-    content.innerHTML = '';
-    const chars = finalText.split('');
-    chars.forEach((char, i) => {
-      const span = document.createElement('span');
-      span.textContent = char;
-      span.style.position = 'absolute';
-      span.style.left = '50%';
-      span.style.transformOrigin = `0 ${radius}px`;
-      span.style.transform = `rotate(${(i * 360) / chars.length}deg)`;
-      content.appendChild(span);
-    });
+  measureTextWidth() {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = `${this.fontSize}px ${this.uppercase ? ' uppercase' : ''}`;
+    const textWidth = context.measureText(this.text).width * 1.05; 
+    return textWidth;
   }
 
-  observe() {
-    const observer = new MutationObserver(() => this.render());
-    observer.observe(this, { attributes: true });
+  updateSvg() {
+    const textWidth = this.measureTextWidth();
+    const circumference = textWidth;
+    const radius = circumference / (2 * Math.PI);
+    const padding = this.fontSize * 2; 
+    const svgSize = radius * 2 + padding;
+    const center = svgSize / 2;
+
+    this.svg.setAttribute('width', svgSize);
+    this.svg.setAttribute('height', svgSize);
+    this.svg.setAttribute('viewBox', `0 0 ${svgSize} ${svgSize}`);
+
+    const pathD = `
+      M ${center}, ${center}
+      m -${radius}, 0
+      a ${radius},${radius} 0 1,1 ${radius * 2},0
+      a ${radius},${radius} 0 1,1 -${radius * 2},0
+    `;
+    this.path.setAttribute('d', pathD);
+
+    this.textPath.textContent = this.text;
+  }
+
+  init() {
+    this.updateSvg();
   }
 }
-
-customElements.define('spinning-text', SpinningTextElement);
-
-window.SpinningTextComponent = {
-  load: () => {
-    document.querySelectorAll('spinning-text').forEach(el => el.load?.());
-  },
-};
