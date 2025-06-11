@@ -15,7 +15,7 @@
 {%- endcapture -%}
 
 <div
-  class="page-heading section color-{{ section_st.color_scheme }} gradient text-{{ section_st.text_alignment }}"
+  class="page-heading section color-{{ section_st.color_scheme }} gradient{% if section_st.text_alignment != 'none' %} text-{{ section_st.text_alignment }}{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -53,15 +53,9 @@
                 class="block"
               >
             {%- endif -%}
-            {%- if block_st.description != blank -%}
-              <div class="heading-description mt-15 prose">
-                {{ block_st.description }}
-              </div>
-            {%- else -%}
-              <div class="heading-description mt-15 rte">
-                {{ page.content }}
-              </div>
-            {%- endif -%}
+            <div class="heading-description mt-15{% if section_st.text_alignment == 'none' %} rte{% endif %}">
+              {{ page.content }}
+            </div>
             {%- if scroll_animation -%}
               </motion-effect>
             {%- endif -%}
@@ -73,7 +67,7 @@
 
 {% schema %}
 {
-  "name": "t:sections.all.section_setting.page_heading.label",
+  "name": "t:sections.main-page.name",
   "tag": "section",
   "class": "page-heading",
   "settings": [
@@ -127,6 +121,10 @@
         {
           "value": "end",
           "label": "t:sections.all.text_alignment.options__3.label"
+        },
+        {
+          "value": "none",
+          "label": "t:sections.all.icon.none.label"
         }
       ],
       "default": "start",
@@ -161,13 +159,13 @@
   "blocks": [
     {
       "type": "heading",
-      "name": "t:sections.all.section_setting.page_heading.label",
+      "name": "t:sections.all.section_setting.page_heading.heading.label",
       "limit": 1,
       "settings": [
         {
           "type": "text",
           "id": "heading",
-          "label": "t:sections.all.section_setting.page_heading.label"
+          "label": "t:sections.all.section_setting.page_heading.heading.label"
         }
       ]
     },
@@ -179,8 +177,7 @@
         {
           "type": "richtext",
           "id": "description",
-          "label": "t:sections.all.section_setting.page_heading.description.label",
-          "info": "t:sections.all.section_setting.page_heading.description.info"
+          "label": "t:sections.all.section_setting.page_heading.description.label"
         }
       ]
     }
