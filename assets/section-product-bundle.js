@@ -323,7 +323,7 @@ class ButtonSubmitBundle extends HTMLElement {
       "[data-product-bundle-variant][data-variant-id]"
     );
     const bundleBtnAddCart = this.wrapper.querySelectorAll(
-      `product-form-bundle button`
+      `product-form-bundle button:not(.btn-sold-out)`
     );
     bundleBtnAddCart.forEach((button) => {
       if (button.classList.contains("disabled")) {
@@ -478,7 +478,7 @@ class BundleCartRemoveButton extends HTMLElement {
     }
 
     const bundleBtnAddCart = this.bundle.querySelectorAll(
-      "product-form-bundle button"
+      "product-form-bundle button:not(.btn-sold-out)"
     );
     bundleBtnAddCart.forEach((button) => {
       const productForm = button.closest("product-form-bundle");
