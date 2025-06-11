@@ -121,13 +121,11 @@ if (!customElements.get("product-form-bundle")) {
         );
         if (bundleItems.length >= minimum) {
           submitButton.classList.remove("disabled");
-          console.log("Bundle button enabled");
 
           submitButton.removeAttribute("aria-disabled");
           submitButton.removeAttribute("disabled");
         } else {
           submitButton.classList.add("disabled");
-          console.log("Bundle button disabled");
           submitButton.setAttribute("aria-disabled", true);
           submitButton.setAttribute("disabled", true);
           submitButton.setAttribute("tabindex", -1);
@@ -215,22 +213,27 @@ class ButtonSubmitBundle extends HTMLElement {
   }
 
   addItemsToCart(items) {
-    const formData = {
-      items: items,
-      sections: this.cart
-        ? this.cart.getSectionsToRender().map((section) => section.id)
-        : [],
-      sections_url: window.location.pathname,
-    };
+    const config = NextSkyTheme.fetchConfig("javascript");
+    config.headers["X-Requested-With"] = "XMLHttpRequest";
+    delete config.headers["Content-Type"];
 
-    fetch(`${routes?.cart_add_url}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
+    const formData = new FormData();
+    items.forEach((item, index) => {
+      formData.append(`items[${index}][id]`, item.id);
+      formData.append(`items[${index}][quantity]`, item.quantity);
+    });
+
+    if (this.cart) {
+      formData.append(
+        "sections",
+        this.cart.getSectionsToRender().map((section) => section.id)
+      );
+      formData.append("sections_url", window.location.pathname);
+    }
+
+    config.body = formData;
+
+    fetch(`${routes?.cart_add_url}`, config)
       .then((response) => response.json())
       .then((response) => {
         if (response.status) {
@@ -336,7 +339,6 @@ class ButtonSubmitBundle extends HTMLElement {
     }
 
     if (itemCount >= this.minimum) {
-      console.log("Bundle button enabled");
       this.classList.remove("disabled");
       this.removeAttribute("aria-disabled");
       this.removeAttribute("disabled");
