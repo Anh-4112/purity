@@ -685,19 +685,24 @@ class SubMenuDetails extends HTMLDetailsElement {
   init() {
     this.summaryElement = this.firstElementChild;
     this.contentElement = this.lastElementChild;
-    if (window.innerWidth < 1025) {
-      this._open = this.hasAttribute("open");
-      this.content = this.closest(".menu-link").querySelector(".sub-children-menu");
-      this.initialize();
-    }
+    this._open = this.hasAttribute("open");
+    this.content = this.closest(".menu-link").querySelector(".sub-children-menu");
     this.summaryElement.addEventListener("click", this.onSummaryClicked.bind(this));
+    if (window.innerWidth < 1025) {
+      this.initialize();
+    } else {
+      (this.detectHoverListener = this.detectHover.bind(this)),
+      this.addEventListener("mouseenter", this.detectHoverListener.bind(this)),
+      this.addEventListener("mouseleave", this.detectHoverListener.bind(this));
+    }
   }
 
   onSummaryClicked(event) {
     event.preventDefault(),
     window.innerWidth >= 1025 &&
     this.hasAttribute("data-href") &&
-    this.getAttribute("data-href").length > 0
+    this.getAttribute("data-href").length > 0 &&
+    (event.pointerType || this._open === true)
       ? (window.location.href = this.getAttribute("data-href"))
       : (this.open = !this.open);
   }
@@ -712,19 +717,28 @@ class SubMenuDetails extends HTMLDetailsElement {
     }
   }
 
+  detectHover(event) {
+    event.type === "mouseenter" ? (this.open = !0) : (this.open = !1);
+  }
+
   async transition(value) {
     return value
-      ? (Motion.animate(
+      ? (window.innerWidth < 1025 ? Motion.animate(
           this.content,
           true ? { height: "auto" } : { height: 0 },
           { duration: 0.25 }
-        ),
-        this.setAttribute("open", ""))
-      : (Motion.animate(
+        ) :   
+        this.closest('ul').querySelectorAll('details').forEach((details) => {
+          details.removeAttribute("open");
+          details._open = false;
+        }),
+        this.setAttribute("open", ""),
+        this._open = true)
+      : (window.innerWidth < 1025 ? Motion.animate(
           this.content,
           false ? { height: "auto" } : { height: 0 },
           { duration: 0.25 }
-        ),
+        ) : '',
         this.removeAttribute("open"));
   }
 }
