@@ -683,19 +683,23 @@ class SubMenuDetails extends HTMLDetailsElement {
   }
 
   init() {
+    this.summaryElement = this.firstElementChild;
+    this.contentElement = this.lastElementChild;
     if (window.innerWidth < 1025) {
-      this.summaryElement = this.firstElementChild;
-      this.contentElement = this.lastElementChild;
       this._open = this.hasAttribute("open");
       this.content = this.closest(".menu-link").querySelector(".sub-children-menu");
-      this.summaryElement.addEventListener("click", this.onSummaryClicked.bind(this));
       this.initialize();
     }
+    this.summaryElement.addEventListener("click", this.onSummaryClicked.bind(this));
   }
 
   onSummaryClicked(event) {
-    event.preventDefault();
-    this.open = !this.open;
+    event.preventDefault(),
+    window.innerWidth >= 1025 &&
+    this.hasAttribute("data-href") &&
+    this.getAttribute("data-href").length > 0
+      ? (window.location.href = this.getAttribute("data-href"))
+      : (this.open = !this.open);
   }
 
   async initialize() {
