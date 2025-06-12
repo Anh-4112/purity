@@ -124,6 +124,11 @@
                 endif
               endif
             -%}
+            {% capture should_disable %}
+              {% if section_width == "full-width" and i == 0 %}true{% endif %}
+              {% if section_width == "container" and i < 2 %}true{% endif %}
+              {% if section_width == "fluid_container" and i < 1 %}true{% endif %}
+            {% endcapture %}
             <a
               class="scrolling-image-item overflow-hidden w-custom w-custom-mb focus-inset relative"
               style="--width: {{ img_width }}px;--width-mb: {{ img_width_mb }}px;"
@@ -133,6 +138,9 @@
                 href="{{ link_image | default: "#" }}"
               {% endif %}
               aria-label="{{ 'sections.scrolling_text.alt' | t }}"
+              {% if should_disable contains "true" %}
+                role="link" aria-disabled="true" tabindex="-1"
+              {% endif %}
             >
               {%- if image != blank -%}
                 <div
