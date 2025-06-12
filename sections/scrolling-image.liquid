@@ -89,12 +89,12 @@
       </div>
     {%- endif -%}
     <div
-      class="flex{% if section_st.uppercase %} uppercase{% endif %} marquee overflow-hidden gap w-full justify-center {% if section_st.show_background_blur %}show-background-blur{% endif %}"
+      class="flex{% if section_st.uppercase %} uppercase{% endif %} marquee overflow-hidden gap w-full {% if section_st.show_background_blur %}show-background-blur{% endif %}"
       style="{{ col_style | strip | strip_newlines }}"
     >
       {%- for i in (0..5) -%}
         <div
-          class="flex animation-marquee animation__marquee-{{ section_st.direction }} whitespace-nowrap gap align-center"
+          class="flex animation-marquee animation__marquee-{{ section_st.direction }} whitespace-nowrap gap"
           style="{{ col_style | strip | strip_newlines }}"
         >
           {%- for block in section.blocks -%}
@@ -139,7 +139,7 @@
               {% endif %}
               aria-label="{{ 'sections.scrolling_text.alt' | t }}"
               {% if should_disable contains "true" %}
-                role="link" aria-disabled="true" tabindex="-1"
+                aria-disabled="true" tabindex="-1"
               {% endif %}
             >
               {%- if image != blank -%}
