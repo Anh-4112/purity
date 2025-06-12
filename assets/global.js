@@ -91,6 +91,19 @@ export var PUB_SUB_EVENTS = {
   variantChange: "variant-change",
 };
 
+export function pauseAllMedia(element) {
+  element.querySelectorAll('.js-youtube').forEach((video) => {
+    video.contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+  });
+  element.querySelectorAll('.js-vimeo').forEach((video) => {
+    video.contentWindow.postMessage('{"method":"pause"}', '*');
+  });
+  element.querySelectorAll('video').forEach((video) => video.pause());
+  element.querySelectorAll('product-model').forEach((model) => {
+    if (model.modelViewerUI) model.modelViewerUI.pause();
+  });
+}
+
 function getFocusableElements(container) {
   return Array.from(
     container.querySelectorAll(

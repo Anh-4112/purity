@@ -1190,7 +1190,10 @@ class VideoProductGallery extends VideoLocal {
     } else {
       const poster = this.querySelector("button");
       if (!poster) return;
-      poster.addEventListener("click", this.loadContent.bind(this));
+      poster.addEventListener("click", () => {
+        NextSkyTheme.pauseAllMedia(this.closest('media-gallery'));
+        this.loadContent();
+      });
     }
   }
 }
