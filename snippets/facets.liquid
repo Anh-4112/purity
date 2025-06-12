@@ -215,6 +215,8 @@
                       id="Filter-{{ filter.label | escape }}-{{ filter_layout }}-GTE"
                       placeholder="{{ min_price }}"
                       type="number"
+                      inputmode="numeric"
+                      autocomplete="off"
                       min="0"
                       {% if uses_comma_decimals %}
                         {%- assign input_max_of_min = filter.range_max
@@ -255,12 +257,14 @@
                       id="Filter-{{ filter.label | escape }}-{{ filter_layout }}-LTE"
                       placeholder="{{ max_price }}"
                       type="number"
+                      inputmode="numeric"
                       min="0"
                       {% if uses_comma_decimals %}
-                        max="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                        max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
                       {% else %}
-                        max="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                        max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                       {% endif %}
+                      autocomplete="off"
                     >
                     <label
                       class="field__label visually-hidden"
