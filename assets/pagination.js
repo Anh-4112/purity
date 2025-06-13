@@ -6,7 +6,9 @@ class PaginateLoadmore extends HTMLElement {
   }
 
   initLoadMore() {
-    const count = document.getElementById('load-more-container').getAttribute('data-count');
+    const count = document
+      .getElementById("load-more-container")
+      .getAttribute("data-count");
     this.querySelectorAll(".actions-load-more").forEach((loadMore) => {
       var _this = this;
       if (loadMore.classList.contains("infinit-scrolling")) {
@@ -58,11 +60,11 @@ class PaginateLoadmore extends HTMLElement {
             .appendChild(prodNode)
         );
 
-        const images = document.querySelectorAll('#section__content-items img');
+        const images = document.querySelectorAll("#section__content-items img");
         images.forEach((img) => {
-          if (img.hasAttribute('data-srcset')) {
-            img.setAttribute('srcset', img.getAttribute('data-srcset'));
-            img.removeAttribute('data-srcset');
+          if (img.hasAttribute("data-srcset")) {
+            img.setAttribute("srcset", img.getAttribute("data-srcset"));
+            img.removeAttribute("data-srcset");
           }
         });
 
@@ -90,49 +92,78 @@ class PaginateLoadmore extends HTMLElement {
   }
 
   updateProgressBar(count) {
-    var amount = document.querySelectorAll('#section__content-items .item-load').length;
+    var amount = document.querySelectorAll(
+      "#section__content-items .item-load"
+    ).length;
     var percent = (amount / count) * 100;
-    var progressBar = document.querySelector('.load-more-progress-bar');
-    progressBar.style.setProperty('--percent', percent + '%');
-    progressBar.style.setProperty('--amount', amount);
+    var progressBar = document.querySelector(".load-more-progress-bar");
+    progressBar.style.setProperty("--percent", percent + "%");
+    progressBar.style.setProperty("--amount", amount);
   }
 }
 
 customElements.define("loadmore-button", PaginateLoadmore);
 
-
 class LoadMoreButtonCollection extends HTMLElement {
   constructor() {
     super();
-    this.handleClick();
+    this.loadMoreButton = this.querySelector("a");
+    this.loadMoreElement = document.querySelector(".actions-load-more");
+    this.init();
   }
 
-  handleClick() {
-    const loadMoreButton = this.querySelector('a');
-    const load_more = document.querySelector('.actions-load-more');
+  init() {
+    if (!this.loadMoreButton) return;
+    
+    this.loadMoreButton.addEventListener("click", this.handleClick.bind(this));
+    this.loadMoreButton.addEventListener("keydown", this.handleKeydown.bind(this));
+  }
 
-    if (loadMoreButton) {
-      loadMoreButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (load_more) {
-          load_more.classList.add('loading');
-        }
-        setTimeout(() => {
-          this.initLoadMore();
-          if (load_more) {
-            load_more.classList.remove('loading');
-          }
-          this.remove();
-        }, 500);
-      });
+  handleClick(event) {
+    event.preventDefault();
+    this.executeLoadMore();
+  }
+
+  handleKeydown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.executeLoadMore();
     }
   }
 
-  initLoadMore() {
-    document.querySelectorAll('.section__collections-list .collection-item.hidden').forEach(item => {
-      item.classList.remove('hidden');
+  executeLoadMore() {
+    this.toggleLoading(true);
+    
+    setTimeout(() => {
+      this.showHiddenCollections();
+      this.toggleLoading(false);
+      this.cleanup();
+    }, 500);
+  }
+
+  toggleLoading(isLoading) {
+    if (this.loadMoreElement) {
+      this.loadMoreElement.classList.toggle("loading", isLoading);
+    }
+    
+    if (this.loadMoreButton) {
+      this.loadMoreButton.classList.toggle("loading", isLoading);
+    }
+  }
+
+  showHiddenCollections() {
+    const hiddenItems = document.querySelectorAll(
+      ".section__collections-list .collection-item.hidden"
+    );
+    
+    hiddenItems.forEach((item) => {
+      item.classList.remove("hidden");
     });
+  }
+
+  cleanup() {
+    this.remove();
   }
 }
 
-customElements.define('loadmore-button-collection', LoadMoreButtonCollection);
+customElements.define("loadmore-button-collection", LoadMoreButtonCollection);

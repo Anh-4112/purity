@@ -667,6 +667,11 @@ class LoadMoreProduct extends HTMLElement {
   constructor() {
     super();
     this.addEventListener("click", this.fetchData.bind(this), false);
+    this.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        this.fetchData(event);
+      }
+    });
   }
 
   connectedCallback() {
