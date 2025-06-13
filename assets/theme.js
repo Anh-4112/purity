@@ -204,6 +204,11 @@ class BackToTop extends HTMLElement {
   constructor() {
     super();
     this.addEventListener("click", this.backToTop.bind(this), false);
+    this.addEventListener("keyup", (event) => {
+      if (event.code.toUpperCase() === "ENTER") {
+        this.backToTop();
+      }
+    });
   }
 
   connectedCallback() {
@@ -216,6 +221,11 @@ class BackToTop extends HTMLElement {
         top: 0,
         behavior: "smooth",
       });
+      this.blur();
+      setTimeout(() => {
+        const skipLink = document.querySelector('.skip-to-content-link');
+        skipLink.focus();
+      }, 500);
     }
   }
 

@@ -413,6 +413,9 @@ class PriceRange extends PriceRangeDrag {
     var rangeInput2 = inputRange[1];
     var minInput = inputNum[0];
     var maxInput = inputNum[1];
+    minInput.addEventListener("keydown", function (event) {
+      if(event.key === 'e' || event.key === '+' || event.key === '-') event.preventDefault();
+    });
     minInput.addEventListener("input", function () {
       if (minInput.value < Number(minInput.min) || minInput.value == "") {
         minInput.value = maxInput.min;
@@ -431,7 +434,9 @@ class PriceRange extends PriceRangeDrag {
         _this.countPercentMin(Number(minInput.value));
       }
     });
-
+    maxInput.addEventListener("keydown", function (event) {
+      if(event.key === 'e' || event.key === '+' || event.key === '-') event.preventDefault();
+    });
     maxInput.addEventListener("input", function () {
       if (maxInput.value > Number(maxInput.max)) {
         maxInput.value = maxInput.max;
