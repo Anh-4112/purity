@@ -1,6 +1,5 @@
 import { LazyLoader } from "module-lazyLoad";
 import * as NextSkyTheme from "global";
-
 class FacetFiltersForm extends HTMLElement {
   constructor() {
     super();
@@ -414,7 +413,8 @@ class PriceRange extends PriceRangeDrag {
     var minInput = inputNum[0];
     var maxInput = inputNum[1];
     minInput.addEventListener("keydown", function (event) {
-      if(event.key === 'e' || event.key === '+' || event.key === '-') event.preventDefault();
+      if (event.key === "e" || event.key === "+" || event.key === "-")
+        event.preventDefault();
     });
     minInput.addEventListener("input", function () {
       if (minInput.value < Number(minInput.min) || minInput.value == "") {
@@ -435,7 +435,8 @@ class PriceRange extends PriceRangeDrag {
       }
     });
     maxInput.addEventListener("keydown", function (event) {
-      if(event.key === 'e' || event.key === '+' || event.key === '-') event.preventDefault();
+      if (event.key === "e" || event.key === "+" || event.key === "-")
+        event.preventDefault();
     });
     maxInput.addEventListener("input", function () {
       if (maxInput.value > Number(maxInput.max)) {
@@ -517,22 +518,60 @@ class SelectSorter extends HTMLElement {
   constructor() {
     super();
     this.addEventListener("click", this.activeFilterSort.bind(this), false);
-    document.addEventListener("click", this.handleClickOutside.bind(this)),
-      false;
+    document.addEventListener(
+      "click",
+      this.handleClickOutside.bind(this),
+      false
+    );
+    this.addEventListener("keydown", this.handleKeydown.bind(this), false);
   }
-  activeFilterSort() {
-    if (this.closest(".select-custom").classList.contains("active")) {
-      this.closest(".select-custom").classList.remove("active");
-    } else {
-      this.closest(".select-custom").classList.add("active");
+
+  handleKeydown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.activeFilterSort();
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      this.closeDropdown();
     }
   }
+
+  closeDropdown() {
+    const selectCustom = this.closest(".select-custom");
+    if (selectCustom && selectCustom.classList.contains("active")) {
+      selectCustom.classList.remove("active");
+      this.updateFilterSortTabindex(false);
+    }
+  }
+
+  activeFilterSort() {
+    const selectCustom = this.closest(".select-custom");
+    const isActive = selectCustom.classList.contains("active");
+    selectCustom.classList.toggle("active");
+    this.updateFilterSortTabindex(!isActive);
+  }
+
   handleClickOutside(event) {
     if (!event.target.closest(".facets-vertical-form")) {
       document.querySelectorAll(".facets-vertical-form").forEach((element) => {
         element.querySelector(".select-custom").classList.remove("active");
+        const selectCustom = element.querySelector(".select-custom");
+        if (!selectCustom.classList.contains("active")) {
+          this.updateFilterSortTabindex(false);
+        }
       });
     }
+  }
+
+  updateFilterSortTabindex(isActive) {
+    const filterSortElements = document.querySelectorAll("filter-sort");
+    filterSortElements.forEach((element) => {
+      if (isActive) {
+        element.setAttribute("tabindex", "0");
+      } else {
+        element.removeAttribute("tabindex");
+      }
+    });
   }
 }
 customElements.define("select-sorter", SelectSorter);
@@ -541,13 +580,54 @@ class FilterSort extends FacetFiltersForm {
   constructor() {
     super();
     this.addEventListener("click", this.filterSort.bind(this), false);
+    this.addEventListener("keydown", this.handleKeydown.bind(this), false);
   }
-  filterSort() {
+
+  handleKeydown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.filterSort(event);
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      this.closeDropdownAndUpdateTabindex();
+    }
+  }
+
+  filterSort(event) {
+    event?.preventDefault();
     const select = document.querySelector("select.facet-filters__select");
     const value = this.getAttribute("value");
-    select.value = value;
-    select.dispatchEvent(new Event("input", { bubbles: true }));
-    this.closest(".facet-filters").classList.remove("active");
+    if (select && value) {
+      select.value = value;
+      select.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    this.closeDropdownAndUpdateTabindex();
+  }
+
+  closeDropdownAndUpdateTabindex() {
+    const facetFilters = this.closest(".facet-filters");
+    if (facetFilters) {
+      facetFilters.classList.remove("active");
+    }
+    
+    this.updateFilterSortTabindex();
+    this.focusSelectSorter();
+  }
+
+  updateFilterSortTabindex() {
+    const filterSortElements = document.querySelectorAll("filter-sort");
+    filterSortElements.forEach((element) => {
+        element.removeAttribute("tabindex");
+    });
+  }
+
+  focusSelectSorter() {
+    setTimeout(() => {
+      const selectSorter = this.closest(".facet-filters")?.querySelector("select-sorter");
+      if (selectSorter) {
+        selectSorter.focus();
+      }
+    }, 100);
   }
 }
 customElements.define("filter-sort", FilterSort);
