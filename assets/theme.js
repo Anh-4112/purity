@@ -2878,7 +2878,8 @@ class ButtonQuickView extends HTMLButtonElement {
         NextSkyTheme.global.rootToFocus = this;
         new LazyLoader(".image-lazy-load");
         await (import(importJs.mediaLightboxGallery),
-        import(importJs.countdownTimer));
+        import(importJs.countdownTimer),
+        import(importJs.recipientForm));
       })
       .catch((e) => {
         console.error(e);
