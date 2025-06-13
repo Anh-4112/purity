@@ -92,6 +92,9 @@ export var PUB_SUB_EVENTS = {
 };
 
 export function pauseAllMedia(element) {
+  if (!element) {
+    return;
+  }
   element.querySelectorAll('.js-youtube').forEach((video) => {
     video.contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
   });

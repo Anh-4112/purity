@@ -2,6 +2,7 @@ import { SlideSection } from "module-slide";
 import { LazyLoader } from "module-lazyLoad";
 import PhotoSwipeLightbox from "module-photoSwipeLightbox";
 import { CustomElement } from "module-safariElementPatch";
+import * as NextSkyTheme from "global";
 
 class MediaGallery extends SlideSection {
   constructor() {
@@ -125,6 +126,7 @@ class MediaZoomButton extends HTMLButtonElement {
     if (this.closest(".pswp__item")) {
       return;
     }
+    NextSkyTheme.pauseAllMedia(this.closest('media-gallery'));
     const lightbox = new PhotoSwipeLightbox({
       bgOpacity: 1,
       pswpModule: () => import(importJs.pswpModule),
@@ -237,6 +239,9 @@ class MediaZoomButton extends HTMLButtonElement {
     lightbox.loadAndOpen(index - 1, dataSource);
     lightbox.on("pointerDown", (e) => {
       lightbox.pswp.currSlide.data.mediaType != "image" && e.preventDefault();
+    });
+    lightbox.on('change', () => {
+      NextSkyTheme.pauseAllMedia(lightbox.pswp.element);
     });
   }
 }
