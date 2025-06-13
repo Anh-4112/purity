@@ -86,17 +86,24 @@ class QuickViewGallery extends GridGallery {
   constructor() {
     super();
     this.MediaGalleryHtml = this.innerHTML;
+    this.slide = null;
     this.init();
   }
 
   actionOnMobile() {
-    this.initSlideMediaGallery("QuickView");
+    if (this.slide) {
+      this.slide.destroy();
+    }
+    this.slide = this.initSlideMediaGallery("QuickView");
     this.style.maxHeight = "auto";
     this.style.minHeight = "auto";
   }
 
   actionOutMobile() {
-    this.initSlideMediaGallery("QuickView");
+    if (this.slide) {
+      this.slide.destroy();
+    }
+    this.slide = this.initSlideMediaGallery("QuickView");
     this.style.maxHeight =
       this.closest(".drawer__body").offsetHeight - 20 + "px";
     this.style.minHeight = "calc(100vh - 20px)";
