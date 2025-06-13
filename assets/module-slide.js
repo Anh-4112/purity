@@ -94,10 +94,16 @@ function initSlide(_this) {
       768: {
         slidesPerView: itemTablet,
         spaceBetween: spacing,
+        grid: {
+          rows: row
+        }
       },
       1025: {
         slidesPerView: itemDesktop,
         spaceBetween: spacing,
+        grid: {
+          rows: row
+        }
       },
     },
     on: {
