@@ -1425,6 +1425,39 @@ blockquote {
   .classic .sub-children-menu > li:first-child {
     margin-top: 1.5rem;
   }
+  .header__menu.hover .classic .sub-children-menu {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    left: 100%;
+    top: 2rem;
+    background-color: rgb(var(--color-white));
+    width: 27rem;
+    padding: 3rem 2rem;
+    border-radius: var(--img-rounded);
+    box-shadow: 5px 0px 30px 0px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s;
+  }
+  .header__menu.hover .classic .menu-link.have-child:hover .sub-children-menu,
+  .header__menu.hover
+    .classic
+    .menu-link.have-child
+    .details-normal[open]
+    + .sub-children-menu {
+    opacity: 1;
+    visibility: visible;
+    top: -1.5rem;
+  }
+  .header__menu.hover .classic .sub-children-menu > li:first-child {
+    margin-top: 0;
+  }
+  .header__menu.hover .classic .menu-container.overflow-auto {
+    overflow: visible;
+  }
+  .header__menu.hover .classic .menu-link.have-child .toggle-menu .icon-down {
+    transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+  }
   .disclosure__list-wrapper icon-close {
     display: none;
   }
