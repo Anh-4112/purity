@@ -1631,6 +1631,7 @@ customElements.define("mini-cart-recommendations", MiniCartUpSell);
 class CartUpSellProduct extends SlideSection {
   constructor() {
     super();
+    this.slide = null;
   }
 
   init() {
@@ -1653,13 +1654,19 @@ class CartUpSellProduct extends SlideSection {
   }
 
   actionOnMobile() {
-    this.initSlideMediaGallery("CartUpSell");
+    if (this.slide) {
+      this.slide.destroy();
+    }
+    this.slide = this.initSlideMediaGallery("CartUpSell");
     this.style.maxHeight = "auto";
     this.style.minHeight = "auto";
   }
 
   actionOutMobile() {
-    this.initSlideMediaGallery("CartUpSell");
+    if (this.slide) {
+      this.slide.destroy();
+    }
+    this.slide = this.initSlideMediaGallery("CartUpSell");
     this.style.maxHeight =
       this.closest(".drawer__body").offsetHeight - 110 + "px";
     this.style.minHeight = "calc(100vh - 110px)";

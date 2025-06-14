@@ -835,7 +835,11 @@
                 {%- if show_cart_note -%}
                   <main-cart-note class="cart__note block">
                     <div class="cart__note-content block">
+                      <label class="visually-hidden" for="Cart-Note">
+                        {{- 'sections.cart.note.title' | t -}}
+                      </label>
                       <textarea
+                        id="Cart-Note"
                         class="cart-note fs-small-1 text-area field__input w-full"
                         name="note"
                         placeholder="{{ 'sections.cart.note.instructions' | t }}"
