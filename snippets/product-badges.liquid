@@ -4,12 +4,10 @@
   assign sale_format = theme_st.sale_format
   assign show_new = theme_st.show_new
   assign new_badge_display_period = theme_st.new_badge_display_period
-  assign show_pre_order = theme_st.show_pre_order
   assign show_sold_out = theme_st.show_sold_out
   if card_product and card_product != empty
     assign sale = false
     assign sold_out = false
-    assign pre_order = false
     assign product_avail = false
     assign product_qty = 0
     if card_product.has_only_default_variant == false
@@ -37,26 +35,14 @@
         if product_management
           if product_qty < 1
             if product_avail == true
-              assign pre_order = true
               assign sold_out = false
             else
-              assign pre_order = false
               assign sold_out = true
             endif
           else
-            assign pre_order = false
             assign sold_out = false
           endif
         else
-          if product_qty < 1
-            if product_avail == true
-              assign pre_order = true
-            else
-              assign pre_order = false
-            endif
-          else
-            assign pre_order = false
-          endif
           assign sold_out = false
         endif
       else
@@ -68,26 +54,14 @@
         if product_management != null
           if product_qty < 1
             if product_avail == true
-              assign pre_order = true
               assign sold_out = false
             else
-              assign pre_order = false
               assign sold_out = true
             endif
           else
-            assign pre_order = false
             assign sold_out = false
           endif
         else
-          if product_qty < 1
-            if product_avail == true
-              assign pre_order = true
-            else
-              assign pre_order = false
-            endif
-          else
-            assign pre_order = false
-          endif
           assign sold_out = false
         endif
       endif
@@ -103,12 +77,10 @@
         endif
       endfor
       if product_qty < 1 and card_product.available == true
-        assign pre_order = true
         assign sold_out = false
       endif
       for v in card_product.variants
         if v.inventory_management == null
-          assign pre_order = false
           assign sold_out = false
         endif
       endfor
@@ -122,7 +94,7 @@
   assign diff_seconds = now_timestamp | minus: product_create_at
   assign diff_days = diff_seconds | divided_by: 3600 | divided_by: 24
 -%}
-{%- if sale or sold_out or pre_order or show_new or card_product.metafields.custom.custom_product_badge -%}
+{%- if sale or sold_out or show_new or card_product.metafields.custom.custom_product_badge -%}
   <div
     class="product__badges flex wrap gap-5 empty-hidden{% if scope == 'item' %} absolute top-15 column{% if theme_st.rtl %} right-15{% else %} left-15{% endif %}{% endif %}{% if scope != 'item' %} mb-10{% endif %}"
   >
@@ -160,15 +132,6 @@
         >
           {{ 'products.product.sold_out' | t }}
         </div>
-      {%- else -%}
-        {%- if pre_order and show_pre_order -%}
-          <div
-            class=" product__badges-pre-order rounded fs-13 subheading_weight"
-            style="--badges-bg: {{ theme_st.pre_order_background }}; --badges-color: {{ theme_st.pre_order_color }}"
-          >
-            {{ 'products.product.pre_order' | t }}
-          </div>
-        {%- endif -%}
       {%- endif -%}
       {%- if show_new and diff_days < new_badge_display_period -%}
         <div
