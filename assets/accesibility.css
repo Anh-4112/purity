@@ -62,7 +62,8 @@ a.scrolling-image-item.focus-inset:focus-visible,
 .focus-inset-inside:focus-visible,
 .blog-meta-link a:focus-visible,
 .article_post-image a:focus-visible,
-.deferred-media__poster:focus-visible {
+.deferred-media__poster:focus-visible,
+testimonials-thumb .swiper-slide:focus-visible {
   position: relative;
   outline: 0;
   border: 0;
@@ -81,7 +82,9 @@ a.scrolling-image-item.focus-inset:focus-visible:after,
 .focus-inset-inside:focus-visible:after,
 .blog-meta-link a:focus-visible:after,
 .article_post-image a:focus-visible:after,
-.deferred-media__poster:focus-visible:after {
+.deferred-media__poster:focus-visible:after,
+testimonials-thumb .swiper-slide:focus-visible:after,
+.promotion_inner a.banner__media:focus-visible:after {
   content: "";
   position: absolute;
   top: 2px;
@@ -92,10 +95,10 @@ a.scrolling-image-item.focus-inset:focus-visible:after,
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.6),
     inset 0 0 0 4px rgb(var(--color-white));
 }
-button.modal__close:focus-visible {
+.header__menu-mobile button.modal__close:focus-visible,main-cart cart-estimate-element button:focus-visible {
   box-shadow: none;
 }
-button.modal__close:focus-visible::before {
+.header__menu-mobile button.modal__close:focus-visible::before {
   content: "";
   position: absolute;
   top: 15px;
@@ -106,9 +109,24 @@ button.modal__close:focus-visible::before {
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.6),
     inset 0 0 0 4px rgb(var(--color-white));
 }
-.menu__item.level-2:focus-visible,.menu__item.level-3:focus-visible  {
+main-cart cart-estimate-element button:focus-visible::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  bottom: 4px;
+  left: 4px;
+  border-radius: var(--btn-radius);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 4px rgb(var(--color-white));
+}
+.menu__item.level-2:focus-visible,
+.menu__item.level-3:focus-visible {
   outline-offset: -2px;
-} 
+}
+testimonials-thumb .swiper-slide:focus-visible {
+  outline-offset: -1px;
+}
 .variant-options:focus-visible + label {
   outline: 0;
   border: 0;
