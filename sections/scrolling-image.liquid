@@ -125,9 +125,9 @@
               endif
             -%}
             {% capture should_disable %}
-              {% if section_width == "full-width" and i == 0 %}true{% endif %}
-              {% if section_width == "container" and i < 2 %}true{% endif %}
-              {% if section_width == "fluid_container" and i < 1 %}true{% endif %}
+              {% if section_width == "full-width" and i != 1 and i != 2 %}true{% endif %}
+              {% if section_width == "container" and i != 2 and i != 3 %}true{% endif %}
+              {% if section_width == "fluid_container" and i != 1 and i != 2 %}true{% endif %}
             {% endcapture %}
             <a
               class="scrolling-image-item overflow-hidden w-custom w-custom-mb focus-inset relative"
