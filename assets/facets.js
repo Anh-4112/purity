@@ -417,7 +417,7 @@ class PriceRange extends PriceRangeDrag {
         event.preventDefault();
     });
     minInput.addEventListener("input", function () {
-      if (minInput.value < Number(minInput.min) || minInput.value == "") {
+      if (Number(minInput.value) < Number(minInput.min) || minInput.value == "") {
         minInput.value = maxInput.min;
       }
       if (maxInput.value == "") {
@@ -430,7 +430,7 @@ class PriceRange extends PriceRangeDrag {
         }
       }
       if (minInput.value != "") {
-        rangeInput.value = minInput.value;
+        rangeInput.value = Number(minInput.value);
         _this.countPercentMin(Number(minInput.value));
       }
     });
@@ -453,9 +453,9 @@ class PriceRange extends PriceRangeDrag {
       }
       if (maxInput.value != "") {
         rangeInput2.value =
-          maxInput.value > maxInput.max
+          Number(maxInput.value) > Number(maxInput.max)
             ? Number(maxInput.max).toFixed(2)
-            : maxInput.value;
+            : Number(maxInput.value);
         _this.countPercentMax(Number(maxInput.value));
       } else {
         rangeInput2.value = Number(maxInput.max).toFixed(2);

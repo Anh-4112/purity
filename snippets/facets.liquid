@@ -215,6 +215,9 @@
                       id="Filter-{{ filter.label | escape }}-{{ filter_layout }}-GTE"
                       placeholder="{{ min_price }}"
                       type="number"
+                      {%- if filter.min_value.value -%}
+                        value="{{ min_price }}"
+                      {%- endif -%}
                       inputmode="numeric"
                       autocomplete="off"
                       min="0"
@@ -258,6 +261,9 @@
                       placeholder="{{ max_price }}"
                       type="number"
                       inputmode="numeric"
+                      {%- if filter.max_value.value -%}
+                        value="{{ max_price }}"
+                      {%- endif -%}
                       min="0"
                       {% if uses_comma_decimals %}
                         max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
@@ -283,6 +289,7 @@
                   assign from = min_price | times: 100 | divided_by: range_from | round: 2
                   assign to = max_price | times: 100 | divided_by: range_max | round: 2
                 -%}
+                
                 <price-range-drag
                   class="block relative price-range no-js-hidden"
                   data-range-max="{{ range_from }}"
@@ -308,7 +315,6 @@
                   >
                     {{- 'products.facets.from' | t -}}
                   </label>
-
                   <input
                     id="Filter-range-{{ filter.label | escape }}-{{ filter_layout }}-LTE"
                     type="range"
