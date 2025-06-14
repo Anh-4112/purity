@@ -31,14 +31,16 @@ class ScrollOffer extends HTMLElement {
       document.addEventListener("shopify:section:deselect", () => {
         _self.closePopup();
       });
-    }else{
+    } else {
       const rootElement = document.documentElement;
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.attributeName === "class") {
-            const isModalOpen = rootElement.classList.contains("open-modal-offer-popup");
+            const isModalOpen = rootElement.classList.contains(
+              "open-modal-offer-popup"
+            );
             this.isPopupOpen = isModalOpen;
-  
+
             if (isModalOpen) {
               this.hide();
               if (this._scrollHandler) {
@@ -56,7 +58,7 @@ class ScrollOffer extends HTMLElement {
           }
         });
       });
-  
+
       observer.observe(rootElement, {
         attributes: true,
         attributeFilter: ["class"],
@@ -138,7 +140,8 @@ class ScrollOffer extends HTMLElement {
   }
 
   handleKeydown(event) {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !event.target.closest("icon-close-offer")) {
+      event.preventDefault();
       this.initPopup();
     }
   }
@@ -161,6 +164,8 @@ class ScrollOffer extends HTMLElement {
       });
       closeButton.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
+          e.preventDefault();
+          e.stopPropagation();
           this.hideAndSetCookie();
         }
       });

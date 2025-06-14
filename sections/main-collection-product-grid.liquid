@@ -310,10 +310,10 @@
                 <form class="facets-vertical-form relative" id="FacetSortForm">
                   {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
                   <div class="select-custom facet-filters heading-color py-10">
-                    <select-sorter class="select-selected flex gap-10 align-center pointer rotate-animate">
-                      <label>
+                    <select-sorter tabindex="0" class="select-selected flex gap-10 align-center pointer rotate-animate">
+                      <span>
                         {{- 'products.facets.sort_by_label' | t }}
-                      </label>
+                      </span>
                       <span class="inline-block-1025">
                         {%- for option in collection.sort_options -%}
                           {% if option.value == sort_by %}{{ option.name | escape }}{% endif %}

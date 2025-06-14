@@ -121,14 +121,14 @@ if (!customElements.get("product-form-bundle")) {
         );
         if (bundleItems.length >= minimum) {
           submitButton.classList.remove("disabled");
-
           submitButton.removeAttribute("aria-disabled");
           submitButton.removeAttribute("disabled");
+          submitButton.setAttribute("tabindex", "0");
         } else {
           submitButton.classList.add("disabled");
           submitButton.setAttribute("aria-disabled", true);
           submitButton.setAttribute("disabled", true);
-          submitButton.setAttribute("tabindex", -1);
+          submitButton.removeAttribute("tabindex");
         }
 
         const buttonAddBundle = this.bundle.querySelectorAll(
@@ -181,7 +181,6 @@ class ButtonSubmitBundle extends HTMLElement {
     this.addEventListener("click", this.onSubmitHandler.bind(this));
     this.setAttribute("aria-disabled", true);
     this.setAttribute("disabled", true);
-    this.setAttribute("tabindex", -1);
     this.cart = document.querySelector("cart-drawer");
     this.wrapper = this.closest("build-your-routine");
     this.minimum = this.wrapper.dataset.minimum;
@@ -342,12 +341,12 @@ class ButtonSubmitBundle extends HTMLElement {
       this.classList.remove("disabled");
       this.removeAttribute("aria-disabled");
       this.removeAttribute("disabled");
-      this.setAttribute("tabindex", 0);
+      this.setAttribute("tabindex", "0");
     } else {
       this.classList.add("disabled");
       this.setAttribute("aria-disabled", true);
       this.setAttribute("disabled", true);
-      this.setAttribute("tabindex", -1);
+      this.removeAttribute("tabindex");
     }
   }
 }
@@ -473,8 +472,10 @@ class BundleCartRemoveButton extends HTMLElement {
 
     if (bundleItems.length >= parseInt(minimum)) {
       submitButton.classList.remove("disabled");
+      submitButton.setAttribute("tabindex", "0");
     } else {
       submitButton.classList.add("disabled");
+      submitButton.removeAttribute("tabindex");
     }
 
     const bundleBtnAddCart = this.bundle.querySelectorAll(
