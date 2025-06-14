@@ -103,12 +103,10 @@
                     %}
                     <li
                       class="w-full"
-                      {% if collection_media %}
-                        style="--color-text: {{ theme_st.overlay_image_color }};--color-heading: {{ theme_st.overlay_image_color }};"
-                      {% endif %}
+                      style="--color-text: {{ theme_st.overlay_image_color }};--color-heading: {{ theme_st.overlay_image_color }};"
                     >
                       <a
-                        class="collection-item__media--ratio rounded relative hover-effect{% if collection_media %} w-full flex align-end{% endif %}"
+                        class="collection-item__media--ratio relative hover-effect{% if collection_media %} w-full flex align-end rounded{% endif %}"
                         {% if collection_media %}
                           style="--aspect-ratio: 20/7;"
                         {% endif %}
