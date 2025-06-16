@@ -73,7 +73,7 @@
             >
           {% endif %}
           <div class="section-subheading h7 mb-5 mb-md-10 body_weight">
-            {{ section_st.subheading }}
+            {{ section.settings.subheading }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -89,7 +89,7 @@
             >
           {% endif %}
           <h2 class="section-heading {{ header_size }}">
-            {{ section_st.title }}
+            {{ section.settings.title }}
           </h2>
           {% if scroll_animation %}
             </motion-effect>
@@ -105,7 +105,7 @@
             >
           {% endif %}
           <div class="section-description mt-15 prose">
-            {{ section_st.description }}
+            {{ section.settings.description }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -148,8 +148,8 @@
             <div class="swiper-slide routine-builder__item motion-item">
               <div class="routine-builder__item-content">
                 {% if step_title != blank %}
-                  <span class="routine-builder__item-title heading-color mb-20 subheading_weight block text-center">
-                    {{ step_title }}
+                  <span class="routine-builder__item-title heading-color mb-20 subheading_weight block text-center" {{ block.shopify_attributes }}>
+                    {{ block.settings.step_title }}
                   </span>
                 {% endif %}
                 {% render 'card-product',
@@ -196,8 +196,8 @@
           <div class="routine-builder__item grid-card-item motion-item">
             <div class="routine-builder__item-content">
               {% if step_title != blank %}
-                <span class="routine-builder__item-title heading-color mb-20 subheading_weight block text-center">
-                  {{ step_title }}
+                <span class="routine-builder__item-title heading-color mb-20 subheading_weight block text-center" {{ block.shopify_attributes }}>
+                  {{ block.settings.step_title }}
                 </span>
               {% endif %}
               {% render 'card-product',
@@ -378,19 +378,22 @@
       "type": "checkbox",
       "id": "show_navigation",
       "default": false,
-      "label": "t:sections.all.carousel.show_navigation.label"
+      "label": "t:sections.all.carousel.show_navigation.label",
+      "visible_if": "{{ section.settings.enable_carousel == true }}"
     },
     {
       "type": "checkbox",
       "id": "show_pagination",
       "default": false,
-      "label": "t:sections.all.carousel.show_pagination.label"
+      "label": "t:sections.all.carousel.show_pagination.label",
+      "visible_if": "{{ section.settings.enable_carousel == true }}"
     },
     {
       "type": "checkbox",
       "id": "reveal_slide",
       "default": false,
-      "label": "t:sections.all.carousel.reveal_slide.label"
+      "label": "t:sections.all.carousel.reveal_slide.label",
+      "visible_if": "{{ section.settings.enable_carousel == true }}"
     },
     {
       "type": "header",
