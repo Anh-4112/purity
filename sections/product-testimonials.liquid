@@ -173,9 +173,9 @@
                     assign ratio = '3/4'
                 endcase
               else
-                if video != blank
+                if media_type == 'video' and video != blank
                   assign ratio = video.aspect_ratio
-                elsif image != blank
+                elsif media_type == 'image' and image != blank
                   assign ratio = image.aspect_ratio
                 elsif before_image != blank
                   assign ratio = before_image.aspect_ratio
