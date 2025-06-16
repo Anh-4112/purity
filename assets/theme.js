@@ -1184,11 +1184,15 @@ class VideoLocalScroll extends VideoLocal {
   }
 
   init() {
-    if (!this.isScrollInitialized) {
-      this.isScrollInitialized = true;
-      window.addEventListener("scroll", this.checkScroll.bind(this), {
-        passive: true,
-      });
+    if (window.Shopify && window.Shopify.designMode) {
+      this.loadContentVideo(this);
+    } else {
+      if (!this.isScrollInitialized) {
+        this.isScrollInitialized = true;
+        window.addEventListener("scroll", this.checkScroll.bind(this), {
+          passive: true,
+        });
+      }
     }
   }
 
