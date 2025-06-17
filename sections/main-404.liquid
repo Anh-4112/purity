@@ -29,6 +29,7 @@
           <div
             class="w-full max-w-custom mb-50 rounded"
             style="{%- if image != blank -%}--aspect-ratio: {{ image.aspect_ratio }};{% else %}--aspect-ratio: 4/3;{% endif %};--max-width: 50rem;"
+            {{ block.shopify_attributes }}
           >
             {%- assign image_alt = image.alt | escape | default: 'image' -%}
             {%- if image != blank -%}
@@ -53,6 +54,7 @@
           <div
             class="block__content-subheading subheading_weight heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }}"
             style="--space-bottom: {{ block_st.spacing_bottom }};"
+            {{ block.shopify_attributes }}
           >
             {{ block_st.subheading | escape }}
           </div>
@@ -118,6 +120,7 @@
             <div
               class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap text-center gap-15 content-center"
               style="--space-bottom: {{ block_st.spacing_bottom }};"
+              {{ block.shopify_attributes }}
             >
               {% if first_button_label != blank %}
                 <a
