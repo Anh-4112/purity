@@ -4,6 +4,7 @@
   assign overlay_opacity = section_st.overlay_opacity
   assign video_local = section_st.video_local
   assign image = section_st.image
+  assign media_type = section_st.media_type
 %}
 {%- capture style -%}
   --overlay-opacity: {{ overlay_opacity }}%; --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -49,7 +50,7 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="relative">
-    {%- if video_local == null and image != null -%}
+    {%- if media_type == 'image' and image != null -%}
       <div
         class="banner__media-hero sticky top-0 left-0 h-full-screen"
       >
@@ -65,7 +66,7 @@
           image_alt: alt
         %}
       </div>
-    {%- elsif video_local != null -%}
+    {%- elsif media_type == 'video' and video_local != null -%}
       <video-local class="block video-section sticky top-0 left-0 w-full banner__media-hero h-full-screen">
         {% liquid
           assign preview_image = video_local.preview_image | image_url: width: 1100
@@ -160,22 +161,41 @@
       "content": "t:sections.media-hero.media"
     },
     {
+      "type": "select",
+      "id": "media_type",
+      "options": [
+        {
+          "value": "image",
+          "label": "t:sections.all.image.label"
+        },
+        {
+          "value": "video",
+          "label": "t:sections.all.video.label"
+        }
+      ],
+      "default": "image",
+      "label": "t:sections.all.media.label"
+    },
+    {
       "type": "image_picker",
       "id": "image",
-      "label": "t:sections.all.image.label"
+      "label": "t:sections.all.image.label",
+      "visible_if": "{{ section.settings.media_type == 'image' }}"
     },
     {
       "type": "video",
       "id": "video_local",
       "label": "t:sections.video-with-text-overlay.settings.video_local.label",
-      "info": "t:sections.media-hero.info"
+      "info": "t:sections.media-hero.info",
+      "visible_if": "{{ section.settings.media_type == 'video' }}"
     },
     {
       "type": "text",
       "id": "video_alt_text",
       "label": "t:sections.video.settings.alt_description.label",
       "info": "t:sections.video.settings.alt_description.info",
-      "default": "Video alt text"
+      "default": "Video alt text",
+      "visible_if": "{{ section.settings.media_type == 'video' }}"
     },
     {
       "type": "range",
@@ -225,6 +245,7 @@
   "presets": [
     {
       "name": "t:sections.media-hero.name",
+      "category": "t:sections.group.banners",
       "blocks": [
         {
           "type": "heading"

@@ -156,7 +156,7 @@
               assign video_alt = block_st.video_alt_text
               if video_alt != blank
                 assign video_alt = video_alt | escape
-              else local_video.alt
+              else
                 assign video_alt = video.alt | escape
               else
                 assign video_alt = 'accessibility.video' | t
@@ -869,6 +869,7 @@
   "presets": [
     {
       "name": "t:sections.product_testimonials.name",
+      "category": "t:sections.group.product",
       "blocks": [
         {
           "type": "image_comparison"
