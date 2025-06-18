@@ -89,21 +89,15 @@
                   {%- if heading != blank -%}
                     <div
                       class="section-heading h3"
-                      {% if design_mode %}
-                        data-live-text-setting="section.{{ section.id }}.newsletter_heading"
-                      {% endif %}
                     >
-                      {{ heading }}
+                      {{ section.settings.newsletter_heading }}
                     </div>
                   {%- endif -%}
                   {%- if short_desc != blank -%}
                     <div
                       class="section-description mt-10 prose"
-                      {% if design_mode %}
-                        data-live-text-setting="section.{{ section.id }}.newsletter_sub_title"
-                      {% endif %}
                     >
-                      {{ short_desc }}
+                      {{ section.settings.newsletter_sub_title }}
                     </div>
                   {%- endif -%}
                 </div>
@@ -147,7 +141,7 @@
                         {% endif %}
                       >
                         {%- if button_label != blank -%}
-                          {{ button_label }}
+                          {{ section.settings.newsletter_button_label }}
                         {%- else -%}
                           {{ 'newsletter.button_label' | t }}
                         {% endif -%}

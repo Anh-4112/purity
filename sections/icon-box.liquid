@@ -64,7 +64,7 @@
             >
           {% endif %}
           <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight fs-big-2">
-            {{ section_st.subheading }}
+            {{ section.settings.subheading }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -80,7 +80,7 @@
             >
           {% endif %}
           <h2 class="block section-heading {{ header_size }}">
-            {{ section_st.title }}
+            {{ section.settings.title }}
           </h2>
           {% if scroll_animation %}
             </motion-effect>
@@ -96,7 +96,7 @@
             >
           {% endif %}
           <div class="section-description mt-15 prose">
-            {{ section_st.description }}
+            {{ section.settings.description }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -128,6 +128,7 @@
           <div
             class="motion-item {% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-15 gap-md-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
             style="---width: {{ section_st.icon_size }}px;"
+            {{ block.shopify_attributes }}
           >
             <div
               class="icon-box__icon w-custom h-auto flex heading-color"
@@ -160,12 +161,12 @@
                   class="icon-box__heading {{ content_icon_size }}"
                   style="--body-font-size:20px;"
                 >
-                  {{ heading }}
+                  {{ block.settings.heading }}
                 </h6>
               {%- endif -%}
               {%- if description != blank -%}
                 <div class="icon-box__description prose">
-                  {{ description }}
+                  {{ block.settings.description }}
                 </div>
               {%- endif -%}
             </div>
