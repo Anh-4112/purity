@@ -7,6 +7,11 @@
   .block-tags{
     justify-content: {{ block_st.text_alignment }};
   }
+  {% if request.visual_preview_mode %}
+    .block-tags > * {
+      border-color: #cccccc;
+    }
+  {% endif %}
 {%- endstyle -%}
 
 <div class="group__text w-full h-full flex align-{{ block_st.vertical_alignment }} justify-content-{{ block_st.text_alignment }}">
@@ -90,7 +95,21 @@
   ],
   "presets": [
     {
-      "name": "t:sections.all.text.label"
+      "name": "t:sections.all.text.label",
+      "blocks": [
+        {
+          "type": "highlight-text"
+        },
+        {
+          "type": "heading"
+        },
+        {
+          "type": "description"
+        },
+        {
+          "type": "_tags"
+        }
+      ]
     }
   ]
 }

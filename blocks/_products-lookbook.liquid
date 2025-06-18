@@ -15,9 +15,19 @@
   else
     if block_st.image != blank
       assign ratio = block_st.image.aspect_ratio
+    else
+      assign ratio = '3/4'
     endif
   endif
 -%}
+{% style %}
+  {% if request.visual_preview_mode %}
+    .group-lookbook_product__image svg,
+    .group-lookbook_product{
+      width: 16.5rem;
+    }
+  {% endif %}
+{% endstyle %}
 <div class="group-lookbook_product relative">
   <div
     class="group-lookbook_product__image rounded"

@@ -31,6 +31,13 @@
 {%- capture col_style -%}
   --item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }}; --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
+{% style %}
+  {% if request.visual_preview_mode %}
+    shopable-image-slide{
+      width: 35rem;
+    }
+  {% endif %}
+{% endstyle %}
 {% if data_free_scroll == 'true' %}
   <div class="free-scroll">
 {% endif %}
@@ -71,7 +78,7 @@
       "type": "@app"
     },
     {
-      "type": "_products"
+      "type": "_products-lookbook"
     }
   ],
   "settings": [
@@ -140,7 +147,18 @@
   ],
   "presets": [
     {
-      "name": "t:sections.shopable-image.blocks.lookbook.name"
+      "name": "t:sections.shopable-image.blocks.lookbook.name",
+      "blocks": [
+        {
+          "type": "_products-lookbook"
+        },
+        {
+          "type": "_products-lookbook"
+        },
+        {
+          "type": "_products-lookbook"
+        }
+      ]
     }
   ]
 }
