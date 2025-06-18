@@ -22,6 +22,21 @@
   endif
   assign show_border = true
 %}
+{% style %}
+  {% if request.visual_preview_mode %}
+    .block__image-with-text-offer {
+      border-radius: var(--img-rounded);
+      height: 500px;
+      background-color: transparent;
+    }
+    .image-with-text__text-item-inner{
+      background-color: #ffffff;
+    }
+    .block__image-with-text-offer .image-with-text__media {
+      height: 230px;
+    }
+  {% endif %}
+{% endstyle %}
 <div
   class="color-{{ block_st.color_scheme }} gradient block__image-with-text-offer"
 >
