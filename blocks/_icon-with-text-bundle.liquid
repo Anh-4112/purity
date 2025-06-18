@@ -1,11 +1,14 @@
-<span class="flex gap-10 align-center heading-color prose">
+{% if request.visual_preview_mode %}
+  <span class="visibility-hidden">{{ 'preview.content' | t }}</span>
+{% endif %}
+<span class="block-icon flex gap-10 align-center heading-color prose" {{ block.shopify_attributes }}>
   {%- if block.settings.svg_icon != 'none' -%}
     <span class="icon flex-auto w-custom fs-0" style="--width: 16px;">
       {%- render 'icon_svg_list', icon: block.settings.svg_icon, custom_width: 16, custom_height: 16 -%}
     </span>
   {%- endif -%}
-  {%- if block.settings.content != blank -%}
-    <span class="content prose">{{ block.settings.content }}</span>
+  {%- if block.settings.text != blank -%}
+    <span class="content prose">{{ block.settings.text }}</span>
   {%- endif -%}
 </span>
 {% schema %}
@@ -59,7 +62,7 @@
     },
     {
       "type": "richtext",
-      "id": "content",
+      "id": "text",
       "label": "t:sections.all.product_setting.icon_with_text.content.label",
       "default": "<p>Icon with text</p>"
     }
