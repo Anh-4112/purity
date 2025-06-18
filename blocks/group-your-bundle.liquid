@@ -30,6 +30,15 @@
     assign ratio = '3/4'
   endif
 %}
+{% style %}
+  {% if request.visual_preview_mode %}
+    .bundle-sticky{
+      display: flex;
+      flex: 0 0 auto;
+      width: var(--col-width, 50%);
+    }
+  {% endif %}
+{% endstyle %}
 <div
   class="bundle-sticky border rounded p-20 p-1025-40 flex column gap-20 gap-1025-30 sticky-1025 top-30"
   style="--border-height: 2px;"
