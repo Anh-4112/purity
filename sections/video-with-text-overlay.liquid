@@ -100,7 +100,13 @@
             <template>
               {{
                 section_st.video_local
-                | video_tag: image_size: '1100x', autoplay: true, controls: true, muted: true, alt: image_alt, loop: true
+                | video_tag:
+                  image_size: '1100x',
+                  autoplay: true,
+                  controls: true,
+                  muted: true,
+                  alt: image_alt,
+                  loop: true
               }}
             </template>
           </div>
@@ -443,6 +449,7 @@
   "presets": [
     {
       "name": "t:sections.video-with-text-overlay.name",
+      "category": "t:sections.group.banners",
       "blocks": [
         {
           "type": "heading"
