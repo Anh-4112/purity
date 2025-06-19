@@ -31,7 +31,6 @@
   class="footer color-{{ section_st.color_scheme }} gradient border-top"
   style="{{ style | strip | strip_newlines }}"
 >
-
   <div class="footer__middle section">
     <div class="{{ section_width }}">
       {%- if section.blocks.size > 0 -%}
@@ -61,16 +60,16 @@
                     <div
                       class="footer-block__newsletter-inner"
                     >
-                      {%- if block_st.heading != blank or block_st.description != blank -%}
+                      {%- if block.settings.heading != blank or block.settings.description != blank -%}
                         <div class="footer-block__newsletter-heading">
-                          {%- if block_st.heading != blank -%}
+                          {%- if block.settings.heading != blank -%}
                             <div class="footer__block-heading h6 flex space-between align-center collapsible-title relative pb-10 pb-1025-20">
-                              {{- block_st.heading | escape -}}
+                              {{ block.settings.heading }}
                             </div>
                           {%- endif -%}
-                          {%- if block_st.description != blank -%}
+                          {%- if block.settings.description != blank -%}
                             <div class="footer__block-description mb-20">
-                              {{ block_st.description }}
+                              {{ block.settings.description }}
                             </div>
                           {%- endif -%}
                         </div>
@@ -147,15 +146,15 @@
                         {%- else -%}
                         {%- endif -%}
                       {%- endform -%}
-                      {%- if block_st.note != blank -%}
+                      {%- if block.settings.note != blank -%}
                         <div class="footer__block-note fs-small">
-                          {{ block_st.note }}
+                          {{ block.settings.note }}
                         </div>
                       {%- endif -%}
                     </div>
                   </div>
                 {%- when 'menu_block' -%}
-                  {%- if block_st.menu != blank or block_st.heading != blank -%}
+                  {%- if block.settings.menu != blank or block.settings.heading != blank -%}
                     <details
                       class="mobile-collapsible-row detail-open"
                       hidden-mobile
@@ -165,18 +164,18 @@
                       <summary tabindex="-1" class="collapsible-row__summary pointer-md-none pb-20">
                         <h3 class="footer__block-heading h6 flex space-between align-center collapsible-heading relative">
                           <span>
-                            {{- block_st.heading | default: block_st.menu.title | escape -}}
+                            {{ block.settings.heading }}
                           </span>
-                          {%- if block_st.menu != blank -%}
+                          {%- if block.settings.menu != blank -%}
                             <span class="open-children-toggle icon transition hidden-md">
                               <span class="icon_plus-animation heading-color"> </span>
                             </span>
                           {%- endif -%}
                         </h3>
                       </summary>
-                      {%- if block_st.menu != blank -%}
+                      {%- if block.settings.menu != blank -%}
                         <ul class="footer__block-content menu-list-footer collapsible-row__content list-unstyled overflow-hidden-mb">
-                          {%- for link in block_st.menu.links -%}
+                          {%- for link in block.settings.menu.links -%}
                             <li class="mb-10">
                               <a
                                 href="{{ link.url }}"
@@ -198,11 +197,11 @@
                     is="collapsible-row"
                     open
                   >
-                    {%- if block_st.store_heading != blank -%}
+                    {%- if block.settings.store_heading != blank -%}
                       <summary tabindex="-1" class="collapsible-row__summary pointer-md-none pb-20">
                         <h3 class="footer__block-heading h6 flex space-between align-center collapsible-heading relative">
                           <span>
-                            {{ block_st.store_heading | escape }}
+                            {{ block.settings.store_heading | escape }}
                           </span>
                           <span class="open-children-toggle icon transition hidden-md">
                             <span class="icon_plus-animation heading-color"> </span>
@@ -214,33 +213,36 @@
                       class="collapsible-row__content overflow-hidden-mb"
                     >
                       <div class="pb-30 pb-1025-0 flex column gap-25">
-                        {%- if block_st.store_address or block_st.store_email or block_st.store_phone %}
+                        {%- if block.settings.store_address
+                          or block.settings.store_email
+                          or block.settings.store_phone
+                        %}
                           <div class="footer_store-infor flex column">
-                            {%- if block_st.store_address != blank -%}
+                            {%- if block.settings.store_address != blank -%}
                               <div class="footer__store-info">
                                 <div class="footer__info-content">
-                                  {{ block_st.store_address }}
+                                  {{ block.settings.store_address }}
                                 </div>
                               </div>
                             {%- endif -%}
-                            {%- if block_st.store_phone != blank -%}
+                            {%- if block.settings.store_phone != blank -%}
                               <div class="footer__store-info">
                                 <a
-                                  href="tel:{{ block_st.store_phone }}"
+                                  href="tel:{{ block.settings.store_phone }}"
                                   class="footer__info-content"
-                                  aria-label=" {{ block_st.store_phone }}"
+                                  aria-label=" {{ block.settings.store_phone }}"
                                 >
-                                  {{ block_st.store_phone }}
+                                  {{ block.settings.store_phone }}
                                 </a>
                               </div>
                             {%- endif -%}
-                            {%- if block_st.store_email != blank -%}
+                            {%- if block.settings.store_email != blank -%}
                               <div class="footer__store-info">
                                 <a
-                                  href="mailto:{{ block_st.store_email }}"
+                                  href="mailto:{{ block.settings.store_email }}"
                                   class="footer__info-content"
                                 >
-                                  {{ block_st.store_email }}
+                                  {{ block.settings.store_email }}
                                 </a>
                               </div>
                             {%- endif -%}
@@ -259,9 +261,9 @@
                             {% render 'social-icons' %}
                           </social-icon>
                         {%- endif -%}
-                        {%- if block_st.store_description != blank -%}
+                        {%- if block.settings.store_description != blank -%}
                           <div class="footer__block-info">
-                            {{ block_st.store_description }}
+                            {{ block.settings.store_description }}
                           </div>
                         {%- endif -%}
                       </div>
@@ -346,8 +348,11 @@
       {%- endif -%}
     </div>
   </div>
-    {%- if section_st.enable_back_top -%}
-    <back-to-top tabindex="0" class="back-to-top transition invisible pointer w-50 h-50 inline-flex content-center shadow bg-white fixed bottom-30 right-30 z-10 rounded-50 overflow-hidden">
+  {%- if section_st.enable_back_top -%}
+    <back-to-top
+      tabindex="0"
+      class="back-to-top transition invisible pointer w-50 h-50 inline-flex content-center shadow bg-white fixed bottom-30 right-30 z-10 rounded-50 overflow-hidden"
+    >
       <span class="absolute left-0 bottom-0 w-full bg-dark height-scroll"></span>
       <svg width="8" height="10" fill="none" class="color-white mix-blend">
         <path fill="currentColor" d="M7.797 4.203h.016A.636.636 0 0 1 8 4.672a.67.67 0 0 1-.188.469.69.69 0 0 1-.484.187.67.67 0 0 1-.469-.187L4 2.28l-2.86 2.86a.69.69 0 0 1-.484.187.617.617 0 0 1-.453-.187A.644.644 0 0 1 0 4.67c0-.187.068-.343.203-.468L3.531.86A.636.636 0 0 1 4 .672c.188 0 .344.062.469.187l3.328 3.344Zm0 4.656h.016A.69.69 0 0 1 8 9.344a.617.617 0 0 1-.188.453.661.661 0 0 1-.953 0L4 6.937l-2.86 2.86A.661.661 0 0 1 .657 10a.594.594 0 0 1-.453-.203A.594.594 0 0 1 0 9.344c0-.188.068-.35.203-.485l3.328-3.328A.611.611 0 0 1 4 5.328c.188 0 .344.068.469.203L7.797 8.86Z"/>

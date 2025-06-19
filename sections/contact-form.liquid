@@ -14,12 +14,12 @@
 >
   <div class="contact_form-inner w-full">
     <div class="contact_form-field w-full">
-      {%- if section_st.heading != blank or section_st.description != blank -%}
+      {%- if section.settings.heading != blank or section.settings.description != blank -%}
         {% assign animate_delay = 25 %}
         <div
           class="section-header text-{{ section_st.text_alignment }}"
         >
-          {%- if section_st.heading != blank -%}
+          {%- if section.settings.heading != blank -%}
             {% if scroll_animation %}
               <motion-effect
                 data-animate="fade-up"
@@ -27,12 +27,12 @@
                 class="block"
               >
             {% endif %}
-            <h2 class="section-heading">{{ section_st.heading }}</h2>
+            <h2 class="section-heading">{{ section.settings.heading }}</h2>
             {% if scroll_animation %}
               </motion-effect>
             {% endif %}
           {%- endif -%}
-          {%- if section_st.description != blank -%}
+          {%- if section.settings.description != blank -%}
             {% assign animate_delay = animate_delay | plus: 50 %}
             {% if scroll_animation %}
               <motion-effect
@@ -45,7 +45,7 @@
               class="short-des mt-15 prose max-w-custom mx-auto"
               style="--max-width: 60rem;"
             >
-              {{ section_st.description }}
+              {{ section.settings.description }}
             </div>
             {% if scroll_animation %}
               </motion-effect>
@@ -111,7 +111,7 @@
                 name="contact[name]"
                 required
                 value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
-                placeholder="{{ section_st.name }} *"
+                placeholder="{{ section.settings.name }} *"
               >
               <label class="field__label visually-hidden" for="ContactFormName-{{ section.id }}">
                 {{ 'templates.contact.form.name' | t -}}
@@ -133,7 +133,7 @@
                   aria-invalid="true"
                   aria-describedby="ContactForm-email-error"
                 {% endif %}
-                placeholder="{{ section_st.email_placeholder }} *"
+                placeholder="{{ section.settings.email_placeholder }} *"
                 required
                 pattern=".+\.[a-zA-Z]{2,6}"
               >
@@ -166,7 +166,7 @@
             >
               <option value="" disabled selected>{{ 'templates.contact.subject.name' | t }} *</option>
             </select>
-            <select-contact text="{{ section_st.option_select }}"></select-contact>
+            <select-contact text="{{ section.settings.option_select }}"></select-contact>
             <label for="ContactFormSubject-{{ section.id }}" class="visually-hidden">
               {{ 'templates.contact.subject.name' | t }}
             </label>
@@ -183,7 +183,7 @@
             aria-invalid="true"
             required
             name="contact[body]"
-            placeholder="{{ section_st.message }} *"
+            placeholder="{{ section.settings.message }} *"
             required
           >
         {{- form.body -}}
@@ -201,7 +201,7 @@
             class="btn pointer btn-primary w-1025-custom w-full max-w-100 relative"
             style="--width: 25rem;"
           >
-            <span class="hidden-on-load transition-short">{{ section_st.button_label }}</span>
+            <span class="hidden-on-load transition-short">{{ section.settings.button_label }}</span>
             {%- render 'loader' -%}
           </button>
         </div>
