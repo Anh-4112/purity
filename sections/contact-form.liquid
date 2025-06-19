@@ -7,7 +7,11 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
-
+{%  style %}
+  .contact__fields select {
+    padding: 5px 35px 5px 25px;
+  }
+{% endstyle %}
 <div
   class="color-{{ section_st.color_scheme }} gradient section stretch_width flex column content-center w-full max-w-custom-all mx-auto{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}--max-width: 78rem;--bs-gutter-x: 3rem;"
@@ -185,6 +189,7 @@
             name="contact[body]"
             placeholder="{{ section_st.message }} *"
             required
+            style="--input-padding: 2.5rem;"
           >
         {{- form.body -}}
         </textarea>
