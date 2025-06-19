@@ -6,7 +6,6 @@
 <div
   class="block__subheading subheading_weight heading-color lh-global inline-block mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }}"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
-  {{ block.shopify_attributes }}
 >
   {%- if scroll_animation -%}
     <motion-effect
@@ -14,7 +13,9 @@
       class="block"
     >
   {%- endif -%}
-  {{ block_st.subheading | escape }}
+  <div {{ block.shopify_attributes }}>
+    {{ block.settings.subheading }}
+  </div>
   {%- if scroll_animation -%}
     </motion-effect>
   {%- endif -%}

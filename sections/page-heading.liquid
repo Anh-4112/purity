@@ -22,9 +22,6 @@
     <div class="section_header">
       {% assign animate_delay = 25 %}
       {% for block in section.blocks %}
-        {%- liquid
-          assign block_st = block.settings
-        -%}
         {% case block.type %}
           {% when 'heading' %}
             {%- if scroll_animation -%}
@@ -35,8 +32,8 @@
               >
             {%- endif -%}
             <h1 class="heading-title">
-              {% if block_st.heading != blank %}
-                {{ block_st.heading }}
+              {% if block.settings.heading != blank %}
+                {{ block.settings.heading }}
               {% else %}
                 {{ page.title }}
               {% endif %}
@@ -172,14 +169,7 @@
     {
       "type": "description",
       "name": "t:sections.all.section_setting.page_heading.description.label",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "richtext",
-          "id": "description",
-          "label": "t:sections.all.section_setting.page_heading.description.label"
-        }
-      ]
+      "limit": 1
     }
   ]
 }
