@@ -135,10 +135,10 @@
                               %}
                             {% endif %}
                           </div>
-                          <div class="icon-box__content">
+                          <div class="icon-box__content" {{ block.shopify_attributes }}>
                             {%- if heading != blank -%}
                               <div class="icon-box__heading prose">
-                                {{ heading }}
+                                {{ block.settings.heading }}
                               </div>
                             {%- endif -%}
                           </div>
@@ -927,17 +927,17 @@
                             %}
                           {% endif %}
                         </div>
-                        <div class="icon-box__content">
+                        <div class="icon-box__content" {{ block.shopify_attributes }}>
                           {%- if heading != blank -%}
                             <div
                               class="icon-box__heading h7 mb-5 prose"
                             >
-                              {{ heading }}
+                              {{ block.settings.heading }}
                             </div>
                           {%- endif -%}
                           {%- if description != blank -%}
                             <div class="icon-box__description">
-                              {{ description }}
+                              {{ block.settings.description }}
                             </div>
                           {%- endif -%}
                         </div>
