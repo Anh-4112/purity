@@ -181,12 +181,12 @@
                               {%- endif -%}
                             </a>
                             {%- if heading != blank or description != blank -%}
-                              <div class="promotion-information mt-20">
+                              <div class="promotion-information mt-20" {{ block.shopify_attributes }}>
                                 {%- if heading != blank -%}
-                                  <div class="heading h7">{{ heading }}</div>
+                                  <div class="heading h7">{{ block.settings.heading }}</div>
                                 {%- endif -%}
                                 {%- if description != blank -%}
-                                  <div class="description heading-color">{{ description }}</div>
+                                  <div class="description heading-color">{{ block.settings.description }}</div>
                                 {%- endif -%}
                                 {%- if button_label != blank -%}
                                   <a
@@ -199,7 +199,7 @@
                                     class="btn-link border-animation inline-block mt-10 pointer"
                                     style="--btn-link-color: #000000;"
                                   >
-                                    {{ button_label }}
+                                    {{ block.settings.button_label }}
                                   </a>
                                 {%- endif -%}
                               </div>
@@ -534,15 +534,15 @@
                                   {%- if subheading != blank or heading != blank or button_label != blank -%}
                                     <div class="banner__box">
                                       {%- if subheading != blank -%}
-                                        <div class="suheading h7 mb-10">{{ subheading }}</div>
+                                        <div class="suheading h7 mb-10">{{ block.settings.subheading }}</div>
                                       {%- endif -%}
                                       {%- if heading != blank -%}
                                         <h2 class="h3 mb-10 px-0 px-1025-22">
-                                          {{ heading }}
+                                          {{ block.settings.heading }}
                                         </h2>
                                       {%- endif -%}
                                       {%- if description != blank -%}
-                                        <p class="description">{{ description }}</p>
+                                        <p class="description">{{ block.settings.description }}</p>
                                       {%- endif -%}
                                     </div>
                                   {%- endif -%}
@@ -556,7 +556,7 @@
                                       {% endif %}
                                       class="btn btn-primary w-full"
                                     >
-                                      {{ button_label }}
+                                      {{ block.settings.button_label }}
                                     </a>
                                   {%- endif -%}
                                 </div>

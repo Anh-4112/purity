@@ -206,11 +206,12 @@
                       {% if subheading != blank %}
                         <div class="sec__content-subheading fs-big-2 subheading_weight heading-color mb-10 mb-1025-30">
                           <motion-effect
+                            {{ block.shopify_attributes }}
                             data-animate="fade-up"
                             data-animate-delay="{{ animate_delay }}"
                             class="block{{ animate }}"
                           >
-                            {{ subheading | escape }}
+                            {{ block.settings.subheading | escape }}
                           </motion-effect>
                         </div>
                       {% endif %}
@@ -218,11 +219,14 @@
                         <div class="sec__content-heading {{ heading_size }}">
                           {% assign animate_delay = animate_delay | plus: 50 %}
                           <motion-effect
+                            {{ block.shopify_attributes }}
                             data-animate="fade-up"
                             data-animate-delay="{{ animate_delay }}"
                             class="block{{ animate }}"
                           >
-                            {{ heading }}
+                            <div {{ block.shopify_attributes }}>
+                              {{ block.settings.heading }}
+                            </div>
                           </motion-effect>
                         </div>
                       {% endif %}
@@ -230,11 +234,12 @@
                         <div class="sec__content-des mt-10 prose">
                           {% assign animate_delay = animate_delay | plus: 50 %}
                           <motion-effect
+                            {{ block.shopify_attributes }}
                             data-animate="fade-up"
                             data-animate-delay="{{ animate_delay }}"
                             class="block{{ animate }}"
                           >
-                            {{ description }}
+                            {{ block.settings.description }}
                           </motion-effect>
                         </div>
                       {% endif %}
@@ -256,8 +261,9 @@
                                 aria-label="{{ first_button_label }}"
                                 class="btn btn-{{ first_button_type }} inline-flex no-underline w-custom max-w-100 content-center"
                                 style="--width: 20rem;"
+                                {{ block.shopify_attributes }}
                               >
-                                {{ first_button_label }}
+                                {{ block.settings.first_button_label }}
                               </a>
                             </motion-effect>
                           {% endif %}
@@ -463,7 +469,7 @@
           "label": "t:sections.all.content_setting.subheading.label"
         },
         {
-          "type": "textarea",
+          "type": "text",
           "id": "heading",
           "default": "Image slide",
           "label": "t:sections.all.content_setting.heading.label"
