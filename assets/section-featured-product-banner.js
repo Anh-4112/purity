@@ -570,6 +570,9 @@ if (!customElements.get("content-effect")) {
       }
 
       connectedCallback() {
+        if (Shopify.visualPreviewMode) {
+          return;
+        }
         const mediaQuery = window.matchMedia("(max-width: 1024.98px)");
         const handleMediaQueryChange = throttle((mediaQuery) => {
           if (mediaQuery.matches) {

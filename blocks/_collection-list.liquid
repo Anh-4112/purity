@@ -24,6 +24,14 @@
     assign alt_text = 'sections.collection_list.sample_name' | t
   endif
 -%}
+{% if request.visual_preview_mode %}
+  {% style %}
+    :where(.border-bottom),
+    :where(.border){
+      border-color: #bbbbbb
+    }
+  {% endstyle %}
+{% endif %}
 <collection-hover {{ block.shopify_attributes }}>
   <a
     class="heading-style collection-list__content block"

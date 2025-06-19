@@ -31,8 +31,6 @@
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
-  
-
 {%- endcapture -%}
 <div
   class="section__collection-highlight overflow-hidden section color-{{ section_st.color_scheme }} gradient{% if section_st.show_divider %} border-top{% endif %}"
@@ -95,7 +93,11 @@
       class="collection-highlight__blocks relative flex wrap gap"
       style="--gap-desktop: {{ column_gap_desktop }}px;--col-width: {{ highlight_collection_width }}%;--row-gap: 3rem;"
     >
-      {% content_for 'blocks' %}
+      {% if request.visual_preview_mode %}
+        {% render '_preview-collection-highlights' , section_st: section_st %}
+      {% else %}
+        {% content_for 'blocks' %}
+      {% endif %}
     </div>
   </div>
 </div>
@@ -291,7 +293,7 @@
           "label": "t:sections.all.content_position.options__2.label"
         }
       ],
-      "default": "overlay",
+      "default": "bellow",
       "label": "t:sections.all.content_position.label"
     },
     {
