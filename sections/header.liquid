@@ -31,8 +31,9 @@
           --header-grid-template: 'menu logo icon' / minmax(0, 1fr) minmax(50px, var(--logo-width))  minmax(0,1fr);
         }
       }
+      {% if section_st.mobile_menu_position == "right" %}
       @media only screen and (max-width: 1024.98px) {
-        .mobile-menu-toggle:has(.menu-mobile-right) {
+        .mobile-menu-toggle .menu-mobile-right {
           grid-area: "menu"
         }
         .menu-mobile-right {
@@ -42,6 +43,14 @@
           margin-right: -1rem;
         }
       }
+      {% endif %}
+      {% if section_st.mobile_menu_position == "left" %}
+      @media only screen and (max-width: 1024.98px) {
+        .mobile-menu-toggle {
+          margin-left: -1rem;
+        }
+      }
+      {% endif %}
     {% if request.page_type == 'index' and transparent %}
       .site-header .transparent{
         background: transparent;
@@ -101,7 +110,10 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div class="header__inner grid gap logo-{{ section_st.logo_position }} menu-mobile-{{ section_st.mobile_menu_position }} align-center" style="--gap: 25px;">
+    <div
+      class="header__inner grid gap logo-{{ section_st.logo_position }} menu-mobile-{{ section_st.mobile_menu_position }} align-center"
+      style="--gap: 12px;"
+    >
       <toggle-menu class="mobile-menu-toggle hidden-1025 fs-0 relative wh-44 flex content-center">
         <button
           class="btn-reset btn-toggle text-start pointer heading-color transparent-color"
@@ -475,7 +487,7 @@
       {%- if section_st.show_account or section_st.show_search or section_st.show_cart -%}
         <div class="header__action flex wrap flex-end align-center gap-20">
           {%- if section_st.show_search or section_st.show_account or section_st.show_cart -%}
-            <div class="flex gap" style="--gap: 25px;--gap-desktop: 12px;">
+            <div class="flex gap" style="--gap: 12px;--gap-desktop: 12px;">
               {%- if section_st.show_search -%}
                 <a
                   href="{{ routes.search_url }}"
