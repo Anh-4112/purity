@@ -429,10 +429,10 @@ input[type="checkbox"]:checked + .checkmark:before {
   color: var(--btn-primary-color);
   border: 1px solid rgb(var(--color-white));
 }
-.wh-40,
+.wh-44,
 .touch-target {
-  width: 4rem;
-  height: 4rem;
+  width: 4.4rem;
+  height: 4.4rem;
 }
 .wh-55 {
   width: 5.5rem;
@@ -987,6 +987,11 @@ a.hover-heading-color:hover,
 :where(.gap-6) {
   gap: 0.6rem;
 }
+:where(.gap-8) {
+  --gap: 0.8rem;
+  --gap-desktop: 0.8rem;
+  gap: var(--gap);
+}
 :where(.gap-10) {
   --gap: 1rem;
   --gap-desktop: 1rem;
@@ -1005,6 +1010,10 @@ a.hover-heading-color:hover,
 }
 :where(.gap-30) {
   --gap: 3rem;
+  gap: var(--gap);
+}
+:where(.gap-32) {
+  --gap: 3.2rem;
   gap: var(--gap);
 }
 :where(.gap-40) {
@@ -1237,6 +1246,9 @@ a.hover-heading-color:hover,
 }
 .mb-30 {
   margin-bottom: 3rem;
+}
+.mb-32 {
+  margin-bottom: 3.2rem;
 }
 .mb-35 {
   margin-bottom: 3.5rem;
@@ -1498,7 +1510,7 @@ body:not(.template-index) .transparent-logo {
 .product__price {
   font-size: var(--product-price-size, 1.4rem);
 }
-.card-product-price .unit-price{
+.card-product-price .unit-price {
   flex-basis: 100%;
 }
 .rating {
@@ -1786,7 +1798,7 @@ quantity-input input {
     --gap: 30px;
     --row-gap: 4rem;
   }
-    .gap-md-16 {
+  .gap-md-16 {
     gap: 1.6rem;
   }
   .gap-md-20 {
@@ -1796,8 +1808,16 @@ quantity-input input {
     --gap: 3rem;
     gap: var(--gap);
   }
+  :where(.gap-md-32) {
+    --gap: 3.2rem;
+    gap: var(--gap);
+  }
   :where(.gap-md-50) {
     --gap: 5rem;
+    gap: var(--gap);
+  }
+  :where(.gap-md-52) {
+    --gap: 5.2rem;
     gap: var(--gap);
   }
   .column-md {
@@ -2178,6 +2198,20 @@ menu-drawer .modal-inner {
     padding: var(--padding-block-desktop, 3rem)
       var(--padding-inline-desktop, 4rem);
   }
+}
+.drawer-right .header__menu-mobile .submenu {
+  transform: translateX(10px);
+  opacity: 0;
+  transition: all var(--duration-short);
+}
+.drawer-left .header__menu-mobile .submenu {
+  transform: translateX(-10px);
+  opacity: 0;
+  transition: all var(--duration-short);
+}
+.header__menu-mobile .submenu[open] {
+  transform: translateX(0px);
+  opacity: 1;
 }
 .load-more-progress-bar::after {
   content: "";

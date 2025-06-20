@@ -31,6 +31,17 @@
           --header-grid-template: 'menu logo icon' / minmax(0, 1fr) minmax(50px, var(--logo-width))  minmax(0,1fr);
         }
       }
+      @media only screen and (max-width: 1024.98px) {
+        .mobile-menu-toggle:has(.menu-mobile-right) {
+          grid-area: "menu"
+        }
+        .menu-mobile-right {
+          --header-grid-template: 'logo icon menu' / minmax(50px, var(--logo-width)) minmax(0,1fr) auto;
+        }
+        .mobile-menu-toggle {
+          margin-right: -1rem;
+        }
+      }
     {% if request.page_type == 'index' and transparent %}
       .site-header .transparent{
         background: transparent;
@@ -90,8 +101,8 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <div class="header__inner grid gap logo-{{ section_st.logo_position }} align-center">
-      <toggle-menu class="mobile-menu-toggle hidden-1025 fs-0">
+    <div class="header__inner grid gap logo-{{ section_st.logo_position }} menu-mobile-{{ section_st.mobile_menu_position }} align-center" style="--gap: 25px;">
+      <toggle-menu class="mobile-menu-toggle hidden-1025 fs-0 relative wh-44 flex content-center">
         <button
           class="btn-reset btn-toggle text-start pointer heading-color transparent-color"
           aria-label="{{ 'accessibility.toggle_menu' | t }}"
@@ -464,11 +475,11 @@
       {%- if section_st.show_account or section_st.show_search or section_st.show_cart -%}
         <div class="header__action flex wrap flex-end align-center gap-20">
           {%- if section_st.show_search or section_st.show_account or section_st.show_cart -%}
-            <div class="flex gap" style="--gap: 7px;--gap-desktop: 7px;">
+            <div class="flex gap" style="--gap: 25px;--gap-desktop: 12px;">
               {%- if section_st.show_search -%}
                 <a
                   href="{{ routes.search_url }}"
-                  class="header__icon heading-color transparent-color wh-40 flex content-center"
+                  class="header__icon heading-color transparent-color wh-44 flex content-center relative"
                   id="search-icon-bubble"
                   aria-label="{{ 'general.search.name' | t }}"
                 >
@@ -481,7 +492,7 @@
               {%- if section_st.show_account -%}
                 <a
                   href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                  class="header__icon heading-color transparent-color wh-40 hidden flex-1025 content-center"
+                  class="header__icon heading-color transparent-color wh-44 hidden flex-1025 content-center"
                   aria-label="{{ 'customer.account_fallback' | t }}"
                 >
                   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -493,7 +504,7 @@
               {%- if section_st.show_cart -%}
                 <a
                   href="{{ routes.cart_url }}"
-                  class="header__icon heading-color transparent-color wh-40 flex content-center relative"
+                  class="header__icon heading-color transparent-color wh-44 flex content-center relative"
                   id="cart-icon-bubble"
                   aria-label="{{ 'templates.cart.cart' | t }}"
                 >
@@ -527,7 +538,7 @@
     <menu-drawer id="Menu-Drawer" class="modal block active-modal-js" style="--modal-width: 100%;">
       <modal-overlay class="modal-overlay invisible transition-drawer pointer z-21"></modal-overlay>
       <div
-        class="modal-inner draw-mb drawer-left drawer-left-mb inset-y-0 color-default transition-drawer w-full fixed z-22 left-0 bg-white overflow-hidden"
+        class="modal-inner draw-mb{% if section_st.mobile_menu_position == "left" %} drawer-left drawer-left-mb left-0{% else %} drawer-right drawer-right-mb right-0{% endif %} inset-y-0 color-default transition-drawer w-full fixed z-22 bg-white overflow-hidden"
         role="dialog"
         aria-modal="true"
         aria-label="{{ 'accessibility.toggle_menu' | t }}"
@@ -639,7 +650,7 @@
                                 </svg>
                               {% endif %}
                             </summary>
-                            <div class="submenu pointer-none absolute inset-0 z-2 bg-white flex column transition sub-mb absolute inset-0 drawer drawer-right-mb overflow-hidden">
+                            <div class="submenu pointer-none absolute inset-0 z-2 bg-white flex column transition sub-mb absolute inset-0 drawer overflow-hidden">
                               <div class="overflow-y-auto overflow-x-hidden custom-scrollbar pb-20">
                                 {%- render 'horizontal-menu', section_st: section_st, menu_mobile: true, link: link -%}
                                 {%- if has_content -%}
@@ -1036,6 +1047,23 @@
     {
       "type": "header",
       "content": "t:sections.header.settings.menu_mobile.label"
+    },
+    {
+      "type": "select",
+      "id": "mobile_menu_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.all.text_alignment.options__1.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.all.text_alignment.options__3.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.header.settings.menu_mobile.menu_icon.label",
+      "info": "t:sections.header.settings.menu_mobile.menu_icon.info"
     },
     {
       "type": "image_picker",
