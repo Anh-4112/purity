@@ -83,7 +83,7 @@
                                 id="NewsletterForm-Footer--{{ section.id }}"
                                 type="email"
                                 name="contact[email]"
-                                class="field__input show-placeholder grow-1 w-custom"
+                                class="field__input show-placeholder grow-1 w-custom js-custom-input"
                                 style="--width: calc(100% - 65px);--input-color: #444444;"
                                 value="{{ form.email }}"
                                 aria-required="true"
@@ -132,19 +132,6 @@
                             </div>
                           {%- endif -%}
                         </div>
-                        {%- if form.posted_successfully? -%}
-                          <div
-                            class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex align-center gap-10"
-                            id="ContactFooter-success"
-                            tabindex="-1"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
-                              <use href="#icon-success">
-                            </svg>
-                            <span>{{- 'newsletter.success' | t }}</span>
-                          </div>
-                        {%- else -%}
-                        {%- endif -%}
                       {%- endform -%}
                       {%- if block.settings.note != blank -%}
                         <div class="footer__block-note fs-small">
@@ -361,7 +348,7 @@
   {%- endif -%}
 </footer>
 <script type="module">
-  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-action.js" | asset_url }}';
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form#ContactFooter',

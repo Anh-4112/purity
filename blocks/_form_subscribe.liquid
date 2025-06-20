@@ -37,7 +37,7 @@
         name="contact[email]"
         value="{% if customer %}{{ customer.email }}{% endif %}"
         placeholder="{{ block.settings.email_placeholder }}"
-        class="password__subcribe-input btn-radius min-w-custom"
+        class="password__subcribe-input btn-radius min-w-custom js-custom-input"
         style="--min-width: 30rem;"
         {% if form.errors %}
           aria-invalid="true"
@@ -68,18 +68,6 @@
         {{ form.errors.messages.email -}}
       </div>
     {%- endif -%}
-    {%- if form.posted_successfully? -%}
-      <div
-        class="form__message success max-w-custom mb-20 mt-20 fs-small inline-flex align-center gap-10"
-        id="Password-success--{{ section.id }}"
-        tabindex="-1"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
-          <use href="#icon-success"></use>
-        </svg>
-        {{- 'newsletter.success' | t }}
-      </div>
-    {%- endif -%}
   {%- endform -%}
   {%- if scroll_animation -%}
     </motion-effect>
@@ -87,7 +75,7 @@
 </div>
 
 <script type="module">
-  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-action.js" | asset_url }}';
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form.form-password-page',
