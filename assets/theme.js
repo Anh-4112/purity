@@ -223,7 +223,7 @@ class BackToTop extends HTMLElement {
       });
       this.blur();
       setTimeout(() => {
-        const skipLink = document.querySelector('.skip-to-content-link');
+        const skipLink = document.querySelector(".skip-to-content-link");
         skipLink.focus();
       }, 500);
     }
@@ -696,25 +696,35 @@ class SubMenuDetails extends HTMLDetailsElement {
     this.summaryElement = this.firstElementChild;
     this.contentElement = this.lastElementChild;
     this._open = this.hasAttribute("open");
-    this.content = this.closest(".menu-link").querySelector(".sub-children-menu");
-    this.summaryElement.addEventListener("click", this.onSummaryClicked.bind(this));
+    this.content =
+      this.closest(".menu-link").querySelector(".sub-children-menu");
+    this.summaryElement.addEventListener(
+      "click",
+      this.onSummaryClicked.bind(this)
+    );
     if (window.innerWidth < 1025) {
       this.initialize();
     } else {
       (this.detectHoverListener = this.detectHover.bind(this)),
-      this.addEventListener("mouseenter", this.detectHoverListener.bind(this)),
-      this.addEventListener("mouseleave", this.detectHoverListener.bind(this));
+        this.addEventListener(
+          "mouseenter",
+          this.detectHoverListener.bind(this)
+        ),
+        this.addEventListener(
+          "mouseleave",
+          this.detectHoverListener.bind(this)
+        );
     }
   }
 
   onSummaryClicked(event) {
     event.preventDefault(),
-    window.innerWidth >= 1025 &&
-    this.hasAttribute("data-href") &&
-    this.getAttribute("data-href").length > 0 &&
-    (event.pointerType || this._open === true)
-      ? (window.location.href = this.getAttribute("data-href"))
-      : (this.open = !this.open);
+      window.innerWidth >= 1025 &&
+      this.hasAttribute("data-href") &&
+      this.getAttribute("data-href").length > 0 &&
+      (event.pointerType || this._open === true)
+        ? (window.location.href = this.getAttribute("data-href"))
+        : (this.open = !this.open);
   }
 
   async initialize() {
@@ -733,22 +743,27 @@ class SubMenuDetails extends HTMLDetailsElement {
 
   async transition(value) {
     return value
-      ? (window.innerWidth < 1025 ? Motion.animate(
-          this.content,
-          true ? { height: "auto" } : { height: 0 },
-          { duration: 0.25 }
-        ) :   
-        this.closest('ul').querySelectorAll('details').forEach((details) => {
-          details.removeAttribute("open");
-          details._open = false;
-        }),
+      ? (window.innerWidth < 1025
+          ? Motion.animate(
+              this.content,
+              true ? { height: "auto" } : { height: 0 },
+              { duration: 0.25 }
+            )
+          : this.closest("ul")
+              .querySelectorAll("details")
+              .forEach((details) => {
+                details.removeAttribute("open");
+                details._open = false;
+              }),
         this.setAttribute("open", ""),
-        this._open = true)
-      : (window.innerWidth < 1025 ? Motion.animate(
-          this.content,
-          false ? { height: "auto" } : { height: 0 },
-          { duration: 0.25 }
-        ) : '',
+        (this._open = true))
+      : (window.innerWidth < 1025
+          ? Motion.animate(
+              this.content,
+              false ? { height: "auto" } : { height: 0 },
+              { duration: 0.25 }
+            )
+          : "",
         this.removeAttribute("open"));
   }
 }
@@ -1221,7 +1236,7 @@ class VideoProductGallery extends VideoLocal {
       const poster = this.querySelector("button");
       if (!poster) return;
       poster.addEventListener("click", () => {
-        NextSkyTheme.pauseAllMedia(this.closest('media-gallery'));
+        NextSkyTheme.pauseAllMedia(this.closest("media-gallery"));
         this.loadContent();
       });
     }
@@ -1768,14 +1783,32 @@ class NavBar extends HTMLElement {
   updateScrollNavigationbar() {
     const scrollTop =
       document.documentElement.scrollTop || document.body.scrollTop;
+    const siteHeader = document.querySelector(".site-header");
     if (scrollTop > 200) {
-      this.classList.add("show");
+      if (
+        siteHeader &&
+        siteHeader.classList.contains("animate") &&
+        siteHeader.classList.contains("header-sticky-hidden")
+      ) {
+        this.classList.add("show");
+      } else if (
+        siteHeader &&
+        siteHeader.classList.contains("animate") &&
+        !siteHeader.classList.contains("header-sticky-hidden")
+      ) {
+        this.classList.remove("show");
+      } else if (!siteHeader) {
+        this.classList.add("show");
+      } else {
+        this.classList.add("show");
+      }
     } else {
       this.classList.remove("show");
     }
   }
 }
 customElements.define("mobile-navigation-bar", NavBar);
+
 var BlsCustomer = (function () {
   return {
     init: function () {
