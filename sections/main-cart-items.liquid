@@ -138,7 +138,7 @@
                           style="--gap-desktop: 25px; --gap: 15px;"
                         >
                           {% if item.image %}
-                            <div class="cart__image flex align-center gap-5">
+                            <div class="cart__image flex align-center gap-4">
                               <main-cart-remove-button
                                 id="Remove-{{ item.index | plus: 1 }}"
                                 data-index="{{ item.index | plus: 1 }}"
@@ -146,17 +146,17 @@
                                 <a
                                   href="{{ item.url_to_remove }}"
                                   class="button button--tertiary inline-flex align-center hover-icon-zoom relative w-custom flex-start col-md-w-custom h-30"
-                                  style="--width: 2rem;--col-width: 3rem;"
+                                  style="--width: 2rem;--col-width: 4rem;"
                                   aria-label="{{ 'sections.cart.remove_title' | t }}"
                                 >
                                   <svg
-                                    width="12"
-                                    height="12"
-                                    viewBox="0 0 12 12"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 20 20"
                                     fill="none"
-                                    class="icon-remove-cart icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                                    class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
                                   >
-                                    <use href="#icon-close" />
+                                    <use href="#icon-trash-cart"/>
                                   </svg>
                                   <span class="capitalize currentColor lh-1 visually-hidden">
                                     {{- 'sections.cart.remove_title' | t -}}
@@ -309,23 +309,16 @@
                                 </div>
                               {%- endif -%}
                               <ul
-                                class="discounts list-unstyled"
+                                class="discounts list-unstyled mt-4"
                                 role="list"
                                 aria-label="{{ 'customer.order.discount' | t }}"
                               >
                                 {%- for discount in item.discounts -%}
-                                  <li class="discounts__discount fs-small">
-                                    <svg
-                                      aria-hidden="true"
-                                      focusable="false"
-                                      class="icon icon-discount w-custom"
-                                      style="--width: 12px;"
-                                      viewBox="0 0 12 12"
-                                    >
-                                      <path fill-rule="evenodd" clip-rule="evenodd" d="M7 0h3a2 2 0 012 2v3a1 1 0 01-.3.7l-6 6a1 1 0 01-1.4 0l-4-4a1 1 0 010-1.4l6-6A1 1 0 017 0zm2 2a1 1 0 102 0 1 1 0 00-2 0z" fill="currentColor">
-                                    </svg>
-                                    {{ discount.title }}
-                                    (-{{ discount.amount | money }})
+                                  <li
+                                    class="discounts__discount fs-13 h-custom inline-flex align-center bg-custom text-color px-12 rounded"
+                                    style="--height: 2.8rem;--bg-color-custom: #D9266B26;--color-text: #D9266B;--img-rounded: 3rem;"
+                                  >
+                                    {{ discount.title }} (-{{ discount.amount | money }})
                                   </li>
                                 {%- endfor -%}
                               </ul>
@@ -559,15 +552,17 @@
                       {{ free_shipping_message | replace: '[amount]', total }}
                     </div>
                     <div
-                      class="progress-bar rounded-10 mx-auto w-full h-custom bg-grey mt-10 relative max-w-custom"
+                      class="progress-bar rounded-10 clip-path-unset mx-auto w-full h-custom bg-grey mt-10 relative max-w-custom"
                       style="--height: 6px;--max-width: 60rem"
                     >
                       <div
-                        class="progress rounded-10 h-custom absolute left-0 inset-y-0 transition"
+                        class="progress rounded-10 clip-path-unset h-custom absolute left-0 inset-y-0 transition"
                         style="width: var(--width); --width: 100%;"
                         data-total-order="{{ total_price }}"
                         data-fe-amount="{{ free_minimum_amount }}"
-                      ></div>
+                      >
+                        <div class="absolute progress-dot"></div>
+                      </div>
                     </div>
                   </free-ship-progress-bar>
                 {%- endif -%}
@@ -789,26 +784,27 @@
                   </div>
                   <div class="js-contents fs-small pb-24">
                     {%- if cart.cart_level_discount_applications.size > 0 -%}
-                      <ul
-                        class="discounts list-unstyled flex column gap-15 mb-15"
-                        role="list"
-                        aria-label="{{ 'customer.order.discount' | t }}"
-                      >
-                        {%- for discount in cart.cart_level_discount_applications -%}
-                          <li class="discounts__discount fs-small discounts__discount fs-small--position flex gap-5">
-                            <svg
-                              aria-hidden="true"
-                              focusable="false"
-                              class="icon icon-discount w-custom"
-                              viewBox="0 0 12 12"
-                              style="--width: 12px;"
-                            >
-                              <path fill-rule="evenodd" clip-rule="evenodd" d="M7 0h3a2 2 0 012 2v3a1 1 0 01-.3.7l-6 6a1 1 0 01-1.4 0l-4-4a1 1 0 010-1.4l6-6A1 1 0 017 0zm2 2a1 1 0 102 0 1 1 0 00-2 0z" fill="currentColor">
-                            </svg>
-                            {{ discount.title }} (-{{ discount.total_allocated_amount | money }})
-                          </li>
-                        {%- endfor -%}
-                      </ul>
+                      <div class="flex space-between">
+                        <div>
+                          <p class="heading-color">Order discount:</p>
+                        </div>
+                        <div>
+                          <ul
+                            class="discounts list-unstyled flex column gap-10"
+                            role="list"
+                            aria-label="{{ 'customer.order.discount' | t }}"
+                          >
+                            {%- for discount in cart.cart_level_discount_applications -%}
+                              <li
+                                class="discounts__discount discounts__discount fs-13 lh-global flex gap-5 text-white bg-custom color-white h-custom flex content-center rounded px-16"
+                                style="--body-line-height: 1.6;--bg-color-custom:#D0473E;--height: 3rem;--img-rounded: 3rem;"
+                              >
+                                -{{ discount.total_allocated_amount | money }}
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      </div>
                     {%- endif -%}
                     <p class="caption-large rte prose">
                       {%- if cart.duties_included and cart.taxes_included -%}

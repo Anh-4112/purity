@@ -527,7 +527,7 @@ export class FSProgressBar {
         _this.classList.remove("free-shipping");
         feUnAvailable = feUnAvailable.replace(
           "[amount]",
-          '<span class="price">[amount]</strong>'
+          '<span class="price heading-style">[amount]</span>'
         );
         _this.querySelector(".progress-bar-message").innerHTML =
           feUnAvailable.replace(

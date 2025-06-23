@@ -1681,37 +1681,23 @@ blockquote {
 }
 .progress {
   background-color: #14854e;
-  animation: 2s linear infinite progress;
-  -webkit-background-image: linear-gradient(
-    135deg,
-    #ffffff26 0 25%,
-    #fff0 25% 50%,
-    #ffffff26 50% 75%,
-    #fff0 75% 100%
-  );
-  background-image: linear-gradient(
-    135deg,
-    #ffffff26 0 25%,
-    #fff0 25% 50%,
-    #ffffff26 50% 75%,
-    #fff0 75% 100%
-  );
   background-size: 40px 40px;
   width: 0;
   transition-delay: 0.35s;
   --transition: width 0.4s ease;
 }
+.progress-dot {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background-color: #14854e;
+  top: 50%;
+  transform: translate(50%, -50%);
+  right: 0rem;
+}
 cart-drawer.active .progress,
 bundle-progress-bar .progress {
   width: var(--width);
-}
-@keyframes progress {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 60px 60px;
-  }
 }
 cart-gift-wrap-element.open .cart-addons-content {
   visibility: visible;
