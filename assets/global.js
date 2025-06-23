@@ -95,14 +95,17 @@ export function pauseAllMedia(element) {
   if (!element) {
     return;
   }
-  element.querySelectorAll('.js-youtube').forEach((video) => {
-    video.contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+  element.querySelectorAll(".js-youtube").forEach((video) => {
+    video.contentWindow.postMessage(
+      '{"event":"command","func":"' + "pauseVideo" + '","args":""}',
+      "*"
+    );
   });
-  element.querySelectorAll('.js-vimeo').forEach((video) => {
-    video.contentWindow.postMessage('{"method":"pause"}', '*');
+  element.querySelectorAll(".js-vimeo").forEach((video) => {
+    video.contentWindow.postMessage('{"method":"pause"}', "*");
   });
-  element.querySelectorAll('video').forEach((video) => video.pause());
-  element.querySelectorAll('product-model').forEach((model) => {
+  element.querySelectorAll("video").forEach((video) => video.pause());
+  element.querySelectorAll("product-model").forEach((model) => {
     if (model.modelViewerUI) model.modelViewerUI.pause();
   });
 }

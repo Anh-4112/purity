@@ -330,6 +330,18 @@ input[type="search"] {
   appearance: none;
   -webkit-appearance: none;
 }
+input.error-input,
+textarea.error-input {
+  --input-color: #C5382E !important;
+  --color-border: #C5382E !important;
+  --color-heading: #C5382E !important;
+  border-color: var(--color-border) !important;
+}
+input:required:valid:not(.error-input),
+textarea:required:valid:not(.error-input) {
+  --color-border: #13621f !important;
+  border-color: var(--color-border) !important;
+}
 select {
   cursor: pointer;
   -moz-appearance: none;

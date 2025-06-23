@@ -340,7 +340,11 @@
       window.validate = {
         email_invalid: `{{ "customer.validate.email" | t }}`,
         emailRegex: `{{ 'customer.validate.email_invalid' | t }}`,
+        password_invalid: `{{ 'customer.validate.min_password' | t }}`,
+        min_length: `{{ 'customer.validate.min_length' | t }}`,
+        phone_invalid: `{{ 'customer.validate.phone_invalid' | t }}`,
       };
     </script>
+    <script src="{{ 'form-validation.js' | asset_url }}" defer="defer"></script>
   </body>
 </html>

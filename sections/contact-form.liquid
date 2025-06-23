@@ -110,6 +110,7 @@
                 id="ContactFormName-{{ section.id }}"
                 name="contact[name]"
                 required
+                minlength="2"
                 value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
                 placeholder="{{ section.settings.name }} *"
               >
@@ -181,10 +182,10 @@
             class="text-area field__input w-full"
             aria-required="true"
             aria-invalid="true"
-            required
             name="contact[body]"
             placeholder="{{ section.settings.message }} *"
             required
+            minlength="2"
           >
         {{- form.body -}}
         </textarea>
@@ -210,7 +211,7 @@
   </div>
 </div>
 <script type="module">
-  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-action.js" | asset_url }}';
 
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({

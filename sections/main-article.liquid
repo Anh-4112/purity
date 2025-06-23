@@ -486,6 +486,7 @@
                             aria-describedby="CommentForm-author-error"
                           {% endif %}
                           placeholder="{{ 'blogs.article.name' | t }} *"
+                          minlength="2"
                         >
                         <label class="field__label visually-hidden" for="CommentForm-author">
                           {{- 'blogs.article.name' | t }}
@@ -542,6 +543,7 @@
                         class="text-area field__input w-full"
                         aria-required="true"
                         required
+                        minlength="2"
                         {% if form.errors contains 'body' %}
                           aria-invalid="true"
                           aria-describedby="CommentForm-body-error"
@@ -619,7 +621,7 @@
 </script>
 
 <script type="module">
-  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-action.js" | asset_url }}';
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form#commentArticle',

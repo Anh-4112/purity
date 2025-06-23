@@ -116,6 +116,7 @@
                   autocomplete="name"
                   type="text"
                   required
+                  minlength="2"
                   id="ContactFormName-faq--{{ section.id }}"
                   name="contact[name]"
                   value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
@@ -141,7 +142,7 @@
                     aria-invalid="true"
                     aria-describedby="ContactForm-email-error"
                   {% endif %}
-                  placeholder="{{ section.settings.email_placeholder }} *"
+                  placeholder="{{ section.settings.email_placeholder }}"
                   required
                 >
                 <label class="field__label visually-hidden" for="ContactFormEmail-faq--{{ section.id }}">
@@ -174,6 +175,7 @@
                 aria-required="true"
                 aria-invalid="true"
                 required
+                minlength="2"
                 name="contact[body]"
                 placeholder="{{ section.settings.message }}*"
               >
@@ -202,7 +204,7 @@
   </div>
 </section>
 <script type="module">
-  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-action.js" | asset_url }}';
 
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
