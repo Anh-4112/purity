@@ -147,7 +147,7 @@
                         assign button_link = block_st.button_link
                       -%}
                       {%- if block.type == 'steps' -%}
-                        <div class="swiper-slide motion-item">
+                        <div class="swiper-slide motion-item" {{ block.shopify_attributes }}>
                           <div class="product__promotion-banner hover-effect">
                             <a
                               {% if button_link == blank %}
@@ -180,15 +180,15 @@
                                 {% render 'placeholder-render', type: 'product' %}
                               {%- endif -%}
                             </a>
-                            {%- if heading != blank or description != blank -%}
+                            {%- if block.settings.heading != blank or block.settings.description != blank -%}
                               <div class="promotion-information mt-20">
-                                {%- if heading != blank -%}
-                                  <div class="heading h7">{{ heading }}</div>
+                                {%- if block.settings.heading != blank -%}
+                                  <div class="heading h7">{{ block.settings.heading }}</div>
                                 {%- endif -%}
-                                {%- if description != blank -%}
-                                  <div class="description heading-color">{{ description }}</div>
+                                {%- if block.settings.description != blank -%}
+                                  <div class="description heading-color">{{ block.settings.description }}</div>
                                 {%- endif -%}
-                                {%- if button_label != blank -%}
+                                {%- if block.settings.button_label != blank -%}
                                   <a
                                     {% if button_link == blank %}
                                       role="link" aria-disabled="true"
@@ -199,7 +199,7 @@
                                     class="btn-link border-animation inline-block mt-10 pointer"
                                     style="--btn-link-color: #000000;"
                                   >
-                                    {{ button_label }}
+                                    {{ block.settings.button_label }}
                                   </a>
                                 {%- endif -%}
                               </div>
