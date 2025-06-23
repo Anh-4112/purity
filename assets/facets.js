@@ -116,6 +116,13 @@ class FacetFiltersForm extends HTMLElement {
 
   static renderProductCount(htmlRender) {
     const updateContent = (blockClass) => {
+      if (
+        blockClass == "facet-drawer" &&
+        window.innerWidth < 1025 &&
+        document.querySelector("#FacetFiltersForm")
+      ) {
+        return;
+      }
       const source = htmlRender.querySelector(`.${blockClass}`);
       const destination = document.querySelector(`.${blockClass}`);
       if (source && destination) {
@@ -126,6 +133,7 @@ class FacetFiltersForm extends HTMLElement {
     const blocksToUpdate = [
       "collection-count",
       "facets-filters-active",
+      "facets-filters-drawer-active",
       "select-custom.facet-filters",
       "pagination-load-more",
       "facet-drawer",
@@ -159,6 +167,22 @@ class FacetFiltersForm extends HTMLElement {
         ).innerHTML = element.innerHTML;
       }
     });
+
+    if (
+      htmlRender.querySelector(".js-filter-apply") &&
+      document.querySelector(".js-filter-apply")
+    ) {
+      document.querySelector(".js-filter-apply").innerHTML =
+        htmlRender.querySelector(".js-filter-apply").innerHTML;
+    }
+
+    if (
+      htmlRender.querySelector(".js-filter-facet") &&
+      document.querySelector(".js-filter-facet")
+    ) {
+      document.querySelector(".js-filter-facet").innerHTML =
+        htmlRender.querySelector(".js-filter-facet").innerHTML;
+    }
 
     FacetFiltersForm.renderActiveFacets(htmlRender);
 
@@ -229,9 +253,6 @@ class FacetFiltersForm extends HTMLElement {
       "facet-filters-form form"
     );
     const targetForm = event.target.closest("form");
-    if (event.target.closest("#FacetFiltersFormDrawer")) {
-      return;
-    }
     const forms = [];
     const isFiltersForm = targetForm.id === "FacetFiltersForm";
     sortFilterForms.forEach((form) => {
@@ -417,7 +438,10 @@ class PriceRange extends PriceRangeDrag {
         event.preventDefault();
     });
     minInput.addEventListener("input", function () {
-      if (Number(minInput.value) < Number(minInput.min) || minInput.value == "") {
+      if (
+        Number(minInput.value) < Number(minInput.min) ||
+        minInput.value == ""
+      ) {
         minInput.value = maxInput.min;
       }
       if (maxInput.value == "") {
@@ -609,7 +633,7 @@ class FilterSort extends FacetFiltersForm {
     if (facetFilters) {
       facetFilters.classList.remove("active");
     }
-    
+
     this.updateFilterSortTabindex();
     this.focusSelectSorter();
   }
@@ -617,13 +641,14 @@ class FilterSort extends FacetFiltersForm {
   updateFilterSortTabindex() {
     const filterSortElements = document.querySelectorAll("filter-sort");
     filterSortElements.forEach((element) => {
-        element.removeAttribute("tabindex");
+      element.removeAttribute("tabindex");
     });
   }
 
   focusSelectSorter() {
     setTimeout(() => {
-      const selectSorter = this.closest(".facet-filters")?.querySelector("select-sorter");
+      const selectSorter =
+        this.closest(".facet-filters")?.querySelector("select-sorter");
       if (selectSorter) {
         selectSorter.focus();
       }
@@ -662,6 +687,43 @@ class FacetApplyCanvas extends FacetFiltersForm {
   }
 }
 customElements.define("facet-apply-canvas", FacetApplyCanvas);
+
+class ShowMoreButton extends FacetFiltersForm {
+  constructor() {
+    super();
+    const _this = this;
+    this.addEventListener("click", this.ShowMoreFilter.bind(this));
+    this.addEventListener(
+      "keypress",
+      function (event) {
+        if (event.key === "Enter") {
+          _this.ShowMoreFilter.bind(_this)(event);
+        }
+      }.bind(_this),
+      false
+    );
+  }
+
+  ShowMoreFilter() {
+    const button = this.querySelector(".button-show-more");
+    const filterItemElements =
+      this.closest(".filter-attribute").querySelectorAll(".hidden-load-more");
+    if (button.classList.contains("show-more")) {
+      button.classList.remove("show-more");
+      button.classList.add("show-less");
+      filterItemElements.forEach((element) => {
+        element.classList.remove("hidden");
+      });
+    } else {
+      button.classList.add("show-more");
+      button.classList.remove("show-less");
+      filterItemElements.forEach((element) => {
+        element.classList.add("hidden");
+      });
+    }
+  }
+}
+customElements.define("show-more-button", ShowMoreButton);
 
 class LoadMoreProduct extends HTMLElement {
   constructor() {
