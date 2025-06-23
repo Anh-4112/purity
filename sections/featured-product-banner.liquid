@@ -54,6 +54,21 @@
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if section.blocks.size > 6 %}--speed: 15s;{% elsif  section.blocks.size > 4 %} --speed: 10s;{% elsif section.blocks.size > 2 %}--speed: 6s;{% else %}--speed: 4s;{% endif %}
 {%- endcapture -%}
+
+{% for block in section.blocks %}
+  {% case block.type -%}
+    {%- when 'image_effect' %}
+      {% if request.visual_preview_mode %}
+        <div
+          {{ block.shopify_attributes }}
+          class="image-with-text__media banner__media h-full rounded"
+          style="--aspect-ratio: 16/9"
+        >
+          {% render 'placeholder-render', type: 'product', class: 'img-placeholder h-full w-full' %}
+        </div>
+      {% endif %}
+  {% endcase %}
+{% endfor %}
 <div
   class="section section color-{{ section_st.color_scheme }} gradient{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
