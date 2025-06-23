@@ -42,9 +42,9 @@
       <div class="drawer__body h-full flex column bg-white rounded-start">
         <div
           class="drawer__header drawer__header-cart flex gap-10 space-between align-center drawer-spacing border-bottom"
-          style="--padding-block-desktop: 2.15rem;"
+          style="--padding-block-desktop: 2.15rem;--padding-inline-desktop:3.2rem;"
         >
-          <div class="drawer__heading h5 flex gap align-center" style="--gap-desktop: 6px;--gap: 6px">
+          <div class="drawer__heading h5 flex gap align-center" style="--gap-desktop: 8px;--gap: 8px">
             {{ 'sections.cart.title' | t }}
             <span
               class="cart-count w-custom h-custom rounded-50 bg-custom fs-12 inline-flex content-center"
@@ -179,9 +179,9 @@
               class="free-shipping-bar drawer-spacing pt-20"
               style="--padding-block-desktop: 2rem;--padding-inline-desktop: 3.2rem;"
             >
-              <div class="progress-bar-message text-center"></div>
+              <div class="progress-bar-message text-center mb-18"></div>
               <div
-                class="progress-bar rounded-10 clip-path-unset h-custom bg-grey mt-10 relative"
+                class="progress-bar rounded-10 clip-path-unset h-custom bg-grey relative"
                 style="--height: 4px;"
               >
                 <div
@@ -195,7 +195,10 @@
             </free-ship-progress-bar>
           {%- endif -%}
           <div class="cart-drawer-inner overflow-y-auto custom-scrollbar grow-1 flex column">
-            <cart-items class="block drawer-spacing grow-1 mb-10 pt-0" style="--padding-block-desktop: 0.6rem;--padding-inline-desktop: 3.2rem;">
+            <cart-items
+              class="block drawer-spacing grow-1 mb-10 pt-0"
+              style="--padding-block-desktop: 0rem;--padding-inline-desktop: 3.2rem;"
+            >
               <form
                 action="{{ routes.cart_url }}"
                 id="CartDrawer-Form"
@@ -210,7 +213,7 @@
                         {%- for item in cart.items -%}
                           <div
                             id="CartDrawer-Item-{{ item.index | plus: 1 }}"
-                            class="cart-item loading_snippet product__item pb-20 mb-20 border-bottom-dashed last-0"
+                            class="cart-item loading_snippet product__item pt-20{% if item.index != 0 %} mt-20{% endif %} border-top-dashed last-0"
                           >
                             <div class="cart-item_inner flex gap-20 transition">
                               {% if item.image %}
@@ -271,6 +274,7 @@
                                     <cart-remove-button
                                       id="CartDrawer-Remove-{{ item.index | plus: 1 }}"
                                       data-index="{{ item.index | plus: 1 }}"
+                                      class="flex justify-end"
                                     >
                                       <button
                                         type="button"
@@ -278,8 +282,8 @@
                                         aria-label="{{- 'sections.cart.remove_title' | t: title: item.title -}}"
                                       >
                                         <svg
-                                          width="20"
-                                          height="20"
+                                          width="16"
+                                          height="16"
                                           viewBox="0 0 20 20"
                                           fill="none"
                                           class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
@@ -394,7 +398,7 @@
                                     style="--input-height: 40px;"
                                   >
                                     <button
-                                      class="quantity__button flex align-center btn-reset ps-18 pe-10 pointer heading-color"
+                                      class="quantity__button flex align-center btn-reset ps-18 pe-18 pointer heading-color"
                                       name="minus"
                                       type="button"
                                     >
@@ -430,7 +434,7 @@
                                       data-index="{{ item.index | plus: 1 }}"
                                     >
                                     <button
-                                      class="quantity__button flex align-center btn-reset ps-10 pe-18 pointer heading-color"
+                                      class="quantity__button flex align-center btn-reset ps-18 pe-18 pointer heading-color"
                                       name="plus"
                                       type="button"
                                     >
@@ -592,7 +596,7 @@
                           <svg width="18" height="18" fill="none">
                             <path fill="currentColor" d="M9.703 11.672a.703.703 0 1 0-1.406 0v2.812a.703.703 0 0 0 1.406 0v-2.812Z"/><path fill="#000" d="M1.969 10.969a.703.703 0 0 0-.703.703v2.812A3.52 3.52 0 0 0 4.78 18h8.438a3.52 3.52 0 0 0 3.515-3.516v-2.812a.703.703 0 1 0-1.406 0v2.812c0 1.164-.946 2.11-2.11 2.11H4.782a2.112 2.112 0 0 1-2.11-2.11v-2.812a.703.703 0 0 0-.702-.703ZM2.11 9.844h13.78c1.164 0 2.11-.947 2.11-2.11V6.328c0-1.163-.946-2.11-2.11-2.11h-2.347c.24-.413.379-.893.379-1.405A2.816 2.816 0 0 0 11.109 0C10.27 0 9.516.37 9 .955A2.806 2.806 0 0 0 6.89 0a2.816 2.816 0 0 0-2.812 2.813c0 .512.138.992.379 1.406H2.109C.946 4.219 0 5.165 0 6.329v1.405c0 1.163.946 2.11 2.11 2.11Zm9-8.438a1.408 1.408 0 0 1 0 2.813H9.702V2.812c0-.775.631-1.406 1.406-1.406ZM5.483 2.813a1.408 1.408 0 0 1 2.813 0v1.406H6.89c-.776 0-1.407-.631-1.407-1.407ZM1.406 6.328c0-.388.316-.703.703-.703h6.188v.703a.703.703 0 1 0 1.406 0v-.703h6.188c.387 0 .703.315.703.703v1.406a.704.704 0 0 1-.703.704H2.109a.704.704 0 0 1-.703-.704V6.328Z"/>
                           </svg>
-                          {{ 'sections.cart.gift.title' | t -}}
+                          {{ 'sections.cart.gift.title_mini_cart' | t -}}
                         </span>
                         <button
                           type="button"
@@ -846,27 +850,29 @@
               </div>
 
               {%- if cart.cart_level_discount_applications.size > 0 -%}
-                <div class="flex space-between">
-                  <div>
-                    <p class="heading-color">Order discount:</p>
-                  </div>
-                  <div>
-                    <ul
-                      class="discounts list-unstyled flex column gap-10"
-                      role="list"
-                      aria-label="{{ 'customer.order.discount' | t }}"
-                    >
-                      {%- for discount in cart.cart_level_discount_applications -%}
-                        <li
-                          class="discounts__discount discounts__discount fs-13 lh-global flex gap-5 text-white bg-custom color-white h-custom flex content-center rounded px-16"
-                          style="--body-line-height: 1.6;--bg-color-custom:#D0473E;--height: 3rem;--img-rounded: 3rem;"
-                        >
-                          -{{ discount.total_allocated_amount | money }}
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                  </div>
-                </div>
+                <ul
+                  class="discounts list-unstyled flex column gap-4"
+                  role="list"
+                  aria-label="{{ 'customer.order.discount' | t }}"
+                >
+                  {%- for discount in cart.cart_level_discount_applications -%}
+                  <li
+                    class="discounts__discount discounts__discount fs-13 lh-global flex gap-5 text-white heading-color flex space-between"
+                    style="--body-line-height: 1.6;--bg-color-custom:#D0473E;--height: 3rem;--img-rounded: 3rem;"
+                  >
+                    <div class="flex content-center gap-4 fs-small">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none">
+                        <use href="#icon-discount"/>
+                      </svg>
+                      {{ discount.title }}
+                    </div>
+
+                    <div class="bg-custom color-white h-custom flex content-center rounded px-16">
+                      -{{ discount.total_allocated_amount | money }}
+                    </div>
+                  </li>
+                  {%- endfor -%}
+                </ul>
               {%- endif -%}
               <small class="tax-note caption-large word-break text-center rte">
                 {%- if cart.duties_included and cart.taxes_included -%}
@@ -909,7 +915,7 @@
               </small>
             </div>
 
-            <form action="{{ routes.cart_url }}" method="POST" class="flex wrap gap-10 mt-20 mt-1025-24">
+            <form action="{{ routes.cart_url }}" method="POST" class="flex wrap gap-10 mt-20 mt-1025-16">
               <a
                 href="{{ routes.cart_url }}"
                 aria-label="{{ 'sections.cart.view_cart' | t }}"
