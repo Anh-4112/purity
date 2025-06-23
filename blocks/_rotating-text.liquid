@@ -37,33 +37,44 @@
   }
 {% endstyle %}
 
-{%- if scroll_animation -%}
-  <motion-effect data-animate="fade-up" class="block">
-{%- endif -%}
-<div
-  class="mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex justify-content-{{ content_alignment }}"
-  {{ block.shopify_attributes }}
->
-  <div id="circular-text-{{ block_id }}" class="relative flex justify-center items-center heading-style">
-    <svg id="circleSvg-{{ block_id }}">
-      <defs>
-        <path id="circle-{{ block_id }}" />
-      </defs>
-      <text class="{{ rotation_class }}{% if block_st.uppercase %} uppercase{% endif %}" font-size="15">
-        <textPath xlink:href="#circle-{{ block_id }}" id="textPath-{{ block_id }}">
-          {{ block.settings.circle_text }}
-        </textPath>
-      </text>
+{% if request.visual_preview_mode %}
+  <div
+    {{ block.shopify_attributes }}
+  >
+    <svg width="132" height="132" viewBox="0 0 132 132">
+      <use href="#icon-rotate-text" />
     </svg>
-    <div class="absolute circular-text__icon flex justify-center items-center">
-      {% render 'icon_svg_list', icon: block_st.icon_svg, custom_width: 42, custom_height: 42 %}
+  </div>
+{% else %}
+  {%- if scroll_animation -%}
+    <motion-effect data-animate="fade-up" class="block">
+  {%- endif -%}
+  <div
+    class="mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex justify-content-{{ content_alignment }}"
+  >
+    <div
+      id="circular-text-{{ block_id }}"
+      class="relative flex justify-center items-center heading-style"
+    >
+      <svg id="circleSvg-{{ block_id }}">
+        <defs>
+          <path id="circle-{{ block_id }}" />
+        </defs>
+        <text class="{{ rotation_class }}{% if block_st.uppercase %} uppercase{% endif %}" font-size="15">
+          <textPath xlink:href="#circle-{{ block_id }}" id="textPath-{{ block_id }}">
+            {{ block_st.circle_text }}
+          </textPath>
+        </text>
+      </svg>
+      <div class="absolute circular-text__icon flex justify-center items-center">
+        {% render 'icon_svg_list', icon: block_st.icon_svg, custom_width: 42, custom_height: 42 %}
+      </div>
     </div>
   </div>
-</div>
-{%- if scroll_animation -%}
-  </motion-effect>
-{%- endif -%}
-
+  {%- if scroll_animation -%}
+    </motion-effect>
+  {%- endif -%}
+{% endif %}
 <script type="module">
   import { CircularText } from '{{ 'circular-text.js' | asset_url }}';
   document.addEventListener('DOMContentLoaded', () => {
