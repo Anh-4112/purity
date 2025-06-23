@@ -777,8 +777,8 @@
                     </details>
                   </div>
                 {%- endif -%}
-                <div class="totals pt-20 pt-1025-25">
-                  <div class="total_price-inner flex wrap gap-10 align-center space-between h5">
+                <div class="totals pt-20 pt-1025-24">
+                  <div class="total_price-inner flex wrap gap-10 align-center space-between h5 mb-4">
                     <span class="totals__subtotal"> {{ 'sections.cart.total' | t }}:</span>
                     {{ cart.total_price | money_with_currency }}
                   </div>
@@ -909,8 +909,8 @@
               </div>
               {% if trust_badges %}
                 <div
-                  class="trust-badges bg-secondary rounded drawer-spacing mt-30 grid gap"
-                  style="--padding-block-desktop: 4rem;--padding-block: var(--bs-gutter-x);--gap-desktop: 2.5rem;--gap: 2rem;"
+                  class="trust-badges bg-secondary rounded drawer-spacing mt-24 grid gap"
+                  style="--padding-block-desktop: 4rem;--padding-block: var(--bs-gutter-x);--gap-desktop: 2.4rem;--gap: 2rem;"
                 >
                   {%- for block in section.blocks -%}
                     {%- liquid
@@ -922,7 +922,7 @@
                       assign icon_size = block_st.icon_size
                     -%}
                     {%- if block.type == 'trust-badges' -%}
-                      <div class="icon-box__item flex gap-15">
+                      <div class="icon-box__item flex gap-16">
                         <div class="icon-box__icon">
                           {% if icon_svg != 'none' %}
                             {% render 'icon_svg_list',
@@ -946,7 +946,7 @@
                         <div class="icon-box__content">
                           {%- if heading != blank -%}
                             <div
-                              class="icon-box__heading h7 mb-5 prose"
+                              class="icon-box__heading h7 mb-4 prose"
                             >
                               {{ heading }}
                             </div>
