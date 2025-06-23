@@ -23,6 +23,24 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--overlay-opacity: {{ section_st.image_opacity }}%;
 {%- endcapture -%}
+
+{%- for block in section.blocks -%}
+  {%- case block.type -%}
+    {%- when 'heading' -%}
+      {% if request.visual_preview_mode %}
+        <div {{ block.shopify_attributes }} class="fs-50">
+          {{ 'general.content.heading' | t }}
+        </div>
+      {% endif %}
+    {%- when 'description' -%}
+      {% if request.visual_preview_mode %}
+        <div {{ block.shopify_attributes }} class="fs-50">
+          {{ 'general.content.description' | t }}
+        </div>
+      {% endif %}
+  {%- endcase -%}
+{%- endfor -%}
+
 <div
   class="section__page-heading color-{{ section_st.color_scheme }} gradient mb-60"
   style="{{ style | strip | strip_newlines }}"
