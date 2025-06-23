@@ -37,14 +37,14 @@
   assign column_gap_slide = 0
   assign column_gap_mb = 0
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-    assign column_gap_mb = 20
+    assign column_gap_slide = 32
+    assign column_gap_mb = 24
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-    assign column_gap_mb = 10
+    assign column_gap_slide = 24
+    assign column_gap_mb = 12
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
-    assign column_gap_mb = 5
+    assign column_gap_slide = 16
+    assign column_gap_mb = 8
   endif
 -%}
 {%- capture style -%}
@@ -266,7 +266,7 @@
           "label": "t:sections.all.text_alignment.options__3.label"
         }
       ],
-      "default": "left",
+      "default": "center",
       "label": "t:sections.all.text_alignment.alignment"
     },
     {
@@ -385,7 +385,7 @@
     }
   ],
   "enabled_on": {
-    "templates": ["product"]
+    "templates": ["product", "cart", "search", "collection"]
   }
 }
 {% endschema %}

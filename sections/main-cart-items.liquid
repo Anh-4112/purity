@@ -70,28 +70,6 @@
           {{ 'sections.cart.title' | t }}
         </h1>
         {% assign total_price = cart.total_price | times: 1 %}
-        {%- if show_free_shipping_message and free_minimum_amount -%}
-          <free-ship-progress-bar
-            data-fe-unavailable="{% if free_shipping_message != blank %}{{ free_shipping_message }}{% else %}{{ 'sections.cart.free_shipping_html' | t }}{% endif %}"
-            data-fe-available="{{ 'sections.cart.free_shipping_available' | t }}"
-            class="free-shipping-bar mt-10 mb-60 block"
-          >
-            <div class="progress-bar-message text-center heading-style">
-              {{ free_shipping_message | replace: '[amount]', total }}
-            </div>
-            <div
-              class="progress-bar rounded-10 mx-auto w-full h-custom bg-grey mt-10 relative max-w-custom"
-              style="--height: 6px;--max-width: 60rem"
-            >
-              <div
-                class="progress rounded-10 h-custom absolute left-0 inset-y-0 transition"
-                style="width: var(--width); --width: 100%;"
-                data-total-order="{{ total_price }}"
-                data-fe-amount="{{ free_minimum_amount }}"
-              ></div>
-            </div>
-          </free-ship-progress-bar>
-        {%- endif -%}
         <main-cart
           class="main-cart flex-wrap flex-1025 gap-60 justify-between{% if cart == empty %} is-empty{% endif %}"
           data-section-id="{{ section.id }}"
@@ -568,9 +546,31 @@
           <div class="cart-right mb-15 col-1025-w-custom w-full">
             <div class="sticky-1025 top-30">
               <div
-                class="cart-info bg-secondary rounded drawer-spacing flex column gap"
-                style="--padding-block-desktop: 4rem;--padding-block: var(--bs-gutter-x);--gap-desktop: 25px;--gap: 2rem;"
+                class="cart-info bg-secondary rounded drawer-spacing flex column"
+                style="--padding-block-desktop: 4rem;--padding-block: var(--bs-gutter-x)"
               >
+                {%- if show_free_shipping_message and free_minimum_amount -%}
+                  <free-ship-progress-bar
+                    data-fe-unavailable="{% if free_shipping_message != blank %}{{ free_shipping_message }}{% else %}{{ 'sections.cart.free_shipping_html' | t }}{% endif %}"
+                    data-fe-available="{{ 'sections.cart.free_shipping_available' | t }}"
+                    class="free-shipping-bar pb-24 border-bottom block"
+                  >
+                    <div class="progress-bar-message text-center heading-style">
+                      {{ free_shipping_message | replace: '[amount]', total }}
+                    </div>
+                    <div
+                      class="progress-bar rounded-10 mx-auto w-full h-custom bg-grey mt-10 relative max-w-custom"
+                      style="--height: 6px;--max-width: 60rem"
+                    >
+                      <div
+                        class="progress rounded-10 h-custom absolute left-0 inset-y-0 transition"
+                        style="width: var(--width); --width: 100%;"
+                        data-total-order="{{ total_price }}"
+                        data-fe-amount="{{ free_minimum_amount }}"
+                      ></div>
+                    </div>
+                  </free-ship-progress-bar>
+                {%- endif -%}
                 {%- if show_gift_wrap and select_product_gift_wrap != blank -%}
                   {% liquid
                     assign gift_wrap = false
@@ -582,17 +582,28 @@
                   %}
                   {%- if gift_wrap -%}
                     <div class="cart__gift-wrap">
-                      <details class="collapsible-row" is="collapsible-row">
+                      <details class="collapsible-row py-24 border-bottom" is="collapsible-row">
                         <summary class="collapsible-row__summary">
-                          <h6 class="footer__block-heading fs-18 pe-20 flex space-between align-center collapsible-heading relative">
-                            <span>{{- 'sections.cart.gift.title_order' | t -}}</span>
+                          <h6 class="fs-18 fw-500 pe-20 flex space-between align-center collapsible-heading relative">
+                            <div class="flex content-center">
+                              <svg
+                                class="icon me-10"
+                                width="20"
+                                height="21"
+                                viewBox="0 0 20 21"
+                                fill="none"
+                              >
+                                <use href="#icon-gift" />
+                              </svg>
+                              <span>{{- 'sections.cart.gift.title_order' | t -}}</span>
+                            </div>
                             <span class="open-children-toggle transition">
                               <span class="icon_plus-animation heading-color"> </span>
                             </span>
                           </h6>
                         </summary>
                         <div class="collapsible-row__content overflow-hidden">
-                          <cart-gift-wrap-element class="block pt-15">
+                          <cart-gift-wrap-element class="block pt-16">
                             <div class="cart-addons-content-inner fs-small-1">
                               <p class="heading-color">{{ 'sections.cart.gift.info_order' | t }}</p>
                               {%- if select_product_gift_wrap != blank -%}
@@ -679,10 +690,21 @@
                 {%- endif -%}
                 {%- if show_estimate_shipping -%}
                   <div class="cart__estimate-shipping">
-                    <details class="collapsible-row" is="collapsible-row">
+                    <details class="collapsible-row py-24 border-bottom" is="collapsible-row">
                       <summary class="collapsible-row__summary">
-                        <h6 class="footer__block-heading fs-18 pe-20 flex space-between align-center collapsible-heading relative">
-                          <span>{{ 'sections.cart.shipping.estimate_shipping_title' | t }}</span>
+                        <h6 class="fs-18 fw-500 pe-20 flex space-between align-center collapsible-heading relative">
+                          <div class="flex content-center">
+                            <svg
+                              class="icon me-10"
+                              width="20"
+                              height="21"
+                              viewBox="0 0 20 21"
+                              fill="none"
+                            >
+                              <use href="#icon-car-shipping" />
+                            </svg>
+                            <span>{{ 'sections.cart.shipping.estimate_shipping_title' | t }}</span>
+                          </div>
                           <span class="open-children-toggle transition">
                             <span class="icon_plus-animation heading-color"> </span>
                           </span>
@@ -760,12 +782,12 @@
                     </details>
                   </div>
                 {%- endif -%}
-                <div class="totals pt-20 pt-1025-25 border-top">
+                <div class="totals pt-20 pt-1025-25">
                   <div class="total_price-inner flex wrap gap-10 align-center space-between h5">
                     <span class="totals__subtotal"> {{ 'sections.cart.total' | t }}:</span>
                     {{ cart.total_price | money_with_currency }}
                   </div>
-                  <div class="js-contents fs-small">
+                  <div class="js-contents fs-small pb-24">
                     {%- if cart.cart_level_discount_applications.size > 0 -%}
                       <ul
                         class="discounts list-unstyled flex column gap-15 mb-15"
@@ -833,8 +855,8 @@
                   </div>
                 </div>
                 {%- if show_cart_note -%}
-                  <main-cart-note class="cart__note block">
-                    <div class="cart__note-content block">
+                  <main-cart-note class="cart__note block pb-24">
+                    <div class="cart__note-content flex">
                       <label class="visually-hidden" for="Cart-Note">
                         {{- 'sections.cart.note.title' | t -}}
                       </label>
@@ -848,7 +870,7 @@
                   </main-cart-note>
                 {%- endif -%}
                 <form action="{{ routes.cart_url }}" method="POST">
-                  <div class="cart__ctas grid gap-10">
+                  <div class="cart__ctas grid gap-10 pb-24">
                     <noscript>
                       <button type="submit" class="cart__update-button" form="cart">
                         {{ 'sections.cart.update' | t }}
