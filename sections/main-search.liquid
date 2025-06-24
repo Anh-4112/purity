@@ -26,6 +26,7 @@
   assign show_product_counts = section_st.show_product_counts
   assign enable_filtering = section_st.enable_filtering
   assign search_empty = true
+  assign search_popular_keywords = theme_st.search_popular_keywords
   assign all_product = search.results_count
   if all_product <= products_to_show
     assign products_to_show = all_product
@@ -91,7 +92,7 @@
     <div class="breadcrumbs container pt-20">
       {%- render 'breadcrumbs' -%}
     </div>
-    <div class="page-header my-60">
+    <div class="page-header mt-60 mb_auto-rsp" style="--space-bottom: 100">
       {% if scroll_animation %}
         <motion-effect
           data-animate="fade-up"
@@ -162,6 +163,42 @@
               </div>
             </form>
           </div>
+          {% if search.performed and search.results_count == 0 %}
+            {%- if search_popular_keywords != blank -%}
+              {%- capture link_search_keyword -%}
+              {{ routes.search_url }}?type=product&options%5Bprefix%5D=last&q=
+            {%- endcapture -%}
+              <div
+                id="search-keyword"
+                class="search-keyword w-full max-w-custom mx-auto mt-24"
+              >
+                <ul
+                  class="search-keyword-list list-unstyled flex wrap gap justify-center"
+                  style="--row-gap: 10px;"
+                >
+                  {%- assign search_popular_keywords = search_popular_keywords
+                    | replace: ' ,', ','
+                    | replace: ', ', ','
+                    | split: ','
+                  -%}
+                  {%- for qr in search_popular_keywords -%}
+                    {%- assign search_keywords = qr | strip -%}
+                    {%- if search_keywords -%}
+                      <li>
+                        <a
+                          class="recommend-search__item outlined-border"
+                          href="{{ link_search_keyword }}{{ search_keywords }}"
+                          aria-label="{{ search_keywords }}"
+                        >
+                          {{ search_keywords }}
+                        </a>
+                      </li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+          {%- endif -%}
         </action-main-search>
       </div>
     </div>
