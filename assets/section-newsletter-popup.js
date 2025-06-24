@@ -6,6 +6,8 @@ class NewsletterPopup extends HTMLElement {
     this.enable = this.dataset.enable;
     this.initialized = false;
     this.sectionId = this.dataset.sectionId;
+    this.scrollTriggered = false;
+    this.spaceScroll = 60;
   }
 
   connectedCallback() {
@@ -36,7 +38,7 @@ class NewsletterPopup extends HTMLElement {
     if (this.initialized) return;
     this.initialized = true;
 
-    const urlChecked = this.checkUrlParameters();
+    const urlChecked = NextSkyTheme.checkUrlParameters();
     if (urlChecked) {
       return;
     }
@@ -45,18 +47,31 @@ class NewsletterPopup extends HTMLElement {
       (this.enable === "show-on-homepage" || this.enable === "show-all-page") &&
       getCookie === null
     ) {
-      this.schedulePopupWithModalCheck();
+      this.initScrollTrigger();
     }
   }
 
-  schedulePopupWithModalCheck() {
-    const popupDelay = 6000;
-    setTimeout(() => {
-      const activeModal = NextSkyTheme.root.classList.contains("open-modal");
-      if (!activeModal) {
-        this.createPopup();
+  initScrollTrigger() {
+    const _self = this;
+    const scrollHandler = () => {
+      if (_self.scrollTriggered) return;
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const documentHeight =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const scrollPercentage = (scrollTop / documentHeight) * 100;
+      if (scrollPercentage >= _self.spaceScroll) {
+        _self.scrollTriggered = true;
+        window.removeEventListener("scroll", scrollHandler);
+        const activeModal = NextSkyTheme.root.classList.contains("open-modal");
+        if (!activeModal) {
+          _self.createPopup();
+        }
       }
-    }, popupDelay - 100);
+    };
+
+    window.addEventListener("scroll", scrollHandler, { passive: true });
   }
 
   actionDesignMode(event) {
@@ -80,7 +95,6 @@ class NewsletterPopup extends HTMLElement {
 
   createPopup(templateDesignMode) {
     let template;
-    let timeShowPopup = 0;
     if (window.Shopify && window.Shopify.designMode) {
       const existingPopup = document.querySelector("newsletter-modal-popup");
       if (existingPopup.classList.contains("active")) {
@@ -89,17 +103,13 @@ class NewsletterPopup extends HTMLElement {
     }
     if (window.Shopify && window.Shopify.designMode) {
       template = templateDesignMode;
-      timeShowPopup = 0;
     } else {
       template = this.querySelector("newsletter-modal-popup");
-      timeShowPopup = 100;
     }
     if (!template) return;
-    setTimeout(() => {
-      NextSkyTheme.eventModal(template, "open", false, null, true);
-      NextSkyTheme.global.rootToFocus = template;
-      new LazyLoader(".image-lazy-load");
-    }, timeShowPopup);
+    NextSkyTheme.eventModal(template, "open", false, null, true);
+    NextSkyTheme.global.rootToFocus = template;
+    new LazyLoader(".image-lazy-load");
     this.initNotShow(template);
   }
 
@@ -110,46 +120,45 @@ class NewsletterPopup extends HTMLElement {
     }
   }
 
-  checkUrlParameters() {
-    const urlInfo = window.location.href;
-    const newURL = location.href.split("?")[0];
-
-    if (urlInfo.indexOf("customer_posted=true") >= 1) {
-      NextSkyTheme.setCookie("newsletter_popup", "true", 1);
-      NextSkyTheme.notifier.show(message.newsletter.success, "success", 4000);
-      window.history.pushState("object", document.title, newURL);
-      return true;
-    }
-
-    if (
-      urlInfo.indexOf("contact%5Btags%5D=newsletter&form_type=customer") >= 1
-    ) {
-      NextSkyTheme.notifier.show(message.newsletter.error, "error", 4000);
-      window.history.pushState("object", document.title, newURL);
-      return false;
-    }
-
-    return false;
-  }
-
   initNotShow(modal) {
-    const notShow = modal?.querySelector(".newsletter-action");
-    if (!notShow) return;
+    const notShowCheckbox = modal?.querySelector(".newsletter-action");
+    if (!notShowCheckbox || notShowCheckbox.type !== "checkbox") return;
     const _self = this;
 
-    notShow.addEventListener("click", () => {
-      _self.eventNotShow(modal);
-    });
-    notShow.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        _self.eventNotShow(modal);
-      }
+    notShowCheckbox.addEventListener("change", () => {
+      _self.eventNotShow(notShowCheckbox);
     });
   }
 
-  eventNotShow(modal) {
-    NextSkyTheme.setCookie("newsletter_popup", "true", 1);
-    NextSkyTheme.eventModal(modal, "close", true);
+  eventNotShow(checkbox) {
+    if (checkbox.checked) {
+      NextSkyTheme.setCookie("newsletter_popup", "true", 1);
+    } else {
+      NextSkyTheme.deleteCookie("newsletter_popup");
+    }
   }
 }
 customElements.define("newsletter-popup", NewsletterPopup);
+
+class ButtonCopyDiscount extends HTMLButtonElement {
+  constructor() {
+    super();
+    this.init();
+  }
+  init() {
+    this.addEventListener("click", this.onClick.bind(this), false);
+  }
+  onClick() {
+    const url = this.getAttribute("data-href");
+    navigator.clipboard.writeText(url);
+    const text = this.getAttribute("data-text");
+    this.textContent = text;
+    const clipboardText = this.getAttribute("data-clipboard-text");
+    setTimeout(() => {
+      this.textContent = clipboardText;
+    }, 1000);
+  }
+}
+customElements.define("button-copy-discount", ButtonCopyDiscount, {
+  extends: "button",
+});
