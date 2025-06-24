@@ -223,7 +223,7 @@ class BackToTop extends HTMLElement {
       });
       this.blur();
       setTimeout(() => {
-        const skipLink = document.querySelector('.skip-to-content-link');
+        const skipLink = document.querySelector(".skip-to-content-link");
         skipLink.focus();
       }, 500);
     }
@@ -696,25 +696,35 @@ class SubMenuDetails extends HTMLDetailsElement {
     this.summaryElement = this.firstElementChild;
     this.contentElement = this.lastElementChild;
     this._open = this.hasAttribute("open");
-    this.content = this.closest(".menu-link").querySelector(".sub-children-menu");
-    this.summaryElement.addEventListener("click", this.onSummaryClicked.bind(this));
+    this.content =
+      this.closest(".menu-link").querySelector(".sub-children-menu");
+    this.summaryElement.addEventListener(
+      "click",
+      this.onSummaryClicked.bind(this)
+    );
     if (window.innerWidth < 1025) {
       this.initialize();
     } else {
       (this.detectHoverListener = this.detectHover.bind(this)),
-      this.addEventListener("mouseenter", this.detectHoverListener.bind(this)),
-      this.addEventListener("mouseleave", this.detectHoverListener.bind(this));
+        this.addEventListener(
+          "mouseenter",
+          this.detectHoverListener.bind(this)
+        ),
+        this.addEventListener(
+          "mouseleave",
+          this.detectHoverListener.bind(this)
+        );
     }
   }
 
   onSummaryClicked(event) {
     event.preventDefault(),
-    window.innerWidth >= 1025 &&
-    this.hasAttribute("data-href") &&
-    this.getAttribute("data-href").length > 0 &&
-    (event.pointerType || this._open === true)
-      ? (window.location.href = this.getAttribute("data-href"))
-      : (this.open = !this.open);
+      window.innerWidth >= 1025 &&
+      this.hasAttribute("data-href") &&
+      this.getAttribute("data-href").length > 0 &&
+      (event.pointerType || this._open === true)
+        ? (window.location.href = this.getAttribute("data-href"))
+        : (this.open = !this.open);
   }
 
   async initialize() {
@@ -733,22 +743,27 @@ class SubMenuDetails extends HTMLDetailsElement {
 
   async transition(value) {
     return value
-      ? (window.innerWidth < 1025 ? Motion.animate(
-          this.content,
-          true ? { height: "auto" } : { height: 0 },
-          { duration: 0.25 }
-        ) :   
-        this.closest('ul').querySelectorAll('details').forEach((details) => {
-          details.removeAttribute("open");
-          details._open = false;
-        }),
+      ? (window.innerWidth < 1025
+          ? Motion.animate(
+              this.content,
+              true ? { height: "auto" } : { height: 0 },
+              { duration: 0.25 }
+            )
+          : this.closest("ul")
+              .querySelectorAll("details")
+              .forEach((details) => {
+                details.removeAttribute("open");
+                details._open = false;
+              }),
         this.setAttribute("open", ""),
-        this._open = true)
-      : (window.innerWidth < 1025 ? Motion.animate(
-          this.content,
-          false ? { height: "auto" } : { height: 0 },
-          { duration: 0.25 }
-        ) : '',
+        (this._open = true))
+      : (window.innerWidth < 1025
+          ? Motion.animate(
+              this.content,
+              false ? { height: "auto" } : { height: 0 },
+              { duration: 0.25 }
+            )
+          : "",
         this.removeAttribute("open"));
   }
 }
@@ -1217,7 +1232,7 @@ class VideoProductGallery extends VideoLocal {
       const poster = this.querySelector("button");
       if (!poster) return;
       poster.addEventListener("click", () => {
-        NextSkyTheme.pauseAllMedia(this.closest('media-gallery'));
+        NextSkyTheme.pauseAllMedia(this.closest("media-gallery"));
         this.loadContent();
       });
     }
@@ -1728,6 +1743,7 @@ class CarouselMobile extends HTMLElement {
   actionOutMobile() {
     this.classList.remove("swiper");
     this.innerHTML = this.swiperSlideInnerHtml;
+    console.log('first', this.swiperSlideInnerHtml)
     if (this.bundle) {
       this.className = "";
       setTimeout(() => {
@@ -2927,3 +2943,112 @@ class SelectContact extends HTMLElement {
   }
 }
 customElements.define("select-contact", SelectContact);
+
+
+class GridCustom extends HTMLElement {
+  constructor() {
+    super();
+    this.enableCarousel = this.dataset.actionMobile === 'true';
+    this.breakpoint = 767;
+    this.swiperInstance = null;
+    this.originalHTML = this.innerHTML;
+    this.originalStyle = this.getAttribute('style') || '';
+  }
+
+  connectedCallback() {
+    setTimeout(() => {
+      this.init();
+    }, 300);
+  }
+
+  init() {
+    if (!this.enableCarousel) return;
+
+    let width = window.innerWidth;
+    
+    if (width <= this.breakpoint) {
+      this.actionOnMobile();
+    } else {
+      this.actionOutMobile();
+    }
+
+    window.addEventListener('resize', () => {
+      const newWidth = window.innerWidth;
+      if (newWidth <= this.breakpoint && width > this.breakpoint) {
+        this.actionOnMobile();
+      }
+      if (newWidth > this.breakpoint && width <= this.breakpoint) {
+        this.actionOutMobile();
+      }
+      width = newWidth;
+    });
+  }
+
+  actionOnMobile() {
+    if (this.swiperInstance) {
+      this.swiperInstance.destroy(true, true);
+      this.swiperInstance = null;
+    }
+
+    const currentStyle = this.getAttribute('style') || '';
+
+    this.classList.add('swiper');
+    this.classList.remove('grid', 'grid-cols', 'gap');
+    
+    const items = Array.from(this.children);
+    const swiperWrapper = document.createElement('div');
+    swiperWrapper.className = 'swiper-wrapper';
+
+    items.forEach(item => {
+      const slide = document.createElement('div');
+      slide.className = 'swiper-slide';
+      slide.appendChild(item);
+      swiperWrapper.appendChild(slide);
+    });
+
+    this.innerHTML = '';
+    this.appendChild(swiperWrapper);
+
+    if (currentStyle) {
+      this.setAttribute('style', currentStyle);
+    }
+
+    const pagination = document.createElement('div');
+    pagination.className = 'swiper-pagination';
+    pagination.style.setProperty('--swiper-pagination-bottom', '0');
+    this.appendChild(pagination);
+
+    this.initSwiper();
+    new LazyLoader('.image-lazy-load');
+  }
+
+  actionOutMobile() {
+    if (this.swiperInstance) {
+      this.swiperInstance.destroy(true, true);
+      this.swiperInstance = null;
+    }
+
+    this.classList.remove('swiper');
+    this.classList.add('grid', 'grid-cols', 'gap');
+    
+    this.innerHTML = this.originalHTML;
+    if (this.originalStyle) {
+      this.setAttribute('style', this.originalStyle);
+    }
+
+    new LazyLoader('.image-lazy-load');
+  }
+
+  initSwiper() {
+    this.swiperInstance = initSlide(this);
+  }
+
+  disconnectedCallback() {
+    if (this.swiperInstance) {
+      this.swiperInstance.destroy(true, true);
+      this.swiperInstance = null;
+    }
+  }
+}
+
+customElements.define('grid-custom', GridCustom);
