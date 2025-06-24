@@ -582,7 +582,6 @@ export function checkUrlParameters() {
   const newURL = location.href.split("?")[0];
 
   if (urlInfo.indexOf("customer_posted=true") >= 1) {
-    setCookie("newsletter_popup", "true", 1);
     createAfterSubmit();
     window.history.pushState("object", document.title, newURL);
     return true;
