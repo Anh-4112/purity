@@ -278,6 +278,14 @@ export class ProductForm extends HTMLElement {
                 progress.getAttribute("data-total-order")
               );
           }
+          const recommendations = this.cart.getSectionInnerHTML(
+            parsedState.sections[section.id],
+            ".drawer__cart-recommendations"
+          );
+          if (document.querySelector(".drawer__cart-recommendations")) {
+            document.querySelector(".drawer__cart-recommendations").innerHTML =
+              recommendations;
+          }
         } else {
           sectionElement.innerHTML = this.cart.getSectionInnerHTML(
             parsedState.sections[section.id],
@@ -708,6 +716,86 @@ if (!customElements.get("cart-gift-wrap-element")) {
   customElements.define("cart-gift-wrap-element", CartGiftWrap);
 }
 
+class CartDiscountElement extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  get cartActionId() {
+    return this.querySelector(".apply-discount") || null;
+  }
+
+  get cartActionAddons() {
+    return this.querySelector(".toggle-addons") || null;
+  }
+
+  get cartContentAddons() {
+    return this.querySelector(".cart-addons-content");
+  }
+
+  connectedCallback() {
+    if (this.cartActionAddons) {
+      this.cartActionAddons.addEventListener(
+        "click",
+        this.handleDiscountToggle.bind(this)
+      );
+    }
+
+    if (this.cartActionId) {
+      this.cartActionId.addEventListener(
+        "click",
+        this.applyDiscount.bind(this)
+      );
+    }
+  }
+
+  applyDiscount(event) {
+    event.preventDefault();
+    this.cartActionId.classList.add("loading");
+    if (!this.querySelector(".cart-discount").value) {
+      NextSkyTheme.notifier.show(message.discount.error, "error", 3000);
+      this.cartActionId.classList.remove("loading");
+      return;
+    }
+    const body = JSON.stringify({
+      discount: this.querySelector(".cart-discount").value,
+    });
+    fetch(`${routes?.cart_update_url}`, {
+      ...NextSkyTheme.fetchConfig(),
+      ...{ body },
+    }).finally(() => {
+      this.cartActionId.classList.remove("loading");
+      this.classList.remove("open");
+      Motion.animate(this.cartContentAddons, { height: 0 }, { duration: 0.3 });
+      NextSkyTheme.notifier.show(message.discount.success, "success", 3000);
+    });
+  }
+
+  handleDiscountToggle() {
+    if (this.cartContentAddons) {
+      if (this.classList.contains("open")) {
+        this.classList.remove("open");
+        Motion.animate(
+          this.cartContentAddons,
+          { height: 0 },
+          { duration: 0.3 }
+        );
+      } else {
+        this.classList.add("open");
+        Motion.animate(
+          this.cartContentAddons,
+          { height: "auto" },
+          { duration: 0.3 }
+        );
+      }
+    }
+  }
+}
+
+if (!customElements.get("cart-discount-element")) {
+  customElements.define("cart-discount-element", CartDiscountElement);
+}
+
 class CartDrawer extends HTMLElement {
   constructor() {
     super();
@@ -743,6 +831,35 @@ class CartDrawer extends HTMLElement {
         action.classList.add("loading");
       });
     });
+
+    let width = window.innerWidth;
+    window.addEventListener("resize", () => {
+      const newWidth = window.innerWidth;
+      if (newWidth <= 767 && width > 767) {
+        this.actionOnMobile();
+      }
+      if (newWidth > 767 && width <= 767) {
+        this.actionOutMobile();
+      }
+      width = newWidth;
+    });
+    if (width <= 767) {
+      this.actionOnMobile();
+    } else {
+      this.actionOutMobile();
+    }
+  }
+
+  actionOnMobile() {
+    const modal_inner = this.querySelector(".modal-inner");
+    modal_inner.classList.add("modal-draggable");
+    modal_inner.classList.remove("draw-mb", "drawer-right-mb");
+  }
+
+  actionOutMobile() {
+    const modal_inner = this.querySelector(".modal-inner");
+    modal_inner.classList.remove("modal-draggable");
+    modal_inner.classList.add("draw-mb", "drawer-right-mb");
   }
 
   getSectionsToRender() {
@@ -817,6 +934,16 @@ class CartDrawer extends HTMLElement {
                 "data-total-order",
                 progress.getAttribute("data-total-order")
               );
+          }
+        }
+        if (index === 3) {
+          const recommendations = this.getSectionInnerHTML(
+            parsedState.sections[section.id],
+            ".drawer__cart-recommendations"
+          );
+          if (document.querySelector(".drawer__cart-recommendations")) {
+            document.querySelector(".drawer__cart-recommendations").innerHTML =
+              recommendations;
           }
         }
       });

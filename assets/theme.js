@@ -223,7 +223,7 @@ class BackToTop extends HTMLElement {
       });
       this.blur();
       setTimeout(() => {
-        const skipLink = document.querySelector('.skip-to-content-link');
+        const skipLink = document.querySelector(".skip-to-content-link");
         skipLink.focus();
       }, 500);
     }
@@ -696,25 +696,35 @@ class SubMenuDetails extends HTMLDetailsElement {
     this.summaryElement = this.firstElementChild;
     this.contentElement = this.lastElementChild;
     this._open = this.hasAttribute("open");
-    this.content = this.closest(".menu-link").querySelector(".sub-children-menu");
-    this.summaryElement.addEventListener("click", this.onSummaryClicked.bind(this));
+    this.content =
+      this.closest(".menu-link").querySelector(".sub-children-menu");
+    this.summaryElement.addEventListener(
+      "click",
+      this.onSummaryClicked.bind(this)
+    );
     if (window.innerWidth < 1025) {
       this.initialize();
     } else {
       (this.detectHoverListener = this.detectHover.bind(this)),
-      this.addEventListener("mouseenter", this.detectHoverListener.bind(this)),
-      this.addEventListener("mouseleave", this.detectHoverListener.bind(this));
+        this.addEventListener(
+          "mouseenter",
+          this.detectHoverListener.bind(this)
+        ),
+        this.addEventListener(
+          "mouseleave",
+          this.detectHoverListener.bind(this)
+        );
     }
   }
 
   onSummaryClicked(event) {
     event.preventDefault(),
-    window.innerWidth >= 1025 &&
-    this.hasAttribute("data-href") &&
-    this.getAttribute("data-href").length > 0 &&
-    (event.pointerType || this._open === true)
-      ? (window.location.href = this.getAttribute("data-href"))
-      : (this.open = !this.open);
+      window.innerWidth >= 1025 &&
+      this.hasAttribute("data-href") &&
+      this.getAttribute("data-href").length > 0 &&
+      (event.pointerType || this._open === true)
+        ? (window.location.href = this.getAttribute("data-href"))
+        : (this.open = !this.open);
   }
 
   async initialize() {
@@ -733,22 +743,27 @@ class SubMenuDetails extends HTMLDetailsElement {
 
   async transition(value) {
     return value
-      ? (window.innerWidth < 1025 ? Motion.animate(
-          this.content,
-          true ? { height: "auto" } : { height: 0 },
-          { duration: 0.25 }
-        ) :   
-        this.closest('ul').querySelectorAll('details').forEach((details) => {
-          details.removeAttribute("open");
-          details._open = false;
-        }),
+      ? (window.innerWidth < 1025
+          ? Motion.animate(
+              this.content,
+              true ? { height: "auto" } : { height: 0 },
+              { duration: 0.25 }
+            )
+          : this.closest("ul")
+              .querySelectorAll("details")
+              .forEach((details) => {
+                details.removeAttribute("open");
+                details._open = false;
+              }),
         this.setAttribute("open", ""),
-        this._open = true)
-      : (window.innerWidth < 1025 ? Motion.animate(
-          this.content,
-          false ? { height: "auto" } : { height: 0 },
-          { duration: 0.25 }
-        ) : '',
+        (this._open = true))
+      : (window.innerWidth < 1025
+          ? Motion.animate(
+              this.content,
+              false ? { height: "auto" } : { height: 0 },
+              { duration: 0.25 }
+            )
+          : "",
         this.removeAttribute("open"));
   }
 }
@@ -1217,7 +1232,7 @@ class VideoProductGallery extends VideoLocal {
       const poster = this.querySelector("button");
       if (!poster) return;
       poster.addEventListener("click", () => {
-        NextSkyTheme.pauseAllMedia(this.closest('media-gallery'));
+        NextSkyTheme.pauseAllMedia(this.closest("media-gallery"));
         this.loadContent();
       });
     }
@@ -1623,56 +1638,42 @@ class MiniCartUpSell extends HTMLElement {
         .catch((e) => {
           console.error(e);
         });
+    } else {
+      const recommendations = this.querySelector(".swiper-wrapper");
+      if (!recommendations) {
+        if (this.closest(".drawer__cart-recommendations")) {
+          this.closest(".drawer__cart-recommendations").classList.add("hidden");
+        } else {
+          this.classList.add("hidden");
+        }
+      }
+      if (recommendations && recommendations.childElementCount == 0) {
+        if (this.closest(".drawer__cart-recommendations")) {
+          this.closest(".drawer__cart-recommendations").classList.add("hidden");
+        } else {
+          this.classList.add("hidden");
+        }
+      }
+      if (
+        recommendations &&
+        recommendations.innerHTML.trim().length &&
+        recommendations.childElementCount > 0
+      ) {
+        this.querySelector(".swiper-wrapper").innerHTML =
+          recommendations.innerHTML;
+        if (this.closest(".drawer__cart-recommendations")) {
+          this.closest(".drawer__cart-recommendations").classList.remove(
+            "hidden"
+          );
+        } else {
+          this.classList.remove("hidden");
+        }
+      }
     }
   }
 }
 customElements.define("mini-cart-recommendations", MiniCartUpSell);
 
-class CartUpSellProduct extends SlideSection {
-  constructor() {
-    super();
-    this.slide = null;
-  }
-
-  init() {
-    let width = window.innerWidth;
-    window.addEventListener("resize", () => {
-      const newWidth = window.innerWidth;
-      if (newWidth <= 1024 && width > 1024) {
-        this.actionOnMobile();
-      }
-      if (newWidth > 1024 && width <= 1024) {
-        this.actionOutMobile();
-      }
-      width = newWidth;
-    });
-    if (width <= 1024) {
-      this.actionOnMobile();
-    } else {
-      this.actionOutMobile();
-    }
-  }
-
-  actionOnMobile() {
-    if (this.slide) {
-      this.slide.destroy();
-    }
-    this.slide = this.initSlideMediaGallery("CartUpSell");
-    this.style.maxHeight = "auto";
-    this.style.minHeight = "auto";
-  }
-
-  actionOutMobile() {
-    if (this.slide) {
-      this.slide.destroy();
-    }
-    this.slide = this.initSlideMediaGallery("CartUpSell");
-    this.style.maxHeight =
-      this.closest(".drawer__body").offsetHeight - 110 + "px";
-    this.style.minHeight = "calc(100vh - 110px)";
-  }
-}
-customElements.define("cart-upsell-product", CartUpSellProduct);
 class CarouselMobile extends HTMLElement {
   constructor() {
     super();
