@@ -95,14 +95,17 @@ export function pauseAllMedia(element) {
   if (!element) {
     return;
   }
-  element.querySelectorAll('.js-youtube').forEach((video) => {
-    video.contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+  element.querySelectorAll(".js-youtube").forEach((video) => {
+    video.contentWindow.postMessage(
+      '{"event":"command","func":"' + "pauseVideo" + '","args":""}',
+      "*"
+    );
   });
-  element.querySelectorAll('.js-vimeo').forEach((video) => {
-    video.contentWindow.postMessage('{"method":"pause"}', '*');
+  element.querySelectorAll(".js-vimeo").forEach((video) => {
+    video.contentWindow.postMessage('{"method":"pause"}', "*");
   });
-  element.querySelectorAll('video').forEach((video) => video.pause());
-  element.querySelectorAll('product-model').forEach((model) => {
+  element.querySelectorAll("video").forEach((video) => video.pause());
+  element.querySelectorAll("product-model").forEach((model) => {
     if (model.modelViewerUI) model.modelViewerUI.pause();
   });
 }
@@ -359,6 +362,11 @@ export function setCookie(name, value, days = 30, path = "/") {
   document.cookie = name + "=" + cookieValue;
 }
 
+export function deleteCookie(name, path = "/") {
+  document.cookie =
+    name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=" + path + ";";
+}
+
 export function createMediaImageElement(
   media,
   availableWidths = [],
@@ -567,4 +575,34 @@ export function loadImages(imageOrArray) {
       });
     })
   );
+}
+
+export function checkUrlParameters() {
+  const urlInfo = window.location.href;
+  const newURL = location.href.split("?")[0];
+
+  if (urlInfo.indexOf("customer_posted=true") >= 1) {
+    setCookie("newsletter_popup", "true", 1);
+    createAfterSubmit();
+    window.history.pushState("object", document.title, newURL);
+    return true;
+  }
+
+  if (urlInfo.indexOf("contact%5Btags%5D=newsletter&form_type=customer") >= 1) {
+    notifier.show(message.newsletter.error, "error", 4000);
+    window.history.pushState("object", document.title, newURL);
+    return false;
+  }
+
+  return false;
+}
+
+function createAfterSubmit() {
+  const template = document.querySelector("discount-modal-popup");
+  if (template) {
+    eventModal(template, "open", false, null, true);
+    global.rootToFocus = template;
+  } else {
+    notifier.show(message.newsletter.success, "success", 4000);
+  }
 }
