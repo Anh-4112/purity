@@ -228,10 +228,15 @@
                         class="drawer__header h5 flex gap-10 space-between align-center drawer-spacing border-bottom"
                         style="--padding-block-desktop: 2.15rem;"
                       >
-                        <div class="facets-filter js-filter-facet">
+                        <div class="facets-filter js-filter-facet flex content-center">
                           {{ 'products.facets.filter' | t }}
                           {% if total_active_values > 0 %}
-                            <span>{{ total_active_values }}</span>
+                            <span
+                              class="ms-8 fs-12 w-custom h-custom bg-primary color-white inline-flex content-center rounded-50"
+                              style="--width: 2.3rem;--height: 2.3rem"
+                            >
+                              {{- total_active_values -}}
+                            </span>
                           {%- endif -%}
                         </div>
                         <button
@@ -252,10 +257,10 @@
                         </button>
                       </div>
                       <div class="drawer__inner overflow-y-auto custom-scrollbar grow-1 flex column">
-                        <div class="facets-filters-drawer-active">
+                        <div class="facets-filters-drawer-active px-20 px-1025-32">
                           {% if total_active_values > 0 %}
-                            <div class="filters-count active-facets flex wrap gap-10 mb-30 fs-small">
-                              {%- for filter in collection.filters -%}
+                            <div class="filters-count active-facets flex wrap gap-10 fs-small border-bottom py-20 py-1025-32">
+                              {%- for filter in search.filters -%}
                                 {%- liquid
                                   assign is_color_option = false
                                   for cl in option_name
@@ -269,7 +274,8 @@
                                     <facet-remove>
                                       <a
                                         href="{{ value.url_to_remove }}"
-                                        class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal hover-heading-color"
+                                        class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                                        style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
                                       >
                                         {%- if is_color_option == true -%}
                                           {%- liquid
@@ -345,6 +351,15 @@
                                   {%- endif -%}
                                 {% endif %}
                               {%- endfor -%}
+                              <facet-remove class="active-facets__button-wrapper">
+                                <a
+                                  href="{{ results_url }}"
+                                  class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                                  style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
+                                >
+                                  <span>{{ 'products.facets.clear_all' | t }}</span>
+                                </a>
+                              </facet-remove>
                             </div>
                           {% endif %}
                         </div>
@@ -407,22 +422,27 @@
                       </svg>
                     </select-sorter>
                     <div
-                      class="select-custom__content facet-filters__sort active-show absolute top-100 right-0 bg-white shadow p-20 p-1025-30 rounded-10 z-2 min-w-custom transition-short opacity-0 pointer-none"
+                      class="select-custom__content facet-filters__sort active-show absolute top-100 right-0 bg-white shadow p-10 rounded-15 z-2 min-w-custom transition-short opacity-0 pointer-none"
                       id="SortBy"
                       style="--min-width: 22rem;"
                     >
                       <div
-                        class="facet-filters__select flex column gap"
-                        style="--gap-desktop: 8px; --gap: 8px;"
+                        class="facet-filters__select flex column"
                       >
                         {%- for option in search.sort_options -%}
                           <filter-sort
-                            class="block text-color pointer align-self-start outlined-border"
+                            class="filter-sort pointer rounded-10 align-self-start w-full flex gap-8 align-center h-custom {% if option.value != sort_by %} ps-33 text-color{% else %} ps-12 heading-color{% endif %}"
+                            style="--height: 3.8rem;"
                             value="{{ option.value | escape }}"
                             {% if option.value == sort_by %}
                               selected="selected"
                             {% endif %}
                           >
+                            {% if option.value == sort_by %}
+                              <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                                <path d="M12.6693 0.216606C12.8273 0.0722022 13.0095 0 13.2161 0C13.4349 0 13.6172 0.0722022 13.763 0.216606C13.921 0.373045 14 0.559567 14 0.776173C14 0.980746 13.921 1.15523 13.763 1.29964L5.21354 9.78339C5.06771 9.9278 4.88542 10 4.66667 10C4.44792 10 4.26562 9.9278 4.11979 9.78339L0.236979 5.92058C0.078993 5.77617 0 5.60169 0 5.39711C0 5.18051 0.078993 4.99398 0.236979 4.83755C0.382812 4.69314 0.559028 4.62094 0.765625 4.62094C0.984375 4.62094 1.17274 4.69314 1.33073 4.83755L4.66667 8.14079L12.6693 0.216606Z" fill="currentColor"/>
+                              </svg>
+                            {% endif %}
                             {{ option.name | escape }}
                           </filter-sort>
                         {%- endfor -%}
@@ -468,7 +488,8 @@
                         <facet-remove>
                           <a
                             href="{{ value.url_to_remove }}"
-                            class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer"
+                            class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                            style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
                           >
                             {%- if is_color_option == true -%}
                               {%- liquid
@@ -546,7 +567,8 @@
                     <facet-remove class="active-facets__button-wrapper">
                       <a
                         href="{{ results_url }}"
-                        class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer"
+                        class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                        style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
                       >
                         <span>{{ 'products.facets.clear_all' | t }}</span>
                       </a>

@@ -880,6 +880,10 @@ a.hover-heading-color:hover,
   border-radius: 10px;
   clip-path: inset(0 0 0 0 round 10px);
 }
+.rounded-style :where(.rounded-15) {
+  border-radius: 15px;
+  clip-path: inset(0 0 0 0 round 15px);
+}
 :is(
     .rounded,
     .btn-rounded,
@@ -980,6 +984,9 @@ a.hover-heading-color:hover,
 .gap-large {
   --gap: 20px;
   --row-gap: 3rem;
+}
+:where(.gap-4) {
+  gap: 0.4rem;
 }
 :where(.gap-5) {
   gap: 0.5rem;
@@ -1100,6 +1107,9 @@ a.hover-heading-color:hover,
 .px-15 {
   padding-inline: 1.5rem;
 }
+.px-16 {
+  padding-inline: 1.6rem;
+}
 .px-20 {
   padding-inline: 2rem;
 }
@@ -1160,6 +1170,9 @@ a.hover-heading-color:hover,
 }
 .pb-10 {
   padding-bottom: 1rem;
+}
+.pb-12 {
+  padding-bottom: 1.2rem;
 }
 .pb-15 {
   padding-bottom: 1.5rem;
@@ -1614,9 +1627,9 @@ body:not(.template-index) .transparent-logo {
   --color-border: var(--color-dark);
 }
 :is(
-    .color-swatch-label:hover,
-    .variant-options:focus-visible + label.color-swatch-label,
-    .variant-options:checked + .color-swatch-label
+    .color-swatch-label:not(.disabled):hover,
+    .variant-options:focus-visible + label.color-swatch-label:not(.disabled),
+    .variant-options:checked + .color-swatch-label:not(.disabled)
   ):before {
   --shadow-position: 5px;
 }
@@ -1985,6 +1998,9 @@ quantity-input input {
   .py-1025-30 {
     padding-block: 3rem;
   }
+  .py-1025-32 {
+    padding-block: 3.2rem;
+  }
   .py-1025-25 {
     padding-block: 2.5rem;
   }
@@ -2014,6 +2030,9 @@ quantity-input input {
   .pt-1025-30 {
     padding-top: 3rem;
   }
+  .pt-1025-32 {
+    padding-top: 3.2rem;
+  }
   .pb-1025-0 {
     padding-bottom: 0;
   }
@@ -2026,6 +2045,9 @@ quantity-input input {
   .pb-1025-30 {
     padding-bottom: 3rem;
   }
+  .pb-1025-32 {
+    padding-bottom: 3.2rem;
+  }
   .px-1025-8 {
     padding-inline: 8px;
   }
@@ -2037,6 +2059,9 @@ quantity-input input {
   }
   .px-1025-30 {
     padding-inline: 3rem;
+  }
+  .px-1025-32 {
+    padding-inline: 3.2rem;
   }
   .px-1025-35 {
     padding-inline: 3.5rem;
@@ -2194,8 +2219,8 @@ menu-drawer .modal-inner {
     border-radius: 0;
   }
   .drawer-spacing {
-    padding: var(--padding-block-desktop, 3rem)
-      var(--padding-inline-desktop, 4rem);
+    padding: var(--padding-block-desktop, 3.2rem)
+      var(--padding-inline-desktop, 3.2rem);
   }
 }
 .load-more-progress-bar::after {
