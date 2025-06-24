@@ -139,26 +139,3 @@ class NewsletterPopup extends HTMLElement {
   }
 }
 customElements.define("newsletter-popup", NewsletterPopup);
-
-class ButtonCopyDiscount extends HTMLButtonElement {
-  constructor() {
-    super();
-    this.init();
-  }
-  init() {
-    this.addEventListener("click", this.onClick.bind(this), false);
-  }
-  onClick() {
-    const url = this.getAttribute("data-href");
-    navigator.clipboard.writeText(url);
-    const text = this.getAttribute("data-text");
-    this.textContent = text;
-    const clipboardText = this.getAttribute("data-clipboard-text");
-    setTimeout(() => {
-      this.textContent = clipboardText;
-    }, 1000);
-  }
-}
-customElements.define("button-copy-discount", ButtonCopyDiscount, {
-  extends: "button",
-});

@@ -13,73 +13,72 @@
     opacity: 1;
   }
 {% endstyle %}
-<discount-popup data-section-id="{{ section.id }}">
-  <discount-modal-popup
-    drawer
-    class="modal modal_type_popup active-modal-js fixed inset-0 z-31 flex align-center invisible transition content-hidden"
-  >
-    <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
-    <div
-      class="modal-popup-inner invisible modal-focus modal-body modal-draggable transition rounded max-w-custom m-auto w-full bg-white z-15"
-      style="--max-width: 68rem;"
-      tabindex="-1"
+{% if discount_code != blank %}
+  <discount-popup data-section-id="{{ section.id }}">
+    <discount-modal-popup
+      drawer
+      class="modal modal_type_popup active-modal-js fixed inset-0 z-31 flex align-center invisible transition content-hidden"
     >
-      <button
-        is="button-close-model"
-        class="modal__close pointer btn-reset wh-58 hidden flex-1025 content-center absolute z-3 top-0 right-0"
-        aria-label="Close"
+      <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
+      <div
+        class="modal-popup-inner invisible modal-focus modal-body modal-draggable transition rounded max-w-custom m-auto w-full bg-white z-15"
+        style="--max-width: 68rem;"
+        tabindex="-1"
       >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
-          class="transition-short will-change icon-zoom"
+        <button
+          is="button-close-model"
+          class="modal__close pointer btn-reset wh-58 hidden flex-1025 content-center absolute z-3 top-0 right-0"
+          aria-label="Close"
         >
-          <use href="#icon-close"></use>
-        </svg>
-      </button>
-      <div class="drawer__body drawer__body-item h-full">
-        <div class="discount_content-inner w-full flex column max-h-100 p-gutter-x p-md-40 overflow-y-auto custom-scrollbar content-center">
-          {%- if heading != blank or description != blank or button_text != blank or subheading != blank -%}
-            {%- if subheading != blank -%}
-              <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
-                {{ section.settings.subheading }}
-              </div>
-            {% endif %}
-            {%- if section.settings.heading != blank -%}
-              <div
-                class="section-heading h3 mb-10 mb-1025-20"
-              >
-                {{ section.settings.heading }}
-              </div>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            class="transition-short will-change icon-zoom"
+          >
+            <use href="#icon-close"></use>
+          </svg>
+        </button>
+        <div class="drawer__body drawer__body-item h-full">
+          <div class="discount_content-inner w-full flex column max-h-100 p-gutter-x p-md-40 overflow-y-auto custom-scrollbar content-center">
+            {%- if heading != blank or description != blank or button_text != blank or subheading != blank -%}
+              {%- if subheading != blank -%}
+                <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
+                  {{ section.settings.subheading }}
+                </div>
+              {% endif %}
+              {%- if section.settings.heading != blank -%}
+                <div
+                  class="section-heading h3 mb-10 mb-1025-20"
+                >
+                  {{ section.settings.heading }}
+                </div>
+              {%- endif -%}
+              {%- if button_text != blank -%}
+                <a
+                  tabindex="0"
+                  aria-label="{{ button_text }}"
+                  class="btn btn-outline"
+                  href="{{ discount_code }}"
+                >
+                  {{ section.settings.button_text }}
+                </a>
+              {% endif %}
+              {%- if section.settings.description != blank -%}
+                <div
+                  class="section-description mt-10 prose"
+                >
+                  {{ section.settings.description }}
+                </div>
+              {%- endif -%}
             {%- endif -%}
-            {%- if section.settings.description != blank -%}
-              <div
-                class="section-description mt-10 prose"
-              >
-                {{ section.settings.description }}
-              </div>
-            {%- endif -%}
-            {%- if button_text != blank -%}
-              <button
-                tabindex="0"
-                is="button-copy-discount"
-                aria-label="{{ button_text }}"
-                class="btn btn-outline"
-                data-href="{{ discount_code }}"
-                data-text="{{ 'general.copied_to_discount' | t }}"
-                data-clipboard-text="{{ button_text }}"
-              >
-                {{ section.settings.button_text }}
-              </button>
-            {% endif %}
-          {%- endif -%}
+          </div>
         </div>
       </div>
-    </div>
-  </discount-modal-popup>
-</discount-popup>
+    </discount-modal-popup>
+  </discount-popup>
+{% endif %}
 {% if request.visual_preview_mode %}
   <div class="discount_content-inner w-full flex column max-h-100 p-gutter-x p-md-40 overflow-y-auto custom-scrollbar content-center">
     {%- if heading != blank or description != blank or button_text != blank or subheading != blank -%}
@@ -103,17 +102,13 @@
         </div>
       {%- endif -%}
       {%- if button_text != blank -%}
-        <button
-          tabindex="0"
-          is="button-copy-discount"
+        <a
           aria-label="{{ button_text }}"
           class="btn btn-outline"
-          data-href="{{ discount_code }}"
-          data-text="{{ 'general.copied_to_discount' | t }}"
-          data-clipboard-text="{{ button_text }}"
+          href="{{ discount_code }}"
         >
           {{ section.settings.button_text }}
-        </button>
+        </a>
       {% endif %}
     {%- endif -%}
   </div>
@@ -138,12 +133,6 @@
     },
     {
       "type": "text",
-      "id": "discount_code",
-      "label": "t:sections.discount_popup.settings.discount_code.label",
-      "default": "t:sections.discount_popup.settings.discount_code.default"
-    },
-    {
-      "type": "text",
       "id": "subheading",
       "label": "t:sections.all.content_setting.subheading.label",
       "default": "t:sections.discount_popup.settings.sub_heading.default"
@@ -160,10 +149,15 @@
       "label": "t:sections.all.content_setting.description.label"
     },
     {
+      "type": "url",
+      "id": "discount_code",
+      "label": "t:sections.discount_popup.settings.discount_code.label",
+      "info": "t:sections.discount_popup.settings.discount_code.info"
+    },
+    {
       "type": "text",
       "id": "button_text",
       "label": "t:sections.discount_popup.settings.discount_button.label",
-      "info": "t:sections.discount_popup.settings.discount_button.info",
       "default": "t:sections.discount_popup.settings.discount_button.default"
     }
   ],
