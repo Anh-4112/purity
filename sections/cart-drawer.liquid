@@ -213,7 +213,7 @@
                         {%- for item in cart.items -%}
                           <div
                             id="CartDrawer-Item-{{ item.index | plus: 1 }}"
-                            class="cart-item loading_snippet product__item pt-20{% if item.index != 0 %} mt-20{% endif %} border-top-dashed last-0"
+                            class="cart-item loading_snippet product__item pt-20{% if item.index != 0 %} mt-20{% endif %} border-top-dashed"
                           >
                             <div class="cart-item_inner flex gap-20 transition">
                               {% if item.image %}
@@ -294,7 +294,7 @@
                                           {{- 'sections.cart.remove_title' | t: title: item.title -}}
                                         </span>
                                         <span
-                                          class="icon-rotator absolute top-0 right-0 rounded-50 opacity-0 w-custom h-custom"
+                                          class="icon-rotator absolute top-5 right-0 rounded-50 opacity-0 w-custom h-custom"
                                           style="--width: 1.5rem;--height: 1.5rem;"
                                         ></span>
                                       </button>
