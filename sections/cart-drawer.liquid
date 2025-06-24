@@ -17,7 +17,8 @@
   assign product_recommendations_heading = theme_st.product_recommendations_heading
   assign recommendation_product_type = theme_st.recommendation_product_type
   assign select_product_recommendation = theme_st.select_product_recommendation
-  assign add_cart_type = theme_st.cart_type
+  assign action_add_cart_desktop = theme_st.action_add_cart_desktop
+  assign action_add_cart_mobile = theme_st.action_add_cart_mobile
   assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'
   for item in cart.items
     for allocation in item.line_level_discount_allocations
@@ -38,7 +39,8 @@
     id="{{ section.id }}"
     class="cart-drawer block modal invisible transition-drawer fixed inset-0 z-15 active-modal-js content-hidden"
     data-section-id="{{ section.id }}"
-    data-cart-type="{{ add_cart_type }}"
+    data-action-add-cart-desktop="{{ action_add_cart_desktop }}"
+    data-action-add-cart-mobile="{{ action_add_cart_mobile }}"
     drawer
   >
     <modal-overlay class="modal-overlay pointer"></modal-overlay>
@@ -203,7 +205,10 @@
             </free-ship-progress-bar>
           {%- endif -%}
           <div class="cart-drawer-inner overflow-y-auto custom-scrollbar grow-1 flex column">
-            <cart-items class="block drawer-spacing grow-1 mb-10 pt-0" style="--padding-block-desktop: 1rem;">
+            <cart-items
+              class="block drawer-spacing grow-1 mb-10 pt-0 cart-content-items"
+              style="--padding-block-desktop: 1rem;"
+            >
               <form
                 action="{{ routes.cart_url }}"
                 id="CartDrawer-Form"
@@ -779,21 +784,23 @@
                             <p class="cart-discount__pill-code">
                               {{ discount_code }}
                             </p>
-                            <button
-                              type="button"
-                              class="cart-discount__pill-remove"
-                              aria-label="{{ 'accessibility.remove_discount' | t: code: discount_code }}"
-                            >
-                              <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 12 12"
-                                fill="none"
-                                class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                            <remove-discount>
+                              <button
+                                type="button"
+                                class="cart-discount__pill-remove"
+                                aria-label="{{ 'accessibility.remove_discount' | t: code: discount_code }}"
                               >
-                                <use href="#icon-close"></use>
-                              </svg>
-                            </button>
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 12 12"
+                                  fill="none"
+                                  class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                                >
+                                  <use href="#icon-close"></use>
+                                </svg>
+                              </button>
+                            </remove-discount>
                           </li>
                         {% endfor %}
                       </ul>

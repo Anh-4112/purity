@@ -20,6 +20,7 @@
   assign product_recommendations_heading = theme_st.product_recommendations_heading
   assign recommendation_product_type = theme_st.recommendation_product_type
   assign select_product_recommendation = theme_st.select_product_recommendation
+  assign show_discount = section_st.show_discount
   assign show_icon_with_text = false
   assign trust_badges = false
   for block in section.blocks
@@ -31,6 +32,15 @@
     endcase
   endfor
   assign total = cart.total_price | money
+  assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'
+  for item in cart.items
+    for allocation in item.line_level_discount_allocations
+      if allocation.discount_application.type == 'discount_code'
+        assign discount_codes = item.line_level_discount_allocations | slice: forloop.index0 | map: 'discount_application' | map: 'title' | concat: discount_codes
+      endif
+    endfor
+  endfor
+  assign discount_codes = discount_codes | uniq
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--gap-desktop: 6rem;--col-width: 31.95%;
@@ -147,7 +157,7 @@
                   </div>
                 {%- endif -%}
               {% endif %}
-              <main-cart-items class="main-cart-items border-top block">
+              <main-cart-items class="main-cart-items cart-content-items border-top block">
                 <form action="{{ routes.cart_url }}" class="cart__contents critical-hidden" method="post" id="cart">
                   <div class="cart-items">
                     {%- for item in cart.items -%}
@@ -760,7 +770,82 @@
                     </details>
                   </div>
                 {%- endif -%}
-                <div class="totals pt-20 pt-1025-25 border-top">
+                {%- if show_discount -%}
+                  <div class="cart__discount">
+                    <details class="collapsible-row" is="collapsible-row">
+                      <summary class="collapsible-row__summary">
+                        <h6 class="footer__block-heading fs-18 pe-20 flex space-between align-center collapsible-heading relative">
+                          <span>{{ 'sections.cart.discount.title' | t -}}</span>
+                          <span class="open-children-toggle transition">
+                            <span class="icon_plus-animation heading-color"> </span>
+                          </span>
+                        </h6>
+                      </summary>
+                      <div class="collapsible-row__content overflow-hidden">
+                        <cart-discount-element class="block">
+                          <div class="cart-addons-content">
+                            <div class="cart-addons-content-inner">
+                              <div class="cart__discount field">
+                                <label class="visually-hidden" for="Cart-Discount">
+                                  {{- 'sections.cart.discount.note_title' | t -}}
+                                </label>
+                                <input
+                                  id="Cart-Discount"
+                                  class="cart-discount w-full"
+                                  name="discount"
+                                  placeholder="{{ 'sections.cart.discount.note_title' | t }}"
+                                >
+                              </div>
+                              <div class="addon-actions">
+                                <button
+                                  type="button"
+                                  class="apply-discount btn pointer btn-primary mt-20 w-full"
+                                  aria-label="{{- 'general.button.save' | t }}"
+                                >
+                                  <span class="hidden-on-load transition-short">
+                                    {{ 'sections.cart.discount.apply' | t -}}
+                                  </span>
+                                  {%- render 'loader' -%}
+                                </button>
+                              </div>
+                            </div>
+                            <ul class="cart-discount__codes">
+                              {% for discount_code in discount_codes %}
+                                <li
+                                  class="cart-discount__pill"
+                                  data-discount-code="{{ discount_code }}"
+                                  aria-label="{{ 'accessibility.discount_applied' | t: code: discount_code }}"
+                                >
+                                  <p class="cart-discount__pill-code">
+                                    {{ discount_code }}
+                                  </p>
+                                  <remove-discount>
+                                    <button
+                                      type="button"
+                                      class="cart-discount__pill-remove"
+                                      aria-label="{{ 'accessibility.remove_discount' | t: code: discount_code }}"
+                                    >
+                                      <svg
+                                        width="12"
+                                        height="12"
+                                        viewBox="0 0 12 12"
+                                        fill="none"
+                                        class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                                      >
+                                        <use href="#icon-close"></use>
+                                      </svg>
+                                    </button>
+                                  </remove-discount>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        </cart-discount-element>
+                      </div>
+                    </details>
+                  </div>
+                {%- endif -%}
+                <div class="main-cart-totals totals pt-20 pt-1025-25 border-top">
                   <div class="total_price-inner flex wrap gap-10 align-center space-between h5">
                     <span class="totals__subtotal"> {{ 'sections.cart.total' | t }}:</span>
                     {{ cart.total_price | money_with_currency }}
@@ -1016,6 +1101,12 @@
       "default": true,
       "label": "t:sections.cart-drawer.settings.show_gift_wrap.label",
       "info": "t:sections.cart-drawer.settings.show_gift_wrap.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discount",
+      "default": true,
+      "label": "t:sections.cart-drawer.settings.show_discount"
     },
     {
       "type": "header",
