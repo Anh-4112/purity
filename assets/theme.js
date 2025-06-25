@@ -1679,6 +1679,7 @@ class CarouselMobile extends HTMLElement {
     super();
     this.enable = this.dataset.enableCarouselMobile == "true";
     this.isMulticontent = this.dataset.multicontent == "true";
+    this.showPagination = this.dataset.showPagination == "true";
     this.bundle = this.dataset.bundle == "true";
     this.swiperSlideInnerHtml = this.innerHTML;
     this.initCarousel();
@@ -1720,16 +1721,16 @@ class CarouselMobile extends HTMLElement {
       "switch-slide__mobile",
       "swiper-slide"
     );
-    const wrapper = `<div class='swiper-wrapper custom-padding-carousel-mobile'>${html}</div><div class="swiper-pagination" style="--swiper-pagination-bottom: 0"></div>`;
+    const wrapper = `<div class='swiper-wrapper custom-padding-carousel-mobile'>${html}</div>${this.showPagination ? '<div class="swiper-pagination" style="--swiper-pagination-bottom: 0"></div>' : ''}`;
     this.innerHTML = wrapper;
     initSlide(this);
     new LazyLoader(".image-lazy-load");
   }
 
   actionOutMobile() {
+    new LazyLoader(".image-lazy-load");
     this.classList.remove("swiper");
     this.innerHTML = this.swiperSlideInnerHtml;
-    console.log('first', this.swiperSlideInnerHtml)
     if (this.bundle) {
       this.className = "";
       setTimeout(() => {
@@ -1744,7 +1745,6 @@ class CarouselMobile extends HTMLElement {
       this.classList.add("grid", "grid-cols");
       this.classList.remove("flex", "column", "flex-md-row", "wrap", "cols");
     }
-    new LazyLoader(".image-lazy-load");
   }
 }
 customElements.define("carousel-mobile", CarouselMobile);
