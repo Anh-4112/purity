@@ -58,13 +58,13 @@
                   endfor
                 -%}
                 <ul
-                  class="facets__list list-unstyled flex gap-custom column mt-20"
+                  class="facets__list list-unstyled flex column mt-20"
                   style="{% if is_color_option == false %}--gap: 12;{% else %}--gap: 10;--color-swatch-width: 3.2rem;--color-swatch-height: 3.2rem;{% endif %}"
                   role="list"
                 >
                   {%- for value in filter.values -%}
                     {%- if is_color_option == false -%}
-                      <li class="facets__item flex gap-10 pointer word-break{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}{% if forloop.index > 8 %} hidden-load-more hidden{% endif %}">
+                      <li class="facets__item flex gap-10 pb-12 pointer word-break{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}{% if forloop.index > 8 %} hidden-load-more hidden{% endif %}">
                         <div class="input_checkbox relative">
                           <input
                             type="checkbox"
@@ -92,7 +92,7 @@
                         </label>
                       </li>
                     {%- else -%}
-                      <li class="facets__item flex gap-10 pointer word-break{% if forloop.index > 8 %} hidden-load-more hidden{% endif %}">
+                      <li class="facets__item flex gap-10 pb-12 pointer word-break{% if forloop.index > 8 %} hidden-load-more hidden{% endif %}">
                         <div class="facet-checkbox facet-color flex align-center gap-10 relative p-2">
                           <div class="input_checkbox absolute fs-0 left-0 top-0">
                             <input
@@ -157,10 +157,32 @@
                     <button
                       type="button"
                       id="button-more-button-{{ filter.param_name | escape }}-{{ filter_layout }}"
-                      class="button-show-more show-more"
+                      class="button-show-more show-more btn-reset text-size flex content-center gap-8 mt-4 pointer"
                       aria-label="{{ 'products.facets.show_more' | t }}"
                     >
-                      <span class="label-show-more label">{{ 'products.facets.show_more' | t }}</span>
+                      <span class="icon-show-more heading-color flex column gap-4">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="13"
+                          height="6"
+                          viewBox="0 0 13 6"
+                          fill="none"
+                          class="icon-arrow-down-facet"
+                        >
+                          <use href="#icon-arrow-up-facet"></use>
+                        </svg>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="13"
+                          height="6"
+                          viewBox="0 0 13 6"
+                          fill="none"
+                          class="icon-arrow-down-facet"
+                        >
+                          <use href="#icon-arrow-down-facet"></use>
+                        </svg>
+                      </span>
+                      <span class="label-show-more label"> {{ 'products.facets.show_more' | t }}</span>
                       <span class="label-show-less label hidden">{{ 'products.facets.show_less' | t }}</span>
                     </button>
                   </show-more-button>
@@ -360,19 +382,20 @@
   </form>
   {% if filter_layout == 'drawer' %}
     <div
-      class="filter-action-bottom sticky bottom-0 bg-white drawer-spacing shadow z-1"
+      class="filter-action-bottom sticky bottom-0 bg-white drawer-spacing shadow z-1 flex gap-8"
       style="--padding-block-desktop: 2rem;"
     >
       <facet-remove>
         <a
           href="{{ results_url }}"
-          class="btn btn-primary w-full block text-center"
+          class="btn btn-outline block text-center"
+          style="--btn-padding-x: 3rem;"
         >
           <span>{{ 'products.facets.clear_all' | t }}</span>
         </a>
       </facet-remove>
       <facet-apply-drawer
-        class="btn btn-primary w-full block text-center js-filter-apply"
+        class="btn btn-primary grow-1 block text-center js-filter-apply"
         tabindex="0"
       >
         <span>{{ 'products.facets.apply' | t }}</span>
