@@ -30,6 +30,13 @@
   if items_per_row > 3
     assign items_per_row_tablet = items_per_row | minus: 1
   endif
+
+  assign class_pagination = ''
+  if show_pagination == false and items_per_row_mobile != 1.5
+    assign class_pagination = ' hidden-md block'
+  elsif show_pagination == false and items_per_row_mobile == 1.5
+    assign class_pagination = ' hidden'
+  endif
 %}
 
 {%- capture col_style -%}
@@ -58,11 +65,9 @@
     <div class="swiper-wrapper">
       {% content_for 'blocks' %}
     </div>
-    {%- if show_pagination -%}
-      <div
-        class="swiper-pagination"
-      ></div>
-    {% endif %}
+    <div
+      class="swiper-pagination {{ class_pagination }}"
+    ></div>
   </slide-section>
 {% endif %}
 

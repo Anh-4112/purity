@@ -46,7 +46,7 @@
     assign column_gap_mb = 8
   endif
 
-  assign items_per_row_mobile = 1.5
+  assign items_per_row_mobile = section_st.items_per_row_mobile
   assign data_free_scroll = 'false'
   if items_per_row_mobile > 1 and items_per_row_mobile < 2
     assign data_free_scroll = 'true'
@@ -65,6 +65,13 @@
     assign center_slide = true
   endif
   assign animate_delay = 25
+
+  assign class_pagination = ''
+  if show_pagination == false and items_per_row_mobile != 1.5
+    assign class_pagination = ' hidden-md block'
+  elsif show_pagination == false and items_per_row_mobile == 1.5
+    assign class_pagination = ' hidden'
+  endif
 -%}
 {%- capture style -%}
       --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--width: 5rem;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
@@ -317,11 +324,9 @@
             </div>
           {%- endfor -%}
         </div>
-        {%- if show_pagination -%}
-          <div
-            class="swiper-pagination"
-          ></div>
-        {% endif %}
+        <div
+          class="swiper-pagination {{ class_pagination }}"
+        ></div>
       </shopable-video>
       {% if data_free_scroll == 'true' %}
         </div>
@@ -1064,7 +1069,8 @@
       "type": "checkbox",
       "id": "show_pagination",
       "default": false,
-      "label": "t:sections.all.carousel.show_pagination.label"
+      "label": "t:sections.all.carousel.show_pagination.label",
+      "info": "t:sections.all.carousel.show_pagination.info"
     },
     {
       "type": "checkbox",
@@ -1081,6 +1087,19 @@
       "unit": "s",
       "label": "t:sections.all.carousel.change_slide_every",
       "default": 5
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.product.settings.mobile_options.label"
+    },
+    {
+      "type": "range",
+      "id": "items_per_row_mobile",
+      "label": "t:sections.all.items.items_per_row_mobile",
+      "min": 1,
+      "max": 2,
+      "step": 0.5,
+      "default": 1.5
     },
     {
       "type": "header",
