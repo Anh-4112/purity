@@ -148,6 +148,7 @@
               assign after_image = block_st.after_image
               assign product = block_st.testimonial_product
               assign author_name = block_st.testimonial_author
+              assign review_sumary = block_st.review_sumary
               assign quote = block_st.testimonial_quote
               assign rating_star = block_st.rating_star
               assign show_verified_buyer = section_st.show_verified_buyer
@@ -156,7 +157,7 @@
               assign video_alt = block_st.video_alt_text
               if video_alt != blank
                 assign video_alt = video_alt | escape
-              else local_video.alt
+              else
                 assign video_alt = video.alt | escape
               else
                 assign video_alt = 'accessibility.video' | t
@@ -257,7 +258,7 @@
                     </div>
                     <div class="testimonial_info flex align-center align-seft-center w-full{% if image_desktop_position == 'left' %} col-1025-remaining{% endif %}">
                       <div class="p-20 p-1025-30 w-full h-full bg-secondary rounded-bottom-mb {% if image_desktop_position == 'left' %} rounded-1025-right {% else %} rounded-bottom{% endif %} overflow-hidden">
-                        <div class="testimonials-rating flex mb-5 relative">
+                        <div class="testimonials-rating flex relative mb-4">
                           <div class="relative inline-flex">
                             <svg width="78" height="14" fill="none">
                               <use href="#icon-rate-grey"></use>
@@ -271,7 +272,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="testimonials-group flex flex-wrap wrap gap-15">
+                        <div class="testimonials-group flex flex-wrap wrap gap-12">
                           {% if author_name != blank %}
                             <span class="heading-style max-w-custom-all" style="--max-width: 65%;">
                               {{ author_name }}
@@ -286,13 +287,18 @@
                             </span>
                           {%- endif %}
                         </div>
-                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %} mt-15 mt-1025-20 mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}">
+                        {% if review_sumary != blank %}
+                          <div class="heading-style fs-big-2 mt-8">
+                            {{ review_sumary }}
+                          </div>
+                        {% endif %}
+                        <div class="testimonials-quote{% if quote != blank %} pb-16{% endif %} mt-8 mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}">
                           {{ quote }}
                         </div>
                         {% if product != blank %}
                           <div
-                            class="testimonial-product pt-20 pt-1025-25"
-                            style="--width: 5.5rem;"
+                            class="testimonial-product pt-16"
+                            style="--width: 7rem;"
                           >
                             {% render 'card-product',
                               card_product: product,
@@ -306,10 +312,11 @@
                               disable_hover_image: true,
                               show_quick_add: true,
                               disable_color_swatches: true,
-                              image_class: ' flex-auto w-custom rounded-10',
-                              image_rounded: ' rounded-10',
+                              image_class: ' flex-auto w-custom h-custom rounded-50',
+                              image_rounded: ' rounded-50',
                               style_layout: ' flex gap-15 align-center',
-                              info_class: ' flex-1 mt-0 word-break'
+                              info_class: ' flex-1 mt-0 word-break',
+                              aspect_ratio: '1/1'
                             %}
                           </div>
                         {% endif %}
@@ -387,7 +394,7 @@
                     </div>
                     <div class="testimonial_info flex align-center align-seft-center w-full{% if image_desktop_position == 'left' %} col-1025-remaining{% endif %}">
                       <div class="p-20 p-1025-30 w-full h-full bg-secondary rounded-bottom-mb{% if image_desktop_position == 'left' %} rounded-1025-right {% else %} rounded-bottom{% endif %} overflow-hidden">
-                        <div class="testimonials-rating flex mb-5 relative">
+                        <div class="testimonials-rating flex relative mb-4">
                           <div class="relative inline-flex">
                             <svg width="78" height="14" fill="none">
                               <use href="#icon-rate-grey"></use>
@@ -401,7 +408,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="testimonials-group flex flex-wrap wrap gap-15">
+                        <div class="testimonials-group flex flex-wrap wrap gap-12">
                           {% if author_name != blank %}
                             <span class="heading-style max-w-custom-all" style="--max-width: 65%;">
                               {{ author_name }}
@@ -416,13 +423,18 @@
                             </span>
                           {%- endif %}
                         </div>
-                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %} mt-15 mt-1025-20 mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}">
+                        {% if review_sumary != blank %}
+                          <div class="heading-style fs-big-2 mt-8">
+                            {{ review_sumary }}
+                          </div>
+                        {% endif %}
+                        <div class="testimonials-quote{% if quote != blank %} pb-16{% endif %} mt-8 mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}">
                           {{ quote }}
                         </div>
                         {% if product != blank %}
                           <div
-                            class="testimonial-product pt-20 pt-1025-25"
-                            style="--width: 5.5rem;"
+                            class="testimonial-product pt-16"
+                            style="--width: 7rem;"
                           >
                             {% render 'card-product',
                               card_product: product,
@@ -436,10 +448,11 @@
                               disable_hover_image: true,
                               show_quick_add: true,
                               disable_color_swatches: true,
-                              image_class: ' flex-auto w-custom rounded-10',
-                              image_rounded: ' rounded-10',
+                              image_class: ' flex-auto w-custom rounded-50',
+                              image_rounded: ' rounded-50',
                               style_layout: ' flex gap-15 align-center',
-                              info_class: ' flex-1 mt-0 word-break'
+                              info_class: ' flex-1 mt-0 word-break',
+                              aspect_ratio: '1/1'
                             %}
                           </div>
                         {% endif %}
@@ -804,6 +817,12 @@
           "default": "Author's name"
         },
         {
+          "type": "text",
+          "id": "review_sumary",
+          "label": "t:sections.product_testimonials.blocks.settings.information.review_sumary.label",
+          "default": "Review summary"
+        },
+        {
           "type": "textarea",
           "id": "testimonial_quote",
           "label": "t:sections.testimonials.blocks.settings.quote.label",
@@ -852,6 +871,12 @@
           "id": "testimonial_author",
           "label": "t:sections.product_testimonials.blocks.settings.information.author_name.label",
           "default": "Author's name"
+        },
+        {
+          "type": "text",
+          "id": "review_sumary",
+          "label": "t:sections.product_testimonials.blocks.settings.information.review_sumary.label",
+          "default": "Review summary"
         },
         {
           "type": "textarea",
