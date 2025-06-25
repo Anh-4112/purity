@@ -27,6 +27,13 @@
     assign column_gap_slide = 16
     assign column_gap_mb = 8
   endif
+
+  assign class_pagination = ''
+  if show_pagination == false and items_per_row_mobile != 1.5
+    assign class_pagination = ' hidden-md block'
+  elsif show_pagination == false and items_per_row_mobile == 1.5
+    assign class_pagination = ' hidden'
+  endif
 -%}
 {%- capture col_style -%}
   --item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }}; --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
@@ -53,11 +60,9 @@
   <div class="swiper-wrapper">
     {% content_for 'blocks' %}
   </div>
-  {%- if show_pagination -%}
-    <div
-      class="swiper-pagination"
-    ></div>
-  {% endif %}
+  <div
+    class="swiper-pagination {{ class_pagination }}"
+  ></div>
 </shopable-image-slide>
 {% if data_free_scroll == 'true' %}
   </div>
@@ -122,7 +127,8 @@
       "type": "checkbox",
       "id": "show_pagination",
       "default": false,
-      "label": "t:sections.all.carousel.show_pagination.label"
+      "label": "t:sections.all.carousel.show_pagination.label",
+      "info": "t:sections.all.carousel.show_pagination.info"
     },
     {
       "type": "header",

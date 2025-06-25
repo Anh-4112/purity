@@ -49,6 +49,13 @@
     assign column_gap_slide = 16
     assign column_gap_mb = 8
   endif
+
+  assign class_pagination = ''
+  if show_pagination == false and items_per_row_mobile != 1.5
+    assign class_pagination = ' hidden-md block'
+  elsif show_pagination == false and items_per_row_mobile == 1.5
+    assign class_pagination = ' hidden'
+  endif
 -%}
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -222,11 +229,9 @@
                       %}
                     {%- endfor -%}
                   </div>
-                  {%- if show_pagination -%}
                     <div
-                      class="swiper-pagination"
+                      class="swiper-pagination {{ class_pagination }}"
                     ></div>
-                  {% endif %}
                 </slide-section>
                 {% if scroll_animation %}
                   </motion-items-effect>
@@ -272,11 +277,9 @@
                       %}
                     {%- endfor -%}
                   </div>
-                  {%- if show_pagination -%}
-                    <div
-                      class="swiper-pagination"
-                    ></div>
-                  {% endif %}
+                  <div
+                    class="swiper-pagination {{ class_pagination }}"
+                  ></div>
                 </slide-section>
                 {% if scroll_animation %}
                   </motion-items-effect>
@@ -432,7 +435,8 @@
       "type": "checkbox",
       "id": "show_pagination",
       "default": false,
-      "label": "t:sections.all.carousel.show_pagination.label"
+      "label": "t:sections.all.carousel.show_pagination.label",
+      "info": "t:sections.all.carousel.show_pagination.info"
     },
     {
       "type": "checkbox",

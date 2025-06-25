@@ -57,6 +57,13 @@
   assign image_collection_width = section_st.image_collection_width
   assign width_range_slider = image_collection_width | times: block_size | plus: total_gap_size
   assign animate_delay = 25
+
+  assign class_pagination = ''
+  if show_pagination == false and items_per_row_mobile != 1.5
+    assign class_pagination = ' hidden-md block'
+  elsif show_pagination == false and items_per_row_mobile == 1.5
+    assign class_pagination = ' hidden'
+  endif
 -%}
 {%- capture style -%} --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--image-collection-width: {{ image_collection_width }}px;--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
@@ -303,7 +310,10 @@
                     {% render 'placeholder-render', type: 'collection', class: class_placeholder %}
                   {%- endif -%}
                 </div>
-                <div class="product-tabs__header-title word-break heading-color text-center max-w-custom-md" style="--max-width: {{image_collection_width}}px;">
+                <div
+                  class="product-tabs__header-title word-break heading-color text-center max-w-custom-md"
+                  style="--max-width: {{image_collection_width}}px;"
+                >
                   {{ collection_title }}
                 </div>
               </div>
@@ -373,11 +383,9 @@
                   %}
                 {%- endfor -%}
               </div>
-              {%- if show_pagination -%}
-                <div
-                  class="swiper-pagination"
-                ></div>
-              {% endif %}
+              <div
+                class="swiper-pagination {{ class_pagination }}"
+              ></div>
             </slide-section>
             {% if scroll_animation %}
               </motion-items-effect>
@@ -423,11 +431,9 @@
                   %}
                 {%- endfor -%}
               </div>
-              {%- if show_pagination -%}
-                <div
-                  class="swiper-pagination"
-                ></div>
-              {% endif %}
+              <div
+                class="swiper-pagination {{ class_pagination }}"
+              ></div>
             </slide-section>
             {% if scroll_animation %}
               </motion-items-effect>
@@ -646,7 +652,8 @@
       "type": "checkbox",
       "id": "show_pagination",
       "default": false,
-      "label": "t:sections.all.carousel.show_pagination.label"
+      "label": "t:sections.all.carousel.show_pagination.label",
+      "info": "t:sections.all.carousel.show_pagination.info"
     },
     {
       "type": "checkbox",

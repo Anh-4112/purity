@@ -20,6 +20,11 @@
   if section_st.section_width != 'full_width'
     assign rounded = 'rounded'
   endif
+
+  assign class_pagination = ''
+  if show_pagination == false
+    assign class_pagination = ' hidden-md block'
+  endif
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--auto-speed: {{ change_slide_every }}s;
@@ -272,12 +277,10 @@
         {% if show_navigation %}
           {%- render 'swiper-navigation', show_on_hover: true -%}
         {% endif %}
-        {%- if show_pagination -%}
-          <div
-            class="swiper-pagination swiper-pagination-slideshow{% if show_text_bellow_image %} swiper-pagination-bellow{% endif %}"
-            style="{% if show_text_bellow_image %}--position: absolute;--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% else %}--position: absolute;{% endif %}--swiper-pagination-bottom: 1.6rem;--swiper-pagination-bullet-active-width: 8rem;"
-          ></div>
-        {% endif %}
+        <div
+          class="swiper-pagination swiper-pagination-slideshow{% if show_text_bellow_image %} swiper-pagination-bellow{% endif %} {{ class_pagination }}"
+          style="{% if show_text_bellow_image %}--position: absolute;--swiper-pagination-position: static;--swiper-pagination-margin-top: 2rem;{% else %}--position: absolute;{% endif %}--swiper-pagination-bottom: 1.6rem;--swiper-pagination-bullet-active-width: 8rem;"
+        ></div>
       </slideshow-section>
     {% endif %}
   </div>
@@ -340,7 +343,8 @@
       "type": "checkbox",
       "id": "show_pagination",
       "default": false,
-      "label": "t:sections.all.carousel.show_pagination.label"
+      "label": "t:sections.all.carousel.show_pagination.label",
+      "info": "t:sections.all.carousel.show_pagination.info_single"
     },
     {
       "type": "checkbox",
