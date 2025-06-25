@@ -258,12 +258,32 @@
               <input type="hidden" name="form_type" value="product">
               <input type="hidden" name="utf8" value="✓">
               <div class="product-bundle-products-list">
+                {% liquid
+                  assign bundle_total = 0
+                  assign price_string = ''
+                %}
                 {%- for block in section.blocks -%}
                   {%- liquid
                     assign blo_settings = block.settings
                     assign product = blo_settings.product
                     assign product_available = product.variants | where: 'available'
                     assign loop_index = forloop.index
+                    if product != blank
+                      assign first_available_variant = product.selected_or_first_available_variant
+                      if first_available_variant.available
+                        assign current_price = first_available_variant.price
+                        assign price_string = price_string | append: '|' | append: current_price
+                      endif
+                      assign price_array = price_string | split: '|'
+                      for price in price_array
+                        assign bundle_total = bundle_total | plus: price
+                      endfor
+                      if settings.currency_code_enabled
+                        assign bundle_total = bundle_total | money_with_currency
+                      else
+                        assign bundle_total = bundle_total | money
+                      endif
+                    endif
                   -%}
                   {% if product != blank %}
                     <div class="variant-select" product-id="{{ product.id }}">
@@ -314,7 +334,13 @@
                   class="btn pointer btn-primary w-full relative product_submit_button product-form__submit word-wrap relative mt-30 mt-1025-40"
                   aria-label="{{ 'products.product.add_all_to_cart' | t }}"
                 >
-                  <span class="hidden-on-load transition-short">{{ 'products.product.add_all_to_cart' | t }}</span>
+                  <span class="hidden-on-load transition-short flex content-center">
+                    {{ 'products.product.add_all_to_cart' | t }}
+                    <span class="dot-total"></span>
+                    <span class="total-price">
+                      {{ bundle_total }}
+                    </span>
+                  </span>
                   {%- render 'loader' -%}
                 </button>
               {%- endif -%}
