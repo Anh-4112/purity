@@ -32,25 +32,34 @@
   assign image_position = section_st.image_position
   assign image_ratio = section_st.image_ratio
   assign image = section_st.image
-  assign ratio = '3/4'
+  assign mobile_image = section_st.mobile_image | default: image
+  assign ratio_desktop = '3/4'
+  assign ratio_mobile = '3/4'
   if image_ratio != 'adapt'
     case image_ratio
       when 'square'
-        assign ratio = '1/1'
+        assign ratio_desktop = '1/1'
+        assign ratio_mobile = '1/1'
       when 'landscape'
-        assign ratio = '4/3'
+        assign ratio_desktop = '4/3'
+        assign ratio_mobile = '4/3'
       when 'portrait'
-        assign ratio = '3/4'
+        assign ratio_desktop = '3/4'
+        assign ratio_mobile = '3/4'
     endcase
   else
     if image != blank
-      assign ratio = image.aspect_ratio
+      assign ratio_desktop = image.aspect_ratio
+    endif
+    if mobile_image != blank
+      assign ratio_mobile = mobile_image.aspect_ratio
     endif
   endif
 
   assign text_alignment = section_st.text_alignment
   assign enable_quick_add = section_st.enable_quick_add
   assign animate_delay = 25
+  assign hidden_button_mobile = section_st.hidden_button_mobile
 %}
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -71,8 +80,8 @@
       >
         <div class="relative">
           <div
-            class="rounded"
-            style="--aspect-ratio: {{ ratio }}"
+            class="rounded banner__media"
+            style="--aspect-ratio: {{ ratio_desktop }};--aspect-ratio-mb: {{ ratio_mobile }};"
           >
             {%- liquid
               assign alt = 'general.image.image_alt_default' | t
@@ -82,9 +91,10 @@
             -%}
             {%- if image != blank -%}
               {% render 'responsive-image',
-                type: 'other',
+                type: 'banner',
                 container: section_width,
                 image: image,
+                image_mobile: mobile_image,
                 image_alt: alt,
                 class: 'rounded',
                 motion: true
@@ -98,11 +108,13 @@
               assign block_st = block.settings
               assign position_top = block_st.position_top
               assign position_left = block_st.position_left
+              assign position_top_mobile = block_st.position_top_mobile
+              assign position_left_mobile = block_st.position_left_mobile
               assign product = block_st.product
             %}
             <div
               class="absolute bundle-products-link z-2 flex justify-center overflow-hidden"
-              style="--position-top: {{ position_top }}%; --position-left: {{ position_left }}%;"
+              style="--position-top: {{ position_top }}%; --position-left: {{ position_left }}%; --position-top-mb: {{ position_top_mobile }}%; --position-left-mb: {{ position_left_mobile }}%;"
               data-product-position="{{ forloop.index }}"
               {{ block.shopify_attributes }}
             >
@@ -309,7 +321,7 @@
             </form>
           </product-form>
           {%- if section_st.button_label != blank %}
-            <div class="mt-20 text-center">
+            <div class="mt-20 text-center {% if hidden_button_mobile %}hidden block-md{% endif %}">
               <a
                 {% if section_st.button_link == blank %}
                   role="link" aria-disabled="true"
@@ -470,6 +482,11 @@
       "label": "t:sections.compact_product_bundle.settings.image.label"
     },
     {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "t:sections.all.image.mobile_image"
+    },
+    {
       "type": "range",
       "id": "image_width",
       "min": 40,
@@ -537,6 +554,12 @@
       "label": "t:sections.all.content_setting.first_button_label.link"
     },
     {
+      "type": "checkbox",
+      "id": "hidden_button_mobile",
+      "label": "t:sections.compact_product_bundle.settings.hidden_button_mobile.label",
+      "default": true
+    },
+    {
       "type": "header",
       "content": "t:sections.all.padding.section_padding_heading"
     },
@@ -601,6 +624,30 @@
           "unit": "%",
           "step": 1,
           "default": 50
+        },
+        {
+          "type": "header",
+          "content": "t:settings_schema.product.settings.mobile_options.label"
+        },
+        {
+          "type": "range",
+          "id": "position_top_mobile",
+          "label": "t:sections.compact_product_bundle.blocks.settings.position_top",
+          "min": 0,
+          "max": 100,
+          "unit": "%",
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "position_left_mobile",
+          "label": "t:sections.compact_product_bundle.blocks.settings.position_left",
+          "min": 0,
+          "max": 100,
+          "unit": "%",
+          "step": 1,
+          "default": 50
         }
       ]
     }
@@ -613,21 +660,27 @@
           "type": "product",
           "settings": {
             "position_top": 45,
-            "position_left": 32
+            "position_left": 32,
+            "position_top_mobile": 45,
+            "position_left_mobile": 32
           }
         },
         {
           "type": "product",
           "settings": {
             "position_top": 47,
-            "position_left": 56
+            "position_left": 56,
+            "position_top_mobile": 47,
+            "position_left_mobile": 56
           }
         },
         {
           "type": "product",
           "settings": {
             "position_top": 62,
-            "position_left": 76
+            "position_left": 76,
+            "position_top_mobile": 62,
+            "position_left_mobile": 76
           }
         }
       ]

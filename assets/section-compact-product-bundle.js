@@ -24,10 +24,18 @@ if (!customElements.get("bundle-products")) {
           this.handleResponsiveHeader();
           this.handleResponsiveState();
           if (this.carouselMobile.swiper) {
-            this.carouselMobile.swiper.on('slideChange', this.onSlideChange.bind(this));
+            this.carouselMobile.swiper.on(
+              "slideChange",
+              this.onSlideChange.bind(this)
+            );
           }
         });
-
+        if (this.carouselMobile.swiper) {
+          this.carouselMobile.swiper.on(
+            "slideChange",
+            this.onSlideChange.bind(this)
+          );
+        }
         this.dot.forEach((e) => {
           e.addEventListener(
             "mouseenter",
@@ -59,7 +67,8 @@ if (!customElements.get("bundle-products")) {
       initializeMobileDefault() {
         if (window.innerWidth <= 767 && this.dot.length > 0) {
           const firstDot = this.dot[0];
-          const firstPosition = firstDot.closest(".bundle-products-link").dataset.productPosition;
+          const firstPosition = firstDot.closest(".bundle-products-link")
+            .dataset.productPosition;
           this.removeActive();
           const firstItem = this.querySelector(
             `bundle-item[data-product-position="${firstPosition}"]`
@@ -68,6 +77,12 @@ if (!customElements.get("bundle-products")) {
             firstDot.closest(".bundle-products-link").classList.add("active");
             firstItem.classList.add("active");
             this.classList.add("is-hover");
+            
+            if (this.carouselMobile.swiper && firstPosition) {
+              const allItems = this.querySelectorAll("bundle-item");
+              const itemIndex = Array.from(allItems).indexOf(firstItem);
+              this.slideToItem(itemIndex);
+            }
           }
         }
       }
@@ -193,18 +208,18 @@ if (!customElements.get("bundle-products")) {
         if (window.innerWidth <= 767) {
           const currentIndex = this.carouselMobile.swiper.activeIndex;
           const allItems = this.querySelectorAll("bundle-item");
-          
+
           if (allItems[currentIndex]) {
             const position = allItems[currentIndex].dataset.productPosition;
             this.removeActive();
-            
+
             const correspondingDot = this.querySelector(
               `.bundle-products-link[data-product-position="${position}"]`
             );
             const correspondingItem = this.querySelector(
               `bundle-item[data-product-position="${position}"]`
             );
-            
+
             if (correspondingDot && correspondingItem) {
               correspondingDot.classList.add("active");
               correspondingItem.classList.add("active");
