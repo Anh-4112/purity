@@ -17,49 +17,17 @@ if (!customElements.get("bundle-products")) {
         this.carouselMobile = this.querySelector("carousel-mobile");
 
         if (this.dot.length < 1) return;
-        const _this = this;
 
         this.handleResponsiveHeader();
-        window.addEventListener("resize", () => {
-          this.handleResponsiveHeader();
-          this.handleResponsiveState();
-          if (this.carouselMobile.swiper) {
-            this.carouselMobile.swiper.on(
-              "slideChange",
-              this.onSlideChange.bind(this)
-            );
-          }
-        });
-        if (this.carouselMobile.swiper) {
-          this.carouselMobile.swiper.on(
-            "slideChange",
-            this.onSlideChange.bind(this)
-          );
-        }
-        this.dot.forEach((e) => {
-          e.addEventListener(
-            "mouseenter",
-            _this.onMouseoverPopup.bind(_this),
-            false
-          );
-          e.addEventListener("mouseleave", _this.onMouseout.bind(_this), false);
-          e.addEventListener(
-            "focus",
-            _this.onMouseoverPopup.bind(_this),
-            false
-          );
-          e.addEventListener("blur", _this.onMouseout.bind(_this), false);
-          e.addEventListener("click", _this.onClickDot.bind(_this), false);
-        });
-        this.item.forEach((e) => {
-          e.addEventListener(
-            "mouseenter",
-            _this.onMouseoverItem.bind(_this),
-            false
-          );
-          e.addEventListener("mouseleave", _this.onMouseout.bind(_this), false);
-          e.addEventListener("focus", _this.onMouseoverItem.bind(_this), false);
-          e.addEventListener("blur", _this.onMouseout.bind(_this), false);
+        this.initEventListeners();
+        
+        const _this = this;
+        window.addEventListener("resize", function() {
+          _this.handleResponsiveHeader();
+          _this.handleResponsiveState();
+          setTimeout(() => {
+            _this.refreshEventListeners();
+          }, 100);
         });
         this.initializeMobileDefault();
       }
@@ -121,30 +89,51 @@ if (!customElements.get("bundle-products")) {
       }
 
       onMouseoverPopup(e) {
-        const target = e.target;
         if (window.innerWidth >= 768) {
-          const position = target.closest(".bundle-products-link").dataset
-            .productPosition;
+          const target = e.currentTarget || e.target;
+          
+          const link = target.closest(".bundle-products-link");
+          
+          if (!link) return;
+          
+          const position = link.dataset.productPosition;
+          
+          if (!position) return;
+          
           this.removeActive();
-          this.querySelector(
-            "bundle-item[data-product-position='" + position + "']"
-          ).classList.add("active");
-          this.classList.add("is-hover");
-          target.closest(".bundle-products-link").classList.add("active");
+          const bundleItem = this.querySelector(
+            `bundle-item[data-product-position="${position}"]`
+          );
+          
+          if (bundleItem) {
+            bundleItem.classList.add("active");
+            this.classList.add("is-hover");
+            link.classList.add("active");
+          }
         }
       }
 
       onMouseoverItem(e) {
-        const target = e.target;
         if (window.innerWidth >= 768) {
-          const position =
-            target.closest("bundle-item").dataset.productPosition;
+          const target = e.currentTarget || e.target;
+          const bundleItem = target.closest("bundle-item");
+          
+          if (!bundleItem) return;
+          
+          const position = bundleItem.dataset.productPosition;
+          
+          if (!position) return;
+          
           this.removeActive();
-          this.querySelector(
-            ".bundle-products-link[data-product-position='" + position + "']"
-          ).classList.add("active");
-          this.classList.add("is-hover");
-          target.closest("bundle-item").classList.add("active");
+          const link = this.querySelector(
+            `.bundle-products-link[data-product-position="${position}"]`
+          );
+          
+          if (link) {
+            link.classList.add("active");
+            this.classList.add("is-hover");
+            bundleItem.classList.add("active");
+          }
         }
       }
 
@@ -168,23 +157,26 @@ if (!customElements.get("bundle-products")) {
 
       onClickDot(e) {
         if (window.innerWidth <= 767) {
-          const target = e.target;
-          const position = target.closest(".bundle-products-link").dataset
-            .productPosition;
+          const target = e.currentTarget;
+          const link = target.closest(".bundle-products-link");
+          if (!link) return;
+          
+          const position = link.dataset.productPosition;
+          if (!position) return;
+          
           this.removeActive();
-          this.querySelector(
-            "bundle-item[data-product-position='" + position + "']"
-          ).classList.add("active");
-          this.classList.add("is-hover");
-          target.closest(".bundle-products-link").classList.add("active");
+          const bundleItem = this.querySelector(
+            `bundle-item[data-product-position="${position}"]`
+          );
+          
+          if (bundleItem) {
+            bundleItem.classList.add("active");
+            this.classList.add("is-hover");
+            link.classList.add("active");
 
-          if (this.carouselMobile && position) {
-            const targetItem = this.querySelector(
-              `bundle-item[data-product-position="${position}"]`
-            );
-            if (targetItem) {
+            if (this.carouselMobile) {
               const allItems = this.querySelectorAll("bundle-item");
-              const itemIndex = Array.from(allItems).indexOf(targetItem);
+              const itemIndex = Array.from(allItems).indexOf(bundleItem);
               this.slideToItem(itemIndex);
             }
           }
@@ -227,6 +219,73 @@ if (!customElements.get("bundle-products")) {
             }
           }
         }
+      }
+
+      initEventListeners() {
+        const _this = this;
+        
+        this.removeEventListeners();
+        
+        this.dot.forEach((dot, index) => {
+          dot.addEventListener("mouseenter", function(e) {
+            _this.onMouseoverPopup(e);
+          }, false);
+          dot.addEventListener("mouseleave", function(e) {
+            _this.onMouseout(e);
+          }, false);
+          dot.addEventListener("focus", function(e) {
+            _this.onMouseoverPopup(e);
+          }, false);
+          dot.addEventListener("blur", function(e) {
+            _this.onMouseout(e);
+          }, false);
+          dot.addEventListener("click", function(e) {
+            _this.onClickDot(e);
+          }, false);
+        });
+        
+        this.item.forEach((item, index) => {
+          item.addEventListener("mouseenter", function(e) {
+            console.log('Item mouseenter triggered');
+            _this.onMouseoverItem(e);
+          }, false);
+          item.addEventListener("mouseleave", function(e) {
+            _this.onMouseout(e);
+          }, false);
+          item.addEventListener("focus", function(e) {
+            _this.onMouseoverItem(e);
+          }, false);
+          item.addEventListener("blur", function(e) {
+            _this.onMouseout(e);
+          }, false);
+        });
+
+        if (this.carouselMobile && this.carouselMobile.swiper) {
+          this.carouselMobile.swiper.on("slideChange", function() {
+            _this.onSlideChange();
+          });
+        }
+      }
+
+      removeEventListeners() {
+        this.dot.forEach((dot) => {
+          const newDot = dot.cloneNode(true);
+          dot.parentNode.replaceChild(newDot, dot);
+        });
+        
+        this.item.forEach((item) => {
+          const newItem = item.cloneNode(true);
+          item.parentNode.replaceChild(newItem, item);
+        });
+        
+        this.dot = this.querySelectorAll(".bundle-products-hotspot");
+        this.item = this.querySelectorAll("bundle-item");
+      }
+
+      refreshEventListeners() {
+        this.dot = this.querySelectorAll(".bundle-products-hotspot");
+        this.item = this.querySelectorAll("bundle-item");
+        this.initEventListeners();
       }
     }
   );
