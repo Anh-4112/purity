@@ -1638,56 +1638,42 @@ class MiniCartUpSell extends HTMLElement {
         .catch((e) => {
           console.error(e);
         });
+    } else {
+      const recommendations = this.querySelector(".swiper-wrapper");
+      if (!recommendations) {
+        if (this.closest(".drawer__cart-recommendations")) {
+          this.closest(".drawer__cart-recommendations").classList.add("hidden");
+        } else {
+          this.classList.add("hidden");
+        }
+      }
+      if (recommendations && recommendations.childElementCount == 0) {
+        if (this.closest(".drawer__cart-recommendations")) {
+          this.closest(".drawer__cart-recommendations").classList.add("hidden");
+        } else {
+          this.classList.add("hidden");
+        }
+      }
+      if (
+        recommendations &&
+        recommendations.innerHTML.trim().length &&
+        recommendations.childElementCount > 0
+      ) {
+        this.querySelector(".swiper-wrapper").innerHTML =
+          recommendations.innerHTML;
+        if (this.closest(".drawer__cart-recommendations")) {
+          this.closest(".drawer__cart-recommendations").classList.remove(
+            "hidden"
+          );
+        } else {
+          this.classList.remove("hidden");
+        }
+      }
     }
   }
 }
 customElements.define("mini-cart-recommendations", MiniCartUpSell);
 
-class CartUpSellProduct extends SlideSection {
-  constructor() {
-    super();
-    this.slide = null;
-  }
-
-  init() {
-    let width = window.innerWidth;
-    window.addEventListener("resize", () => {
-      const newWidth = window.innerWidth;
-      if (newWidth <= 1024 && width > 1024) {
-        this.actionOnMobile();
-      }
-      if (newWidth > 1024 && width <= 1024) {
-        this.actionOutMobile();
-      }
-      width = newWidth;
-    });
-    if (width <= 1024) {
-      this.actionOnMobile();
-    } else {
-      this.actionOutMobile();
-    }
-  }
-
-  actionOnMobile() {
-    if (this.slide) {
-      this.slide.destroy();
-    }
-    this.slide = this.initSlideMediaGallery("CartUpSell");
-    this.style.maxHeight = "auto";
-    this.style.minHeight = "auto";
-  }
-
-  actionOutMobile() {
-    if (this.slide) {
-      this.slide.destroy();
-    }
-    this.slide = this.initSlideMediaGallery("CartUpSell");
-    this.style.maxHeight =
-      this.closest(".drawer__body").offsetHeight - 110 + "px";
-    this.style.minHeight = "calc(100vh - 110px)";
-  }
-}
-customElements.define("cart-upsell-product", CartUpSellProduct);
 class CarouselMobile extends HTMLElement {
   constructor() {
     super();

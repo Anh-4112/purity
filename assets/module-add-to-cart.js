@@ -23,9 +23,15 @@ export class ProductForm extends HTMLElement {
     }
   }
 
-  get addCartType() {
-    return this.cart && this.cart.hasAttribute("data-cart-type")
-      ? this.cart.getAttribute("data-cart-type")
+  get addActionAddCartDesktop() {
+    return this.cart && this.cart.hasAttribute("data-action-add-cart-desktop")
+      ? this.cart.getAttribute("data-action-add-cart-desktop")
+      : "page";
+  }
+
+  get addActionAddCartMobile() {
+    return this.cart && this.cart.hasAttribute("data-action-add-cart-mobile")
+      ? this.cart.getAttribute("data-action-add-cart-mobile")
       : "page";
   }
 
@@ -74,7 +80,7 @@ export class ProductForm extends HTMLElement {
           return;
         } else if (
           !this.cart ||
-          this.addCartType == "page" ||
+          this.addActionAddCartDesktop == "page" ||
           document.body.classList.contains("template-cart")
         ) {
           window.location = window.routes.cart_url;
@@ -277,6 +283,14 @@ export class ProductForm extends HTMLElement {
                 "data-total-order",
                 progress.getAttribute("data-total-order")
               );
+          }
+          const recommendations = this.cart.getSectionInnerHTML(
+            parsedState.sections[section.id],
+            ".drawer__cart-recommendations"
+          );
+          if (document.querySelector(".drawer__cart-recommendations")) {
+            document.querySelector(".drawer__cart-recommendations").innerHTML =
+              recommendations;
           }
         } else {
           sectionElement.innerHTML = this.cart.getSectionInnerHTML(
@@ -708,6 +722,193 @@ if (!customElements.get("cart-gift-wrap-element")) {
   customElements.define("cart-gift-wrap-element", CartGiftWrap);
 }
 
+class CartDiscountElement extends HTMLElement {
+  constructor() {
+    super();
+    this.cart =
+      document.querySelector("cart-drawer") ||
+      document.querySelector("main-cart");
+  }
+
+  get cartActionId() {
+    return this.querySelector(".apply-discount") || null;
+  }
+
+  get cartActionAddons() {
+    return this.querySelector(".toggle-addons") || null;
+  }
+
+  get cartContentAddons() {
+    return this.querySelector(".cart-addons-content");
+  }
+
+  connectedCallback() {
+    if (this.cartActionAddons) {
+      this.cartActionAddons.addEventListener(
+        "click",
+        this.handleDiscountToggle.bind(this)
+      );
+    }
+
+    if (this.cartActionId) {
+      this.cartActionId.addEventListener(
+        "click",
+        this.applyDiscount.bind(this)
+      );
+    }
+  }
+
+  applyDiscount(event) {
+    event.preventDefault();
+    this.cartActionId.classList.add("loading");
+    const discountCode = this.querySelector(".cart-discount");
+    const discountCodeValue = discountCode.value;
+    if (!discountCodeValue) {
+      NextSkyTheme.notifier.show(message.discount.error, "error", 3000);
+      this.cartActionId.classList.remove("loading");
+      return;
+    }
+    const existingDiscounts = this.existingDiscounts();
+    const body = JSON.stringify({
+      discount: [...existingDiscounts, discountCodeValue].join(","),
+      sections: this.cart.dataset.sectionId,
+    });
+    fetch(`${routes?.cart_update_url}`, {
+      ...NextSkyTheme.fetchConfig(),
+      ...{ body },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (
+          response.discount_codes.find((discount) => {
+            return (
+              discount.code === discountCodeValue &&
+              discount.applicable === false
+            );
+          })
+        ) {
+          discountCode.value = "";
+          NextSkyTheme.notifier.show(
+            message.discount.discount_code_error,
+            "error",
+            3000
+          );
+          return;
+        }
+        const newHtml = response.sections[this.cart.dataset.sectionId];
+        this.renderContent(newHtml);
+        NextSkyTheme.notifier.show(message.discount.success, "success", 3000);
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {
+        this.cartActionId.classList.remove("loading");
+      });
+  }
+
+  renderContent(newHtml) {
+    const parsedHtml = new DOMParser().parseFromString(newHtml, "text/html");
+    const updateContent = (blockClass) => {
+      const source = parsedHtml.querySelector(`.${blockClass}`);
+      const destination = this.cart.querySelector(`.${blockClass}`);
+      if (source && destination) {
+        destination.innerHTML = source.innerHTML;
+      }
+    };
+
+    const blocksToUpdate = [
+      "cart-discount__codes",
+      "drawer__footer-bottom-total",
+      "main-cart-totals",
+      "cart-content-items",
+    ];
+    blocksToUpdate.forEach(updateContent);
+  }
+
+  existingDiscounts() {
+    const discountCodes = [];
+    const discountPills = this.querySelectorAll(".cart-discount__pill");
+    for (const pill of discountPills) {
+      if (
+        pill instanceof HTMLLIElement &&
+        typeof pill.dataset.discountCode === "string"
+      ) {
+        discountCodes.push(pill.dataset.discountCode);
+      }
+    }
+    return discountCodes;
+  }
+
+  handleDiscountToggle() {
+    if (this.cartContentAddons) {
+      if (this.classList.contains("open")) {
+        this.classList.remove("open");
+        Motion.animate(
+          this.cartContentAddons,
+          { height: 0 },
+          { duration: 0.3 }
+        );
+      } else {
+        this.classList.add("open");
+        Motion.animate(
+          this.cartContentAddons,
+          { height: "auto" },
+          { duration: 0.3 }
+        );
+      }
+    }
+  }
+}
+if (!customElements.get("cart-discount-element")) {
+  customElements.define("cart-discount-element", CartDiscountElement);
+}
+
+class RemoveDiscount extends CartDiscountElement {
+  constructor() {
+    super();
+    this.addEventListener("click", (event) => {
+      event.preventDefault();
+      this.removeDiscount();
+    });
+  }
+
+  removeDiscount() {
+    this.classList.add("loading");
+    const pill = this.closest(".cart-discount__pill");
+    const discountCode = pill.dataset.discountCode;
+    const existingDiscounts = this.closest(
+      "cart-discount-element"
+    ).existingDiscounts();
+    const index = existingDiscounts.indexOf(discountCode);
+    if (index === -1) return;
+
+    existingDiscounts.splice(index, 1);
+    const body = JSON.stringify({
+      discount: [...existingDiscounts].join(","),
+      sections: this.cart.dataset.sectionId,
+    });
+    fetch(`${routes?.cart_update_url}`, {
+      ...NextSkyTheme.fetchConfig(),
+      ...{ body },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        const newHtml = response.sections[this.cart.dataset.sectionId];
+        this.renderContent(newHtml);
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {
+        this.classList.remove("loading");
+      });
+  }
+}
+if (!customElements.get("remove-discount")) {
+  customElements.define("remove-discount", RemoveDiscount);
+}
+
 class CartDrawer extends HTMLElement {
   constructor() {
     super();
@@ -751,6 +952,35 @@ class CartDrawer extends HTMLElement {
         action.classList.add("loading");
       });
     });
+
+    let width = window.innerWidth;
+    window.addEventListener("resize", () => {
+      const newWidth = window.innerWidth;
+      if (newWidth <= 767 && width > 767) {
+        this.actionOnMobile();
+      }
+      if (newWidth > 767 && width <= 767) {
+        this.actionOutMobile();
+      }
+      width = newWidth;
+    });
+    if (width <= 767) {
+      this.actionOnMobile();
+    } else {
+      this.actionOutMobile();
+    }
+  }
+
+  actionOnMobile() {
+    const modal_inner = this.querySelector(".modal-inner");
+    modal_inner.classList.add("modal-draggable");
+    modal_inner.classList.remove("draw-mb", "drawer-right-mb");
+  }
+
+  actionOutMobile() {
+    const modal_inner = this.querySelector(".modal-inner");
+    modal_inner.classList.remove("modal-draggable");
+    modal_inner.classList.add("draw-mb", "drawer-right-mb");
   }
 
   getSectionsToRender() {
@@ -825,6 +1055,16 @@ class CartDrawer extends HTMLElement {
                 "data-total-order",
                 progress.getAttribute("data-total-order")
               );
+          }
+        }
+        if (index === 3) {
+          const recommendations = this.getSectionInnerHTML(
+            parsedState.sections[section.id],
+            ".drawer__cart-recommendations"
+          );
+          if (document.querySelector(".drawer__cart-recommendations")) {
+            document.querySelector(".drawer__cart-recommendations").innerHTML =
+              recommendations;
           }
         }
       });

@@ -1717,7 +1717,16 @@ cart-drawer.active .progress,
 bundle-progress-bar .progress {
   width: var(--width);
 }
-cart-gift-wrap-element.open .cart-addons-content {
+@keyframes progress {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 60px 60px;
+  }
+}
+cart-gift-wrap-element.open .cart-addons-content,
+cart-discount-element.open .cart-addons-content {
   visibility: visible;
 }
 @media (max-width: 1024.98px) {
