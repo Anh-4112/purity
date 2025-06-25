@@ -945,7 +945,10 @@
               {%- endif -%}
             </div>
           </div>
-          <div class="drawer__footer-bottom border-top drawer-spacing" style="--padding-block-desktop: 3.2rem;--padding-inline-desktop: 3.2rem;">
+          <div
+            class="drawer__footer-bottom border-top drawer-spacing"
+            style="--padding-block-desktop: 3.2rem;--padding-inline-desktop: 3.2rem;"
+          >
             <div class="drawer__footer-bottom-total">
               <div class="total h5 flex space-between gap-10">
                 <span class="text">{{ 'sections.cart.total' | t }}:</span>
@@ -961,7 +964,10 @@
                   aria-label="{{ 'customer.order.discount' | t }}"
                 >
                   {%- for discount in cart.cart_level_discount_applications -%}
-                    <li class="discounts__discount fs-small discounts__discount fs-small--position flex gap-5" style="--body-line-height: 1.6;--bg-color-custom:#D0473E;--height: 3rem;--img-rounded: 3rem;">
+                    <li
+                      class="discounts__discount fs-small discounts__discount fs-small--position flex gap-5"
+                      style="--body-line-height: 1.6;--bg-color-custom:#D0473E;--height: 3rem;--img-rounded: 3rem;"
+                    >
                       <span class="cart__discount-label">
                         <svg
                           aria-hidden="true"
@@ -1032,12 +1038,14 @@
               <button
                 type="submit"
                 name="checkout"
-                class="grow-1 btn pointer btn-primary flex content-center gap-10"
+                class="grow-1 btn pointer btn-primary"
               >
-                <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
-                  <use href="#icon-lock" />
-                </svg>
-                <span class="hidden-on-load transition-short"> {{ 'sections.cart.checkout' | t }}</span>
+                <span class="hidden-on-load transition-short flex content-center gap-10">
+                  <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                    <use href="#icon-lock" />
+                  </svg>
+                  {{ 'sections.cart.checkout' | t -}}
+                </span>
                 {%- render 'loader' -%}
               </button>
             </form>
