@@ -11,9 +11,7 @@
   assign heading_size = section_st.heading_size
   assign text_alignment = section_st.text_alignment
   assign items_per_row = section_st.items_per_row
-  assign show_pagination = section_st.show_pagination
-  assign show_navigation = section_st.show_navigation
-  assign reveal_slide = section_st.reveal_slide
+  assign enable_carousel = section_st.enable_carousel
   assign scroll_animation = theme_st.scroll_animation
   assign header_size = ''
   if heading_size == 'small'
@@ -37,14 +35,14 @@
   assign column_gap_slide = 0
   assign column_gap_mb = 0
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-    assign column_gap_mb = 20
+    assign column_gap_slide = 32
+    assign column_gap_mb = 24
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-    assign column_gap_mb = 10
+    assign column_gap_slide = 24
+    assign column_gap_mb = 12
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
-    assign column_gap_mb = 5
+    assign column_gap_slide = 16
+    assign column_gap_mb = 8
   endif
 -%}
 {%- capture style -%}
@@ -55,7 +53,7 @@
   --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};--repeat: {{ section.blocks.size }}; --col-mobile: {{ items_per_row_mobile }}
 {%- endcapture -%}
 <div
-  class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}"
+  class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' %} overflow-hidden{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -103,73 +101,27 @@
         {% if scroll_animation %}
           <motion-items-effect>
         {% endif %}
-        {%- if section_st.enable_carousel -%}
-          {% if data_free_scroll == 'true' %}
-            <div class="free-scroll">
-          {% endif %}
-          <slide-section
-            class="swiper hover-action{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
-            data-section-id="{{ section.id }}"
-            data-autoplay="false"
-            data-effect="slide"
-            data-loop="false"
-            data-speed="500"
-            data-spacing="{{ column_gap_slide }}"
-            data-mobile="{{ items_per_row_mobile }}"
-            data-desktop="{{ items_per_row }}"
-            data-tablet="{{ items_per_row_tablet }}"
-            data-free-scroll="{{ data_free_scroll }}"
-            style="{{ col_style | strip | strip_newlines }}"
-            data-arrow-center-image="true"
-          >
-            {% if show_navigation %}
-              {%- render 'swiper-navigation', show_on_hover: true -%}
-            {% endif %}
-            <div class="swiper-wrapper">
-              {% for card_product in search.results %}
-                {% render 'card-product',
-                  card_product: card_product,
-                  section_id: section.id,
-                  class: ' swiper-slide motion-item',
-                  container: section_width,
-                  column: items_per_row,
-                  column_mobile: items_per_row_mobile,
-                  padding: column_gap_slide,
-                  indexFor: forloop.index
-                %}
-              {% endfor %}
-            </div>
-            {%- if show_pagination -%}
-              <div
-                class="swiper-pagination"
-              ></div>
-            {% endif %}
-          </slide-section>
-          {% if data_free_scroll == 'true' %}
-            </div>
-          {% endif %}
-        {%- else -%}
-          <grid-custom
-            class="collection-list--grid grid grid-cols gap{% if data_free_scroll == 'true' %} grid_scroll{% endif %}"
-            style="{{ col_style | strip | strip_newlines }}"
-            data-mobile="{{ items_per_row_mobile }}"
-            data-spacing="{{ column_gap_slide }}"
-            data-free-scroll="{{ data_free_scroll }}"
-          >
-            {% for card_product in search.results %}
-              {% render 'card-product',
-                card_product: card_product,
-                section_id: section.id,
-                class: ' grid-card-item motion-item',
-                container: section_width,
-                column: items_per_row,
-                column_mobile: items_per_row_mobile,
-                padding: column_gap_slide,
-                indexFor: forloop.index
-              %}
-            {% endfor %}
-          </grid-custom>
-        {%- endif -%}
+        <grid-custom
+          class="collection-list--grid grid grid-cols gap{% if data_free_scroll == 'true'  and enable_carousel == false  %} grid_scroll{% endif %}"
+          style="{{ col_style | strip | strip_newlines }}"
+          data-mobile="{{ items_per_row_mobile }}"
+          data-spacing="{{ column_gap_slide }}"
+          data-free-scroll="{{ data_free_scroll }}"
+          data-action-mobile="{{ enable_carousel }}"
+        >
+          {% for card_product in search.results %}
+            {% render 'card-product',
+              card_product: card_product,
+              section_id: section.id,
+              class: ' grid-card-item motion-item',
+              container: section_width,
+              column: items_per_row,
+              column_mobile: items_per_row_mobile,
+              padding: column_gap_slide,
+              indexFor: forloop.index
+            %}
+          {% endfor %}
+        </grid-custom>
         {% if scroll_animation %}
           </motion-items-effect>
         {% endif %}
@@ -266,7 +218,7 @@
           "label": "t:sections.all.text_alignment.options__3.label"
         }
       ],
-      "default": "left",
+      "default": "center",
       "label": "t:sections.all.text_alignment.alignment"
     },
     {
@@ -317,33 +269,13 @@
     },
     {
       "type": "header",
-      "content": "t:sections.all.carousel.header"
+      "content": "t:sections.all.mobile_options.label"
     },
     {
       "type": "checkbox",
       "id": "enable_carousel",
       "label": "t:sections.all.carousel.enable_carousel.label",
-      "default": true,
-      "info": "t:sections.all.carousel.enable_carousel.description"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_navigation",
-      "default": true,
-      "label": "t:sections.all.carousel.show_navigation.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_pagination",
-      "default": false,
-      "label": "t:sections.all.carousel.show_pagination.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "reveal_slide",
-      "default": false,
-      "label": "t:sections.all.carousel.reveal_slide.label",
-      "info": "t:sections.all.carousel.reveal_slide.info"
+      "default": false
     },
     {
       "type": "range",
@@ -385,7 +317,7 @@
     }
   ],
   "enabled_on": {
-    "templates": ["product"]
+    "templates": ["product", "cart", "search", "collection"]
   }
 }
 {% endschema %}

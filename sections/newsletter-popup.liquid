@@ -28,7 +28,7 @@
       max-height: 80vh;
     }
   }
-  newsletter-modal-popup.active{
+  newsletter-modal-popup.active {
     visibility: visible;
     opacity: 1;
   }
@@ -46,7 +46,7 @@
     >
       <button
         is="button-close-model"
-        class="modal__close pointer btn-reset wh-58 hidden flex-1025 content-center absolute z-3 top-0 right-0"
+        class="modal__close pointer btn-reset wh-58 flex-1025 content-center absolute z-3 top-0 left-0-mb right-0-1025"
         aria-label="Close"
       >
         <svg
@@ -158,12 +158,18 @@
                 {%- endform -%}
               </div>
               <div
-                class="newsletter-action pointer"
+                class="pointer"
                 tabindex="0"
               >
-                <span class="fs-small underline hover-heading-color">
+                <input
+                  type="checkbox"
+                  id="newsletter-popup-do-not-show-again"
+                  aria-label="{{ 'newsletter_popup.do_not_show_again' | t }}"
+                  class="m-0 newsletter-action"
+                >
+                <label for="newsletter-popup-do-not-show-again" class="fs-small">
                   {{- 'newsletter_popup.do_not_show_again' | t -}}
-                </span>
+                </label>
               </div>
             </div>
           </div>

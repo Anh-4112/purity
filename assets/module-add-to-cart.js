@@ -933,12 +933,20 @@ class CartDrawer extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this.cartActionId) {
-      this.cartActionId.addEventListener(
-        "click",
-        this.onShowCartDrawer.bind(this)
-      );
-    }
+    const triggers = [
+      document.getElementById("cart-icon-bubble"),
+      document.getElementById("cart-icon-bubble-mobile"),
+    ];
+
+    triggers.forEach((trigger) => {
+      if (trigger) {
+        trigger.addEventListener(
+          "click",
+          (event) => this.onShowCartDrawer(event, trigger)
+        );
+      }
+    });
+
     this.formAction.forEach((action) => {
       action.addEventListener("click", (event) => {
         action.classList.add("loading");
@@ -1099,10 +1107,10 @@ class CartDrawer extends HTMLElement {
       .querySelector(selector);
   }
 
-  onShowCartDrawer(event) {
+  onShowCartDrawer(event, triggerEl) {
     event.preventDefault();
     NextSkyTheme.eventModal(this, "open", false, "delay");
-    NextSkyTheme.global.rootToFocus = this.cartActionId;
+    NextSkyTheme.global.rootToFocus = triggerEl || this.cartActionId;
   }
 }
 customElements.define("cart-drawer", CartDrawer);
