@@ -1872,26 +1872,6 @@ class ImageComparison extends HTMLElement {
       this.moveSlider(Motion.clamp(-this.boundary, this.boundary, this.x));
     });
     this.setupIntersectionObserver();
-    this.setupHoverTracking();
-  }
-
-  setupHoverTracking() {
-    this.addEventListener("mouseenter", () => {
-      this.isHovering = true;
-      this.updateSliderStatus();
-    });
-    this.addEventListener("mouseleave", () => {
-      this.isHovering = false;
-      this.updateSliderStatus();
-    });
-    this.addEventListener("touchstart", () => {
-      this.isHovering = true;
-      this.updateSliderStatus();
-    });
-    this.addEventListener("touchend", () => {
-      this.isHovering = false;
-      this.updateSliderStatus();
-    });
   }
 
   updateSliderStatus() {
@@ -2021,6 +2001,8 @@ class ImageComparison extends HTMLElement {
       this.slider.style.cursor = "grabbing";
       this.slider.classList.add("active");
       this.slider.setPointerCapture(e.pointerId);
+      this.isHovering = true;
+      this.updateSliderStatus();
     });
 
     this.slider.addEventListener("pointermove", (e) => {
@@ -2050,6 +2032,8 @@ class ImageComparison extends HTMLElement {
           damping: 40,
         });
       }
+      this.isHovering = false;
+      this.updateSliderStatus();
     });
   }
 
