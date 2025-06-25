@@ -12,13 +12,47 @@ if (!customElements.get("collection-hover")) {
         this.imageVisible = false;
         this.animationId = null;
         this.cursorOffset = { x: 10, y: 10 };
+        this.isLargeScreen = window.matchMedia("(min-width: 1025px)").matches;
       }
 
       connectedCallback() {
         if (!this.content || !this.imageHover) return;
 
-        this.setupImageStyles();
+        if (this.isLargeScreen) {
+          this.setupImageStyles();
+          this.addEventListeners();
+          this.updateImageSize();
+        }
 
+        const image = this.imageHover.querySelector("img");
+        if (image && !image.complete) {
+          image.addEventListener("load", () => {
+            if (this.isLargeScreen) {
+              this.updateImageSize();
+            }
+          });
+        }
+
+        window
+          .matchMedia("(min-width: 1025px)")
+          .addEventListener("change", this.handleMediaChange.bind(this));
+      }
+
+      handleMediaChange(e) {
+        this.isLargeScreen = e.matches;
+        if (this.isLargeScreen) {
+          this.setupImageStyles();
+          this.addEventListeners();
+          this.updateImageSize();
+        } else {
+          this.onMouseLeave(); 
+          this.removeEventListeners();
+          this.clearImageStyles(); 
+        }
+      }
+
+      addEventListeners() {
+        if (!this.content) return;
         this.content.addEventListener(
           "mouseenter",
           this.onMouseEnter.bind(this)
@@ -28,15 +62,13 @@ if (!customElements.get("collection-hover")) {
           this.onMouseLeave.bind(this)
         );
         this.content.addEventListener("mousemove", this.onMouseMove.bind(this));
+      }
 
-        const image = this.imageHover.querySelector("img");
-        if (image && !image.complete) {
-          image.addEventListener("load", () => {
-            this.updateImageSize();
-          });
-        } else {
-          this.updateImageSize();
-        }
+      removeEventListeners() {
+        if (!this.content) return;
+        this.content.removeEventListener("mouseenter", this.onMouseEnter);
+        this.content.removeEventListener("mouseleave", this.onMouseLeave);
+        this.content.removeEventListener("mousemove", this.onMouseMove);
       }
 
       setupImageStyles() {
@@ -48,22 +80,39 @@ if (!customElements.get("collection-hover")) {
         this.imageHover.style.opacity = "0";
         this.imageHover.style.transform = "translate(-50%, -50%) scale(0.95)";
         this.imageHover.style.overflow = "hidden";
-
         this.imageHover.style.left = "-9999px";
         this.imageHover.style.top = "-9999px";
-
         this.imageHover.style.transition = "none";
       }
 
-      updateImageSize() {
-        const maxHeight = Math.min(300, window.innerHeight * 0.5);
+      clearImageStyles() {
+        if (!this.imageHover) return;
 
+        this.imageHover.style.position = "";
+        this.imageHover.style.pointerEvents = "";
+        this.imageHover.style.zIndex = "";
+        this.imageHover.style.opacity = "";
+        this.imageHover.style.transform = "";
+        this.imageHover.style.overflow = "";
+        this.imageHover.style.left = "";
+        this.imageHover.style.top = "";
+        this.imageHover.style.transition = "";
+        this.imageHover.style.width = "";
+        this.imageHover.style.height = "";
+        this.imageHover.style.maxHeight = "";
+      }
+
+      updateImageSize() {
+        if (!this.isLargeScreen) return;
+
+        const maxHeight = Math.min(300, window.innerHeight * 0.5);
         this.imageHover.style.width = `120px`;
         this.imageHover.style.height = "auto";
         this.imageHover.style.maxHeight = `${maxHeight}px`;
       }
 
       onMouseEnter(event) {
+        if (!this.isLargeScreen) return;
         this.isHovering = true;
         this.bounds = this.content.getBoundingClientRect();
 
@@ -139,7 +188,7 @@ if (!customElements.get("collection-hover")) {
           }
 
           setTimeout(() => {
-            if (!this.isHovering) {
+            if (!this.isHovering && this.imageHover) {
               this.imageHover.style.left = "-9999px";
               this.imageHover.style.top = "-9999px";
             }
@@ -148,7 +197,7 @@ if (!customElements.get("collection-hover")) {
       }
 
       onMouseMove(event) {
-        if (this.isHovering) {
+        if (this.isHovering && this.isLargeScreen) {
           this.updateMousePosition(event);
         }
       }
@@ -161,7 +210,7 @@ if (!customElements.get("collection-hover")) {
       }
 
       animateImagePosition() {
-        if (!this.isHovering || !this.imageVisible) {
+        if (!this.isHovering || !this.imageVisible || !this.isLargeScreen) {
           return;
         }
 
@@ -198,15 +247,13 @@ if (!customElements.get("collection-hover")) {
       }
 
       disconnectedCallback() {
-        if (this.content) {
-          this.content.removeEventListener("mouseenter", this.onMouseEnter);
-          this.content.removeEventListener("mouseleave", this.onMouseLeave);
-          this.content.removeEventListener("mousemove", this.onMouseMove);
-        }
-
+        this.removeEventListeners();
         if (this.animationId) {
           cancelAnimationFrame(this.animationId);
         }
+        window
+          .matchMedia("(min-width: 1025px)")
+          .removeEventListener("change", this.handleMediaChange);
       }
     }
   );
