@@ -29,12 +29,6 @@ export class ProductForm extends HTMLElement {
       : "page";
   }
 
-  get addActionAddCartMobile() {
-    return this.cart && this.cart.hasAttribute("data-action-add-cart-mobile")
-      ? this.cart.getAttribute("data-action-add-cart-mobile")
-      : "page";
-  }
-
   onSubmitHandler(event) {
     event.preventDefault();
     if (this.submitButton.getAttribute("aria-disabled") === "true") return;
@@ -78,13 +72,15 @@ export class ProductForm extends HTMLElement {
           soldOutMessage.classList.remove("hidden");
           this.error = true;
           return;
-        } else if (
-          !this.cart ||
-          this.addActionAddCartDesktop == "page" ||
-          document.body.classList.contains("template-cart")
-        ) {
-          window.location = window.routes.cart_url;
-          return;
+        } else if (window.innerWidth > 767) {
+          if (
+            !this.cart ||
+            this.addActionAddCartDesktop == "page" ||
+            document.body.classList.contains("template-cart")
+          ) {
+            window.location = window.routes.cart_url;
+            return;
+          }
         }
 
         if (!this.error)
@@ -96,14 +92,47 @@ export class ProductForm extends HTMLElement {
         this.error = false;
         const is_cart_page = document.body.classList.contains("template-cart");
         if (!is_cart_page) {
+          let submitButton = this.submitButton;
+          if (this.submitButton.closest("cart-drawer")) {
+            submitButton = this.cart.querySelector(".drawer__footer-bottom");
+          }
           this.cart.renderContents(response);
-          NextSkyTheme.eventModal(this.cart, "open", false, "delay");
-          if (document.querySelector("quickview-drawer.active")) {
-            NextSkyTheme.eventModal(this.quickView, "close", false);
+          const actionMobile =
+            themeGlobalVariables.settings.actionAddCartMobile;
+          let getCookieCartMessage = true;
+          if (actionMobile == "cart_message") {
+            getCookieCartMessage = NextSkyTheme.getCookie("cart_message");
+            if (!getCookieCartMessage) {
+              NextSkyTheme.setCookie("cart_message", "true", 1);
+            }
           }
-          if (document.querySelector(".modal-shopable-video.active")) {
-            NextSkyTheme.eventModal(this.shopifyShopableVideo, "close", false);
+          if (
+            window.innerWidth > 767 ||
+            actionMobile == "mini_cart" ||
+            !getCookieCartMessage
+          ) {
+            NextSkyTheme.eventModal(this.cart, "open", false, "delay");
+            if (document.querySelector("quickview-drawer.active")) {
+              NextSkyTheme.eventModal(this.quickView, "close", false);
+            }
+            if (document.querySelector(".modal-shopable-video.active")) {
+              NextSkyTheme.eventModal(
+                this.shopifyShopableVideo,
+                "close",
+                false
+              );
+            }
+          } else {
+            NextSkyTheme.notifier.showElement(
+              window.cartStrings.addSuccessMobile,
+              submitButton,
+              "success",
+              3000
+            );
           }
+        } else {
+          window.location = window.routes.cart_url;
+          return;
         }
       })
       .catch((e) => {
@@ -932,6 +961,12 @@ class CartDrawer extends HTMLElement {
     return document.getElementById("cart-icon-bubble") || null;
   }
 
+  get openCartMobile() {
+    return this.hasAttribute("data-open-cart-mobile")
+      ? this.getAttribute("data-open-cart-mobile")
+      : "popup";
+  }
+
   connectedCallback() {
     const triggers = [
       document.getElementById("cart-icon-bubble"),
@@ -940,9 +975,8 @@ class CartDrawer extends HTMLElement {
 
     triggers.forEach((trigger) => {
       if (trigger) {
-        trigger.addEventListener(
-          "click",
-          (event) => this.onShowCartDrawer(event, trigger)
+        trigger.addEventListener("click", (event) =>
+          this.onShowCartDrawer(event, trigger)
         );
       }
     });
@@ -952,7 +986,12 @@ class CartDrawer extends HTMLElement {
         action.classList.add("loading");
       });
     });
+    if (this.openCartMobile == "popup") {
+      this.innerWidth();
+    }
+  }
 
+  innerWidth() {
     let width = window.innerWidth;
     window.addEventListener("resize", () => {
       const newWidth = window.innerWidth;

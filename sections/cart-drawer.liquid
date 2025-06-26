@@ -18,7 +18,7 @@
   assign recommendation_product_type = theme_st.recommendation_product_type
   assign select_product_recommendation = theme_st.select_product_recommendation
   assign action_add_cart_desktop = theme_st.action_add_cart_desktop
-  assign action_add_cart_mobile = theme_st.action_add_cart_mobile
+  assign open_cart_mobile = theme_st.open_cart_mobile
   assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'
   for item in cart.items
     for allocation in item.line_level_discount_allocations
@@ -40,7 +40,7 @@
     class="cart-drawer block modal invisible transition-drawer fixed inset-0 z-15 active-modal-js content-hidden"
     data-section-id="{{ section.id }}"
     data-action-add-cart-desktop="{{ action_add_cart_desktop }}"
-    data-action-add-cart-mobile="{{ action_add_cart_mobile }}"
+    data-open-cart-mobile="{{ open_cart_mobile }}"
     drawer
   >
     <modal-overlay class="modal-overlay pointer"></modal-overlay>
@@ -945,7 +945,10 @@
               {%- endif -%}
             </div>
           </div>
-          <div class="drawer__footer-bottom border-top drawer-spacing" style="--padding-block-desktop: 3.2rem;--padding-inline-desktop: 3.2rem;">
+          <div
+            class="drawer__footer-bottom border-top drawer-spacing"
+            style="--padding-block-desktop: 3.2rem;--padding-inline-desktop: 3.2rem;"
+          >
             <div class="drawer__footer-bottom-total">
               <div class="total h5 flex space-between gap-10">
                 <span class="text">{{ 'sections.cart.total' | t }}:</span>
@@ -961,7 +964,10 @@
                   aria-label="{{ 'customer.order.discount' | t }}"
                 >
                   {%- for discount in cart.cart_level_discount_applications -%}
-                    <li class="discounts__discount fs-small discounts__discount fs-small--position flex gap-5" style="--body-line-height: 1.6;--bg-color-custom:#D0473E;--height: 3rem;--img-rounded: 3rem;">
+                    <li
+                      class="discounts__discount fs-small discounts__discount fs-small--position flex gap-5"
+                      style="--body-line-height: 1.6;--bg-color-custom:#D0473E;--height: 3rem;--img-rounded: 3rem;"
+                    >
                       <span class="cart__discount-label">
                         <svg
                           aria-hidden="true"

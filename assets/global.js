@@ -446,11 +446,42 @@ class AlertNotify {
     }, duration);
   }
 
-  hide(notification) {
+  hide(notification, element = null) {
     notification.classList.remove("show");
     setTimeout(() => {
-      this.container.removeChild(notification);
+      if (element) {
+        element.removeChild(notification);
+      } else {
+        this.container.removeChild(notification);
+      }
     }, 300);
+  }
+
+  showElement(
+    message,
+    element = this.container,
+    type = "warning",
+    duration = 3000
+  ) {
+    if (element.querySelector(".notification")) {
+      element.querySelector(".notification").remove();
+    }
+    const notification = document.createElement("div");
+    notification.classList.add("notification", type);
+    const icon = this.createIcon(type);
+    const text = document.createElement("span");
+    text.innerHTML = message;
+    notification.appendChild(icon.firstElementChild);
+    notification.appendChild(text);
+    element.appendChild(notification);
+
+    setTimeout(() => {
+      notification.classList.add("show");
+    }, 10);
+
+    setTimeout(() => {
+      this.hide(notification, element);
+    }, duration);
   }
 
   createIcon(type) {
