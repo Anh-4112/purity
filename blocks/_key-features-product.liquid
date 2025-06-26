@@ -1,28 +1,43 @@
 {%- if closest.product != blank -%}
   {%- if closest.product.metafields.custom.key_features.value -%}
-    <ul class="list-unstyled flex column gap-5">
-      {%- for features in closest.product.metafields.custom.key_features.value -%}
-        {%- if features.title or features.description -%}
-          <li class="flex gap-10">
-            <span class="heading-color flex-auto w-custom" style="--width: 16px;">
-              <svg width="16" height="12" fill="none" class="heading-color">
-                <path fill="currentColor" d="M14.074 1.074A.838.838 0 0 1 14.66.84c.235 0 .43.078.586.234.17.17.254.371.254.606 0 .221-.085.41-.254.566l-9.16 9.18a.795.795 0 0 1-.586.234.795.795 0 0 1-.586-.234l-4.16-4.18A.743.743 0 0 1 .5 6.68c0-.235.085-.437.254-.606a.772.772 0 0 1 .566-.234c.235 0 .437.078.606.234L5.5 9.648l8.574-8.574Z"/>
-              </svg>
-            </span>
-            <div class="key__features-inner">
-              <span class="features-title-label heading-style">{{ features.title }}:</span>
-              <span class="features-description-value">{{ features.description }}</span>
-            </div>
-          </li>
-        {% endif %}
-      {%- endfor -%}
-    </ul>
+    <div class="p-20 border rounded">
+      {%- if block.settings.heading != blank -%}
+        <p class="h6 mb-10 fs-18">
+          {{ block.settings.heading }}
+        </p>
+      {%- endif -%}
+      <ul class="flex gap-5 list-unstyled column">
+        {%- for features in closest.product.metafields.custom.key_features.value -%}
+          {%- if features.title or features.description -%}
+            <li class="flex gap-10 align-center">
+              <span class="flex-auto heading-color w-custom" style="--width: 10px;">
+                <svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="3" cy="3" r="3" fill="currentColor"/>
+                  </svg>
+              </span>
+              <div class="key__features-inner">
+                <span class="features-title-label heading-style">{{ features.title }}:</span>
+                <span class="features-description-value">{{ features.description }}</span>
+              </div>
+            </li>
+          {% endif %}
+        {%- endfor -%}
+      </ul>
+    </div>
   {% endif %}
 {% endif %}
 {% schema %}
 {
   "name": "t:sections.all.product_setting.key_features.name",
   "class": "block-product__key-features my-custom slideIn-animate",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "heading",
+      "default": "Key Features",
+      "label": "t:sections.all.content_setting.heading.label"
+    },
+  ],
   "presets": [{ "name": "t:sections.all.product_setting.key_features.name" }]
 }
 {% endschema %}

@@ -237,7 +237,8 @@
           "module-variantSwatch": "{{ 'module-variant-swatch.js' | asset_url }}",
           "module-safariElementPatch": "{{ 'safari-element-patch.js' | asset_url }}",
           "module-photoSwipeLightbox": "{{ 'photoswipe-lightbox.min.js' | asset_url }}",
-          "vertical-product-tabs": "{{ 'section-vertical-product-tabs.js' | asset_url }}"
+          "vertical-product-tabs": "{{ 'section-vertical-product-tabs.js' | asset_url }}",
+          "module-progress-video": "{{ 'module-progress-video.js' | asset_url }}"
         }
       }
     </script>
@@ -261,6 +262,7 @@
     </a>
     {% if theme_st.scroll_animation %}
       <page-loader class="page-loader z-20 fixed inset-0 overflow-hidden pointer-none no-js-hidden flex content-center">
+        <span class="preload-screen-spinner"></span>
       </page-loader>
     {% endif %}
     {% sections 'header-group' %}
@@ -288,11 +290,13 @@
       window.themeGlobalVariables = {
         settings: {
           money_format: {{ shop.money_format | json }},
+          actionAddCartMobile: `{{ theme_st.action_add_cart_mobile }}`
         }
       }
       window.cartStrings = {
         error: `{{ 'sections.cart.cart_error' | t }}`,
         quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
+        addSuccessMobile: `{{ 'sections.cart.cart_add_success_mobile_html' | t: link: routes.cart_url }}`,
         no_shipping: `{{ 'sections.cart.no_shipping' | t }}`,
         shipping_rate: `{{ 'sections.cart.shipping_rate' | t }}`,
         money_format: {{ money_format | json }},

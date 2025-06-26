@@ -116,12 +116,13 @@ class FacetFiltersForm extends HTMLElement {
 
   static renderProductCount(htmlRender) {
     const updateContent = (blockClass) => {
-      if (
-        blockClass == "facet-drawer" &&
-        window.innerWidth < 1025 &&
-        document.querySelector("#FacetFiltersForm")
-      ) {
-        return;
+      if (blockClass == "facet-drawer") {
+        if (
+          window.innerWidth < 1025 ||
+          !document.querySelector("#FacetFiltersForm")
+        ) {
+          return;
+        }
       }
       const source = htmlRender.querySelector(`.${blockClass}`);
       const destination = document.querySelector(`.${blockClass}`);

@@ -145,13 +145,13 @@ if (!customElements.get("countdown-timer")) {
         const mins = this.dataset?.mins;
         const secs = this.dataset?.secs;
         const container = document.createElement("div");
-        container.innerHTML = `<div class="countdown-container lh-normal min-w-custom p-custom flex column bg-custom rounded-5 relative content-center"><span class="days_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 timer-announcementbar-text">${
+        container.innerHTML = `<div class="countdown-container lh-normal sale-color bg-white min-w-custom p-custom flex column  rounded-5 relative content-center"><span class="days_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 timer-announcementbar-text hidden">${
           days ? days : "days"
-        }</span></div><div class="countdown-container lh-normal min-w-custom p-custom flex column bg-custom rounded-5 relative content-center"><span class="hours_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 timer-announcementbar-text">${
+        }</span></div><div class="countdown-container lh-normal sale-color bg-white min-w-custom p-custom flex column  rounded-5 relative content-center"><span class="hours_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 timer-announcementbar-text hidden">${
           hours ? hours : "hours"
-        }</span></div><div class="countdown-container lh-normal min-w-custom p-custom flex column bg-custom rounded-5 relative content-center"><span class="minutes_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 timer-announcementbar-text">${
+        }</span></div><div class="countdown-container lh-normal sale-color bg-white min-w-custom p-custom flex column rounded-5 relative content-center"><span class="minutes_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 timer-announcementbar-text hidden">${
           mins ? mins : "mins"
-        }</span></div><div class="countdown-container lh-normal min-w-custom p-custom flex column bg-custom rounded-5 relative content-center"><span class="seconds_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 timer-announcementbar-text">${
+        }</span></div><div class="countdown-container lh-normal sale-color bg-white min-w-custom p-custom flex column  rounded-5 relative content-center"><span class="seconds_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 timer-announcementbar-text hidden">${
           secs ? secs : "secs"
         }</span></div>`;
         return container;

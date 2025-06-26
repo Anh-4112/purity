@@ -1111,6 +1111,8 @@ blockquote {
   }
   :where(
       .btn-outline,
+      .shopify-payment-button__more-options,
+      .shopify-payment-button__button--unbranded,
       .text-swatch-label.btn-hover,
       .btn-white,
       .btn__quick-shop.bg-white
@@ -1128,6 +1130,12 @@ blockquote {
       .btn__quick-shop.bg-white
     ):after {
     background-color: var(--btn-primary-bg-color);
+  }
+  :where(
+    .shopify-payment-button__more-options,
+    .shopify-payment-button__button--unbranded
+  ):after {
+    background-color: var(--btn-primary-bg-color) !important;
   }
   :where(
       .btn,
@@ -2182,6 +2190,14 @@ cart-drawer {
 }
 .filter-sort:hover {
   background-color: var(--color-background-2);
+}
+.dot-total {
+  display: inline-flex;
+  width: 0.4rem;
+  height: 0.4rem;
+  background-color: var(--btn-color);
+  border-radius: 50%;
+  margin: 0 0.8rem;
 }
 .touch-target-before::before {
   content: "";

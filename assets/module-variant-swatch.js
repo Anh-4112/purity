@@ -334,6 +334,7 @@ class VariantInput extends HTMLElement {
 
   updateBoughtTogether(currentSection) {
     let total_price = Number(currentSection.getAttribute("data-price"));
+    console.log('total_price', total_price)
     currentSection
       .querySelectorAll(".bought-together-checkbox[type='checkbox']")
       .forEach((item) => {
@@ -515,6 +516,7 @@ class VariantSwatchSelect extends VariantInput {
       }
       this.updateProductFormBundleRoutine(currentProduct, currentTarget.value);
       this.updateProductFormBundleSection(currentProduct, currentTarget.value);
+      this.updateTotalPriceCompactProductBundle(e);
     }
   }
 
@@ -568,6 +570,40 @@ class VariantSwatchSelect extends VariantInput {
       if (variant) {
         variant.querySelector(`input[name="items[][id]"]`).value = value;
       }
+    }
+  }
+
+  updateTotalPriceCompactProductBundle(event) {
+    const currentTarget = event.currentTarget;
+    const currentSection = currentTarget.closest('section');
+    
+    const bundleProducts = currentSection?.querySelector('bundle-products');
+    if (!bundleProducts) return;
+
+    const productForm = bundleProducts.querySelector('.bundle-products-form');
+    if (!productForm) return;
+
+    let totalPrice = 0;
+    
+    const bundleItems = bundleProducts.querySelectorAll('bundle-item');
+    bundleItems.forEach(item => {
+      const select = item.querySelector('select');
+      if (select && select.value) {
+        const selectedOption = select.options[select.selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
+        if (price) {
+          totalPrice += parseFloat(price);
+        }
+      }
+    });
+
+    const totalPriceElement = productForm.querySelector('.total-price');
+    if (totalPriceElement && totalPrice > 0) {
+      const formattedPrice = NextSkyTheme.formatMoney(
+        totalPrice,
+        cartStrings.money_format
+      );
+      totalPriceElement.textContent = formattedPrice;
     }
   }
 }
