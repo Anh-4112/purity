@@ -1,4 +1,5 @@
 import * as NextSkyTheme from "global";
+import { createVideoProgressBar } from "module-progress-video";
 
 class VideoLocalLightbox extends HTMLElement {
   constructor() {
@@ -174,6 +175,74 @@ class VideoLightboxItem extends HTMLElement {
         false
       );
     }
+    
+    const video = this.querySelector("video");
+    if (video) {
+      video.addEventListener('play', () => {
+        this._createProgressBarForVideo(video);
+      });
+      
+      video.addEventListener('pause', () => {
+        if (video._progressBar) {
+          if (typeof video._progressBar.destroy === 'function') {
+            video._progressBar.destroy();
+          } else {
+            video._progressBar.hide();
+            const progressContainer = video.parentElement.querySelector('.video-progress-bar');
+            if (progressContainer) {
+              progressContainer.remove();
+            }
+          }
+          video._progressBar = null;
+        }
+      });
+    }
+  }
+
+  _createProgressBarForVideo(video) {
+    if (!video) return;
+    
+    const lightboxPopup = this.closest("media-lightbox-popup");
+    if (lightboxPopup) {
+      const allVideos = lightboxPopup.querySelectorAll("video");
+      allVideos.forEach((v) => {
+        if (v !== video && v._progressBar) {
+          if (typeof v._progressBar.destroy === 'function') {
+            v._progressBar.destroy();
+          } else {
+            v._progressBar.hide();
+            const progressContainer = v.parentElement.querySelector('.video-progress-bar');
+            if (progressContainer) {
+              progressContainer.remove();
+            }
+          }
+          v._progressBar = null;
+        }
+      });
+    }
+    
+    if (video._progressBar) {
+      if (typeof video._progressBar.destroy === 'function') {
+        video._progressBar.destroy();
+      } else {
+        video._progressBar.hide();
+        const progressContainer = video.parentElement.querySelector('.video-progress-bar');
+        if (progressContainer) {
+          progressContainer.remove();
+        }
+      }
+      video._progressBar = null;
+    }
+    
+    const videoContainer = video.closest('.video_inner') || video.parentElement;
+    video._progressBar = createVideoProgressBar(video, {
+      container: videoContainer,
+      allowHide: true
+    });
+    
+    if (video._progressBar) {
+      video._progressBar.show();
+    }
   }
 
   clickMuteVideo(event) {
@@ -191,12 +260,20 @@ class VideoLightboxItem extends HTMLElement {
   clickPlayVideo(event) {
     event.preventDefault();
     event.stopPropagation();
-    if (this.querySelector("video").paused) {
-      this.querySelector("video").play();
-      this.querySelector(".play-button").classList.add("active");
+    
+    const video = this.querySelector("video");
+    const playButton = this.querySelector(".play-button");
+    
+    if (!video) return;
+    
+    if (video.paused) {
+      video.play().then(() => {
+        if (playButton) playButton.classList.add("active");
+      }).catch(() => {
+      });
     } else {
-      this.querySelector("video").pause();
-      this.querySelector(".play-button").classList.remove("active");
+      video.pause();
+      if (playButton) playButton.classList.remove("active");
     }
   }
 }
