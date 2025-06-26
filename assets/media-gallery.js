@@ -179,7 +179,9 @@ class MediaZoomButton extends HTMLButtonElement {
         isButton: true,
         html: '<svg width="6" height="11" fill="none"><use href="#icon-next"></use></svg>',
         onClick: (event, el) => {
-          pswp.next();
+          if (pswp && pswp.getNumItems() > 0 && pswp.currIndex < pswp.getNumItems() - 1) {
+            pswp.next();
+          }
         },
       });
       pswp?.ui.registerElement({
@@ -189,9 +191,25 @@ class MediaZoomButton extends HTMLButtonElement {
         isButton: true,
         html: '<svg width="6" height="11" fill="none"><use href="#icon-back"></use></svg>',
         onClick: (event, el) => {
-          pswp.prev();
+          if (pswp && pswp.getNumItems() > 0 && pswp.currIndex > 0) {
+            pswp.prev();
+          }
         },
       });
+    });
+    lightbox.on("afterInit", () => {
+      const { pswp } = lightbox;
+      if (!pswp) return;
+      const updateButtons = () => {
+        const nextBtn = pswp.element.querySelector('[data-element="next"]');
+        const prevBtn = pswp.element.querySelector('[data-element="prev"]');
+        if (nextBtn && prevBtn) {
+          nextBtn.disabled = pswp.currIndex >= pswp.getNumItems() - 1;
+          prevBtn.disabled = pswp.currIndex <= 0;
+        }
+      };
+      pswp.on("change", updateButtons);
+      updateButtons(); // Gọi ngay khi khởi tạo
     });
     lightbox.init();
 
