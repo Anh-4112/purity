@@ -1055,7 +1055,13 @@ blockquote {
   transition: var(--transition);
   -webkit-transition: var(--transition);
 }
+.active .transition-drawer {
+  --transition-drawer: all 0.4s cubic-bezier(0.5, -0.03, 0.34, 0.83);
+  transition: var(--transition-drawer);
+  -webkit-transition: var(--transition-drawer);
+}
 .transition-drawer {
+  --transition-drawer: all 0.25s cubic-bezier(0.5, -0.03, 0.34, 0.83);
   transition: var(--transition-drawer);
   -webkit-transition: var(--transition-drawer);
 }
@@ -1637,7 +1643,7 @@ blockquote {
   height: var(--icon-width, 14px);
 }
 
-:is(.detail-open, cart-gift-wrap-element.open) .icon_plus-animation:before {
+:is(.detail-open,.collapse-block.open, cart-gift-wrap-element.open) .icon_plus-animation:before {
   opacity: 0;
   -webkit-transform: translate(-50%, -50%) rotate(90deg);
   transform: translate(-50%, -50%) rotate(90deg);
