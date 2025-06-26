@@ -1105,6 +1105,8 @@ blockquote {
   }
   :where(
       .btn-outline,
+      .shopify-payment-button__more-options,
+      .shopify-payment-button__button--unbranded,
       .text-swatch-label.btn-hover,
       .btn-white,
       .btn__quick-shop.bg-white
@@ -1122,6 +1124,12 @@ blockquote {
       .btn__quick-shop.bg-white
     ):after {
     background-color: var(--btn-primary-bg-color);
+  }
+  :where(
+    .shopify-payment-button__more-options,
+    .shopify-payment-button__button--unbranded
+  ):after {
+    background-color: var(--btn-primary-bg-color) !important;
   }
   :where(
       .btn,
