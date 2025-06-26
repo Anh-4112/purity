@@ -212,20 +212,19 @@ input[type="checkbox"]:checked + .color-checkmark:before {
 }
 
 @media screen and (max-width: 1024.98px) {
-  .header-sticky-hidden {
-    --top-position: 0 !important;
-  }
   .facets-toolbar {
-    --top-position: var(--header-height);
     position: sticky;
-    top: var(--top-position);
+    top: 0;
     z-index: 4;
+    margin-inline: -2rem;
+    padding-inline: 2rem;
     background: white;
     transition: var(--transition-drawer);
   }
-  .facets-toolbar.header-hidden {
-    --top-position: 0 !important;
-    top: 0 !important;
-    transition: var(--transition-drawer);
+  .site-header.section-header-sticky:not(.header-sticky-hidden)
+    + .content-for-layout
+    .facets-toolbar {
+    top: var(--header-height);
   }
+
 }
