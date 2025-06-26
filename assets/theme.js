@@ -299,6 +299,7 @@ class SiteHeader extends HTMLElement {
       this.heightAnnouncementBar + Math.round(this.clientHeight);
     let header = this.closest(".site-header");
     let positionScrollY = window.scrollY;
+    const facetsToolbar = document.querySelector('.facets-toolbar');
     if (header) {
       if (this.dataStickyType === "always") {
         if (positionScrollY > headerHeight) {
@@ -312,8 +313,10 @@ class SiteHeader extends HTMLElement {
             header.classList.add("scr-pass-header");
             if (positionScrollY > this.check) {
               header.classList.add("header-sticky-hidden");
+              if (facetsToolbar) facetsToolbar.classList.add('header-hidden');
             } else {
               header.classList.remove("header-sticky-hidden");
+              if (facetsToolbar) facetsToolbar.classList.remove('header-hidden');
               header.classList.add("animate");
             }
             header.classList.add("section-header-sticky");
@@ -328,6 +331,7 @@ class SiteHeader extends HTMLElement {
             "section-header-sticky",
             "animate"
           );
+          if (facetsToolbar) facetsToolbar.classList.remove('header-hidden');
         }
       }
     }
