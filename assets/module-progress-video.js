@@ -1,17 +1,17 @@
 /**
- * VideoProgressBar - Class quản lý progress bar cho video
- * Hiển thị tiến trình phát video, buffer và thời gian
- * Chỉ hiển thị thông tin, không có khả năng điều khiển
+ * VideoProgressBar - Class for managing video progress bar
+ * Displays video playback progress, buffer and time information
+ * Display only, no control functionality
  */
 class VideoProgressBar {
   constructor(videoElement, options = {}) {
     this.video = videoElement;
     this.container = options.container || videoElement.parentElement;
     this.options = {
-      showTime: options.showTime || false, // Hiển thị thời gian hiện tại
-      showDuration: options.showDuration || false, // Hiển thị tổng thời gian
+      showTime: options.showTime || false, // Show current time
+      showDuration: options.showDuration || false, // Show total duration
       className: options.className || 'video-progress-bar',
-      allowHide: options.allowHide === true, // Mặc định KHÔNG cho phép ẩn, set true để cho phép ẩn
+      allowHide: options.allowHide === true, // Default does NOT allow hiding, set true to allow hiding
       ...options
     };
     
@@ -25,30 +25,30 @@ class VideoProgressBar {
     this.bindEvents();
     this.updateProgress();
     
-    // Hiển thị ngay lập tức nếu không cho phép ẩn
+    // Show immediately if hiding is not allowed
     if (!this.options.allowHide) {
       this.show();
     }
   }
 
   createProgressBar() {
-    // Tạo container cho progress bar
+    // Create container for progress bar
     this.progressContainer = document.createElement('div');
     this.progressContainer.className = `${this.options.className}-container`;
 
-    // Tạo progress bar
+    // Create progress bar
     this.progressBar = document.createElement('div');
     this.progressBar.className = `${this.options.className}`;
 
-    // Tạo progress fill
+    // Create progress fill
     this.progressFill = document.createElement('div');
     this.progressFill.className = `${this.options.className}-fill`;
 
-    // Tạo buffer bar (cho video buffering)
+    // Create buffer bar (for video buffering)
     this.bufferBar = document.createElement('div');
     this.bufferBar.className = `${this.options.className}-buffer`;
 
-    // Tạo time display
+    // Create time display
     if (this.options.showTime || this.options.showDuration) {
       this.timeDisplay = document.createElement('div');
       this.timeDisplay.className = `${this.options.className}-time`;
@@ -63,7 +63,7 @@ class VideoProgressBar {
       this.timeDisplay.appendChild(this.duration);
     }
 
-    // Ghép các element
+    // Assemble elements
     this.progressBar.appendChild(this.bufferBar);
     this.progressBar.appendChild(this.progressFill);
     
@@ -116,7 +116,7 @@ class VideoProgressBar {
   }
 
   hide() {
-    // Chỉ ẩn progress bar nếu allowHide = true
+    // Only hide progress bar if allowHide = true
     if (!this.options.allowHide) return;
     
     this.isVisible = false;
@@ -129,7 +129,7 @@ class VideoProgressBar {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   }
 
-  // Phương thức để tùy chỉnh style
+  // Method to customize styles
   setStyles(styles) {
     Object.assign(this.progressContainer.style, styles.container || {});
     Object.assign(this.progressBar.style, styles.progressBar || {});
@@ -140,7 +140,7 @@ class VideoProgressBar {
     }
   }
 
-  // Phương thức để destroy progress bar
+  // Method to destroy progress bar
   destroy() {
     if (this.progressContainer && this.progressContainer.parentNode) {
       this.progressContainer.parentNode.removeChild(this.progressContainer);
@@ -149,14 +149,14 @@ class VideoProgressBar {
 }
 
 /**
- * Utility function để tạo progress bar cho video
+ * Utility function to create progress bar for video
  * @param {HTMLVideoElement} videoElement - Video element
- * @param {Object} options - Tùy chọn cấu hình
- * @param {boolean} options.showTime - Hiển thị thời gian hiện tại (mặc định: false)
- * @param {boolean} options.showDuration - Hiển thị tổng thời gian (mặc định: false)
- * @param {string} options.className - CSS class name (mặc định: 'video-progress-bar')
- * @param {boolean} options.allowHide - Cho phép ẩn progress bar (mặc định: false - luôn hiển thị)
- * @returns {VideoProgressBar} Instance của VideoProgressBar
+ * @param {Object} options - Configuration options
+ * @param {boolean} options.showTime - Show current time (default: false)
+ * @param {boolean} options.showDuration - Show total duration (default: false)
+ * @param {string} options.className - CSS class name (default: 'video-progress-bar')
+ * @param {boolean} options.allowHide - Allow hiding progress bar (default: false - always visible)
+ * @returns {VideoProgressBar} Instance of VideoProgressBar
  */
 export function createVideoProgressBar(videoElement, options = {}) {
   return new VideoProgressBar(videoElement, options);
