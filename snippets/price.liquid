@@ -36,7 +36,7 @@
   endif
 -%}
 <div
-  class="card-product-price relative flex wrap gap row-gap-0 align-center{% if settings.product_alignment == 'center' %} justify-center{% endif %}{% if scope == 'detail' %} h5{% endif %} {{ class }}"
+  class="card-product-price relative flex align-center wrap gap row-gap-0 align-center{% if settings.product_alignment == 'center' %} justify-center{% endif %}{% if scope == 'detail' %} h4{% endif %} {{ class }}"
   style="--gap: 2px;--gap-desktop: 4px;"
 >
   {%- if compare_at_price > price -%}
@@ -50,7 +50,7 @@
       <span class="visually-hidden visually-hidden--inline">
         {{- 'products.product.price.regular_price' | t -}}
       </span>
-      <s class="price-item compare-price body_weight">
+      <s class="price-item compare-price body_weight fs-16">
         {%- if settings.currency_code_enabled -%}
           {{ compare_at_price | money_with_currency }}
         {%- else -%}
@@ -59,7 +59,7 @@
       </s>
     </div>
     {% if scope == 'detail' %}
-      <span class="price-saving price-item compare-price body_weight sale-color">
+      <span class="price-saving price-item compare-price body_weight sale-color fs-16 pt-3 pe-3">
         {% if display_percent %}
           {{ 'products.product.sale_off' | t: discount: savings_percent }}
         {% else %}

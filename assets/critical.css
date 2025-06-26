@@ -26,6 +26,29 @@ page-loader:not([style="opacity: 1;"]) .loader {
   border-radius: 30px;
   animation: moving 1s ease-in-out infinite;
 }
+@keyframes pageTransitionSpinner {
+  0% {
+    -webkit-transform: rotate3d(0, 0, 1, 0deg);
+    transform: rotate3d(0, 0, 1, 0deg);
+  }
+
+  25% {
+    -webkit-transform: rotate3d(0, 0, 1, 90deg);
+    transform: rotate3d(0, 0, 1, 90deg);
+  }
+  50% {
+    -webkit-transform: rotate3d(0, 0, 1, 180deg);
+    transform: rotate3d(0, 0, 1, 180deg);
+  }
+  75% {
+    -webkit-transform: rotate3d(0, 0, 1, 270deg);
+    transform: rotate3d(0, 0, 1, 270deg);
+  }
+  100% {
+    -webkit-transform: rotate3d(0, 0, 1, 360deg);
+    transform: rotate3d(0, 0, 1, 360deg);
+  }
+}
 @keyframes moving {
   50% {
     width: 100%;
@@ -37,6 +60,18 @@ page-loader:not([style="opacity: 1;"]) .loader {
     left: unset;
   }
 }
+.preload-screen-spinner {
+  --loading-size: 80px;
+  --loading-color: #626f6b;
+  animation: pageTransitionSpinner 1.5s linear infinite;
+  width: var(--loading-size);
+  height: var(--loading-size);
+  border-radius: 50%;
+  box-shadow: 0 2px 0 0 var(--loading-color);
+  transform-origin: calc(var(--loading-size) / 2)
+    calc(var(--loading-size) / 2 + 1px);
+}
+
 :where(.container, .fluid_container) {
   padding-left: var(--bs-gutter-x, 1.5rem);
   padding-right: var(--bs-gutter-x, 1.5rem);
@@ -191,7 +226,7 @@ summary::-webkit-details-marker {
 }
 :is(.rte, announcement-bar, .tax-note, .product__tax, .prose) a {
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
   font-weight: var(--heading-weight);
   color: var(--color-heading);
 }
@@ -680,8 +715,6 @@ input[type="checkbox"]:checked + .checkmark:before {
 }
 :where(
     .btn-primary,
-    .shopify-payment-button__more-options,
-    .shopify-payment-button__button--unbranded,
     .shopify-challenge__button,
     .dmp_discount-form button
   ) {
@@ -689,6 +722,8 @@ input[type="checkbox"]:checked + .checkmark:before {
   --btn-color: var(--btn-primary-color);
   --btn-border-color: var(--btn-bg);
 }
+.shopify-payment-button__more-options,
+.shopify-payment-button__button--unbranded,
 .btn-outline {
   --btn-bg: rgb(var(--color-white));
   --btn-color: var(--btn-outline-color);
