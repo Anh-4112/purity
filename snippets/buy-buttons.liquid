@@ -1,6 +1,23 @@
 {%- liquid
   assign gift_card_recipient_feature_active = false
   assign show_dynamic_checkout_active = false
+  if scope != 'detail'
+    if first_available_variant
+      assign target = product.selected_or_first_available_variant
+    else
+      assign target = product.variants[0]
+    endif
+  else
+    assign target = product.selected_or_first_available_variant
+  endif
+  assign price = target.price | default: 1999
+  assign money_price = price | money
+  if settings.currency_code_enabled
+    assign money_price = price | money_with_currency
+  endif
+  if product.price_varies and scope != 'detail'
+    assign money_price = 'products.product.price.from_price_html' | t: price: money_price
+  endif
 -%}
 {%- if product != blank -%}
   {%- liquid
@@ -118,13 +135,19 @@
                   disabled
                 {% endif %}
               >
-                <span class="btn-label hidden-on-load transition-short">
+                <span class="btn-label hidden-on-load transition-short flex content-center">
                   {%- if product.selected_or_first_available_variant == null -%}
                     {{ 'products.product.unavailable' | t }}
                   {%- elsif product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
                     {{ 'products.product.sold_out' | t }}
                   {%- else -%}
                     {{ 'products.product.add_to_cart' | t }}
+                    {%- if type_form != 'sticky-add-cart' -%}
+                      <span class="dot-total"></span>
+                      <span data-total-price="{{ price }}" class="total-price__detail">
+                        {{ money_price }}
+                      </span>
+                    {%- endif -%}
                   {%- endif -%}
                 </span>
                 {%- render 'loader' -%}

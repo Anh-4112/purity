@@ -1019,6 +1019,17 @@ class QuantityInput extends HTMLElement {
         sticky.querySelector("quantity-input input").value = this.input.value;
       }
     }
+
+    this.updateTotalPrice(this.input.value);
+  }
+
+  updateTotalPrice(previousValue) {
+    const form = this.closest("form");
+    if (!form) return;
+    const priceElement = form.querySelector(".total-price__detail");
+    const dataTotalPrice = priceElement.getAttribute("data-total-price");
+    const totalPrice = Number(dataTotalPrice) * Number(previousValue);
+    priceElement.textContent = NextSkyTheme.formatMoney(totalPrice, themeGlobalVariables.settings.money_format);
   }
 
   validateQtyRules() {
