@@ -1,4 +1,4 @@
-import { initSlide, SlideSection } from "module-slide";
+import { initSlide } from "module-slide";
 import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
 import { CustomElement } from "module-safariElementPatch";
 import "module-addToCart";
@@ -551,40 +551,48 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         : (this.open = !this.open);
   }
   async transition(value) {
-    return value
-      ? (megaMenuCount.set(
-          DetailsMegaMenu,
-          megaMenuCount.get(DetailsMegaMenu) + 1
-        ),
-        this.setAttribute("open", ""),
-        this.summaryElement.setAttribute("open", ""),
-        document.addEventListener("click", this.detectClickOutsideListener),
-        document.addEventListener("keydown", this.detectEscKeyboardListener),
-        document.addEventListener("focusout", this.detectFocusOutListener),
-        this.classList.add("detail-open"),
-        this.dropdownsAnimation == "fade-in-down" && window.innerWidth >= 1025
-          ? (this.contentElement.setAttribute("open", ""),
-            this.contentElement.classList.add("expanding"),
-            await this.fadeInDown(),
-            this.contentElement.classList.remove("expanding"))
-          : setTimeout(() => this.contentElement.setAttribute("open", ""), 100))
-      : (megaMenuCount.set(
-          DetailsMegaMenu,
-          megaMenuCount.get(DetailsMegaMenu) - 1
-        ),
-        this.summaryElement.removeAttribute("open"),
-        this.contentElement.removeAttribute("open"),
-        document.removeEventListener("click", this.detectClickOutsideListener),
-        document.removeEventListener("keydown", this.detectEscKeyboardListener),
-        document.removeEventListener("focusout", this.detectFocusOutListener),
-        this.classList.remove("detail-open"),
-        this.dropdownsAnimation == "fade-in-down" && window.innerWidth >= 1025
-          ? (this.contentElement.classList.add("expanding"),
-            await this.fadeInUp(),
-            this.contentElement.classList.remove("expanding"),
-            this.open || this.removeAttribute("open"))
-          : setTimeout(() => this.open || this.removeAttribute("open"), 300));
-  }
+    const body = document.body;
+
+    if (value) {
+      megaMenuCount.set(DetailsMegaMenu, megaMenuCount.get(DetailsMegaMenu) + 1);
+      this.setAttribute("open", "");
+      this.summaryElement.setAttribute("open", "");
+      document.addEventListener("click", this.detectClickOutsideListener);
+      document.addEventListener("keydown", this.detectEscKeyboardListener);
+      document.addEventListener("focusout", this.detectFocusOutListener);
+      this.classList.add("detail-open");
+      body.classList.add("dropdown-open");
+
+      if (this.dropdownsAnimation === "fade-in-down" && window.innerWidth >= 1025) {
+        this.contentElement.setAttribute("open", "");
+        this.contentElement.classList.add("expanding");
+        await this.fadeInDown();
+        this.contentElement.classList.remove("expanding");
+      } else {
+        setTimeout(() => this.contentElement.setAttribute("open", ""), 100);
+      }
+    } else {
+      megaMenuCount.set(DetailsMegaMenu, megaMenuCount.get(DetailsMegaMenu) - 1);
+      this.summaryElement.removeAttribute("open");
+      this.contentElement.removeAttribute("open");
+      document.removeEventListener("click", this.detectClickOutsideListener);
+      document.removeEventListener("keydown", this.detectEscKeyboardListener);
+      document.removeEventListener("focusout", this.detectFocusOutListener);
+      this.classList.remove("detail-open");
+      body.classList.remove("dropdown-open");
+
+      if (this.dropdownsAnimation === "fade-in-down" && window.innerWidth >= 1025) {
+        this.contentElement.classList.add("expanding");
+        await this.fadeInUp();
+        this.contentElement.classList.remove("expanding");
+        if (!this.open) this.removeAttribute("open");
+      } else {
+        setTimeout(() => {
+          if (!this.open) this.removeAttribute("open");
+        }, 300);
+      }
+    }
+}
   detectClickOutside(event) {
     !this.contains(event.target) &&
       !(event.target.closest("details") instanceof DetailsMegaMenu) &&
@@ -1027,11 +1035,12 @@ class QuantityInput extends HTMLElement {
     const form = this.closest("form");
     if (!form) return;
     const priceElement = form.querySelector(".total-price__detail");
-    const dataTotalPrice = priceElement.getAttribute("data-total-price");
+    if (!priceElement) return;
+    const dataTotalPrice = priceElement?.getAttribute("data-total-price");
     const totalPrice = Number(dataTotalPrice) * Number(previousValue);
     priceElement.textContent = NextSkyTheme.formatMoney(totalPrice, themeGlobalVariables.settings.money_format);
   }
-
+  
   validateQtyRules() {
     const value = parseInt(this.input.value);
     if (this.input.min) {
@@ -3034,7 +3043,6 @@ class GridCustom extends HTMLElement {
 
 customElements.define('grid-custom', GridCustom);
 
-
 class BeforeYouLeave extends HTMLElement {
   constructor() {
     super();
@@ -3129,6 +3137,23 @@ class BeforeYouLeave extends HTMLElement {
 
 customElements.define('before-you-leave', BeforeYouLeave);
 
+class ShareButton extends HTMLElement {
+  constructor() {
+    super();
+    this.addEventListener('click', this.handleShare.bind(this));
+  }
 
+  handleShare() {
+    const title = this.getAttribute('data-title') || document.title;
+    const text = this.getAttribute('data-text') || '';
+    const url = this.getAttribute('data-url') || window.location.href;
 
+    if (navigator.share) {
+      navigator.share({ title, text, url });
+    } else {
+      alert("Your browser doesn't support sharing.");
+    }
+  }
+}
 
+customElements.define('share-button', ShareButton);

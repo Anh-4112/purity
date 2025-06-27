@@ -19,6 +19,8 @@
   assign select_product_recommendation = theme_st.select_product_recommendation
   assign action_add_cart_desktop = theme_st.action_add_cart_desktop
   assign open_cart_mobile = theme_st.open_cart_mobile
+  assign cart_duration_show = theme_st.show_duration
+  assign cart_duration = theme_st.cart_duration
   assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'
   for item in cart.items
     for allocation in item.line_level_discount_allocations
@@ -43,7 +45,7 @@
     data-open-cart-mobile="{{ open_cart_mobile }}"
     drawer
   >
-    <modal-overlay class="modal-overlay pointer"></modal-overlay>
+    <modal-overlay class="modal-overlay cursor-crosshair"></modal-overlay>
     <div
       class="modal-inner draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 inset-y-0 z-2 w-full"
       role="dialog"
@@ -205,6 +207,34 @@
                 </div>
               </div>
             </free-ship-progress-bar>
+          {%- endif -%}
+          {%- if cart_duration_show and cart.items.size > 0 -%}
+            <script src="{{ 'countdown-timer.js' | asset_url }}" defer="defer"></script>
+            <div class="cart-countdown-time">
+              <countdown-timer
+                data-deadline-mins="{{ cart_duration }}"
+                data-message="{{ 'sections.cart.timeout_message' | t }}"
+                data-mins="{{ 'products.product.countdown.format.mins' | t }}"
+                data-secs="{{ 'products.product.countdown.format.secs' | t }}"
+              >
+                <span class="icon-fire me-10">🔥</span>
+                <span>{{- 'sections.cart.countdown_message_html' | t -}}</span>
+                <div class="countdown-inner">
+                  <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
+                    <span class="minutes_timer countdown-item">00</span>
+                    <span class="hidden timer-announcementbar-text">
+                      {{- 'products.product.countdown.format.mins' | t -}}
+                    </span>
+                  </div>
+                  <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
+                    <span class="seconds_timer countdown-item">00</span>
+                    <span class="hidden timer-announcementbar-text">
+                      {{- 'products.product.countdown.format.secs' | t -}}
+                    </span>
+                  </div>
+                </div>
+              </countdown-timer>
+            </div>
           {%- endif -%}
           <div class="cart-drawer-inner overflow-y-auto custom-scrollbar grow-1 flex column">
             <cart-items
@@ -490,7 +520,7 @@
             {%- if enable_product_recommendations -%}
               <div class="drawer__cart-recommendations drawer-left drawer-spacing inset-y-0 beside">
                 <mini-cart-recommendations
-                  class="swiper__controls-group{% if hidden %} hidden{% endif %}"
+                  class="swiper__controls-group"
                   style="--position-arrow: static;--swiper-navigation-size: 20px;--padding: 0;"
                   data-type="{{ recommendation_product_type }}"
                   data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=main-cart-upsell"

@@ -8,7 +8,14 @@
   assign share_email = theme_st.share_email
   assign title = block.settings.title
 -%}
-
+<share-button
+  data-title="{{ product.title }}"
+  data-text="{{ product.title }}"
+  data-url="{{ shop.url }}{{ product.url }}"
+  class="btn-share-mobile"
+>
+  {{ 'blogs.article.share' | t }}
+</share-button>
 {% if share_facebook or share_twitter or share_pinterest or share_whatsapp or share_email %}
   <div class="flex wrap gap-10 align-center">
     {%- if title != blank -%}
