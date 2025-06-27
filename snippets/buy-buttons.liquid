@@ -30,14 +30,19 @@
     if type_form == 'sticky-add-cart'
       assign include_id = '-sticky-add-cart'
     endif
+    assign element = 'product-form'
+    if type_form == 'edit-cart'
+      assign element = 'product-form-edit-cart'
+    endif
   -%}
+  {% capture attributes %}
+    id="Product-form-{{ section.id }}{{ include_id }}"
+    class="block product-form flex-1"
+    data-hide-errors="{{ gift_card_recipient_feature_active }}"
+    data-section-id="{{ section.id }}{{ include_id }}"
+  {% endcapture %}
   <div class="product__submit-form">
-    <product-form
-      id="Product-form-{{ section.id }}{{ include_id }}"
-      class="block product-form flex-1"
-      data-hide-errors="{{ gift_card_recipient_feature_active }}"
-      data-section-id="{{ section.id }}{{ include_id }}"
-    >
+    <{{ element }} {{ attributes }}>
       {%- if type_form != 'sticky-add-cart' -%}
         <div class="product-form__error-message-wrapper" role="alert" hidden>
           <div class="form__message error mb-15">
@@ -141,7 +146,11 @@
                   {%- elsif product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
                     {{ 'products.product.sold_out' | t }}
                   {%- else -%}
-                    {{ 'products.product.add_to_cart' | t }}
+                    {% if type_form == 'edit-cart' %}
+                      {{ 'products.product.update_in_cart' | t }}
+                    {% else %}
+                      {{ 'products.product.add_to_cart' | t }}
+                    {%- endif -%}
                     {%- if type_form != 'sticky-add-cart' -%}
                       <span class="dot-total"></span>
                       <span data-total-price="{{ price }}" class="total-price__detail">
@@ -159,7 +168,7 @@
           {%- endif -%}
         </div>
       {%- endform -%}
-    </product-form>
+    </{{ element }}>
   </div>
 {%- else -%}
   <div class="product-form">

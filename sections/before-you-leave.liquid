@@ -1,0 +1,203 @@
+{%- liquid
+  assign section_st = section.settings
+  assign th_st = settings
+  assign show_time = section_st.show_time
+  assign code = section_st.code
+  assign collection = section_st.collection
+  assign recommended_heading = section_st.recommended_heading
+  assign recommended_button_label = th_st.recommended_button_label
+-%}
+
+<before-you-leave
+  id="{{ section.id }}"
+  class="before-you-leave modal transition-drawer invisible fixed inset-0 z-21 active-modal-js content-hidden"
+  data-time-delay="{{ show_time | times: 1 }}"
+  data-section-id="{{ section.id }}"
+  style="--drawer-width: 42rem;"
+>
+  <modal-overlay class="modal-overlay pointer"></modal-overlay>
+  <div
+    class="modal-inner overflow-auto transition-drawer draw-mb drawer-right-mb bg-white drawer drawer-right fixed right-0 z-15 inset-y-0 w-full z-2"
+  >
+    <div
+      class="relative"
+      {% if section_st.banner != blank %}
+        style="--aspect-ratio: {{ section_st.banner.aspect_ratio }}"
+      {% endif %}
+    >
+      {%- if section_st.banner != blank -%}
+        {%- assign image_alt = section_st.banner.alt | default: 'before you leave' -%}
+        {% render 'responsive-image',
+          type: 'banner',
+          image: section_st.banner,
+          image_alt: image_alt,
+          class: 'absolute inset-0 z-1 pointer-none w-full h-full object-position-center object-fit-cover'
+        %}
+      {% endif %}
+      <div class="before-banner-content{% if section_st.banner != blank %} absolute z-2 top-0{% endif %} p-30">
+        {%- if section.settings.sub_heading != blank -%}
+          <div class="before-sub-heading heading-style fs-18 mb-15">
+            {{ section.settings.sub_heading }}
+          </div>
+        {% endif %}
+        {%- if section.settings.content_heading != blank -%}
+          <h2 class="before-heading heading-letter-spacing mt-0 mb-30 not-hide-br">
+            {{ section.settings.content_heading }}
+          </h2>
+        {% endif %}
+        {%- if section.settings.code != blank -%}
+          <div class="before-code mb-30">
+            <a
+              href="javascript:;"
+              class="btn-primary inline-flex discount gap-10 no-underline content-center"
+              data-code="{{ code }}"
+              aria-label="{{ 'popup.copy' | t }}"
+            >
+              <svg width="16" height="14" fill="none">
+                <path fill="currentColor" fill-rule="evenodd" d="M14.286 4.667v7.583H4.57V4.667h9.715ZM16 4.375c0-.805-.64-1.458-1.429-1.458H4.286c-.79 0-1.429.653-1.429 1.458v8.167c0 .805.64 1.458 1.429 1.458H14.57c.79 0 1.429-.653 1.429-1.458V4.375Z" clip-rule="evenodd"/><path fill="currentColor" fill-rule="evenodd" d="M13.43.875A.866.866 0 0 0 12.573 0H1.43C1.05 0 .687.154.42.427A1.474 1.474 0 0 0 0 1.458V10.5c0 .484.384.875.857.875a.866.866 0 0 0 .857-.875V1.75h10.857a.866.866 0 0 0 .858-.874Z" clip-rule="evenodd"/>
+              </svg>
+              <span class="text relative">
+                <span class="copied-action">
+                  {{ section.settings.code }}
+                </span>
+                <span class="copied-success absolute invisible inset-0 inline-flex content-center">
+                  {{- 'popup.copied' | t -}}
+                </span>
+              </span>
+            </a>
+          </div>
+        {% endif %}
+        {%- if section.settings.description != blank -%}
+          <div class="before-des rich__text-m0">
+            {{ section.settings.description }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {%- if collection != blank -%}
+      {%- liquid
+        assign collection = collections[collection]
+      -%}
+      <div class="before-product p-30">
+        {%- if recommended_heading != blank -%}
+          <h5 class="before-product-title heading-letter-spacing mt-0 mb-30">
+            {{ recommended_heading }}
+          </h5>
+        {% endif %}
+        <div class="before-product-content">
+          {% for product in collection.products limit: 3 %}
+            <div class="product-before-items" style="--rounded-radius: 5px;">
+              {% render 'card-product',
+                card_product: product,
+                disable_hover_image: true,
+                disable_badge: true,
+                disable_rate: true,
+                disable_tag: true,
+                disable_countdown: true,
+                disable_scrolling_text: true,
+                disable_color_swatches: true,
+                disable_quickview: true,
+                disable_show_video: true,
+                type: 'list'
+              %}
+            </div>
+          {% endfor %}
+        </div>
+        <a
+          href="{{ collection.url }}"
+          class="btn btn-primary btn-before-bottom no-underline text-center block mt-30"
+        >
+          {%- if recommended_button_label != blank -%}
+            {{ recommended_button_label }}
+          {%- else -%}
+            {{ 'general.continue_shopping' | t }}
+          {% endif %}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</before-you-leave>
+
+{% schema %}
+{
+  "name": "t:sections.before-you-leave.name",
+  "tag": "section",
+  "class": "not-hide-br",
+  "enabled_on": {
+    "groups": ["custom.overlay"]
+  },
+  "limit": 1,
+  "settings": [
+    {
+      "type": "range",
+      "id": "show_time",
+      "label": "t:sections.before-you-leave.settings.show_time.label",
+      "min": 25,
+      "max": 100,
+      "default": 30,
+      "step": 1,
+      "unit": "s"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner",
+      "label": "t:sections.before-you-leave.settings.banner.label",
+      "info": "t:sections.before-you-leave.settings.banner.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_setting.label"
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "t:sections.all.content_setting.subheading.label",
+      "default": "10% Coupon!"
+    },
+    {
+      "type": "text",
+      "id": "content_heading",
+      "label": "t:sections.all.content_setting.heading.label",
+      "default": "Big Save 10% Coupon!"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.all.content_setting.description.label",
+      "default": "<p>Enter the code below at checkout to get 10% off your first order.<\/p>"
+    },
+    {
+      "type": "text",
+      "id": "code",
+      "label": "t:sections.before-you-leave.settings.code.label",
+      "default": "Topsale10STBL"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.before-you-leave.settings.header.recommended_products"
+    },
+    {
+      "type": "text",
+      "id": "recommended_heading",
+      "label": "t:sections.all.content_setting.heading.label",
+      "default": "You may also like..."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:sections.before-you-leave.settings.collection.label"
+    },
+    {
+      "type": "text",
+      "id": "recommended_button_label",
+      "label": "t:sections.all.content_setting.first_button_label.label",
+      "default": "Continue Shopping"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.before-you-leave.name"
+    }
+  ]
+}
+{% endschema %}

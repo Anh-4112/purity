@@ -76,7 +76,7 @@
       {%- else -%}
         <slide-section
           id="swiper-{{ section.id }}"
-          class="swiper mx-auto lazy-loading-swiper-before"
+          class="mx-auto swiper lazy-loading-swiper-before"
           data-section-id="{{ section.id }}"
           data-loop="true"
           data-speed="500"
@@ -93,7 +93,7 @@
           <div class="swiper-wrapper {% if section_st.uppercase %}uppercase {% endif %}fs-{{ scrolling_size }}">
             {%- for block in section.blocks -%}
               {% assign block_st = block.settings %}
-              <div class="swiper-slide announcement-bar__content flex wrap content-center mx-auto text-center">
+              <div class="flex content-center mx-auto text-center swiper-slide announcement-bar__content wrap">
                 <div class="announcement-bar__content-inner">{{ block_st.text }}</div>
               </div>
             {%- endfor -%}
@@ -101,7 +101,7 @@
           {% if section_st.show_navigation %}
             <div class="swiper-actions">
               <div
-                class="swiper-arrow swiper-button-prev overflow-hidden inline-flex content-center transition"
+                class="inline-flex content-center overflow-hidden transition swiper-arrow swiper-button-prev"
                 style="--transform-x: 2rem;"
               >
                 <svg width="6" height="11" fill="none">
@@ -109,7 +109,7 @@
                 </svg>
               </div>
               <div
-                class="swiper-arrow swiper-button-next overflow-hidden inline-flex content-center transition"
+                class="inline-flex content-center overflow-hidden transition swiper-arrow swiper-button-next"
                 style="--transform-x: -2rem;"
               >
                 <svg width="6" height="11" fill="none">
