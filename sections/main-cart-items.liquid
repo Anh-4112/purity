@@ -1,4 +1,5 @@
 {{ 'cart-page.css' | asset_url | stylesheet_tag }}
+<script type="module" src="{{ 'cart-page.js' | asset_url }}" defer="defer"></script>
 {% liquid
   assign theme_st = settings
   assign section_st = section.settings
@@ -208,8 +209,16 @@
                                     ></span>
                                   </a>
                                 </main-cart-remove-button>
-                                <div>
-                                  <button class="hover-icon-zoom btn-reset pointer flex mt-8 h-30">
+                                {%- unless item.product.has_only_default_variant -%}
+                                  <main-cart-edit
+                                    class="hover-icon-zoom btn-reset pointer flex mt-8 h-30"
+                                    data-href="{{ item.url }}"
+                                    data-id="{{ item.id }}"
+                                    data-key="{{ item.key }}"
+                                    data-quantity="{{ item.quantity }}"
+                                    tabindex="0"
+                                    data-index="{{ item.index | plus: 1 }}"
+                                  >
                                     <svg
                                       width="16"
                                       height="16"
@@ -218,8 +227,8 @@
                                     >
                                       <use href="#icon-edit"/>
                                     </svg>
-                                  </button>
-                                </div>
+                                  </main-cart-edit>
+                                {%- endunless -%}
                               </div>
                               <div class="cart-item__media w-custom" style="--width: 9rem;">
                                 {%- liquid
@@ -261,34 +270,56 @@
                               </div>
                             </div>
                           {% else %}
-                            <main-cart-remove-button
-                              id="Remove-{{ item.index | plus: 1 }}"
-                              data-index="{{ item.index | plus: 1 }}"
-                            >
-                              <a
-                                href="{{ item.url_to_remove }}"
-                                class="button button--tertiary inline-flex align-center hover-icon-zoom relative w-custom flex-start"
-                                style="--width: 2.7rem;"
-                                aria-label="{{ 'sections.cart.remove_title' | t }}"
+                            <div>
+                              <main-cart-remove-button
+                                id="Remove-{{ item.index | plus: 1 }}"
+                                data-index="{{ item.index | plus: 1 }}"
                               >
-                                <svg
-                                  width="12"
-                                  height="12"
-                                  viewBox="0 0 12 12"
-                                  fill="none"
-                                  class="icon-remove-cart icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                                <a
+                                  href="{{ item.url_to_remove }}"
+                                  class="button button--tertiary inline-flex align-center hover-icon-zoom relative w-custom flex-start"
+                                  style="--width: 2.7rem;"
+                                  aria-label="{{ 'sections.cart.remove_title' | t }}"
                                 >
-                                  <use href="#icon-close" />
-                                </svg>
-                                <span class="capitalize currentColor lh-1 visually-hidden">
-                                  {{- 'sections.cart.remove_title' | t -}}
-                                </span>
-                                <span
-                                  class="icon-rotator absolute top-0 left-0 rounded-50 opacity-0 w-custom h-custom"
-                                  style="--width: 1.5rem;--height: 1.5rem;"
-                                ></span>
-                              </a>
-                            </main-cart-remove-button>
+                                  <svg
+                                    width="12"
+                                    height="12"
+                                    viewBox="0 0 12 12"
+                                    fill="none"
+                                    class="icon-remove-cart icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                                  >
+                                    <use href="#icon-close" />
+                                  </svg>
+                                  <span class="capitalize currentColor lh-1 visually-hidden">
+                                    {{- 'sections.cart.remove_title' | t -}}
+                                  </span>
+                                  <span
+                                    class="icon-rotator absolute top-0 left-0 rounded-50 opacity-0 w-custom h-custom"
+                                    style="--width: 1.5rem;--height: 1.5rem;"
+                                  ></span>
+                                </a>
+                              </main-cart-remove-button>
+                              {%- unless item.product.has_only_default_variant -%}
+                                <main-cart-edit
+                                  tabindex="0"
+                                  class="hover-icon-zoom btn-reset pointer flex mt-8 h-30"
+                                  data-href="{{ item.url }}"
+                                  data-id="{{ item.id }}"
+                                  data-key="{{ item.key }}"
+                                  data-quantity="{{ item.quantity }}"
+                                  data-index="{{ item.index | plus: 1 }}"
+                                >
+                                  <svg
+                                    width="16"
+                                    height="16"
+                                    fill="none"
+                                    class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                                  >
+                                    <use href="#icon-edit"/>
+                                  </svg>
+                                </main-cart-edit>
+                              {%- endunless -%}
+                            </div>
                           {% endif %}
                           <div
                             class="cart-item-info flex wrap nowrap-1025 gap-20 flex-1 align-center"

@@ -1,4 +1,4 @@
-import { initSlide, SlideSection } from "module-slide";
+import { initSlide } from "module-slide";
 import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
 import { CustomElement } from "module-safariElementPatch";
 import "module-addToCart";
@@ -1035,11 +1035,12 @@ class QuantityInput extends HTMLElement {
     const form = this.closest("form");
     if (!form) return;
     const priceElement = form.querySelector(".total-price__detail");
-    const dataTotalPrice = priceElement.getAttribute("data-total-price");
+    if (!priceElement) return;
+    const dataTotalPrice = priceElement?.getAttribute("data-total-price");
     const totalPrice = Number(dataTotalPrice) * Number(previousValue);
     priceElement.textContent = NextSkyTheme.formatMoney(totalPrice, themeGlobalVariables.settings.money_format);
   }
-
+  
   validateQtyRules() {
     const value = parseInt(this.input.value);
     if (this.input.min) {
