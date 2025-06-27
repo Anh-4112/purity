@@ -3033,3 +3033,102 @@ class GridCustom extends HTMLElement {
 }
 
 customElements.define('grid-custom', GridCustom);
+
+
+class BeforeYouLeave extends HTMLElement {
+  constructor() {
+    super();
+    this.delay = parseInt(this.dataset.timeDelay, 10);
+    this.sectionId = this.dataset.sectionId;
+    this.interactions = 0;
+    this.popupTimeout = null;
+    this.popupActive = false;
+
+    this.interactionHandler = this.interactionHandler.bind(this);
+    this.closeHandler = this.closeHandler.bind(this);
+
+    setTimeout(() => this.init(), 10000);
+  }
+
+  init() {
+    const sourceContent = document.getElementById(this.sectionId);
+    if (!sourceContent) {
+      console.error('Section content not found:', this.sectionId);
+      return;
+    }
+
+    this.innerHTML = sourceContent.innerHTML;
+
+    if (typeof BlsLazyloadImg !== 'undefined') {
+      BlsLazyloadImg.init();
+    }
+
+    this.initPopup();
+  }
+
+  initPopup() {
+    this.interactions = 0;
+
+    ['scroll', 'click', 'mousemove', 'keydown'].forEach(evt => {
+      document.body.addEventListener(evt, this.interactionHandler);
+    });
+
+    this.popupTimeout = setTimeout(() => {
+      if (this.interactions === 0 && !this.popupActive) {
+        NextSkyTheme.eventModal(this, 'open');
+        this.popupActive = true;
+        this.bindCouponCopy();
+      } else {
+        console.log('Popup cancelled due to interaction');
+        this.cleanup(); 
+        this.initPopup(); // Reset popup nếu người dùng có tương tác
+      }
+    }, (this.delay - 10) * 1000);
+
+    this.addEventListener('click', this.closeHandler);
+  }
+
+  interactionHandler() {
+    this.interactions++;
+  }
+
+  closeHandler(e) {
+    if (e.target.closest('.close-before') || e.target.matches('.modal-overlay')) {
+      clearTimeout(this.popupTimeout);
+      NextSkyTheme.eventModal(this, 'close');
+      this.popupActive = false;
+      this.cleanup();
+      this.initPopup(); // Gọi lại popup sau khi đóng
+    }
+  }
+
+  bindCouponCopy() {
+    const discounts = this.querySelectorAll('.discount');
+    discounts.forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigator.clipboard.writeText(el.dataset.code);
+        el.classList.add('action-copy');
+        setTimeout(() => el.classList.remove('action-copy'), 1500);
+      });
+    });
+  }
+
+  cleanup() {
+    ['scroll', 'click', 'mousemove', 'keydown'].forEach(evt => {
+      document.body.removeEventListener(evt, this.interactionHandler);
+    });
+    this.removeEventListener('click', this.closeHandler);
+  }
+
+  disconnectedCallback() {
+    clearTimeout(this.popupTimeout);
+    this.cleanup();
+  }
+}
+
+customElements.define('before-you-leave', BeforeYouLeave);
+
+
+
+
