@@ -3033,3 +3033,24 @@ class GridCustom extends HTMLElement {
 }
 
 customElements.define('grid-custom', GridCustom);
+
+class ShareButton extends HTMLElement {
+  constructor() {
+    super();
+    this.addEventListener('click', this.handleShare.bind(this));
+  }
+
+  handleShare() {
+    const title = this.getAttribute('data-title') || document.title;
+    const text = this.getAttribute('data-text') || '';
+    const url = this.getAttribute('data-url') || window.location.href;
+
+    if (navigator.share) {
+      navigator.share({ title, text, url });
+    } else {
+      alert("Your browser doesn't support sharing.");
+    }
+  }
+}
+
+customElements.define('share-button', ShareButton);
