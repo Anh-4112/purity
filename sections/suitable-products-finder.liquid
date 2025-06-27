@@ -41,14 +41,14 @@
   assign column_gap_slide = 0
   assign column_gap_mb = 0
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-    assign column_gap_mb = 20
+    assign column_gap_slide = 32
+    assign column_gap_mb = 24
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-    assign column_gap_mb = 10
+    assign column_gap_slide = 24
+    assign column_gap_mb = 12
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
-    assign column_gap_mb = 5
+    assign column_gap_slide = 16
+    assign column_gap_mb = 8
   endif
   assign block_size = section.blocks.size
   assign size_dot_range_slider = 40
@@ -57,6 +57,13 @@
   assign image_collection_width = section_st.image_collection_width
   assign width_range_slider = image_collection_width | times: block_size | plus: total_gap_size
   assign animate_delay = 25
+
+  assign class_pagination = ''
+  if show_pagination == false and items_per_row_mobile != 1.5
+    assign class_pagination = ' hidden-md block'
+  elsif show_pagination == false and items_per_row_mobile == 1.5
+    assign class_pagination = ' hidden'
+  endif
 -%}
 {%- capture style -%} --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--image-collection-width: {{ image_collection_width }}px;--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
 {%- endcapture -%}
@@ -112,7 +119,7 @@
               class="block"
             >
           {% endif %}
-          <div class="section-description mt-15 prose">
+          <div class="section-description mt-16 prose">
             {{ section.settings.description }}
           </div>
           {% if scroll_animation %}
@@ -125,7 +132,7 @@
       data-size-dot="{{ size_dot_range_slider }}"
       data-spacing="30"
     >
-      <div class="product-tabs__header flex column align-center type-{{ section_st.media_type }} mb-40 mb-md-50">
+      <div class="product-tabs__header flex column align-center type-{{ section_st.media_type }} mb-40 mb-md-52">
         <slide-section
           class="product-tabs__header-image-mobile swiper hidden-md reveal_on_scroll mb-20"
           data-spacing="30"
@@ -376,11 +383,9 @@
                   %}
                 {%- endfor -%}
               </div>
-              {%- if show_pagination -%}
-                <div
-                  class="swiper-pagination"
-                ></div>
-              {% endif %}
+              <div
+                class="swiper-pagination {{ class_pagination }}"
+              ></div>
             </slide-section>
             {% if scroll_animation %}
               </motion-items-effect>
@@ -426,11 +431,9 @@
                   %}
                 {%- endfor -%}
               </div>
-              {%- if show_pagination -%}
-                <div
-                  class="swiper-pagination"
-                ></div>
-              {% endif %}
+              <div
+                class="swiper-pagination {{ class_pagination }}"
+              ></div>
             </slide-section>
             {% if scroll_animation %}
               </motion-items-effect>
@@ -650,7 +653,8 @@
       "type": "checkbox",
       "id": "show_pagination",
       "default": false,
-      "label": "t:sections.all.carousel.show_pagination.label"
+      "label": "t:sections.all.carousel.show_pagination.label",
+      "info": "t:sections.all.carousel.show_pagination.info"
     },
     {
       "type": "checkbox",

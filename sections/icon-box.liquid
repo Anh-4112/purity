@@ -19,19 +19,19 @@
   endif
   assign content_icon_size = section_st.content_icon_size
   if content_icon_size == 'small'
-    assign content_icon_size = 'fs-small mb-10'
+    assign content_icon_size = 'fs-small mb-8'
   elsif content_icon_size == 'medium'
-    assign content_icon_size = 'mb-15'
+    assign content_icon_size = 'mb-16'
   elsif content_icon_size == 'large'
-    assign content_icon_size = 'fs-big-2 mb-15'
+    assign content_icon_size = 'fs-big-2 mb-16'
   endif
   assign column_gap_slide = 0
   if section_st.column_gap == 'large'
     assign column_gap_slide = 100
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 50
+    assign column_gap_slide = 52
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 30
+    assign column_gap_slide = 32
   endif
   assign animate_delay = 25
 %}
@@ -95,7 +95,7 @@
               class="block"
             >
           {% endif %}
-          <div class="section-description mt-15 prose">
+          <div class="section-description mt-16 prose">
             {{ section.settings.description }}
           </div>
           {% if scroll_animation %}
@@ -114,7 +114,8 @@
         style="{{ col_style | strip | strip_newlines }}"
         data-enable-carousel-mobile="{{ section_st.enable_carousel_mobile }}"
         data-mobile="{{ section_st.items_per_row }}"
-        data-spacing="{{ column_gap_slide }}"
+        data-spacing="{{ column_gap_slide }}" 
+        data-show-pagination="true"
       >
         {%- for block in section.blocks -%}
           {%- liquid
@@ -126,7 +127,7 @@
             assign icon_position = section_st.icon_position
           -%}
           <div
-            class="motion-item {% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-15 gap-md-20{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
+            class="motion-item {% if section_st.enable_carousel_mobile %}switch-slide__mobile {% endif %}icon-box__item flex gap-15 gap-md-16{% if icon_position == "top" %} column{% else %} column-reverse{% endif %} align-{{ section_st.content_icon_alignment }} text-{{ section_st.content_icon_alignment }}"
             style="---width: {{ section_st.icon_size }}px;"
             {{ block.shopify_attributes }}
           >

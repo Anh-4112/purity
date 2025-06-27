@@ -10,19 +10,19 @@
     assign section_width = 'fluid_container'
   endif
   assign items_per_row = section_st.items_per_row
-  assign pagination = section_st.pagination
+  assign show_pagination = section_st.show_pagination
   assign show_navigation = section_st.show_navigation
   assign reveal_slide = section_st.reveal_slide
   assign column_gap_slide = 0
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-    assign column_gap_mb = 20
+    assign column_gap_slide = 32
+    assign column_gap_mb = 24
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-    assign column_gap_mb = 10
+    assign column_gap_slide = 24
+    assign column_gap_mb = 12
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
-    assign column_gap_mb = 5
+    assign column_gap_slide = 16
+    assign column_gap_mb = 8
   endif
 
   assign items_per_row_mobile = section_st.items_per_row_mobile
@@ -46,6 +46,13 @@
     assign header_size = 'h1'
   endif
   assign animate_delay = 25
+
+  assign class_pagination = ''
+  if show_pagination == false and items_per_row_mobile != 1.5
+    assign class_pagination = ' hidden-md block'
+  elsif show_pagination == false and items_per_row_mobile == 1.5
+    assign class_pagination = ' hidden'
+  endif
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -105,7 +112,7 @@
               class="block"
             >
           {% endif %}
-          <div class="section-description mt-15 prose">
+          <div class="section-description mt-16 prose">
             {{ section.settings.description }}
           </div>
           {% if scroll_animation %}
@@ -136,11 +143,9 @@
       <div class="swiper-wrapper">
         {% content_for 'blocks' %}
       </div>
-      {%- if pagination == 'show_pagination' or pagination == 'show_pagination_on_mobile' -%}
-        <div
-          class="swiper-pagination {% if pagination == 'show_pagination_on_mobile' %}hidden-md{% endif %}"
-        ></div>
-      {% endif %}
+      <div
+        class="swiper-pagination {{ class_pagination }}"
+      ></div>
     </slide-section>
   </div>
 </div>
@@ -307,7 +312,8 @@
       "type": "color",
       "id": "background_color",
       "label": "t:sections.image-with-text.settings.background_color",
-      "default": "#ECE7DA"
+      "default": "#ECE7DA",
+      "alpha": true
     },
     {
       "type": "select",
@@ -399,24 +405,11 @@
       "label": "t:sections.all.carousel.show_navigation.label"
     },
     {
-      "type": "select",
-      "id": "pagination",
-      "options": [
-        {
-          "value": "hidden",
-          "label": "t:sections.all.carousel.hidden_pagination.label"
-        },
-        {
-          "value": "show_pagination",
-          "label": "t:sections.all.carousel.show_pagination.label"
-        },
-        {
-          "value": "show_pagination_on_mobile",
-          "label": "t:sections.all.carousel.show_pagination_mobile.label"
-        }
-      ],
-      "default": "hidden",
-      "label": "t:sections.all.carousel.pagination.label"
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "t:sections.all.carousel.show_pagination.label",
+      "default": false,
+      "info": "t:sections.all.carousel.show_pagination.info"
     },
     {
       "type": "checkbox",

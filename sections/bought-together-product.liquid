@@ -103,7 +103,7 @@
                   </h2>
                 {%- endif -%}
                 {%- if section_st.description != blank -%}
-                  <div class="section-description mt-15 prose">
+                  <div class="section-description mt-16 prose">
                     {{ section.settings.description }}
                   </div>
                 {%- endif -%}
@@ -179,44 +179,41 @@
                     {%- endfor -%}
                   </div>
                   {%- if show_button_add_all -%}
+                    {%- liquid
+                      assign price = product.selected_or_first_available_variant.price
+                    -%}
+                    {%- for items in product.metafields.custom.frequently_bought_together.value -%}
+                      {% if items != blank and items.id != product.id %}
+                        {%- liquid
+                          assign product_available = items.variants | where: 'available'
+                          assign current_variant = items.selected_or_first_available_variant
+                          assign price = current_variant.price | plus: price
+                        -%}
+                      {% endif %}
+                    {%- endfor -%}
                     <button
                       type="submit"
                       name="add"
                       class="btn pointer btn-primary w-full relative product_submit_button product-form__submit word-wrap relative"
                       aria-label="{{ 'products.product.add_all_to_cart' | t }}"
                     >
-                      <span class="btn-label hidden-on-load transition-short">
+                      <span class="btn-label hidden-on-load transition-short flex content-center">
                         {{- 'products.product.add_all_to_cart' | t -}}
+                        <span class="dot-total"></span>
+                        <div class="total-price">
+                          <span class="price">
+                            {%- if settings.currency_code_enabled %}
+                              {{ price | money_with_currency }}
+                            {% else %}
+                              {{ price | money }}
+                            {% endif -%}
+                          </span>
+                        </div>
                       </span>
                       {%- render 'loader' -%}
                     </button>
                   {% endif %}
                 </form>
-                <div class="total-price mt-20 heading-style">
-                  {%- liquid
-                    assign price = product.selected_or_first_available_variant.price
-                  -%}
-                  {%- for items in product.metafields.custom.frequently_bought_together.value -%}
-                    {% if items != blank and items.id != product.id %}
-                      {%- liquid
-                        assign product_available = items.variants | where: 'available'
-                        assign current_variant = items.selected_or_first_available_variant
-                        assign price = current_variant.price | plus: price
-                      -%}
-                    {% endif %}
-                  {%- endfor -%}
-                  <span>
-                    {{- 'products.product.total_price' | t -}}
-                    :</span
-                  >
-                  <span class="price">
-                    {%- if settings.currency_code_enabled %}
-                      {{ price | money_with_currency }}
-                    {% else %}
-                      {{ price | money }}
-                    {% endif -%}
-                  </span>
-                </div>
               </product-form>
             </div>
           </div>
@@ -335,13 +332,15 @@
       "type": "color",
       "id": "background_color",
       "label": "t:sections.image-with-text.settings.background_color",
-      "default": "#D0473E"
+      "default": "#D0473E",
+      "alpha": true
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "t:sections.image-with-text.settings.text_color",
-      "default": "#ffffff"
+      "default": "#ffffff",
+      "alpha": true
     },
     {
       "type": "header",

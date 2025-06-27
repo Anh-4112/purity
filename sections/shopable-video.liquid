@@ -36,17 +36,17 @@
   assign column_gap_slide = 0
   assign column_gap_mb = 0
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-    assign column_gap_mb = 20
+    assign column_gap_slide = 32
+    assign column_gap_mb = 24
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-    assign column_gap_mb = 10
+    assign column_gap_slide = 24
+    assign column_gap_mb = 12
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
-    assign column_gap_mb = 5
+    assign column_gap_slide = 16
+    assign column_gap_mb = 8
   endif
 
-  assign items_per_row_mobile = 1.5
+  assign items_per_row_mobile = section_st.items_per_row_mobile
   assign data_free_scroll = 'false'
   if items_per_row_mobile > 1 and items_per_row_mobile < 2
     assign data_free_scroll = 'true'
@@ -65,6 +65,13 @@
     assign center_slide = true
   endif
   assign animate_delay = 25
+
+  assign class_pagination = ''
+  if show_pagination == false and items_per_row_mobile != 1.5
+    assign class_pagination = ' hidden-md block'
+  elsif show_pagination == false and items_per_row_mobile == 1.5
+    assign class_pagination = ' hidden'
+  endif
 -%}
 {%- capture style -%}
       --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--width: 5rem;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
@@ -119,7 +126,7 @@
               class="block"
             >
           {% endif %}
-          <div class="section-description mt-15 prose">
+          <div class="section-description mt-16 prose">
             {{ section.settings.description }}
           </div>
           {% if scroll_animation %}
@@ -317,11 +324,9 @@
             </div>
           {%- endfor -%}
         </div>
-        {%- if show_pagination -%}
-          <div
-            class="swiper-pagination"
-          ></div>
-        {% endif %}
+        <div
+          class="swiper-pagination {{ class_pagination }}"
+        ></div>
       </shopable-video>
       {% if data_free_scroll == 'true' %}
         </div>
@@ -476,12 +481,13 @@
             class="swiper swiper-modal-shopable-video"
             data-section-id="modal-shopable-_slide-video"
             data-effect="slide"
-            data-loop="true"
+            data-loop="false"
             data-speed="500"
             data-spacing="30"
             data-mobile="1"
             data-desktop="1"
             data-tablet="1"
+            data-direction="vertical"
             style="--item-desktop: 1;--item-tablet: 1;--item-mb: 1;--gap: 0px; --gap-desktop: 0px;"
           >
             <div class="swiper-wrapper">
@@ -829,7 +835,8 @@
                                   type: 'primary',
                                   product: card_product,
                                   section_id: block.id,
-                                  product_form_id: product_form_id
+                                  product_form_id: product_form_id,
+                                  scope: 'detail'
                                 -%}
                               </div>
                             {%- else -%}
@@ -1063,7 +1070,8 @@
       "type": "checkbox",
       "id": "show_pagination",
       "default": false,
-      "label": "t:sections.all.carousel.show_pagination.label"
+      "label": "t:sections.all.carousel.show_pagination.label",
+      "info": "t:sections.all.carousel.show_pagination.info"
     },
     {
       "type": "checkbox",
@@ -1080,6 +1088,19 @@
       "unit": "s",
       "label": "t:sections.all.carousel.change_slide_every",
       "default": 5
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.product.settings.mobile_options.label"
+    },
+    {
+      "type": "range",
+      "id": "items_per_row_mobile",
+      "label": "t:sections.all.items.items_per_row_mobile",
+      "min": 1,
+      "max": 2,
+      "step": 0.5,
+      "default": 1.5
     },
     {
       "type": "header",

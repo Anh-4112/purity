@@ -143,7 +143,7 @@
         --page-width-margin: {% if theme_st.page_width == '1600' %}2{% else %}0{% endif %}rem;
 
         --logo-width: {{ theme_st.logo_width }}px;
-        --bs-gutter-x: 2.4rem;
+        --bs-gutter-x: 2rem;
         --bs-gutter-y: 0;
         --color-white: 255, 255, 255;
         --color-dark: #000;
@@ -156,7 +156,7 @@
         --transition: all 0.4s;
         --duration-short: 0.2s;
         --duration-long: 0.5s;
-        --transition-drawer: all var(--timming, 0.35s) var(--timing-function, cubic-bezier(.5, -.03, .34, .83));
+        --transition-drawer: all var(--timming, 0.4s) var(--timing-function, cubic-bezier(.5, -.03, .34, .83));
         --overlay-bg: rgba(0, 0, 0, 0.60);
         --responsive-ratio: 0.7;
         --gap: 2rem;
@@ -215,9 +215,9 @@
       }
       @media (min-width: 1025px) {
         :root{
-          --btn-padding-y: 1.7rem;
+          --btn-padding-y: 1.5rem;
           --btn-padding-x: 3.6rem;
-          --input-height: 5.6rem;
+          --input-height: 5.2rem;
           --header-spacing-bottom: 4rem;
         }
       }
@@ -237,7 +237,8 @@
           "module-variantSwatch": "{{ 'module-variant-swatch.js' | asset_url }}",
           "module-safariElementPatch": "{{ 'safari-element-patch.js' | asset_url }}",
           "module-photoSwipeLightbox": "{{ 'photoswipe-lightbox.min.js' | asset_url }}",
-          "vertical-product-tabs": "{{ 'section-vertical-product-tabs.js' | asset_url }}"
+          "vertical-product-tabs": "{{ 'section-vertical-product-tabs.js' | asset_url }}",
+          "module-progress-video": "{{ 'module-progress-video.js' | asset_url }}"
         }
       }
     </script>
@@ -261,6 +262,7 @@
     </a>
     {% if theme_st.scroll_animation %}
       <page-loader class="page-loader z-20 fixed inset-0 overflow-hidden pointer-none no-js-hidden flex content-center">
+        <span class="preload-screen-spinner"></span>
       </page-loader>
     {% endif %}
     {% sections 'header-group' %}
@@ -288,11 +290,13 @@
       window.themeGlobalVariables = {
         settings: {
           money_format: {{ shop.money_format | json }},
+          actionAddCartMobile: `{{ theme_st.action_add_cart_mobile }}`
         }
       }
       window.cartStrings = {
         error: `{{ 'sections.cart.cart_error' | t }}`,
         quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
+        addSuccessMobile: `{{ 'sections.cart.cart_add_success_mobile_html' | t: link: routes.cart_url }}`,
         no_shipping: `{{ 'sections.cart.no_shipping' | t }}`,
         shipping_rate: `{{ 'sections.cart.shipping_rate' | t }}`,
         money_format: {{ money_format | json }},
@@ -316,6 +320,12 @@
         newsletter: {
           success: `{{ 'newsletter.success' | t }}`,
           error: `{{ 'newsletter.error' | t }}`
+        },
+        discount: {
+          success: `{{ 'discount.success' | t }}`,
+          error: `{{ 'discount.error' | t }}`,
+          shipping_discount_error: `{{ 'content.discount_code_error' | t }}`,
+          discount_code_error: `{{ 'content.discount_code_error' | t }}`
         },
         socialCopyLink: {
           success: `{{ 'general.social.copy_link_success' | t }}`,

@@ -75,7 +75,7 @@
             {%- if p_media -%}
               <div
                 class="image__media product__media animation-swatches{{ image_rounded }}{% if type == 'bought_together' %} h-full{% endif %}"
-                style="--aspect-ratio: {{ ratio }};"
+                style="--aspect-ratio: {{ aspect_ratio | default: ratio }};"
               >
                 {%- assign alt_features = p_media.alt | default: card_product.title | escape -%}
                 {% if type_video and product_show_video_featured and disable_show_video != true %}

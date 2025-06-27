@@ -38,14 +38,21 @@
   assign column_gap_slide = 0
   assign column_gap_mb = 0
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-    assign column_gap_mb = 20
+    assign column_gap_slide = 32
+    assign column_gap_mb = 24
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-    assign column_gap_mb = 10
+    assign column_gap_slide = 24
+    assign column_gap_mb = 12
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
-    assign column_gap_mb = 5
+    assign column_gap_slide = 16
+    assign column_gap_mb = 8
+  endif
+
+  assign class_pagination = ''
+  if show_pagination == false and items_per_row_mobile != 1.5
+    assign class_pagination = ' hidden-md block'
+  elsif show_pagination == false and items_per_row_mobile == 1.5
+    assign class_pagination = ' hidden'
   endif
 -%}
 {%- capture style -%}
@@ -151,11 +158,9 @@
             endif
           -%}
         </div>
-        {%- if show_pagination -%}
-          <div
-            class="swiper-pagination"
-          ></div>
-        {% endif %}
+        <div
+          class="swiper-pagination {{ class_pagination }}"
+        ></div>
       </slide-section>
       {% if data_free_scroll == 'true' %}
         </div>
@@ -366,6 +371,7 @@
       "default": false,
       "label": "t:sections.all.carousel.show_pagination.label",
       "visible_if": "{{ section.settings.enable_carousel != false }}"
+      "info": "t:sections.all.carousel.show_pagination.info"
     },
     {
       "type": "checkbox",

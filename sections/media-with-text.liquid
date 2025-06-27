@@ -24,11 +24,11 @@
 
   assign column_gap_slide = 'gap-0'
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 'gap-30 gap-md-50'
+    assign column_gap_slide = 'gap-32 gap-md-52'
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 'gap-20 gap-md-30'
+    assign column_gap_slide = 'gap-20 gap-md-32'
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 'gap-10 gap-md-20'
+    assign column_gap_slide = 'gap-8 gap-md-16'
   endif
 -%}
 {%- capture style -%}
@@ -39,7 +39,7 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }} flex column content-center">
-    <div class="content-center {{ column_gap_slide }} flex mb-30">
+    <div class="content-center {{ column_gap_slide }} flex mb-32">
       {%- for block in section.blocks -%}
         {%- liquid
           assign block_st = block.settings

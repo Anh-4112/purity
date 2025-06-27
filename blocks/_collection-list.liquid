@@ -61,7 +61,10 @@
         {%- render 'icon-arrow-top' -%}
       </span>
     </div>
-    <div class="collection-list__image-hover hidden block-1025 rounded w-custom h-full absolute" style="opacity: 0;--width: 12rem;" >
+    <div
+      class="collection-list__image-hover block rounded w-custom-1025 h-full absolute-1025 opacity-0-1025 relative-mb"
+      style="--width: 12rem;"
+    >
       {%- if image != blank -%}
         {% render 'responsive-image',
           type: 'other',
@@ -70,7 +73,7 @@
           container: section_width,
           column: items_per_row,
           column_mobile: section_st.items_per_row_mobile,
-          class: 'rounded'
+          class: 'rounded w-full'
         %}
       {%- else -%}
         {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full' %}

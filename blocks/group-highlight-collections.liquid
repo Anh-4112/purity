@@ -8,14 +8,14 @@
   assign column_gap_slide = 0
   assign column_gap_mb = 0
   if section_st.column_gap_block == 'large'
-    assign column_gap_slide = 20
-    assign column_gap_mb = 10
+    assign column_gap_slide = 32
+    assign column_gap_mb = 24
   elsif section_st.column_gap_block == 'medium'
-    assign column_gap_slide = 15
-    assign column_gap_mb = 10
+    assign column_gap_slide = 24
+    assign column_gap_mb = 12
   elsif section_st.column_gap_block == 'small'
-    assign column_gap_slide = 10
-    assign column_gap_mb = 5
+    assign column_gap_slide = 16
+    assign column_gap_mb = 8
   endif
 
   assign items_per_row_mobile = section_st.items_per_row_mobile
@@ -29,6 +29,13 @@
   assign items_per_row_tablet = items_per_row
   if items_per_row > 3
     assign items_per_row_tablet = items_per_row | minus: 1
+  endif
+
+  assign class_pagination = ''
+  if show_pagination == false and items_per_row_mobile != 1.5
+    assign class_pagination = ' hidden-md block'
+  elsif show_pagination == false and items_per_row_mobile == 1.5
+    assign class_pagination = ' hidden'
   endif
 %}
 
@@ -69,11 +76,9 @@
     <div class="swiper-wrapper">
       {% content_for 'blocks' %}
     </div>
-    {%- if show_pagination -%}
-      <div
-        class="swiper-pagination"
-      ></div>
-    {% endif %}
+    <div
+      class="swiper-pagination {{ class_pagination }}"
+    ></div>
   </slide-section>
 {% endif %}
 

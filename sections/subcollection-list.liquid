@@ -1,8 +1,6 @@
-<script src="{{ 'section-collection-highlights.js' | asset_url }}" defer="defer"></script>
-{% liquid
+{%- liquid
   assign theme_st = settings
   assign section_st = section.settings
-  assign scroll_animation = theme_st.scroll_animation
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
   elsif section_st.section_width == 'full_width'
@@ -10,16 +8,13 @@
   else
     assign section_width = 'fluid_container'
   endif
-  assign column_gap_desktop = 0
-  if section_st.column_gap == 'large'
-    assign column_gap_desktop = 84
-  elsif section_st.column_gap == 'medium'
-    assign column_gap_desktop = 52
-  elsif section_st.column_gap == 'small'
-    assign column_gap_desktop = 32
-  endif
-
   assign heading_size = section_st.heading_size
+  assign text_alignment = section_st.text_alignment
+  assign items_per_row = section_st.items_per_row
+  assign show_pagination = section_st.show_pagination
+  assign show_navigation = section_st.show_navigation
+  assign reveal_slide = section_st.reveal_slide
+  assign scroll_animation = theme_st.scroll_animation
   assign header_size = ''
   if heading_size == 'small'
     assign header_size = 'h3'
@@ -27,94 +22,150 @@
     assign header_size = 'h1'
   endif
 
-  assign highlight_collection_width = section_st.highlight_collection_width
-%}
+  assign items_per_row_mobile = section_st.items_per_row_mobile
+  assign data_free_scroll = 'false'
+  if items_per_row_mobile > 1 and items_per_row_mobile < 2
+    assign data_free_scroll = 'true'
+  elsif items_per_row_mobile > 2 and items_per_row_mobile < 3
+    assign data_free_scroll = 'true'
+  endif
+
+  assign items_per_row_tablet = items_per_row
+  if items_per_row > 3
+    assign items_per_row_tablet = items_per_row | minus: 1
+  endif
+  assign column_gap_slide = 0
+  assign column_gap_mb = 0
+  if section_st.column_gap == 'large'
+    assign column_gap_slide = 32
+    assign column_gap_mb = 24
+  elsif section_st.column_gap == 'medium'
+    assign column_gap_slide = 24
+    assign column_gap_mb = 12
+  elsif section_st.column_gap == 'small'
+    assign column_gap_slide = 16
+    assign column_gap_mb = 8
+  endif
+
+  assign class_pagination = ''
+  if show_pagination == false and items_per_row_mobile != 1.5
+    assign class_pagination = ' hidden-md block'
+  elsif show_pagination == false and items_per_row_mobile == 1.5
+    assign class_pagination = ' hidden'
+  endif
+-%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
+  
 {%- endcapture -%}
-<div
-  class="section__collection-highlight overflow-hidden section color-{{ section_st.color_scheme }} gradient{% if section_st.show_divider %} border-top{% endif %}"
-  style="{{ style | strip | strip_newlines }}"
->
-  <div class="{{ section_width }}">
-    {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
-      <div class="section-header section-header__in-section hidden-1025 d-block text-{{ section_st.text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}">
-        {% assign animate_delay = 25 %}
-        {%- if section_st.subheading != blank -%}
-          {% if scroll_animation %}
-            <motion-effect
-              data-animate="fade-up"
-              data-animate-delay="{{ animate_delay }}"
-              class="block"
-            >
-          {% endif %}
-          <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight fs-big-2">
-            {{ section.settings.subheading }}
-          </div>
-          {% if scroll_animation %}
-            </motion-effect>
-          {% endif %}
-        {%- endif -%}
-        {%- if section_st.title != blank -%}
-          {% assign animate_delay = animate_delay | plus: 50 %}
-          {% if scroll_animation %}
-            <motion-effect
-              data-animate="fade-up"
-              data-animate-delay="{{ animate_delay }}"
-              class="block"
-            >
-          {% endif %}
-          <h2 class="block section-heading {{ header_size }}">
-            {{ section.settings.title }}
-          </h2>
-          {% if scroll_animation %}
-            </motion-effect>
-          {% endif %}
-        {%- endif -%}
-        {%- if section_st.description != blank -%}
-          {% assign animate_delay = animate_delay | plus: 50 %}
-          {% if scroll_animation %}
-            <motion-effect
-              data-animate="fade-up"
-              data-animate-delay="{{ animate_delay }}"
-              class="block"
-            >
-          {% endif %}
-          <div class="section-description mt-16 prose">
-            {{ section.settings.description }}
-          </div>
-          {% if scroll_animation %}
-            </motion-effect>
-          {% endif %}
-        {%- endif -%}
-      </div>
-    {%- endif -%}
+{%- capture col_style -%}
+  --col-desktop: {{ items_per_row }};--col-number:{{ items_per_row_mobile }};--col-tablet: {{ items_per_row_tablet }};--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};{{- -}}
+  --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
+{%- endcapture -%}
+{% if collection.metafields.custom.subcollection.value %}
+  {% assign sub_collection = collection.metafields.custom.subcollection.value %}
+  {% if sub_collection != blank %}
     <div
-      class="collection-highlight__blocks relative flex wrap gap"
-      style="--gap-desktop: {{ column_gap_desktop }}px;--col-width: {{ highlight_collection_width }}%;--row-gap: 3rem;"
+      class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}{% if section_st.show_divider %} border-top{% endif %}"
+      style="{{ style | strip | strip_newlines }}"
     >
-      {% if request.visual_preview_mode %}
-        {% render '_preview-collection-highlights' , section_st: section_st %}
-      {% else %}
-        {% content_for 'blocks' %}
-      {% endif %}
+      <div class="{{ section_width }}">
+        {%- if section_st.heading != blank or section_st.description != blank -%}
+          <div class="section-header text-{{ text_alignment }}">
+            {% assign animate_delay = 25 %}
+            {%- if section_st.heading != blank -%}
+              {% if scroll_animation %}
+                <motion-effect
+                  data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
+                  class="block"
+                >
+              {% endif %}
+              <h2 class="block section-heading {{ header_size }}">
+                {{ section_st.heading }}
+              </h2>
+              {% if scroll_animation %}
+                </motion-effect>
+              {% endif %}
+            {%- endif -%}
+            {%- if section_st.description != blank -%}
+              {% assign animate_delay = animate_delay | plus: 50 %}
+              {% if scroll_animation %}
+                <motion-effect
+                  data-animate="fade-up"
+                  data-animate-delay="{{ animate_delay }}"
+                  class="block"
+                >
+              {% endif %}
+              <div class="section-description mt-16 prose">
+                {{ section_st.description }}
+              </div>
+              {% if scroll_animation %}
+                </motion-effect>
+              {% endif %}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        {% if scroll_animation %}
+          <motion-items-effect>
+        {% endif %}
+        <slide-section
+          class="swiper{% if reveal_slide %} reveal_on_scroll{% endif %}{% if data_free_scroll == 'true' %} overflow-visible-mb{% endif %}"
+          data-section-id="{{ section.id }}"
+          data-autoplay="false"
+          data-effect="slide"
+          data-loop="false"
+          data-speed="500"
+          data-spacing="{{ column_gap_slide }}"
+          data-mobile="{{ items_per_row_mobile }}"
+          data-desktop="{{ items_per_row }}"
+          data-tablet="{{ items_per_row_tablet }}"
+          data-free-scroll="{{ data_free_scroll }}"
+          style="{{ col_style | strip | strip_newlines }}"
+          data-arrow-center-image="true"
+        >
+          {% if show_navigation %}
+            {%- render 'swiper-navigation' -%}
+          {% endif %}
+          <div class="swiper-wrapper">
+            {% for collection in sub_collection %}
+              <div
+                class="collection-item motion-item swiper-slide"
+              >
+                {% render 'collection-item',
+                  card_collection: collection,
+                  section: section,
+                  container: section_width,
+                  column: items_per_row,
+                  column_mobile: section_st.items_per_row_mobile,
+                  padding: column_gap_slide
+                %}
+              </div>
+            {% endfor %}
+          </div>
+          <div
+            class="swiper-pagination {{ class_pagination }}"
+          ></div>
+        </slide-section>
+        {% if scroll_animation %}
+          </motion-items-effect>
+        {% endif %}
+      </div>
     </div>
-  </div>
-</div>
-
+  {% endif %}
+{% endif %}
 {% schema %}
 {
-  "name": "t:sections.collection-highlights.name",
+  "name": "t:sections.subcollection-list.name",
   "tag": "section",
-  "class": "section section-collection-highlights",
+  "class": "section section-subcollection-list",
   "disabled_on": {
     "groups": ["header", "footer", "custom.overlay"]
   },
-  "max_blocks": 2,
   "settings": [
     {
       "type": "paragraph",
-      "content": "t:sections.collection-highlights.how_to_use"
+      "content": "t:sections.collection-list.how_to_use"
     },
     {
       "type": "header",
@@ -153,14 +204,8 @@
     },
     {
       "type": "text",
-      "id": "subheading",
-      "label": "t:sections.all.content_setting.subheading.label",
-      "default": "Subheading"
-    },
-    {
-      "type": "text",
-      "id": "title",
-      "default": "Heading",
+      "id": "heading",
+      "default": "Sub collection",
       "label": "t:sections.all.content_setting.heading.label"
     },
     {
@@ -209,52 +254,8 @@
       "label": "t:sections.all.text_alignment.alignment"
     },
     {
-      "type": "select",
-      "id": "column_gap",
-      "options": [
-        {
-          "value": "no_gap",
-          "label": "t:sections.all.padding.column_gap.no_gap"
-        },
-        {
-          "value": "small",
-          "label": "t:sections.all.padding.column_gap.small"
-        },
-        {
-          "value": "medium",
-          "label": "t:sections.all.padding.column_gap.medium"
-        },
-        {
-          "value": "large",
-          "label": "t:sections.all.padding.column_gap.large"
-        }
-      ],
-      "default": "medium",
-      "label": "t:sections.all.padding.column_gap.label"
-    },
-    {
       "type": "header",
-      "content": "t:sections.collection-highlights.blocks.header"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_product_count",
-      "default": false,
-      "label": "t:sections.collection-list.settings.show_product_count.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.collection-highlights.blocks.type.type_highlight.header"
-    },
-    {
-      "type": "range",
-      "id": "highlight_collection_width",
-      "min": 40,
-      "max": 60,
-      "step": 1,
-      "unit": "%",
-      "default": 50,
-      "label": "t:sections.collection-highlights.settings.highlight_collection_width.label"
+      "content": "t:sections.collection-list.settings.header.collection"
     },
     {
       "type": "select",
@@ -277,7 +278,7 @@
           "label": "t:sections.all.image.aspect_ratio.options__3"
         }
       ],
-      "default": "adapt",
+      "default": "square",
       "label": "t:sections.all.image.aspect_ratio.label"
     },
     {
@@ -313,17 +314,24 @@
       "label": "t:sections.all.text_alignment.label"
     },
     {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "default": false,
+      "label": "t:sections.collection-list.settings.show_product_count.label"
+    },
+
+    {
       "type": "range",
       "id": "items_per_row",
       "label": "t:sections.all.columns_desktop.label",
-      "min": 1,
-      "max": 3,
+      "min": 2,
+      "max": 6,
       "step": 1,
-      "default": 2
+      "default": 5
     },
     {
       "type": "select",
-      "id": "column_gap_block",
+      "id": "column_gap",
       "options": [
         {
           "value": "no_gap",
@@ -347,15 +355,13 @@
     },
     {
       "type": "header",
-      "content": "t:sections.collection-list.settings.overlay_image_settings",
-      "visible_if": "{{ section.settings.content_position == 'overlay' }}"
+      "content": "t:sections.collection-list.settings.overlay_image_settings"
     },
     {
       "type": "color",
       "id": "overlay_image_color",
       "label": "t:sections.collection-list.settings.overlay_image_color",
-      "default": "#000",
-      "visible_if": "{{ section.settings.content_position == 'overlay' }}"
+      "default": "#111",
       "alpha": true
     },
     {
@@ -365,7 +371,7 @@
     {
       "type": "checkbox",
       "id": "show_navigation",
-      "default": false,
+      "default": true,
       "label": "t:sections.all.carousel.show_navigation.label"
     },
     {
@@ -376,13 +382,19 @@
       "info": "t:sections.all.carousel.show_pagination.info"
     },
     {
+      "type": "checkbox",
+      "id": "reveal_slide",
+      "default": false,
+      "label": "t:sections.all.carousel.reveal_slide.label"
+    },
+    {
       "type": "range",
       "id": "items_per_row_mobile",
       "label": "t:sections.all.items.items_per_row_mobile",
       "min": 1,
       "max": 2,
       "step": 0.5,
-      "default": 2
+      "default": 1
     },
     {
       "type": "header",
@@ -417,50 +429,6 @@
       "id": "show_divider",
       "label": "t:sections.all.divider.show_divider",
       "default": false
-    }
-  ],
-  "blocks": [
-    {
-      "type": "group-highlight-collections"
-    },
-    {
-      "type": "group-collections-list"
-    }
-  ],
-  "presets": [
-    {
-      "name": "t:sections.collection-highlights.name",
-      "category": "t:sections.group.collection",
-      "blocks": [
-        {
-          "type": "group-highlight-collections",
-          "blocks": [
-            {
-              "type": "_collection-item"
-            },
-            {
-              "type": "_collection-item"
-            },
-            {
-              "type": "_collection-item"
-            }
-          ]
-        },
-        {
-          "type": "group-collections-list",
-          "blocks": [
-            {
-              "type": "_collection-list"
-            },
-            {
-              "type": "_collection-list"
-            },
-            {
-              "type": "_collection-list"
-            }
-          ]
-        }
-      ]
     }
   ]
 }

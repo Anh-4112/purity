@@ -1019,6 +1019,17 @@ class QuantityInput extends HTMLElement {
         sticky.querySelector("quantity-input input").value = this.input.value;
       }
     }
+
+    this.updateTotalPrice(this.input.value);
+  }
+
+  updateTotalPrice(previousValue) {
+    const form = this.closest("form");
+    if (!form) return;
+    const priceElement = form.querySelector(".total-price__detail");
+    const dataTotalPrice = priceElement.getAttribute("data-total-price");
+    const totalPrice = Number(dataTotalPrice) * Number(previousValue);
+    priceElement.textContent = NextSkyTheme.formatMoney(totalPrice, themeGlobalVariables.settings.money_format);
   }
 
   validateQtyRules() {
@@ -1642,61 +1653,48 @@ class MiniCartUpSell extends HTMLElement {
         .catch((e) => {
           console.error(e);
         });
+    } else {
+      const recommendations = this.querySelector(".swiper-wrapper");
+      if (!recommendations) {
+        if (this.closest(".drawer__cart-recommendations")) {
+          this.closest(".drawer__cart-recommendations").classList.add("hidden");
+        } else {
+          this.classList.add("hidden");
+        }
+      }
+      if (recommendations && recommendations.childElementCount == 0) {
+        if (this.closest(".drawer__cart-recommendations")) {
+          this.closest(".drawer__cart-recommendations").classList.add("hidden");
+        } else {
+          this.classList.add("hidden");
+        }
+      }
+      if (
+        recommendations &&
+        recommendations.innerHTML.trim().length &&
+        recommendations.childElementCount > 0
+      ) {
+        this.querySelector(".swiper-wrapper").innerHTML =
+          recommendations.innerHTML;
+        if (this.closest(".drawer__cart-recommendations")) {
+          this.closest(".drawer__cart-recommendations").classList.remove(
+            "hidden"
+          );
+        } else {
+          this.classList.remove("hidden");
+        }
+      }
     }
   }
 }
 customElements.define("mini-cart-recommendations", MiniCartUpSell);
 
-class CartUpSellProduct extends SlideSection {
-  constructor() {
-    super();
-    this.slide = null;
-  }
-
-  init() {
-    let width = window.innerWidth;
-    window.addEventListener("resize", () => {
-      const newWidth = window.innerWidth;
-      if (newWidth <= 1024 && width > 1024) {
-        this.actionOnMobile();
-      }
-      if (newWidth > 1024 && width <= 1024) {
-        this.actionOutMobile();
-      }
-      width = newWidth;
-    });
-    if (width <= 1024) {
-      this.actionOnMobile();
-    } else {
-      this.actionOutMobile();
-    }
-  }
-
-  actionOnMobile() {
-    if (this.slide) {
-      this.slide.destroy();
-    }
-    this.slide = this.initSlideMediaGallery("CartUpSell");
-    this.style.maxHeight = "auto";
-    this.style.minHeight = "auto";
-  }
-
-  actionOutMobile() {
-    if (this.slide) {
-      this.slide.destroy();
-    }
-    this.slide = this.initSlideMediaGallery("CartUpSell");
-    this.style.maxHeight =
-      this.closest(".drawer__body").offsetHeight - 110 + "px";
-    this.style.minHeight = "calc(100vh - 110px)";
-  }
-}
-customElements.define("cart-upsell-product", CartUpSellProduct);
 class CarouselMobile extends HTMLElement {
   constructor() {
     super();
     this.enable = this.dataset.enableCarouselMobile == "true";
     this.isMulticontent = this.dataset.multicontent == "true";
+    this.showPagination = this.dataset.showPagination == "true";
     this.bundle = this.dataset.bundle == "true";
     this.swiperSlideInnerHtml = this.innerHTML;
     this.initCarousel();
@@ -1738,13 +1736,14 @@ class CarouselMobile extends HTMLElement {
       "switch-slide__mobile",
       "swiper-slide"
     );
-    const wrapper = `<div class='swiper-wrapper custom-padding-carousel-mobile'>${html}</div><div class="swiper-pagination" style="--swiper-pagination-bottom: 0"></div>`;
+    const wrapper = `<div class='swiper-wrapper custom-padding-carousel-mobile'>${html}</div>${this.showPagination ? '<div class="swiper-pagination" style="--swiper-pagination-bottom: 0"></div>' : ''}`;
     this.innerHTML = wrapper;
     initSlide(this);
     new LazyLoader(".image-lazy-load");
   }
 
   actionOutMobile() {
+    new LazyLoader(".image-lazy-load");
     this.classList.remove("swiper");
     this.innerHTML = this.swiperSlideInnerHtml;
     if (this.bundle) {
@@ -1761,7 +1760,6 @@ class CarouselMobile extends HTMLElement {
       this.classList.add("grid", "grid-cols");
       this.classList.remove("flex", "column", "flex-md-row", "wrap", "cols");
     }
-    new LazyLoader(".image-lazy-load");
   }
 }
 customElements.define("carousel-mobile", CarouselMobile);
@@ -1907,26 +1905,6 @@ class ImageComparison extends HTMLElement {
       this.moveSlider(Motion.clamp(-this.boundary, this.boundary, this.x));
     });
     this.setupIntersectionObserver();
-    this.setupHoverTracking();
-  }
-
-  setupHoverTracking() {
-    this.addEventListener("mouseenter", () => {
-      this.isHovering = true;
-      this.updateSliderStatus();
-    });
-    this.addEventListener("mouseleave", () => {
-      this.isHovering = false;
-      this.updateSliderStatus();
-    });
-    this.addEventListener("touchstart", () => {
-      this.isHovering = true;
-      this.updateSliderStatus();
-    });
-    this.addEventListener("touchend", () => {
-      this.isHovering = false;
-      this.updateSliderStatus();
-    });
   }
 
   updateSliderStatus() {
@@ -2056,6 +2034,8 @@ class ImageComparison extends HTMLElement {
       this.slider.style.cursor = "grabbing";
       this.slider.classList.add("active");
       this.slider.setPointerCapture(e.pointerId);
+      this.isHovering = true;
+      this.updateSliderStatus();
     });
 
     this.slider.addEventListener("pointermove", (e) => {
@@ -2085,6 +2065,8 @@ class ImageComparison extends HTMLElement {
           damping: 40,
         });
       }
+      this.isHovering = false;
+      this.updateSliderStatus();
     });
   }
 
@@ -2964,3 +2946,112 @@ class SelectContact extends HTMLElement {
   }
 }
 customElements.define("select-contact", SelectContact);
+
+
+class GridCustom extends HTMLElement {
+  constructor() {
+    super();
+    this.enableCarousel = this.dataset.actionMobile === 'true';
+    this.breakpoint = 767;
+    this.swiperInstance = null;
+    this.originalHTML = this.innerHTML;
+    this.originalStyle = this.getAttribute('style') || '';
+  }
+
+  connectedCallback() {
+    setTimeout(() => {
+      this.init();
+    }, 300);
+  }
+
+  init() {
+    if (!this.enableCarousel) return;
+
+    let width = window.innerWidth;
+    
+    if (width <= this.breakpoint) {
+      this.actionOnMobile();
+    } else {
+      this.actionOutMobile();
+    }
+
+    window.addEventListener('resize', () => {
+      const newWidth = window.innerWidth;
+      if (newWidth <= this.breakpoint && width > this.breakpoint) {
+        this.actionOnMobile();
+      }
+      if (newWidth > this.breakpoint && width <= this.breakpoint) {
+        this.actionOutMobile();
+      }
+      width = newWidth;
+    });
+  }
+
+  actionOnMobile() {
+    if (this.swiperInstance) {
+      this.swiperInstance.destroy(true, true);
+      this.swiperInstance = null;
+    }
+
+    const currentStyle = this.getAttribute('style') || '';
+
+    this.classList.add('swiper');
+    this.classList.remove('grid', 'grid-cols', 'gap');
+    
+    const items = Array.from(this.children);
+    const swiperWrapper = document.createElement('div');
+    swiperWrapper.className = 'swiper-wrapper';
+
+    items.forEach(item => {
+      const slide = document.createElement('div');
+      slide.className = 'swiper-slide';
+      slide.appendChild(item);
+      swiperWrapper.appendChild(slide);
+    });
+
+    this.innerHTML = '';
+    this.appendChild(swiperWrapper);
+
+    if (currentStyle) {
+      this.setAttribute('style', currentStyle);
+    }
+
+    const pagination = document.createElement('div');
+    pagination.className = 'swiper-pagination';
+    pagination.style.setProperty('--swiper-pagination-bottom', '0');
+    this.appendChild(pagination);
+
+    this.initSwiper();
+    new LazyLoader('.image-lazy-load');
+  }
+
+  actionOutMobile() {
+    if (this.swiperInstance) {
+      this.swiperInstance.destroy(true, true);
+      this.swiperInstance = null;
+    }
+
+    this.classList.remove('swiper');
+    this.classList.add('grid', 'grid-cols', 'gap');
+    
+    this.innerHTML = this.originalHTML;
+    if (this.originalStyle) {
+      this.setAttribute('style', this.originalStyle);
+    }
+
+    new LazyLoader('.image-lazy-load');
+  }
+
+  initSwiper() {
+    this.swiperInstance = initSlide(this);
+  }
+
+  disconnectedCallback() {
+    if (this.swiperInstance) {
+      this.swiperInstance.destroy(true, true);
+      this.swiperInstance = null;
+    }
+  }
+}
+
+customElements.define('grid-custom', GridCustom);

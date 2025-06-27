@@ -8,6 +8,15 @@
   else
     assign section_width = 'fluid_container'
   endif
+  assign product_enable_color_swatches = theme_st.product_enable_color_swatches
+  assign color_swatch_trigger = theme_st.color_swatch_trigger
+  if color_swatch_trigger != blank and product_enable_color_swatches != false
+    assign option_name = color_swatch_trigger | split: ','
+  else
+    assign option_name = 'Color'
+  endif
+  assign color_swatch_custom = theme_st.color_swatch_custom
+  assign color_swatch_shape = theme_st.color_swatch_shape
   assign scroll_animation = theme_st.scroll_animation
   assign items_per_row = section_st.items_per_row
   assign pagination_type = section_st.pagination_type
@@ -49,14 +58,14 @@
   assign column_gap_slide = 0
   assign column_gap_mb = 0
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
-    assign column_gap_mb = 20
+    assign column_gap_slide = 32
+    assign column_gap_mb = 24
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
-    assign column_gap_mb = 10
+    assign column_gap_slide = 24
+    assign column_gap_mb = 16
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
-    assign column_gap_mb = 5
+    assign column_gap_slide = 16
+    assign column_gap_mb = 8
   endif
   assign index_promotion = 1
   assign total_active_values = 0
@@ -107,7 +116,9 @@
               results: collection,
               filter_layout: 'vertical',
               paginate: paginate,
-              results_url: results_url
+              results_url: results_url,
+              total_active_values: total_active_values,
+              products_count: collection.products_count
             %}
           </div>
         </div>
@@ -147,7 +158,7 @@
                         assign button_link = block_st.button_link
                       -%}
                       {%- if block.type == 'steps' -%}
-                        <div class="swiper-slide motion-item">
+                        <div class="swiper-slide motion-item" {{ block.shopify_attributes }}>
                           <div class="product__promotion-banner hover-effect">
                             <a
                               {% if button_link == blank %}
@@ -188,7 +199,7 @@
                                 {%- if description != blank -%}
                                   <div class="description heading-color">{{ block.settings.description }}</div>
                                 {%- endif -%}
-                                {%- if button_label != blank -%}
+                                {%- if block.settings.button_label != blank -%}
                                   <a
                                     {% if button_link == blank %}
                                       role="link" aria-disabled="true"
@@ -218,11 +229,11 @@
             </div>
           {%- endif -%}
           <div
-            class="facets-toolbar flex align-center gap space-between mb-20"
+            class="facets-toolbar flex align-center gap space-between mb-8"
             style="--gap-desktop: 50px; --gap: 15px;"
           >
             {%- if enable_filtering -%}
-              <div class="facet-drawer grow-1{% if enable_filtering and filter_layout == 'drawer' %}{% else %} inline-flex hidden-1025{% endif %}">
+              <div class="facet-drawer grow-1{% if enable_filtering and filter_layout == 'drawer' %}{% else %} inline-flex hidden-1025{% endif %} py-16">
                 <button
                   id="FacetsDrawer"
                   class="button heading color btn-reset inline-flex gap-5 align-center body_weight pointer"
@@ -252,7 +263,17 @@
                         class="drawer__header h5 flex gap-10 space-between align-center drawer-spacing border-bottom"
                         style="--padding-block-desktop: 2.15rem;"
                       >
-                        {{ 'products.facets.filter' | t }}
+                        <div class="facets-filter js-filter-facet flex content-center">
+                          {{ 'products.facets.filter' | t }}
+                          {% if total_active_values > 0 %}
+                            <span
+                              class="ms-8 fs-12 w-custom h-custom bg-primary color-white inline-flex content-center rounded-50"
+                              style="--width: 2.3rem;--height: 2.3rem"
+                            >
+                              {{- total_active_values -}}
+                            </span>
+                          {%- endif -%}
+                        </div>
                         <button
                           type="button"
                           is="button-close-model"
@@ -271,11 +292,187 @@
                         </button>
                       </div>
                       <div class="drawer__inner overflow-y-auto custom-scrollbar grow-1 flex column">
+                        <div class="facets-filters-drawer-active px-20 px-1025-32">
+                          {% if total_active_values > 0 %}
+                            <div class="filters-count active-facets flex wrap gap-10 fs-small py-20 py-1025-32">
+                              {%- for filter in collection.filters -%}
+                                {%- liquid
+                                  assign is_color_option = false
+                                  for cl in option_name
+                                    if filter.label == cl
+                                      assign is_color_option = true
+                                    endif
+                                  endfor
+                                -%}
+                                {%- for value in filter.active_values -%}
+                                  <div class="facet-remove">
+                                    <facet-remove>
+                                      <a
+                                        href="{{ value.url_to_remove }}"
+                                        class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                                        style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
+                                      >
+                                        {%- if is_color_option == true -%}
+                                          {%- liquid
+                                            assign swatch_color = value.label
+                                            assign is_swatch_image = false
+                                            assign swatch_image = ''
+                                            if color_swatch_custom != blank and product_enable_color_swatches
+                                              assign string_value = color_swatch_custom
+                                              assign pairs = string_value | split: ','
+                                              for pair in pairs
+                                                assign key_and_value = pair | split: ':'
+                                                assign key = key_and_value[0] | strip
+                                                assign v = key_and_value[1] | strip
+                                                if key == value.label
+                                                  if v contains '.png' or v contains '.jpg' or v contains '.webp'
+                                                    assign image_url = v | file_img_url: 'medium'
+                                                    assign swatch_image = 'url(' | append: image_url | append: ')'
+                                                    assign is_swatch_image = true
+                                                  else
+                                                    assign swatch_color = v
+                                                  endif
+                                                endif
+                                              endfor
+                                            endif
+                                          -%}
+                                          <span
+                                            class="color-swatch-label pointer{% if is_swatch_image %} swatch-image{% endif %} filter-swatch"
+                                            style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }};{% endif %}{% if color_swatch_shape == 'round' %}--radius: 50%;{% else %}--radius: 3px;{% endif %}"
+                                          >
+                                          </span>
+                                        {%- endif -%}
+                                        {{ value.label | escape }}
+                                        <span class="active-facets__button-inner">
+                                          <svg width="9" height="10" viewBox="0 0 9 10" fill="none">
+                                            <use href="#icon-close"></use>
+                                          </svg>
+                                          <span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+                                        </span>
+                                      </a>
+                                    </facet-remove>
+                                  </div>
+                                {%- endfor -%}
+                                {% if filter.type == 'price_range' %}
+                                  {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+                                    <div class="facet-remove">
+                                      <facet-remove>
+                                        <a
+                                          href="{{ filter.url_to_remove }}"
+                                          class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                                          style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
+                                        >
+                                          {%- if filter.min_value.value -%}
+                                            {{ filter.min_value.value | money }}
+                                          {%- else -%}
+                                            {{ 0 | money }}
+                                          {%- endif -%}
+                                          -
+                                          {%- if filter.max_value.value -%}
+                                            {{ filter.max_value.value | money }}
+                                          {%- else -%}
+                                            {{ filter.range_max | money }}
+                                          {%- endif -%}
+                                          <span class="active-facets__button-inner">
+                                            <svg width="9" height="10" viewBox="0 0 9 10" fill="none">
+                                              <use href="#icon-close"></use>
+                                            </svg>
+                                            <span class="visually-hidden">
+                                              {{- 'products.facets.clear_filter' | t -}}
+                                            </span>
+                                          </span>
+                                        </a>
+                                      </facet-remove>
+                                    </div>
+                                  {%- endif -%}
+                                {% endif %}
+                              {%- endfor -%}
+                            </div>
+                          {% endif %}
+                        </div>
+                        {% if enable_sorting %}
+                          <facet-filters-form class="facets facets-vertical-sort block hidden-1025">
+                            <form class="facets-vertical-form relative" id="FacetSortForm">
+                              {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                              <div class="select-custom facet-filters heading-color py-10 px-gutter-x">
+                                <select-sorter
+                                  tabindex="0"
+                                  class="select-selected flex gap-10 align-center pointer rotate-animate"
+                                >
+                                  <span>
+                                    {{- 'products.facets.sort_by_label' | t }}
+                                  </span>
+                                  <span class="inline-block-1025">
+                                    {%- for option in collection.sort_options -%}
+                                      {% if option.value == sort_by %}{{ option.name | escape }}{% endif %}
+                                    {%- endfor -%}
+                                  </span>
+                                  <svg
+                                    width="9"
+                                    height="6"
+                                    viewBox="0 0 9 6"
+                                    fill="none"
+                                    class="icon icon-down icon-rotate transition-short flex-auto w-custom"
+                                    style="--width: 9px;"
+                                  >
+                                    <use href="#icon-arrow-down"></use>
+                                  </svg>
+                                </select-sorter>
+                                <div
+                                  class="select-custom__content facet-filters__sort active-show absolute top-100 right-0 bg-white shadow p-10 rounded-15 z-2 min-w-custom transition-short opacity-0 pointer-none"
+                                  id="SortBy"
+                                  style="--min-width: 22rem;"
+                                >
+                                  <div
+                                    class="facet-filters__select flex column"
+                                  >
+                                    {%- for option in collection.sort_options -%}
+                                      <filter-sort
+                                        class="filter-sort pointer rounded-10 align-self-start w-full flex gap-8 align-center h-custom {% if option.value != sort_by %} ps-33 text-color{% else %} ps-12 heading-color{% endif %}"
+                                        style="--height: 3.8rem;"
+                                        value="{{ option.value | escape }}"
+                                        {% if option.value == sort_by %}
+                                          selected="selected"
+                                        {% endif %}
+                                      >
+                                        {% if option.value == sort_by %}
+                                          <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                                            <path d="M12.6693 0.216606C12.8273 0.0722022 13.0095 0 13.2161 0C13.4349 0 13.6172 0.0722022 13.763 0.216606C13.921 0.373045 14 0.559567 14 0.776173C14 0.980746 13.921 1.15523 13.763 1.29964L5.21354 9.78339C5.06771 9.9278 4.88542 10 4.66667 10C4.44792 10 4.26562 9.9278 4.11979 9.78339L0.236979 5.92058C0.078993 5.77617 0 5.60169 0 5.39711C0 5.18051 0.078993 4.99398 0.236979 4.83755C0.382812 4.69314 0.559028 4.62094 0.765625 4.62094C0.984375 4.62094 1.17274 4.69314 1.33073 4.83755L4.66667 8.14079L12.6693 0.216606Z" fill="currentColor"/>
+                                          </svg>
+                                        {% endif %}
+                                        {{ option.name | escape }}
+                                      </filter-sort>
+                                    {%- endfor -%}
+                                  </div>
+                                </div>
+                              </div>
+                              <select
+                                name="sort_by"
+                                class="facet-filters__select hidden"
+                                aria-label="{{ 'products.facets.sort_button' | t }}"
+                                aria-describedby="a11y-refresh-page-message"
+                              >
+                                {%- for option in collection.sort_options -%}
+                                  <option
+                                    value="{{ option.value | escape }}"
+                                    {% if option.value == sort_by %}
+                                      selected="selected"
+                                    {% endif %}
+                                  >
+                                    {{ option.name | escape }}
+                                  </option>
+                                {%- endfor -%}
+                              </select>
+                            </form>
+                          </facet-filters-form>
+                        {% endif %}
                         {% render 'facets',
                           results: collection,
                           filter_layout: 'drawer',
                           paginate: paginate,
-                          results_url: results_url
+                          results_url: results_url,
+                          total_active_values: total_active_values,
+                          products_count: collection.products_count
                         %}
                       </div>
                     </div>
@@ -285,7 +482,7 @@
             {%- endif -%}
             {%- if show_product_counts -%}
               <div
-                class="collection-count heading-color hidden block-md"
+                class="collection-count heading-color"
                 role="status"
               >
                 <span>
@@ -306,7 +503,7 @@
               </div>
             {%- endif -%}
             {% if enable_sorting %}
-              <facet-filters-form class="facets facets-vertical-sort">
+              <facet-filters-form class="facets facets-vertical-sort hidden block-1025">
                 <form class="facets-vertical-form relative" id="FacetSortForm">
                   {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
                   <div class="select-custom facet-filters heading-color py-10">
@@ -331,22 +528,27 @@
                       </svg>
                     </select-sorter>
                     <div
-                      class="select-custom__content facet-filters__sort active-show absolute top-100 right-0 bg-white shadow p-20 p-1025-30 rounded-10 z-2 min-w-custom transition-short opacity-0 pointer-none"
+                      class="select-custom__content facet-filters__sort active-show absolute top-100 right-0 bg-white shadow p-10 rounded-15 z-2 min-w-custom transition-short opacity-0 pointer-none"
                       id="SortBy"
                       style="--min-width: 22rem;"
                     >
                       <div
-                        class="facet-filters__select flex column gap"
-                        style="--gap-desktop: 8px; --gap: 8px;"
+                        class="facet-filters__select flex column"
                       >
                         {%- for option in collection.sort_options -%}
                           <filter-sort
-                            class="block text-color pointer align-self-start outlined-border"
+                            class="filter-sort pointer rounded-10 align-self-start w-full flex gap-8 align-center h-custom {% if option.value != sort_by %} ps-33 text-color{% else %} ps-12 heading-color{% endif %}"
+                            style="--height: 3.8rem;"
                             value="{{ option.value | escape }}"
                             {% if option.value == sort_by %}
                               selected="selected"
                             {% endif %}
                           >
+                            {% if option.value == sort_by %}
+                              <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                                <path d="M12.6693 0.216606C12.8273 0.0722022 13.0095 0 13.2161 0C13.4349 0 13.6172 0.0722022 13.763 0.216606C13.921 0.373045 14 0.559567 14 0.776173C14 0.980746 13.921 1.15523 13.763 1.29964L5.21354 9.78339C5.06771 9.9278 4.88542 10 4.66667 10C4.44792 10 4.26562 9.9278 4.11979 9.78339L0.236979 5.92058C0.078993 5.77617 0 5.60169 0 5.39711C0 5.18051 0.078993 4.99398 0.236979 4.83755C0.382812 4.69314 0.559028 4.62094 0.765625 4.62094C0.984375 4.62094 1.17274 4.69314 1.33073 4.83755L4.66667 8.14079L12.6693 0.216606Z" fill="currentColor"/>
+                              </svg>
+                            {% endif %}
                             {{ option.name | escape }}
                           </filter-sort>
                         {%- endfor -%}
@@ -374,47 +576,58 @@
               </facet-filters-form>
             {% endif %}
           </div>
-          <div class="facets-filters-active">
-            {% if total_active_values > 0 %}
-              <div class="filters-count active-facets flex wrap gap-10 mb-30 fs-small">
-                {%- for filter in collection.filters -%}
-                  {%- for value in filter.active_values -%}
-                    <div class="facet-remove">
-                      <facet-remove>
-                        <a
-                          href="{{ value.url_to_remove }}"
-                          class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal hover-heading-color"
-                        >
-                          {{ value.label | escape }}
-                          <span class="active-facets__button-inner">
-                            <svg width="9" height="10" viewBox="0 0 9 10" fill="none">
-                              <use href="#icon-close"></use>
-                            </svg>
-                            <span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
-                          </span>
-                        </a>
-                      </facet-remove>
-                    </div>
-                  {%- endfor -%}
-                  {% if filter.type == 'price_range' %}
-                    {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+          {%- if enable_filtering and filter_layout == 'vertical' -%}
+            <div class="facets-filters-active">
+              {% if total_active_values > 0 %}
+                <div class="filters-count active-facets flex wrap gap-10 mb-30 fs-small">
+                  {%- for filter in collection.filters -%}
+                    {%- liquid
+                      assign is_color_option = false
+                      for cl in option_name
+                        if filter.label == cl
+                          assign is_color_option = true
+                        endif
+                      endfor
+                    -%}
+                    {%- for value in filter.active_values -%}
                       <div class="facet-remove">
                         <facet-remove>
                           <a
-                            href="{{ filter.url_to_remove }}"
-                            class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal hover-heading-color"
+                            href="{{ value.url_to_remove }}"
+                            class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                            style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
                           >
-                            {%- if filter.min_value.value -%}
-                              {{ filter.min_value.value | money }}
-                            {%- else -%}
-                              {{ 0 | money }}
+                            {%- if is_color_option == true -%}
+                              {%- liquid
+                                assign swatch_color = value.label
+                                assign is_swatch_image = false
+                                assign swatch_image = ''
+                                if color_swatch_custom != blank and product_enable_color_swatches
+                                  assign string_value = color_swatch_custom
+                                  assign pairs = string_value | split: ','
+                                  for pair in pairs
+                                    assign key_and_value = pair | split: ':'
+                                    assign key = key_and_value[0] | strip
+                                    assign v = key_and_value[1] | strip
+                                    if key == value.label
+                                      if v contains '.png' or v contains '.jpg' or v contains '.webp'
+                                        assign image_url = v | file_img_url: 'medium'
+                                        assign swatch_image = 'url(' | append: image_url | append: ')'
+                                        assign is_swatch_image = true
+                                      else
+                                        assign swatch_color = v
+                                      endif
+                                    endif
+                                  endfor
+                                endif
+                              -%}
+                              <span
+                                class="color-swatch-label pointer{% if is_swatch_image %} swatch-image{% endif %} filter-swatch"
+                                style="--swatch-background: {{ swatch_color }};{% if is_swatch_image %}--swatch-background-image: {{ swatch_image }};{% endif %}{% if color_swatch_shape == 'round' %}--radius: 50%;{% else %}--radius: 3px;{% endif %}"
+                              >
+                              </span>
                             {%- endif -%}
-                            -
-                            {%- if filter.max_value.value -%}
-                              {{ filter.max_value.value | money }}
-                            {%- else -%}
-                              {{ filter.range_max | money }}
-                            {%- endif -%}
+                            {{ value.label | escape }}
                             <span class="active-facets__button-inner">
                               <svg width="9" height="10" viewBox="0 0 9 10" fill="none">
                                 <use href="#icon-close"></use>
@@ -424,22 +637,54 @@
                           </a>
                         </facet-remove>
                       </div>
-                    {%- endif -%}
-                  {% endif %}
-                {%- endfor -%}
-                <div class="facet-remove facet-clear-all">
-                  <facet-remove class="active-facets__button-wrapper">
-                    <a
-                      href="{{ results_url }}"
-                      class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal hover-heading-color"
-                    >
-                      <span>{{ 'products.facets.clear_all' | t }}</span>
-                    </a>
-                  </facet-remove>
+                    {%- endfor -%}
+                    {% if filter.type == 'price_range' %}
+                      {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+                        <div class="facet-remove">
+                          <facet-remove>
+                            <a
+                              href="{{ filter.url_to_remove }}"
+                              class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                              style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
+                            >
+                              {%- if filter.min_value.value -%}
+                                {{ filter.min_value.value | money }}
+                              {%- else -%}
+                                {{ 0 | money }}
+                              {%- endif -%}
+                              -
+                              {%- if filter.max_value.value -%}
+                                {{ filter.max_value.value | money }}
+                              {%- else -%}
+                                {{ filter.range_max | money }}
+                              {%- endif -%}
+                              <span class="active-facets__button-inner">
+                                <svg width="9" height="10" viewBox="0 0 9 10" fill="none">
+                                  <use href="#icon-close"></use>
+                                </svg>
+                                <span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+                              </span>
+                            </a>
+                          </facet-remove>
+                        </div>
+                      {%- endif -%}
+                    {% endif %}
+                  {%- endfor -%}
+                  <div class="facet-remove facet-clear-all">
+                    <facet-remove class="active-facets__button-wrapper">
+                      <a
+                        href="{{ results_url }}"
+                        class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                        style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
+                      >
+                        <span>{{ 'products.facets.clear_all' | t }}</span>
+                      </a>
+                    </facet-remove>
+                  </div>
                 </div>
-              </div>
-            {% endif %}
-          </div>
+              {% endif %}
+            </div>
+          {% endif %}
           <div id="CollectionGird" class="collection__gird relative">
             {%- if collection.products.size == 0 -%}
               <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">

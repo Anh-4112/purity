@@ -2,7 +2,7 @@
   {%- assign t = template | split: '.' | first -%}
   <nav class="breadcrumbs flex {{ class }}" role="navigation" aria-label="breadcrumbs">
     <ul class="navigation__breadcrumb-list list-unstyled my-0 px-0 fs-small flex wrap">
-      <li class="bls__breadcrumb-item dash-between flex align-center flex align-center">
+      <li class="bls__breadcrumb-item flex align-center flex align-center">
         <a
           class="navigation__breadcrumb-link word-break heading-color subheading_weight"
           href="{{ routes.root_url }}"
@@ -10,10 +10,22 @@
         >
           {{- 'general.breadcrumb.home' | t -}}
         </a>
+        <span class="navigation__breadcrumb-separator px-12 flex">
+          <svg
+            class="icon icon--arrow-right"
+            width="4"
+            height="7"
+            viewBox="0 0 4 7"
+            focusable="false"
+            aria-hidden="true"
+          >
+            <use href="#icon-arrow-next-breadscrumbs"></use>
+          </svg>
+        </span>
       </li>
       {%- case t -%}
         {%- when 'page' -%}
-          <li class="navigation__breadcrumb-item dash-between flex align-center">
+          <li class="navigation__breadcrumb-item flex align-center">
             <span class="navigation__breadcrumb-link word-break" aria-current="page">
               {{- page.title -}}
             </span>
@@ -23,6 +35,18 @@
             <li class="navigation__breadcrumb-item dash-between flex align-center">
               {{ collection.title | link_to: collection.url }}
             </li>
+            <span class="navigation__breadcrumb-separator px-12 flex content-center">
+              <svg
+                class="icon icon--arrow-right"
+                width="4"
+                height="7"
+                viewBox="0 0 4 7"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <use href="#icon-arrow-next-breadscrumbs"></use>
+              </svg>
+            </span>
           {%- endif -%}
           <li class="navigation__breadcrumb-item dash-between flex align-center">
             <span class="navigation__breadcrumb-link word-break" aria-current="page">
@@ -31,16 +55,28 @@
           </li>
         {%- when 'collection' and collection.handle -%}
           {%- if current_tags -%}
-            <li class="navigation__breadcrumb-item dash-between flex align-center">
+            <li class="navigation__breadcrumb-item flex align-center">
               {{ collection.title | link_to: collection.url }}
             </li>
-            <li class="navigation__breadcrumb-item dash-between flex align-center">
+            <span class="navigation__breadcrumb-separator px-12 flex content-center">
+              <svg
+                class="icon icon--arrow-right"
+                width="4"
+                height="7"
+                viewBox="0 0 4 7"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <use href="#icon-arrow-next-breadscrumbs"></use>
+              </svg>
+            </span>
+            <li class="navigation__breadcrumb-item flex align-center">
               <span class="navigation__breadcrumb-link word-break" aria-current="page">
                 {{- current_tags | join: ' + ' -}}
               </span>
             </li>
           {%- else -%}
-            <li class="navigation__breadcrumb-item dash-between flex align-center">
+            <li class="navigation__breadcrumb-item flex align-center">
               <span class="navigation__breadcrumb-link word-break" aria-current="page">
                 {{- collection.title -}}
               </span>
@@ -48,32 +84,56 @@
           {%- endif -%}
         {%- when 'blog' -%}
           {%- if current_tags -%}
-            <li class="navigation__breadcrumb-item dash-between flex align-center">
+            <li class="navigation__breadcrumb-item flex align-center">
               {{ blog.title | link_to: blog.url }}
             </li>
-            <li class="navigation__breadcrumb-item dash-between flex align-center">
+            <span class="navigation__breadcrumb-separator px-12 flex content-center">
+              <svg
+                class="icon icon--arrow-right"
+                width="4"
+                height="7"
+                viewBox="0 0 4 7"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <use href="#icon-arrow-next-breadscrumbs"></use>
+              </svg>
+            </span>
+            <li class="navigation__breadcrumb-item flex align-center">
               <span class="navigation__breadcrumb-link word-break" aria-current="page">
                 {{- current_tags | join: ' + ' -}}
               </span>
             </li>
           {%- else -%}
-            <li class="navigation__breadcrumb-item dash-between flex align-center">
+            <li class="navigation__breadcrumb-item flex align-center">
               <span class="navigation__breadcrumb-link word-break" aria-current="page">
                 {{- blog.title -}}
               </span>
             </li>
           {%- endif -%}
         {%- when 'article' -%}
-          <li class="navigation__breadcrumb-item dash-between flex align-center">
+          <li class="navigation__breadcrumb-item flex content-center">
             {{ blog.title | link_to: blog.url }}
           </li>
-          <li class="navigation__breadcrumb-item dash-between flex align-center">
+          <span class="navigation__breadcrumb-separator px-12 flex content-center">
+            <svg
+              class="icon icon--arrow-right"
+              width="4"
+              height="7"
+              viewBox="0 0 4 7"
+              focusable="false"
+              aria-hidden="true"
+            >
+              <use href="#icon-arrow-next-breadscrumbs"></use>
+            </svg>
+          </span>
+          <li class="navigation__breadcrumb-item flex align-center">
             <span class="navigation__breadcrumb-link word-break" aria-current="page">
               {{- article.title -}}
             </span>
           </li>
         {%- else -%}
-          <li class="navigation__breadcrumb-item dash-between flex align-center">
+          <li class="navigation__breadcrumb-item flex align-center">
             <span class="navigation__breadcrumb-link word-break" aria-current="page">
               {{- page_title -}}
             </span>

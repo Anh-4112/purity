@@ -362,6 +362,11 @@ export function setCookie(name, value, days = 30, path = "/") {
   document.cookie = name + "=" + cookieValue;
 }
 
+export function deleteCookie(name, path = "/") {
+  document.cookie =
+    name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=" + path + ";";
+}
+
 export function createMediaImageElement(
   media,
   availableWidths = [],
@@ -441,11 +446,42 @@ class AlertNotify {
     }, duration);
   }
 
-  hide(notification) {
+  hide(notification, element = null) {
     notification.classList.remove("show");
     setTimeout(() => {
-      this.container.removeChild(notification);
+      if (element) {
+        element.removeChild(notification);
+      } else {
+        this.container.removeChild(notification);
+      }
     }, 300);
+  }
+
+  showElement(
+    message,
+    element = this.container,
+    type = "warning",
+    duration = 3000
+  ) {
+    if (element.querySelector(".notification")) {
+      element.querySelector(".notification").remove();
+    }
+    const notification = document.createElement("div");
+    notification.classList.add("notification", type);
+    const icon = this.createIcon(type);
+    const text = document.createElement("span");
+    text.innerHTML = message;
+    notification.appendChild(icon.firstElementChild);
+    notification.appendChild(text);
+    element.appendChild(notification);
+
+    setTimeout(() => {
+      notification.classList.add("show");
+    }, 10);
+
+    setTimeout(() => {
+      this.hide(notification, element);
+    }, duration);
   }
 
   createIcon(type) {
@@ -530,7 +566,7 @@ export class FSProgressBar {
         _this.classList.remove("free-shipping");
         feUnAvailable = feUnAvailable.replace(
           "[amount]",
-          '<span class="price">[amount]</strong>'
+          '<span class="price heading-style">[amount]</span>'
         );
         _this.querySelector(".progress-bar-message").innerHTML =
           feUnAvailable.replace(
@@ -570,4 +606,33 @@ export function loadImages(imageOrArray) {
       });
     })
   );
+}
+
+export function checkUrlParameters() {
+  const urlInfo = window.location.href;
+  const newURL = location.href.split("?")[0];
+
+  if (urlInfo.indexOf("customer_posted=true") >= 1) {
+    createAfterSubmit();
+    window.history.pushState("object", document.title, newURL);
+    return true;
+  }
+
+  if (urlInfo.indexOf("contact%5Btags%5D=newsletter&form_type=customer") >= 1) {
+    notifier.show(message.newsletter.error, "error", 4000);
+    window.history.pushState("object", document.title, newURL);
+    return false;
+  }
+
+  return false;
+}
+
+function createAfterSubmit() {
+  const template = document.querySelector("discount-modal-popup");
+  if (template) {
+    eventModal(template, "open", false, null, true);
+    global.rootToFocus = template;
+  } else {
+    notifier.show(message.newsletter.success, "success", 4000);
+  }
 }

@@ -1,8 +1,8 @@
 {%- if closest.product != blank -%}
   {%- if closest.product.metafields.custom.highlights.value -%}
     <ul
-      class="list-unstyled flex wrap gap-15 row-gap-20 flex-cols p-20 rounded bg-secondary"
-      style="--col-number: 2;--col-tablet: 2;--col-desktop: 4;"
+      class="list-unstyled flex wrap gap-5 row-gap-20 flex-cols px-1025-25"
+      style="--col-number: 2;--col-tablet: 3;--col-desktop: 3;"
     >
       {%- for highlights in closest.product.metafields.custom.highlights.value -%}
         <li class="flex column content-center fs-small" style="--width:4.5rem;">
@@ -11,18 +11,19 @@
             {% render 'responsive-image',
               type: 'other',
               image: highlights.icon,
-              image_alt: image_alt,
+              image_alt: image_alt,s
               class: 'rounded w-custom max-w-100'
             %}
           {% endif %}
           {%- if highlights.title -%}
-            <div class="highlights-text heading-color text-center mt-10 w-full">
+            <div class="highlights-text heading-color text-center mt-10 w-full fs-16">
               {{ highlights.title }}
             </div>
           {% endif %}
         </li>
       {%- endfor -%}
     </ul>
+    
   {% endif %}
 {% endif %}
 {% schema %}

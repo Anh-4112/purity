@@ -4,11 +4,11 @@
 
   assign column_gap_slide = 0
   if section_st.column_gap == 'large'
-    assign column_gap_slide = 30
+    assign column_gap_slide = 32
   elsif section_st.column_gap == 'medium'
-    assign column_gap_slide = 20
+    assign column_gap_slide = 24
   elsif section_st.column_gap == 'small'
-    assign column_gap_slide = 10
+    assign column_gap_slide = 16
   endif
 %}
 {% style %}
@@ -235,13 +235,15 @@
       "type": "color",
       "id": "background_color",
       "label": "t:sections.image-with-text.settings.background_color",
-      "default": "#D0473E"
+      "default": "#D0473E",
+      "alpha": true
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "t:sections.image-with-text.settings.text_color",
-      "default": "#ffffff"
+      "default": "#ffffff",
+      "alpha": true
     }
   ],
   "blocks": [
