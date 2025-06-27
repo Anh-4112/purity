@@ -551,40 +551,48 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         : (this.open = !this.open);
   }
   async transition(value) {
-    return value
-      ? (megaMenuCount.set(
-          DetailsMegaMenu,
-          megaMenuCount.get(DetailsMegaMenu) + 1
-        ),
-        this.setAttribute("open", ""),
-        this.summaryElement.setAttribute("open", ""),
-        document.addEventListener("click", this.detectClickOutsideListener),
-        document.addEventListener("keydown", this.detectEscKeyboardListener),
-        document.addEventListener("focusout", this.detectFocusOutListener),
-        this.classList.add("detail-open"),
-        this.dropdownsAnimation == "fade-in-down" && window.innerWidth >= 1025
-          ? (this.contentElement.setAttribute("open", ""),
-            this.contentElement.classList.add("expanding"),
-            await this.fadeInDown(),
-            this.contentElement.classList.remove("expanding"))
-          : setTimeout(() => this.contentElement.setAttribute("open", ""), 100))
-      : (megaMenuCount.set(
-          DetailsMegaMenu,
-          megaMenuCount.get(DetailsMegaMenu) - 1
-        ),
-        this.summaryElement.removeAttribute("open"),
-        this.contentElement.removeAttribute("open"),
-        document.removeEventListener("click", this.detectClickOutsideListener),
-        document.removeEventListener("keydown", this.detectEscKeyboardListener),
-        document.removeEventListener("focusout", this.detectFocusOutListener),
-        this.classList.remove("detail-open"),
-        this.dropdownsAnimation == "fade-in-down" && window.innerWidth >= 1025
-          ? (this.contentElement.classList.add("expanding"),
-            await this.fadeInUp(),
-            this.contentElement.classList.remove("expanding"),
-            this.open || this.removeAttribute("open"))
-          : setTimeout(() => this.open || this.removeAttribute("open"), 300));
-  }
+    const body = document.body;
+
+    if (value) {
+      megaMenuCount.set(DetailsMegaMenu, megaMenuCount.get(DetailsMegaMenu) + 1);
+      this.setAttribute("open", "");
+      this.summaryElement.setAttribute("open", "");
+      document.addEventListener("click", this.detectClickOutsideListener);
+      document.addEventListener("keydown", this.detectEscKeyboardListener);
+      document.addEventListener("focusout", this.detectFocusOutListener);
+      this.classList.add("detail-open");
+      body.classList.add("dropdown-open");
+
+      if (this.dropdownsAnimation === "fade-in-down" && window.innerWidth >= 1025) {
+        this.contentElement.setAttribute("open", "");
+        this.contentElement.classList.add("expanding");
+        await this.fadeInDown();
+        this.contentElement.classList.remove("expanding");
+      } else {
+        setTimeout(() => this.contentElement.setAttribute("open", ""), 100);
+      }
+    } else {
+      megaMenuCount.set(DetailsMegaMenu, megaMenuCount.get(DetailsMegaMenu) - 1);
+      this.summaryElement.removeAttribute("open");
+      this.contentElement.removeAttribute("open");
+      document.removeEventListener("click", this.detectClickOutsideListener);
+      document.removeEventListener("keydown", this.detectEscKeyboardListener);
+      document.removeEventListener("focusout", this.detectFocusOutListener);
+      this.classList.remove("detail-open");
+      body.classList.remove("dropdown-open");
+
+      if (this.dropdownsAnimation === "fade-in-down" && window.innerWidth >= 1025) {
+        this.contentElement.classList.add("expanding");
+        await this.fadeInUp();
+        this.contentElement.classList.remove("expanding");
+        if (!this.open) this.removeAttribute("open");
+      } else {
+        setTimeout(() => {
+          if (!this.open) this.removeAttribute("open");
+        }, 300);
+      }
+    }
+}
   detectClickOutside(event) {
     !this.contains(event.target) &&
       !(event.target.closest("details") instanceof DetailsMegaMenu) &&

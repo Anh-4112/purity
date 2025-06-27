@@ -27,6 +27,19 @@ input[type="search"]::-webkit-search-cancel-button {
   cursor: pointer;
   transition: var(--duration-short);
 }
+.address-check input[type="checkbox"]{
+  width: 1.5rem; 
+  height: 1.5rem; 
+  color: var(--color-link); 
+  background-color: #f3f4f6; 
+  border: 1px solid var(--color-border); 
+  border-radius: 0.125rem;
+  margin: 0 2px 0 0;
+}
+.address-check input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
 .loading_snippet.loading input[type="search"]::-webkit-search-cancel-button {
   opacity: 0;
   visibility: hidden;
@@ -54,7 +67,7 @@ blockquote {
   cursor: pointer;
 }
 .cursor-crosshair{
-  cursor: crosshair;
+  cursor: url(cursor-close.png), pointer;
 }
 .pointer-none {
   pointer-events: none;
@@ -678,7 +691,6 @@ blockquote {
   right: 0;
   z-index: 1;
   pointer-events: none;
-  cursor: crosshair;
 }
 .modal.invisible.active {
   visibility: visible;
@@ -1278,6 +1290,7 @@ blockquote {
   .header__icon svg{
     transition: .35s cubic-bezier(.25,.1,.25,1)
   }
+  .pswp__button--close-zoom:hover svg,
   .modal__close:hover svg{
       transition: var(--duration-short);
       rotate: 45deg;
@@ -1394,10 +1407,10 @@ blockquote {
   .footer .back-to-top {
     bottom: 7.5rem;
   }
-  .footer .back-to-top {
+  .template-product.mobile-sticky-bar-enabled .back-to-top {
     bottom: 15rem;
   }
-  .sticky-add-cart{
+  .mobile-sticky-bar-enabled .sticky-add-cart{
     bottom: 67px;
   }
   .mobile-sticky-bar-enabled .footer_bottom-inner {
@@ -1421,8 +1434,8 @@ blockquote {
   -webkit-transform: rotate(180deg);
 }
 .header__menu {
-  --transition: opacity 0.3s, visibility 0.3s, transform 0.3s,
-    -webkit-transform 0.3s;
+  --transition: opacity 0.25s, visibility 0.25s, transform 0.25s,
+    -webkit-transform 0.25s;
 }
 .submenu-desktop > * {
   max-height: 85vh;
@@ -1602,6 +1615,9 @@ blockquote {
 }
 .back-to-top {
   transform: scale(0);
+}
+.template-product .back-to-top {
+  bottom: 10rem;
 }
 .back-to-top.show {
   transform: scale(1);
