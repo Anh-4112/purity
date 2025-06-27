@@ -815,7 +815,7 @@
                               </div>
                               <div class="addon-actions mt-25">
                                 <button
-                                  class="estimate btn btn-outline w-full"
+                                  class="estimate btn btn-outline w-full button-focus-inside"
                                   data-action="shipping"
                                 >
                                   <span class="hidden-on-load transition-short">
@@ -834,10 +834,21 @@
                 {%- endif -%}
                 {%- if show_discount -%}
                   <div class="cart__discount">
-                    <details class="collapsible-row" is="collapsible-row">
+                    <details class="collapsible-row py-24" is="collapsible-row">
                       <summary class="collapsible-row__summary">
-                        <h6 class="footer__block-heading fs-18 pe-20 flex space-between align-center collapsible-heading relative">
-                          <span>{{ 'sections.cart.discount.title' | t -}}</span>
+                        <h6 class="fs-18 fw-500 pe-20 flex space-between align-center collapsible-heading relative">
+                          <div class="flex content-center">
+                            <svg
+                              class="icon me-10"
+                              width="20"
+                              height="21"
+                              viewBox="0 0 20 21"
+                              fill="none"
+                            >
+                              <use href="#icon-discount-2" />
+                            </svg>
+                            <span>{{ 'sections.cart.discount.title' | t -}}</span>
+                          </div>
                           <span class="open-children-toggle transition">
                             <span class="icon_plus-animation heading-color"> </span>
                           </span>
@@ -845,15 +856,15 @@
                       </summary>
                       <div class="collapsible-row__content overflow-hidden">
                         <cart-discount-element class="block">
-                          <div class="cart-addons-content">
-                            <div class="cart-addons-content-inner">
-                              <div class="cart__discount field">
+                          <div class="cart-addons-content mt-16">
+                            <div class="cart-addons-content-inner flex column row-md gap-10">
+                              <div class="cart__discount field grow-1">
                                 <label class="visually-hidden" for="Cart-Discount">
                                   {{- 'sections.cart.discount.note_title' | t -}}
                                 </label>
                                 <input
                                   id="Cart-Discount"
-                                  class="cart-discount w-full"
+                                  class="cart-discount w-full input-style focus-inside"
                                   name="discount"
                                   placeholder="{{ 'sections.cart.discount.note_title' | t }}"
                                 >
@@ -861,7 +872,7 @@
                               <div class="addon-actions">
                                 <button
                                   type="button"
-                                  class="apply-discount btn pointer btn-primary mt-20 w-full"
+                                  class="apply-discount button-focus-inside btn pointer btn-outline w-full px-30"
                                   aria-label="{{- 'general.button.save' | t }}"
                                 >
                                   <span class="hidden-on-load transition-short">
@@ -871,25 +882,25 @@
                                 </button>
                               </div>
                             </div>
-                            <ul class="cart-discount__codes">
+                            <ul class="cart-discount__codes list-unstyled{% if discount_codes.size > 0 %} mt-10 flex gap-8 row-gap-8 wrap{% endif %}">
                               {% for discount_code in discount_codes %}
                                 <li
-                                  class="cart-discount__pill"
+                                  class="cart-discount__pill px-16 bg-white fs-small rounded-30 inline-flex content-center gap-8 py-6"
                                   data-discount-code="{{ discount_code }}"
                                   aria-label="{{ 'accessibility.discount_applied' | t: code: discount_code }}"
                                 >
                                   <p class="cart-discount__pill-code">
                                     {{ discount_code }}
                                   </p>
-                                  <remove-discount>
+                                  <remove-discount class="flex content-center">
                                     <button
                                       type="button"
-                                      class="cart-discount__pill-remove"
+                                      class="cart-discount__pill-remove btn-reset pointer flex content-center"
                                       aria-label="{{ 'accessibility.remove_discount' | t: code: discount_code }}"
                                     >
                                       <svg
-                                        width="12"
-                                        height="12"
+                                        width="10"
+                                        height="10"
                                         viewBox="0 0 12 12"
                                         fill="none"
                                         class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
@@ -1009,7 +1020,12 @@
                       name="checkout"
                       class="grow-1 btn btn-primary"
                     >
-                      <span class="hidden-on-load transition-short"> {{ 'sections.cart.checkout' | t }}</span>
+                      <span class="hidden-on-load transition-short flex content-center gap-10">
+                        <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                          <use href="#icon-lock" />
+                        </svg>
+                        {{ 'sections.cart.checkout' | t -}}
+                      </span>
                       {%- render 'loader' -%}
                     </button>
                     <div id="cart-errors" class="error empty-hidden"></div>
