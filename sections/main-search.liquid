@@ -89,7 +89,7 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="title-wrapper-with-link text-center page-title{{ section_width }}">
-    <div class="breadcrumbs container pt-20">
+    <div class="container pt-20 breadcrumbs">
       {%- render 'breadcrumbs' -%}
     </div>
     <div class="page-header mt-60 mb_auto-rsp" style="--space-bottom: 100">
@@ -100,23 +100,29 @@
           class="block"
         >
       {% endif %}
-      {%- if terms -%}
-        {% if search.performed and search.results_count > 0 %}
-          <h1>{{ 'templates.search.title' | t }}</h1>
-        {%- else -%}
-          <h1>
-            {{ 'templates.search.results_with_count_and_term.none' | t: terms: terms }}
-          </h1>
+      <h1 class="mb-16 h2">{{ 'templates.search.title' | t }}</h1>
+      
+      {%- if terms != blank -%}
+        {% if search.performed %}
+          <p class="mb-40">
+            {%- if search.results_count == 0 -%}
+              {{ 'templates.search.results_with_count_and_term.none' | t: terms: terms }}
+            {%- elsif search.results_count == 1 -%}
+              {{ 'templates.search.results_with_count_and_term.one' | t: count: search.results_count, terms: terms }}
+            {%- else -%}
+              {{ 'templates.search.results_with_count_and_term.other' | t: count: search.results_count, terms: terms }}
+            {%- endif -%}
+          </p>
         {% endif %}
       {%- else -%}
-        <h1>
+        <p class="mb-40">
           {{ 'templates.search.title_no_search' | t }}
-        </h1>
+        </p>
       {%- endif -%}
       {% if scroll_animation %}
         </motion-effect>
       {% endif %}
-      <div class="search-form container">
+      <div class="container search-form">
         <action-main-search class="block mt-30">
           <div class="search-form">
             <form
@@ -126,12 +132,12 @@
               class="search"
             >
               <div
-                class="field bg-secondary px-25 btn-rounded flex align-center gap-10 relative max-w-custom mx-auto"
+                class="relative flex gap-10 mx-auto border border-transparent field bg-secondary px-25 btn-rounded btn-search align-center max-w-custom"
                 style="--max-width: 60rem;"
               >
                 <button
                   type="submit"
-                  class="button pointer btn-reset search__button relative fs-0"
+                  class="relative button pointer btn-reset search__button fs-0"
                   tabindex="0"
                   aria-label="{{ 'general.search.search' | t }}"
                 >
@@ -140,7 +146,7 @@
                   </svg>
                 </button>
                 <input
-                  class="search__input field__input flex-1"
+                  class="flex-1 search__input field__input"
                   style="--input-bg:transparent;--input-border-width: 0;--input-padding: 0;--input-height: 6rem;--input-placeholder-color: var(--color-heading);--input-border-radius: 0;"
                   type="search"
                   name="q"
@@ -170,10 +176,10 @@
             {%- endcapture -%}
               <div
                 id="search-keyword"
-                class="search-keyword w-full max-w-custom mx-auto mt-24"
+                class="search-keyword w-full max-w-custom mx-auto mt-24 heading-color"
               >
                 <ul
-                  class="search-keyword-list list-unstyled flex wrap gap justify-center"
+                  class="flex justify-center search-keyword-list list-unstyled wrap gap"
                   style="--row-gap: 10px;"
                 >
                   {%- assign search_popular_keywords = search_popular_keywords
@@ -212,7 +218,7 @@
   >
     {%- paginate search.results by products_to_show -%}
       {%- if enable_filtering and filter_layout == 'vertical' -%}
-        <div id="CollectionSidebar" class="collection__sidebar col-1025-w-custom hidden block-1025">
+        <div id="CollectionSidebar" class="hidden collection__sidebar col-1025-w-custom block-1025">
           <div class="sticky-md top-30">
             {% render 'facets',
               results: search,
@@ -231,14 +237,14 @@
       >
         <div class="sticky-md top-30">
           <div
-            class="facets-toolbar flex align-center gap space-between mb-20"
+            class="flex mb-20 facets-toolbar align-center gap space-between"
             style="--gap-desktop: 50px; --gap: 15px;"
           >
             {%- if enable_filtering -%}
               <div class="facet-drawer grow-1{% if enable_filtering and filter_layout == 'drawer' %}{% else %} inline-flex hidden-1025{% endif %}">
                 <button
                   id="FacetsDrawer"
-                  class="button heading color btn-reset pointer inline-flex gap-5 align-center body_weight"
+                  class="inline-flex gap-5 button heading color btn-reset pointer align-center body_weight"
                   aria-label="{{ 'products.facets.filter' | t }}"
                 >
                   <svg width="22" height="22" fill="none">
@@ -248,28 +254,28 @@
                 </button>
                 <facet-drawer
                   id="{{ section.id }}"
-                  class="modal invisible transition-drawer fixed inset-0 z-15 pointer-none active-modal-js content-hidden"
+                  class="fixed inset-0 invisible modal transition-drawer z-15 pointer-none active-modal-js content-hidden"
                   style="--drawer-width: 45rem;"
                   drawer
                 >
-                  <modal-overlay class="modal-overlay pointer"></modal-overlay>
+                  <modal-overlay class="modal-overlay cursor-crosshair"></modal-overlay>
                   <div
-                    class="modal-inner transition-drawer draw-mb drawer-left drawer-left-mb inset-y-0 color-default w-full fixed z-15 left-0 inset-y-0 z-2 bg-white"
+                    class="fixed inset-y-0 left-0 w-full bg-white modal-inner transition-drawer draw-mb drawer-left drawer-left-mb color-default z-15 z-2"
                     role="dialog"
                     aria-modal="true"
                     aria-label="{{ 'products.facets.filter' | t }}"
                     tabindex="-1"
                   >
-                    <div class="drawer__body flex h-full column">
+                    <div class="flex h-full drawer__body column">
                       <div
-                        class="drawer__header h5 flex gap-10 space-between align-center drawer-spacing border-bottom"
+                        class="flex gap-10 drawer__header h5 space-between align-center drawer-spacing border-bottom"
                         style="--padding-block-desktop: 2.15rem;"
                       >
-                        <div class="facets-filter js-filter-facet flex content-center">
+                        <div class="flex content-center facets-filter js-filter-facet">
                           {{ 'products.facets.filter' | t }}
                           {% if total_active_values > 0 %}
                             <span
-                              class="ms-8 fs-12 w-custom h-custom bg-primary color-white inline-flex content-center rounded-50"
+                              class="inline-flex content-center ms-8 fs-12 w-custom h-custom bg-primary color-white rounded-50"
                               style="--width: 2.3rem;--height: 2.3rem"
                             >
                               {{- total_active_values -}}
@@ -279,7 +285,7 @@
                         <button
                           type="button"
                           is="button-close-model"
-                          class="modal__close pointer btn-reset w-30 h-full inline-flex align-center flex-end"
+                          class="inline-flex h-full modal__close pointer btn-reset w-30 align-center flex-end"
                           aria-label="Close"
                         >
                           <svg
@@ -293,10 +299,10 @@
                           </svg>
                         </button>
                       </div>
-                      <div class="drawer__inner overflow-y-auto custom-scrollbar grow-1 flex column">
-                        <div class="facets-filters-drawer-active px-20 px-1025-32">
+                      <div class="flex overflow-y-auto drawer__inner custom-scrollbar grow-1 column">
+                        <div class="px-20 facets-filters-drawer-active px-1025-32">
                           {% if total_active_values > 0 %}
-                            <div class="filters-count active-facets flex wrap gap-10 fs-small py-20 py-1025-32">
+                            <div class="flex gap-10 py-20 filters-count active-facets wrap fs-small py-1025-32">
                               {%- for filter in search.filters -%}
                                 {%- liquid
                                   assign is_color_option = false
@@ -311,7 +317,7 @@
                                     <facet-remove>
                                       <a
                                         href="{{ value.url_to_remove }}"
-                                        class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                                        class="flex content-center gap-8 px-16 overflow-hidden border h-custom btn-rounded pointer lh-normal hover-heading-color"
                                         style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
                                       >
                                         {%- if is_color_option == true -%}
@@ -361,7 +367,7 @@
                                       <facet-remove>
                                         <a
                                           href="{{ filter.url_to_remove }}"
-                                          class="border overflow-hidden px-20 py-11 btn-rounded pointer flex gap-10 lh-normal hover-heading-color"
+                                          class="flex gap-10 px-20 overflow-hidden border py-11 btn-rounded pointer lh-normal hover-heading-color"
                                         >
                                           {%- if filter.min_value.value -%}
                                             {{ filter.min_value.value | money }}
@@ -392,13 +398,13 @@
                           {% endif %}
                         </div>
                         {% if enable_sorting %}
-                          <facet-filters-form class="facets facets-vertical-sort block hidden-1025 px-gutter-x">
-                            <form class="facets-vertical-form relative" id="FacetSortForm">
+                          <facet-filters-form class="block facets facets-vertical-sort hidden-1025 px-gutter-x">
+                            <form class="relative facets-vertical-form" id="FacetSortForm">
                               {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
-                              <div class="select-custom facet-filters heading-color py-10">
+                              <div class="py-10 select-custom facet-filters heading-color">
                                 <select-sorter
                                   tabindex="0"
-                                  class="select-selected flex gap-10 align-center pointer rotate-animate"
+                                  class="flex gap-10 select-selected align-center pointer rotate-animate"
                                 >
                                   <span>
                                     {{- 'products.facets.sort_by_label' | t }}
@@ -413,19 +419,19 @@
                                     height="6"
                                     viewBox="0 0 9 6"
                                     fill="none"
-                                    class="icon icon-down icon-rotate transition-short flex-auto w-custom"
+                                    class="flex-auto icon icon-down icon-rotate transition-short w-custom"
                                     style="--width: 9px;"
                                   >
                                     <use href="#icon-arrow-down"></use>
                                   </svg>
                                 </select-sorter>
                                 <div
-                                  class="select-custom__content facet-filters__sort active-show absolute top-100 right-0 bg-white shadow p-10 rounded-15 z-2 min-w-custom transition-short opacity-0 pointer-none"
+                                  class="absolute right-0 p-10 bg-white shadow opacity-0 select-custom__content facet-filters__sort active-show top-100 rounded-15 z-2 min-w-custom transition-short pointer-none"
                                   id="SortBy"
                                   style="--min-width: 22rem;"
                                 >
                                   <div
-                                    class="facet-filters__select flex column"
+                                    class="flex facet-filters__select column"
                                   >
                                     {%- for option in search.sort_options -%}
                                       <filter-sort
@@ -449,7 +455,7 @@
                               </div>
                               <select
                                 name="sort_by"
-                                class="facet-filters__select hidden"
+                                class="hidden facet-filters__select"
                                 aria-label="{{ 'products.facets.sort_button' | t }}"
                                 aria-describedby="a11y-refresh-page-message"
                               >
@@ -501,11 +507,11 @@
               </div>
             {%- endif -%}
             {% if enable_sorting %}
-              <facet-filters-form class="facets facets-vertical-sort hidden block-1025">
-                <form class="facets-vertical-form relative" id="FacetSortForm">
+              <facet-filters-form class="hidden facets facets-vertical-sort block-1025">
+                <form class="relative facets-vertical-form" id="FacetSortForm">
                   {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
-                  <div class="select-custom facet-filters heading-color py-10">
-                    <select-sorter tabindex="0" class="select-selected flex gap-10 align-center pointer rotate-animate">
+                  <div class="py-10 select-custom facet-filters heading-color">
+                    <select-sorter tabindex="0" class="flex gap-10 select-selected align-center pointer rotate-animate">
                       <span>
                         {{- 'products.facets.sort_by_label' | t }}
                       </span>
@@ -519,19 +525,19 @@
                         height="6"
                         viewBox="0 0 9 6"
                         fill="none"
-                        class="icon icon-down icon-rotate transition-short flex-auto w-custom"
+                        class="flex-auto icon icon-down icon-rotate transition-short w-custom"
                         style="--width: 9px;"
                       >
                         <use href="#icon-arrow-down"></use>
                       </svg>
                     </select-sorter>
                     <div
-                      class="select-custom__content facet-filters__sort active-show absolute top-100 right-0 bg-white shadow p-10 rounded-15 z-2 min-w-custom transition-short opacity-0 pointer-none"
+                      class="absolute right-0 p-10 bg-white shadow opacity-0 select-custom__content facet-filters__sort active-show top-100 rounded-15 z-2 min-w-custom transition-short pointer-none"
                       id="SortBy"
                       style="--min-width: 22rem;"
                     >
                       <div
-                        class="facet-filters__select flex column"
+                        class="flex facet-filters__select column"
                       >
                         {%- for option in search.sort_options -%}
                           <filter-sort
@@ -555,7 +561,7 @@
                   </div>
                   <select
                     name="sort_by"
-                    class="facet-filters__select hidden"
+                    class="hidden facet-filters__select"
                     aria-label="{{ 'products.facets.sort_button' | t }}"
                     aria-describedby="a11y-refresh-page-message"
                   >
@@ -577,7 +583,7 @@
           {%- if enable_filtering and filter_layout == 'vertical' -%}
             <div class="facets-filters-active">
               {% if total_active_values > 0 %}
-                <div class="filters-count active-facets flex wrap gap-10 mb-30 fs-small">
+                <div class="flex gap-10 filters-count active-facets wrap mb-30 fs-small">
                   {%- for filter in search.filters -%}
                     {%- liquid
                       assign is_color_option = false
@@ -592,7 +598,7 @@
                         <facet-remove>
                           <a
                             href="{{ value.url_to_remove }}"
-                            class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                            class="flex content-center gap-8 px-16 overflow-hidden border h-custom btn-rounded pointer lh-normal hover-heading-color"
                             style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
                           >
                             {%- if is_color_option == true -%}
@@ -642,7 +648,7 @@
                           <facet-remove>
                             <a
                               href="{{ filter.url_to_remove }}"
-                              class="border overflow-hidden px-20 py-11 btn-rounded flex gap-10 lh-normal pointer"
+                              class="flex gap-10 px-20 overflow-hidden border py-11 btn-rounded lh-normal pointer"
                             >
                               {%- if filter.min_value.value -%}
                                 {{ filter.min_value.value | money }}
@@ -671,7 +677,7 @@
                     <facet-remove class="active-facets__button-wrapper">
                       <a
                         href="{{ results_url }}"
-                        class="border overflow-hidden px-16 h-custom btn-rounded pointer flex content-center gap-8 lh-normal hover-heading-color"
+                        class="flex content-center gap-8 px-16 overflow-hidden border h-custom btn-rounded pointer lh-normal hover-heading-color"
                         style="--height: 3.8rem;--color-swatch-width: 2rem;--color-swatch-height: 2rem;"
                       >
                         <span>{{ 'products.facets.clear_all' | t }}</span>
@@ -682,10 +688,10 @@
               {% endif %}
             </div>
           {%- endif -%}
-          <div id="CollectionGird" class="collection__gird relative">
+          <div id="CollectionGird" class="relative collection__gird">
             {%- if search.results.size == 0 and search.filters != empty -%}
               <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
-                <div class="title-wrapper text-center">
+                <div class="text-center title-wrapper">
                   <h2 class="title title--primary mt-50">
                     {{ 'sections.collection_template.no_products_found' | t -}}
                     <br>
@@ -708,7 +714,7 @@
                 <motion-items-effect>
               {% endif %}
               <div
-                class="collection grid-cols grid gap row-gap-30"
+                class="grid collection grid-cols gap row-gap-30"
                 id="product-grid"
                 data-id="{{ section.id }}"
                 style="{{ col_style | strip | strip_newlines }}"
@@ -780,17 +786,17 @@
               -%}
               {%- if pagination_type == 'button' or pagination_type == 'infinity' -%}
                 <div
-                  class="pagination-load-more mt-60 block text-center"
+                  class="block text-center pagination-load-more mt-60"
                 >
                   <div class="paginate-progress {{amount_products}}">
-                    <p class="counting_product load-more-amount mb-20">
+                    <p class="mb-20 counting_product load-more-amount">
                       {{-
                         'sections.collection_template.product_count.one'
                         | t: count: amount_products, product_count: search.results_count
                       -}}
                     </p>
                     <div
-                      class="load-more-progress-bar relative mx-auto h-custom rounded max-w-custom-all bg-custom"
+                      class="relative mx-auto rounded load-more-progress-bar h-custom max-w-custom-all bg-custom"
                       style="--percent: {{ amount_products | divided_by: collection_products_count | times: 100 }}%; --amount: {{ amount_products }}; --count: {{ amount_products }};--height: 3px;--img-rounded: 5px;--max-width: 32rem;--bg-color-custom: #e5e5e5;"
                     ></div>
                   </div>
@@ -800,7 +806,7 @@
                       data-pagination="{{ pagination_type }}"
                       data-limit="{{ products_to_show }}"
                       data-url="?page={{ paginate.current_page | plus: 1 }}"
-                      class="relative btn btn-primary inline-flex content-center pointer transition w-custom max-w-100 mt-25"
+                      class="relative inline-flex content-center transition btn btn-primary pointer w-custom max-w-100 mt-25"
                       style="--width: 20rem;"
                       aria-label="{{ 'sections.collection_template.load_more' | t }}"
                       tabindex="0"
@@ -819,7 +825,7 @@
               {%- endif -%}
             {%- endif -%}
             <div
-              class="loading-filter opacity-0 pointer-none absolute inset-0 bg-white transition"
+              class="absolute inset-0 transition bg-white opacity-0 loading-filter pointer-none"
               style="--opacity: 0.6;"
             >
               {%- render 'loader' -%}

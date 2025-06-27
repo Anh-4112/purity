@@ -125,7 +125,7 @@ class ScrollOffer extends HTMLElement {
     const contentAppend = document.createElement("li");
     contentAppend.classList.add("flex-1", "offer-mobile");
     contentAppend.innerHTML = `
-      <div class="mobile_icon inline-flex column content-center heading-color gap-3">
+      <div class="mobile_icon pointer inline-flex column content-center heading-color gap-3">
 <svg width="20" height="20" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.326 12.217 2.059 10.95a1.338 1.338 0 0 1 0-1.883L3.326 7.8c.217-.216.392-.641.392-.941V5.067c0-.733.6-1.333 1.333-1.333h1.792c.3 0 .725-.175.941-.392l1.267-1.267a1.338 1.338 0 0 1 1.883 0l1.267 1.267c.217.217.642.392.942.392h1.791c.734 0 1.334.6 1.334 1.333V6.86c0 .3.175.725.391.941l1.267 1.267a1.338 1.338 0 0 1 0 1.883l-1.267 1.267c-.216.217-.391.642-.391.942v1.791c0 .734-.6 1.334-1.334 1.334h-1.791c-.3 0-.725.175-.942.392l-1.267 1.266a1.338 1.338 0 0 1-1.883 0l-1.267-1.267a1.537 1.537 0 0 0-.941-.391H5.05c-.733 0-1.333-.6-1.333-1.334V13.16c0-.309-.175-.734-.392-.942ZM7.5 12.5l5-5"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.08 12.083h.008M7.912 7.917h.008"/></svg>
         ${window.content.offer.title}
       </div>

@@ -132,6 +132,12 @@
               {{- article.title -}}
             </span>
           </li>
+        {%- when 'search' -%}
+          <li class="navigation__breadcrumb-item flex align-center">
+            <span class="navigation__breadcrumb-link word-break" aria-current="page">
+              {{- 'general.breadcrumb.search' | t -}}
+            </span>
+          </li>
         {%- else -%}
           <li class="navigation__breadcrumb-item flex align-center">
             <span class="navigation__breadcrumb-link word-break" aria-current="page">

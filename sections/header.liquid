@@ -203,7 +203,7 @@
   data-sticky-type="{{ section_st.sticky_header_type }}"
   data-menu-trigger="{{ section_st.menu_trigger }}"
   data-dropdowns-animation="{{ dropdowns_animation }}"
-  class="header-wrapper p-min{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}{% if request.page_type != 'index' %} border-bottom{% endif %}"
+  class="header-wrapper relative z-10 p-min{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}{% if request.page_type != 'index' %} border-bottom{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
@@ -211,7 +211,7 @@
       class="header__inner grid gap logo-{{ section_st.logo_position }} menu-mobile-{{ section_st.mobile_menu_position }} align-center"
       style="--gap: 12px;"
     >
-      <toggle-menu class="mobile-menu-toggle hidden-1025 fs-0 relative wh-44 flex content-center">
+      <toggle-menu class="relative flex content-center mobile-menu-toggle hidden-1025 fs-0 wh-44">
         <button
           class="btn-reset btn-toggle text-start pointer heading-color transparent-color"
           aria-label="{{ 'accessibility.toggle_menu' | t }}"
@@ -242,7 +242,7 @@
           </symbol>
         </svg>
         <nav class="header__menu hidden block-1025 {{ section_st.menu_trigger }}">
-          <ul class="list-menu list-unstyled flex wrap">
+          <ul class="flex list-menu list-unstyled wrap">
             {%- for link in menu.links -%}
               {%- if section.blocks.size > 0 -%}
                 <li>
@@ -282,7 +282,7 @@
                         -%}
                     {%- endcase -%}
                     {%- if link.links.size > 0 or has_content -%}
-                      <details is="details-mega-menu" class="details-header-menu level-1 inline-block animate-motion">
+                      <details is="details-mega-menu" class="inline-block details-header-menu level-1 animate-motion">
                         <summary
                           class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-6 space-between"
                           data-href="{{ link.url }}"
@@ -307,11 +307,11 @@
                           class="mega-menu submenu z-5 pointer-none transition invisible submenu-desktop overflow-auto {{ dropdowns_animation }} border-top inset-x-0 absolute{% if dropdowns_animation != 'fade-in-down' %} z-2 bg-white{% endif %}"
                           style="--col-mega-width: {{ mega_width }}%; --gap: 20px; --delay: 0.05s;"
                         >
-                          <div class="menu-container bg-white py-40 custom-scrollbar overflow-auto">
+                          <div class="py-40 overflow-auto bg-white menu-container custom-scrollbar">
                             <div class="container flex wrap gap">
                               {%- if link.links.size > 0 -%}
                                 <div
-                                  class="menu-list flex-1"
+                                  class="flex-1 menu-list"
                                   style="--col-desktop: {{ last_block.settings.menu_column }}"
                                 >
                                   {%- render 'horizontal-menu', section_st: section_st, menu_mega: true, link: link -%}
@@ -321,7 +321,7 @@
                                 {%- case last_block.type -%}
                                   {%- when 'menu_mega' -%}
                                     <div
-                                      class="col-mega mega-banner flex wrap flex-cols"
+                                      class="flex col-mega mega-banner wrap flex-cols"
                                       style="{% if last_block.settings.banner_column > 1 %}--col-number: 2{% else %}--col-number: 1;{% endif %};--col-desktop: {{ last_block.settings.banner_column }};"
                                     >
                                       {%- for i in (1..5) -%}
@@ -386,7 +386,7 @@
                                               %}
                                                 <div class="banner__item-info bg-transparent color-{{ color_scheme_banner }} w-full{% if last_block.settings.content_position != 'bellow' %} py-40 px-30{% else %} mt-10{% endif %} text-{{ last_block.settings.content_alignment }} relative z-1">
                                                   {% if subheading != blank %}
-                                                    <div class="subheading mb-3">
+                                                    <div class="mb-3 subheading">
                                                       {{ subheading | escape }}
                                                     </div>
                                                   {% endif %}
@@ -396,17 +396,17 @@
                                                     </h2>
                                                   {% endif %}
                                                   {% if description != blank %}
-                                                    <div class="description mt-5">
+                                                    <div class="mt-5 description">
                                                       {{ description }}
                                                     </div>
                                                   {% endif %}
                                                   {% if button_label != blank %}
                                                     <button
-                                                      class="btn pointer btn-primary mt-20 text-center w-custom"
+                                                      class="mt-20 text-center btn pointer btn-primary w-custom"
                                                       style="--width: 70%;--btn-padding-x: 2rem;"
                                                       aria-label="{{ button_label }}"
                                                     >
-                                                      <span class="btn-text relative z-1">{{ button_label }}</span>
+                                                      <span class="relative btn-text z-1">{{ button_label }}</span>
                                                     </button>
                                                   {% endif %}
                                                 </div>
@@ -423,7 +423,7 @@
                                         assign product_column = last_block.settings.product_column
                                       -%}
                                       {%- if heading != blank -%}
-                                        <h2 class="section-heading h4 mb-20 slideIn-animate">
+                                        <h2 class="mb-20 section-heading h4 slideIn-animate">
                                           {{ heading }}
                                         </h2>
                                       {%- endif -%}
@@ -456,7 +456,7 @@
                                         assign collection_column = last_block.settings.collection_column
                                       -%}
                                       {%- if heading != blank -%}
-                                        <h2 class="section-heading h4 mb-20 slideIn-animate">
+                                        <h2 class="mb-20 section-heading h4 slideIn-animate">
                                           {{ heading }}
                                         </h2>
                                       {%- endif -%}
@@ -501,12 +501,12 @@
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
-                        <span class="outlined-border block">{{- link.title -}}</span>
+                        <span class="block outlined-border">{{- link.title -}}</span>
                       </a>
                     {%- endif -%}
                   {%- else -%}
                     {%- if link.links.size > 0 -%}
-                      <details is="details-mega-menu" class="details-header-menu level-1 inline-block animate-motion">
+                      <details is="details-mega-menu" class="inline-block details-header-menu level-1 animate-motion">
                         <summary
                           class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-6 space-between"
                           data-href="{{ link.url }}"
@@ -535,7 +535,7 @@
                         href="{{ link.url }}"
                         aria-label="{{ link.title }}"
                       >
-                        <span class="outlined-border block">{{- link.title -}}</span>
+                        <span class="block outlined-border">{{- link.title -}}</span>
                       </a>
                     {%- endif -%}
                   {%- endif -%}
@@ -543,7 +543,7 @@
               {%- else -%}
                 <li class="py-16{% unless forloop.last %} border-dash-bottom{% endunless %}">
                   {%- if link.links.size > 0 -%}
-                    <details is="details-mega-menu" class="details-header-menu level-1 inline-block animate-motion">
+                    <details is="details-mega-menu" class="inline-block details-header-menu level-1 animate-motion">
                       <summary
                         class="menu__item outlined-border transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex align-center gap-6 space-between"
                         data-href="{{ link.url }}"
@@ -572,7 +572,7 @@
                       href="{{ link.url }}"
                       aria-label="{{ link.title }}"
                     >
-                      <span class="outlined-border block">{{- link.title -}}</span>
+                      <span class="block outlined-border">{{- link.title -}}</span>
                     </a>
                   {%- endif -%}
                 </li>
@@ -582,13 +582,13 @@
         </nav>
       {%- endif -%}
       {%- if section_st.show_account or section_st.show_search or section_st.show_cart -%}
-        <div class="header__action flex wrap flex-end align-center gap-20">
+        <div class="flex gap-20 header__action wrap flex-end align-center">
           {%- if section_st.show_search or section_st.show_account or section_st.show_cart -%}
             <div class="flex gap" style="--gap: 12px;--gap-desktop: 12px;">
               {%- if section_st.show_search -%}
                 <a
                   href="{{ routes.search_url }}"
-                  class="header__icon heading-color transparent-color wh-44 flex content-center relative"
+                  class="relative flex content-center header__icon heading-color transparent-color wh-44"
                   id="search-icon-bubble"
                   aria-label="{{ 'general.search.name' | t }}"
                 >
@@ -601,7 +601,7 @@
               {%- if section_st.show_account -%}
                 <a
                   href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                  class="header__icon heading-color transparent-color wh-44 hidden flex-1025 content-center"
+                  class="content-center hidden header__icon heading-color transparent-color wh-44 flex-1025"
                   aria-label="{{ 'customer.account_fallback' | t }}"
                 >
                   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -613,7 +613,7 @@
               {%- if section_st.show_cart -%}
                 <a
                   href="{{ routes.cart_url }}"
-                  class="header__icon heading-color transparent-color wh-44 flex content-center relative"
+                  class="relative flex content-center header__icon heading-color transparent-color wh-44"
                   id="cart-icon-bubble"
                   aria-label="{{ 'templates.cart.cart' | t }}"
                 >
@@ -622,7 +622,7 @@
                   </svg>
                   <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
                   {%- if cart != empty -%}
-                    <div class="cart-count rounded-50 inline-flex content-center absolute bg-sale fs-10">
+                    <div class="absolute inline-flex content-center cart-count rounded-50 bg-sale fs-10">
                       {%- if cart.item_count < 100 -%}
                         <span class="count">{{ cart.item_count }}</span>
                       {%- else -%}
@@ -631,7 +631,7 @@
                       <span class="visually-hidden">{{ 'templates.cart.cart_count' | t: count: cart.item_count }}</span>
                     </div>
                   {%- else -%}
-                    <div class="cart-count hidden">
+                    <div class="hidden cart-count">
                       <span aria-hidden="true">0</span>
                     </div>
                   {%- endif -%}
@@ -644,8 +644,8 @@
     </div>
   </div>
   <template class="menu-drawer">
-    <menu-drawer id="Menu-Drawer" class="modal block active-modal-js" style="--modal-width: 100%;">
-      <modal-overlay class="modal-overlay invisible transition-drawer pointer z-21"></modal-overlay>
+    <menu-drawer id="Menu-Drawer" class="block modal active-modal-js" style="--modal-width: 100%;">
+      <modal-overlay class="invisible modal-overlay transition-drawer cursor-crosshair z-21"></modal-overlay>
       <div
         class="modal-inner draw-mb{% if section_st.mobile_menu_position == "left" %} drawer-left drawer-left-mb left-0{% else %} drawer-right drawer-right-mb right-0{% endif %} inset-y-0 color-default transition-drawer w-full fixed z-22 bg-white overflow-hidden"
         role="dialog"
@@ -653,13 +653,13 @@
         aria-label="{{ 'accessibility.toggle_menu' | t }}"
         tabindex="-1"
       >
-        <div class="drawer__body h-full">
-          <div class="drawer__content flex column h-full max-height-mb-menu">
-            <nav class="header__menu-mobile overflow-y-auto overflow-x-hidden w-full h-full flex column">
-              <div class="border-bottom px-gutter-x py-20 flex align-center space-between gap-16 sticky top-0 z-2 bg-white">
+        <div class="h-full drawer__body">
+          <div class="flex h-full drawer__content column max-height-mb-menu">
+            <nav class="flex w-full h-full overflow-x-hidden overflow-y-auto header__menu-mobile column">
+              <div class="sticky top-0 flex gap-16 py-20 bg-white border-bottom px-gutter-x align-center space-between z-2">
                 <a
                   href="{{ routes.root_url }}"
-                  class="header__heading-link no-underline h3 inline-flex align-center transparent-color"
+                  class="inline-flex no-underline header__heading-link h3 align-center transparent-color"
                   aria-label="{{ shop.name }}"
                 >
                   {%- liquid
@@ -688,7 +688,7 @@
                   {%- endif -%}
                 </a>
                 <button
-                  class="modal__close transition-short heading-color bg-white align-center btn-reset pointer touch-target-before relative"
+                  class="relative bg-white modal__close transition-short heading-color align-center btn-reset pointer touch-target-before"
                   style="--width: 2.4rem;"
                   is="button-close-model"
                   aria-label="{{ 'accessibility.button.close' | t }}"
@@ -699,7 +699,7 @@
                 </button>
               </div>
               <div class="flex column grow-1">
-                <ul class="list-unstyled px-gutter-x overflow-y-auto">
+                <ul class="overflow-y-auto list-unstyled px-gutter-x">
                   {%- for link in menu.links -%}
                     {%- if section.blocks.size > 0 -%}
                       <li class="py-16{% unless forloop.last %} border-dash-bottom{% endunless %}">
@@ -750,17 +750,17 @@
                               >
                                 {{ link.title }}
                                 {% if settings.rtl %}
-                                  <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
+                                  <svg class="block w-6 icon-down hidden-1025" width="6" height="11">
                                     <use href="#icon-back" />
                                   </svg>
                                 {% else %}
-                                  <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
+                                  <svg class="block w-6 icon-down hidden-1025" width="6" height="11">
                                     <use href="#icon-next" />
                                   </svg>
                                 {% endif %}
                               </summary>
-                              <div class="submenu pointer-none absolute inset-0 z-2 bg-white flex column transition sub-mb absolute inset-0 drawer overflow-hidden">
-                                <div class="overflow-y-auto overflow-x-hidden custom-scrollbar pb-20">
+                              <div class="absolute inset-0 flex overflow-hidden transition bg-white submenu pointer-none z-2 column sub-mb drawer">
+                                <div class="pb-20 overflow-x-hidden overflow-y-auto custom-scrollbar">
                                   {%- render 'horizontal-menu',
                                     section_st: section_st,
                                     menu_mobile: true,
@@ -776,7 +776,7 @@
                                           endfor
                                         -%}
                                         <div
-                                          class="mega-banner flex wrap flex-cols gap-10 row-gap-10 p-gutter-x"
+                                          class="flex gap-10 row-gap-10 mega-banner wrap flex-cols p-gutter-x"
                                           style="{% if last_block.settings.content_position != 'bellow' %}--col-number: 1;{% else %}--col-number: 2;{% endif %};--col-tablet: 2;--gap:1rem;"
                                         >
                                           {%- for i in (1..5) -%}
@@ -844,14 +844,14 @@
                                                         </h6>
                                                       {% endif %}
                                                       {% if description != blank %}
-                                                        <div class="description hidden block-md">
+                                                        <div class="hidden description block-md">
                                                           {{ description }}
                                                         </div>
                                                       {% endif %}
                                                       {% if button_label != blank %}
                                                         <div class="button">
                                                           <a
-                                                            class="btn pointer btn-primary inline-block text-center mt-20"
+                                                            class="inline-block mt-20 text-center btn pointer btn-primary"
                                                             {% if banner_link == blank %}
                                                               role="link" aria-disabled="true"
                                                             {% else %}
@@ -871,7 +871,7 @@
                                           {%- endfor -%}
                                         </div>
                                       {%- when 'menu_product' -%}
-                                        <div class="col-mega mega-product px-gutter-x py-12">
+                                        <div class="py-12 col-mega mega-product px-gutter-x">
                                           {%- liquid
                                             assign heading = last_block.settings.heading
                                             assign product_column = last_block.settings.product_column
@@ -881,12 +881,12 @@
                                             endfor
                                           -%}
                                           {%- if heading != blank -%}
-                                            <h4 class="section-heading mb-20">
+                                            <h4 class="mb-20 section-heading">
                                               {{ heading }}
                                             </h4>
                                           {%- endif -%}
                                           <div
-                                            class="flex wrap flex-cols gap-10 row-gap-20"
+                                            class="flex gap-10 row-gap-20 wrap flex-cols"
                                             style="{% if count > 1 %}--col-number: 2{% else %}--col-number: 1;{% endif %};--col-tablet: 2;"
                                           >
                                             {%- liquid
@@ -897,7 +897,7 @@
                                           </div>
                                         </div>
                                       {%- when 'menu_collection' -%}
-                                        <div class="col-mega mega-collection px-gutter-x py-12">
+                                        <div class="py-12 col-mega mega-collection px-gutter-x">
                                           {%- liquid
                                             assign heading = last_block.settings.heading
                                             assign collection_column = last_block.settings.collection_column
@@ -907,12 +907,12 @@
                                             endfor
                                           -%}
                                           {%- if heading != blank -%}
-                                            <h4 class="section-heading mb-20">
+                                            <h4 class="mb-20 section-heading">
                                               {{ heading }}
                                             </h4>
                                           {%- endif -%}
                                           <div
-                                            class="flex wrap flex-cols gap-10 row-gap-20"
+                                            class="flex gap-10 row-gap-20 wrap flex-cols"
                                             style="{% if count > 1 %}--col-number: 2{% else %}--col-number: 1;{% endif %};--col-tablet: 2;"
                                           >
                                             {% for collection in last_block.settings.collection %}
@@ -945,7 +945,7 @@
                           {%- if link.links.size > 0 -%}
                             <details
                               is="details-mega-menu"
-                              class="details-header-menu inline-flex w-full animate-motion"
+                              class="inline-flex w-full details-header-menu animate-motion"
                             >
                               <summary
                                 class="menu__item level-1 transparent-menu heading-color{% if settings.menu_uppercase %} uppercase{% endif %} menu_weight flex w-full align-center gap-5 space-between"
@@ -954,11 +954,11 @@
                               >
                                 {{ link.title }}
                                 {% if settings.rtl %}
-                                  <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
+                                  <svg class="block w-6 icon-down hidden-1025" width="6" height="11">
                                     <use href="#icon-back" />
                                   </svg>
                                 {% else %}
-                                  <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
+                                  <svg class="block w-6 icon-down hidden-1025" width="6" height="11">
                                     <use href="#icon-next" />
                                   </svg>
                                 {% endif %}
@@ -977,7 +977,7 @@
                               href="{{ link.url }}"
                               aria-label="{{ link.title }}"
                             >
-                              <span class="outlined-border block">{{- link.title -}}</span>
+                              <span class="block outlined-border">{{- link.title -}}</span>
                             </a>
                           {%- endif -%}
                         {%- endif -%}
@@ -993,11 +993,11 @@
                             >
                               {{ link.title }}
                               {% if settings.rtl %}
-                                <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
+                                <svg class="block w-6 icon-down hidden-1025" width="6" height="11">
                                   <use href="#icon-back" />
                                 </svg>
                               {% else %}
-                                <svg class="icon-down block hidden-1025 w-6" width="6" height="11">
+                                <svg class="block w-6 icon-down hidden-1025" width="6" height="11">
                                   <use href="#icon-next" />
                                 </svg>
                               {% endif %}
@@ -1016,7 +1016,7 @@
                             href="{{ link.url }}"
                             aria-label="{{ link.title }}"
                           >
-                            <span class="outlined-border block">{{- link.title -}}</span>
+                            <span class="block outlined-border">{{- link.title -}}</span>
                           </a>
                         {%- endif -%}
                       </li>
@@ -1024,13 +1024,13 @@
                   {%- endfor -%}
                 </ul>
                 <div
-                  class="header-menu-bottom flex align-end grow-1 justify-between px-gutter-x py-24 gap-8"
+                  class="flex justify-between gap-8 py-24 header-menu-bottom align-end grow-1 px-gutter-x"
                   style="--btn-padding-y: 1rem;"
                 >
                   {%- if customer -%}
                     <a
                       href="{{ routes.account_url }}"
-                      class="btn btn-primary grow-1 text-center lh-global"
+                      class="text-center btn btn-primary grow-1 lh-global"
                       style="--btn-padding-x: 1.5rem;"
                       aria-label="{{ 'customer.account_fallback' | t }}"
                     >
@@ -1038,7 +1038,7 @@
                     </a>
                     <a
                       href="{{ routes.account_logout_url }}"
-                      class="btn btn-outline text-center lh-global"
+                      class="text-center btn btn-outline lh-global"
                       aria-label="{{ 'customer.log_out' | t }}"
                     >
                       {{ 'customer.log_out' | t }}
@@ -1046,7 +1046,7 @@
                   {%- else -%}
                     <a
                       href="{{ routes.account_login_url }}"
-                      class="btn btn-primary grow-1 text-center lh-global"
+                      class="text-center btn btn-primary grow-1 lh-global"
                       style="--btn-padding-x: 1.5rem;"
                       aria-label="{{ 'customer.login_page.title' | t }}"
                     >
@@ -1054,7 +1054,7 @@
                     </a>
                     <a
                       href="{{ routes.account_register_url }}"
-                      class="btn btn-outline text-center lh-global"
+                      class="text-center btn btn-outline lh-global"
                       aria-label="{{ 'customer.register.title' | t }}"
                     >
                       {{ 'customer.register.title' | t }}
@@ -1069,6 +1069,7 @@
     </menu-drawer>
   </template>
 </header>
+<span class="fixed-overlay z-8"></span>
 {% schema %}
 {
   "name": "t:sections.header.name",

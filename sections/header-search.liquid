@@ -63,7 +63,7 @@
   data-type="{{ search_type }}"
   drawer
 >
-  <modal-overlay class="modal-overlay pointer"></modal-overlay>
+  <modal-overlay class="modal-overlay cursor-crosshair"></modal-overlay>
   <div
     class="modal-inner draw-mb transition-drawer drawer-right-mb color-default transition-drawer drawer{% if search_type != 'popup' %} drawer-right{% else %} drawer-top{% endif %} fixed right-0 inset-y-0 z-2 bg-white w-full"
     role="dialog"
@@ -77,7 +77,7 @@
           {%- if logo_img != blank -%}
             <a
               href="{{ routes.root_url }}"
-              class="header__heading-link hidden block-1025 text-center fs-0 mb-20"
+              class="hidden mb-20 text-center header__heading-link block-1025 fs-0"
               aria-label="{{ shop.name }}"
             >
               {%- assign img_alt = logo_img.alt | default: shop.name | escape -%}
@@ -132,10 +132,10 @@
           {% endif %}
         >
           <input type="hidden" name="options[prefix]" value="last">
-          <div class="field bg-secondary px-25 btn-rounded flex align-center gap-10{% if search_popular_keywords != blank %} mb-20{% endif %} relative{% if search_type == 'popup' %} w-full max-w-custom mx-auto{% endif %}">
+          <div class="field bg-secondary px-25 btn-rounded flex align-center border border-transparent btn-search btn-rounded gap-10{% if search_popular_keywords != blank %} mb-20{% endif %} relative{% if search_type == 'popup' %} w-full max-w-custom mx-auto{% endif %}">
             <button
               type="submit"
-              class="button pointer btn-reset search__button relative fs-0"
+              class="relative button pointer btn-reset search__button fs-0"
               tabindex="0"
               aria-label="{{ 'general.search.search' | t }}"
             >
@@ -144,7 +144,7 @@
               </svg>
             </button>
             <input
-              class="search__input field__input flex-1"
+              class="flex-1 search__input field__input"
               style="--input-bg:transparent;--input-border-width: 0;--input-padding: 0;--input-height: 6rem;--input-placeholder-color: var(--color-heading);--input-border-radius: 0;"
               type="search"
               name="q"
@@ -160,10 +160,10 @@
             >
             <label class="visually-hidden" for="Search-In-Modal"> {{ 'general.search.search' | t }}</label>
             <div
-              class="search__action-right inline-flex align-center inset-y-0 right-28 absolute pointer-none"
+              class="absolute inset-y-0 inline-flex search__action-right align-center right-28 pointer-none"
             >
               <span
-                class="icon-rotator bg-secondary opacity-0 w-custom h-custom inline-flex rounded-50 transition-short"
+                class="inline-flex opacity-0 icon-rotator bg-secondary w-custom h-custom rounded-50 transition-short"
                 style="--width: 1.5rem;--height: 1.5rem;"
               ></span>
             </div>
@@ -218,7 +218,7 @@
                     {%- assign sizes = '(min-width: 1200px) calc((1200px -  30px * 3) * 0.2), (min-width: 768px) calc( (100vw - 30px - 30px * 2 ) * 0.33), 80px' -%}
                     <template class="template-recommended-default">
                       <div class="search-product">
-                        <div class="heading-color mb-20 h5">
+                        <div class="mb-20 heading-color h5">
                           {{ 'general.search.popular_products' | t }}
                         </div>
                         <div class="flex gap-20 column">
@@ -246,7 +246,7 @@
                     {% if search_type == 'popup' %}
                       <template class="template-recommended-popup">
                         <div class="search-product">
-                          <div class="heading-color h5 mb-20">
+                          <div class="mb-20 heading-color h5">
                             {{ 'general.search.popular_products' | t }}
                           </div>
                           <slide-section

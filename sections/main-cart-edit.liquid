@@ -1,0 +1,61 @@
+{% liquid
+  assign product_form_id = 'product-form-main-cart-edit-' | append: section.id
+%}
+<main-cart-edit-popup class="modal modal_type_popup active-modal-js fixed inset-0 z-22 w-full flex align-center invisible-1025 transition-drawer">
+  <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
+  <div
+    class="modal-popup-inner w-full invisible-1025 flex column modal-focus transition modal-draggable rounded max-w-custom m-auto z-15 bg-white"
+    tabindex="-1"
+    style="--max-width: 60rem;"
+  >
+    <draggable-modal
+      class="modal__header relative drawer__header drawer-spacing border-bottom flex gap-10 space-between"
+      style="--padding-block-desktop: 1.65rem;"
+    >
+      <div class="drawer__heading h6">{{ 'templates.cart.cart_page.edit_cart' | t }}</div>
+      <button
+        is="button-close-model"
+        class="modal__close pointer btn-reset hidden w-30 inline-flex-1025 align-center flex-end"
+        aria-label="Close"
+      >
+        <svg width="14" height="15" viewBox="0 0 14 15" fill="none">
+          <use href="#icon-close" />
+        </svg>
+      </button>
+    </draggable-modal>
+    <div class="drawer__body grow-1 h-full overflow-y-auto custom-scrollbar p-30" id="Product-{{ section.id }}" style="--width: 5rem;">
+      {% render 'card-product',
+        card_product: product,
+        section_id: section.id,
+        show_video: false,
+        disable_quickview: true,
+        disable_badge: true,
+        disable_rate: true,
+        disable_vendor: true,
+        disable_tag: true,
+        disable_hover_image: true,
+        show_quick_add: true,
+        disable_price: true,
+        disable_color_swatches: true,
+        style_layout: ' flex gap-10 align-center',
+        image_class: ' flex-auto w-custom rounded-10',
+        image_rounded: ' rounded-10',
+        info_class: ' flex-1 mt-0 col-remaining'
+      %}
+      <div class="block-product__variant-picker">
+        {%- render 'variant-swatches', product: product, scope: 'detail', is_dropdown: false -%}
+      </div>
+      <div class="block-product__buttons">
+        <div class="product-detail__buy-buttons">
+          {%- render 'buy-buttons',
+            type: 'primary',
+            product: product,
+            product_form_id: product_form_id,
+            scope: 'detail',
+            type_form: 'edit-cart'
+          -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</main-cart-edit-popup>

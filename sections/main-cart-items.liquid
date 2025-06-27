@@ -1,4 +1,5 @@
 {{ 'cart-page.css' | asset_url | stylesheet_tag }}
+<script type="module" src="{{ 'cart-page.js' | asset_url }}" defer="defer"></script>
 {% liquid
   assign theme_st = settings
   assign section_st = section.settings
@@ -21,6 +22,8 @@
   assign recommendation_product_type = theme_st.recommendation_product_type
   assign select_product_recommendation = theme_st.select_product_recommendation
   assign show_discount = section_st.show_discount
+  assign cart_duration_show = theme_st.show_duration
+  assign cart_duration = theme_st.cart_duration
   assign show_icon_with_text = false
   assign trust_badges = false
   for block in section.blocks
@@ -79,6 +82,34 @@
         <h1 class="heading-letter-spacing title title--primary h0 text-center my-60">
           {{ 'sections.cart.title' | t }}
         </h1>
+        {%- if cart_duration_show and cart.items.size > 0 -%}
+          <script src="{{ 'countdown-timer.js' | asset_url }}" defer="defer"></script>
+          <div class="cart-countdown-time">
+            <countdown-timer
+              data-deadline-mins="{{ cart_duration }}"
+              data-message="{{ 'sections.cart.timeout_message' | t }}"
+              data-mins="{{ 'products.product.countdown.format.mins' | t }}"
+              data-secs="{{ 'products.product.countdown.format.secs' | t }}"
+            >
+              <span class="icon-fire me-10">🔥</span>
+              <span>{{- 'sections.cart.countdown_message_html' | t -}}</span>
+              <div class="countdown-inner">
+                <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
+                  <span class="minutes_timer countdown-item">00</span>
+                  <span class="hidden timer-announcementbar-text">
+                    {{- 'products.product.countdown.format.mins' | t -}}
+                  </span>
+                </div>
+                <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
+                  <span class="seconds_timer countdown-item">00</span>
+                  <span class="hidden timer-announcementbar-text">
+                    {{- 'products.product.countdown.format.secs' | t -}}
+                  </span>
+                </div>
+              </div>
+            </countdown-timer>
+          </div>
+        {%- endif -%}
         {% assign total_price = cart.total_price | times: 1 %}
         <main-cart
           class="main-cart flex-wrap flex-1025 gap-60 justify-between{% if cart == empty %} is-empty{% endif %}"
@@ -179,8 +210,16 @@
                                     ></span>
                                   </a>
                                 </main-cart-remove-button>
-                                <div>
-                                  <button class="hover-icon-zoom btn-reset pointer flex mt-8 h-30">
+                                {%- unless item.product.has_only_default_variant -%}
+                                  <main-cart-edit
+                                    class="hover-icon-zoom btn-reset pointer flex mt-8 h-30"
+                                    data-href="{{ item.url }}"
+                                    data-id="{{ item.id }}"
+                                    data-key="{{ item.key }}"
+                                    data-quantity="{{ item.quantity }}"
+                                    tabindex="0"
+                                    data-index="{{ item.index | plus: 1 }}"
+                                  >
                                     <svg
                                       width="16"
                                       height="16"
@@ -189,8 +228,8 @@
                                     >
                                       <use href="#icon-edit"/>
                                     </svg>
-                                  </button>
-                                </div>
+                                  </main-cart-edit>
+                                {%- endunless -%}
                               </div>
                               <div class="cart-item__media w-custom" style="--width: 9rem;">
                                 {%- liquid
@@ -232,34 +271,56 @@
                               </div>
                             </div>
                           {% else %}
-                            <main-cart-remove-button
-                              id="Remove-{{ item.index | plus: 1 }}"
-                              data-index="{{ item.index | plus: 1 }}"
-                            >
-                              <a
-                                href="{{ item.url_to_remove }}"
-                                class="button button--tertiary inline-flex align-center hover-icon-zoom relative w-custom flex-start"
-                                style="--width: 2.7rem;"
-                                aria-label="{{ 'sections.cart.remove_title' | t }}"
+                            <div>
+                              <main-cart-remove-button
+                                id="Remove-{{ item.index | plus: 1 }}"
+                                data-index="{{ item.index | plus: 1 }}"
                               >
-                                <svg
-                                  width="12"
-                                  height="12"
-                                  viewBox="0 0 12 12"
-                                  fill="none"
-                                  class="icon-remove-cart icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                                <a
+                                  href="{{ item.url_to_remove }}"
+                                  class="button button--tertiary inline-flex align-center hover-icon-zoom relative w-custom flex-start"
+                                  style="--width: 2.7rem;"
+                                  aria-label="{{ 'sections.cart.remove_title' | t }}"
                                 >
-                                  <use href="#icon-close" />
-                                </svg>
-                                <span class="capitalize currentColor lh-1 visually-hidden">
-                                  {{- 'sections.cart.remove_title' | t -}}
-                                </span>
-                                <span
-                                  class="icon-rotator absolute top-0 left-0 rounded-50 opacity-0 w-custom h-custom"
-                                  style="--width: 1.5rem;--height: 1.5rem;"
-                                ></span>
-                              </a>
-                            </main-cart-remove-button>
+                                  <svg
+                                    width="12"
+                                    height="12"
+                                    viewBox="0 0 12 12"
+                                    fill="none"
+                                    class="icon-remove-cart icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                                  >
+                                    <use href="#icon-close" />
+                                  </svg>
+                                  <span class="capitalize currentColor lh-1 visually-hidden">
+                                    {{- 'sections.cart.remove_title' | t -}}
+                                  </span>
+                                  <span
+                                    class="icon-rotator absolute top-0 left-0 rounded-50 opacity-0 w-custom h-custom"
+                                    style="--width: 1.5rem;--height: 1.5rem;"
+                                  ></span>
+                                </a>
+                              </main-cart-remove-button>
+                              {%- unless item.product.has_only_default_variant -%}
+                                <main-cart-edit
+                                  tabindex="0"
+                                  class="hover-icon-zoom btn-reset pointer flex mt-8 h-30"
+                                  data-href="{{ item.url }}"
+                                  data-id="{{ item.id }}"
+                                  data-key="{{ item.key }}"
+                                  data-quantity="{{ item.quantity }}"
+                                  data-index="{{ item.index | plus: 1 }}"
+                                >
+                                  <svg
+                                    width="16"
+                                    height="16"
+                                    fill="none"
+                                    class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                                  >
+                                    <use href="#icon-edit"/>
+                                  </svg>
+                                </main-cart-edit>
+                              {%- endunless -%}
+                            </div>
                           {% endif %}
                           <div
                             class="cart-item-info flex wrap nowrap-1025 gap-20 flex-1 align-center"
@@ -501,7 +562,7 @@
                         {%- render 'swiper-navigation',
                           navigation_custom: true,
                           type: 'custom_nav',
-                          class-custom: 'flex align-center gap-5'
+                          class-custom: 'flex align-center gap-5 heading-color'
                         -%}
                       </div>
                     {%- endif -%}
@@ -852,7 +913,7 @@
                                 </button>
                               </div>
                             </div>
-                            <ul class="cart-discount__codes list-unstyled{% if discount_codes.size > 0 %} mt-10 flex gap-8 row-gap-8 wrap{% endif %}">
+                            <ul class="cart-discount__codes list-unstyled">
                               {% for discount_code in discount_codes %}
                                 <li
                                   class="cart-discount__pill px-16 bg-white fs-small rounded-30 inline-flex content-center gap-8 py-6"
