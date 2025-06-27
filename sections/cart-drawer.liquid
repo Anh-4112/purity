@@ -543,24 +543,6 @@
                           type: 'custom_nav',
                           class-custom: 'flex align-center gap-5 heading-color'
                         -%}
-            {%- if enable_product_recommendations -%}
-              <div class="drawer__cart-recommendations drawer-left drawer-spacing inset-y-0 beside">
-                <mini-cart-recommendations
-                  class="swiper__controls-group"
-                  style="--position-arrow: static;--swiper-navigation-size: 20px;--padding: 0;"
-                  data-type="{{ recommendation_product_type }}"
-                  data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=main-cart-upsell"
-                >
-                  {% if product_recommendations_heading != blank %}
-                    <div class="flex gap-10 align-center space-between mb-12">
-                      <h4 class="cart-recommendations-title fs-20">
-                        {{ product_recommendations_heading }}
-                      </h4>
-                      {%- render 'swiper-navigation',
-                        navigation_custom: true,
-                        type: 'custom_nav',
-                        class-custom: 'flex align-center gap-5'
-                      -%}
                     </div>
                   {%- endif -%}
                   <div class="main-cart-upsell-product mb-32">
@@ -612,56 +594,6 @@
                           {%- endfor -%}
                         {%- endif -%}
                       </div>
-                    {%- endif -%}
-                    <div class="main-cart-upsell-product pb-20">
-                      <slide-section
-                        class="swiper"
-                        data-section-id="{{ section.id }}"
-                        data-autoplay="false"
-                        data-effect="slide"
-                        data-loop="false"
-                        data-speed="500"
-                        data-pagination="custom"
-                        data-spacing="20"
-                        data-mobile="1"
-                        data-desktop="1"
-                        data-tablet="1"
-                      >
-                        <div class="swiper-wrapper" style="--width:6rem;">
-                          {%- if recommendation_product_type != 'auto' -%}
-                            {%- for item in select_product_recommendation -%}
-                              {% liquid
-                                assign hidden = false
-                                for item_cart in cart.items
-                                  if item_cart.product_id == item.id
-                                    assign hidden = true
-                                  endif
-                                endfor
-                              %}
-                              {%- if hidden == false -%}
-                                {% render 'card-product',
-                                  card_product: item,
-                                  section_id: section.id,
-                                  disable_hover_image: true,
-                                  disable_show_video: true,
-                                  disable_lazy_loading: true,
-                                  disable_badge: true,
-                                  disable_rate: true,
-                                  disable_tag: true,
-                                  disable_countdown: true,
-                                  disable_scrolling_text: true,
-                                  disable_color_swatches: true,
-                                  class: ' swiper-slide bg-secondary rounded-10 p-20',
-                                  style_layout: ' flex gap-10 align-center',
-                                  image_class: ' flex-auto w-custom rounded-10',
-                                  image_rounded: ' rounded-10',
-                                  info_class: ' flex-1 mt-0',
-                                  type: 'action_beside'
-                                %}
-                              {%- endif -%}
-                            {%- endfor -%}
-                          {%- endif -%}
-                        </div>
                       </slide-section>
                     </div>
                   </mini-cart-recommendations>
