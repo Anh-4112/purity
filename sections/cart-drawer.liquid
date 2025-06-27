@@ -543,24 +543,6 @@
                           type: 'custom_nav',
                           class-custom: 'flex align-center gap-5 heading-color'
                         -%}
-            {%- if enable_product_recommendations -%}
-              <div class="drawer__cart-recommendations drawer-left drawer-spacing inset-y-0 beside">
-                <mini-cart-recommendations
-                  class="swiper__controls-group"
-                  style="--position-arrow: static;--swiper-navigation-size: 20px;--padding: 0;"
-                  data-type="{{ recommendation_product_type }}"
-                  data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=main-cart-upsell"
-                >
-                  {% if product_recommendations_heading != blank %}
-                    <div class="flex gap-10 align-center space-between mb-12">
-                      <h4 class="cart-recommendations-title fs-20">
-                        {{ product_recommendations_heading }}
-                      </h4>
-                      {%- render 'swiper-navigation',
-                        navigation_custom: true,
-                        type: 'custom_nav',
-                        class-custom: 'flex align-center gap-5'
-                      -%}
                     </div>
                   {%- endif -%}
                   <div class="main-cart-upsell-product mb-32">
