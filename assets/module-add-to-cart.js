@@ -94,7 +94,7 @@ export class ProductForm extends HTMLElement {
         if (!is_cart_page) {
           let submitButton = this.submitButton;
           if (this.submitButton.closest("cart-drawer")) {
-            submitButton = this.cart.querySelector(".drawer__footer-bottom-total");
+            submitButton = this.cart.querySelector(".drawer__footer-bottom");
           }
           this.cart.renderContents(response);
           const actionMobile =
