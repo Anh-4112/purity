@@ -296,7 +296,7 @@
                       <div class="drawer__inner overflow-y-auto custom-scrollbar grow-1 flex column">
                         <div class="facets-filters-drawer-active px-20 px-1025-32">
                           {% if total_active_values > 0 %}
-                            <div class="filters-count active-facets flex wrap gap-10 fs-small border-bottom py-20 py-1025-32">
+                            <div class="filters-count active-facets flex wrap gap-10 fs-small py-20 py-1025-32">
                               {%- for filter in search.filters -%}
                                 {%- liquid
                                   assign is_color_option = false
@@ -391,6 +391,82 @@
                             </div>
                           {% endif %}
                         </div>
+                        {% if enable_sorting %}
+                          <facet-filters-form class="facets facets-vertical-sort block hidden-1025 px-gutter-x">
+                            <form class="facets-vertical-form relative" id="FacetSortForm">
+                              {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
+                              <div class="select-custom facet-filters heading-color py-10">
+                                <select-sorter
+                                  tabindex="0"
+                                  class="select-selected flex gap-10 align-center pointer rotate-animate"
+                                >
+                                  <span>
+                                    {{- 'products.facets.sort_by_label' | t }}
+                                  </span>
+                                  <span class="inline-block-1025">
+                                    {%- for option in search.sort_options -%}
+                                      {% if option.value == sort_by %}{{ option.name | escape }}{% endif %}
+                                    {%- endfor -%}
+                                  </span>
+                                  <svg
+                                    width="9"
+                                    height="6"
+                                    viewBox="0 0 9 6"
+                                    fill="none"
+                                    class="icon icon-down icon-rotate transition-short flex-auto w-custom"
+                                    style="--width: 9px;"
+                                  >
+                                    <use href="#icon-arrow-down"></use>
+                                  </svg>
+                                </select-sorter>
+                                <div
+                                  class="select-custom__content facet-filters__sort active-show absolute top-100 right-0 bg-white shadow p-10 rounded-15 z-2 min-w-custom transition-short opacity-0 pointer-none"
+                                  id="SortBy"
+                                  style="--min-width: 22rem;"
+                                >
+                                  <div
+                                    class="facet-filters__select flex column"
+                                  >
+                                    {%- for option in search.sort_options -%}
+                                      <filter-sort
+                                        class="filter-sort pointer rounded-10 align-self-start w-full flex gap-8 align-center h-custom {% if option.value != sort_by %} ps-33 text-color{% else %} ps-12 heading-color{% endif %}"
+                                        style="--height: 3.8rem;"
+                                        value="{{ option.value | escape }}"
+                                        {% if option.value == sort_by %}
+                                          selected="selected"
+                                        {% endif %}
+                                      >
+                                        {% if option.value == sort_by %}
+                                          <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                                            <path d="M12.6693 0.216606C12.8273 0.0722022 13.0095 0 13.2161 0C13.4349 0 13.6172 0.0722022 13.763 0.216606C13.921 0.373045 14 0.559567 14 0.776173C14 0.980746 13.921 1.15523 13.763 1.29964L5.21354 9.78339C5.06771 9.9278 4.88542 10 4.66667 10C4.44792 10 4.26562 9.9278 4.11979 9.78339L0.236979 5.92058C0.078993 5.77617 0 5.60169 0 5.39711C0 5.18051 0.078993 4.99398 0.236979 4.83755C0.382812 4.69314 0.559028 4.62094 0.765625 4.62094C0.984375 4.62094 1.17274 4.69314 1.33073 4.83755L4.66667 8.14079L12.6693 0.216606Z" fill="currentColor"/>
+                                          </svg>
+                                        {% endif %}
+                                        {{ option.name | escape }}
+                                      </filter-sort>
+                                    {%- endfor -%}
+                                  </div>
+                                </div>
+                              </div>
+                              <select
+                                name="sort_by"
+                                class="facet-filters__select hidden"
+                                aria-label="{{ 'products.facets.sort_button' | t }}"
+                                aria-describedby="a11y-refresh-page-message"
+                              >
+                                {%- for option in search.sort_options -%}
+                                  <option
+                                    value="{{ option.value | escape }}"
+                                    {% if option.value == sort_by %}
+                                      selected="selected"
+                                    {% endif %}
+                                  >
+                                    {{ option.name | escape }}
+                                  </option>
+                                {%- endfor -%}
+                              </select>
+                            </form>
+                          </facet-filters-form>
+                        {% endif %}
                         {% render 'facets',
                           results: search,
                           filter_layout: 'drawer',
@@ -407,7 +483,7 @@
             {%- endif -%}
             {%- if show_product_counts -%}
               <div
-                class="collection-count heading-color hidden block-md"
+                class="collection-count heading-color"
                 role="status"
               >
                 <span>
@@ -425,7 +501,7 @@
               </div>
             {%- endif -%}
             {% if enable_sorting %}
-              <facet-filters-form class="facets facets-vertical-sort">
+              <facet-filters-form class="facets facets-vertical-sort hidden block-1025">
                 <form class="facets-vertical-form relative" id="FacetSortForm">
                   {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
                   <div class="select-custom facet-filters heading-color py-10">

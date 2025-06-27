@@ -154,13 +154,6 @@ input[type="checkbox"]:checked + .color-checkmark:before {
   left: 2px;
   top: 2px;
 }
-/* .filter-swatch:after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  inset: 0;
-} */
 .price-range .range-slider::-moz-range-progress,
 .price-range .range-slider::-moz-range-track {
   border: none;
@@ -216,4 +209,22 @@ input[type="checkbox"]:checked + .color-checkmark:before {
 .facets__item input[type="checkbox"]:checked + .color-checkmark:before {
   background-color: transparent;
   border: transparent;
+}
+
+@media screen and (max-width: 1024.98px) {
+  .facets-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    margin-inline: -2rem;
+    padding-inline: 2rem;
+    background: white;
+    transition: var(--transition-drawer);
+  }
+  .site-header.section-header-sticky:not(.header-sticky-hidden)
+    + .content-for-layout
+    .facets-toolbar {
+    top: var(--header-height);
+  }
+
 }

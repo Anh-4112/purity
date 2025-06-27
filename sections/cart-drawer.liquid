@@ -53,7 +53,7 @@
     >
       <div class="drawer__body h-full flex column bg-white rounded-start">
         <draggable-modal
-          class="drawer__header drawer__header-cart flex gap-10 space-between align-center drawer-spacing border-bottom"
+          class="drawer__header drawer__header-cart flex gap-10 space-between align-center drawer-spacing border-bottom relative"
           style="--padding-block-desktop: 2.15rem;--padding-inline-desktop:3.2rem;"
         >
           <div class="drawer__heading h5 flex gap align-center" style="--gap-desktop: 8px;--gap: 8px">
@@ -209,7 +209,7 @@
           <div class="cart-drawer-inner overflow-y-auto custom-scrollbar grow-1 flex column">
             <cart-items
               class="block drawer-spacing grow-1 mb-10 pt-0 cart-content-items"
-              style="--padding-block-desktop: 0rem;--padding-inline-desktop: 3.2rem;"
+              style="--padding-block: 0rem;--padding-block-desktop: 0rem;--padding-inline-desktop: 3.2rem;"
             >
               <form
                 action="{{ routes.cart_url }}"
@@ -490,12 +490,13 @@
             {%- if enable_product_recommendations -%}
               <div class="drawer__cart-recommendations drawer-left drawer-spacing inset-y-0 beside">
                 <mini-cart-recommendations
-                  class="swiper__controls-group minicar_recommend flex column h-full"
+                  class="swiper__controls-group{% if hidden %} hidden{% endif %}"
+                  style="--position-arrow: static;--swiper-navigation-size: 20px;--padding: 0;"
                   data-type="{{ recommendation_product_type }}"
-                  data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=cart-upsell"
+                  data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=main-cart-upsell"
                 >
-                  {%- if product_recommendations_heading -%}
-                    <div class="cart-recommendations-title flex gap-10 align-center space-between mb-25">
+                  {% if product_recommendations_heading != blank %}
+                    <div class="flex gap-10 align-center space-between mb-12">
                       <h4 class="cart-recommendations-title fs-20">
                         {{ product_recommendations_heading }}
                       </h4>
@@ -506,7 +507,7 @@
                       -%}
                     </div>
                   {%- endif -%}
-                  <div class="cart-upsell-product grow-1">
+                  <div class="main-cart-upsell-product mb-32">
                     <slide-section
                       class="swiper"
                       data-section-id="{{ section.id }}"
@@ -520,7 +521,7 @@
                       data-desktop="1"
                       data-tablet="1"
                     >
-                      <div class="swiper-wrapper">
+                      <div class="swiper-wrapper" style="--width:6rem;">
                         {%- if recommendation_product_type != 'auto' -%}
                           {%- for item in select_product_recommendation -%}
                             {% liquid
@@ -544,11 +545,12 @@
                                 disable_countdown: true,
                                 disable_scrolling_text: true,
                                 disable_color_swatches: true,
-                                class: ' swiper-slide mini-cart',
-                                style_layout: ' flex gap-10',
+                                class: ' swiper-slide bg-secondary rounded-10 p-20',
+                                style_layout: ' flex gap-10 align-center',
                                 image_class: ' flex-auto w-custom rounded-10',
                                 image_rounded: ' rounded-10',
-                                info_class: ' flex-1'
+                                info_class: ' flex-1 mt-0',
+                                type: 'action_beside'
                               %}
                             {%- endif -%}
                           {%- endfor -%}
@@ -719,18 +721,21 @@
                 {% endif %}
               {%- endif -%}
               {%- if show_discount -%}
-                <cart-discount-element class="block">
+                <cart-discount-element class="block collapse-block">
                   <div
                     class="cart-addons-element drawer-spacing border-top"
                     style="--padding-block: 0;--padding-block-desktop: 0;"
                   >
                     <div class="cart-addons-title flex gap-10 space-between relative py-15">
                       <span class="title heading-style flex gap-10 align-center lg-normal">
-                        <svg width="18" height="20" fill="none">
-                          <path fill-rule="evenodd" clip-rule="evenodd" d="M0.472656 17.8794C0.472656 18.7731 1.05166 19.5638 1.90346 19.8338C2.75527 20.1038 3.6838 19.7912 4.19887 19.0609L4.20029 19.0587C4.54627 18.5678 5.09969 18.2659 5.6993 18.2403C6.2989 18.2155 6.87648 18.4698 7.26224 18.9294L7.41286 19.1085C7.80643 19.5781 8.38544 19.853 8.99854 19.8615C9.61093 19.8708 10.1977 19.6122 10.6048 19.1546C10.6986 19.0488 10.7959 18.9401 10.8947 18.8286C11.2762 18.4002 11.8367 18.1757 12.4079 18.2218C12.9798 18.268 13.497 18.5799 13.8046 19.0637L13.8053 19.0644C14.2856 19.8217 15.2084 20.1698 16.0695 19.9198C16.9305 19.669 17.523 18.8804 17.523 17.9831C17.523 13.0144 17.523 5.29129 17.523 2.13129C17.523 1.56579 17.2985 1.02373 16.8985 0.62447C16.4993 0.224497 15.9572 0 15.3917 0C12.4193 0 5.57639 0 2.60395 0C2.03845 0 1.49639 0.224497 1.09713 0.62447C0.697153 1.02373 0.472656 1.56579 0.472656 2.13129V17.8794ZM16.1021 5.68345V17.9831C16.1021 18.2481 15.9274 18.4811 15.673 18.555C15.4187 18.6289 15.1466 18.5259 15.0045 18.3028L15.0038 18.3021C14.4575 17.4418 13.5389 16.8877 12.5223 16.8052C11.5064 16.7235 10.511 17.1228 9.83329 17.8844L9.54344 18.2098C9.41059 18.3597 9.21877 18.4442 9.01843 18.4414C8.8188 18.4378 8.62982 18.3483 8.50053 18.1948L8.35062 18.0158C7.68069 17.2187 6.67969 16.7768 5.63962 16.8209C4.59955 16.8649 3.63905 17.3892 3.03873 18.2396L3.03731 18.2424C2.8796 18.4662 2.594 18.5621 2.33256 18.4797C2.07113 18.3966 1.89352 18.1536 1.89352 17.8794V5.68345H16.1021ZM16.1021 4.26259H1.89352V2.13129C1.89352 1.94303 1.96811 1.76187 2.10167 1.62902C2.23453 1.49546 2.41568 1.42086 2.60395 1.42086H15.3917C15.58 1.42086 15.7611 1.49546 15.894 1.62902C16.0275 1.76187 16.1021 1.94303 16.1021 2.13129V4.26259Z" fill="#1D1D1F"/>
-                          <path d="M6.49554 14.8989C6.32062 14.8988 6.14966 14.8466 6.00427 14.749C5.85888 14.6514 5.74557 14.5127 5.67865 14.3504C5.61173 14.1882 5.59421 14.0097 5.62829 13.8375C5.66237 13.6652 5.74654 13.507 5.87015 13.3828L10.8756 8.35806C11.0434 8.20114 11.2653 8.11571 11.4946 8.11977C11.7238 8.12383 11.9426 8.21706 12.1047 8.37983C12.2669 8.5426 12.3597 8.76219 12.3638 8.99234C12.3678 9.22249 12.2827 9.44524 12.1264 9.61365L7.12093 14.6384C7.03906 14.7212 6.94162 14.7869 6.83427 14.8316C6.72691 14.8763 6.61177 14.8992 6.49554 14.8989Z" fill="#1D1D1F"/>
-                          <path d="M6.63897 10.3143C7.29065 10.3143 7.81895 9.78402 7.81895 9.12983C7.81895 8.47564 7.29065 7.94531 6.63897 7.94531C5.98728 7.94531 5.45898 8.47564 5.45898 9.12983C5.45898 9.78402 5.98728 10.3143 6.63897 10.3143Z" fill="#1D1D1F"/>
-                          <path d="M11.3577 15.0531C12.0094 15.0531 12.5377 14.5228 12.5377 13.8686C12.5377 13.2144 12.0094 12.6841 11.3577 12.6841C10.706 12.6841 10.1777 13.2144 10.1777 13.8686C10.1777 14.5228 10.706 15.0531 11.3577 15.0531Z" fill="#1D1D1F"/>
+                        <svg
+                          class="icon me-10"
+                          width="20"
+                          height="21"
+                          viewBox="0 0 20 21"
+                          fill="none"
+                        >
+                          <use href="#icon-discount-2" />
                         </svg>
                         {{ 'sections.cart.discount.title' | t -}}
                       </span>
@@ -740,20 +745,20 @@
                         aria-label="{{- 'general.button.close' | t }}"
                       >
                         <span class="open-children-toggle transition">
-                          <span class="icon_plus-animation heading-color"></span>
+                          <span class="icon_plus-animation heading-color"> </span>
                         </span>
                         <span class="visually-hidden">{{ 'general.button.close' | t }}</span>
                       </button>
                     </div>
                     <div class="cart-addons-content overflow-hidden h-0 fs-small visibility-hidden">
-                      <div class="cart-addons-content-inner">
-                        <div class="cart__discount field">
+                      <div class="cart-addons-content-inner flex gap-10{% if discount_codes.size == 0 %} mb-20{% endif %}">
+                        <div class="cart__discount field grow-1">
                           <label class="visually-hidden" for="CartDrawer-Discount">
                             {{- 'sections.cart.discount.note_title' | t -}}
                           </label>
                           <input
                             id="CartDrawer-Discount"
-                            class="cart-discount w-full"
+                            class="cart-discount w-full input-style focus-inside"
                             name="discount"
                             placeholder="{{ 'sections.cart.discount.note_title' | t }}"
                           >
@@ -761,7 +766,7 @@
                         <div class="addon-actions">
                           <button
                             type="button"
-                            class="apply-discount btn pointer btn-primary mt-20 w-full"
+                            class="apply-discount btn pointer btn-primary w-full px-30 button-focus-inside"
                             aria-label="{{- 'general.button.save' | t }}"
                           >
                             <span class="hidden-on-load transition-short">
@@ -771,25 +776,25 @@
                           </button>
                         </div>
                       </div>
-                      <ul class="cart-discount__codes">
+                      <ul class="cart-discount__codes list-unstyled{% if discount_codes.size > 0 %} mt-10 flex gap-8 row-gap-8 wrap mb-20{% endif %}">
                         {% for discount_code in discount_codes %}
                           <li
-                            class="cart-discount__pill"
+                            class="cart-discount__pill px-16 bg-secondary fs-small rounded-30 inline-flex content-center gap-8 py-6"
                             data-discount-code="{{ discount_code }}"
                             aria-label="{{ 'accessibility.discount_applied' | t: code: discount_code }}"
                           >
                             <p class="cart-discount__pill-code">
                               {{ discount_code }}
                             </p>
-                            <remove-discount>
+                            <remove-discount class="flex content-center">
                               <button
                                 type="button"
-                                class="cart-discount__pill-remove"
+                                class="cart-discount__pill-remove btn-reset pointer flex content-center"
                                 aria-label="{{ 'accessibility.remove_discount' | t: code: discount_code }}"
                               >
                                 <svg
-                                  width="12"
-                                  height="12"
+                                  width="10"
+                                  height="10"
                                   viewBox="0 0 12 12"
                                   fill="none"
                                   class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
@@ -929,7 +934,7 @@
                       </div>
                       <div class="addon-actions">
                         <button
-                          class="estimate btn pointer btn-primary mt-20 w-full"
+                          class="estimate btn pointer btn-primary mt-20 w-full button-focus-insides"
                           data-action="shipping"
                         >
                           <span class="hidden-on-load transition-short">
@@ -946,7 +951,7 @@
             </div>
           </div>
           <div
-            class="drawer__footer-bottom border-top drawer-spacing"
+            class="drawer__footer-bottom border-top drawer-spacing sticky bottom-0 bg-white z-10"
             style="--padding-block-desktop: 3.2rem;--padding-inline-desktop: 3.2rem;"
           >
             <div class="drawer__footer-bottom-total">
@@ -965,22 +970,19 @@
                 >
                   {%- for discount in cart.cart_level_discount_applications -%}
                     <li
-                      class="discounts__discount fs-small discounts__discount fs-small--position flex gap-5"
+                      class="discounts__discount discounts__discount fs-13 lh-global flex gap-5 text-white heading-color flex space-between"
                       style="--body-line-height: 1.6;--bg-color-custom:#D0473E;--height: 3rem;--img-rounded: 3rem;"
                     >
-                      <span class="cart__discount-label">
-                        <svg
-                          aria-hidden="true"
-                          focusable="false"
-                          class="icon icon-discount w-custom"
-                          viewBox="0 0 12 12"
-                          style="--width: 12px;"
-                        >
-                          <path fill-rule="evenodd" clip-rule="evenodd" d="M7 0h3a2 2 0 012 2v3a1 1 0 01-.3.7l-6 6a1 1 0 01-1.4 0l-4-4a1 1 0 010-1.4l6-6A1 1 0 017 0zm2 2a1 1 0 102 0 1 1 0 00-2 0z" fill="currentColor">
+                      <div class="flex content-center gap-4 fs-small">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none">
+                          <use href="#icon-discount"/>
                         </svg>
-                        {{ discount.title | escape }}
-                      </span>
-                      <span class="cart__discount-value">-{{ discount.total_allocated_amount | money -}}</span>
+                        {{ discount.title }}
+                      </div>
+
+                      <div class="bg-custom color-white h-custom flex content-center rounded px-16">
+                        -{{ discount.total_allocated_amount | money }}
+                      </div>
                     </li>
                   {%- endfor -%}
                 </ul>
