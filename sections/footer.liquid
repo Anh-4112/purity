@@ -25,6 +25,15 @@
     .menu-list-footer li:last-child {
       margin-bottom: 30px;
     }
+    .order-1 {
+      order: 1;
+    }
+    .order-2 {
+      order: 2;
+    }
+    .order-3 {
+      order: 3;
+    }
   }
 </style>
 <footer
@@ -32,7 +41,7 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="footer__middle section">
-    <div class="{{ section_width }}">
+    <div class="{{ section_width }} pb-6 pb">
       {%- if section.blocks.size > 0 -%}
         {%- liquid
           assign menu_item = 0
@@ -48,15 +57,27 @@
         {%- endfor -%}
         <div class="footer__blocks cols flex wrap" style="--gap: 2.4rem;">
           {%- for block in section.blocks -%}
+            {%- assign order_class = '' -%}
+            {%- case block.type -%}
+              {%- when 'menu_block' -%}
+                {%- assign order_class = 'order-3' -%}
+              {%- when 'contact_bar_block' -%}
+                {%- assign order_class = 'order-1' -%}
+              {%- when 'newsletter_block' -%}
+                {%- assign order_class = 'order-2' -%}
+            {%- endcase -%}
+            {%- liquid
+              assign menu_item = menu_item | plus: 1
+            -%}
             {% assign block_st = block.settings %}
             <div
-              class="footer-block w-full{% unless block.type == 'newsletter_block' and modulo == 1 %} col-md-w-custom-50 col-md-w-custom{% endunless %} col-1025-w-custom {{ block.type }}"
+              class="footer-block w-full{% unless block.type == 'newsletter_block' and modulo == 1 %} col-md-w-custom-50 col-md-w-custom{% endunless %} col-1025-w-custom {{ block.type }}{% if block.type == 'menu_block' %} order-3{% endif %} {% if block.type == 'contact_bar_block' %} order-1{% endif %} {% if block.type == 'newsletter_block' %} order-2{% endif %}"
               style="--col-width: {{ block_st.width }}; --menu-list: {{ menu_item }};"
               {{ block.shopify_attributes }}
             >
               {%- case block.type -%}
                 {%- when 'newsletter_block' -%}
-                  <div class="footer-block__newsletter pb-30 pb-1025-0">
+                  <div class="footer-block__newsletter pb-24 pb-1025-0">
                     <div
                       class="footer-block__newsletter-inner"
                     >
@@ -161,7 +182,7 @@
                       is="collapsible-row"
                       open
                     >
-                      <summary tabindex="-1" class="collapsible-row__summary pointer-md-none pb-20">
+                      <summary tabindex="-1" class="collapsible-row__summary pointer-md-none pb-24 pb-1025-0">
                         <h3 class="footer__block-heading h6 flex space-between align-center collapsible-heading relative">
                           <span>
                             {{- block_st.heading | default: block_st.menu.title | escape -}}
@@ -198,7 +219,7 @@
                     open
                   >
                     {%- if block_st.store_heading != blank -%}
-                      <summary tabindex="-1" class="collapsible-row__summary pointer-md-none pb-20">
+                      <summary tabindex="-1" class="collapsible-row__summary pointer-md-none pb-24 pb-1025-0">
                         <h3 class="footer__block-heading h6 flex space-between align-center collapsible-heading relative">
                           <span>
                             {{ block_st.store_heading | escape }}
