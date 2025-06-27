@@ -23,7 +23,25 @@
         </svg>
       </button>
     </draggable-modal>
-    <div class="drawer__body grow-1 h-full overflow-y-auto custom-scrollbar p-30" id="Product-{{ section.id }}">
+    <div class="drawer__body grow-1 h-full overflow-y-auto custom-scrollbar p-30" id="Product-{{ section.id }}" style="--width: 5rem;">
+      {% render 'card-product',
+        card_product: product,
+        section_id: section.id,
+        show_video: false,
+        disable_quickview: true,
+        disable_badge: true,
+        disable_rate: true,
+        disable_vendor: true,
+        disable_tag: true,
+        disable_hover_image: true,
+        show_quick_add: true,
+        disable_price: true,
+        disable_color_swatches: true,
+        style_layout: ' flex gap-10 align-center',
+        image_class: ' flex-auto w-custom rounded-10',
+        image_rounded: ' rounded-10',
+        info_class: ' flex-1 mt-0 col-remaining'
+      %}
       <div class="block-product__variant-picker">
         {%- render 'variant-swatches', product: product, scope: 'detail', is_dropdown: false -%}
       </div>

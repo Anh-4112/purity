@@ -1,5 +1,7 @@
 import * as NextSkyTheme from "global";
 import { ProductForm } from "module-addToCart";
+import { LazyLoadEventHover, LazyLoader } from "module-lazyLoad";
+LazyLoadEventHover.run();
 class MainCartEdit extends HTMLElement {
   constructor() {
     super();
@@ -43,6 +45,7 @@ class MainCartEdit extends HTMLElement {
           .getElementById("shopify-section-main-cart-edit");
         const modal = resultsHtml.querySelector("main-cart-edit-popup");
         NextSkyTheme.body.appendChild(modal);
+        new LazyLoader(".image-lazy-load");
         setTimeout(
           () =>
             NextSkyTheme.eventModal(
