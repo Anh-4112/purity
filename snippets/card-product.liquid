@@ -30,7 +30,7 @@
     class="product-item product__item-js{{ class }}{% if type == 'action_bellow' %} w-full{% endif %}"
     data-product-id="{{ card_product.id }}"
   >
-    <div class="product-item__inner relative{{ style_layout }}{% if theme_st.product_show_quick_add_mobile == true %} show_quick_add-mb{% endif %}{% if type == 'action_bellow' %} action-bellow{% endif %}">
+    <div class="product-item__inner hover-effect relative{{ style_layout }}{% if theme_st.product_show_quick_add_mobile == true %} show_quick_add-mb{% endif %}{% if type == 'action_bellow' %} action-bellow{% endif %}">
       {%- if disable_image != true -%}
         {%- liquid
           assign p_media = card_product.featured_media
@@ -56,7 +56,7 @@
           endif
         -%}
         <div
-          class="product__inner relative block{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} hover-effect"
+          class="product__inner relative block{% if card_product.media[1] != blank and product_show_image_hover and disable_hover_image != true %} show-hover-img{% endif %} "
           {% if type == 'list' or type == 'bundle' %}
             style="--width: 8rem;"
           {% endif %}

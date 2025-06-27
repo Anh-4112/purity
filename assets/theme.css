@@ -53,6 +53,9 @@ blockquote {
 .pointer {
   cursor: pointer;
 }
+.cursor-crosshair{
+  cursor: crosshair;
+}
 .pointer-none {
   pointer-events: none;
 }
@@ -675,6 +678,7 @@ blockquote {
   right: 0;
   z-index: 1;
   pointer-events: none;
+  cursor: crosshair;
 }
 .modal.invisible.active {
   visibility: visible;
@@ -749,6 +753,24 @@ blockquote {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  pointer-events: auto;
+}
+.fixed-overlay{
+  position: fixed;
+  transition: .4s cubic-bezier(.7,0,.2,1);
+  transition-property: opacity, visibility, background-color;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-color: rgb(0 0 0 / 50%);
+  opacity: 0;
+  visibility: hidden;
+}
+.dropdown-open header ~ .fixed-overlay{
+  opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 @keyframes slideIn {
@@ -1092,12 +1114,11 @@ blockquote {
   .will-change {
     will-change: transform;
   }
-  :where(a:hover) {
+  :where(a:not(a[role="link"]):hover) {
     color: var(--color-heading);
   }
-  :where(
-      .btn,
-      .btn-hover,
+  :where(.btn:not(a[role="link"]),
+      .btn-hover:not(a[role="link"]),
       .btn-tag a,
       .shopify-payment-button__button--unbranded,
       body .jdgm-write-rev-link,
@@ -1109,12 +1130,12 @@ blockquote {
     color: var(--btn-color);
   }
   :where(
-      .btn-outline,
-      .shopify-payment-button__more-options,
-      .shopify-payment-button__button--unbranded,
-      .text-swatch-label.btn-hover,
-      .btn-white,
-      .btn__quick-shop.bg-white
+      .btn-outline:not(a[role="link"]),
+      .shopify-payment-button__more-options:not(a[role="link"]),
+      .shopify-payment-button__button--unbranded:not(a[role="link"]),
+      .text-swatch-label.btn-hover:not(a[role="link"]),
+      .btn-white:not(a[role="link"]),
+      .btn__quick-shop.bg-white:not(a[role="link"])
     ):hover {
     --btn-color: var(--btn-primary-color);
   }
@@ -1136,9 +1157,8 @@ blockquote {
   ):after {
     background-color: var(--btn-primary-bg-color) !important;
   }
-  :where(
-      .btn,
-      .btn-hover,
+  :where(.btn:not(a[role="link"]),
+    .btn-hover:not(a[role="link"]),
       .btn-tag a,
       body .jdgm-write-rev-link,
       body .jdgm-write-rev-link.jdgm-write-rev-link,
@@ -1254,6 +1274,19 @@ blockquote {
     transform: scale(1.1);
     color: var(--color-heading);
   }
+  .modal__close svg,
+  .header__icon svg{
+    transition: .35s cubic-bezier(.25,.1,.25,1)
+  }
+  .modal__close:hover svg{
+      transition: var(--duration-short);
+      rotate: 45deg;
+      scale: 110%;
+  }
+  .header__icon:hover svg{
+    color: var(--color-primary);
+    scale: 110%;
+  }
   .blur:not(.btn-hover):hover {
     --opacity: 1;
   }
@@ -1263,7 +1296,7 @@ blockquote {
   .product__inner {
     --zoom-transform: scale(1.1);
   }
-  .product__inner:hover :is(.product__hover-img, .btn__quick-shop),
+  .product-item__inner:hover .product__inner :is(.product__hover-img, .btn__quick-shop),
   .btn__quick-shop:focus-visible {
     opacity: 1;
     visibility: visible;
@@ -1275,7 +1308,7 @@ blockquote {
     transform: translateY(50%);
     transition: var(--transition);
   }
-  .product__inner:hover .btn__quick-shop.absolute,
+  .product-item__inner:hover .product__inner .btn__quick-shop.absolute,
   .btn__quick-shop:focus-visible {
     transform: translateY(0);
     pointer-events: auto;
@@ -1360,6 +1393,12 @@ blockquote {
   }
   .footer .back-to-top {
     bottom: 7.5rem;
+  }
+  .footer .back-to-top {
+    bottom: 15rem;
+  }
+  .sticky-add-cart{
+    bottom: 67px;
   }
   .mobile-sticky-bar-enabled .footer_bottom-inner {
     padding-bottom: 6rem;
@@ -2206,4 +2245,12 @@ cart-drawer {
   transform: translate(-50%, -50%);
   width: 4.4rem;
   height: 4.4rem;
+}
+/* search form */
+.btn-search .search__input:focus {
+  box-shadow: none;
+}
+
+.btn-search:has(input:focus) {
+  box-shadow: 0 0 0 1px rgb(29 29 31 / 70%);
 }
