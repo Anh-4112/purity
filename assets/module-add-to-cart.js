@@ -94,7 +94,7 @@ export class ProductForm extends HTMLElement {
         if (!is_cart_page) {
           let submitButton = this.submitButton;
           if (this.submitButton.closest("cart-drawer")) {
-            submitButton = this.cart.querySelector(".drawer__footer-bottom");
+            submitButton = this.cart.querySelector(".drawer__footer-bottom-total");
           }
           this.cart.renderContents(response);
           const actionMobile =
@@ -785,6 +785,12 @@ class CartDiscountElement extends HTMLElement {
         this.applyDiscount.bind(this)
       );
     }
+    
+    this.initializeDiscountCodesStyling();
+  }
+
+  initializeDiscountCodesStyling() {
+    this.updateDiscountCodesStyling();
   }
 
   applyDiscount(event) {
@@ -843,6 +849,10 @@ class CartDiscountElement extends HTMLElement {
       const destination = this.cart.querySelector(`.${blockClass}`);
       if (source && destination) {
         destination.innerHTML = source.innerHTML;
+        
+        if (blockClass === "cart-discount__codes") {
+          this.updateDiscountCodesStyling();
+        }
       }
     };
 
@@ -853,6 +863,29 @@ class CartDiscountElement extends HTMLElement {
       "cart-content-items",
     ];
     blocksToUpdate.forEach(updateContent);
+  }
+
+  updateDiscountCodesStyling() {
+    const discountCodesElement = this.cart.querySelector(".cart-discount__codes");
+    const discountCodesElementDrawer = this.cart.querySelector(".cart-drawer .cart-discount__codes");
+    const cartAddonsContentInner = this.cart.querySelector(".cart-drawer .cart-addons-content-inner");
+
+    if (discountCodesElement) {
+      const discountPills = discountCodesElement.querySelectorAll(".cart-discount__pill");
+      if (discountPills.length > 0) {
+        discountCodesElement.classList.add("mt-10", "flex", "gap-8", "row-gap-8", "wrap");
+        discountCodesElementDrawer.classList.add("mb-20");
+        if (cartAddonsContentInner) {
+          cartAddonsContentInner.classList.remove("mb-20");
+        }
+      } else {
+        discountCodesElement.classList.remove("mt-10", "flex", "gap-8", "row-gap-8", "wrap");
+        discountCodesElementDrawer.classList.remove("mb-20");
+        if (cartAddonsContentInner) {
+          cartAddonsContentInner.classList.add("mb-20");
+        }
+      }
+    }
   }
 
   existingDiscounts() {
@@ -1013,13 +1046,11 @@ class CartDrawer extends HTMLElement {
   actionOnMobile() {
     const modal_inner = this.querySelector(".modal-inner");
     modal_inner.classList.add("modal-draggable");
-    modal_inner.classList.remove("draw-mb", "drawer-right-mb");
   }
 
   actionOutMobile() {
     const modal_inner = this.querySelector(".modal-inner");
     modal_inner.classList.remove("modal-draggable");
-    modal_inner.classList.add("draw-mb", "drawer-right-mb");
   }
 
   getSectionsToRender() {

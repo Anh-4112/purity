@@ -100,18 +100,24 @@
           class="block"
         >
       {% endif %}
-      {%- if terms -%}
-        {% if search.performed and search.results_count > 0 %}
-          <h1>{{ 'templates.search.title' | t }}</h1>
-        {%- else -%}
-          <h1>
-            {{ 'templates.search.results_with_count_and_term.none' | t: terms: terms }}
-          </h1>
+      <h1 class="mb-16 h2">{{ 'templates.search.title' | t }}</h1>
+      
+      {%- if terms != blank -%}
+        {% if search.performed %}
+          <p class="mb-40">
+            {%- if search.results_count == 0 -%}
+              {{ 'templates.search.results_with_count_and_term.none' | t: terms: terms }}
+            {%- elsif search.results_count == 1 -%}
+              {{ 'templates.search.results_with_count_and_term.one' | t: count: search.results_count, terms: terms }}
+            {%- else -%}
+              {{ 'templates.search.results_with_count_and_term.other' | t: count: search.results_count, terms: terms }}
+            {%- endif -%}
+          </p>
         {% endif %}
       {%- else -%}
-        <h1>
+        <p class="mb-40">
           {{ 'templates.search.title_no_search' | t }}
-        </h1>
+        </p>
       {%- endif -%}
       {% if scroll_animation %}
         </motion-effect>
@@ -170,7 +176,7 @@
             {%- endcapture -%}
               <div
                 id="search-keyword"
-                class="search-keyword w-full max-w-custom mx-auto mt-24"
+                class="search-keyword w-full max-w-custom mx-auto mt-24 heading-color"
               >
                 <ul
                   class="search-keyword-list list-unstyled flex wrap gap justify-center"
