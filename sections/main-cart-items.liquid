@@ -116,7 +116,7 @@
           data-section-id="{{ section.id }}"
         >
           <div class="cart-left mb-15 col-1025-remaining">
-            <div class="sticky-1025  top-30">
+            <div class="sticky-1025 top-30">
               {% if cart != empty %}
                 {% if show_icon_with_text %}
                   <div class="icon-with-text flex-1025 gap-20 mb-50">
@@ -127,6 +127,7 @@
                         assign heading = block_st.heading
                         assign icon_image = block_st.icon_image
                         assign icon_size = block_st.icon_size
+                        assign icon_type = block_st.icon_type
                       -%}
                       {%- if block.type == 'icon-with-text' -%}
                         <div class="icon-box__item flex-1 flex align-center gap-10 bg-secondary rounded px-20 py-15 py-1025-20 mb-10">
@@ -134,13 +135,13 @@
                             class="icon-box__icon w-custom h-auto flex heading-color"
                             style="---width: {{ icon_size }}px; "
                           >
-                            {% if icon_svg != 'none' %}
+                            {% if icon_type == 'svg' and icon_svg != 'none' %}
                               {% render 'icon_svg_list',
                                 icon: icon_svg,
                                 custom_width: icon_size,
                                 custom_height: icon_size
                               %}
-                            {% elsif icon_image != blank %}
+                            {% elsif icon_type == 'image' and icon_image != blank %}
                               {%- liquid
                                 assign alt_default = 'accessibility.promotion_banner' | t
                                 assign alt = icon_image.alt | default: alt_default | escape
@@ -153,10 +154,10 @@
                               %}
                             {% endif %}
                           </div>
-                          <div class="icon-box__content">
+                          <div class="icon-box__content" {{ block.shopify_attributes }}>
                             {%- if heading != blank -%}
                               <div class="icon-box__heading prose">
-                                {{ heading }}
+                                {{ block.settings.heading }}
                               </div>
                             {%- endif -%}
                           </div>
@@ -1098,17 +1099,18 @@
                       assign heading = block_st.heading
                       assign description = block_st.description
                       assign icon_size = block_st.icon_size
+                      assign icon_type = block_st.icon_type
                     -%}
                     {%- if block.type == 'trust-badges' -%}
                       <div class="icon-box__item flex gap-16">
                         <div class="icon-box__icon">
-                          {% if icon_svg != 'none' %}
+                          {% if icon_type == 'svg' and icon_svg != 'none' %}
                             {% render 'icon_svg_list',
                               icon: icon_svg,
                               custom_width: icon_size,
                               custom_height: icon_size
                             %}
-                          {% elsif icon_image != blank %}
+                          {% elsif icon_type == 'image' and icon_image != blank %}
                             {%- liquid
                               assign alt_default = 'accessibility.promotion_banner' | t
                               assign alt = icon_image.alt | default: alt_default | escape
@@ -1121,17 +1123,17 @@
                             %}
                           {% endif %}
                         </div>
-                        <div class="icon-box__content">
+                        <div class="icon-box__content" {{ block.shopify_attributes }}>
                           {%- if heading != blank -%}
                             <div
                               class="icon-box__heading h7 mb-4 prose"
                             >
-                              {{ heading }}
+                              {{ block.settings.heading }}
                             </div>
                           {%- endif -%}
                           {%- if description != blank -%}
                             <div class="icon-box__description">
-                              {{ description }}
+                              {{ block.settings.description }}
                             </div>
                           {%- endif -%}
                         </div>
@@ -1251,9 +1253,26 @@
       "limit": 2,
       "settings": [
         {
+          "type": "select",
+          "id": "icon_type",
+          "options": [
+            {
+              "value": "image",
+              "label": "t:sections.all.image.label"
+            },
+            {
+              "value": "svg",
+              "label": "t:sections.all.svg.label"
+            }
+          ],
+          "default": "image",
+          "label": "t:sections.all.media.label"
+        },
+        {
           "type": "image_picker",
           "id": "icon_image",
-          "label": "t:sections.all.image.label"
+          "label": "t:sections.all.image.label",
+          "visible_if": "{{ block.settings.icon_type == 'image' }}"
         },
         {
           "type": "select",
@@ -1261,6 +1280,7 @@
           "label": "t:sections.all.svg.label",
           "info": "t:sections.all.svg.custom_svg.info",
           "default": "account",
+          "visible_if": "{{ block.settings.icon_type == 'svg' }}",
           "options": [
             {
               "value": "none",
@@ -1332,9 +1352,26 @@
       "limit": 3,
       "settings": [
         {
+          "type": "select",
+          "id": "icon_type",
+          "options": [
+            {
+              "value": "image",
+              "label": "t:sections.all.image.label"
+            },
+            {
+              "value": "svg",
+              "label": "t:sections.all.svg.label"
+            }
+          ],
+          "default": "image",
+          "label": "t:sections.all.media.label"
+        },
+        {
           "type": "image_picker",
           "id": "icon_image",
-          "label": "t:sections.all.image.label"
+          "label": "t:sections.all.image.label",
+          "visible_if": "{{ block.settings.icon_type == 'image' }}"
         },
         {
           "type": "select",
@@ -1342,6 +1379,7 @@
           "label": "t:sections.all.svg.label",
           "info": "t:sections.all.svg.custom_svg.info",
           "default": "privacy-protection",
+          "visible_if": "{{ block.settings.icon_type == 'svg' }}",
           "options": [
             {
               "value": "none",

@@ -26,7 +26,12 @@
     endif
   endif
 
-  if has_custom_background
+  if request.visual_preview_mode
+    assign radius_image_class = 'rounded-1025-left rounded-top-mb'
+    assign radius_content_class = 'rounded-1025-right rounded-bottom-mb'
+  endif
+
+  if has_custom_background or request.visual_preview_mode
     assign padding_content_class = 'p-20 p-1025-40'
   endif
 
@@ -57,7 +62,13 @@
     assign column_gap_slide = 16
   endif
 -%}
-
+{% style %}
+  {% if request.visual_preview_mode %}
+    .bg-custom {
+      background-color: #ECE7DA;
+    }
+  {% endif %}
+{% endstyle %}
 <div
   class="flex wrap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
 >
@@ -89,7 +100,7 @@
     </div>
   </div>
   <div class="w-full w-1025-50-percent flex text-{{ section_st.content_alignment }}">
-    {% if has_custom_background %}
+    {% if has_custom_background or request.visual_preview_mode %}
       <div
         class="image-with-text__wrapper w-full flex bg-custom {{ radius_content_class }}"
         style="--bg-color-custom: {{ section_st.background_color }};"
@@ -98,7 +109,7 @@
     <div class="image-with-text__text-item-inner w-full align-self-{{ section_st.desktop_vertical_alignment }} {{ padding_content_class }} text-{{ section_st.text_alignment_mobile }} text-md-{{ section_st.text_alignment }}">
       {% content_for 'blocks' %}
     </div>
-    {% if has_custom_background %}</div>{% endif %}
+    {% if has_custom_background or request.visual_preview_mode %}</div>{% endif %}
   </div>
 </div>
 

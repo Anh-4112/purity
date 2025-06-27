@@ -10,6 +10,7 @@
         value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
         placeholder="{{ 'templates.contact.form.name' | t }}*"
         required
+        minlength="2"
       >
       <label class="visually-hidden" for="Ask-name">
         {{ 'templates.contact.form.name' | t -}}
@@ -73,6 +74,7 @@
       name="contact[{{ 'templates.contact.form.comment' | t }}]"
       placeholder="{{ 'templates.contact.form.comment' | t }}*"
       required
+      minlength="2"
     >
         {{- form.body -}}
       </textarea>

@@ -54,6 +54,21 @@
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if section.blocks.size > 6 %}--speed: 15s;{% elsif  section.blocks.size > 4 %} --speed: 10s;{% elsif section.blocks.size > 2 %}--speed: 6s;{% else %}--speed: 4s;{% endif %}
 {%- endcapture -%}
+
+{% for block in section.blocks %}
+  {% case block.type -%}
+    {%- when 'image_effect' %}
+      {% if request.visual_preview_mode %}
+        <div
+          {{ block.shopify_attributes }}
+          class="image-with-text__media banner__media h-full rounded"
+          style="--aspect-ratio: 16/9"
+        >
+          {% render 'placeholder-render', type: 'product', class: 'img-placeholder h-full w-full' %}
+        </div>
+      {% endif %}
+  {% endcase %}
+{% endfor %}
 <div
   class="section section color-{{ section_st.color_scheme }} gradient{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
@@ -70,7 +85,7 @@
             >
           {% endif %}
           <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
-            {{ section_st.subheading }}
+            {{ section.settings.subheading }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -86,7 +101,7 @@
             >
           {% endif %}
           <h2 class="block section-heading {{ header_size }}">
-            {{ section_st.title }}
+            {{ section.settings.title }}
           </h2>
           {% if scroll_animation %}
             </motion-effect>
@@ -102,7 +117,7 @@
             >
           {% endif %}
           <div class="section-description mt-16 prose">
-            {{ section_st.description }}
+            {{ section.settings.description }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -551,6 +566,7 @@
   "presets": [
     {
       "name": "t:sections.featured_product_banner.name",
+      "category": "t:sections.group.product",
       "blocks": [
         {
           "type": "image_effect",

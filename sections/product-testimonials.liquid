@@ -87,7 +87,7 @@
             >
           {% endif %}
           <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
-            {{ section_st.subheading }}
+            {{ section.settings.subheading }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -103,7 +103,7 @@
             >
           {% endif %}
           <h2 class="block section-heading {{ header_size }}">
-            {{ section_st.title }}
+            {{ section.settings.title }}
           </h2>
           {% if scroll_animation %}
             </motion-effect>
@@ -119,7 +119,7 @@
             >
           {% endif %}
           <div class="section-description mt-16 prose">
-            {{ section_st.description }}
+            {{ section.settings.description }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -162,6 +162,7 @@
               assign image_desktop_position = section_st.image_desktop_position
               assign image_ratio = section_st.image_ratio
               assign video_alt = block_st.video_alt_text
+              assign media_type = block_st.media_type
               if video_alt != blank
                 assign video_alt = video_alt | escape
               else
@@ -180,9 +181,9 @@
                     assign ratio = '3/4'
                 endcase
               else
-                if video != blank
+                if media_type == 'video' and video != blank
                   assign ratio = video.aspect_ratio
-                elsif image != blank
+                elsif media_type == 'image' and image != blank
                   assign ratio = image.aspect_ratio
                 elsif before_image != blank
                   assign ratio = before_image.aspect_ratio
@@ -206,7 +207,7 @@
                       class="testimonial-media relative {% if image_desktop_position == 'left' %} col-1025-w-custom media-left{% else %} w-full radius-bottom-0 media-top{% endif %}"
                       style="--aspect-ratio: {{ ratio }}"
                     >
-                      {% if video != blank %}
+                      {% if media_type == 'video' %}
                         {%- liquid
                           assign source = video.sources
                           assign source_url = ''
@@ -218,49 +219,55 @@
                           endfor
                           assign video_poster = video.preview_image | image_url: width: 1100
                         -%}
-                        <video-local-scroll>
-                          <div class="video-thumbnail">
-                            {% render 'responsive-image',
-                              type: 'banner',
-                              container: section_st.section_width,
-                              image: video_poster,
-                              image_alt: image_alt,
-                              padding: column_gap_slide,
-                              column: items_per_row
-                            %}
-                          </div>
-                          <template>
-                            <video
-                              loop="true"
-                              src="{{ source_url }}"
-                              poster="{{ video_poster }}"
-                              playsinline="true"
-                              autoplay
-                              muted
-                              class="h-full w-full object-fit-cover"
-                              title="{{ video_alt }}"
-                            ></video>
-                          </template>
-                          <button
-                            aria-label="{{ 'accessibility.play_button.video' | t }}"
-                            class="play-button absolute invisible-1025 bottom-10 right-10 z-2 transition pointer border-0 inline-flex align-center justify-content-center active"
-                          >
-                            {% render 'icon-play' %}
-                            {% render 'icon-pause' %}
-                          </button>
-                        </video-local-scroll>
-                      {% elsif image != blank %}
-                        {% render 'responsive-image',
-                          type: 'banner',
-                          container: section_st.section_width,
-                          image: image,
-                          image_alt: image_alt,
-                          padding: column_gap_slide,
-                          column: items_per_row,
-                          motion: true
-                        %}
+                        {% if video != blank %}
+                          <video-local-scroll>
+                            <div class="video-thumbnail">
+                              {% render 'responsive-image',
+                                type: 'banner',
+                                container: section_st.section_width,
+                                image: video_poster,
+                                image_alt: image_alt,
+                                padding: column_gap_slide,
+                                column: items_per_row
+                              %}
+                            </div>
+                            <template>
+                              <video
+                                loop="true"
+                                src="{{ source_url }}"
+                                poster="{{ video_poster }}"
+                                playsinline="true"
+                                autoplay
+                                muted
+                                class="h-full w-full object-fit-cover"
+                                title="{{ video_alt }}"
+                              ></video>
+                            </template>
+                            <button
+                              aria-label="{{ 'accessibility.play_button.video' | t }}"
+                              class="play-button absolute invisible-1025 bottom-10 right-10 z-2 transition pointer border-0 inline-flex align-center justify-content-center active"
+                            >
+                              {% render 'icon-play' %}
+                              {% render 'icon-pause' %}
+                            </button>
+                          </video-local-scroll>
+                        {% else %}
+                          {% render 'placeholder-render', type: 'blog', class: 'img-placeholder' %}
+                        {% endif %}
                       {% else %}
-                        {% render 'placeholder-render', type: 'blog', class: 'img-placeholder' %}
+                        {% if image != blank %}
+                          {% render 'responsive-image',
+                            type: 'banner',
+                            container: section_st.section_width,
+                            image: image,
+                            image_alt: image_alt,
+                            padding: column_gap_slide,
+                            column: items_per_row,
+                            motion: true
+                          %}
+                        {% else %}
+                          {% render 'placeholder-render', type: 'blog', class: 'img-placeholder' %}
+                        {% endif %}
                       {% endif %}
                     </div>
                     <div class="testimonial_info flex align-center align-seft-center w-full{% if image_desktop_position == 'left' %} col-1025-remaining{% endif %}">
@@ -281,8 +288,11 @@
                         </div>
                         <div class="testimonials-group flex flex-wrap wrap gap-12">
                           {% if author_name != blank %}
-                            <span class="heading-style max-w-custom-all" style="--max-width: 65%;">
-                              {{ author_name }}
+                            <span
+                              class="heading-style max-w-custom-all"
+                              style="--max-width: 65%;"
+                            >
+                              {{ block.settings.testimonial_author }}
                             </span>
                           {% endif %}
                           {% if show_verified_buyer -%}
@@ -293,6 +303,11 @@
                               <i>{{ 'testimonials.verified_buyer.default' | t }}</i>
                             </span>
                           {%- endif %}
+                        </div>
+                        <div
+                          class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %} mt-15 mt-1025-20 mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}"
+                        >
+                          {{ block.settings.testimonial_quote }}
                         </div>
                         {% if review_sumary != blank %}
                           <div class="heading-style fs-big-2 mt-8">
@@ -418,7 +433,7 @@
                         <div class="testimonials-group flex flex-wrap wrap gap-12">
                           {% if author_name != blank %}
                             <span class="heading-style max-w-custom-all" style="--max-width: 65%;">
-                              {{ author_name }}
+                              {{ block.settings.testimonial_author }}
                             </span>
                           {% endif %}
                           {% if show_verified_buyer -%}
@@ -429,6 +444,9 @@
                               <i>{{ 'testimonials.verified_buyer.default' | t }}</i>
                             </span>
                           {%- endif %}
+                        </div>
+                        <div class="testimonials-quote{% if quote != blank %} pb-20 pb-1025-25{% endif %} mt-15 mt-1025-20 mx-0 rich__text-m0{% if product != blank %} border-bottom{% else %} pb-0{% endif %}">
+                          {{ block.settings.testimonial_quote }}
                         </div>
                         {% if review_sumary != blank %}
                           <div class="heading-style fs-big-2 mt-8">
@@ -772,22 +790,40 @@
           "content": "t:sections.product_testimonials.blocks.settings.media.label"
         },
         {
+          "type": "select",
+          "id": "media_type",
+          "options": [
+            {
+              "value": "image",
+              "label": "t:sections.all.image.label"
+            },
+            {
+              "value": "video",
+              "label": "t:sections.all.video.label"
+            }
+          ],
+          "default": "image",
+          "label": "t:sections.all.media.label"
+        },
+        {
           "type": "image_picker",
           "id": "testimonial_image",
-          "label": "t:sections.all.image.label"
+          "label": "t:sections.all.image.label",
+          "visible_if": "{{ block.settings.media_type == 'image' }}"
         },
         {
           "type": "video",
           "id": "video_local",
-          "label": "t:sections.video.settings.video_local.label",
-          "info": "t:sections.all.video.info"
+          "label": "t:sections.all.video.label",
+          "visible_if": "{{ block.settings.media_type == 'video' }}"
         },
         {
           "type": "text",
           "id": "video_alt_text",
           "label": "t:sections.video.settings.alt_description.label",
           "info": "t:sections.video.settings.alt_description.info",
-          "default": "Video alt text"
+          "default": "Video alt text",
+          "visible_if": "{{ block.settings.media_type == 'video' }}"
         },
         {
           "type": "header",
@@ -887,6 +923,7 @@
   "presets": [
     {
       "name": "t:sections.product_testimonials.name",
+      "category": "t:sections.group.product",
       "blocks": [
         {
           "type": "image_comparison"

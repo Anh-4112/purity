@@ -35,29 +35,29 @@
     >
       {% if show_faqs_message %}
         <div class="contact_form-field w-full col-1025-w-custom bg-secondary p-20 p-1025-40 h-content rounded sticky-1025 top-20 transition">
-          {%- if section_st.heading != blank
-            or section_st.description != blank
-            or section_st.highlight_text != blank
+          {%- if section.settings.heading != blank
+            or section.settings.description != blank
+            or section.settings.highlight_text != blank
           -%}
             <div
               class="text-{{ section_st.text_alignment }} mb-30"
             >
-              {%- if section_st.highlight_text != blank -%}
+              {%- if section.settings.highlight_text != blank -%}
                 <div
                   class="section-subheading lh-1 mb-10 mb-md-15 py-10 px-15 btn-rounded inline-block bg-sale"
                   style="--"
                 >
-                  {{ section_st.highlight_text }}
+                  {{ section.settings.highlight_text }}
                 </div>
               {%- endif -%}
-              {%- if section_st.heading != blank -%}
-                <h2 class="section-heading mb-15">{{ section_st.heading }}</h2>
+              {%- if section.settings.heading != blank -%}
+                <h2 class="section-heading mb-15">{{ section.settings.heading }}</h2>
               {%- endif -%}
-              {%- if section_st.description != blank -%}
+              {%- if section.settings.description != blank -%}
                 <div
                   class="short-des prose"
                 >
-                  {{ section_st.description }}
+                  {{ section.settings.description }}
                 </div>
               {%- endif -%}
             </div>
@@ -116,10 +116,11 @@
                   autocomplete="name"
                   type="text"
                   required
+                  minlength="2"
                   id="ContactFormName-faq--{{ section.id }}"
                   name="contact[name]"
                   value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
-                  placeholder="{{ section_st.name }} *"
+                  placeholder="{{ section.settings.name }} *"
                 >
                 <label class="field__label visually-hidden" for="ContactFormName-faq--{{ section.id }}">
                   {{ 'templates.contact.form.name' | t -}}
@@ -141,7 +142,7 @@
                     aria-invalid="true"
                     aria-describedby="ContactForm-email-error"
                   {% endif %}
-                  placeholder="{{ section_st.email_placeholder }} *"
+                  placeholder="{{ section.settings.email_placeholder }}"
                   required
                 >
                 <label class="field__label visually-hidden" for="ContactFormEmail-faq--{{ section.id }}">
@@ -174,8 +175,9 @@
                 aria-required="true"
                 aria-invalid="true"
                 required
+                minlength="2"
                 name="contact[body]"
-                placeholder="{{ section_st.message }}*"
+                placeholder="{{ section.settings.message }}*"
               >
           {{- form.body -}}
           </textarea>
@@ -188,7 +190,7 @@
               class="contact__button"
             >
               <button type="submit" class="btn btn-primary w-full relative">
-                <span class="hidden-on-load transition-short">{{ section_st.button_label }}</span>
+                <span class="hidden-on-load transition-short">{{ section.settings.button_label }}</span>
                 {%- render 'loader' -%}
               </button>
             </div>
@@ -202,7 +204,7 @@
   </div>
 </section>
 <script type="module">
-  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-action.js" | asset_url }}';
 
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({

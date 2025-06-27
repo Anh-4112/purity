@@ -29,6 +29,7 @@
           <div
             class="w-full max-w-custom mb-50 rounded"
             style="{%- if image != blank -%}--aspect-ratio: {{ image.aspect_ratio }};{% else %}--aspect-ratio: 4/3;{% endif %};--max-width: 50rem;"
+            {{ block.shopify_attributes }}
           >
             {%- assign image_alt = image.alt | escape | default: 'image' -%}
             {%- if image != blank -%}
@@ -43,6 +44,27 @@
             {% endif %}
           </div>
         {%- when 'subheading' -%}
+          {%- liquid
+            assign animate_delay = animate_delay | plus: 50
+            assign classes = 'block__content-subheading subheading_weight heading mb-custom'
+
+            if block_st.spacing_bottom > 10
+              assign classes = classes | append: ' mb_auto-rsp'
+            endif
+
+            if block_st.uppercase
+              assign classes = classes | append: ' uppercase'
+            endif
+
+            assign classes = classes | append: ' fs-' | append: block_st.subheading_size
+
+            capture attributes
+              echo 'class="' | append: classes | append: '" '
+              echo 'style="--space-bottom: ' | append: block_st.spacing_bottom | append: ';" '
+              echo block.shopify_attributes
+            endcapture
+          -%}
+
           {%- if scroll_animation -%}
             <motion-effect
               data-animate="fade-up"
@@ -50,17 +72,35 @@
               class="block"
             >
           {%- endif -%}
-          <div
-            class="block__content-subheading subheading_weight heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.subheading_size }}"
-            style="--space-bottom: {{ block_st.spacing_bottom }};"
-          >
-            {{ block_st.subheading | escape }}
+
+          <div {{ attributes }}>
+            {{ block.settings.subheading | escape }}
           </div>
+
           {%- if scroll_animation -%}
             </motion-effect>
           {%- endif -%}
         {%- when 'heading' -%}
-          {% assign animate_delay = animate_delay | plus: 50 %}
+          {%- liquid
+            assign animate_delay = animate_delay | plus: 50
+            assign classes = 'block__content-heading mb-custom'
+            if block.settings.spacing_bottom > 10
+              assign classes = classes | append: ' mb_auto-rsp'
+            endif
+
+            if block_st.uppercase
+              assign classes = classes | append: ' uppercase'
+            endif
+
+            assign classes = classes | append: ' ' | append: block_st.heading_size
+
+            capture attributes
+              echo 'class="' | append: classes | append: '" '
+              echo 'style="--space-bottom: ' | append: block_st.spacing_bottom | append: ';" '
+              echo block.shopify_attributes
+            endcapture
+          -%}
+
           {%- if scroll_animation -%}
             <motion-effect
               data-animate="fade-up"
@@ -68,18 +108,31 @@
               class="block"
             >
           {%- endif -%}
-          <div
-            class="block__content-heading mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} {{ block_st.heading_size }}"
-            style="--space-bottom: {{ block_st.spacing_bottom }};"
-            {{ block.shopify_attributes }}
-          >
-            {{ block_st.heading }}
+
+          <div {{ attributes }}>
+            {{ block.settings.heading }}
           </div>
+
           {%- if scroll_animation -%}
             </motion-effect>
           {%- endif -%}
         {%- when 'description' -%}
-          {% assign animate_delay = animate_delay | plus: 50 %}
+          {%- liquid
+            assign animate_delay = animate_delay | plus: 50
+            assign classes = 'block__content-des mb-custom'
+            if block.settings.spacing_bottom > 10
+              assign classes = classes | append: ' mb_auto-rsp'
+            endif
+
+            assign classes = classes | append: ' fs-' | append: block.settings.description_size | append: ' prose'
+
+            capture attributes
+              echo 'class="' | append: classes | append: '" '
+              echo 'style="--space-bottom: ' | append: block.settings.spacing_bottom | append: ';" '
+              echo block.shopify_attributes
+            endcapture
+          -%}
+
           {%- if scroll_animation -%}
             <motion-effect
               data-animate="fade-up"
@@ -87,16 +140,15 @@
               class="block"
             >
           {%- endif -%}
-          <div
-            class="block__content-des mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} prose"
-            style="--space-bottom: {{ block_st.spacing_bottom }};"
-            {{ block.shopify_attributes }}
-          >
-            {{ block_st.description }}
+
+          <div {{ attributes }}>
+            {{ block.settings.description }}
           </div>
+
           {%- if scroll_animation -%}
             </motion-effect>
           {%- endif -%}
+
         {%- when 'button' -%}
           {%- liquid
             assign first_button_label = block_st.first_button_label
@@ -118,6 +170,7 @@
             <div
               class="block__buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap text-center gap-15 content-center"
               style="--space-bottom: {{ block_st.spacing_bottom }};"
+              {{ block.shopify_attributes }}
             >
               {% if first_button_label != blank %}
                 <a
@@ -132,7 +185,7 @@
                     style="--width: 25rem;"
                   {% endif %}
                 >
-                  {{ first_button_label }}
+                  {{ block.settings.first_button_label }}
                 </a>
               {% endif %}
               {% if second_button_label != blank %}
@@ -148,7 +201,7 @@
                     style="--width: 25rem;"
                   {% endif %}
                 >
-                  {{ second_button_label }}
+                  {{ block.settings.second_button_label }}
                 </a>
               {% endif %}
             </div>

@@ -579,19 +579,22 @@
         "type": "color",
         "id": "sale_color",
         "label": "t:settings_schema.badges.settings.badge_color.label",
-        "default": "#fff"
+        "default": "#fff",
+        "visible_if": "{{ settings.show_sale != false }}"
       },
       {
         "type": "color",
         "id": "sale_background",
         "label": "t:settings_schema.badges.settings.background_color.label",
-        "default": "#D0473E"
+        "default": "#D0473E",
+         "visible_if": "{{ settings.show_sale != false }}"
       },
       {
         "type": "select",
         "id": "sale_format",
         "label": "t:settings_schema.badges.settings.sale.format.label",
         "default": "percentage",
+         "visible_if": "{{ settings.show_sale != false }}",
         "options": [
           {
             "value": "text",
@@ -621,13 +624,15 @@
         "type": "color",
         "id": "new_color",
         "label": "t:settings_schema.badges.settings.badge_color.label",
-        "default": "#fff"
+        "default": "#fff",
+        "visible_if": "{{ settings.show_new != false }}"
       },
       {
         "type": "color",
         "id": "new_background",
         "label": "t:settings_schema.badges.settings.background_color.label",
-        "default": "#D0473E"
+        "default": "#D0473E",
+        "visible_if": "{{ settings.show_new != false }}"
       },
       {
         "type": "range",
@@ -638,7 +643,8 @@
         "unit": "day",
         "default": 5,
         "label": "t:settings_schema.badges.settings.new.new_badge_display_period.label",
-        "info": "t:settings_schema.badges.settings.new.new_badge_display_period.info"
+        "info": "t:settings_schema.badges.settings.new.new_badge_display_period.info",
+        "visible_if": "{{ settings.show_new != false }}"
       },
       {
         "type": "header",
@@ -654,13 +660,15 @@
         "type": "color",
         "id": "sold_out_color",
         "label": "t:settings_schema.badges.settings.badge_color.label",
-        "default": "#fff"
+        "default": "#fff",
+        "visible_if": "{{ settings.show_sold_out != false }}"
       },
       {
         "type": "color",
         "id": "sold_out_background",
         "label": "t:settings_schema.badges.settings.background_color.label",
-        "default": "#D0473E"
+        "default": "#D0473E",
+        "visible_if": "{{ settings.show_sold_out != false }}"
       },
       {
         "type": "header",
@@ -863,12 +871,14 @@
         "type": "text",
         "id": "product_recommendations_heading",
         "default": "You may also like",
-        "label": "t:settings_schema.cart.settings.product_recommendations.heading"
+        "label": "t:settings_schema.cart.settings.product_recommendations.heading",
+        "visible_if": "{{ settings.enable_product_recommendations != false }}"
       },
       {
         "type": "select",
         "id": "recommendation_product_type",
         "label": "t:settings_schema.cart.settings.product_recommendations.recommendation_product_type.label",
+        "visible_if": "{{ settings.enable_product_recommendations != false }}",
         "options": [
           {
             "value": "auto",
@@ -885,6 +895,7 @@
         "type": "product_list",
         "id": "select_product_recommendation",
         "label": "t:settings_schema.cart.settings.product_recommendations.select_product_recommendation",
+        "visible_if": "{{ settings.enable_product_recommendations != false and settings.recommendation_product_type == 'selected' }}",
         "limit": 12
       },
       {

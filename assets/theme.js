@@ -1219,11 +1219,15 @@ class VideoLocalScroll extends VideoLocal {
   }
 
   init() {
-    if (!this.isScrollInitialized) {
-      this.isScrollInitialized = true;
-      window.addEventListener("scroll", this.checkScroll.bind(this), {
-        passive: true,
-      });
+    if (window.Shopify && window.Shopify.designMode) {
+      this.loadContentVideo(this);
+    } else {
+      if (!this.isScrollInitialized) {
+        this.isScrollInitialized = true;
+        window.addEventListener("scroll", this.checkScroll.bind(this), {
+          passive: true,
+        });
+      }
     }
   }
 
@@ -1786,14 +1790,32 @@ class NavBar extends HTMLElement {
   updateScrollNavigationbar() {
     const scrollTop =
       document.documentElement.scrollTop || document.body.scrollTop;
+    const siteHeader = document.querySelector(".site-header");
     if (scrollTop > 200) {
-      this.classList.add("show");
+      if (
+        siteHeader &&
+        siteHeader.classList.contains("animate") &&
+        siteHeader.classList.contains("header-sticky-hidden")
+      ) {
+        this.classList.add("show");
+      } else if (
+        siteHeader &&
+        siteHeader.classList.contains("animate") &&
+        !siteHeader.classList.contains("header-sticky-hidden")
+      ) {
+        this.classList.remove("show");
+      } else if (!siteHeader) {
+        this.classList.add("show");
+      } else {
+        this.classList.add("show");
+      }
     } else {
       this.classList.remove("show");
     }
   }
 }
 customElements.define("mobile-navigation-bar", NavBar);
+
 var BlsCustomer = (function () {
   return {
     init: function () {

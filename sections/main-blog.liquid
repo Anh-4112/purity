@@ -138,9 +138,9 @@
             {%- if found -%}
               {%- for block in section.blocks -%}
                 <div
-                  {{ block.shopify_attributes }}
                   class="blog-subscribe flex column justify-center p-30{% if section_st.post_per_row_desktop < 4 %} p-1025-40{% else %} p-1025-20{% endif %} text-center rounded blog-subscribe bg-secondary"
                   id="blocks blog-subscribe-{{ block.id }}"
+                  {{ block.shopify_attributes }}
                 >
                   {% if block.settings.form_title != blank or block.settings.form_description != blank %}
                     <div class="mb-30">
@@ -268,7 +268,7 @@
 </div>
 
 <script type="module">
-  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-action.js" | asset_url }}';
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form.subscribe-form',

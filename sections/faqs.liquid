@@ -2,13 +2,9 @@
   assign theme_st = settings
   assign section_st = section.settings
   assign scroll_animation = theme_st.scroll_animation
-  assign heading = section_st.heading
-  assign subheading = section_st.subheading
   assign show_faqs_message = section_st.show_faqs_message
   assign show_image = section_st.show_image
   assign image_desktop_position = section_st.image_desktop_position
-  assign description = section_st.description
-  assign button_label = section_st.button_label
   assign button_link = section_st.button_link
 
   if section_st.section_width == 'fix_width'
@@ -80,7 +76,7 @@
             {% if show_faqs_message and show_image == false %}
               <div class="sticky-md top-30">
             {% endif %}
-            {%- if subheading != blank -%}
+            {%- if section.settings.subheading != blank -%}
               {%- if scroll_animation -%}
                 <motion-effect
                   data-animate="fade-up"
@@ -89,13 +85,13 @@
                 >
               {%- endif -%}
               <div class="faqs__subheading h7 heading-letter-spacing subheading_weight mb-10">
-                {{- subheading }}
+                {{ section.settings.subheading }}
               </div>
               {%- if scroll_animation -%}
                 </motion-effect>
               {%- endif -%}
             {%- endif -%}
-            {%- if heading != blank -%}
+            {%- if section.settings.heading != blank -%}
               {% assign animate_delay = animate_delay | plus: 50 %}
               {%- if scroll_animation -%}
                 <motion-effect
@@ -104,12 +100,12 @@
                   class="block"
                 >
               {%- endif -%}
-              <h2 class="faqs__heading h2">{{ heading }}</h2>
+              <h2 class="faqs__heading h2">{{ section.settings.heading }}</h2>
               {%- if scroll_animation -%}
                 </motion-effect>
               {%- endif -%}
             {%- endif -%}
-            {%- if description != blank -%}
+            {%- if section.settings.description != blank -%}
               {% assign animate_delay = animate_delay | plus: 50 %}
               {%- if scroll_animation -%}
                 <motion-effect
@@ -119,13 +115,13 @@
                 >
               {%- endif -%}
               <div class="faqs__description mt-1025-15 prose">
-                {{- description }}
+                {{ section.settings.description }}
               </div>
               {%- if scroll_animation -%}
                 </motion-effect>
               {%- endif -%}
             {%- endif -%}
-            {%- if button_label != blank -%}
+            {%- if section.settings.button_label != blank -%}
               {% assign animate_delay = animate_delay | plus: 50 %}
               {%- if scroll_animation -%}
                 <motion-effect
@@ -140,11 +136,11 @@
                 {% else %}
                   href="{{ button_link | default: "#" }}"
                 {% endif %}
-                aria-label="{{ button_label }}"
+                aria-label="{{ section.settings.button_label }}"
                 class="btn pointer btn-primary inline-block mt-40 min-w-custom w-full w-1025-auto text-center"
                 style="--min-width: 20rem;"
               >
-                {{ button_label }}
+                {{ section.settings.button_label }}
               </a>
               {%- if scroll_animation -%}
                 </motion-effect>
@@ -359,6 +355,7 @@
   "presets": [
     {
       "name": "t:sections.faq.name",
+      "category": "t:sections.group.storytelling",
       "blocks": [
         {
           "type": "_item-faq"

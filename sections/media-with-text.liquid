@@ -47,6 +47,7 @@
           assign media = block_st.image
           assign video = block_st.video
           assign image_alt = media.alt
+          assign media_type_block = block_st.media_type
           if image_alt == blank
             assign image_alt_translate = 'media-with-text.image.default' | t
             assign image_alt = image_alt_translate | append: ' ' | append: forloop.index
@@ -76,10 +77,12 @@
                   assign ratio = '3/4'
               endcase
             else
-              if video != blank
+              if video != blank and media_type_block == 'video'
                 assign ratio = video.aspect_ratio
-              elsif media != blank
+              elsif media != blank and media_type_block == 'image'
                 assign ratio = media.aspect_ratio
+              else
+                assign ratio = '3/4'
               endif
             endif
           else
@@ -87,12 +90,12 @@
             assign media_type = 'rounded-50'
           endif
         -%}
-        <div class="multimedia_with_text__block {{ active_class }}">
+        <div class="multimedia_with_text__block {{ active_class }}" {{ block.shopify_attributes }}>
           <div
             class="multimedia_with_text__media {{ media_type }} rounded video-section"
             style="--aspect-ratio: {{ ratio }};{% if section_st.media_type == 'oval' %}--img-rounded: 100px;{% endif %}"
           >
-            {%- if video != blank -%}
+            {%- if media_type_block == 'video' -%}
               {%- liquid
                 assign source = video.sources
                 assign source_url = ''
@@ -112,42 +115,48 @@
                   assign video_alt = 'accessibility.video' | t
                 endif
               -%}
-              <video-local-scroll style="--aspect-ratio: {{ ratio }};" class="absolute">
-                <div class="video-thumbnail absolute" style="--aspect-ratio: {{ ratio }}">
-                  {% render 'responsive-image',
-                    type: 'banner',
-                    container: section_st.section_width,
-                    image: video_poster,
-                    image_alt: image_alt,
-                    padding: column_gap_slide,
-                    column: section.blocks.size,
-                    motion: true
-                  %}
-                </div>
-                <template>
-                  <video
-                    loop
-                    src="{{ source_url }}"
-                    poster="{{ video_poster }}"
-                    playsinline
-                    autoplay
-                    muted
-                    title="{{ video_alt }}"
-                  ></video>
-                </template>
-              </video-local-scroll>
-            {%- elsif media != blank -%}
-              {% render 'responsive-image',
-                type: 'banner',
-                container: section_st.section_width,
-                image: media,
-                image_alt: image_alt,
-                padding: column_gap_slide,
-                column: section.blocks.size,
-                motion: true
-              %}
+              {% if video != blank %}
+                <video-local-scroll style="--aspect-ratio: {{ ratio }};" class="absolute">
+                  <div class="video-thumbnail absolute" style="--aspect-ratio: {{ ratio }}">
+                    {% render 'responsive-image',
+                      type: 'banner',
+                      container: section_st.section_width,
+                      image: video_poster,
+                      image_alt: image_alt,
+                      padding: column_gap_slide,
+                      column: section.blocks.size,
+                      motion: true
+                    %}
+                  </div>
+                  <template>
+                    <video
+                      loop
+                      src="{{ source_url }}"
+                      poster="{{ video_poster }}"
+                      playsinline
+                      autoplay
+                      muted
+                      title="{{ video_alt }}"
+                    ></video>
+                  </template>
+                </video-local-scroll>
+              {% else %}
+                {% render 'placeholder-render', type: 'blog' %}
+              {% endif %}
             {%- else -%}
-              {% render 'placeholder-render', type: 'blog' %}
+              {%- if media != blank -%}
+                {% render 'responsive-image',
+                  type: 'banner',
+                  container: section_st.section_width,
+                  image: media,
+                  image_alt: image_alt,
+                  padding: column_gap_slide,
+                  column: section.blocks.size,
+                  motion: true
+                %}
+              {%- else -%}
+                {% render 'placeholder-render', type: 'blog' %}
+              {%- endif -%}
             {%- endif -%}
           </div>
         </div>
@@ -163,7 +172,7 @@
           >
         {% endif %}
         <div class="text-content {{ text_content_size }} prose">
-          {{ text }}
+          {{ section.settings.text }}
         </div>
         {% if scroll_animation %}
           </motion-effect>
@@ -370,22 +379,40 @@
       "name": "t:sections.multimedia_with_text.blocks.name",
       "settings": [
         {
+          "type": "select",
+          "id": "media_type",
+          "options": [
+            {
+              "value": "image",
+              "label": "t:sections.all.image.label"
+            },
+            {
+              "value": "video",
+              "label": "t:sections.all.video.label"
+            }
+          ],
+          "default": "image",
+          "label": "t:sections.all.media.label"
+        },
+        {
           "type": "image_picker",
           "id": "image",
-          "label": "t:sections.all.image.label"
+          "label": "t:sections.all.image.label",
+          "visible_if": "{{ block.settings.media_type == 'image' }}"
         },
         {
           "type": "video",
           "id": "video",
           "label": "t:sections.all.video.label",
-          "info": "t:sections.all.video.info"
+          "visible_if": "{{ block.settings.media_type == 'video' }}"
         },
         {
           "type": "text",
           "id": "video_alt_text",
           "label": "t:sections.video.settings.alt_description.label",
           "info": "t:sections.video.settings.alt_description.info",
-          "default": "Video alt text"
+          "default": "Video alt text",
+          "visible_if": "{{ block.settings.media_type == 'video' }}"
         }
       ]
     }
@@ -393,6 +420,7 @@
   "presets": [
     {
       "name": "t:sections.multimedia_with_text.name",
+      "category": "t:sections.group.banners",
       "blocks": [
         {
           "type": "media"

@@ -48,7 +48,7 @@
             >
           {% endif %}
           <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight fs-big-2">
-            {{ section_st.subheading }}
+            {{ section.settings.subheading }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -64,7 +64,7 @@
             >
           {% endif %}
           <h2 class="block section-heading {{ header_size }}">
-            {{ section_st.title }}
+            {{ section.settings.title }}
           </h2>
           {% if scroll_animation %}
             </motion-effect>
@@ -80,7 +80,7 @@
             >
           {% endif %}
           <div class="section-description mt-16 prose">
-            {{ section_st.description }}
+            {{ section.settings.description }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -130,6 +130,7 @@
               {% if section_width == "fluid_container" and i != 1 and i != 2 %}true{% endif %}
             {% endcapture %}
             <a
+              {{ block.shopify_attributes }}
               class="scrolling-image-item overflow-hidden w-custom w-custom-mb focus-inset relative"
               style="--width: {{ img_width }}px;--width-mb: {{ img_width_mb }}px;"
               {% if link_image == blank %}
@@ -138,7 +139,7 @@
                 href="{{ link_image | default: "#" }}"
               {% endif %}
               aria-label="{{ 'sections.scrolling_text.alt' | t }}"
-              {% if should_disable contains "true" %}
+              {% if should_disable contains 'true' %}
                 aria-disabled="true" tabindex="-1"
               {% endif %}
             >
@@ -417,6 +418,7 @@
   "presets": [
     {
       "name": "t:sections.scrolling_image.name",
+      "category": "t:sections.group.storytelling",
       "blocks": [
         {
           "type": "image"

@@ -45,6 +45,7 @@
                     <input
                       class="form-input form-input-placeholder heading-color"
                       type="text"
+                      minlength="2"
                       placeholder="{{ 'customer.addresses.first_name' | t }}"
                       name="address[first_name]"
                       id="AddresFsirstName_{{ form.id }}"
@@ -65,6 +66,7 @@
                       value="{{ form.last_name }}"
                       autocapitalize="words"
                       required
+                      minlength="2"
                       placeholder="{{ 'customer.addresses.last_name' | t }}"
                     >
                   </div>
@@ -93,6 +95,7 @@
                       id="AddressAddress1_{{ form.id }}"
                       value="{{ form.address1 }}"
                       required
+                      minlength="2"
                       autocapitalize="words"
                       placeholder="{{ 'customer.addresses.address1' | t }}"
                     >
@@ -120,6 +123,7 @@
                       id="AddressCity_{{ form.id }}"
                       value="{{ form.city }}"
                       required
+                      minlength="2"
                       autocapitalize="words"
                       placeholder="{{ 'customer.addresses.city' | t }}"
                     >
@@ -457,7 +461,7 @@
   }
 </style>
 <script type="module">
-  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-action.js" | asset_url }}';
   Shopify.CustomerAddress = {
     toggleForm: function (id) {
       var edit = document.getElementById('EditAddress_' + id);

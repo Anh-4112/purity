@@ -5,7 +5,7 @@
 -%}
 <details class="collapsible-row border-bottom py-15" is="collapsible-row">
   <summary class="collapsible-row__summary">
-    <div class="collapsible-heading h6 fs-18">{{- heading | default: page.title -}}</div>
+    <div class="collapsible-heading h6 fs-18">{{ block.settings.heading | default: pages[collapsible_page].title }}</div>
     <span class="open-children-toggle transition">
       <span class="icon_plus-animation heading-color"> </span>
     </span>
@@ -15,7 +15,9 @@
       {% if collapsible_page != null and pages[collapsible_page].content %}
         {{ pages[collapsible_page].content }}
       {% else %}
-        {{ content }}
+        <div {{ block.shopify_attributes }}>
+          {{ block.settings.content }}
+        </div>
       {% endif %}
     </div>
   </div>

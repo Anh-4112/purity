@@ -88,7 +88,7 @@
             >
           {% endif %}
           <div class="section-subheading h7 mb-5 mb-md-10 subheading_weight">
-            {{ section_st.subheading }}
+            {{ section.settings.subheading }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -104,7 +104,7 @@
             >
           {% endif %}
           <h2 class="block section-heading {{ header_size }}">
-            {{ section_st.title }}
+            {{ section.settings.title }}
           </h2>
           {% if scroll_animation %}
             </motion-effect>
@@ -120,7 +120,7 @@
             >
           {% endif %}
           <div class="section-description mt-16 prose">
-            {{ section_st.description }}
+            {{ section.settings.description }}
           </div>
           {% if scroll_animation %}
             </motion-effect>
@@ -594,7 +594,8 @@
       "type": "color_background",
       "id": "range_slider_background",
       "label": "t:settings_schema.colors.settings.background_gradient.label",
-      "default": "linear-gradient(90deg, #F7C09D 0%, #CD6D45 50%, #6E4136 100%)"
+      "default": "linear-gradient(90deg, #F7C09D 0%, #CD6D45 50%, #6E4136 100%)",
+      "visible_if": "{{ section.settings.show_range_slider == true }}"
     },
     {
       "type": "header",
@@ -738,6 +739,7 @@
   "presets": [
     {
       "name": "t:sections.suitable_products_finder.name",
+      "category": "t:sections.group.product",
       "blocks": [
         {
           "type": "featured_collection"

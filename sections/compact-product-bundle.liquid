@@ -155,7 +155,7 @@
                 >
               {% endif %}
               <div class="section-subheading fs-big-2 mb-5 mb-1025-10 heading-color subheading_weight">
-                {{ section_st.subheading }}
+                {{ section.settings.subheading }}
               </div>
               {% if scroll_animation %}
                 </motion-effect>
@@ -171,7 +171,7 @@
                 >
               {% endif %}
               <h2 class="block section-heading {{ header_size }}">
-                {{ section_st.title }}
+                {{ section.settings.title }}
               </h2>
               {% if scroll_animation %}
                 </motion-effect>
@@ -187,7 +187,7 @@
                 >
               {% endif %}
               <div class="section-description mt-16 prose">
-                {{ section_st.description }}
+                {{ section.settings.description }}
               </div>
               {% if scroll_animation %}
                 </motion-effect>
@@ -681,6 +681,7 @@
   "presets": [
     {
       "name": "t:sections.compact_product_bundle.presets.name",
+      "category": "t:sections.group.product",
       "blocks": [
         {
           "type": "product",

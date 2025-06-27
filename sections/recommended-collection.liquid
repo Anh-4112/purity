@@ -112,6 +112,18 @@
     }
   }
 {% endstyle %}
+
+{%- for block in section.blocks -%}
+  {%- case block.type -%}
+    {%- when 'featured_collection' -%}
+      {% if request.visual_preview_mode %}
+        <div {{ block.shopify_attributes }} class="flex w-full gap-10 p-30 rounded">
+          {% render 'collection-item' %}
+        </div>
+      {% endif %}
+  {%- endcase -%}
+{%- endfor -%}
+
 {% capture title_replace %}
   <select-options class="title-select relative px-15 pointer lh-global inline-flex">
     {% if split_array.size > 0 %}
@@ -266,7 +278,7 @@
                     style="--space-bottom: {{ block_st.spacing_bottom }};"
                     {{ block.shopify_attributes }}
                   >
-                    {{ block_st.heading }}
+                    {{ block.settings.heading }}
                   </div>
                   {% if scroll_animation %}
                     </motion-effect>
@@ -295,7 +307,7 @@
                       {%- elsif block_st.highlight_text_icon == 'dot' -%}
                         {%- render 'icon-dot' -%}
                       {%- endif -%}
-                      {{ block_st.highlight_text | escape }}
+                      {{ block.settings.highlight_text | escape }}
                       {%- if scroll_animation -%}
                         </div>
                         </div>
@@ -351,6 +363,7 @@
                     <div
                       class="block__buttons recommend_collections_buttons mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} flex wrap gap text-center {% if section_content_alignment %} justify-content-{{ section_content_alignment }}{% else %} justify-content-{{ content_alignment }}{% endif %}{% if section_st.vertical_alignment_group %} justify-content-{{ section_st.vertical_alignment_group }}{% endif %}"
                       style="--space-bottom: {{ block_st.spacing_bottom }};--gap-desktop: 30px; --gap: 20px;"
+                      {{ block.shopify_attributes }}
                     >
                       {% if first_button_label != blank %}
                         <a
@@ -365,7 +378,7 @@
                             style="--width: 20rem;"
                           {% endif %}
                         >
-                          {{ first_button_label }}
+                          {{ block.settings.first_button_label }}
                         </a>
                       {% endif %}
                       {% if second_button_label != blank %}
@@ -381,7 +394,7 @@
                             style="--width: 20rem;"
                           {% endif %}
                         >
-                          {{ second_button_label }}
+                          {{ block.settings.second_button_label }}
                         </a>
                       {% endif %}
                     </div>
@@ -880,6 +893,7 @@
   "presets": [
     {
       "name": "t:sections.recommended_collection.name",
+      "category": "t:sections.group.collection",
       "blocks": [
         {
           "type": "subheading"

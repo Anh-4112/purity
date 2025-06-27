@@ -15,7 +15,6 @@
 <div
   class="block__description mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %} fs-{{ block_st.description_size }} {% if section.settings.hide_description_on_mobile %}hidden-mobile{% endif %} prose"
   style="--space-bottom: {{ block_st.spacing_bottom }};"
-  {{ block.shopify_attributes }}
 >
   {%- if scroll_animation -%}
     <motion-effect
@@ -23,7 +22,9 @@
       class="block"
     >
   {%- endif -%}
-  {{ block_st.description }}
+  <div {{ block.shopify_attributes }}>
+    {{ block.settings.description }}
+  </div>
   {%- if scroll_animation -%}
     </motion-effect>
   {%- endif -%}

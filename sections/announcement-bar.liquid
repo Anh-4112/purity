@@ -65,9 +65,8 @@
           {%- for i in (0..5) -%}
             <div class="flex animation-marquee whitespace-nowrap gap align-center">
               {%- for block in section.blocks -%}
-                {% assign block_st = block.settings %}
-                <div class="announcement-bar__content">
-                  {{ block_st.text }}
+                <div class="announcement-bar__content" {{ block.shopify_attributes }}>
+                  {{ block.settings.text }}
                 </div>
               {%- endfor -%}
             </div>
@@ -92,9 +91,8 @@
         >
           <div class="swiper-wrapper {% if section_st.uppercase %}uppercase {% endif %}fs-{{ scrolling_size }}">
             {%- for block in section.blocks -%}
-              {% assign block_st = block.settings %}
-              <div class="flex content-center mx-auto text-center swiper-slide announcement-bar__content wrap">
-                <div class="announcement-bar__content-inner">{{ block_st.text }}</div>
+              <div class="swiper-slide announcement-bar__content flex wrap content-center mx-auto text-center" {{ block.shopify_attributes }}>
+                <div class="announcement-bar__content-inner">{{ block.settings.text }}</div>
               </div>
             {%- endfor -%}
           </div>
@@ -236,7 +234,63 @@
       "default": "slide",
       "label": "t:sections.announcement-bar.settings.type.name"
     },
-
+    {
+      "type": "header",
+      "content": "t:sections.all.carousel.header",
+      "visible_if": "{{ section.settings.announcement_actions == 'slide' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "default": true,
+      "label": "t:sections.all.carousel.show_navigation.label",
+      "visible_if": "{{ section.settings.announcement_actions == 'slide' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "slide_auto_change",
+      "default": false,
+      "label": "t:sections.all.carousel.slide_auto_change",
+      "visible_if": "{{ section.settings.announcement_actions == 'slide' }}"
+    },
+    {
+      "type": "range",
+      "id": "change_slide_every",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "t:sections.all.carousel.change_slide_every",
+      "default": 5,
+      "visible_if": "{{ section.settings.announcement_actions == 'slide' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.announcement-bar.settings.marquee_settings.label",
+      "visible_if": "{{ section.settings.announcement_actions == 'marquee' }}"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "default": 7,
+      "label": "t:sections.announcement-bar.settings.marquee_settings.speed.label",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "unit": "s",
+      "visible_if": "{{ section.settings.announcement_actions == 'marquee' }}"
+    },
+    {
+      "type": "range",
+      "id": "space_between_text",
+      "label": "t:sections.all.space_between.label",
+      "min": 10,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 50,
+      "visible_if": "{{ section.settings.announcement_actions == 'marquee' }}"
+    },
     {
       "type": "header",
       "content": "t:sections.all.content_setting.label"
@@ -266,56 +320,6 @@
       ],
       "default": "small",
       "label": "t:sections.all.content_header.heading_size.size"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.all.carousel.header"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_navigation",
-      "default": true,
-      "label": "t:sections.all.carousel.show_navigation.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "slide_auto_change",
-      "default": false,
-      "label": "t:sections.all.carousel.slide_auto_change"
-    },
-    {
-      "type": "range",
-      "id": "change_slide_every",
-      "min": 1,
-      "max": 10,
-      "step": 1,
-      "unit": "s",
-      "label": "t:sections.all.carousel.change_slide_every",
-      "default": 5
-    },
-    {
-      "type": "header",
-      "content": "t:sections.announcement-bar.settings.marquee_settings.label"
-    },
-    {
-      "type": "range",
-      "id": "marquee_speed",
-      "default": 7,
-      "label": "t:sections.announcement-bar.settings.marquee_settings.speed.label",
-      "min": 1,
-      "max": 50,
-      "step": 1,
-      "unit": "s"
-    },
-    {
-      "type": "range",
-      "id": "space_between_text",
-      "label": "t:sections.all.space_between.label",
-      "min": 10,
-      "max": 200,
-      "step": 5,
-      "unit": "px",
-      "default": 50
     },
     {
       "type": "header",

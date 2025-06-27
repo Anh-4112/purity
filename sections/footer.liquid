@@ -36,6 +36,202 @@
     }
   }
 </style>
+
+{%- for block in section.blocks -%}
+  {%- case block.type -%}
+    {%- when 'menu_block' -%}
+      {% if request.visual_preview_mode %}
+        <div {{ block.shopify_attributes }} class="flex w-full gap-10 p-30 rounded">
+          <ul
+            class="list-unstyled flex flex-1 gap-10 w-full"
+          >
+            <li
+              class="menu-link have-child"
+            >
+              <a
+                class="menu__item level-2 heading-style fs-52 outlined-border relative"
+                href="#"
+                aria-label="{{ 'accessibility.heading_menu' | t }}"
+              >
+                {{ 'accessibility.heading_menu' | t }}
+              </a>
+
+              <ul class="sub-children-menu list-unstyled flex column gap-15 overflow-hidden-mb mt-1025-20">
+                {% for i in (1..5) %}
+                  <li class="menu-link">
+                    <a
+                      class="menu__item level-3 fs-50 outlined-border relative"
+                      href="#"
+                      aria-label="{{ 'accessibility.menu_item' | t }}"
+                    >
+                      {{ 'accessibility.menu_item' | t }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          </ul>
+        </div>
+      {% endif %}
+    {%- when 'contact_bar_block' -%}
+      {% if request.visual_preview_mode %}
+        <div {{ block.shopify_attributes }} class="flex w-full gap-10 p-30 rounded">
+          <ul
+            class="list-unstyled flex flex-1 gap-10 w-full"
+          >
+            <li
+              class="menu-link have-child"
+            >
+              <a
+                class="menu__item level-2 heading-style fs-52 outlined-border relative"
+                href="#"
+                aria-label="{{ 'accessibility.heading_menu' | t }}"
+              >
+                {{ 'sections.footer.contact_bar' | t }}
+              </a>
+
+              <ul class="sub-children-menu list-unstyled flex column gap-15 overflow-hidden-mb mt-1025-20">
+                <li class="menu-link">
+                  <a
+                    class="menu__item level-3 fs-50 outlined-border relative"
+                    href="#"
+                    aria-label="{{ 'accessibility.menu_item' | t }}"
+                  >
+                    {{ 'sections.footer.address' | t }}
+                  </a>
+                </li>
+                <li class="menu-link">
+                  <a
+                    class="menu__item level-3 fs-50 outlined-border relative"
+                    href="#"
+                    aria-label="{{ 'accessibility.menu_item' | t }}"
+                  >
+                    {{ 'sections.footer.phone' | t }}
+                  </a>
+                </li>
+                <li class="menu-link">
+                  <a
+                    class="menu__item level-3 fs-50 outlined-border relative"
+                    href="#"
+                    aria-label="{{ 'accessibility.menu_item' | t }}"
+                  >
+                    {{ 'sections.footer.email' | t }}
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      {% endif %}
+    {%- when 'newsletter_block' -%}
+      {% if request.visual_preview_mode %}
+        <div {{ block.shopify_attributes }} class="flex w-full gap-10 p-30 rounded">
+          <ul
+            class="list-unstyled flex flex-1 gap-10 w-full"
+          >
+            <li
+              class="menu-link have-child"
+            >
+              <a
+                class="menu__item level-2 heading-style fs-52 outlined-border relative"
+                href="#"
+                aria-label="{{ 'accessibility.heading_menu' | t }}"
+              >
+                {{ 'sections.footer.newsletter' | t }}
+              </a>
+
+              <ul class="sub-children-menu list-unstyled flex column gap-15 overflow-hidden-mb mt-1025-20">
+                <li class="menu-link">
+                  <a
+                    class="menu__item level-3 fs-50 outlined-border relative"
+                    href="#"
+                    aria-label="{{ 'accessibility.menu_item' | t }}"
+                  >
+                    {{ 'sections.footer.desc' | t }}
+                  </a>
+                </li>
+                <li class="menu-link">
+                  {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
+                    <input type="hidden" name="contact[tags]" value="newsletter">
+                    <div class="newsletter-form__field-wrapper mb-20">
+                      <div class="field relative">
+                        <div class="flex gap-10">
+                          <input
+                            id="NewsletterForm-Footer--{{ section.id }}"
+                            type="email"
+                            name="contact[email]"
+                            class="field__input show-placeholder grow-1 w-custom"
+                            style="--width: calc(100% - 65px);--input-color: #444444;"
+                            value="{{ form.email }}"
+                            aria-required="true"
+                            autocapitalize="off"
+                            autocomplete="email"
+                            {% if form.errors %}
+                              aria-invalid="true"
+                              aria-describedby="ContactFooter-error"
+                            {% elsif form.posted_successfully? %}
+                              aria-describedby="ContactFooter-success"
+                            {% endif %}
+                            placeholder="{{ 'newsletter.label' | t }}"
+                            required
+                            pattern=".+\.[a-zA-Z]{2,6}"
+                          >
+                          <label class="visually-hidden" for="NewsletterForm-Footer--{{ section.id }}">
+                            {{ 'newsletter.label' | t }}
+                            <span class="required">*</span></label
+                          >
+                          <button
+                            class="newsletter-form__button btn pointer p-0 btn-primary btn-hover wh-55"
+                            id="Subscribe-{{ section.id }}"
+                            aria-label="{{ 'subscribe.button_label' | t }}"
+                          >
+                            <span class="hidden-on-load transition-short">
+                              <svg width="6" height="11" fill="none">
+                                <use href="#icon-next" />
+                              </svg>
+                            </span>
+                            {%- render 'loader' -%}
+                          </button>
+                        </div>
+                      </div>
+                      {%- if form.errors -%}
+                        <div
+                          class="newsletter-form__message form__message error fs-small inline-flex align-center gap-10 mt-10"
+                          id="ContactFooter-error"
+                        >
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
+                            <use href="#icon-error"></use>
+                          </svg>
+                          <span>
+                            {{- form.errors.translated_fields.email | capitalize }}
+                            {{ form.errors.messages.email -}}
+                          </span>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                    {%- if form.posted_successfully? -%}
+                      <div
+                        class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex align-center gap-10"
+                        id="ContactFooter-success"
+                        tabindex="-1"
+                      >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
+                          <use href="#icon-success">
+                        </svg>
+                        <span>{{- 'newsletter.success' | t }}</span>
+                      </div>
+                    {%- else -%}
+                    {%- endif -%}
+                  {%- endform -%}
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      {% endif %}
+  {%- endcase -%}
+{%- endfor -%}
+
 <footer
   class="footer color-{{ section_st.color_scheme }} gradient border-top"
   style="{{ style | strip | strip_newlines }}"
@@ -81,16 +277,16 @@
                     <div
                       class="footer-block__newsletter-inner"
                     >
-                      {%- if block_st.heading != blank or block_st.description != blank -%}
+                      {%- if block.settings.heading != blank or block.settings.description != blank -%}
                         <div class="footer-block__newsletter-heading">
-                          {%- if block_st.heading != blank -%}
+                          {%- if block.settings.heading != blank -%}
                             <div class="footer__block-heading h6 flex space-between align-center collapsible-title relative pb-10 pb-1025-20">
-                              {{- block_st.heading | escape -}}
+                              {{ block.settings.heading }}
                             </div>
                           {%- endif -%}
-                          {%- if block_st.description != blank -%}
+                          {%- if block.settings.description != blank -%}
                             <div class="footer__block-description mb-20">
-                              {{ block_st.description }}
+                              {{ block.settings.description }}
                             </div>
                           {%- endif -%}
                         </div>
@@ -104,7 +300,7 @@
                                 id="NewsletterForm-Footer--{{ section.id }}"
                                 type="email"
                                 name="contact[email]"
-                                class="field__input show-placeholder grow-1 w-custom"
+                                class="field__input show-placeholder grow-1 w-custom js-custom-input"
                                 style="--width: calc(100% - 65px);--input-color: #444444;"
                                 value="{{ form.email }}"
                                 aria-required="true"
@@ -153,29 +349,16 @@
                             </div>
                           {%- endif -%}
                         </div>
-                        {%- if form.posted_successfully? -%}
-                          <div
-                            class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex align-center gap-10"
-                            id="ContactFooter-success"
-                            tabindex="-1"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="flex-auto w-20">
-                              <use href="#icon-success">
-                            </svg>
-                            <span>{{- 'newsletter.success' | t }}</span>
-                          </div>
-                        {%- else -%}
-                        {%- endif -%}
                       {%- endform -%}
-                      {%- if block_st.note != blank -%}
+                      {%- if block.settings.note != blank -%}
                         <div class="footer__block-note fs-small">
-                          {{ block_st.note }}
+                          {{ block.settings.note }}
                         </div>
                       {%- endif -%}
                     </div>
                   </div>
                 {%- when 'menu_block' -%}
-                  {%- if block_st.menu != blank or block_st.heading != blank -%}
+                  {%- if block.settings.menu != blank or block.settings.heading != blank -%}
                     <details
                       class="mobile-collapsible-row detail-open"
                       hidden-mobile
@@ -185,18 +368,18 @@
                       <summary tabindex="-1" class="collapsible-row__summary pointer-md-none pb-24 pb-1025-0">
                         <h3 class="footer__block-heading h6 flex space-between align-center collapsible-heading relative">
                           <span>
-                            {{- block_st.heading | default: block_st.menu.title | escape -}}
+                            {{ block.settings.heading }}
                           </span>
-                          {%- if block_st.menu != blank -%}
+                          {%- if block.settings.menu != blank -%}
                             <span class="open-children-toggle icon transition hidden-md">
                               <span class="icon_plus-animation heading-color"> </span>
                             </span>
                           {%- endif -%}
                         </h3>
                       </summary>
-                      {%- if block_st.menu != blank -%}
+                      {%- if block.settings.menu != blank -%}
                         <ul class="footer__block-content menu-list-footer collapsible-row__content list-unstyled overflow-hidden-mb">
-                          {%- for link in block_st.menu.links -%}
+                          {%- for link in block.settings.menu.links -%}
                             <li class="mb-10">
                               <a
                                 href="{{ link.url }}"
@@ -218,11 +401,11 @@
                     is="collapsible-row"
                     open
                   >
-                    {%- if block_st.store_heading != blank -%}
+                    {%- if block.settings.store_heading != blank -%}
                       <summary tabindex="-1" class="collapsible-row__summary pointer-md-none pb-24 pb-1025-0">
                         <h3 class="footer__block-heading h6 flex space-between align-center collapsible-heading relative">
                           <span>
-                            {{ block_st.store_heading | escape }}
+                            {{ block.settings.store_heading | escape }}
                           </span>
                           <span class="open-children-toggle icon transition hidden-md">
                             <span class="icon_plus-animation heading-color"> </span>
@@ -234,33 +417,36 @@
                       class="collapsible-row__content overflow-hidden-mb"
                     >
                       <div class="pb-30 pb-1025-0 flex column gap-25">
-                        {%- if block_st.store_address or block_st.store_email or block_st.store_phone %}
+                        {%- if block.settings.store_address
+                          or block.settings.store_email
+                          or block.settings.store_phone
+                        %}
                           <div class="footer_store-infor flex column">
-                            {%- if block_st.store_address != blank -%}
+                            {%- if block.settings.store_address != blank -%}
                               <div class="footer__store-info">
                                 <div class="footer__info-content">
-                                  {{ block_st.store_address }}
+                                  {{ block.settings.store_address }}
                                 </div>
                               </div>
                             {%- endif -%}
-                            {%- if block_st.store_phone != blank -%}
+                            {%- if block.settings.store_phone != blank -%}
                               <div class="footer__store-info">
                                 <a
-                                  href="tel:{{ block_st.store_phone }}"
+                                  href="tel:{{ block.settings.store_phone }}"
                                   class="footer__info-content"
-                                  aria-label=" {{ block_st.store_phone }}"
+                                  aria-label=" {{ block.settings.store_phone }}"
                                 >
-                                  {{ block_st.store_phone }}
+                                  {{ block.settings.store_phone }}
                                 </a>
                               </div>
                             {%- endif -%}
-                            {%- if block_st.store_email != blank -%}
+                            {%- if block.settings.store_email != blank -%}
                               <div class="footer__store-info">
                                 <a
-                                  href="mailto:{{ block_st.store_email }}"
+                                  href="mailto:{{ block.settings.store_email }}"
                                   class="footer__info-content"
                                 >
-                                  {{ block_st.store_email }}
+                                  {{ block.settings.store_email }}
                                 </a>
                               </div>
                             {%- endif -%}
@@ -279,9 +465,9 @@
                             {% render 'social-icons' %}
                           </social-icon>
                         {%- endif -%}
-                        {%- if block_st.store_description != blank -%}
+                        {%- if block.settings.store_description != blank -%}
                           <div class="footer__block-info">
-                            {{ block_st.store_description }}
+                            {{ block.settings.store_description }}
                           </div>
                         {%- endif -%}
                       </div>
@@ -379,7 +565,7 @@
   {%- endif -%}
 </footer>
 <script type="module">
-  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-action.js" | asset_url }}';
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form#ContactFooter',

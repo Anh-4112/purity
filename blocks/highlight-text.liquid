@@ -7,43 +7,53 @@
   endif
   assign scroll_animation = theme_st.scroll_animation
 %}
-{%- if scroll_animation -%}
-  <motion-effect
-    data-animate="left-to-right"
-    class="block ltr-motion"
+{% if request.visual_preview_mode %}
+  <div
+    class="block__highlight_text btn-rounded py-8 px-15"
+    style="color: #ffffff; background-color: #C92419;"
+    {{ block.shopify_attributes }}
   >
-{%- endif -%}
-<div
-  class="block__highlight_text subheading_weight lh-1 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color{% if scroll_animation == false %}{% if has_custom_background %} bg-custom py-8 px-15 btn-rounded{% endif %} inline-flex align-center gap-5{% endif %}"
-  style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
-  {{ block.shopify_attributes }}
->
+    <div>{{ block.settings.highlight_text }}</div>
+  </div>
+{% else %}
   {%- if scroll_animation -%}
-    <div class="ltr-outer inline-block max-w-100">
-      <div class="ltr-inner inline-block overflow-hidden relative{% if has_custom_background %} py-8 px-15 btn-rounded{% endif %} max-w-100">
-        <div class="ltr-inner-content">
-          <div
-            class="ltr-wrap inline-flex wrap content-center gap-5 lh-normal max-w-100"
-          >
+    <motion-effect
+      data-animate="left-to-right"
+      class="block ltr-motion"
+    >
   {%- endif -%}
-  {%- if block_st.highlight_text_icon == 'star' -%}
-    {%- render 'icon-star' -%}
-  {%- elsif block_st.highlight_text_icon == 'dot' -%}
-    <svg width="5" height="5" viewBox="0 0 8 8" fill="none">
-      <use href="#icon-dot"></use>
-    </svg>
-  {%- endif -%}
-    <span class="max-w-100">{{ block_st.highlight_text | escape }}</span>
+
+  <div
+    class="block__highlight_text subheading_weight lh-1 mb-custom{% if block_st.spacing_bottom > 10 %} mb_auto-rsp{% endif %}{% if block_st.uppercase %} uppercase{% endif %} fs-{{ block_st.highlight_text_size }} text-color{% if scroll_animation == false %}{% if has_custom_background %} bg-custom py-8 px-15 btn-rounded{% endif %} inline-flex align-center gap-5{% endif %}"
+    style="--space-bottom: {{ block_st.spacing_bottom }};--color-text: {{ block_st.text_color }};--bg-color-custom: {{ block_st.background_color }};"
+  >
+    {%- if scroll_animation -%}
+      <div class="ltr-outer inline-block max-w-100">
+        <div class="ltr-inner inline-block overflow-hidden relative{% if has_custom_background %} py-8 px-15 btn-rounded{% endif %} max-w-100">
+          <div class="ltr-inner-content">
+            <div
+              class="ltr-wrap inline-flex wrap content-center gap-5 lh-normal max-w-100"
+            >
+    {%- endif -%}
+    {%- if block_st.highlight_text_icon == 'star' -%}
+      {%- render 'icon-star' -%}
+    {%- elsif block_st.highlight_text_icon == 'dot' -%}
+      <svg width="5" height="5" viewBox="0 0 8 8" fill="none">
+        <use href="#icon-dot"></use>
+      </svg>
+    {%- endif -%}
+    <div class="max-w-100">{{ block.settings.highlight_text | escape }}</div>
+    {%- if scroll_animation -%}
+      </div>
+      </div>
+      </div>
+      </div>
+    {%- endif -%}
+  </div>
   {%- if scroll_animation -%}
-    </div>
-    </div>
-    </div>
-    </div>
+    </motion-effect>
   {%- endif -%}
-</div>
-{%- if scroll_animation -%}
-  </motion-effect>
-{%- endif -%}
+{% endif %}
 {% schema %}
 {
   "name": "t:sections.all.content_setting.highlight_text.label",

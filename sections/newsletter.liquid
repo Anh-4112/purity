@@ -29,10 +29,10 @@
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    {%- if section_st.heading != blank or section_st.description != blank -%}
+    {%- if section.settings.heading != blank or section.settings.description != blank -%}
       {% assign animate_delay = 25 %}
       <div class="section-header text-{{ text_alignment }}">
-        {%- if section_st.heading != blank -%}
+        {%- if section.settings.heading != blank -%}
           {%- if scroll_animation -%}
             <motion-effect
               data-animate="fade-up"
@@ -43,13 +43,13 @@
           <h2
             class="section-heading {{ header_size }}"
           >
-            {{ section_st.heading }}
+            {{ section.settings.heading }}
           </h2>
           {%- if scroll_animation -%}
             </motion-effect>
           {%- endif -%}
         {%- endif -%}
-        {%- if section_st.description != blank -%}
+        {%- if section.settings.description != blank -%}
           {% assign animate_delay = animate_delay | plus: 50 %}
           {%- if scroll_animation -%}
             <motion-effect
@@ -61,7 +61,7 @@
           <div
             class="section-description mt-16 prose"
           >
-            {{ section_st.description }}
+            {{ section.settings.description }}
           </div>
           {%- if scroll_animation -%}
             </motion-effect>
@@ -88,7 +88,7 @@
               autocapitalize="off"
               value="{% if customer %}{{ customer.email }}{% endif %}"
               placeholder="{% if section_st.email_placeholder != blank %}{{section_st.email_placeholder}}{% else %}{{ 'newsletter.label' | t }}{% endif %}"
-              class="newsletter__input grow-1"
+              class="newsletter__input grow-1 js-custom-input"
               {% if form.errors %}
                 aria-invalid="true"
                 aria-describedby="Newsletter-error--{{ section.id }}"
@@ -127,24 +127,12 @@
             {{ form.errors.messages.email -}}
           </small>
         {%- endif -%}
-        {%- if form.posted_successfully? -%}
-          <div
-            class="newsletter-form__message newsletter-form__message--success success form__message fs-small inline-flex gap-10 mt-10 align-self-{{ text_alignment }}"
-            id="Newsletter-success--{{ section.id }}"
-            tabindex="-1"
-          >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="flex-auto w-20">
-              <use href="#icon-success"></use>
-            </svg>
-            {{- 'newsletter.success' | t }}
-          </div>
-        {%- endif -%}
       {%- endform -%}
     </div>
   </div>
 </div>
 <script type="module">
-  import { setupFormValidation } from '{{ "form-validation.js" | asset_url }}';
+  import { setupFormValidation } from '{{ "form-action.js" | asset_url }}';
   document.addEventListener('DOMContentLoaded', () => {
     setupFormValidation({
       formSelector: 'form.newsletter__form',
@@ -304,7 +292,8 @@
   ],
   "presets": [
     {
-      "name": "t:sections.newsletter.name"
+      "name": "t:sections.newsletter.name",
+      "category": "t:sections.group.form"
     }
   ]
 }

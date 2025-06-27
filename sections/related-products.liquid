@@ -72,7 +72,7 @@
                 >
               {% endif %}
               <h2 class="section-heading{{ header_size }}">
-                {{ section_st.title }}
+                {{ section.settings.title }}
               </h2>
               {% if scroll_animation %}
                 </motion-effect>
@@ -88,7 +88,7 @@
                 >
               {% endif %}
               <div class="section-description mt-16 prose">
-                {{ section_st.description }}
+                {{ section.settings.description }}
               </div>
               {% if scroll_animation %}
                 </motion-effect>
@@ -274,7 +274,34 @@
       "type": "checkbox",
       "id": "enable_carousel",
       "label": "t:sections.all.carousel.enable_carousel.label",
+<<<<<<< HEAD
+      "default": true,
+      "info": "t:sections.all.carousel.enable_carousel.description"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "default": true,
+      "label": "t:sections.all.carousel.show_navigation.label",
+      "visible_if": "{{ section.settings.enable_carousel != false }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "default": false,
+      "label": "t:sections.all.carousel.show_pagination.label",
+      "visible_if": "{{ section.settings.enable_carousel != false }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "reveal_slide",
+      "default": false,
+      "label": "t:sections.all.carousel.reveal_slide.label",
+      "info": "t:sections.all.carousel.reveal_slide.info",
+      "visible_if": "{{ section.settings.enable_carousel != false }}"
+=======
       "default": false
+>>>>>>> main_ver_1_1_0_clone_27
     },
     {
       "type": "range",
@@ -312,7 +339,8 @@
   ],
   "presets": [
     {
-      "name": "t:sections.related-products.name"
+      "name": "t:sections.related-products.name",
+      "category": "t:sections.group.product"
     }
   ],
   "enabled_on": {

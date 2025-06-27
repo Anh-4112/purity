@@ -302,23 +302,26 @@
     {
       "type": "header",
       "content": "t:sections.multi_content.blocks.bellow_image",
-      "info": "t:sections.multi_content.blocks.info_bellow"
+      "visible_if": "{{ block.settings.content_position == 'bellow' }}"
     },
     {
       "type": "checkbox",
       "id": "show_badge",
       "default": true,
+      "visible_if": "{{ block.settings.content_position == 'bellow' }}",
       "label": "t:settings_schema.badges.settings.show_badge.label"
     },
     {
       "type": "text",
       "id": "badge",
       "default": "Highlight text",
-      "label": "t:sections.multi_content.blocks.badge"
+      "label": "t:sections.multi_content.blocks.badge",
+      "visible_if": "{{ block.settings.content_position == 'bellow' }}"
     },
     {
       "type": "select",
       "id": "highlight_text_icon",
+      "visible_if": "{{ block.settings.content_position == 'bellow' }}",
       "options": [
         {
           "value": "star",
@@ -340,19 +343,22 @@
       "type": "color",
       "id": "background_color",
       "label": "t:sections.image-with-text.settings.background_color",
-      "default": "#D0473E",
+      "visible_if": "{{ block.settings.content_position == 'bellow' }}",
+      "default": "#D0473E"
       "alpha": true
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "t:sections.image-with-text.settings.text_color",
-      "default": "#ffffff",
+      "visible_if": "{{ block.settings.content_position == 'bellow' }}",
+      "default": "#ffffff"
       "alpha": true
     },
     {
       "type": "select",
       "id": "vertical_position",
+      "visible_if": "{{ block.settings.content_position == 'bellow' }}",
       "options": [
         {
           "value": "top",
@@ -368,7 +374,8 @@
     },
     {
       "type": "header",
-      "content": "t:sections.collection-list.settings.overlay_image_settings"
+      "content": "t:sections.collection-list.settings.overlay_image_settings",
+      "visible_if": "{{ block.settings.content_position == 'overlay' }}"
     },
     {
       "type": "range",
@@ -378,7 +385,8 @@
       "step": 1,
       "unit": "%",
       "label": "t:sections.slideshow.settings.blocks.image.image_overlay_opacity.overlay_opacity",
-      "default": 0
+      "default": 0,
+      "visible_if": "{{ block.settings.content_position == 'overlay' }}"
     },
     {
       "type": "select",
@@ -386,6 +394,7 @@
       "default": "middle-left",
       "label": "t:sections.all.desktop_content_position.label",
       "info": "t:sections.all.desktop_content_position.info",
+      "visible_if": "{{ block.settings.content_position == 'overlay' }}",
       "options": [
         {
           "group": "t:sections.all.desktop_content_position.group.top.label",

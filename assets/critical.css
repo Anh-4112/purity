@@ -365,6 +365,18 @@ input[type="search"] {
   appearance: none;
   -webkit-appearance: none;
 }
+input.error-input,
+textarea.error-input {
+  --input-color: #C5382E !important;
+  --color-border: #C5382E !important;
+  --color-heading: #C5382E !important;
+  border-color: var(--color-border) !important;
+}
+input:required:valid:not(.error-input),
+textarea:required:valid:not(.error-input) {
+  --color-border: #13621f !important;
+  border-color: var(--color-border) !important;
+}
 select {
   cursor: pointer;
   -moz-appearance: none;
@@ -479,6 +491,9 @@ input[type="checkbox"]:checked + .checkmark:before {
 .w-50-percent {
   width: 50%;
 }
+.w-25-percent {
+  width: 25%;
+}
 .w-custom {
   width: var(--width);
 }
@@ -537,6 +552,12 @@ input[type="checkbox"]:checked + .checkmark:before {
 }
 .fs-13 {
   font-size: 1.3rem;
+}
+.fs-50 {
+  font-size: 5rem;
+}
+.fs-52 {
+  font-size: 5.2rem;
 }
 .sale-color {
   color: rgb(var(--sale-bg-rgb));

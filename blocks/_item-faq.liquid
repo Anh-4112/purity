@@ -1,10 +1,8 @@
 {%- liquid
   assign section_st = section.settings
   assign open_all_question = section_st.open_all_question
-  assign question = block.settings.question
-  assign answer = block.settings.answer
 -%}
-{%- if question != blank and answer != blank -%}
+{%- if block.settings.question != blank and block.settings.answer != blank -%}
   <div
     class="section__faq-items relative faq-block border-bottom"
   >
@@ -16,10 +14,12 @@
       {% endif %}
     >
       <summary class="collapsible-row__summary">
-        <div
-          class="h6 collapsible-heading transition pointer relative flex pe-20"
-        >
-          {{ question }}
+        <div class="collapsible-heading">
+          <div
+            class="h6 transition pointer relative flex pe-20"
+          >
+            {{ block.settings.question }}
+          </div>
           <span class="open-children-toggle transition">
             <span class="icon_plus-animation heading-color"> </span>
           </span>
@@ -28,7 +28,7 @@
       <div
         class="collapsible-row__content overflow-hidden"
       >
-        <div class="faq_content-inner mt-10 mt-1025-20 prose">{{ answer }}</div>
+        <div class="faq_content-inner mt-10 mt-1025-20 prose">{{ block.settings.answer }}</div>
       </div>
     </details>
   </div>

@@ -30,6 +30,15 @@
     assign ratio = '3/4'
   endif
 %}
+{% style %}
+  {% if request.visual_preview_mode %}
+    .bundle-sticky{
+      display: flex;
+      flex: 0 0 auto;
+      width: var(--col-width, 50%);
+    }
+  {% endif %}
+{% endstyle %}
 <div
   class="bundle-sticky border rounded p-20 p-1025-30 flex column gap-20 gap-1025-25 sticky-1025 top-30"
   style="--border-height: 2px;"
@@ -42,7 +51,7 @@
       <div class="bundle-title mb-10 gap-10">
         {%- if title != blank -%}
           <h2 class="block section-heading {{ header_size }}">
-            {{ title }}
+            {{ block.settings.title }}
           </h2>
         {%- endif -%}
         <span
@@ -56,7 +65,7 @@
       </div>
       {%- if description != blank -%}
         <div class="section-description prose">
-          {{ description }}
+          {{ block.settings.description }}
         </div>
       {%- endif -%}
     </bundle-header>
