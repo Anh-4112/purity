@@ -27,12 +27,12 @@ input[type="search"]::-webkit-search-cancel-button {
   cursor: pointer;
   transition: var(--duration-short);
 }
-.address-check input[type="checkbox"]{
-  width: 1.5rem; 
-  height: 1.5rem; 
-  color: var(--color-link); 
-  background-color: #f3f4f6; 
-  border: 1px solid var(--color-border); 
+.address-check input[type="checkbox"] {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-link);
+  background-color: #f3f4f6;
+  border: 1px solid var(--color-border);
   border-radius: 0.125rem;
   margin: 0 2px 0 0;
 }
@@ -66,7 +66,7 @@ blockquote {
 .pointer {
   cursor: pointer;
 }
-.cursor-crosshair{
+.cursor-crosshair {
   cursor: url(cursor-close.png), pointer;
 }
 .pointer-none {
@@ -764,9 +764,9 @@ blockquote {
   transform: translateY(0);
   pointer-events: auto;
 }
-.fixed-overlay{
+.fixed-overlay {
   position: fixed;
-  transition: .4s cubic-bezier(.7,0,.2,1);
+  transition: 0.4s cubic-bezier(0.7, 0, 0.2, 1);
   transition-property: opacity, visibility, background-color;
   inset-block-start: 0;
   inset-inline-start: 0;
@@ -777,7 +777,7 @@ blockquote {
   opacity: 0;
   visibility: hidden;
 }
-.dropdown-open header ~ .fixed-overlay{
+.dropdown-open header ~ .fixed-overlay {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -1126,7 +1126,8 @@ blockquote {
   :where(a:not(a[role="link"]):hover) {
     color: var(--color-heading);
   }
-  :where(.btn:not(a[role="link"]),
+  :where(
+      .btn:not(a[role="link"]),
       .btn-hover:not(a[role="link"]),
       .btn-tag a,
       .shopify-payment-button__button--unbranded,
@@ -1161,13 +1162,14 @@ blockquote {
     background-color: var(--btn-primary-bg-color);
   }
   :where(
-    .shopify-payment-button__more-options,
-    .shopify-payment-button__button--unbranded
-  ):after {
+      .shopify-payment-button__more-options,
+      .shopify-payment-button__button--unbranded
+    ):after {
     background-color: var(--btn-primary-bg-color) !important;
   }
-  :where(.btn:not(a[role="link"]),
-    .btn-hover:not(a[role="link"]),
+  :where(
+      .btn:not(a[role="link"]),
+      .btn-hover:not(a[role="link"]),
       .btn-tag a,
       body .jdgm-write-rev-link,
       body .jdgm-write-rev-link.jdgm-write-rev-link,
@@ -1284,16 +1286,16 @@ blockquote {
     color: var(--color-heading);
   }
   .modal__close svg,
-  .header__icon svg{
-    transition: .35s cubic-bezier(.25,.1,.25,1)
+  .header__icon svg {
+    transition: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
   .pswp__button--close-zoom:hover svg,
-  .modal__close:hover svg{
-      transition: var(--duration-short);
-      rotate: 45deg;
-      scale: 110%;
+  .modal__close:hover svg {
+    transition: var(--duration-short);
+    rotate: 45deg;
+    scale: 110%;
   }
-  .header__icon:hover svg{
+  .header__icon:hover svg {
     color: var(--color-primary);
     scale: 110%;
   }
@@ -1301,12 +1303,14 @@ blockquote {
     --opacity: 1;
   }
   .collection-list__content-inner:hover .collection-list__icon {
-    transform: rotate(45deg);
+    clip-path: inset(0 0 0 0 round 50%);
   }
   .product__inner {
     --zoom-transform: scale(1.1);
   }
-  .product-item__inner:hover .product__inner :is(.product__hover-img, .btn__quick-shop),
+  .product-item__inner:hover
+    .product__inner
+    :is(.product__hover-img, .btn__quick-shop),
   .btn__quick-shop:focus-visible {
     opacity: 1;
     visibility: visible;
@@ -1407,7 +1411,7 @@ blockquote {
   .template-product.mobile-sticky-bar-enabled .back-to-top {
     bottom: 15rem;
   }
-  .mobile-sticky-bar-enabled .sticky-add-cart{
+  .mobile-sticky-bar-enabled .sticky-add-cart {
     bottom: 67px;
   }
   .mobile-sticky-bar-enabled .footer_bottom-inner {
@@ -1634,7 +1638,7 @@ blockquote {
   text-decoration: underline;
   display: inline-block;
 }
-.footer__newsletter .error-custom{
+.footer__newsletter .error-custom {
   margin-top: 0 !important;
   margin-bottom: 1rem;
 }
@@ -1656,7 +1660,7 @@ blockquote {
   font-weight: var(--subheading_weight, 500);
   line-height: normal;
 }
-.error.error-custom{
+.error.error-custom {
   background-color: transparent;
   padding: unset;
   margin-top: 1rem;
@@ -1714,7 +1718,8 @@ blockquote {
   height: var(--icon-width, 14px);
 }
 
-:is(.detail-open,.collapse-block.open, cart-gift-wrap-element.open) .icon_plus-animation:before {
+:is(.detail-open, .collapse-block.open, cart-gift-wrap-element.open)
+  .icon_plus-animation:before {
   opacity: 0;
   -webkit-transform: translate(-50%, -50%) rotate(90deg);
   transform: translate(-50%, -50%) rotate(90deg);
