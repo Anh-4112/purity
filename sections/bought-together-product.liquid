@@ -17,6 +17,8 @@
       assign header_size = 'h1'
     endif
     assign show_button_add_all = false
+    assign hidden_highlight_text_on_mobile = section_st.hidden_highlight_text_on_mobile
+    assign hidden_description_on_mobile = section_st.hidden_description_on_mobile
   -%}
   {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -81,7 +83,7 @@
               >
                 {% if section_st.highlight_text != blank %}
                   <div
-                    class="highlight_text subheading_weight inline-flex content-center gap-5 text-color bg-custom py-5 px-15 btn-rounded fs-small-1 mb-15"
+                    class="highlight_text subheading_weight {% if hidden_highlight_text_on_mobile %}inline-flex-md hidden{% else %}inline-flex{% endif %} content-center gap-5 text-color bg-custom py-5 px-15 btn-rounded fs-small-1 mb-15"
                     style="--color-text: {{ section_st.text_color }};--bg-color-custom: {{ section_st.background_color }};"
                   >
                     {%- if section_st.highlight_text_icon == 'star' -%}
@@ -103,7 +105,7 @@
                   </h2>
                 {%- endif -%}
                 {%- if section_st.description != blank -%}
-                  <div class="section-description mt-16 prose">
+                  <div class="section-description mt-16 prose {% if hidden_description_on_mobile %}hidden block-md{% endif %}">
                     {{ section.settings.description }}
                   </div>
                 {%- endif -%}
@@ -113,7 +115,7 @@
               <product-form class="bought-together-products-form">
                 <form
                   method="post"
-                  action="/cart/add"
+                  action="{{ routes.cart_add_url }}"
                   accept-charset="UTF-8"
                   enctype="multipart/form-data"
                   novalidate="novalidate"
@@ -343,6 +345,12 @@
       "alpha": true
     },
     {
+      "type": "checkbox",
+      "id": "hidden_highlight_text_on_mobile",
+      "label": "t:sections.all.mobile_options.mobile_layout.hidden_on_mobile.label",
+      "default": true
+    },
+    {
       "type": "header",
       "content": "t:sections.all.content_header.label"
     },
@@ -362,6 +370,12 @@
       "type": "richtext",
       "id": "description",
       "label": "t:sections.all.content_setting.description.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hidden_description_on_mobile",
+      "label": "t:sections.all.mobile_options.mobile_layout.hidden_description_on_mobile.label",
+      "default": true
     },
     {
       "type": "select",
