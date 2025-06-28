@@ -334,7 +334,6 @@ class VariantInput extends HTMLElement {
 
   updateBoughtTogether(currentSection) {
     let total_price = Number(currentSection.getAttribute("data-price"));
-    console.log('total_price', total_price)
     currentSection
       .querySelectorAll(".bought-together-checkbox[type='checkbox']")
       .forEach((item) => {
@@ -378,6 +377,14 @@ class VariantInput extends HTMLElement {
       total_price,
       cartStrings.money_format
     );
+
+    const totalElementMobile = document.querySelector("button-bought-together-mobile .total-price .price");
+    if (totalElementMobile) {
+      totalElementMobile.innerHTML = NextSkyTheme.formatMoney(
+        total_price,
+        cartStrings.money_format
+      );
+    }
   }
 
   onSwatchClick(event) {
