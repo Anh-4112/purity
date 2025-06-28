@@ -56,6 +56,7 @@
   elsif show_pagination == false and items_per_row_mobile == 1.5
     assign class_pagination = ' hidden'
   endif
+  assign show_view_all_button = section_st.show_view_all_button
 -%}
 {%- capture style -%}
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -229,12 +230,23 @@
                       %}
                     {%- endfor -%}
                   </div>
-                    <div
-                      class="swiper-pagination {{ class_pagination }}"
-                    ></div>
+                  <div
+                    class="swiper-pagination {{ class_pagination }}"
+                  ></div>
                 </slide-section>
                 {% if scroll_animation %}
                   </motion-items-effect>
+                {% endif %}
+                {% if show_view_all_button %}
+                  <div class="mt-20 flex text-center justify-content-center">
+                    <a
+                      href="{{ collection.url }}"
+                      class="pointer btn-outline btn w-md-custom w-full max-w-100"
+                      aria-label="{{ section.settings.view_all_button_label }}"
+                    >
+                      {{ section.settings.view_all_button_label }}
+                    </a>
+                  </div>
                 {% endif %}
               </div>
             {%- else -%}
@@ -283,6 +295,18 @@
                 </slide-section>
                 {% if scroll_animation %}
                   </motion-items-effect>
+                {% endif %}
+                {% if show_view_all_button %}
+                  <div class="mt-20 flex text-center justify-content-center">
+                    <a
+                      role="link"
+                      aria-disabled="true"
+                      class="pointer btn-outline btn w-md-custom w-full max-w-100"
+                      aria-label="{{ section.settings.view_all_button_label }}"
+                    >
+                      {{ section.settings.view_all_button_label }}
+                    </a>
+                  </div>
                 {% endif %}
               </div>
             {%- endif -%}
@@ -378,6 +402,19 @@
       ],
       "default": "medium",
       "label": "t:sections.all.content_header.heading_size.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all_button",
+      "default": false,
+      "label": "t:sections.all.content_setting.show_view_all_button.label"
+    },
+    {
+      "type": "text",
+      "id": "view_all_button_label",
+      "default": "t:sections.all.content_setting.show_view_all_button.default_text",
+      "label": "t:sections.all.content_setting.show_view_all_button.label_text",
+      "visible_if": "{{ section.settings.show_view_all_button == true }}"
     },
     {
       "type": "header",

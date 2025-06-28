@@ -54,6 +54,13 @@
   elsif show_pagination == false and items_per_row_mobile == 1.5
     assign class_pagination = ' hidden'
   endif
+  assign show_view_all = false
+  assign show_view_all_button = section_st.show_view_all_button
+  if show_view_all_button and text_alignment == 'start'
+    assign show_view_all = true
+  elsif show_view_all_button and text_alignment == 'end'
+    assign show_view_all = true
+  endif
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};--gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;
@@ -68,8 +75,11 @@
   <div class="{{ section_width }}">
     {%- if section_st.heading != blank or section_st.description != blank or section_st.subheading != blank -%}
       <div
-        class="section-header text-{{ text_alignment }} mb-30 mb-md-40"
+        class="section-header {% if show_view_all %}flex space-between align-center{% if text_alignment == 'end' %} row-reverse {% endif %}{% else %}text-{{ text_alignment }} {% endif %}mb-30 mb-md-40"
       >
+        {% if show_view_all %}
+          <div>
+        {% endif %}
         {% assign animate_delay = 25 %}
         {%- if section_st.subheading != blank -%}
           {% if scroll_animation %}
@@ -118,6 +128,33 @@
             </motion-effect>
           {% endif %}
         {%- endif -%}
+        {% if show_view_all %}
+          </div>
+          {% if scroll_animation %}
+            <motion-effect
+              data-animate="fade-up"
+              data-animate-delay="25"
+              class="block"
+            >
+          {% endif %}
+          <div class="flex">
+            <a
+              {% if collection != blank %}
+                href="{{ collection.url }}"
+              {% else %}
+                role="link"
+                aria-disabled="true"
+              {% endif %}
+              class="pointer btn-outline btn w-md-custom w-full max-w-100"
+              aria-label="{{ section.settings.view_all_button_label }}"
+            >
+              {{ section.settings.view_all_button_label }}
+            </a>
+          </div>
+          {% if scroll_animation %}
+            </motion-effect>
+          {% endif %}
+        {% endif %}
       </div>
     {%- endif -%}
     {% if scroll_animation %}
@@ -188,6 +225,22 @@
     {% endif %}
     {% if scroll_animation %}
       </motion-items-effect>
+    {% endif %}
+    {% if show_view_all_button and text_alignment == 'center' %}
+      <div class="mt-20 flex text-center justify-content-center">
+        <a
+          {% if collection != blank %}
+            href="{{ collection.url }}"
+          {% else %}
+            role="link"
+            aria-disabled="true"
+          {% endif %}
+          class="pointer btn-outline btn w-md-custom w-full max-w-100"
+          aria-label="{{ section.settings.view_all_button_label }}"
+        >
+          {{ section.settings.view_all_button_label }}
+        </a>
+      </div>
     {% endif %}
   </div>
 </div>
@@ -295,6 +348,19 @@
       ],
       "default": "start",
       "label": "t:sections.all.text_alignment.alignment"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all_button",
+      "default": false,
+      "label": "t:sections.all.content_setting.show_view_all_button.label"
+    },
+    {
+      "type": "text",
+      "id": "view_all_button_label",
+      "default": "t:sections.all.content_setting.show_view_all_button.default_text",
+      "label": "t:sections.all.content_setting.show_view_all_button.label_text",
+      "visible_if": "{{ section.settings.show_view_all_button == true }}"
     },
     {
       "type": "header",
