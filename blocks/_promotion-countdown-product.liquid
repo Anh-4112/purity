@@ -15,19 +15,14 @@
     class="flex gap-5 rounded countdown_timer-product align-center space-between wrap bg-custom p-15 mb-custom color-white"
     style="--opacity: 1;--bg-color-custom: #D0473E;--font-size: 2rem;--padding: 0.5rem 0.3rem;--min-width: 3rem; --img-rounded: 5px;"
   >
-      {% if heading or description %}
-      <div class="promotion_countdown mb-20 sale-color">
-        {% if heading %}
-          <div class="heading h6 sale-color">{{ block.settings.heading }}</div>
-        {% endif %}
-        {% if description %}
-          <div class="description sale-color">{{ block.settings.description }}</div>
-        {% endif %}
+    <div class="promotion_countdown mb-20 sale-color">
+      {% if heading %}
+        <div class="heading h6 sale-color">{{ block.settings.heading }}</div>
+      {% endif %}
+      {% if description %}
+        <div class="description sale-color">{{ block.settings.description }}</div>
       {% endif %}
       <div class="inline-flex gap-15 align-center">
-        {%- if block.settings.description != blank -%}
-            <span class="description ms-auto heading_weight">{{ description }}</span>
-          {% endif %}
         <countdown-timer
           class="flex gap-5 text-center wrap heading_weight"
           data-deadline="{{ product.metafields.custom.promotion_countdown }}"
@@ -54,6 +49,7 @@
           </div>
         </countdown-timer>
       </div>
+    </div>
   </div>
 {%- endif -%}
 {% schema %}
