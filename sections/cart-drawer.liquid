@@ -45,16 +45,16 @@
     data-open-cart-mobile="{{ open_cart_mobile }}"
     drawer
   >
-    <modal-overlay class="modal-overlay cursor-crosshair"></modal-overlay>
+    <modal-overlay class="modal-overlay pointer"></modal-overlay>
     <div
-      class="modal-inner draw-mb draw-mb-full drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 inset-y-0 z-2 w-full"
+      class="modal-inner draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 inset-y-0 z-2 w-full"
       role="dialog"
       aria-modal="true"
       aria-label="{{ 'sections.cart.title' | t }}"
       tabindex="-1"
     >
       <div class="drawer__body h-full flex column bg-white rounded-start">
-        <div
+        <draggable-modal
           class="drawer__header drawer__header-cart flex gap-10 space-between align-center drawer-spacing border-bottom relative"
           style="--padding-block-desktop: 2.15rem;--padding-inline-desktop:3.2rem;"
         >
@@ -87,7 +87,7 @@
               <use href="#icon-close" />
             </svg>
           </button>
-        </div>
+        </draggable-modal>
         {%- if cart == empty -%}
           {% liquid
             assign cart_empty_heading = 'sections.cart.empty' | t
@@ -185,27 +185,25 @@
             </div>
           </div>
         {%- else -%}
-          <div class="cart-drawer-inner overflow-y-auto custom-scrollbar grow-1 flex column">
-            {% assign total_price = cart.total_price | times: 1 %}
-            {%- if show_free_shipping_message and free_minimum_amount -%}
-              <free-ship-progress-bar
-                data-fe-unavailable="{% if free_shipping_message != blank %}{{ free_shipping_message }}{% else %}{{ 'sections.cart.free_shipping_html' | t }}{% endif %}"
-                data-fe-available="{{ 'sections.cart.free_shipping_available' | t }}"
-                class="free-shipping-bar drawer-spacing pt-20"
-                style="--padding-block:1.6rem;--padding-block-desktop: 2rem;--padding-inline-desktop: 3.2rem;"
+          {% assign total_price = cart.total_price | times: 1 %}
+          {%- if show_free_shipping_message and free_minimum_amount -%}
+            <free-ship-progress-bar
+              data-fe-unavailable="{% if free_shipping_message != blank %}{{ free_shipping_message }}{% else %}{{ 'sections.cart.free_shipping_html' | t }}{% endif %}"
+              data-fe-available="{{ 'sections.cart.free_shipping_available' | t }}"
+              class="free-shipping-bar drawer-spacing pt-20"
+              style="--padding-block-desktop: 2rem;--padding-inline-desktop: 3.2rem;"
+            >
+              <div class="progress-bar-message text-center mb-18"></div>
+              <div
+                class="progress-bar rounded-10 clip-path-unset h-custom bg-grey relative"
+                style="--height: 4px;"
               >
-                <div class="progress-bar-message text-center mb-18"></div>
                 <div
-                  class="progress-bar rounded-10 clip-path-unset h-custom bg-grey relative"
-                  style="--height: 4px;"
+                  class="progress rounded-10 clip-path-unset h-custom absolute left-0 inset-y-0 transition"
+                  data-total-order="{{ total_price }}"
+                  data-fe-amount="{{ free_minimum_amount }}"
                 >
-                  <div
-                    class="progress rounded-10 clip-path-unset h-custom absolute left-0 inset-y-0 transition"
-                    data-total-order="{{ total_price }}"
-                    data-fe-amount="{{ free_minimum_amount }}"
-                  >
-                    <div class="absolute progress-dot"></div>
-                  </div>
+                  <div class="absolute progress-dot"></div>
                 </div>
               </div>
             </free-ship-progress-bar>
@@ -240,7 +238,7 @@
           {%- endif -%}
           <div class="cart-drawer-inner overflow-y-auto custom-scrollbar grow-1 flex column">
             <cart-items
-              class="block drawer-spacing grow-1 mb-20 pt-0 cart-content-items"
+              class="block drawer-spacing grow-1 mb-10 pt-0 cart-content-items"
               style="--padding-block: 0rem;--padding-block-desktop: 0rem;--padding-inline-desktop: 3.2rem;"
             >
               <form
@@ -322,7 +320,7 @@
                                     >
                                       <button
                                         type="button"
-                                        class="btn-reset pointer inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative touch-target-before"
+                                        class="btn-reset pointer inline-flex align-center flex-end w-30 pointer hover-icon-zoom relative"
                                         aria-label="{{- 'sections.cart.remove_title' | t: title: item.title -}}"
                                       >
                                         <svg
@@ -519,30 +517,24 @@
                 </div>
               </form>
             </cart-items>
-          </div>
-          <div
-            class="drawer__footer-bottom border-top sticky bottom-0 bg-white z-10"
-            style="--padding-block-desktop: 3.2rem;--padding-inline-desktop: 3.2rem;"
-          >
-            <div class="drawer__footer">
-              {%- if enable_product_recommendations -%}
-                <div class="drawer__cart-recommendations drawer-left drawer-spacing inset-y-0 beside" style="--padding-block: 0;--padding-block-desktop: 0;">
-                  <mini-cart-recommendations
-                    class="swiper__controls-group{% if hidden %} hidden{% endif %}"
-                    style="--position-arrow: static;--swiper-navigation-size: 20px;--padding: 0;"
-                    data-type="{{ recommendation_product_type }}"
-                    data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=main-cart-upsell"
-                  >
-                    {% if product_recommendations_heading != blank %}
-                      <div class="flex gap-10 align-center space-between py-12">
-                        <h4 class="cart-recommendations-title fs-20">
-                          {{ product_recommendations_heading }}
-                        </h4>
-                        {%- render 'swiper-navigation',
-                          navigation_custom: true,
-                          type: 'custom_nav',
-                          class-custom: 'flex align-center gap-5 heading-color'
-                        -%}
+            {%- if enable_product_recommendations -%}
+              <div class="drawer__cart-recommendations drawer-left drawer-spacing inset-y-0 beside">
+                <mini-cart-recommendations
+                  class="swiper__controls-group"
+                  style="--position-arrow: static;--swiper-navigation-size: 20px;--padding: 0;"
+                  data-type="{{ recommendation_product_type }}"
+                  data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=main-cart-upsell"
+                >
+                  {% if product_recommendations_heading != blank %}
+                    <div class="flex gap-10 align-center space-between mb-12">
+                      <h4 class="cart-recommendations-title fs-20">
+                        {{ product_recommendations_heading }}
+                      </h4>
+                      {%- render 'swiper-navigation',
+                        navigation_custom: true,
+                        type: 'custom_nav',
+                        class-custom: 'flex align-center gap-5'
+                      -%}
                     </div>
                   {%- endif -%}
                   <div class="main-cart-upsell-product mb-32">
@@ -594,11 +586,12 @@
                           {%- endfor -%}
                         {%- endif -%}
                       </div>
-                      </slide-section>
-                    </div>
-                  </mini-cart-recommendations>
-                </div>
-              {%- endif -%}
+                    </slide-section>
+                  </div>
+                </mini-cart-recommendations>
+              </div>
+            {%- endif -%}
+            <div class="drawer__footer relative">
               {%- if show_cart_note or show_estimate_shipping -%}
                 <div
                   class="cart-addons flex align-center border-top drawer-spacing"
@@ -609,7 +602,7 @@
                       type="button"
                       data-open="note"
                       aria-label="{{- 'sections.cart.note.note_title' | t }}"
-                      class="drawer__cart-note show-overlay btn-reset pointer inline-flex align-center gap-8 fs-small p-20 ps-0 heading-color"
+                      class="drawer__cart-note show-overlay btn-reset pointer inline-flex align-center gap-5 fs-small p-20 ps-0 heading-color"
                     >
                       <svg width="15" height="16" viewBox="0 0 15 16" fill="none">
                         <path d="M10.8642 1.18519V0.691358C10.8642 0.296296 10.5679 0 10.1728 0C9.77778 0 9.48148 0.395062 9.48148 0.691358V1.08642H5.03704V0.691358C5.03704 0.395062 4.74074 0 4.34568 0C3.95062 0 3.65432 0.395062 3.65432 0.691358V1.18519C1.28395 1.38272 0 2.96296 0 5.4321V11.6543C0 14.4198 1.58025 16 4.34568 16H10.1728C12.9383 16 14.5185 14.4198 14.5185 11.6543V5.4321C14.5185 2.96296 13.2346 1.38272 10.8642 1.18519ZM4.34568 3.55556C4.64198 3.55556 5.03704 3.25926 5.03704 2.8642V2.46914H9.48148V2.8642C9.48148 3.25926 9.87654 3.55556 10.1728 3.55556C10.4691 3.55556 10.8642 3.25926 10.8642 2.8642V2.46914C12.4444 2.66667 13.1358 3.65432 13.1358 5.4321V11.6543C13.1358 13.7284 12.1481 14.6173 10.1728 14.6173H4.34568C2.27161 14.6173 1.38272 13.6296 1.38272 11.6543V5.33333C1.38272 3.55556 2.07407 2.5679 3.65432 2.37037V2.76543C3.65432 3.25926 3.95062 3.55556 4.34568 3.55556Z" fill="#111111"></path>
@@ -626,7 +619,7 @@
                       type="button"
                       data-open="shipping"
                       aria-label="{{- 'sections.cart.shipping.title' | t -}}"
-                      class="btn-reset drawer__cart-shipping show-overlay pointer inline-flex align-center gap-8 fs-small p-20 heading-color"
+                      class="btn-reset drawer__cart-shipping show-overlay pointer inline-flex align-center gap-5 fs-small p-20 heading-color"
                     >
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M13.7633 2.65861L9.8962 0.435045C8.83275 -0.145015 7.28593 -0.145015 6.31916 0.435045L2.45209 2.65861C1.38865 3.23867 0.518555 4.68882 0.518555 5.94562V10.1027C0.518555 11.3595 1.38865 12.713 2.45209 13.3897L6.31916 15.6133C6.80254 15.9033 7.47928 16 8.15602 16C8.83275 16 9.41282 15.9033 9.99288 15.6133L13.8599 13.3897C14.9234 12.8097 15.7935 11.3595 15.7935 10.1027V5.84894C15.6968 4.68882 14.8267 3.23867 13.7633 2.65861ZM6.80254 1.49849C7.09257 1.30514 7.57596 1.20846 8.05934 1.20846C8.54272 1.20846 8.92943 1.30514 9.31614 1.49849L13.1832 3.72205C13.4732 3.81873 13.6666 4.10876 13.8599 4.39879L11.7331 5.65559L5.7391 2.07855L6.80254 1.49849ZM2.93547 3.62538L4.57898 2.65861L10.5729 6.13897L8.05934 7.6858L2.16206 4.30212C2.35541 4.01208 2.64544 3.81873 2.93547 3.62538ZM2.93547 12.2296C2.25874 11.8429 1.582 10.7795 1.582 10.006V5.84894C1.582 5.65559 1.582 5.46224 1.67868 5.26888L7.47928 8.65257V14.6465C7.18925 14.6465 6.9959 14.5498 6.80254 14.4532L2.93547 12.2296ZM14.5367 10.006C14.5367 10.7795 13.9566 11.8429 13.1832 12.2296L9.31614 14.3565C9.12279 14.4532 8.92943 14.5498 8.6394 14.5498V8.65257L11.153 7.20242V8.84592C11.153 9.13595 11.443 9.42598 11.7331 9.42598C12.0231 9.42598 12.3131 9.13595 12.3131 8.84592V6.52568L14.44 5.26888C14.44 5.55891 14.5367 5.75227 14.5367 5.84894V10.006Z" fill="#111111"></path>
@@ -654,7 +647,7 @@
                       style="--padding-block: 0;--padding-block-desktop: 0;"
                     >
                       <div class="cart-addons-title flex gap-10 space-between relative py-15">
-                        <span class="title heading-style flex gap-8 align-center lg-normal">
+                        <span class="title heading-style flex gap-10 align-center lg-normal">
                           <svg width="18" height="18" fill="none">
                             <path fill="currentColor" d="M9.703 11.672a.703.703 0 1 0-1.406 0v2.812a.703.703 0 0 0 1.406 0v-2.812Z"/><path fill="#000" d="M1.969 10.969a.703.703 0 0 0-.703.703v2.812A3.52 3.52 0 0 0 4.78 18h8.438a3.52 3.52 0 0 0 3.515-3.516v-2.812a.703.703 0 1 0-1.406 0v2.812c0 1.164-.946 2.11-2.11 2.11H4.782a2.112 2.112 0 0 1-2.11-2.11v-2.812a.703.703 0 0 0-.702-.703ZM2.11 9.844h13.78c1.164 0 2.11-.947 2.11-2.11V6.328c0-1.163-.946-2.11-2.11-2.11h-2.347c.24-.413.379-.893.379-1.405A2.816 2.816 0 0 0 11.109 0C10.27 0 9.516.37 9 .955A2.806 2.806 0 0 0 6.89 0a2.816 2.816 0 0 0-2.812 2.813c0 .512.138.992.379 1.406H2.109C.946 4.219 0 5.165 0 6.329v1.405c0 1.163.946 2.11 2.11 2.11Zm9-8.438a1.408 1.408 0 0 1 0 2.813H9.702V2.812c0-.775.631-1.406 1.406-1.406ZM5.483 2.813a1.408 1.408 0 0 1 2.813 0v1.406H6.89c-.776 0-1.407-.631-1.407-1.407ZM1.406 6.328c0-.388.316-.703.703-.703h6.188v.703a.703.703 0 1 0 1.406 0v-.703h6.188c.387 0 .703.315.703.703v1.406a.704.704 0 0 1-.703.704H2.109a.704.704 0 0 1-.703-.704V6.328Z"/>
                           </svg>
@@ -764,9 +757,9 @@
                     style="--padding-block: 0;--padding-block-desktop: 0;"
                   >
                     <div class="cart-addons-title flex gap-10 space-between relative py-15">
-                      <span class="title heading-style flex gap-8 align-center lg-normal">
+                      <span class="title heading-style flex gap-10 align-center lg-normal">
                         <svg
-                          class="icon"
+                          class="icon me-10"
                           width="20"
                           height="21"
                           viewBox="0 0 20 21"
@@ -788,7 +781,7 @@
                       </button>
                     </div>
                     <div class="cart-addons-content overflow-hidden h-0 fs-small visibility-hidden">
-                      <div class="cart-addons-content-inner flex gap-10">
+                      <div class="cart-addons-content-inner flex gap-10{% if discount_codes.size == 0 %} mb-20{% endif %}">
                         <div class="cart__discount field grow-1">
                           <label class="visually-hidden" for="CartDrawer-Discount">
                             {{- 'sections.cart.discount.note_title' | t -}}
@@ -813,7 +806,7 @@
                           </button>
                         </div>
                       </div>
-                      <ul class="cart-discount__codes list-unstyled">
+                      <ul class="cart-discount__codes list-unstyled{% if discount_codes.size > 0 %} mt-10 flex gap-8 row-gap-8 wrap mb-20{% endif %}">
                         {% for discount_code in discount_codes %}
                           <li
                             class="cart-discount__pill px-16 bg-secondary fs-small rounded-30 inline-flex content-center gap-8 py-6"
@@ -986,7 +979,12 @@
                 </cart-estimate-element>
               {%- endif -%}
             </div>
-            <div class="drawer__footer-bottom-total drawer-spacing border-top">
+          </div>
+          <div
+            class="drawer__footer-bottom border-top drawer-spacing sticky bottom-0 bg-white z-10"
+            style="--padding-block-desktop: 3.2rem;--padding-inline-desktop: 3.2rem;"
+          >
+            <div class="drawer__footer-bottom-total">
               <div class="total h5 flex space-between gap-10">
                 <span class="text">{{ 'sections.cart.total' | t }}:</span>
                 <span class="total-price">
@@ -1058,30 +1056,31 @@
                   {%- endif -%}
                 {%- endif -%}
               </small>
-              <form action="{{ routes.cart_url }}" method="POST" class="flex wrap gap-10 mt-16">
-                <a
-                  href="{{ routes.cart_url }}"
-                  aria-label="{{ 'sections.cart.view_cart' | t }}"
-                  class="btn pointer btn-outline"
-                >
-                  <span class="hidden-on-load transition-short">{{ 'sections.cart.view_cart' | t }}</span>
-                  {%- render 'loader' -%}
-                </a>
-                <button
-                  type="submit"
-                  name="checkout"
-                  class="grow-1 btn pointer btn-primary"
-                >
-                  <span class="hidden-on-load transition-short flex content-center gap-10">
-                    <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
-                      <use href="#icon-lock" />
-                    </svg>
-                    {{ 'sections.cart.checkout' | t -}}
-                  </span>
-                  {%- render 'loader' -%}
-                </button>
-              </form>
             </div>
+
+            <form action="{{ routes.cart_url }}" method="POST" class="flex wrap gap-10 mt-20 mt-1025-16">
+              <a
+                href="{{ routes.cart_url }}"
+                aria-label="{{ 'sections.cart.view_cart' | t }}"
+                class="btn pointer btn-outline"
+              >
+                <span class="hidden-on-load transition-short">{{ 'sections.cart.view_cart' | t }}</span>
+                {%- render 'loader' -%}
+              </a>
+              <button
+                type="submit"
+                name="checkout"
+                class="grow-1 btn pointer btn-primary"
+              >
+                <span class="hidden-on-load transition-short flex content-center gap-10">
+                  <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                    <use href="#icon-lock" />
+                  </svg>
+                  {{ 'sections.cart.checkout' | t -}}
+                </span>
+                {%- render 'loader' -%}
+              </button>
+            </form>
           </div>
         {%- endif -%}
       </div>
