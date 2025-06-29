@@ -192,7 +192,7 @@
               data-fe-unavailable="{% if free_shipping_message != blank %}{{ free_shipping_message }}{% else %}{{ 'sections.cart.free_shipping_html' | t }}{% endif %}"
               data-fe-available="{{ 'sections.cart.free_shipping_available' | t }}"
               class="free-shipping-bar drawer-spacing pt-20"
-              style="--padding-block-desktop: 2rem;--padding-inline-desktop: 3.2rem;"
+              style="--padding-block-desktop: 2rem;--padding-block: 1.6rem;--padding-inline-desktop: 3.2rem;"
             >
               <div class="progress-bar-message text-center mb-18"></div>
               <div
@@ -212,7 +212,7 @@
           {%- if cart_duration_show and cart.items.size > 0 -%}
             <script src="{{ 'countdown-timer.js' | asset_url }}" defer="defer"></script>
             <div
-              class="cart-countdown-time drawer-spacing mb-20 mt-6"
+              class="cart-countdown-time drawer-spacing mb-16 mb-1025-20 mt-0 mt-1025-6"
               style="--padding-block: 0rem;--padding-block-desktop: 0rem;"
             >
               <countdown-timer
@@ -1068,7 +1068,7 @@
               </small>
             </div>
 
-            <form action="{{ routes.cart_url }}" method="POST" class="flex wrap gap-10 mt-20 mt-1025-16">
+            <form action="{{ routes.cart_url }}" method="POST" class="flex gap-10 mt-20 mt-1025-16">
               <a
                 href="{{ routes.cart_url }}"
                 aria-label="{{ 'sections.cart.view_cart' | t }}"
