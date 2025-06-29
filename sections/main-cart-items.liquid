@@ -1,4 +1,5 @@
 {{ 'cart-page.css' | asset_url | stylesheet_tag }}
+{{ 'countdown.css' | asset_url | stylesheet_tag }}
 <script type="module" src="{{ 'cart-page.js' | asset_url }}" defer="defer"></script>
 {% liquid
   assign theme_st = settings
@@ -90,6 +91,7 @@
               data-message="{{ 'sections.cart.timeout_message' | t }}"
               data-mins="{{ 'products.product.countdown.format.mins' | t }}"
               data-secs="{{ 'products.product.countdown.format.secs' | t }}"
+              class="countdown-cart"
             >
               <span class="icon-fire me-10">🔥</span>
               <span>{{- 'sections.cart.countdown_message_html' | t -}}</span>

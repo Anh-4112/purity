@@ -1,3 +1,4 @@
+{{ 'countdown.css' | asset_url | stylesheet_tag }}
 {% liquid
   assign theme_st = settings
   assign section_st = section.settings
@@ -47,13 +48,13 @@
   >
     <modal-overlay class="modal-overlay pointer"></modal-overlay>
     <div
-      class="modal-inner draw-mb drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 inset-y-0 z-2 w-full"
+      class="modal-inner draw-mb draw-mb-full drawer-right-mb color-default transition-drawer drawer drawer-right fixed right-0 inset-y-0 z-2 w-full"
       role="dialog"
       aria-modal="true"
       aria-label="{{ 'sections.cart.title' | t }}"
       tabindex="-1"
     >
-      <div class="drawer__body h-full flex column bg-white rounded-start">
+      <div class="drawer__body overflow-y-auto custom-scrollbar h-full flex column bg-white rounded-start">
         <draggable-modal
           class="drawer__header drawer__header-cart flex gap-10 space-between align-center drawer-spacing border-bottom relative"
           style="--padding-block-desktop: 2.15rem;--padding-inline-desktop:3.2rem;"
@@ -210,25 +211,29 @@
           {%- endif -%}
           {%- if cart_duration_show and cart.items.size > 0 -%}
             <script src="{{ 'countdown-timer.js' | asset_url }}" defer="defer"></script>
-            <div class="cart-countdown-time">
+            <div
+              class="cart-countdown-time drawer-spacing mb-20 mt-6"
+              style="--padding-block: 0rem;--padding-block-desktop: 0rem;"
+            >
               <countdown-timer
                 data-deadline-mins="{{ cart_duration }}"
                 data-message="{{ 'sections.cart.timeout_message' | t }}"
                 data-mins="{{ 'products.product.countdown.format.mins' | t }}"
                 data-secs="{{ 'products.product.countdown.format.secs' | t }}"
+                class="countdown-cart"
               >
-                <span class="icon-fire me-10">🔥</span>
+                <span class="icon-fire me-3">🔥</span>
                 <span>{{- 'sections.cart.countdown_message_html' | t -}}</span>
                 <div class="countdown-inner">
                   <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
                     <span class="minutes_timer countdown-item">00</span>
-                    <span class="hidden timer-announcementbar-text">
+                    <span class="timer-announcementbar-text">
                       {{- 'products.product.countdown.format.mins' | t -}}
                     </span>
                   </div>
                   <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
                     <span class="seconds_timer countdown-item">00</span>
-                    <span class="hidden timer-announcementbar-text">
+                    <span class="timer-announcementbar-text">
                       {{- 'products.product.countdown.format.secs' | t -}}
                     </span>
                   </div>
@@ -236,7 +241,7 @@
               </countdown-timer>
             </div>
           {%- endif -%}
-          <div class="cart-drawer-inner overflow-y-auto custom-scrollbar grow-1 flex column">
+          <div class="cart-drawer-inner grow-1 flex column">
             <cart-items
               class="block drawer-spacing grow-1 mb-10 pt-0 cart-content-items"
               style="--padding-block: 0rem;--padding-block-desktop: 0rem;--padding-inline-desktop: 3.2rem;"
@@ -533,11 +538,11 @@
                       {%- render 'swiper-navigation',
                         navigation_custom: true,
                         type: 'custom_nav',
-                        class-custom: 'flex align-center gap-5'
+                        class-custom: 'flex align-center gap-5 heading-color'
                       -%}
                     </div>
                   {%- endif -%}
-                  <div class="main-cart-upsell-product mb-32">
+                  <div class="main-cart-upsell-product">
                     <slide-section
                       class="swiper"
                       data-section-id="{{ section.id }}"
@@ -816,10 +821,10 @@
                             <p class="cart-discount__pill-code">
                               {{ discount_code }}
                             </p>
-                            <remove-discount class="flex content-center">
+                            <remove-discount class="flex content-center loading-smooth loading_snippet">
                               <button
                                 type="button"
-                                class="cart-discount__pill-remove btn-reset pointer flex content-center"
+                                class="cart-discount__pill-remove btn-reset pointer flex content-center relative"
                                 aria-label="{{ 'accessibility.remove_discount' | t: code: discount_code }}"
                               >
                                 <svg
@@ -827,10 +832,14 @@
                                   height="10"
                                   viewBox="0 0 12 12"
                                   fill="none"
-                                  class="icon-zoom transition-short will-change text-color hidden-on-load transition-short"
+                                  class="icon-zoom will-change text-color hidden-on-load transition-short"
                                 >
                                   <use href="#icon-close"></use>
                                 </svg>
+                                                              <span
+                                class="icon-rotator absolute top-0 bottom-0 m-auto rounded-50 opacity-0 w-custom h-custom"
+                                style="--width: 1.5rem;--height: 1.5rem;"
+                              ></span>
                               </button>
                             </remove-discount>
                           </li>
@@ -980,6 +989,7 @@
               {%- endif -%}
             </div>
           </div>
+
           <div
             class="drawer__footer-bottom border-top drawer-spacing sticky bottom-0 bg-white z-10"
             style="--padding-block-desktop: 3.2rem;--padding-inline-desktop: 3.2rem;"
