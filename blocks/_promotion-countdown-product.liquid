@@ -13,16 +13,12 @@
   {% endstyle %}
   <div
     class="flex gap-5 rounded countdown_timer-product align-center space-between wrap bg-custom p-15 mb-custom color-white"
-    style="--opacity: 1;--bg-color-custom: #D0473E;--font-size: 2rem;--padding: 0.5rem 0.3rem;--min-width: 3rem; --img-rounded: 5px;"
+    style="--opacity: 1;--bg-color-custom: #D0473E;--font-size: 2rem;--padding: 0.5rem 0.3rem;--min-width: 3rem; --img-rounded: 10px;"
   >
-      {% if heading or description %}
-      <div class="promotion_countdown mb-20 sale-color">
-        {% if heading %}
-          <div class="heading h6 sale-color">{{ block.settings.heading }}</div>
-        {% endif %}
-        {% if description %}
-          <div class="description sale-color">{{ block.settings.description }}</div>
-        {% endif %}
+      {%- if block.settings.heading != blank -%}
+        <span class="inline-flex gap-8 align-center fs-16 heading_weight"> <svg xmlns="http://www.w3.org/2000/svg" width="26" height="24" fill="none">
+          <use href="#icon-time"/>
+        </svg> {{ heading }}</span>
       {% endif %}
       <div class="inline-flex gap-15 align-center">
         {%- if block.settings.description != blank -%}

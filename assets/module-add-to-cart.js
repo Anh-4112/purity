@@ -127,7 +127,7 @@ export class ProductForm extends HTMLElement {
               window.cartStrings.addSuccessMobile,
               submitButton,
               "success",
-              3000
+              5000
             );
           }
         } else {
@@ -1046,11 +1046,12 @@ class CartDrawer extends HTMLElement {
   actionOnMobile() {
     const modal_inner = this.querySelector(".modal-inner");
     modal_inner.classList.add("modal-draggable");
+    modal_inner.classList.remove("draw-mb", "drawer-right-mb");
   }
-
   actionOutMobile() {
     const modal_inner = this.querySelector(".modal-inner");
     modal_inner.classList.remove("modal-draggable");
+    modal_inner.classList.add("draw-mb", "drawer-right-mb");
   }
 
   getSectionsToRender() {
