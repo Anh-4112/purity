@@ -84,7 +84,7 @@
           assign alt = block_st.image.alt | escape
         endif
       -%}
-      {%- if block_st.image != blank -%}
+      {%- if block_st.image != blank or block_st.image_mobile != blank -%}
         {% render 'responsive-image',
           type: 'other',
           container: section_width,
