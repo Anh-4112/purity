@@ -925,10 +925,10 @@
                                   <p class="cart-discount__pill-code">
                                     {{ discount_code }}
                                   </p>
-                                  <remove-discount class="flex content-center">
+                                  <remove-discount class="flex content-center loading-smooth loading_snippet">
                                     <button
                                       type="button"
-                                      class="cart-discount__pill-remove btn-reset pointer flex content-center"
+                                      class="cart-discount__pill-remove btn-reset pointer flex content-center relative"
                                       aria-label="{{ 'accessibility.remove_discount' | t: code: discount_code }}"
                                     >
                                       <svg
@@ -940,6 +940,10 @@
                                       >
                                         <use href="#icon-close"></use>
                                       </svg>
+                                      <span
+                                        class="icon-rotator absolute top-0 bottom-0 m-auto rounded-50 opacity-0 w-custom h-custom"
+                                        style="--width: 1.5rem;--height: 1.5rem;"
+                                      ></span>
                                     </button>
                                   </remove-discount>
                                 </li>

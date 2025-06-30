@@ -935,10 +935,10 @@ class CartDiscountElement extends HTMLElement {
     const discountCodesElement = this.cart.querySelector(
       ".cart-discount__codes"
     );
-    const discountCodesElementDrawer = this.cart.querySelector(
+    const discountCodesElementDrawer = this?.cart.querySelector(
       ".cart-drawer .cart-discount__codes"
     );
-    const cartAddonsContentInner = this.cart.querySelector(
+    const cartAddonsContentInner = this?.cart.querySelector(
       ".cart-drawer .cart-addons-content-inner"
     );
 
@@ -954,7 +954,9 @@ class CartDiscountElement extends HTMLElement {
           "row-gap-8",
           "wrap"
         );
-        discountCodesElementDrawer.classList.add("mb-20");
+        if (discountCodesElementDrawer) {
+          discountCodesElementDrawer.classList.add("mb-20");
+        }
         if (cartAddonsContentInner) {
           cartAddonsContentInner.classList.remove("mb-20");
         }
@@ -966,7 +968,9 @@ class CartDiscountElement extends HTMLElement {
           "row-gap-8",
           "wrap"
         );
-        discountCodesElementDrawer.classList.remove("mb-20");
+        if (discountCodesElementDrawer) {
+          discountCodesElementDrawer.classList.remove("mb-20");
+        }
         if (cartAddonsContentInner) {
           cartAddonsContentInner.classList.add("mb-20");
         }
