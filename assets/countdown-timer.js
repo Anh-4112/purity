@@ -168,9 +168,9 @@ if (!customElements.get("countdown-timer")) {
           minutesLeft ? " hidden" : ""
         } flex column rounded-5 relative content-center"><span class="hours_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 timer-announcementbar-text hidden">${
           hours ? hours : "hours"
-        }</span></div><div class="countdown-container lh-normal sale-color bg-white min-w-custom p-custom flex column rounded-5 relative content-center"><span class="minutes_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 timer-announcementbar-text hidden">${
+        }</span></div><div class="countdown-container lh-normal sale-color bg-white min-w-custom p-custom flex column rounded-5 relative content-center"><span class="minutes_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 minute timer-announcementbar-text hidden">${
           mins ? mins : "mins"
-        }</span></div><div class="countdown-container lh-normal sale-color bg-white min-w-custom p-custom flex column rounded-5 relative content-center"><span class="seconds_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 timer-announcementbar-text hidden">${
+        }</span></div><div class="countdown-container lh-normal sale-color bg-white min-w-custom p-custom flex column rounded-5 relative content-center"><span class="seconds_timer countdown-item heading_weight fs-custom"></span><span class="fs-13 second timer-announcementbar-text hidden">${
           secs ? secs : "secs"
         }</span></div>`;
         return container;

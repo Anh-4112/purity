@@ -72,18 +72,26 @@
                   </div>
                 {% else %}
                   {% if block.settings.content != blank %}
-                    <a
-                      {% if link_text == blank %}
-                        role="link" aria-disabled="true"
-                      {% else %}
+                    {% if link_text == blank %}
+                      <div
+                        aria-label="{{ content }}"
+                        class="{% if image == blank %} text_scroll{% endif %} {{ header_size }}{% if link_text != blank %} underline{% else %} no-underline{% endif %}"
+                        {{ block.shopify_attributes }}
+                      >
+                    {% else %}
+                      <a
                         href="{{ link_text | default: "#" }}"
-                      {% endif %}
-                      aria-label="{{ content }}"
-                      class="{% if image == blank %} text_scroll{% endif %} {{ header_size }}{% if link_text != blank %} underline{% else %} no-underline{% endif %}"
-                      {{ block.shopify_attributes }}
-                    >
-                      {{ block.settings.content }}
-                    </a>
+                        aria-label="{{ content }}"
+                        class="{% if image == blank %} text_scroll{% endif %} {{ header_size }}{% if link_text != blank %} underline{% else %} no-underline{% endif %}"
+                        {{ block.shopify_attributes }}
+                      >
+                    {% endif %}
+                    {{ block.settings.content }}
+                    {% if link_text == blank %}
+                      </div>
+                    {% else %}
+                      </a>
+                    {% endif %}
                   {% endif %}
                 {% endif %}
               {%- when 'image' -%}
@@ -107,49 +115,57 @@
                     %}
                   </div>
                 {% else %}
-                  <a
-                    class="scrolling-image-item relative overflow-hidden flex align-center rounded w-custom-mb w-custom h-full"
-                    style="--width-mb:{{ block_st.image_width_mb }}px;--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
-                    {% if link_image == blank %}
-                      role="link" aria-disabled="true"
-                    {% else %}
+                  {% if link_image == blank %}
+                    <div
+                      class="scrolling-image-item relative overflow-hidden flex align-center rounded w-custom-mb w-custom h-full"
+                      style="--width-mb:{{ block_st.image_width_mb }}px;--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
+                      {{ block.shopify_attributes }}
+                    >
+                  {% else %}
+                    <a
+                      class="scrolling-image-item relative overflow-hidden flex align-center rounded w-custom-mb w-custom h-full"
+                      style="--width-mb:{{ block_st.image_width_mb }}px;--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
                       href="{{ link_image | default: "#" }}"
-                    {% endif %}
-                    aria-label="{{ 'sections.scrolling_text.alt' | t }}"
-                    {{ block.shopify_attributes }}
-                  >
-                    {% if icon_svg != 'none' %}
-                      {% render 'icon_svg_list',
-                        icon: icon_svg,
-                        custom_width: block_st.image_width,
-                        custom_height: block_st.image_width
+                      aria-label="{{ 'sections.scrolling_text.alt' | t }}"
+                      {{ block.shopify_attributes }}
+                    >
+                  {% endif %}
+                  {% if icon_svg != 'none' %}
+                    {% render 'icon_svg_list',
+                      icon: icon_svg,
+                      custom_width: block_st.image_width,
+                      custom_height: block_st.image_width
+                    %}
+                  {%- elsif image != blank and icon_svg == 'none' -%}
+                    <div
+                      class="scrolling-image image_scroll rounded flex w-full"
+                      style="--image-width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
+                    >
+                      {% render 'responsive-image',
+                        image: image,
+                        type: 'other',
+                        image_alt: image_alt,
+                        container: section_st,
+                        class: 'h-full w-full object-fit-cover'
                       %}
-                    {%- elsif image != blank and icon_svg == 'none' -%}
-                      <div
-                        class="scrolling-image image_scroll rounded flex w-full"
-                        style="--image-width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
-                      >
-                        {% render 'responsive-image',
-                          image: image,
-                          type: 'other',
-                          image_alt: image_alt,
-                          container: section_st,
-                          class: 'h-full w-full object-fit-cover'
-                        %}
-                      </div>
-                    {% elsif image == blank and icon_svg == 'none' %}
-                      <div
-                        class="w-custom w-custom-mb h-full rounded flex content-center"
-                        style="--width-mb:{{ block_st.image_width_mb }}px;--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
-                      >
-                        {% render 'placeholder-render',
-                          type: 'collection',
-                          class: 'img-placeholder h-full w-full object-fit-cover',
-                          class_motion: ' h-full w-full object-fit-cover'
-                        %}
-                      </div>
-                    {%- endif -%}
-                  </a>
+                    </div>
+                  {% elsif image == blank and icon_svg == 'none' %}
+                    <div
+                      class="w-custom w-custom-mb h-full rounded flex content-center"
+                      style="--width-mb:{{ block_st.image_width_mb }}px;--width: {{ block_st.image_width }}px;--img-rounded:{{ section_st.rounded_image }}px;"
+                    >
+                      {% render 'placeholder-render',
+                        type: 'collection',
+                        class: 'img-placeholder h-full w-full object-fit-cover',
+                        class_motion: ' h-full w-full object-fit-cover'
+                      %}
+                    </div>
+                  {%- endif -%}
+                  {% if link_image == blank %}
+                    </div>
+                  {%- else -%}
+                    </a>
+                  {%- endif -%}
                 {% endif %}
             {%- endcase -%}
           {%- endfor -%}
