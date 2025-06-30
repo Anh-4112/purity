@@ -936,6 +936,10 @@ a.hover-heading-color:hover,
   border-radius: 15px;
   clip-path: inset(0 0 0 0 round 15px);
 }
+.rounded-style :where(.rounded-20) {
+  border-radius: 15px;
+  clip-path: inset(0 0 0 0 round 20px);
+}
 .rounded-style :where(.rounded-30) {
   border-radius: 30px;
   clip-path: inset(0 0 0 0 round 30px);
@@ -947,6 +951,8 @@ a.hover-heading-color:hover,
     .rounded-3,
     .rounded-5,
     .rounded-10,
+    .rounded-15,
+    .rounded-20,
     .rounded-30
   ):focus-visible {
   clip-path: unset;
@@ -1152,6 +1158,9 @@ a.hover-heading-color:hover,
 }
 .p-10 {
   padding: 1rem;
+}
+.p-16 {
+  padding: 1.6rem;
 }
 .p-20 {
   padding: 2rem;
@@ -2321,10 +2330,6 @@ th {
 }
 .draw-mb {
   max-width: 90%;
-}
-.draw-mb-full {
-  max-width: 100%;
-  border-radius: 0;
 }
 :where(.rounded-start, .draw-mb:not(.drawer-left)) {
   border-top-left-radius: var(--img-rounded);

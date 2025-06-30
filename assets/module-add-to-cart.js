@@ -935,10 +935,10 @@ class CartDiscountElement extends HTMLElement {
     const discountCodesElement = this.cart.querySelector(
       ".cart-discount__codes"
     );
-    const discountCodesElementDrawer = this?.cart.querySelector(
+    const discountCodesElementDrawer = this.cart.querySelector(
       ".cart-drawer .cart-discount__codes"
     );
-    const cartAddonsContentInner = this?.cart.querySelector(
+    const cartAddonsContentInner = this.cart.querySelector(
       ".cart-drawer .cart-addons-content-inner"
     );
 
