@@ -129,36 +129,44 @@
               {% if section_width == "container" and i != 2 and i != 3 %}true{% endif %}
               {% if section_width == "fluid_container" and i != 1 and i != 2 %}true{% endif %}
             {% endcapture %}
-            <a
-              {{ block.shopify_attributes }}
-              class="scrolling-image-item overflow-hidden w-custom w-custom-mb focus-inset relative"
-              style="--width: {{ img_width }}px;--width-mb: {{ img_width_mb }}px;"
-              {% if link_image == blank %}
-                role="link" aria-disabled="true"
-              {% else %}
+            {% if link_image == blank %}
+              <div
+                class="scrolling-image-item overflow-hidden w-custom w-custom-mb focus-inset relative"
+                style="--width: {{ img_width }}px;--width-mb: {{ img_width_mb }}px;"
+                {{ block.shopify_attributes }}
+              >
+            {%- else -%}
+              <a
+                {{ block.shopify_attributes }}
+                class="scrolling-image-item overflow-hidden w-custom w-custom-mb focus-inset relative"
+                style="--width: {{ img_width }}px;--width-mb: {{ img_width_mb }}px;"
                 href="{{ link_image | default: "#" }}"
-              {% endif %}
-              aria-label="{{ 'sections.scrolling_text.alt' | t }}"
-              {% if should_disable contains 'true' %}
-                aria-disabled="true" tabindex="-1"
-              {% endif %}
-            >
-              {%- if image != blank -%}
-                <div
-                  class="scrolling-image image_scroll rounded"
-                  style="--image-width: {{ section_st.image_width }}px;--width-mb: {{ img_width_mb }}px;--aspect-ratio: {{ ratio }};"
-                >
-                  {% render 'responsive-image', image: image, type: 'banner', image_alt: image_alt %}
-                </div>
-              {% else %}
-                <div
-                  class="w-custom w-custom-mb flex content-center"
-                  style="--width: {{ img_width }}px;--width-mb: {{ img_width_mb }}px;--aspect-ratio: {{ ratio }};"
-                >
-                  {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full rounded' %}
-                </div>
-              {%- endif -%}
-            </a>
+                aria-label="{{ 'sections.scrolling_text.alt' | t }}"
+                {% if should_disable contains 'true' %}
+                  aria-disabled="true" tabindex="-1"
+                {% endif %}
+              >
+            {%- endif -%}
+            {%- if image != blank -%}
+              <div
+                class="scrolling-image image_scroll rounded"
+                style="--image-width: {{ section_st.image_width }}px;--width-mb: {{ img_width_mb }}px;--aspect-ratio: {{ ratio }};"
+              >
+                {% render 'responsive-image', image: image, type: 'banner', image_alt: image_alt %}
+              </div>
+            {% else %}
+              <div
+                class="w-custom w-custom-mb flex content-center"
+                style="--width: {{ img_width }}px;--width-mb: {{ img_width_mb }}px;--aspect-ratio: {{ ratio }};"
+              >
+                {% render 'placeholder-render', type: 'collection', class: 'img-placeholder h-full w-full rounded' %}
+              </div>
+            {%- endif -%}
+            {% if link_image == blank %}
+              </div>
+            {%- else -%}
+              </a>
+            {%- endif -%}
           {%- endfor -%}
         </div>
       {%- endfor -%}

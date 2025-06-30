@@ -9,6 +9,7 @@ export class ProductForm extends HTMLElement {
       document.querySelector("cart-drawer") ||
       document.querySelector("main-cart");
     this.quickView = document.querySelector("quickview-drawer");
+    this.boughtTogether = document.querySelector("bought-together-popup");
     this.shopifyShopableVideo = document.querySelector(".modal-shopable-video");
     if (this.form) {
       if (this.form.querySelector("[name=id]")) {
@@ -121,6 +122,16 @@ export class ProductForm extends HTMLElement {
                 "close",
                 false
               );
+            }
+            if (document.querySelector("bought-together-popup.active")) {
+              NextSkyTheme.eventModal(this.boughtTogether, "close", false);
+              const itemChecked = this.boughtTogether.querySelectorAll(
+                ".bought-together-checkbox[type='checkbox']"
+              );
+              itemChecked.forEach((item) => {
+                item.checked = true;
+              });
+              this.recalculateBoughtTogetherTotal();
             }
           } else {
             NextSkyTheme.notifier.showElement(
@@ -418,6 +429,61 @@ export class ProductForm extends HTMLElement {
       } else {
         cartDrawerItemElements.classList.remove("loading");
       }
+    }
+  }
+
+  recalculateBoughtTogetherTotal() {
+    if (!this.boughtTogether) return;
+    const currentSection = this.boughtTogether;
+    let total_price = Number(currentSection.getAttribute("data-price"));
+    currentSection
+      .querySelectorAll(".bought-together-checkbox[type='checkbox']")
+      .forEach((item) => {
+        const product = item.closest(".product__item-js");
+        const variant_select = product.querySelector(
+          "variant-swatch-select select"
+        );
+        const productId = item.value;
+        let value_option = "";
+        if (variant_select) {
+          value_option = variant_select.value;
+        }
+        let price = item.getAttribute("data-price");
+        if (variant_select) {
+          price =
+            variant_select.options[variant_select.selectedIndex].getAttribute(
+              "data-price"
+            );
+        }
+        const variant = currentSection.querySelector(
+          `[product-id="${productId}"]`
+        );
+        if (item.checked) {
+          total_price = total_price + Number(price);
+          if (value_option) {
+            variant.querySelector(`input[name="items[][id]"]`).value =
+              value_option;
+          }
+          variant.querySelectorAll("input").forEach((input) => {
+            input.disabled = false;
+          });
+        }
+      });
+    currentSection.querySelector(
+      ".bought-together-products-form .total-price .price"
+    ).innerHTML = NextSkyTheme.formatMoney(
+      total_price,
+      cartStrings.money_format
+    );
+
+    const totalElementMobile = document.querySelector(
+      "button-bought-together-mobile .total-price .price"
+    );
+    if (totalElementMobile) {
+      totalElementMobile.innerHTML = NextSkyTheme.formatMoney(
+        total_price,
+        cartStrings.money_format
+      );
     }
   }
 }
@@ -785,7 +851,7 @@ class CartDiscountElement extends HTMLElement {
         this.applyDiscount.bind(this)
       );
     }
-    
+
     this.initializeDiscountCodesStyling();
   }
 
@@ -849,7 +915,7 @@ class CartDiscountElement extends HTMLElement {
       const destination = this.cart.querySelector(`.${blockClass}`);
       if (source && destination) {
         destination.innerHTML = source.innerHTML;
-        
+
         if (blockClass === "cart-discount__codes") {
           this.updateDiscountCodesStyling();
         }
@@ -866,20 +932,40 @@ class CartDiscountElement extends HTMLElement {
   }
 
   updateDiscountCodesStyling() {
-    const discountCodesElement = this.cart.querySelector(".cart-discount__codes");
-    const discountCodesElementDrawer = this.cart.querySelector(".cart-drawer .cart-discount__codes");
-    const cartAddonsContentInner = this.cart.querySelector(".cart-drawer .cart-addons-content-inner");
+    const discountCodesElement = this.cart.querySelector(
+      ".cart-discount__codes"
+    );
+    const discountCodesElementDrawer = this.cart.querySelector(
+      ".cart-drawer .cart-discount__codes"
+    );
+    const cartAddonsContentInner = this.cart.querySelector(
+      ".cart-drawer .cart-addons-content-inner"
+    );
 
     if (discountCodesElement) {
-      const discountPills = discountCodesElement.querySelectorAll(".cart-discount__pill");
+      const discountPills = discountCodesElement.querySelectorAll(
+        ".cart-discount__pill"
+      );
       if (discountPills.length > 0) {
-        discountCodesElement.classList.add("mt-10", "flex", "gap-8", "row-gap-8", "wrap");
+        discountCodesElement.classList.add(
+          "mt-10",
+          "flex",
+          "gap-8",
+          "row-gap-8",
+          "wrap"
+        );
         discountCodesElementDrawer.classList.add("mb-20");
         if (cartAddonsContentInner) {
           cartAddonsContentInner.classList.remove("mb-20");
         }
       } else {
-        discountCodesElement.classList.remove("mt-10", "flex", "gap-8", "row-gap-8", "wrap");
+        discountCodesElement.classList.remove(
+          "mt-10",
+          "flex",
+          "gap-8",
+          "row-gap-8",
+          "wrap"
+        );
         discountCodesElementDrawer.classList.remove("mb-20");
         if (cartAddonsContentInner) {
           cartAddonsContentInner.classList.add("mb-20");

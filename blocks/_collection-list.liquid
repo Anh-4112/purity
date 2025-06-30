@@ -27,14 +27,14 @@
 {% if request.visual_preview_mode %}
   {% style %}
     :where(.border-bottom),
-    :where(.border){
-      border-color: #bbbbbb
+    :where(.border) {
+      border-color: #bbbbbb;
     }
   {% endstyle %}
 {% endif %}
 <collection-hover {{ block.shopify_attributes }}>
   <a
-    class="heading-style collection-list__content block"
+    class="heading-style collection-list__content block-1025 border-bottom flex space-between gap-12 content-center py-12 py-md-20"
     {% if collection_url != blank %}
       href="{{ collection_url }}"
     {% else %}
@@ -42,7 +42,7 @@
     {% endif %}
     aria-label="{{ collection_title }}"
   >
-    <div class="collection-list__content-inner flex space-between align-center py-15 py-md-20 border-bottom gap-15">
+    <div class="collection-list__content-inner flex space-between align-center gap-15 flex-1">
       <div
         class="collection-list__content-text h4 relative flex gap"
         style="--gap: 8px;--gap-desktop: 8px;"
@@ -55,10 +55,11 @@
         {%- endif -%}
       </div>
       <span
-        class="collection-list__icon wh-1025-50 w-custom h-custom flex flex-auto content-center border rounded-50 text-color pointer btn-hover overflow-hidden transition-short relative"
-        style="--width:4.6rem;--height:4.6rem;"
+        class="collection-list__icon wh-1025-50 hidden flex-1025 flex-auto content-center border rounded-50 text-color pointer btn-hover overflow-hidden relative"
       >
-        {%- render 'icon-arrow-top' -%}
+        <svg width="6" height="11" viewBox="0 0 6 11" fill="none">
+          <use href="#icon-next" />
+        </svg>
       </span>
     </div>
     <div

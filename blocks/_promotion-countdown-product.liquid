@@ -21,9 +21,6 @@
         </svg> {{ heading }}</span>
       {% endif %}
       <div class="inline-flex gap-15 align-center">
-        {%- if block.settings.description != blank -%}
-            <span class="description ms-auto heading_weight">{{ description }}</span>
-          {% endif %}
         <countdown-timer
           class="flex gap-5 text-center wrap heading_weight"
           data-deadline="{{ product.metafields.custom.promotion_countdown }}"
@@ -50,6 +47,7 @@
           </div>
         </countdown-timer>
       </div>
+    </div>
   </div>
 {%- endif -%}
 {% schema %}
