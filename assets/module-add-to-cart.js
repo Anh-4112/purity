@@ -138,7 +138,7 @@ export class ProductForm extends HTMLElement {
               window.cartStrings.addSuccessMobile,
               submitButton,
               "success",
-              3000
+              5000
             );
           }
         } else {

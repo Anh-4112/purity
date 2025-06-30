@@ -15,7 +15,7 @@
   if section_st.column_gap == 'large'
     assign padding_container_1025 = 'px-1025-120'
   elsif section_st.column_gap == 'medium'
-    assign padding_container_1025 = 'px-1025-90'
+    assign padding_container_1025 = 'px-1025-100'
   elsif section_st.column_gap == 'small'
     assign padding_container_1025 = 'px-1025-60'
   endif
@@ -65,7 +65,7 @@
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 <div
-  class="section__bundle-product overflow-hidden section color-{{ section_st.color_scheme }}{% if section_st.show_divider %} border-top{% endif %}"
+  class="section__bundle-product section color-{{ section_st.color_scheme }}{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div
@@ -76,9 +76,9 @@
       style="--gap: 0px;--row-gap: 2rem;--col-width: {{ image_width }}%"
     >
       <div
-        class="bundle-products__image w-full col-1025-w-custom sticky top-0"
+        class="bundle-products__image w-full col-1025-w-custom"
       >
-        <div class="relative">
+        <div class="relative sticky top-0">
           <div
             class="rounded banner__media"
             style="--aspect-ratio: {{ ratio_desktop }};--aspect-ratio-mb: {{ ratio_mobile }};"
@@ -220,7 +220,7 @@
                 data-product-position="{{ forloop.index }}"
                 style="--width: 8rem;"
                 tabindex="0"
-                class="bundle-item switch-slide__mobile border-bottom-md block last-0 py-20-md{% if forloop.first %} pt-0{% endif %} transition"
+                class="bundle-item switch-slide__mobile border-bottom-md block last-0 py-24-md{% if forloop.first %} pt-0{% endif %} transition"
               >
                 {% render 'card-product',
                   card_product: product,

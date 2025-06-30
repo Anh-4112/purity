@@ -104,15 +104,31 @@ bundle-item product-form.quick-add button {
     padding-inline: clamp(3rem, 4vw, 6rem);
   }
 
-  .px-1025-90 {
-    padding-inline: clamp(5rem, 6vw, 9rem);
+  .px-1025-100 {
+    padding-inline: clamp(5rem, 6vw, 10rem);
   }
 
   .px-1025-120 {
     padding-inline: clamp(7.5rem, 8vw, 12rem);
   }
 }
-
+@media screen and (max-width: 767.96px) {
+  .bundle-products__body .product-item__inner{
+    padding: 1.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--img-rounded);
+    gap: 1.2rem;
+  }
+  .bundle-products{
+    gap: 1.6rem;
+  }
+  .bundle-products__list .product_submit_button{
+    margin-top: 2.4rem;
+  }
+  .bundle-item .product__inner{
+    --width: 7rem !important;
+  }
+}
 @media screen and (max-width: 1024.98px) {
   .bundle-products__body .product__information {
     width: calc(100% - 4.4rem - 8rem);
@@ -121,7 +137,7 @@ bundle-item product-form.quick-add button {
 
   bundle-item product-form.quick-add button {
     right: 0;
-    bottom: 25px;
+    bottom: 30px;
   }
 }
 
@@ -137,7 +153,7 @@ bundle-item product-form.quick-add button {
 
 @media screen and (min-width: 768px) {
   bundle-item.last-0:last-of-type {
-    padding-top: 2rem;
+    padding-top: 2.4rem;
   }
 
   .bundle-products.is-hover .bundle-item {
