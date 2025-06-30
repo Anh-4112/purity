@@ -55,20 +55,6 @@
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};{% if section.blocks.size > 6 %}--speed: 15s;{% elsif  section.blocks.size > 4 %} --speed: 10s;{% elsif section.blocks.size > 2 %}--speed: 6s;{% else %}--speed: 4s;{% endif %}
 {%- endcapture -%}
 
-{% for block in section.blocks %}
-  {% case block.type -%}
-    {%- when 'image_effect' %}
-      {% if request.visual_preview_mode %}
-        <div
-          {{ block.shopify_attributes }}
-          class="image-with-text__media banner__media h-full rounded"
-          style="--aspect-ratio: 16/9"
-        >
-          {% render 'placeholder-render', type: 'product', class: 'img-placeholder h-full w-full' %}
-        </div>
-      {% endif %}
-  {% endcase %}
-{% endfor %}
 <div
   class="section section color-{{ section_st.color_scheme }} gradient{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
@@ -143,54 +129,8 @@
             {%- render 'placeholder-render', type: 'lifestyle-2' -%}
           {% endif %}
         </div>
-        <media-effect class="hidden block-1025">
-          {% assign image_effect_blocks = section.blocks | where: 'type', 'image_effect' %}
-          {% for block in image_effect_blocks %}
-            {%- liquid
-              assign image = block.settings.image
-              assign ratio = '3/4'
-              if image_ratio != 'adapt'
-                case image_ratio
-                  when 'square'
-                    assign ratio = '1/1'
-                  when 'landscape'
-                    assign ratio = '4/3'
-                  when 'portrait'
-                    assign ratio = '3/4'
-                endcase
-              else
-                if image != blank
-                  assign ratio = image.aspect_ratio
-                else
-                  assign ratio = '1'
-                endif
-              endif
-              assign image_alt = image.alt
-              if image_alt == blank
-                assign image_alt = 'general.image.image_alt_default' | t
-              endif
-            -%}
-            <div
-              class="media-effect__item absolute w-custom max-w-100 rounded"
-              style="--width: 10rem;left: {{ block.settings.position_left }}%;top: {{ block.settings.position_top }}%;--aspect-ratio: {{ ratio}};"
-            >
-              {% if image != blank %}
-                {% render 'responsive-image',
-                  type: 'banner',
-                  container: section_st.section_width,
-                  image: image,
-                  image_alt: image_alt,
-                  class: 'rounded',
-                  motion: true
-                %}
-              {% else %}
-                {%- render 'placeholder-render', type: 'product' -%}
-              {% endif %}
-            </div>
-          {% endfor %}
-        </media-effect>
       </div>
-      <content-effect class="information-text__wrapper block absolute-1025 top-0 w-full h-full z-1">
+      <content-effect class="information-text__wrapper block{% if section_st.hide_icon_text == true %} hidden-mobile{% endif %} absolute-1025 top-0 w-full h-full z-1">
         <div class="information-text__content flex wrap-1025 content-center gap">
           {% assign content_effect_blocks = section.blocks | where: 'type', 'information' %}
           {% for block in content_effect_blocks %}
@@ -417,6 +357,16 @@
     },
     {
       "type": "header",
+      "content": "t:sections.all.mobile_options.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_icon_text",
+      "default": true,
+      "label": "t:sections.featured_product_banner.hide_icon_text"
+    },
+    {
+      "type": "header",
       "content": "t:sections.all.padding.section_padding_heading"
     },
     {
@@ -525,42 +475,6 @@
           "label": "t:settings_schema.typography.settings.heading.text_transform.uppercase"
         }
       ]
-    },
-    {
-      "type": "image_effect",
-      "name": "t:sections.featured_product_banner.blocks.image_effect.label",
-      "limit": 3,
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "t:sections.featured_product_banner.blocks.image_effect.info"
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "t:sections.all.image.label"
-        },
-        {
-          "type": "range",
-          "id": "position_top",
-          "label": "t:sections.featured_product_banner.blocks.image_effect.position_top",
-          "min": 0,
-          "max": 100,
-          "unit": "%",
-          "step": 1,
-          "default": 50
-        },
-        {
-          "type": "range",
-          "id": "position_left",
-          "label": "t:sections.featured_product_banner.blocks.image_effect.position_left",
-          "min": 0,
-          "max": 100,
-          "unit": "%",
-          "step": 1,
-          "default": 50
-        }
-      ]
     }
   ],
   "presets": [
@@ -568,27 +482,6 @@
       "name": "t:sections.featured_product_banner.name",
       "category": "t:sections.group.product",
       "blocks": [
-        {
-          "type": "image_effect",
-          "settings": {
-            "position_top": 1,
-            "position_left": 15
-          }
-        },
-        {
-          "type": "image_effect",
-          "settings": {
-            "position_top": 50,
-            "position_left": 90
-          }
-        },
-        {
-          "type": "image_effect",
-          "settings": {
-            "position_top": 85,
-            "position_left": 0
-          }
-        },
         {
           "type": "information"
         },

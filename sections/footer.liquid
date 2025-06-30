@@ -151,7 +151,7 @@
                   </a>
                 </li>
                 <li class="menu-link">
-                  {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
+                  {%- form 'customer', id: 'ContactFooter_preview', class: 'footer__newsletter newsletter-form' -%}
                     <input type="hidden" name="contact[tags]" value="newsletter">
                     <div class="newsletter-form__field-wrapper mb-20">
                       <div class="field relative">
@@ -253,15 +253,6 @@
         {%- endfor -%}
         <div class="footer__blocks cols flex wrap" style="--gap: 2.4rem;">
           {%- for block in section.blocks -%}
-            {%- assign order_class = '' -%}
-            {%- case block.type -%}
-              {%- when 'menu_block' -%}
-                {%- assign order_class = 'order-3' -%}
-              {%- when 'contact_bar_block' -%}
-                {%- assign order_class = 'order-1' -%}
-              {%- when 'newsletter_block' -%}
-                {%- assign order_class = 'order-2' -%}
-            {%- endcase -%}
             {%- liquid
               assign menu_item = menu_item | plus: 1
             -%}
