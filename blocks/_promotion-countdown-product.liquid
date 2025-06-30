@@ -15,38 +15,43 @@
     class="flex gap-5 rounded countdown_timer-product align-center space-between wrap bg-custom p-15 mb-custom color-white"
     style="--opacity: 1;--bg-color-custom: #D0473E;--font-size: 2rem;--padding: 0.5rem 0.3rem;--min-width: 3rem; --img-rounded: 10px;"
   >
-      {%- if block.settings.heading != blank -%}
-        <span class="inline-flex gap-8 align-center fs-16 heading_weight"> <svg xmlns="http://www.w3.org/2000/svg" width="26" height="24" fill="none">
+    {%- if block.settings.heading != blank -%}
+      <span class="inline-flex gap-8 align-center fs-16 heading_weight">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="24" fill="none">
           <use href="#icon-time"/>
-        </svg> {{ heading }}</span>
+        </svg>
+        {{ heading -}}
+      </span>
+    {% endif %}
+    <div class="inline-flex gap-15 align-center">
+      {%- if block.settings.description != blank -%}
+        <span class="description ms-auto heading_weight">{{ description }}</span>
       {% endif %}
-      <div class="inline-flex gap-15 align-center">
-        <countdown-timer
-          class="flex gap-5 text-center wrap heading_weight"
-          data-deadline="{{ product.metafields.custom.promotion_countdown }}"
-          data-days="{{ 'sections.countdown.format.days' | t }}"
-          data-hours="{{ 'sections.countdown.format.hours' | t }}"
-          data-mins="{{ 'sections.countdown.format.mins' | t }}"
-          data-secs="{{ 'sections.countdown.format.secs' | t }}"
-        >
-          <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
-            <span class="days_timer countdown-item">00</span>
-            <span class="hidden timer-announcementbar-text">{{ 'sections.countdown.format.days' | t }}</span>
-          </div>
-          <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
-            <span class="hours_timer countdown-item">00</span>
-            <span class="hidden timer-announcementbar-text">{{ 'sections.countdown.format.hours' | t }}</span>
-          </div>
-          <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
-            <span class="minutes_timer countdown-item">00</span>
-            <span class="hidden timer-announcementbar-text">{{ 'sections.countdown.format.mins' | t }}</span>
-          </div>
-          <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
-            <span class="seconds_timer countdown-item">00</span>
-            <span class="hidden timer-announcementbar-text">{{ 'sections.countdown.format.secs' | t }}</span>
-          </div>
-        </countdown-timer>
-      </div>
+      <countdown-timer
+        class="flex gap-5 text-center wrap heading_weight"
+        data-deadline="{{ product.metafields.custom.promotion_countdown }}"
+        data-days="{{ 'sections.countdown.format.days' | t }}"
+        data-hours="{{ 'sections.countdown.format.hours' | t }}"
+        data-mins="{{ 'sections.countdown.format.mins' | t }}"
+        data-secs="{{ 'sections.countdown.format.secs' | t }}"
+      >
+        <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
+          <span class="days_timer countdown-item">00</span>
+          <span class="hidden timer-announcementbar-text">{{ 'sections.countdown.format.days' | t }}</span>
+        </div>
+        <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
+          <span class="hours_timer countdown-item">00</span>
+          <span class="hidden timer-announcementbar-text">{{ 'sections.countdown.format.hours' | t }}</span>
+        </div>
+        <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
+          <span class="minutes_timer countdown-item">00</span>
+          <span class="hidden timer-announcementbar-text">{{ 'sections.countdown.format.mins' | t }}</span>
+        </div>
+        <div class="relative flex content-center bg-white countdown-container lh-normal sale-color min-w-custom p-custom rounded-5">
+          <span class="seconds_timer countdown-item">00</span>
+          <span class="hidden timer-announcementbar-text">{{ 'sections.countdown.format.secs' | t }}</span>
+        </div>
+      </countdown-timer>
     </div>
   </div>
 {%- endif -%}
