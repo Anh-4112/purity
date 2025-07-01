@@ -84,6 +84,7 @@
           <h1 class="heading-letter-spacing title title--primary h0 text-center">
             {{ 'sections.cart.title' | t }}
           </h1>
+          {% assign total_price = cart.total_price | times: 1 %}
           {%- if show_free_shipping_message and free_minimum_amount -%}
             <free-ship-progress-bar
               data-fe-unavailable="{% if free_shipping_message != blank %}{{ free_shipping_message }}{% else %}{{ 'sections.cart.free_shipping_html' | t }}{% endif %}"
@@ -94,7 +95,7 @@
                 {{ free_shipping_message | replace: '[amount]', total }}
               </div>
               <div
-                class="progress-bar rounded-10 clip-path-unset mx-auto w-full h-custom bg-grey mt-16 relative max-w-custom"
+                class="progress-bar rounded-10 clip-path-unset mx-auto w-full h-custom bg-border-color mt-16 relative max-w-custom"
                 style="--height: 4px;--max-width: 60rem"
               >
                 <div
@@ -138,7 +139,6 @@
             </div>
           {%- endif -%}
         </div>
-        {% assign total_price = cart.total_price | times: 1 %}
         <main-cart
           class="main-cart flex-wrap flex-1025 gap-60 justify-between{% if cart == empty %} is-empty{% endif %}"
           data-section-id="{{ section.id }}"
@@ -1124,7 +1124,7 @@
                   </div>
                 </form>
                 {%- if additional_checkout_buttons -%}
-                  <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
+                  <div class="cart__dynamic-checkout-buttons additional-checkout-buttons mb-20">
                     {{ content_for_additional_checkout_buttons }}
                   </div>
                 {%- endif -%}
