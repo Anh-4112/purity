@@ -685,7 +685,7 @@
                                   disable_scrolling_text: true,
                                   disable_color_swatches: true,
                                   class: ' swiper-slide bg-secondary rounded-10 p-16',
-                                  style_layout: ' flex gap-16 align-center',
+                                  style_layout: ' flex gap-16 align-center me-10',
                                   image_class: ' flex-auto w-custom rounded-10',
                                   image_rounded: ' rounded-10',
                                   info_class: ' flex-1 mt-0',
@@ -1011,14 +1011,14 @@
                   </div>
                 {%- endif -%}
                 <div class="main-cart-totals totals pt-12 pt-1025-24 border-top">
-                  <div class="total_price-inner flex wrap gap-10 align-center space-between h5">
+                  <div class="total_price-inner hidden flex-1025 wrap gap-10 align-center space-between h5">
                     <span class="totals__subtotal"> {{ 'sections.cart.total' | t }}:</span>
                     {{ cart.total_price | money_with_currency }}
                   </div>
                   <div class="js-contents fs-small pb-16 pb-1025-24">
                     {%- if cart.cart_level_discount_applications.size > 0 -%}
                       <ul
-                        class="discounts list-unstyled flex column gap-4"
+                        class="discounts list-unstyled column gap-4 hidden flex-1025"
                         role="list"
                         aria-label="{{ 'customer.order.discount' | t }}"
                       >
@@ -1101,7 +1101,7 @@
                   </main-cart-note>
                 {%- endif -%}
                 <form action="{{ routes.cart_url }}" method="POST">
-                  <div class="cart__ctas grid gap-8 pb-16 pb-1025-24">
+                  <div class="cart__ctas gap-8 pb-16 pb-1025-24 hidden grid-1025">
                     <noscript>
                       <button type="submit" class="cart__update-button" form="cart">
                         {{ 'sections.cart.update' | t }}
@@ -1207,6 +1207,62 @@
           </div>
         </main-cart>
       {% endif %}
+      <div class="checkout__sticky__wrapper bg-white sticky bottom-0 z-3 py-16">
+        <div class="total_price-inner flex hidden-1025 wrap gap-10 align-center space-between h5">
+          <span class="totals__subtotal"> {{ 'sections.cart.total' | t }}:</span>
+          {{ cart.total_price | money_with_currency }}
+        </div>
+        <div class="js-contents fs-small pb-16 pb-1025-24">
+          {%- if cart.cart_level_discount_applications.size > 0 -%}
+            <ul
+              class="discounts list-unstyled column gap-4 flex hidden-1025"
+              role="list"
+              aria-label="{{ 'customer.order.discount' | t }}"
+            >
+              {%- for discount in cart.cart_level_discount_applications -%}
+                <li
+                  class="discounts__discount discounts__discount fs-13 lh-global flex gap-5 text-white heading-color flex space-between"
+                  style="--body-line-height: 1.6;--bg-color-custom:#D0473E;--height: 3rem;--img-rounded: 3rem;"
+                >
+                  <div class="flex content-center gap-4 fs-small">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none">
+                      <use href="#icon-discount"/>
+                    </svg>
+                    {{ discount.title }}
+                  </div>
+
+                  <div class="bg-custom color-white h-custom flex content-center rounded px-16">
+                    -{{ discount.total_allocated_amount | money }}
+                  </div>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+        <form action="{{ routes.cart_url }}" method="POST">
+          <div class="cart__ctas gap-8 grid hidden-1025">
+            <noscript>
+              <button type="submit" class="cart__update-button" form="cart">
+                {{ 'sections.cart.update' | t }}
+              </button>
+            </noscript>
+            <button
+              type="submit"
+              name="checkout"
+              class="grow-1 btn btn-primary"
+            >
+              <span class="hidden-on-load transition-short flex content-center gap-8">
+                <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                  <use href="#icon-lock" />
+                </svg>
+                {{ 'sections.cart.checkout' | t -}}
+              </span>
+              {%- render 'loader' -%}
+            </button>
+            <div id="cart-errors" class="error empty-hidden"></div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
