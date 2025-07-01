@@ -132,7 +132,7 @@
               </div>
             {%- endif -%}
             <div class="w-full sf-prod__block info-bought-together">
-              <product-form class="bought-together-products-form">
+              <product-form class="bought-together-products-form relative z-3">
                 <form
                   method="post"
                   action="{{ routes.cart_add_url }}"
@@ -221,7 +221,7 @@
                     >
                       <span class="btn-label hidden-on-load transition-short flex content-center">
                         {{- 'products.product.add_all_to_cart' | t -}}
-                        <span class="dot-total"></span>
+                        <span class="dot-total mx-3"> - </span>
                         <div class="total-price">
                           <span class="price">
                             {%- if settings.currency_code_enabled %}
@@ -335,7 +335,7 @@
           >
             <span class="btn-label hidden-on-load transition-short flex content-center">
               {{- 'products.product.add_all_to_cart' | t -}}
-              <span class="dot-total"></span>
+              <span class="dot-total mx-3"> - </span>
               <div class="total-price">
                 <span class="price">
                   {%- if settings.currency_code_enabled %}
@@ -464,7 +464,7 @@
                 >
                   <span class="btn-label hidden-on-load transition-short flex content-center">
                     {{- 'products.product.add_all_to_cart' | t -}}
-                    <span class="dot-total"></span>
+                    <span class="dot-total mx-3"> - </span>
                     <div class="total-price">
                       <span class="price">
                         {%- if settings.currency_code_enabled %}

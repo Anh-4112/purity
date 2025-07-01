@@ -485,7 +485,7 @@ class AlertNotify {
   }
 
   createIcon(type) {
-    const icon = document.createElement("span");
+    const icon = document.createElement("span"); 
     switch (type) {
       case "success":
         icon.innerHTML =

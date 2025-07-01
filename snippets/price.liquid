@@ -59,13 +59,15 @@
       </s>
     </div>
     {% if scope == 'detail' %}
-      <span class="price-saving price-item compare-price body_weight sale-color fs-16 pt-3 pe-3">
-        {% if display_percent %}
-          {{ 'products.product.sale_off' | t: discount: savings_percent }}
-        {% else %}
-          {{ 'products.product.sale_price' | t: price: savings_amount_money }}
-        {% endif %}
-      </span>
+      <div class="saving-price">
+        <span class="price-saving price-item compare-price body_weight sale-color fs-16 pe-3">
+          {% if display_percent %}
+            {{ 'products.product.sale_off' | t: discount: savings_percent }}
+          {% else %}
+            {{ 'products.product.sale_price' | t: price: savings_amount_money }}
+          {% endif %}
+        </span>
+      </div>
     {% endif %}
   {%- else -%}
     <div class="price-regular">
