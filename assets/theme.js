@@ -2729,10 +2729,9 @@ class ButtonCopyLink extends HTMLButtonElement {
   onClick() {
     const url = this.getAttribute("data-href");
     navigator.clipboard.writeText(url);
-    NextSkyTheme.notifier.show(
+    NextSkyTheme.notifierInline.show(
       window.message.socialCopyLink.success,
-      "success",
-      3000
+      "success"
     );
   }
 }
