@@ -657,6 +657,13 @@ blockquote {
   .modal__header {
     justify-content: center;
   }
+
+  .cart-drawer .modal-inner:not(.draw-mb) {
+    overflow: unset;
+  }
+  .cart-drawer .modal-inner:not(.draw-mb) .drawer__body {
+    max-height: calc(100dvh - 100px);
+  }
   draggable-modal:not(.modal__header),
   draggable-localization {
     padding-block: 1.25rem;
@@ -668,11 +675,11 @@ blockquote {
     content: "";
     background-color: #e5e5e5;
     position: absolute;
-    top: 50%;
+    top: 8px;
     left: 50%;
     width: 6rem;
     height: 0.4rem;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     border-radius: 1rem;
   }
   :is(draggable-modal, draggable-localization)::after {
@@ -951,7 +958,7 @@ blockquote {
     margin-top: 0;
   }
   .mt-1025-6 {
-    margin-top: 6;
+    margin-top: 6px;
   }
   .mt-1025-50 {
     margin-top: 5rem;
