@@ -67,6 +67,15 @@
       </div>
     </div>
   </div>
+  {% unless product == empty %}
+    <script
+      type="application/json"
+      data-product-json
+      class="productJson"
+    >
+      {{ product.id | json }}
+    </script>
+  {% endunless %}
   <script type="application/ld+json">
     {
       "@context": "http://schema.org/",
