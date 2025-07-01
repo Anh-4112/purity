@@ -558,6 +558,9 @@ blockquote {
 .overflow-x-hidden {
   overflow-x: hidden;
 }
+.overflow-x-auto {
+  overflow-y: auto;
+}
 .overflow-y-auto {
   overflow-y: auto;
 }
@@ -1782,12 +1785,7 @@ blockquote {
 .bought-together-products-form .notification {
   width: calc(100% - 40px);
   top: inherit;
-  bottom: 80px;
-}
-.mobile-sticky-bar-enabled .bought-together-products-form .notification {
-  width: calc(100% - 40px);
-  top: inherit;
-  bottom: 150px;
+  bottom: 74px;
 }
 .bundle-products__list .notification {
   width: calc(100% - 40px);
@@ -2385,5 +2383,32 @@ cart-drawer {
   .draw-mb.draw-mb-full {
     max-width: 100%;
     border-radius: 0;
+  }
+}
+/* Before you leave */
+.btn-code{
+  border: 2px dashed var(--color-border);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+}
+.btn-code:hover{
+  border: 2px solid var(--btn-primary-hover-bg-color);
+}
+.before-banner-content{
+  text-shadow: 0px 1px 0px rgb(0 0 0 / 0.075), 0px 1px 1px rgb(0 0 0 / 0.075), 0px 2px 2px rgb(0 0 0 / 0.075);
+}
+.action-copy .svg-action,
+.action-copy .copied-action {
+  opacity: 0;
+  visibility: hidden;
+}
+.action-copy .svg-copied,
+.action-copy .copied-success {
+  opacity: 1;
+  visibility: visible;
+}
+@media screen and (max-width: 1024.988px) {
+  .before-you-leave-inner .modal__close svg{
+    color: rgb(var(--color-white));
   }
 }

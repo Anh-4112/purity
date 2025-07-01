@@ -11,15 +11,15 @@
   class="before-you-leave modal modal_type_popup active-modal-js modal-newsletter-popup fixed inset-0 z-31 flex align-center invisible transition content-hidden"
   data-time-delay="{{ show_time | times: 1 }}"
   data-section-id="{{ section.id }}"
-  style="--drawer-width: 42rem;"
+  style="--drawer-width: 42rem; --img-rounded: 2rem;"
 >
   <modal-overlay class="modal-overlay pointer"></modal-overlay>
   <div
-    class="modal-popup-inner invisible modal-focus modal-body modal-draggable transition rounded max-w-custom m-auto w-full bg-white z-15"
-    style="--max-width: 82rem;"
+    class="modal-popup-inner invisible modal-focus modal-body modal-draggable transition rounded max-w-custom m-auto w-full bg-white z-15 custom-scrollbar"
+    style="--max-width: 108rem;"
     tabindex="-1"
   >
-    <div class="before-you-leave-inner flex-1025">
+    <div class="before-you-leave-inner flex-md" style="--col-width: 37%;--gap-desktop: 0px;--gap: 0px;">
       <button
         is="button-close-model"
         class="modal__close pointer btn-reset wh-58 flex-1025 content-center absolute z-3 top-0 left-0-mb right-0-1025"
@@ -36,7 +36,7 @@
         </svg>
       </button>
       <div
-        class="relative w-45-percent-1025"
+        class="col-md-w-custom text-center relative overflow-auto color-{{ section_st.color_scheme }}"
         {% if section_st.banner != blank %}
           style="--aspect-ratio: {{ section_st.banner.aspect_ratio }}"
         {% endif %}
@@ -50,33 +50,40 @@
             class: 'absolute inset-0 z-1 pointer-none w-full h-full object-position-center object-fit-cover'
           %}
         {% endif %}
-        <div class="before-banner-content{% if section_st.banner != blank %} absolute z-2 top-0{% endif %} p-30">
+        <div class="flex column justify-content-end before-banner-content{% if section_st.banner != blank %} absolute z-2 w-full h-full top-0{% endif %} p-30 p-1025-50">
           {%- if section.settings.sub_heading != blank -%}
             <div class="before-sub-heading heading-style fs-18 mb-15">
               {{ section.settings.sub_heading }}
             </div>
           {% endif %}
           {%- if section.settings.content_heading != blank -%}
-            <h2 class="before-heading heading-letter-spacing mt-0 mb-30 not-hide-br">
+            <h3 class="before-heading heading-letter-spacing mt-0 mb-30 not-hide-br">
               {{ section.settings.content_heading }}
-            </h2>
+            </h3>
           {% endif %}
           {%- if section.settings.code != blank -%}
-            <div class="before-code mb-30">
+            <div class="before-code mb-20 mb-1025-30">
               <a
                 href="javascript:;"
-                class="btn-primary inline-flex discount gap-10 no-underline content-center"
+                class="btn btn-code w-full rounded-30 inline-flex discount gap-10 no-underline content-center text-start justify-center"
                 data-code="{{ code }}"
                 aria-label="{{ 'popup.copy' | t }}"
               >
-                <svg width="16" height="14" fill="none">
-                  <path fill="currentColor" fill-rule="evenodd" d="M14.286 4.667v7.583H4.57V4.667h9.715ZM16 4.375c0-.805-.64-1.458-1.429-1.458H4.286c-.79 0-1.429.653-1.429 1.458v8.167c0 .805.64 1.458 1.429 1.458H14.57c.79 0 1.429-.653 1.429-1.458V4.375Z" clip-rule="evenodd"/><path fill="currentColor" fill-rule="evenodd" d="M13.43.875A.866.866 0 0 0 12.573 0H1.43C1.05 0 .687.154.42.427A1.474 1.474 0 0 0 0 1.458V10.5c0 .484.384.875.857.875a.866.866 0 0 0 .857-.875V1.75h10.857a.866.866 0 0 0 .858-.874Z" clip-rule="evenodd"/>
-                </svg>
+                <span class="relative">
+                  <svg width="16" height="14" fill="none" class="svg-action">
+                    <path fill="currentColor" fill-rule="evenodd" d="M14.286 4.667v7.583H4.57V4.667h9.715ZM16 4.375c0-.805-.64-1.458-1.429-1.458H4.286c-.79 0-1.429.653-1.429 1.458v8.167c0 .805.64 1.458 1.429 1.458H14.57c.79 0 1.429-.653 1.429-1.458V4.375Z" clip-rule="evenodd"/><path fill="currentColor" fill-rule="evenodd" d="M13.43.875A.866.866 0 0 0 12.573 0H1.43C1.05 0 .687.154.42.427A1.474 1.474 0 0 0 0 1.458V10.5c0 .484.384.875.857.875a.866.866 0 0 0 .857-.875V1.75h10.857a.866.866 0 0 0 .858-.874Z" clip-rule="evenodd"/>
+                  </svg>
+                  <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg" class=" absolute inset-0 invisible svg-copied mt-3">
+                    <path d="M13.5742 1.07422C13.7435 0.917969 13.9388 0.839844 14.1602 0.839844C14.3945 0.839844 14.5898 0.917969 14.7461 1.07422C14.9154 1.24349 15 1.44531 15 1.67969C15 1.90104 14.9154 2.08984 14.7461 2.24609L5.58594 11.4258C5.42969 11.582 5.23438 11.6602 5 11.6602C4.76562 11.6602 4.57031 11.582 4.41406 11.4258L0.253906 7.24609C0.0846354 7.08984 0 6.90104 0 6.67969C0 6.44531 0.0846354 6.24349 0.253906 6.07422C0.410156 5.91797 0.598958 5.83984 0.820312 5.83984C1.05469 5.83984 1.25651 5.91797 1.42578 6.07422L5 9.64844L13.5742 1.07422Z" fill="currentcolor"/>
+                    </svg>
+                </span>
+                
+                  
                 <span class="text relative">
                   <span class="copied-action">
                     {{ section.settings.code }}
                   </span>
-                  <span class="copied-success absolute invisible inset-0 inline-flex content-center">
+                  <span class="copied-success absolute invisible inset-0 inline-flex">
                     {{- 'popup.copied' | t -}}
                   </span>
                 </span>
@@ -94,13 +101,13 @@
         {%- liquid
           assign collection = collections[collection]
         -%}
-        <div class="before-product p-30 w-65-percent-1025">
+        <div class="before-product col-md-remaining">
           {%- if recommended_heading != blank -%}
-            <h5 class="before-product-title heading-letter-spacing mt-0 mb-30">
+            <h5 class="before-product-title heading-letter-spacing mt-0 px-30 py-20 border-bottom lh-1">
               {{ recommended_heading }}
             </h5>
           {% endif %}
-          <div class="before-product-content">
+          <div class="before-product-content p-30">
             <slide-section
               class="swiper"
               data-section-id="{{ section.id }}"
@@ -108,9 +115,10 @@
               data-effect="slide"
               data-loop="false"
               data-speed="500"
-              data-mobile="1"
+              data-mobile="2"
               data-desktop="3"
               data-tablet="2"
+              data-spacing="12"
               data-arrow-center-image="true"
             >
               {%- render 'swiper-navigation' -%}
@@ -150,6 +158,13 @@
   },
   "limit": 1,
   "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.info",
+      "default": "default-color-scheme"
+    },
     {
       "type": "range",
       "id": "show_time",
