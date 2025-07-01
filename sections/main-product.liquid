@@ -7,6 +7,7 @@
   assign enable_sticky_desktop = section_st.enable_sticky_desktop
   assign desktop_layout = section_st.desktop_layout
   assign desktop_media_width = section_st.desktop_media_width
+  assign enable_image_zoom = section_st.enable_image_zoom
   assign media_position = section_st.media_position
   if section_st.section_width == 'fix_width'
     assign section_width = 'container'
@@ -32,7 +33,7 @@
 >
   <div class="{{ section_width }}">
     <div
-      class="main-product flex wrap gap{% if media_position == 'right' %} row-reverse-md{% endif %}{% if desktop_layout == 'stack' %} stack_media{% else %} main_product-media{% endif %}"
+      class="main-product flex wrap gap{% if media_position == 'right' %} row-reverse-md{% endif %}{% if desktop_layout == 'stack' %} stack_media{% else %} main_product-media{% endif %}{% if enable_image_zoom %} has-zoom{% endif %}"
       style="--gap: var(--bs-gutter-x); --gap-desktop: 10px;"
     >
       {% if product.media.size > 0 %}
@@ -53,7 +54,7 @@
         <div class="sticky-md top-20">
           {% if scroll_animation %}
             <motion-effect
-              data-animate="fade-up"
+              data-animate="fade-in"
               data-animate-delay="25"
               class="block"
             >
