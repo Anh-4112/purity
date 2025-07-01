@@ -3,8 +3,8 @@
 -%}
 {% if link.links.size > 0 %}
   {%- if type == 'classic' -%}
-    <div class="submenu classic pointer-none transition z-5{% if menu_mobile == blank %} {{ dropdowns_animation }} absolute submenu-desktop invisible{% else %} bg-white sub-mb absolute inset-0 drawer drawer-right-mb overflow-hidden flex column{% endif %}">
-      <div class="menu-container py-1025-30 bg-white custom-scrollbar overflow-auto">
+    <div class="submenu classic visibility-hidden pointer-none transition z-5{% if menu_mobile == blank %} {{ dropdowns_animation }} absolute submenu-desktop{% else %} bg-white sub-mb absolute inset-0 drawer drawer-right-mb overflow-hidden flex column{% endif %}">
+      <div class="menu-container opacity-0 transition py-1025-30 bg-white custom-scrollbar overflow-auto">
         {%- if menu_mobile != blank -%}
           <div class="submenu-header heading-color flex align-center space-between px-gutter-x py-18 border-bottom sticky top-0 bg-white z-3">
             <div class="back-menu flex align-center gap-custom pointer" style="--gap: 24">
