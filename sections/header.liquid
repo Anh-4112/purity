@@ -316,10 +316,10 @@
                           endif
                         -%}
                         <div
-                          class="mega-menu submenu z-5 pointer-none transition invisible submenu-desktop overflow-auto {{ dropdowns_animation }} border-top inset-x-0 absolute{% if dropdowns_animation != 'fade-in-down' %} z-2 bg-white{% endif %}"
+                          class="mega-menu submenu visibility-hidden z-5 pointer-none transition submenu-desktop overflow-auto {{ dropdowns_animation }} border-top inset-x-0 absolute{% if dropdowns_animation != 'fade-in-down' %} z-2 bg-white{% endif %}"
                           style="--col-mega-width: {{ mega_width }}%; --gap: 20px; --delay: 0.05s;"
                         >
-                          <div class="py-40 overflow-auto bg-white menu-container custom-scrollbar">
+                          <div class="py-40 overflow-auto bg-white menu-container opacity-0 transition custom-scrollbar">
                             <div class="container flex wrap gap">
                               {%- if link.links.size > 0 -%}
                                 <div
