@@ -2748,10 +2748,9 @@ class ButtonCopyLink extends HTMLButtonElement {
   onClick() {
     const url = this.getAttribute("data-href");
     navigator.clipboard.writeText(url);
-    NextSkyTheme.notifier.show(
+    NextSkyTheme.notifierInline.show(
       window.message.socialCopyLink.success,
-      "success",
-      3000
+      "success"
     );
   }
 }
@@ -3194,5 +3193,60 @@ class ShareButton extends HTMLElement {
     }
   }
 }
-
 customElements.define("share-button", ShareButton);
+
+class InnerTab extends HTMLElement {
+  constructor() {
+    super();
+    this.querySelectorAll("button").forEach((button) =>
+      button.addEventListener("click", this.onButtonClick.bind(this))
+    );
+  }
+
+  onButtonClick(event) {
+    const currentTarget = event.currentTarget;
+    if (currentTarget.classList.contains("active")) {
+      return;
+    }
+    const id = currentTarget.getAttribute("data-id");
+    const visibleItems = document.getElementById(id);
+    this.querySelectorAll("button").forEach((button) =>
+      button.classList.remove("active")
+    );
+    currentTarget.classList.add("active");
+    this.closest(".content-tabs")
+      .querySelectorAll(".tab-content")
+      .forEach((result) => {
+        if (result.id !== id) {
+          result.classList.add("hidden");
+          Motion.animate(
+            result,
+            {
+              transform: "translateY(10px)",
+              opacity: 0,
+              visibility: "hidden",
+            },
+            {
+              duration: 0,
+            }
+          );
+        }
+      });
+
+    visibleItems.classList.remove("hidden");
+    Motion.animate(
+      visibleItems,
+      {
+        transform: ["translateY(10px)", "translateY(0)"],
+        opacity: [0, 1],
+        visibility: ["hidden", "visible"],
+      },
+      {
+        duration: 0.5,
+        delay: Motion.stagger(0.1),
+        easing: [0, 0, 0.3, 1],
+      }
+    );
+  }
+}
+customElements.define("inner-tab", InnerTab);

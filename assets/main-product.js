@@ -3,7 +3,7 @@ import { LazyLoader } from "module-lazyLoad";
 document.addEventListener("DOMContentLoaded", function () {
   function addProductEntry(productJson, storedProducts) {
     if (storedProducts === null) storedProducts = [];
-    const currentProductID = productJson.id.toString();
+    const currentProductID = productJson.toString();
     if (!storedProducts.includes(currentProductID)) {
       storedProducts.unshift(currentProductID);
       if (storedProducts.length > 25) {
