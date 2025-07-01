@@ -895,7 +895,6 @@
         "type": "product_list",
         "id": "select_product_recommendation",
         "label": "t:settings_schema.cart.settings.product_recommendations.select_product_recommendation",
-        "visible_if": "{{ settings.enable_product_recommendations != false and settings.recommendation_product_type == 'selected' }}",
         "limit": 12
       },
       {
@@ -981,6 +980,22 @@
           }
         ],
         "default": "drawer"
+      },
+      {
+        "type": "select",
+        "id": "show_search_results",
+        "label": "t:settings_schema.search.settings.search_results.label",
+        "options": [
+          {
+            "value": "default",
+            "label": "t:settings_schema.search.settings.search_results.option_1"
+          },
+          {
+            "value": "tab",
+            "label": "t:settings_schema.search.settings.search_results.option_2"
+          }
+        ],
+        "default": "default"
       },
       {
         "type": "text",
