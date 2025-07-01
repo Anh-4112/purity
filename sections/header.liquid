@@ -356,7 +356,7 @@
                                             assign banner_default = 'accessibility.promotion_banner' | t
                                             assign image_alt = image.alt | default: banner_default | escape
                                           -%}
-                                          <div class="banner__item {% if last_block.settings.content_position != 'bellow' %} rounded{% endif %}">
+                                          <div class="banner__item slideIn-animate{% if last_block.settings.content_position != 'bellow' %} rounded{% endif %}">
                                             <a
                                               {% if banner_link != blank %}
                                                 href="{{ banner_link }}"
