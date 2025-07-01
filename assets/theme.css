@@ -193,8 +193,11 @@ blockquote {
 .ps-10 {
   padding-inline-start: 1rem;
 }
-.ps-18 {
-  padding-inline-start: 1.8rem;
+.ps-16 {
+  padding-inline-start: 1.6rem;
+}
+.ps-17 {
+  padding-inline-start: 1.7rem;
 }
 .ps-32 {
   padding-inline-start: 3.2rem;
@@ -214,8 +217,8 @@ blockquote {
 .pe-16 {
   padding-inline-end: 1.6rem;
 }
-.pe-18 {
-  padding-inline-end: 1.8rem;
+.pe-17 {
+  padding-inline-end: 1.7rem;
 }
 .pe-5 {
   padding-inline-end: 5px;
@@ -336,6 +339,9 @@ blockquote {
 }
 .mt-17 {
   margin-top: 1.7rem;
+}
+.mb-12 {
+  margin-bottom: 1.2rem;
 }
 .mb-13 {
   margin-bottom: 1.3rem;
@@ -653,33 +659,6 @@ blockquote {
   .modal__header {
     justify-content: center;
   }
-  draggable-modal:not(.modal__header),
-  draggable-localization {
-    padding-block: 1.25rem;
-  }
-  draggable-modal.modal__header::before {
-    top: 18%;
-  }
-  :is(draggable-modal, draggable-localization)::before {
-    content: "";
-    background-color: #e5e5e5;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 6rem;
-    height: 0.4rem;
-    transform: translate(-50%, -50%);
-    border-radius: 1rem;
-  }
-  :is(draggable-modal, draggable-localization)::after {
-    content: "";
-    height: 2.4rem;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
-    z-index: 1;
-  }
 }
 :where(.modal-overlay) {
   background: #0006;
@@ -948,7 +927,7 @@ blockquote {
     margin-top: 0;
   }
   .mt-1025-6 {
-    margin-top: 6;
+    margin-top: 6px;
   }
   .mt-1025-50 {
     margin-top: 5rem;
@@ -962,6 +941,12 @@ blockquote {
   }
   .mb-1025-10 {
     margin-bottom: 1rem;
+  }
+  .mb-1025-16 {
+    margin-bottom: 1.6rem;
+  }
+  .mb-1025-18 {
+    margin-bottom: 1.8rem;
   }
   .mb-1025-20 {
     margin-bottom: 2rem;
@@ -1109,6 +1094,9 @@ blockquote {
 }
 .top-20 {
   top: 2rem;
+}
+.top-35 {
+  top: 3.5rem;
 }
 :is(.custom-scrollbar, .dlg .dlg-message)::-webkit-scrollbar {
   width: 4px;
@@ -1431,6 +1419,39 @@ blockquote {
   }
   .w-custom-mb {
     width: var(--width-mb);
+  }
+  .cart-drawer .modal-inner:not(.draw-mb) {
+    overflow: unset;
+  }
+  .cart-drawer .modal-inner:not(.draw-mb) .drawer__body {
+    max-height: calc(100dvh - 100px);
+  }
+  draggable-modal:not(.modal__header),
+  draggable-localization {
+    padding-block: 1.7rem;
+  }
+  draggable-modal.modal__header::before {
+    top: 18%;
+  }
+  :is(draggable-modal, draggable-localization)::before {
+    content: "";
+    background-color: #e5e5e5;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 6rem;
+    height: 0.4rem;
+    transform: translateX(-50%);
+    border-radius: 1rem;
+  }
+  :is(draggable-modal, draggable-localization)::after {
+    content: "";
+    height: 2.4rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: 1;
   }
 }
 .icon-rotate {
@@ -1925,9 +1946,6 @@ cart-discount-element.open .cart-addons-content {
     overflow: visible;
     margin: auto;
   }
-  .cart-recommendations-title {
-    font-size: 1.8rem;
-  }
 }
 @media (min-width: 1025px) {
   .minicar_recommend .product__information {
@@ -2355,4 +2373,13 @@ cart-drawer {
 
 .btn-search:has(input:focus) {
   box-shadow: 0 0 0 1px rgb(29 29 31 / 70%);
+}
+:is(.drawer__cart-recommendations, .cart-recommendations) .swiper-actions {
+  margin-right: -6px;
+}
+@media screen and (max-width: 576px) {
+  .draw-mb.draw-mb-full {
+    max-width: 100%;
+    border-radius: 0;
+  }
 }
