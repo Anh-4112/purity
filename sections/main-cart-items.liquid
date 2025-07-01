@@ -1207,15 +1207,15 @@
           </div>
         </main-cart>
       {% endif %}
-      <div class="checkout__sticky__wrapper bg-white sticky bottom-0 z-3 py-16">
+      <div class="checkout__sticky__wrapper container bg-white fixed shadow transition-drawer bottom-0 inset-x-0 w-full z-10 py-16">
         <div class="total_price-inner flex hidden-1025 wrap gap-10 align-center space-between h5">
           <span class="totals__subtotal"> {{ 'sections.cart.total' | t }}:</span>
           {{ cart.total_price | money_with_currency }}
         </div>
-        <div class="js-contents fs-small pb-16 pb-1025-24">
+        <div class="js-contents fs-small">
           {%- if cart.cart_level_discount_applications.size > 0 -%}
             <ul
-              class="discounts list-unstyled column gap-4 flex hidden-1025"
+              class="discounts list-unstyled column gap-4 flex hidden-1025 pb-16 pb-1025-24"
               role="list"
               aria-label="{{ 'customer.order.discount' | t }}"
             >

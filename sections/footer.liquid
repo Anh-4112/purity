@@ -474,7 +474,7 @@
   <div class="footer__bottom">
     <div class="{{ section_width }} pb-custom" style="--space-bottom: 30">
       <div
-        class="footer_bottom-inner flex column flex-1025-row gap-20 space-between border-top pt-30"
+        class="footer_bottom-inner flex column flex-1025-row gap-20 space-between border-top pt-30{% if request.path == "/cart" %} in-cart-page{% endif %}"
       >
         <div class="footer__bottom--left disclosure__footer flex column flex-1025-row gap-20">
           {%- if section_st.enable_country_selector or section_st.enable_language_selector -%}
@@ -546,7 +546,7 @@
   {%- if section_st.enable_back_top -%}
     <back-to-top
       tabindex="0"
-      class="back-to-top transition invisible pointer w-50 h-50 inline-flex content-center shadow bg-white fixed bottom-30 right-30 z-10 rounded-50 overflow-hidden"
+      class="back-to-top transition invisible pointer w-50 h-50 inline-flex content-center shadow bg-white fixed{% if request.path == "/cart" %} bottom-180{% else %} bottom-75{% endif %} bottom-md-30 right-30 z-10 rounded-50 overflow-hidden"
     >
       <span class="absolute left-0 bottom-0 w-full bg-dark height-scroll"></span>
       <svg width="8" height="10" fill="none" class="color-white mix-blend">
