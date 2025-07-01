@@ -2921,18 +2921,14 @@ class ButtonQuickView extends HTMLButtonElement {
       .finally(async () => {
         this.classList.remove("loading");
         this.removeAttribute("aria-disabled");
-        NextSkyTheme.eventModal(
-          document.querySelector("quickview-drawer"),
-          "open",
-          false,
-          "delay",
-          true
-        );
+        const drawer = document.querySelector("quickview-drawer");
+        NextSkyTheme.eventModal(drawer, "open", false, "delay", true);
         NextSkyTheme.global.rootToFocus = this;
         new LazyLoader(".image-lazy-load");
         await (import(importJs.mediaLightboxGallery),
         import(importJs.countdownTimer),
         import(importJs.recipientForm));
+        drawer.querySelector(".modal-inner").scrollTop = 0;
       })
       .catch((e) => {
         console.error(e);
@@ -3197,7 +3193,6 @@ class ShareButton extends HTMLElement {
     }
   }
 }
-
 customElements.define("share-button", ShareButton);
 
 class InnerTab extends HTMLElement {
