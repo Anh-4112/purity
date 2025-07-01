@@ -1,0 +1,53 @@
+<details
+  class="collapsible-row py-20 py-1025-25 {% if block.settings.open %}detail-open{% endif %}"
+  {{ block.shopify_attributes }}
+  is="collapsible-row"
+  {% if block.settings.open %}
+    open
+  {% endif %}
+>
+  <summary class="collapsible-row__summary">
+    <div class="collapsible-heading">
+      <div
+        class="h6 transition pointer relative flex pe-20"
+      >
+        {{ block.settings.heading }}
+      </div>
+      <span class="open-children-toggle transition">
+        <span class="icon_plus-animation heading-color"> </span>
+      </span>
+    </div>
+  </summary>
+  {% content_for 'block', id: 'content', type: '_accordion-content' %}
+</details>
+{% schema %}
+{
+  "name": "t:sections.custom_section.blocks.accordion.settings.accordion_row",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.custom_section.blocks.accordion.settings.settings.heading",
+      "default": "t:sections.custom_section.blocks.accordion.settings.accordion_row"
+    },
+    {
+      "type": "checkbox",
+      "id": "open",
+      "label": "t:sections.custom_section.blocks.accordion.settings.settings.open_default.label",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.custom_section.blocks.accordion.settings.accordion_row",
+      "blocks": {
+        "content": {
+          "type": "_accordion-content",
+          "static": true
+        }
+      }
+    }
+  ]
+}
+{% endschema %}
