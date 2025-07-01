@@ -71,6 +71,7 @@
       endif
     endif
   endfor
+  assign show_search_results = section_st.show_search_results
 -%}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
@@ -85,7 +86,7 @@
 {% endstyle %}
 <div
   id="Search-{{ section.id }}"
-  class="section-main-search{% if search_empty %} template-search--empty{% endif %}"
+  class="section-main-search{% if show_search_results == 'tab' %} content-tabs{% endif %}{% if search_empty %} template-search--empty{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="title-wrapper-with-link text-center page-title{{ section_width }}">
@@ -209,6 +210,74 @@
       </div>
     </div>
   </div>
+  {%- if show_search_results == 'tab' -%}
+    {%- liquid
+      assign paginate_to_show = 10000
+      paginate search.results by paginate_to_show
+        assign search_products = search.results | where: 'object_type', 'product'
+        assign search_articles = search.results | where: 'object_type', 'article'
+        assign search_pages = search.results | where: 'object_type', 'page'
+      endpaginate
+    -%}
+    <div class="main-search__tabs">
+      <inner-tab>
+        {%- if search_products.size > 0 -%}
+          <button
+            data-id="search-products-{{ section.id }}"
+            type="button"
+            class="active"
+            aria-label="{{ 'general.search.products' | t }}"
+          >
+            {{ 'general.search.products' | t }}
+          </button>
+        {%- endif -%}
+        {%- if search_articles.size > 0 -%}
+          <button
+            data-id="search-articles-{{ section.id }}"
+            type="button"
+            class="{%- if search_products.size == 0 -%}active{%- endif -%}"
+            aria-label="{{ 'general.search.article' | t }}"
+          >
+            {{ 'general.search.article' | t }}
+          </button>
+        {%- endif -%}
+        {%- if search_pages.size > 0 -%}
+          <button
+            data-id="search-pages-{{ section.id }}"
+            type="button"
+            class="{%- if search_products.size == 0 and search_articles.size == 0 -%}active{%- endif -%}"
+            aria-label="{{ 'general.search.pages' | t }}"
+          >
+            {{ 'general.search.pages' | t }}
+          </button>
+        {%- endif -%}
+      </inner-tab>
+    </div>
+  {%- endif -%}
+  {%- if show_search_results == 'tab' and search.results.size == 0 -%}
+    <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
+      <div class="text-center title-wrapper">
+        <h2 class="title title--primary mt-50">
+          {{ 'sections.collection_template.no_products_found' | t -}}
+          <br>
+          {{
+            'sections.collection_template.use_fewer_filters_html'
+            | t: link: results_url, class: 'heading-color remove-underline border-animation'
+          }}
+        </h2>
+        <a
+          href="{{ routes.all_products_collection_url }}"
+          class="inline-block btn btn-primary mt-30"
+          aria-label="{{- 'general.continue_shopping' | t -}}"
+        >
+          {{- 'general.continue_shopping' | t -}}
+        </a>
+      </div>
+    </div>
+  {%- endif -%}
+  {%- if show_search_results == 'tab' -%}
+    <div id="search-products-{{ section.id }}" class="tab-content{% if search_products.size == 0 %} hidden{% endif %}">
+  {%- endif -%}
   <div
     id="ProductsGridContainer"
     class="{{ section_width }} section filter-layout {{ filter_layout }}-filter{% if enable_filtering and filter_layout == 'vertical' %} flex gap{% endif %} search__results-value"
@@ -217,6 +286,13 @@
     {% endif %}
   >
     {%- paginate search.results by products_to_show -%}
+      {%- liquid
+        if show_search_results == 'tab'
+          assign filtered_products = search.results | where: 'object_type', 'product'
+        else
+          assign filtered_products = search.results
+        endif
+      %}
       {%- if enable_filtering and filter_layout == 'vertical' -%}
         <div id="CollectionSidebar" class="hidden collection__sidebar col-1025-w-custom block-1025">
           <div class="sticky-md top-30">
@@ -355,7 +431,9 @@
                                           <svg width="9" height="10" viewBox="0 0 9 10" fill="none">
                                             <use href="#icon-close"></use>
                                           </svg>
-                                          <span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+                                          <span class="visually-hidden">
+                                            {{- 'products.facets.clear_filter' | t -}}
+                                          </span>
                                         </span>
                                       </a>
                                     </facet-remove>
@@ -487,7 +565,7 @@
                 </facet-drawer>
               </div>
             {%- endif -%}
-            {%- if show_product_counts -%}
+            {%- if show_product_counts and show_search_results == 'default' -%}
               <div
                 class="collection-count heading-color"
                 role="status"
@@ -511,7 +589,10 @@
                 <form class="relative facets-vertical-form" id="FacetSortForm">
                   {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
                   <div class="py-10 select-custom facet-filters heading-color">
-                    <select-sorter tabindex="0" class="flex gap-10 select-selected align-center pointer rotate-animate">
+                    <select-sorter
+                      tabindex="0"
+                      class="flex gap-10 select-selected align-center pointer rotate-animate"
+                    >
                       <span>
                         {{- 'products.facets.sort_by_label' | t }}
                       </span>
@@ -719,57 +800,70 @@
                 data-id="{{ section.id }}"
                 style="{{ col_style | strip | strip_newlines }}"
               >
-                {%- for product in search.results -%}
-                  {%- case product.object_type -%}
-                    {%- when 'product' -%}
-                      {% render 'card-product',
-                        card_product: product,
-                        section_id: section.id,
-                        container: section_width,
-                        column: items_per_row,
-                        column_mobile: 2,
-                        class: ' motion-item',
-                        padding: column_gap_slide,
-                        indexFor: forloop.index
-                      %}
-                    {%- when 'article' -%}
-                      {% render 'article-card',
-                        article: product,
-                        media_aspect_ratio: 1,
-                        show_image: true,
-                        show_date: true,
-                        show_author: true,
-                        show_excerpt: true,
-                        show_cate: false,
-                        show_tags: false,
-                        class: ' grid-card-item motion-item',
-                        container: section_width,
-                        column: items_per_row,
-                        column_mobile: 2,
-                        padding: column_gap_slide,
-                        indexFor: forloop.index
-                      %}
-                    {%- when 'page' -%}
-                      <div class="page-card-wrapper motion-item">
-                        <div
-                          class="card-page"
-                          style="--ratio-percent: 100%;"
-                        >
-                          <div class="card__content">
-                            <div class="card__information">
-                              <h3 class="card__heading">
-                                <a href="{{ product.url }}" class="full-unstyled-link heading-color">
-                                  {{ product.title | escape }}
-                                </a>
-                              </h3>
-                            </div>
-                            <div class="card__badge">
-                              <span class="badge">{{ 'templates.search.page' | t }}</span>
+                {%- for product in filtered_products -%}
+                  {%- if show_search_results == 'tab' -%}
+                    {% render 'card-product',
+                      card_product: product,
+                      section_id: section.id,
+                      container: section_width,
+                      column: items_per_row,
+                      column_mobile: 2,
+                      class: ' motion-item',
+                      padding: column_gap_slide,
+                      indexFor: forloop.index
+                    %}
+                  {%- else -%}
+                    {%- case product.object_type -%}
+                      {%- when 'product' -%}
+                        {% render 'card-product',
+                          card_product: product,
+                          section_id: section.id,
+                          container: section_width,
+                          column: items_per_row,
+                          column_mobile: 2,
+                          class: ' motion-item',
+                          padding: column_gap_slide,
+                          indexFor: forloop.index
+                        %}
+                      {%- when 'article' -%}
+                        {% render 'article-card',
+                          article: product,
+                          media_aspect_ratio: 1,
+                          show_image: true,
+                          show_date: true,
+                          show_author: true,
+                          show_excerpt: true,
+                          show_cate: false,
+                          show_tags: false,
+                          class: ' grid-card-item motion-item',
+                          container: section_width,
+                          column: items_per_row,
+                          column_mobile: 2,
+                          padding: column_gap_slide,
+                          indexFor: forloop.index
+                        %}
+                      {%- when 'page' -%}
+                        <div class="page-card-wrapper motion-item">
+                          <div
+                            class="card-page"
+                            style="--ratio-percent: 100%;"
+                          >
+                            <div class="card__content">
+                              <div class="card__information">
+                                <h3 class="card__heading">
+                                  <a href="{{ product.url }}" class="full-unstyled-link heading-color">
+                                    {{ product.title | escape }}
+                                  </a>
+                                </h3>
+                              </div>
+                              <div class="card__badge">
+                                <span class="badge">{{ 'templates.search.page' | t }}</span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                  {%- endcase -%}
+                    {%- endcase -%}
+                  {%- endif -%}
                 {%- endfor -%}
               </div>
               {% if scroll_animation %}
@@ -836,6 +930,70 @@
     {%- endpaginate -%}
     <script type="module" src="{{ 'facets.js' | asset_url }}"></script>
   </div>
+  {%- if show_search_results == 'tab' -%}
+    </div>
+  {%- endif -%}
+  {%- if show_search_results == 'tab' -%}
+    {%- if search_articles.size > 0 -%}
+      <div
+        id="search-articles-{{ section.id }}"
+        class="tab-content{% if search_products.size > 0 %} hidden{% endif %}"
+      >
+        {% if scroll_animation %}
+          <motion-items-effect>
+        {% endif %}
+        <div
+          class="grid collection grid-cols gap row-gap-30"
+          data-id="{{ section.id }}"
+          style="{{ col_style | strip | strip_newlines }}"
+        >
+          {%- for article in search_articles -%}
+            {% render 'article-card',
+              article: article,
+              media_aspect_ratio: 1,
+              show_image: true,
+              show_date: true,
+              show_author: true,
+              show_excerpt: true,
+              show_cate: false,
+              show_tags: false,
+              class: ' grid-card-item',
+              container: section_width,
+              column: items_per_row,
+              column_mobile: 2,
+              padding: column_gap_slide,
+              indexFor: forloop.index
+            %}
+          {%- endfor -%}
+        </div>
+        {% if scroll_animation %}
+          </motion-items-effect>
+        {% endif %}
+      </div>
+    {%- endif -%}
+    {%- if search_pages.size > 0 -%}
+      <div
+        id="search-pages-{{ section.id }}"
+        class="tab-content{% if search_products.size or search_articles.size > 0 %} hidden{% endif %}"
+      >
+        {%- for page in search_pages -%}
+          <div class="page-card-wrapper">
+            <div class="card-page">
+              <div class="card__content">
+                <div class="card__information">
+                  <h3 class="card__heading">
+                    <a href="{{ page.url }}" class="full-unstyled-link heading-color">
+                      {{ page.title | escape }}
+                    </a>
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
 </div>
 {% schema %}
 {
@@ -869,6 +1027,22 @@
       ],
       "default": "fix_width",
       "label": "t:sections.all.layout.label"
+    },
+    {
+      "type": "select",
+      "id": "show_search_results",
+      "label": "t:sections.main-search.settings.search_results.label",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.main-search.settings.search_results.option_1"
+        },
+        {
+          "value": "tab",
+          "label": "t:sections.main-search.settings.search_results.option_2"
+        }
+      ],
+      "default": "default"
     },
     {
       "type": "range",
