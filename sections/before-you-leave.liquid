@@ -1,11 +1,9 @@
 {%- liquid
   assign section_st = section.settings
-  assign th_st = settings
   assign show_time = section_st.show_time
   assign code = section_st.code
   assign collection = section_st.collection
   assign recommended_heading = section_st.recommended_heading
-  assign recommended_button_label = th_st.recommended_button_label
 -%}
 
 <before-you-leave
@@ -110,7 +108,6 @@
               data-effect="slide"
               data-loop="false"
               data-speed="500"
-              data-spacing="{{ column_gap_slide }}"
               data-mobile="1"
               data-desktop="3"
               data-tablet="2"
@@ -211,12 +208,6 @@
       "type": "collection",
       "id": "collection",
       "label": "t:sections.before-you-leave.settings.collection.label"
-    },
-    {
-      "type": "text",
-      "id": "recommended_button_label",
-      "label": "t:sections.all.content_setting.first_button_label.label",
-      "default": "Continue Shopping"
     }
   ],
   "presets": [
