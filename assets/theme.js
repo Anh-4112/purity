@@ -1151,7 +1151,10 @@ class VideoLocal extends HTMLElement {
     }
   }
 
-  loadContent() {
+  loadContent(event) {
+    if (event) {
+      event.currentTarget.classList.add("active");
+    }
     const _this = this;
     const handleIntersection = (entries, observer) => {
       if (!entries[0].isIntersecting) return;
