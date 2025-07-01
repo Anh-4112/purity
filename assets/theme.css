@@ -99,9 +99,6 @@ blockquote {
 .fs-11 {
   font-size: 1.1rem;
 }
-.fs-12 {
-  font-size: 1.2rem;
-}
 .fs-16 {
   font-size: 1.6rem;
 }
@@ -192,6 +189,9 @@ blockquote {
 }
 .ps-10 {
   padding-inline-start: 1rem;
+}
+.ps-16 {
+  padding-inline-start: 1.6rem;
 }
 .ps-18 {
   padding-inline-start: 1.8rem;
@@ -530,9 +530,6 @@ blockquote {
 .gap-0 {
   gap: 0;
 }
-:where(.gap-3) {
-  gap: 3px;
-}
 :is(.rounded-0) {
   border-radius: 0;
   clip-path: unset;
@@ -780,9 +777,9 @@ blockquote {
   opacity: 0;
   visibility: hidden;
 }
-.dropdown-open header ~ .fixed-overlay{
+.dropdown-open header ~ .fixed-overlay {
   opacity: 1;
-  visibility: visible
+  visibility: visible;
 }
 @keyframes slideIn {
   0% {
@@ -1132,7 +1129,7 @@ blockquote {
     color: var(--color-heading);
   }
   :where(
-    .btn:not(:disabled),
+      .btn:not(:disabled),
       .btn:not(a[role="link"]),
       .btn-hover:not(a[role="link"]),
       .btn-tag a,
@@ -1298,10 +1295,10 @@ blockquote {
     transition: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
   .pswp__button--close-zoom:hover svg,
-  .modal__close:hover svg{
-      transition: var(--duration-short);
-      rotate: 90deg;
-      scale: 110%;
+  .modal__close:hover svg {
+    transition: var(--duration-short);
+    rotate: 90deg;
+    scale: 110%;
   }
   .header__icon:hover svg {
     color: var(--color-primary);
@@ -1339,7 +1336,7 @@ blockquote {
     background-color: var(--accent-color-second);
   }
 }
-.block-product__icon-with-text ul a{
+.block-product__icon-with-text ul a {
   font-weight: var(--body-font-weight);
 }
 /* Open detail */
@@ -1423,9 +1420,9 @@ blockquote {
     bottom: 15rem;
   }
   .template-product .back-to-top {
-      display: none;
+    display: none;
   }
-  .mobile-sticky-bar-enabled .sticky-add-cart{
+  .mobile-sticky-bar-enabled .sticky-add-cart {
     bottom: 67px;
   }
   .mobile-sticky-bar-enabled .footer_bottom-inner {
@@ -1449,13 +1446,13 @@ blockquote {
   -webkit-transform: rotate(180deg);
 }
 .header__menu {
-  --transition: opacity 0.3s, visibility 0.3s, transform 0.3s, -webkit-transform 0.3s;
+  --transition: opacity 0.3s, visibility 0.3s, transform 0.3s,
+    -webkit-transform 0.3s;
 }
 .submenu-desktop > * {
   max-height: 85vh;
   border-radius: 0 0 var(--img-rounded) var(--img-rounded);
   box-shadow: -1px 14px 30px 0px rgba(0, 0, 0, 0.05);
-
 }
 .col-mega {
   flex: 0 0 auto;
@@ -1470,10 +1467,10 @@ blockquote {
   visibility: visible;
   pointer-events: auto;
 }
-.no-js details[open]>summary+* .submenu,
-.no-js details[open]>summary+* .menu-container,
-:is(.detail-open) .submenu[open] .submenu, 
-:is(.detail-open) .submenu[open] .menu-container{
+.no-js details[open] > summary + * .submenu,
+.no-js details[open] > summary + * .menu-container,
+:is(.detail-open) .submenu[open] .submenu,
+:is(.detail-open) .submenu[open] .menu-container {
   opacity: 1;
 }
 .section-header-sticky .logo-normal {
@@ -1712,11 +1709,10 @@ blockquote {
   0% {
     opacity: 0;
     transform: translateX(30px);
-   
   }
   100% {
     opacity: 1;
-    transform: translateX(0);    
+    transform: translateX(0);
   }
 }
 .notification {
@@ -1730,15 +1726,15 @@ blockquote {
   border-radius: 1rem;
   gap: 0.8rem;
   visibility: hidden;
-  transition: transform .4s cubic-bezier(.7,0,.2,1);
+  transition: transform 0.4s cubic-bezier(0.7, 0, 0.2, 1);
   height: max-content;
   padding: 1.4rem 1.5rem;
 }
-.notification.show{
+.notification.show {
   visibility: visible;
-  animation: slideInRight 700ms ease both; 
+  animation: slideInRight 700ms ease both;
 }
-.notification >span{
+.notification > span {
   flex-grow: 1;
   justify-content: space-between;
   display: flex;
@@ -1746,11 +1742,11 @@ blockquote {
 .notification:not(.show) {
   animation: slideOutRight 0.3s forwards;
 }
-.sticky-add-cart .product-form__buttons  .notification{
+.sticky-add-cart .product-form__buttons .notification {
   top: -60px;
   width: calc(100% - 40px);
 }
-.product-detail__buy-buttons .notification{
+.product-detail__buy-buttons .notification {
   width: calc(100% - 40px);
   top: inherit;
   bottom: inherit;
@@ -1759,16 +1755,16 @@ blockquote {
   left: 0;
   right: 0;
 }
-.quickview_inner .product-detail__buy-buttons .notification{
+.quickview_inner .product-detail__buy-buttons .notification {
   width: calc(100% - 40px);
 }
 
-.product-item__inner .notification{
+.product-item__inner .notification {
   width: calc(100% - 40px);
   margin-top: -115px;
   top: inherit;
 }
-.bundle-item .product-item__inner .notification{
+.bundle-item .product-item__inner .notification {
   margin: 15px 0;
   top: inherit;
   bottom: inherit;
@@ -1776,17 +1772,17 @@ blockquote {
   left: 15px;
   width: calc(100% - 80px);
 }
-.bought-together-products-form .notification{
+.bought-together-products-form .notification {
   width: calc(100% - 40px);
   top: inherit;
   bottom: 80px;
 }
-.mobile-sticky-bar-enabled .bought-together-products-form .notification{
+.mobile-sticky-bar-enabled .bought-together-products-form .notification {
   width: calc(100% - 40px);
   top: inherit;
   bottom: 150px;
 }
-.bundle-products__list .notification{
+.bundle-products__list .notification {
   width: calc(100% - 40px);
   top: inherit;
   bottom: inherit;
@@ -1794,7 +1790,6 @@ blockquote {
   right: 0;
   width: 100%;
   margin-top: -92px;
-
 }
 .icon_plus-animation::before,
 .icon_plus-animation::after {
@@ -2071,7 +2066,7 @@ quickview-drawer .media-zoom-button span {
   transform: translateY(0);
   -webkit-transform: translateY(0);
 }
-.template-product mobile-navigation-bar{
+.template-product mobile-navigation-bar {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
@@ -2356,14 +2351,6 @@ cart-drawer {
 .filter-sort:hover {
   background-color: var(--color-background-2);
 }
-.dot-total {
-  display: inline-flex;
-  width: 0.4rem;
-  height: 0.4rem;
-  background-color: var(--btn-color);
-  border-radius: 50%;
-  margin: 0 0.8rem;
-}
 .touch-target-before::before {
   content: "";
   position: absolute;
@@ -2373,7 +2360,7 @@ cart-drawer {
   width: 4.4rem;
   height: 4.4rem;
 }
-.discount-heading{
+.discount-heading {
   line-height: 1.25;
 }
 /* search form */
