@@ -113,59 +113,57 @@
   </script>
   {% if enable_sticky_desktop %}
     {%- assign product_form_id = 'sticky-addcart-form-' | append: section.id -%}
-    <sticky-add-cart class="sticky-add-cart opacity-0 amimate_show-hide transition-drawer fixed bottom-0 inset-x-0 bg-white z-10 shadow">
-      <div class="{{ section_width }}">
-        <div
-          class="sticky-add-cart__inner flex gap-10 space-between align-center py-10"
-          style="--width: 7rem;--height: 7rem;--max-width: 40%;"
-        >
-          {%- liquid
-            if product.selected_or_first_available_variant.featured_media
-              assign card_product = product.selected_or_first_available_variant
-            else
-              assign card_product = product
-            endif
+    <sticky-add-cart class="sticky-add-cart opacity-0 amimate_show-hide transition-drawer fixed bottom-12 inset-x-0 z-10">
+      <div
+        class="sticky-add-cart__inner flex gap-10 space-between align-center py-16 py-md-20 bg-white shadow px-20 mx-auto"
+        style="--width: 7rem;--height: 7rem;--max-width: 35%;"
+      >
+        {%- liquid
+          if product.selected_or_first_available_variant.featured_media
+            assign card_product = product.selected_or_first_available_variant
+          else
+            assign card_product = product
+          endif
+        -%}
+        {% render 'card-product',
+          card_product: card_product,
+          section_id: section.id,
+          disable_hover_image: true,
+          disable_show_video: true,
+          disable_lazy_loading: true,
+          disable_badge: true,
+          disable_rate: true,
+          disable_tag: true,
+          disable_countdown: true,
+          disable_scrolling_text: true,
+          disable_quickview: true,
+          disable_color_swatches: true,
+          class: ' sticky-add-cart hidden block-1025 w-full max-w-custom',
+          style_layout: ' flex gap-10 align-center',
+          info_class: ' mt-0',
+          image_class: ' flex-auto w-custom',
+          image_rounded: ' rounded-50 w-custom h-custom'
+        %}
+        <div class="sticky__item-info flex gap-10 w-full w-1025-auto flex-end">
+          {%- render 'variant-swatches',
+            scope: 'variant_swatch',
+            product: product,
+            show_available: true,
+            select_type: 'default'
           -%}
-          {% render 'card-product',
-            card_product: card_product,
-            section_id: section.id,
-            disable_hover_image: true,
-            disable_show_video: true,
-            disable_lazy_loading: true,
-            disable_badge: true,
-            disable_rate: true,
-            disable_tag: true,
-            disable_countdown: true,
-            disable_scrolling_text: true,
-            disable_quickview: true,
-            disable_color_swatches: true,
-            class: ' sticky-add-cart hidden block-1025 w-full max-w-custom',
-            style_layout: ' flex gap-10 align-center',
-            info_class: ' mt-0',
-            image_class: ' flex-auto w-custom',
-            image_rounded: ' rounded-50 w-custom h-custom'
-          %}
-          <div class="sticky__item-info flex gap-10 w-full w-1025-auto flex-end">
-            {%- render 'variant-swatches',
-              scope: 'variant_swatch',
+          <div
+            class="sticky-sticky__buy-buttons w-full w-1025-auto"
+            style="--min-width: 20.2rem;--btn-padding-x: 20px;"
+          >
+            {%- render 'buy-buttons',
               product: product,
-              show_available: true,
-              select_type: 'default'
+              section_id: section.id,
+              product_form_id: product_form_id,
+              type_form: 'sticky-add-cart',
+              type: 'primary',
+              class_btn: ' min-w-1025-custom text-center',
+              class_quantity: ' flex'
             -%}
-            <div
-              class="sticky-sticky__buy-buttons w-full w-1025-auto"
-              style="--min-width: 20.2rem;--btn-padding-x: 20px;"
-            >
-              {%- render 'buy-buttons',
-                product: product,
-                section_id: section.id,
-                product_form_id: product_form_id,
-                type_form: 'sticky-add-cart',
-                type: 'primary',
-                class_btn: ' min-w-1025-custom text-center',
-                class_quantity: ' flex'
-              -%}
-            </div>
           </div>
         </div>
       </div>
