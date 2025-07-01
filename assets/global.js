@@ -636,3 +636,5 @@ function createAfterSubmit() {
     notifier.show(message.newsletter.success, "success", 4000);
   }
 }
+
+checkUrlParameters();

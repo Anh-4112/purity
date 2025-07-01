@@ -10,13 +10,24 @@
   assign custom_layout = section_st.custom_layout
   assign vertical_on_mobile = section_st.vertical_on_mobile
   assign horizontal_position = section_st.horizontal_position
-  assign alignment = section_st.alignment
+  assign content_alignment = section_st.content_alignment
+  if custom_layout == 'horizontal'
+    if horizontal_position == 'top'
+      assign class_position = 'align-start'
+    elsif horizontal_position == 'bottom'
+      assign class_position = 'align-end'
+    else
+      assign class_position = 'align-center'
+    endif
+  else
+    assign class_position = ''
+  endif
 %}
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 {% capture class %}
-flex{% if custom_layout == 'vertical' %} column{% endif %}{% if vertical_on_mobile and custom_layout == 'horizontal' %} row-md column {% endif %} gap gap-{{ section_st.column_gap}}
+flex{% if custom_layout == 'vertical' %} column{% endif %}{% if vertical_on_mobile and custom_layout == 'horizontal' %} row-md column {% endif %} gap gap-{{ section_st.column_gap}} text-{{ content_alignment }} {{ class_position }}
 {% endcapture %}
 <div
   class="section color-{{ section_st.color_scheme }} gradient"
@@ -117,10 +128,10 @@ flex{% if custom_layout == 'vertical' %} column{% endif %}{% if vertical_on_mobi
     },
     {
       "type": "select",
-      "id": "alignment",
+      "id": "content_alignment",
       "options": [
         {
-          "value": "left",
+          "value": "start",
           "label": "t:sections.custom_section.settings.layout.alignment.options__1.label"
         },
         {
@@ -128,7 +139,7 @@ flex{% if custom_layout == 'vertical' %} column{% endif %}{% if vertical_on_mobi
           "label": "t:sections.custom_section.settings.layout.alignment.options__2.label"
         },
         {
-          "value": "right",
+          "value": "end",
           "label": "t:sections.custom_section.settings.layout.alignment.options__3.label"
         }
       ],
