@@ -579,7 +579,7 @@ class ButtonSubmitBundle extends HTMLElement {
       .then((response) => response.json())
       .then((response) => {
         if (response.status) {
-          NextSkyTheme.notifier.show(response.description, "error", 4000);
+          NextSkyTheme.notifier.show(response.description, "error");
           const soldOutMessage =
             this.submitButton.querySelector(".sold-out-message");
           if (!soldOutMessage) return;
