@@ -554,7 +554,10 @@ class DetailsMegaMenu extends HTMLDetailsElement {
     const body = document.body;
 
     if (value) {
-      megaMenuCount.set(DetailsMegaMenu, megaMenuCount.get(DetailsMegaMenu) + 1);
+      megaMenuCount.set(
+        DetailsMegaMenu,
+        megaMenuCount.get(DetailsMegaMenu) + 1
+      );
       this.setAttribute("open", "");
       this.summaryElement.setAttribute("open", "");
       document.addEventListener("click", this.detectClickOutsideListener);
@@ -563,7 +566,10 @@ class DetailsMegaMenu extends HTMLDetailsElement {
       this.classList.add("detail-open");
       body.classList.add("dropdown-open");
 
-      if (this.dropdownsAnimation === "fade-in-down" && window.innerWidth >= 1025) {
+      if (
+        this.dropdownsAnimation === "fade-in-down" &&
+        window.innerWidth >= 1025
+      ) {
         this.contentElement.setAttribute("open", "");
         this.contentElement.classList.add("expanding");
         await this.fadeInDown();
@@ -572,7 +578,10 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         setTimeout(() => this.contentElement.setAttribute("open", ""), 100);
       }
     } else {
-      megaMenuCount.set(DetailsMegaMenu, megaMenuCount.get(DetailsMegaMenu) - 1);
+      megaMenuCount.set(
+        DetailsMegaMenu,
+        megaMenuCount.get(DetailsMegaMenu) - 1
+      );
       this.summaryElement.removeAttribute("open");
       this.contentElement.removeAttribute("open");
       document.removeEventListener("click", this.detectClickOutsideListener);
@@ -581,7 +590,10 @@ class DetailsMegaMenu extends HTMLDetailsElement {
       this.classList.remove("detail-open");
       body.classList.remove("dropdown-open");
 
-      if (this.dropdownsAnimation === "fade-in-down" && window.innerWidth >= 1025) {
+      if (
+        this.dropdownsAnimation === "fade-in-down" &&
+        window.innerWidth >= 1025
+      ) {
         this.contentElement.classList.add("expanding");
         await this.fadeInUp();
         this.contentElement.classList.remove("expanding");
@@ -592,7 +604,7 @@ class DetailsMegaMenu extends HTMLDetailsElement {
         }, 300);
       }
     }
-}
+  }
   detectClickOutside(event) {
     !this.contains(event.target) &&
       !(event.target.closest("details") instanceof DetailsMegaMenu) &&
@@ -1038,9 +1050,12 @@ class QuantityInput extends HTMLElement {
     if (!priceElement) return;
     const dataTotalPrice = priceElement?.getAttribute("data-total-price");
     const totalPrice = Number(dataTotalPrice) * Number(previousValue);
-    priceElement.textContent = NextSkyTheme.formatMoney(totalPrice, themeGlobalVariables.settings.money_format);
+    priceElement.textContent = NextSkyTheme.formatMoney(
+      totalPrice,
+      themeGlobalVariables.settings.money_format
+    );
   }
-  
+
   validateQtyRules() {
     const value = parseInt(this.input.value);
     if (this.input.min) {
@@ -1745,7 +1760,11 @@ class CarouselMobile extends HTMLElement {
       "switch-slide__mobile",
       "swiper-slide"
     );
-    const wrapper = `<div class='swiper-wrapper custom-padding-carousel-mobile'>${html}</div>${this.showPagination ? '<div class="swiper-pagination" style="--swiper-pagination-bottom: 0"></div>' : ''}`;
+    const wrapper = `<div class='swiper-wrapper custom-padding-carousel-mobile'>${html}</div>${
+      this.showPagination
+        ? '<div class="swiper-pagination" style="--swiper-pagination-bottom: 0"></div>'
+        : ""
+    }`;
     this.innerHTML = wrapper;
     initSlide(this);
     new LazyLoader(".image-lazy-load");
@@ -2729,10 +2748,9 @@ class ButtonCopyLink extends HTMLButtonElement {
   onClick() {
     const url = this.getAttribute("data-href");
     navigator.clipboard.writeText(url);
-    NextSkyTheme.notifier.show(
+    NextSkyTheme.notifierInline.show(
       window.message.socialCopyLink.success,
-      "success",
-      3000
+      "success"
     );
   }
 }
@@ -2903,18 +2921,14 @@ class ButtonQuickView extends HTMLButtonElement {
       .finally(async () => {
         this.classList.remove("loading");
         this.removeAttribute("aria-disabled");
-        NextSkyTheme.eventModal(
-          document.querySelector("quickview-drawer"),
-          "open",
-          false,
-          "delay",
-          true
-        );
+        const drawer = document.querySelector("quickview-drawer");
+        NextSkyTheme.eventModal(drawer, "open", false, "delay", true);
         NextSkyTheme.global.rootToFocus = this;
         new LazyLoader(".image-lazy-load");
         await (import(importJs.mediaLightboxGallery),
         import(importJs.countdownTimer),
         import(importJs.recipientForm));
+        drawer.querySelector(".modal-inner").scrollTop = 0;
       })
       .catch((e) => {
         console.error(e);
@@ -2956,15 +2970,14 @@ class SelectContact extends HTMLElement {
 }
 customElements.define("select-contact", SelectContact);
 
-
 class GridCustom extends HTMLElement {
   constructor() {
     super();
-    this.enableCarousel = this.dataset.actionMobile === 'true';
+    this.enableCarousel = this.dataset.actionMobile === "true";
     this.breakpoint = 767;
     this.swiperInstance = null;
     this.originalHTML = this.innerHTML;
-    this.originalStyle = this.getAttribute('style') || '';
+    this.originalStyle = this.getAttribute("style") || "";
   }
 
   connectedCallback() {
@@ -2977,14 +2990,14 @@ class GridCustom extends HTMLElement {
     if (!this.enableCarousel) return;
 
     let width = window.innerWidth;
-    
+
     if (width <= this.breakpoint) {
       this.actionOnMobile();
     } else {
       this.actionOutMobile();
     }
 
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       const newWidth = window.innerWidth;
       if (newWidth <= this.breakpoint && width > this.breakpoint) {
         this.actionOnMobile();
@@ -3002,36 +3015,36 @@ class GridCustom extends HTMLElement {
       this.swiperInstance = null;
     }
 
-    const currentStyle = this.getAttribute('style') || '';
+    const currentStyle = this.getAttribute("style") || "";
 
-    this.classList.add('swiper');
-    this.classList.remove('grid', 'grid-cols', 'gap');
-    
+    this.classList.add("swiper");
+    this.classList.remove("grid", "grid-cols", "gap");
+
     const items = Array.from(this.children);
-    const swiperWrapper = document.createElement('div');
-    swiperWrapper.className = 'swiper-wrapper';
+    const swiperWrapper = document.createElement("div");
+    swiperWrapper.className = "swiper-wrapper";
 
-    items.forEach(item => {
-      const slide = document.createElement('div');
-      slide.className = 'swiper-slide';
+    items.forEach((item) => {
+      const slide = document.createElement("div");
+      slide.className = "swiper-slide";
       slide.appendChild(item);
       swiperWrapper.appendChild(slide);
     });
 
-    this.innerHTML = '';
+    this.innerHTML = "";
     this.appendChild(swiperWrapper);
 
     if (currentStyle) {
-      this.setAttribute('style', currentStyle);
+      this.setAttribute("style", currentStyle);
     }
 
-    const pagination = document.createElement('div');
-    pagination.className = 'swiper-pagination';
-    pagination.style.setProperty('--swiper-pagination-bottom', '0');
+    const pagination = document.createElement("div");
+    pagination.className = "swiper-pagination";
+    pagination.style.setProperty("--swiper-pagination-bottom", "0");
     this.appendChild(pagination);
 
     this.initSwiper();
-    new LazyLoader('.image-lazy-load');
+    new LazyLoader(".image-lazy-load");
   }
 
   actionOutMobile() {
@@ -3040,15 +3053,15 @@ class GridCustom extends HTMLElement {
       this.swiperInstance = null;
     }
 
-    this.classList.remove('swiper');
-    this.classList.add('grid', 'grid-cols', 'gap');
-    
+    this.classList.remove("swiper");
+    this.classList.add("grid", "grid-cols", "gap");
+
     this.innerHTML = this.originalHTML;
     if (this.originalStyle) {
-      this.setAttribute('style', this.originalStyle);
+      this.setAttribute("style", this.originalStyle);
     }
 
-    new LazyLoader('.image-lazy-load');
+    new LazyLoader(".image-lazy-load");
   }
 
   initSwiper() {
@@ -3063,7 +3076,7 @@ class GridCustom extends HTMLElement {
   }
 }
 
-customElements.define('grid-custom', GridCustom);
+customElements.define("grid-custom", GridCustom);
 
 class BeforeYouLeave extends HTMLElement {
   constructor() {
@@ -3083,13 +3096,13 @@ class BeforeYouLeave extends HTMLElement {
   init() {
     const sourceContent = document.getElementById(this.sectionId);
     if (!sourceContent) {
-      console.error('Section content not found:', this.sectionId);
+      console.error("Section content not found:", this.sectionId);
       return;
     }
 
     this.innerHTML = sourceContent.innerHTML;
 
-    if (typeof BlsLazyloadImg !== 'undefined') {
+    if (typeof BlsLazyloadImg !== "undefined") {
       BlsLazyloadImg.init();
     }
 
@@ -3099,23 +3112,23 @@ class BeforeYouLeave extends HTMLElement {
   initPopup() {
     this.interactions = 0;
 
-    ['scroll', 'click', 'mousemove', 'keydown'].forEach(evt => {
+    ["scroll", "click", "mousemove", "keydown"].forEach((evt) => {
       document.body.addEventListener(evt, this.interactionHandler);
     });
 
     this.popupTimeout = setTimeout(() => {
       if (this.interactions === 0 && !this.popupActive) {
-        NextSkyTheme.eventModal(this, 'open');
+        NextSkyTheme.eventModal(this, "open");
         this.popupActive = true;
         this.bindCouponCopy();
       } else {
-        console.log('Popup cancelled due to interaction');
-        this.cleanup(); 
+        console.log("Popup cancelled due to interaction");
+        this.cleanup();
         this.initPopup(); // Reset popup nếu người dùng có tương tác
       }
     }, (this.delay - 10) * 1000);
 
-    this.addEventListener('click', this.closeHandler);
+    this.addEventListener("click", this.closeHandler);
   }
 
   interactionHandler() {
@@ -3123,9 +3136,12 @@ class BeforeYouLeave extends HTMLElement {
   }
 
   closeHandler(e) {
-    if (e.target.closest('.close-before') || e.target.matches('.modal-overlay')) {
+    if (
+      e.target.closest(".close-before") ||
+      e.target.matches(".modal-overlay")
+    ) {
       clearTimeout(this.popupTimeout);
-      NextSkyTheme.eventModal(this, 'close');
+      NextSkyTheme.eventModal(this, "close");
       this.popupActive = false;
       this.cleanup();
       this.initPopup(); // Gọi lại popup sau khi đóng
@@ -3133,22 +3149,22 @@ class BeforeYouLeave extends HTMLElement {
   }
 
   bindCouponCopy() {
-    const discounts = this.querySelectorAll('.discount');
-    discounts.forEach(el => {
-      el.addEventListener('click', (e) => {
+    const discounts = this.querySelectorAll(".discount");
+    discounts.forEach((el) => {
+      el.addEventListener("click", (e) => {
         e.preventDefault();
         navigator.clipboard.writeText(el.dataset.code);
-        el.classList.add('action-copy');
-        setTimeout(() => el.classList.remove('action-copy'), 1500);
+        el.classList.add("action-copy");
+        setTimeout(() => el.classList.remove("action-copy"), 1500);
       });
     });
   }
 
   cleanup() {
-    ['scroll', 'click', 'mousemove', 'keydown'].forEach(evt => {
+    ["scroll", "click", "mousemove", "keydown"].forEach((evt) => {
       document.body.removeEventListener(evt, this.interactionHandler);
     });
-    this.removeEventListener('click', this.closeHandler);
+    this.removeEventListener("click", this.closeHandler);
   }
 
   disconnectedCallback() {
@@ -3157,18 +3173,18 @@ class BeforeYouLeave extends HTMLElement {
   }
 }
 
-customElements.define('before-you-leave', BeforeYouLeave);
+customElements.define("before-you-leave", BeforeYouLeave);
 
 class ShareButton extends HTMLElement {
   constructor() {
     super();
-    this.addEventListener('click', this.handleShare.bind(this));
+    this.addEventListener("click", this.handleShare.bind(this));
   }
 
   handleShare() {
-    const title = this.getAttribute('data-title') || document.title;
-    const text = this.getAttribute('data-text') || '';
-    const url = this.getAttribute('data-url') || window.location.href;
+    const title = this.getAttribute("data-title") || document.title;
+    const text = this.getAttribute("data-text") || "";
+    const url = this.getAttribute("data-url") || window.location.href;
 
     if (navigator.share) {
       navigator.share({ title, text, url });
@@ -3177,5 +3193,60 @@ class ShareButton extends HTMLElement {
     }
   }
 }
+customElements.define("share-button", ShareButton);
 
-customElements.define('share-button', ShareButton);
+class InnerTab extends HTMLElement {
+  constructor() {
+    super();
+    this.querySelectorAll("button").forEach((button) =>
+      button.addEventListener("click", this.onButtonClick.bind(this))
+    );
+  }
+
+  onButtonClick(event) {
+    const currentTarget = event.currentTarget;
+    if (currentTarget.classList.contains("active")) {
+      return;
+    }
+    const id = currentTarget.getAttribute("data-id");
+    const visibleItems = document.getElementById(id);
+    this.querySelectorAll("button").forEach((button) =>
+      button.classList.remove("active")
+    );
+    currentTarget.classList.add("active");
+    this.closest(".content-tabs")
+      .querySelectorAll(".tab-content")
+      .forEach((result) => {
+        if (result.id !== id) {
+          result.classList.add("hidden");
+          Motion.animate(
+            result,
+            {
+              transform: "translateY(10px)",
+              opacity: 0,
+              visibility: "hidden",
+            },
+            {
+              duration: 0,
+            }
+          );
+        }
+      });
+
+    visibleItems.classList.remove("hidden");
+    Motion.animate(
+      visibleItems,
+      {
+        transform: ["translateY(10px)", "translateY(0)"],
+        opacity: [0, 1],
+        visibility: ["hidden", "visible"],
+      },
+      {
+        duration: 0.5,
+        delay: Motion.stagger(0.1),
+        easing: [0, 0, 0.3, 1],
+      }
+    );
+  }
+}
+customElements.define("inner-tab", InnerTab);

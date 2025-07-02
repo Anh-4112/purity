@@ -859,13 +859,15 @@ class CartDiscountElement extends HTMLElement {
     this.updateDiscountCodesStyling();
   }
 
-  applyDiscount(event) {
+ applyDiscount(event) {
     event.preventDefault();
     this.cartActionId.classList.add("loading");
     const discountCode = this.querySelector(".cart-discount");
     const discountCodeValue = discountCode.value;
+    const notificationContainer = this.closest(".notification-wrapper") || document.querySelector(".notification-wrapper");
+
     if (!discountCodeValue) {
-      NextSkyTheme.notifier.show(message.discount.error, "error", 3000);
+      NextSkyTheme.notifierInline.show(message.discount.error, "error", notificationContainer);
       this.cartActionId.classList.remove("loading");
       return;
     }
@@ -878,34 +880,34 @@ class CartDiscountElement extends HTMLElement {
       ...NextSkyTheme.fetchConfig(),
       ...{ body },
     })
-      .then((response) => response.json())
-      .then((response) => {
-        if (
-          response.discount_codes.find((discount) => {
-            return (
-              discount.code === discountCodeValue &&
-              discount.applicable === false
-            );
-          })
-        ) {
-          discountCode.value = "";
-          NextSkyTheme.notifier.show(
-            message.discount.discount_code_error,
-            "error",
-            3000
+    .then((response) => response.json())
+    .then((response) => {
+      if (
+        response.discount_codes.find((discount) => {
+          return (
+            discount.code === discountCodeValue &&
+            discount.applicable === false
           );
-          return;
-        }
-        const newHtml = response.sections[this.cart.dataset.sectionId];
-        this.renderContent(newHtml);
-        NextSkyTheme.notifier.show(message.discount.success, "success", 3000);
-      })
-      .catch((e) => {
-        console.error(e);
-      })
-      .finally(() => {
-        this.cartActionId.classList.remove("loading");
-      });
+        })
+      ) {
+        discountCode.value = "";
+        NextSkyTheme.notifierInline.show(
+          message.discount.discount_code_error,
+          "error",
+          notificationContainer
+        );
+        return;
+      }
+      const newHtml = response.sections[this.cart.dataset.sectionId];
+      this.renderContent(newHtml);
+      NextSkyTheme.notifierInline.show(message.discount.success, "success", notificationContainer);
+    })
+    .catch((e) => {
+      console.error(e);
+    })
+    .finally(() => {
+      this.cartActionId.classList.remove("loading");
+    });
   }
 
   renderContent(newHtml) {

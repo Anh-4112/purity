@@ -223,7 +223,7 @@
       class="flex wrap gap recommend__collection-inner{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
       style="{{ col_style | strip | strip_newlines }}"
     >
-      <div class="image-with-text__media-item w-full col-1025-w-custom">
+      <div class="image-with-text__media-item w-full col-1025-w-custom{% if section_st.hide_banner_on_mobile == true %} hidden-mobile{% endif %}">
         <div
           class="image-with-text__media banner__media {{ radius_image_class }} h-full"
           {% if section_st.image != blank %}
@@ -568,6 +568,16 @@
       ],
       "default": "no_gap",
       "label": "t:sections.all.padding.column_gap.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.mobile_options.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_banner_on_mobile",
+      "default": false,
+      "label": "t:sections.recommended_collection.hide_banner_on_mobile"
     },
     {
       "type": "header",
