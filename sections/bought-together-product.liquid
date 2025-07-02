@@ -34,19 +34,19 @@
   >
     <div class="{{ section_width }}">
       <div
-        class="bought-together-products__wrapper flex gap wrap"
+        class="bought-together-products__wrapper flex gap wrap flex-1025-row-reverse"
         style="--col-width: clamp(27rem, 22vw, 42rem);--gap-desktop: 5rem;--gap: 2rem;"
         data-price="{{ product.selected_or_first_available_variant.price }}"
       >
         <div class="box-total col-1025-w-custom w-full">
-          <div class="sticky-md header-bought top-30 rounded border p-30 p-1025-50 text-{{ text_alignment }}">
+          <div class="sticky-md header-bought top-30 rounded pb-30 py-1025-30 text-{{ text_alignment }}">
             {%- if section_st.heading != blank
               or section_st.description != blank
               or section_st.subheading != blank
               or section_st.highlight_text != blank
             -%}
               <div
-                class="section-header mb-30 mb-1025-50"
+                class="section-header mb-30 mb-1025-40"
               >
                 {% if section_st.highlight_text != blank %}
                   <div
@@ -67,9 +67,9 @@
                   </div>
                 {%- endif -%}
                 {%- if section_st.heading != blank -%}
-                  <h2 class="section-heading {{ header_size }}">
+                  <h3 class="section-heading {{ header_size }}">
                     {{ section.settings.heading }}
-                  </h2>
+                  </h3>
                 {%- endif -%}
                 {%- if section_st.description != blank -%}
                   <div class="section-description mt-16 prose {% if hidden_description_on_mobile %}hidden block-md{% endif %}">
@@ -188,7 +188,7 @@
           </div>
         </div>
         <div
-          class="bought-together-list flex column flex-1025-row wrap gap-20 col-1025-remaining w-full"
+          class="bought-together-list flex column flex-1025-row wrap gap-16 col-1025-remaining w-full"
           style="--width: 9rem;"
         >
           {%- for items in product.metafields.custom.frequently_bought_together.value -%}
