@@ -160,7 +160,7 @@
                             id="NewsletterForm-Footer--{{ section.id }}"
                             type="email"
                             name="contact[email]"
-                            class="field__input show-placeholder grow-1 w-custom"
+                            class="field__input show-placeholder flex-1 w-custom"
                             style="--width: calc(100% - 65px);--input-color: #444444;"
                             value="{{ form.email }}"
                             aria-required="true"
@@ -181,14 +181,12 @@
                             <span class="required">*</span></label
                           >
                           <button
-                            class="newsletter-form__button btn pointer p-0 btn-primary btn-hover wh-55"
+                            class="newsletter-form__button btn pointer p-0 btn-primary btn-hover px-30"
                             id="Subscribe-{{ section.id }}"
-                            aria-label="{{ 'subscribe.button_label' | t }}"
+                            aria-label="{{ 'newsletter.button_label' | t }}"
                           >
                             <span class="hidden-on-load transition-short">
-                              <svg width="6" height="11" fill="none">
-                                <use href="#icon-next" />
-                              </svg>
+                              {{ 'newsletter.button_label' | t }} cxzas
                             </span>
                             {%- render 'loader' -%}
                           </button>
@@ -264,7 +262,7 @@
             >
               {%- case block.type -%}
                 {%- when 'newsletter_block' -%}
-                  <div class="footer-block__newsletter pb-24 pb-1025-0">
+                  <div class="footer-block__newsletter pb-30 pb-1025-0">
                     <div
                       class="footer-block__newsletter-inner"
                     >
@@ -291,7 +289,7 @@
                                 id="NewsletterForm-Footer--{{ section.id }}"
                                 type="email"
                                 name="contact[email]"
-                                class="field__input show-placeholder grow-1 w-custom js-custom-input"
+                                class="field__input show-placeholder flex-1 w-custom js-custom-input"
                                 style="--width: calc(100% - 65px);--input-color: #444444;"
                                 value="{{ form.email }}"
                                 aria-required="true"
@@ -312,14 +310,12 @@
                                 <span class="required">*</span></label
                               >
                               <button
-                                class="newsletter-form__button btn pointer p-0 btn-primary btn-hover wh-55"
+                                class="newsletter-form__button btn pointer p-0 btn-primary btn-hover px-30"
                                 id="Subscribe-{{ section.id }}"
-                                aria-label="{{ 'subscribe.button_label' | t }}"
+                                aria-label="{{ 'newsletter.button_label' | t }}"
                               >
                                 <span class="hidden-on-load transition-short">
-                                  <svg width="6" height="11" fill="none">
-                                    <use href="#icon-next" />
-                                  </svg>
+                                  {{ block_st.button_label }}
                                 </span>
                                 {%- render 'loader' -%}
                               </button>
@@ -474,9 +470,9 @@
   <div class="footer__bottom">
     <div class="{{ section_width }} pb-custom" style="--space-bottom: 30">
       <div
-        class="footer_bottom-inner flex column flex-1025-row gap-20 space-between border-top pt-30{% if request.path == "/cart" %} in-cart-page{% endif %}"
+        class="footer_bottom-inner flex column flex-1025-row gap-24 space-between border-top pt-24 pt-1025-30{% if request.path == "/cart" %} in-cart-page{% endif %}"
       >
-        <div class="footer__bottom--left disclosure__footer flex column flex-1025-row gap-20">
+        <div class="footer__bottom--left disclosure__footer flex column flex-1025-row gap-16">
           {%- if section_st.enable_country_selector or section_st.enable_language_selector -%}
             {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
               <div class="footer__column flex wrap justify-center justify-start-1025 footer__localization gap-20">
@@ -495,7 +491,7 @@
           </div>
         </div>
         {%- if payment_enable or menu_store_policies != blank -%}
-          <div class="footer__bottom--right flex column flex-1025-row gap-20">
+          <div class="footer__bottom--right flex column flex-1025-row gap-16">
             {%- if menu_store_policies != blank -%}
               <div class="menu__policies">
                 <ul class="menu__policies-list flex wrap justify-center justify-end-1025 gap-20 row-gap-10 list-unstyled fs-small">
@@ -774,6 +770,12 @@
           "id": "email_placeholder",
           "default": "Email placeholder",
           "label": "t:sections.all.newsletter_setting.email_placeholder"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Subscribe",
+          "label": "t:sections.all.newsletter_setting.button_label"
         },
         {
           "type": "richtext",
