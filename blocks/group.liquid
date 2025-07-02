@@ -17,7 +17,7 @@
   endif
 %}
 {% capture class %}
-w-full col-md-w-custom col-md-w-custom-50 flex{% if custom_layout == 'vertical' %} column{% endif %}{% if vertical_on_mobile and custom_layout == 'horizontal' %} row-md column {% endif %} gap gap-{{ block_st.column_gap}} text-{{ content_alignment }} {{ class_position }}
+color-{{ block_st.color_scheme }} gradient w-full col-md-w-custom col-md-w-custom-50 flex{% if custom_layout == 'vertical' %} column{% endif %}{% if vertical_on_mobile and custom_layout == 'horizontal' %} row-md column {% endif %} gap gap-{{ block_st.column_gap}} text-{{ content_alignment }} {{ class_position }}
 {% endcapture %}
 <div class="{{ class }}" style="--col-width: {{ block.settings.width }};">
   {% content_for 'blocks' %}
@@ -27,6 +27,17 @@ w-full col-md-w-custom col-md-w-custom-50 flex{% if custom_layout == 'vertical' 
   "name": "t:sections.custom_section.blocks.group.name",
   "tag": null,
   "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.general"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.info",
+      "default": "default-color-scheme"
+    },
     {
       "type": "header",
       "content": "t:sections.custom_section.settings.layout.label"
