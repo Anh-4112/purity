@@ -6,6 +6,7 @@
   assign description = section_st.description
   assign button_text = section_st.button_text
   assign subheading = section_st.subheading
+  assign banner_image = section_st.discount_banner
 %}
 {% style %}
   discount-modal-popup.active {
@@ -13,34 +14,55 @@
     opacity: 1;
   }
 {% endstyle %}
-{% if discount_code != blank %}
-  <discount-popup data-section-id="{{ section.id }}">
-    <discount-modal-popup
-      drawer
-      class="modal modal_type_popup active-modal-js fixed inset-0 z-31 flex align-center invisible transition content-hidden"
+<discount-popup data-section-id="{{ section.id }}">
+  <discount-modal-popup
+    drawer
+    class="modal modal_type_popup active-modal-js fixed inset-0 z-31 flex align-center invisible transition content-hidden"
+  >
+    <modal-overlay class="modal-overlay invisible transition-drawer cursor-crosshair"></modal-overlay>
+    <div
+      class="modal-popup-inner invisible modal-focus modal-body modal-draggable transition rounded max-w-custom m-auto w-full bg-white z-15"
+      style="--max-width: 68rem;"
+      tabindex="-1"
     >
-      <modal-overlay class="modal-overlay invisible transition-drawer cursor-crosshair"></modal-overlay>
-      <div
-        class="modal-popup-inner invisible modal-focus modal-body modal-draggable transition rounded max-w-custom m-auto w-full bg-white z-15"
-        style="--max-width: 68rem;"
-        tabindex="-1"
+      <button
+        is="button-close-model"
+        class="modal__close pointer btn-reset wh-58 hidden flex-1025 content-center absolute z-3 top-0 right-0"
+        aria-label="Close"
       >
-        <button
-          is="button-close-model"
-          class="modal__close pointer btn-reset wh-58 hidden flex-1025 content-center absolute z-3 top-0 right-0"
-          aria-label="Close"
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+          class="transition-short will-change icon-zoom"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            class="transition-short will-change icon-zoom"
-          >
-            <use href="#icon-close"></use>
-          </svg>
-        </button>
-        <div class="drawer__body drawer__body-item h-full">
+          <use href="#icon-close"></use>
+        </svg>
+      </button>
+      <div class="drawer__body drawer__body-item h-full">
+        <div
+          class="flex notification-wrapper gap{% if section_st.image_desktop_position == 'right' %} row-reverse-md{% endif %}"
+          style="--col-width: {% if banner_image != blank %}{{ section_st.desktop_image_width }}{% else %}0{% endif %}%;--gap-desktop: 0px;--gap: 0px;"
+        >
+          {% if banner_image != blank %}
+            <div class="image-with-text__media-item w-full col-1025-w-custom block-1025 hidden">
+              <div
+                class="image-with-text__media banner__media h-full hidden block-md"
+                style="--aspect-ratio: {{ banner_image.aspect_ratio }}"
+              >
+                {%- liquid
+                  assign alt = 'general.image.image_alt_default' | t
+                  if banner_image.alt
+                    assign alt = banner_image.alt | escape
+                  endif
+                -%}
+                {%- if banner_image != blank -%}
+                  {% render 'responsive-image', type: 'other', image: banner_image, image_alt: alt %}
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
           <div class="discount_content-inner w-full flex column max-h-100 p-gutter-x p-md-40 overflow-y-auto custom-scrollbar content-center">
             {%- if heading != blank or description != blank or button_text != blank or subheading != blank -%}
               {%- if subheading != blank -%}
@@ -76,9 +98,9 @@
           </div>
         </div>
       </div>
-    </discount-modal-popup>
-  </discount-popup>
-{% endif %}
+    </div>
+  </discount-modal-popup>
+</discount-popup>
 {% if request.visual_preview_mode %}
   <div class="discount_content-inner w-full flex column max-h-100 p-gutter-x p-md-40 overflow-y-auto custom-scrollbar content-center">
     {%- if heading != blank or description != blank or button_text != blank or subheading != blank -%}
@@ -130,6 +152,38 @@
     {
       "type": "header",
       "content": "t:sections.newsletter_popup.header.heading"
+    },
+    {
+      "type": "image_picker",
+      "id": "discount_banner",
+      "label": "t:sections.newsletter_popup.settings.banner_image",
+      "info": "t:sections.featured_product_banner.blocks.image_effect.info"
+    },
+    {
+      "type": "range",
+      "id": "desktop_image_width",
+      "min": 30,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 40,
+      "label": "t:sections.all.image.width"
+    },
+    {
+      "type": "select",
+      "id": "image_desktop_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.all.image.desktop_position.left"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.all.image.desktop_position.right"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.all.image.desktop_position.label"
     },
     {
       "type": "text",

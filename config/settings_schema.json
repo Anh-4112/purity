@@ -554,7 +554,7 @@
         "type": "checkbox",
         "id": "product_show_quick_add_mobile",
         "label": "t:settings_schema.product.settings.show_quick_add_mobile.label",
-        "default": false
+        "default": true
       }
     ]
   },
@@ -826,7 +826,7 @@
         "type": "textarea",
         "id": "free_shipping_message",
         "label": "t:settings_schema.cart.settings.free_shipping.message.label",
-        "default": "Spend [amount] more and get free shipping!",
+        "default": "Spend [amount] more for free shipping!",
         "info": "t:settings_schema.cart.settings.free_shipping.message.info"
       },
       {
@@ -851,7 +851,7 @@
         "id": "cart_duration",
         "min": 2,
         "max": 10,
-        "unit": "s",
+        "unit": "m",
         "step": 1,
         "label": "t:settings_schema.cart.settings.cart_count_down.duration.label",
         "default": 2
@@ -870,7 +870,7 @@
       {
         "type": "text",
         "id": "product_recommendations_heading",
-        "default": "You may also like",
+        "default": "You may also like...",
         "label": "t:settings_schema.cart.settings.product_recommendations.heading",
         "visible_if": "{{ settings.enable_product_recommendations != false }}"
       },
@@ -895,7 +895,6 @@
         "type": "product_list",
         "id": "select_product_recommendation",
         "label": "t:settings_schema.cart.settings.product_recommendations.select_product_recommendation",
-        "visible_if": "{{ settings.enable_product_recommendations != false and settings.recommendation_product_type == 'selected' }}",
         "limit": 12
       },
       {
@@ -981,6 +980,22 @@
           }
         ],
         "default": "drawer"
+      },
+      {
+        "type": "select",
+        "id": "show_search_results",
+        "label": "t:settings_schema.search.settings.search_results.label",
+        "options": [
+          {
+            "value": "default",
+            "label": "t:settings_schema.search.settings.search_results.option_1"
+          },
+          {
+            "value": "tab",
+            "label": "t:settings_schema.search.settings.search_results.option_2"
+          }
+        ],
+        "default": "default"
       },
       {
         "type": "text",

@@ -41,12 +41,12 @@
     <modal-overlay class="modal-overlay invisible transition-drawer cursor-crosshair"></modal-overlay>
     <div
       class="modal-popup-inner invisible modal-focus modal-body modal-draggable transition rounded max-w-custom m-auto w-full bg-white z-15"
-      style="--max-width: 68rem;"
+      style="--max-width: 78rem; --img-rounded: 2rem;"
       tabindex="-1"
     >
       <button
         is="button-close-model"
-        class="modal__close pointer btn-reset wh-58 flex-1025 content-center absolute z-3 top-0 left-0-mb right-0-1025"
+        class="modal__close pointer btn-reset wh-58 flex-1025 content-center absolute z-3 top-0 left-0-mb right-0-1025 hidden block-md"
         aria-label="Close"
       >
         <svg
@@ -83,7 +83,7 @@
             </div>
           {% endif %}
           <div class="newsletter_inner w-full col-1025-remaining relative flex">
-            <div class="newsletter_content-inner w-full flex column gap-20 max-h-100 p-gutter-x p-md-40 overflow-y-auto custom-scrollbar align-self-center">
+            <div class="newsletter_content-inner text-center w-full flex column gap-25 max-h-100 p-gutter-x p-md-40 overflow-y-auto custom-scrollbar align-self-center">
               {%- if heading != blank or short_desc != blank -%}
                 <div class="newsletter-header">
                   {%- if heading != blank -%}
@@ -152,7 +152,7 @@
                 {%- endform -%}
               </div>
               <div
-                class="pointer"
+                class="pointer flex content-center gap-5"
                 tabindex="0"
               >
                 <input
@@ -161,7 +161,7 @@
                   aria-label="{{ 'newsletter_popup.do_not_show_again' | t }}"
                   class="m-0 newsletter-action"
                 >
-                <label for="newsletter-popup-do-not-show-again" class="fs-small">
+                <label for="newsletter-popup-do-not-show-again" class="fs-small underline pointer">
                   {{- 'newsletter_popup.do_not_show_again' | t -}}
                 </label>
               </div>

@@ -71,7 +71,7 @@
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
         {%- endif -%}
         <div class="product-form__buttons flex column gap-20">
-          <div class="product__submit-form-cart flex wrap gap-10">
+          <div class="product__submit-form-cart flex wrap gap-10 relative z-3">
             <label class="visually-hidden" for="Quantity-{{ section.id }}{{ include_id }}">
               {{- 'products.product.quantity.label' | t -}}
             </label>
@@ -93,7 +93,7 @@
               </button>
               <input
                 class="quantity__input w-custom text-center border-0"
-                style="--input-padding: 0;--width: 4.7rem;--input-border-radius: 0;--input-bg: transparent;--input-height: auto;"
+                style="--input-padding: 0;--input-border-radius: 0;--input-bg: transparent;--input-height: auto;"
                 type="number"
                 name="quantity"
                 id="Quantity-{{ section.id }}{{ include_id }}"
@@ -151,12 +151,10 @@
                     {% else %}
                       {{ 'products.product.add_to_cart' | t }}
                     {%- endif -%}
-                    {%- if type_form != 'sticky-add-cart' -%}
-                      <span class="dot-total"></span>
-                      <span data-total-price="{{ price }}" class="total-price__detail">
-                        {{ money_price }}
-                      </span>
-                    {%- endif -%}
+                    <span class="dot-total mx-3"> - </span>
+                    <span data-total-price="{{ price }}" class="total-price__detail">
+                      {{ money_price }}
+                    </span>
                   {%- endif -%}
                 </span>
                 {%- render 'loader' -%}
