@@ -209,7 +209,7 @@
                             style="--gap-desktop: 24px; --gap: 15px;"
                           >
                             {% if item.image %}
-                              <div class="cart__image flex align-center">
+                              <div class="cart__image flex align-center gap-10">
                                 <div class="hidden block-1025">
                                   <main-cart-remove-button
                                     id="Remove-{{ item.index | plus: 1 }}"
@@ -218,7 +218,7 @@
                                     <a
                                       href="{{ item.url_to_remove }}"
                                       class="button button--tertiary inline-flex align-center hover-icon-zoom relative w-custom flex-start col-md-w-custom h-30 mt-8"
-                                      style="--width: 2rem;--col-width: 4rem;"
+                                      style="--width: 2rem;--col-width:3rem;"
                                       aria-label="{{ 'sections.cart.remove_title' | t }}"
                                     >
                                       <svg
@@ -658,7 +658,7 @@
                         data-loop="false"
                         data-speed="300"
                         data-pagination="custom"
-                        data-spacing="20"
+                        data-spacing="24"
                         data-mobile="1"
                         data-desktop="2"
                         data-tablet="2"
@@ -1021,7 +1021,7 @@
                   <div class="js-contents fs-small pb-16 pb-1025-24">
                     {%- if cart.cart_level_discount_applications.size > 0 -%}
                       <ul
-                        class="discounts list-unstyled column gap-4 hidden flex-1025"
+                        class="discounts list-unstyled column gap-4 hidden flex-1025 mb-4"
                         role="list"
                         aria-label="{{ 'customer.order.discount' | t }}"
                       >
