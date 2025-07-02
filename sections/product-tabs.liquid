@@ -64,51 +64,15 @@
 {%- capture col_style -%}
   --gap-desktop: {{ column_gap_slide }}px;--gap: {{ column_gap_mb }}px;--item-desktop: {{ items_per_row }};--item-tablet: {{ items_per_row_tablet }};--item-mb: {{ items_per_row_mobile }};
 {%- endcapture -%}
-{%- style -%}
-  @media (max-width: 1024.98px) {
-    .vertical-tab .product-tabs__header-title {
-      color: var(--color-grey);
-      transition: color 0.3s ease;
-      white-space: nowrap;
-    }
-    .vertical-tab .product-tabs__header-item.active .product-tabs__header-title {
-      color: var(--color-heading);
-    }
-    .vertical-tab .product-tabs__header {
-      margin-inline: calc(-1 * var(--bs-gutter-x));
-      padding-inline: var(--bs-gutter-x);
-    }
-  }
-  @media (min-width: 1025px) {
-    .col-left:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: -15px;
-      right: calc(-1 * var(--gap));
-      background: var(--color-background, #fff);
-      width: 100vw;
-      z-index: 2;
-    }
-    .vertical-tab .product-tabs__header-item {
-      background-image: linear-gradient(to right, var(--color-heading) 100%, transparent 0%);
-      background-position: 0 100%;
-      background-repeat: no-repeat;
-      background-size: 0% 1px;
-      transition: background-size 0.4s ease;
-    }
-    .vertical-tab .product-tabs__header-item.active {
-      background-size: 100% 1px;
-      border-color: transparent;
-    }
-  }
-{%- endstyle -%}
 <div
   class="section color-{{ section_st.color_scheme }} gradient{% if data_free_scroll == 'true' or reveal_slide %} overflow-hidden{% endif %}{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
-    <product-tabs class="vertical-tab flex wrap gap" style="--col-width: 32.8rem;--gap: 3rem;">
+    <product-tabs
+      class="vertical-tab flex wrap gap"
+      style="--col-width: 30.6rem;--gap: 3rem;--gap-desktop: 4.8rem;--row-gap: 2.4rem;"
+    >
       <div class="col-left col-1025-w-custom w-full relative-1025">
         {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
           <div
@@ -134,7 +98,7 @@
         {%- if section.blocks.size > 0 -%}
           <div
             class="product-tabs__header hidden-scrollbar flex column-1025 gap overflow-x-scroll-mb relative-1025 z-2 justify-start flex-md-center"
-            style="--row-gap: 0;--gap-desktop: 0; --gap: 30px;"
+            style="--row-gap: 0;--gap-desktop: 0; --gap: 32px;"
           >
             {%- for block in section.blocks -%}
               {%- liquid
@@ -152,8 +116,22 @@
                   tabindex="0"
                   {{ block.shopify_attributes }}
                 >
-                  <div class="product-tabs__header-title h5">
-                    {{ collection_title }}
+                  <div class="product-tabs__header-title flex gap-12 align-center space-between">
+                    <h4>{{ collection_title }}</h4>
+                    {% if show_view_all_button %}
+                      <a
+                        href="{{ collection.url }}"
+                        class="pointer tab_view-all text-color inline-flex align-center"
+                        aria-label="{{ section.settings.view_all_button_label }}"
+                      >
+                        <span class="view_all-label pe-12">{{ section.settings.view_all_button_label }}</span>
+                        <span class="icon-next inline-flex flex-end">
+                          <svg class="block w-6" width="6" height="11">
+                            <use href="#icon-next"></use>
+                          </svg>
+                        </span>
+                      </a>
+                    {% endif %}
                   </div>
                   {%- if collection_description != blank -%}
                     <div
@@ -237,17 +215,6 @@
                 {% if scroll_animation %}
                   </motion-items-effect>
                 {% endif %}
-                {% if show_view_all_button %}
-                  <div class="mt-20 flex text-center justify-content-center">
-                    <a
-                      href="{{ collection.url }}"
-                      class="pointer btn-outline btn w-md-custom w-full max-w-100"
-                      aria-label="{{ section.settings.view_all_button_label }}"
-                    >
-                      {{ section.settings.view_all_button_label }}
-                    </a>
-                  </div>
-                {% endif %}
               </div>
             {%- else -%}
               <div
@@ -295,18 +262,6 @@
                 </slide-section>
                 {% if scroll_animation %}
                   </motion-items-effect>
-                {% endif %}
-                {% if show_view_all_button %}
-                  <div class="mt-20 flex text-center justify-content-center">
-                    <a
-                      role="link"
-                      aria-disabled="true"
-                      class="pointer btn-outline btn w-md-custom w-full max-w-100"
-                      aria-label="{{ section.settings.view_all_button_label }}"
-                    >
-                      {{ section.settings.view_all_button_label }}
-                    </a>
-                  </div>
                 {% endif %}
               </div>
             {%- endif -%}

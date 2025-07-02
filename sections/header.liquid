@@ -19,68 +19,76 @@
 {%- capture style -%}
   --section-pt: {{ section_st.padding_top }};--section-pb: {{ section_st.padding_bottom }};--gap: 1rem; --gap-desktop: 2.5rem;{{- -}}
   {% if transparent %}--transparent-color: {{ section_st.header_text_icon_transparent }};{% endif %}{{- -}}
-  --header-grid-template: 'menu logo icon' / minmax(4rem, 1fr) minmax(auto, 45%)  minmax(8rem,1fr);{{- -}}
 {%- endcapture -%}
 
 {% style %}
-      @media only screen and (min-width: 1025px) {
-        .logo-left{
-          --header-grid-template: 'logo menu icon' / minmax(0, 1fr) fit-content(60%) minmax(0,1fr);
-        }
-        .logo-center{
-          --header-grid-template: 'menu logo icon' / minmax(0, 1fr) minmax(50px, var(--logo-width))  minmax(0,1fr);
-        }
-      }
-      {% if section_st.mobile_menu_position == "right" %}
-      @media only screen and (max-width: 1024.98px) {
-        .mobile-menu-toggle .menu-mobile-right {
-          grid-area: "menu"
-        }
-        .menu-mobile-right {
-          --header-grid-template: 'logo icon menu' / minmax(50px, var(--logo-width)) minmax(0,1fr) auto;
-        }
-        .mobile-menu-toggle {
-          margin-right: -1rem;
-        }
-      }
-      {% endif %}
-      {% if section_st.mobile_menu_position == "left" %}
-      @media only screen and (max-width: 1024.98px) {
-        .mobile-menu-toggle {
-          margin-left: -1rem;
-        }
-      }
-      {% endif %}
-    {% if request.page_type == 'index' and transparent %}
-      .site-header .transparent{
-        background: transparent;
-        transition: background 0.3s ease-in-out;
-      }
-     .site-header:not(.section-header-sticky) :is(.transparent-color,.heading-color.transparent-color){
-        --color-text: {{ section_st.header_text_icon_transparent }};
-        --color-heading: {{ section_st.header_text_icon_transparent }};
-        color: var(--color-text);
-      }
-      @media (min-width: 1025px) {
-        .site-header:not(.section-header-sticky) .transparent-menu{
-          --color-text: {{ section_st.header_text_icon_transparent }};
-          --color-heading: {{ section_st.header_text_icon_transparent }};
-        }
-        .header__action .button-localization{
-          color: {{ section_st.header_text_icon_transparent }};
-        }
-      }
-  @media (min-width: 992px) {
-   body:has(.header-wrapper.transparent) .h-full_screen {
-      min-height: 100vh;
+  @media only screen and (min-width: 1025px) {
+    .logo-left{
+      --header-grid-template: 'logo menu icon' / minmax(0, 1fr) fit-content(60%) minmax(0,1fr);
     }
-    body:has(.header-wrapper.transparent) .section-announcement-bar ~ .content-for-layout .h-full_screen {
-      min-height: calc(100vh - var(--height-bar, 46px));
+    .logo-center{
+      --header-grid-template: 'menu logo icon' / minmax(0, 1fr) minmax(50px, var(--logo-width))  minmax(0,1fr);
     }
   }
-    {% endif %}
-      {% if section_st.enable_rounded_style %}
-        announcement-bar:after {
+  {% if section_st.mobile_menu_position == "right" %}
+    @media only screen and (max-width: 1024.98px) {
+      .mobile-menu-toggle .menu-mobile-right {
+        grid-area: "menu"
+      }
+      .menu-mobile-right {
+        --header-grid-template: 'logo icon menu' / minmax(50px, var(--logo-width)) minmax(0,1fr) auto;
+      }
+      .mobile-menu-toggle {
+        margin-right: -1rem;
+      }
+    }
+  {% endif %}
+  {% if section_st.mobile_menu_position == "left" %}
+    @media only screen and (max-width: 1024.98px) {
+      .mobile-menu-toggle {
+        margin-left: -1rem;
+      }
+    }
+  {% endif %}
+  {% if section_st.logo_position == 'left' %}
+    .header-wrapper{
+      --header-grid-template: 'menu logo icon' / 3.4rem minmax(auto, 45%)  minmax(8rem,1fr);{{- -}}
+    }
+    {% else %}
+    .header-wrapper{
+      --header-grid-template: 'menu logo icon' / minmax(4rem, 1fr) minmax(auto, 45%)  minmax(8rem,1fr);{{- -}}
+    }
+  {% endif %}
+  {% if request.page_type == 'index' and transparent %}
+    .site-header .transparent{
+      background: transparent;
+      transition: background 0.3s ease-in-out;
+    }
+    .site-header:not(.section-header-sticky) :is(.transparent-color,.heading-color.transparent-color){
+      --color-text: {{ section_st.header_text_icon_transparent }};
+      --color-heading: {{ section_st.header_text_icon_transparent }};
+      color: var(--color-text);
+    }
+    @media (min-width: 1025px) {
+      .site-header:not(.section-header-sticky) .transparent-menu{
+        --color-text: {{ section_st.header_text_icon_transparent }};
+        --color-heading: {{ section_st.header_text_icon_transparent }};
+      }
+      .header__action .button-localization{
+        color: {{ section_st.header_text_icon_transparent }};
+      }
+    }
+    @media (min-width: 992px) {
+      body:has(.header-wrapper.transparent) .h-full_screen {
+          min-height: 100vh;
+      }
+      body:has(.header-wrapper.transparent) .section-announcement-bar ~ .content-for-layout .h-full_screen {
+        min-height: calc(100vh - var(--height-bar, 46px));
+      }
+    }
+  {% endif %}
+    {% if section_st.enable_rounded_style %}
+      announcement-bar:after {
         content: '';
         position: absolute;
         left: 0;
@@ -90,15 +98,15 @@
         background: inherit;
         z-index: -2;
       }
-     .section-announcement-bar + .site-header .section-rounded{
+      .section-announcement-bar + .site-header .section-rounded{
         border-radius: 1.5rem 1.5rem 0 0;
       }
-      @media (min-width: 1025px) {
-        .section-announcement-bar + .site-header .section-rounded{
-          border-radius: 3rem 3rem 0 0;
-        }
+    @media (min-width: 1025px) {
+      .section-announcement-bar + .site-header .section-rounded{
+        border-radius: 3rem 3rem 0 0;
       }
-    {% endif %}
+    }
+  {% endif %}
 {% endstyle %}
 
 {%- for block in section.blocks -%}
@@ -215,13 +223,13 @@
   data-sticky-type="{{ section_st.sticky_header_type }}"
   data-menu-trigger="{{ section_st.menu_trigger }}"
   data-dropdowns-animation="{{ dropdowns_animation }}"
-  class="header-wrapper relative z-10 p-min{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}{% if request.page_type != 'index' %} border-bottom{% endif %}"
+  class="header-wrapper relative z-10{{ transparent_class }} color-{{ color_scheme }}{% if section_st.enable_rounded_style %} section-rounded{% endif %}{% if request.page_type != 'index' %} border-bottom{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div class="{{ section_width }}">
     <div
       class="header__inner grid gap logo-{{ section_st.logo_position }} menu-mobile-{{ section_st.mobile_menu_position }} align-center"
-      style="--gap: 12px;"
+      style="{% if section_st.logo_position == 'left' %}--gap: 16px;{% else %}--gap: 12px;{% endif %}"
     >
       <toggle-menu class="relative flex content-center mobile-menu-toggle hidden-1025 fs-0 wh-44">
         <button
@@ -596,7 +604,7 @@
       {%- if section_st.show_account or section_st.show_search or section_st.show_cart -%}
         <div class="flex gap-20 header__action wrap flex-end align-center">
           {%- if section_st.show_search or section_st.show_account or section_st.show_cart -%}
-            <div class="flex gap" style="--gap: 12px;--gap-desktop: 12px;">
+            <div class="flex gap" style="--gap: 8px;--gap-desktop: 12px;">
               {%- if section_st.show_search -%}
                 <a
                   href="{{ routes.search_url }}"

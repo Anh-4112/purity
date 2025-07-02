@@ -138,7 +138,7 @@ export class ProductForm extends HTMLElement {
               window.cartStrings.addSuccessMobile,
               submitButton,
               "success",
-              5000
+              2500
             );
           }
         } else {
@@ -859,15 +859,21 @@ class CartDiscountElement extends HTMLElement {
     this.updateDiscountCodesStyling();
   }
 
- applyDiscount(event) {
+  applyDiscount(event) {
     event.preventDefault();
     this.cartActionId.classList.add("loading");
     const discountCode = this.querySelector(".cart-discount");
     const discountCodeValue = discountCode.value;
-    const notificationContainer = this.closest(".notification-wrapper") || document.querySelector(".notification-wrapper");
+    const notificationContainer =
+      this.closest(".notification-wrapper") ||
+      document.querySelector(".notification-wrapper");
 
     if (!discountCodeValue) {
-      NextSkyTheme.notifierInline.show(message.discount.error, "error", notificationContainer);
+      NextSkyTheme.notifierInline.show(
+        message.discount.error,
+        "error",
+        notificationContainer
+      );
       this.cartActionId.classList.remove("loading");
       return;
     }
@@ -880,34 +886,38 @@ class CartDiscountElement extends HTMLElement {
       ...NextSkyTheme.fetchConfig(),
       ...{ body },
     })
-    .then((response) => response.json())
-    .then((response) => {
-      if (
-        response.discount_codes.find((discount) => {
-          return (
-            discount.code === discountCodeValue &&
-            discount.applicable === false
+      .then((response) => response.json())
+      .then((response) => {
+        if (
+          response.discount_codes.find((discount) => {
+            return (
+              discount.code === discountCodeValue &&
+              discount.applicable === false
+            );
+          })
+        ) {
+          discountCode.value = "";
+          NextSkyTheme.notifierInline.show(
+            message.discount.discount_code_error,
+            "error",
+            notificationContainer
           );
-        })
-      ) {
-        discountCode.value = "";
+          return;
+        }
+        const newHtml = response.sections[this.cart.dataset.sectionId];
+        this.renderContent(newHtml);
         NextSkyTheme.notifierInline.show(
-          message.discount.discount_code_error,
-          "error",
+          message.discount.success,
+          "success",
           notificationContainer
         );
-        return;
-      }
-      const newHtml = response.sections[this.cart.dataset.sectionId];
-      this.renderContent(newHtml);
-      NextSkyTheme.notifierInline.show(message.discount.success, "success", notificationContainer);
-    })
-    .catch((e) => {
-      console.error(e);
-    })
-    .finally(() => {
-      this.cartActionId.classList.remove("loading");
-    });
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {
+        this.cartActionId.classList.remove("loading");
+      });
   }
 
   renderContent(newHtml) {
