@@ -78,7 +78,7 @@
           class="mx-auto swiper lazy-loading-swiper-before"
           data-section-id="{{ section.id }}"
           data-loop="true"
-          data-speed="500"
+          data-speed="300"
           data-mobile="1"
           data-tablet="1"
           data-desktop="1"
@@ -91,7 +91,10 @@
         >
           <div class="swiper-wrapper {% if section_st.uppercase %}uppercase {% endif %}fs-{{ scrolling_size }}">
             {%- for block in section.blocks -%}
-              <div class="swiper-slide announcement-bar__content flex wrap content-center mx-auto text-center" {{ block.shopify_attributes }}>
+              <div
+                class="swiper-slide announcement-bar__content flex wrap content-center mx-auto text-center"
+                {{ block.shopify_attributes }}
+              >
                 <div class="announcement-bar__content-inner">{{ block.settings.text }}</div>
               </div>
             {%- endfor -%}

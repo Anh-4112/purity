@@ -507,6 +507,93 @@ class AlertNotify {
   }
 }
 export const notifier = new AlertNotify();
+
+
+class AlertNotifyInline {
+  constructor() {
+    this.defaultContainer = document.querySelector(".notification-wrapper");
+    if (!this.defaultContainer) {
+      this.defaultContainer = document.createElement("div");
+      this.defaultContainer.className = "notification-wrapper";
+      document.body.appendChild(this.defaultContainer);
+    }
+  }
+
+  show(message, type = "warning", container = this.defaultContainer) {
+    // Xóa thông báo hiện có trong container cụ thể
+    const existingNotification = container.querySelector(".notification_inline");
+    if (existingNotification) {
+      container.removeChild(existingNotification);
+    }
+    
+    const notification = document.createElement("div");
+    notification.classList.add("notification_inline", type);
+    const icon = this.createIcon(type);
+    const text = document.createElement("span");
+    text.classList.add("error-message");
+    text.innerHTML = message;
+    notification.appendChild(icon.firstElementChild);
+    notification.appendChild(text);
+    container.appendChild(notification);
+
+    setTimeout(() => {
+      notification.classList.add("show");
+    }, 10);
+  }
+
+  hide(notification, element = null) {
+    notification.classList.remove("show");
+    setTimeout(() => {
+      if (element) {
+        element.removeChild(notification);
+      } else {
+        this.defaultContainer.removeChild(notification);
+      }
+    }, 300);
+  }
+
+  showElement(message, element = this.defaultContainer, type = "warning") {
+    if (element.querySelector(".notification_inline")) {
+      element.querySelector(".notification_inline").remove();
+    }
+    const notification = document.createElement("div");
+    notification.classList.add("notification_inline", type);
+    const icon = this.createIcon(type);
+    const text = document.createElement("span");
+    text.innerHTML = message;
+    notification.appendChild(icon.firstElementChild);
+    notification.appendChild(text);
+    element.appendChild(notification);
+
+    setTimeout(() => {
+      notification.classList.add("show");
+    }, 10);
+  }
+
+  createIcon(type) {
+    const icon = document.createElement("span"); 
+    switch (type) {
+      case "success":
+        icon.innerHTML =
+          '<svg width="20" height="20" fill="none" class="flex-auto w-20"><use href="#icon-success"></use></svg>';
+        break;
+      case "error":
+        icon.innerHTML =
+          '<svg width="20" height="20" fill="none" class="flex-auto w-20"><use href="#icon-error"></use></svg>';
+        break;
+      case "warning":
+        icon.innerHTML =
+          '<svg width="20" height="20" fill="none" class="flex-auto w-20"><use href="#icon-info"></use></svg>';
+        break;
+      default:
+        icon.innerHTML =
+          '<svg width="20" height="20" fill="none" class="flex-auto w-20"><use href="#icon-success"></use></svg>';
+    }
+    return icon;
+  }
+}
+export const notifierInline = new AlertNotifyInline();
+
 export const currency_rate = Shopify.currency.rate;
 
 export class FSProgressBar {
