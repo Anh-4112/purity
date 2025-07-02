@@ -11,6 +11,17 @@
 input[type='checkbox']:checked~.bought-together-label {
   opacity: 0;
 }
+.bought-together-list .icon-plus:first-child {
+  display: none;
+}
+.section__bought-together-products{
+  background-color: var(--color-background-2);
+}
+.bought-together-list .product-item{
+  background-color:white;
+  padding: 1.6rem;
+  border-radius: var(--img-rounded);
+}
 @media (min-width: 1400px) {
   .header-bought{
     max-width: 29rem;
@@ -24,7 +35,6 @@ input[type='checkbox']:checked~.bought-together-label {
     width: calc((100% - 108px) / 3);
   }
 }
-
 @media (max-width: 1024.98px) {
   .bought-together-list {
     align-items: center;
@@ -35,18 +45,15 @@ input[type='checkbox']:checked~.bought-together-label {
     margin: 0;
   }
 }
-
-.bought-together-list .icon-plus:first-child {
-  display: none;
-}
-
 @media (max-width: 767.98px) {
   .bought-together-list .product__inner {
     display: flex;
     flex-direction: row-reverse;
     gap: 1.6rem;
   }
-
+  .bought-together-list .product-item{
+    padding: 0;
+  }
   .bought-together-list card-bought-together {
     position: unset;
   }
@@ -81,19 +88,12 @@ input[type='checkbox']:checked~.bought-together-label {
     justify-content: flex-start;
     padding: 2.7rem 2rem 1rem;
   }
-  bought-together-popup select{
+  bought-together-popup .bought-together-list select{
     border: 0;
     padding: 0 4rem 0 0;
+    font-size: calc(var(--body-font-size) - 2px);
   }
   bought-together-popup select:focus{
     box-shadow: none;
   }
-}
-.section__bought-together-products{
-  background-color: var(--color-background-2);
-}
-.bought-together-list .product-item{
-  background-color:white;
-  padding: 1.6rem;
-  border-radius: var(--img-rounded);
 }
