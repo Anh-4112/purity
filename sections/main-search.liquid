@@ -105,7 +105,7 @@
 
       {%- if terms != blank -%}
         {% if search.performed %}
-          <p class="mb-40">
+          <p class="mb-20 mb-1025-40 px-gutter-x">
             {%- if search.results_count == 0 -%}
               {{ 'templates.search.results_with_count_and_term.none' | t: terms: terms }}
             {%- elsif search.results_count == 1 -%}
@@ -116,7 +116,7 @@
           </p>
         {% endif %}
       {%- else -%}
-        <p class="mb-40">
+        <p class="mb-20 mb-1025-40 px-gutter-x">
           {{ 'templates.search.title_no_search' | t }}
         </p>
       {%- endif -%}
@@ -124,7 +124,7 @@
         </motion-effect>
       {% endif %}
       <div class="container search-form">
-        <action-main-search class="block mt-30">
+        <action-main-search class="block">
           <div class="search-form">
             <form
               action="{{ routes.search_url }}"
@@ -148,7 +148,7 @@
                 </button>
                 <input
                   class="flex-1 search__input field__input"
-                  style="--input-bg:transparent;--input-border-width: 0;--input-padding: 0;--input-height: 6rem;--input-placeholder-color: var(--color-heading);--input-border-radius: 0;"
+                  style="--input-bg:transparent;--input-border-width: 0;--input-padding: 0;--input-height: 6rem;--input-placeholder-color: var(--color-heading);--input-border-radius: 0;--input-color:var(--color-heading);"
                   type="search"
                   name="q"
                   value="{{ search.terms | escape }}"
@@ -181,7 +181,7 @@
               >
                 <ul
                   class="flex justify-center search-keyword-list list-unstyled wrap gap"
-                  style="--row-gap: 10px;"
+                  style="--row-gap: 10px;--gap: 3rem;"
                 >
                   {%- assign search_popular_keywords = search_popular_keywords
                     | replace: ' ,', ','
