@@ -133,7 +133,7 @@ class MediaZoomButton extends HTMLButtonElement {
     if (this.closest(".pswp__item")) {
       return;
     }
-    NextSkyTheme.pauseAllMedia(this.closest("media-gallery"));
+    NextSkyTheme.pauseAllMedia(this.closest('media-gallery'));
     const lightbox = new PhotoSwipeLightbox({
       bgOpacity: 1,
       pswpModule: () => import(importJs.pswpModule),
@@ -145,6 +145,7 @@ class MediaZoomButton extends HTMLButtonElement {
       arrowPrev: false,
       arrowNext: false,
       close: false,
+      loop: false,
     });
     lightbox.on("contentLoad", (event) => {
       const { content } = event;
@@ -167,7 +168,7 @@ class MediaZoomButton extends HTMLButtonElement {
         isButton: true,
         order: 2,
         tagName: "button",
-        html: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="transition-short will-change heading-color"><use href="#icon-close"></use></svg>',
+        html: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="transition-short will-change"><use href="#icon-close"></use></svg>',
         onClick: () => {
           pswp.close();
         },
@@ -179,11 +180,7 @@ class MediaZoomButton extends HTMLButtonElement {
         isButton: true,
         html: '<svg width="6" height="11" fill="none"><use href="#icon-next"></use></svg>',
         onClick: (event, el) => {
-          if (
-            pswp &&
-            pswp.getNumItems() > 0 &&
-            pswp.currIndex < pswp.getNumItems() - 1
-          ) {
+          if (pswp && pswp.getNumItems() > 0 && pswp.currIndex < pswp.getNumItems() - 1) {
             pswp.next();
           }
         },
@@ -213,7 +210,7 @@ class MediaZoomButton extends HTMLButtonElement {
         }
       };
       pswp.on("change", updateButtons);
-      updateButtons(); // Gọi ngay khi khởi tạo
+      updateButtons();
     });
     lightbox.init();
 
@@ -269,7 +266,7 @@ class MediaZoomButton extends HTMLButtonElement {
     lightbox.on("pointerDown", (e) => {
       lightbox.pswp.currSlide.data.mediaType != "image" && e.preventDefault();
     });
-    lightbox.on("change", () => {
+    lightbox.on('change', () => {
       NextSkyTheme.pauseAllMedia(lightbox.pswp.element);
     });
   }
