@@ -53,10 +53,11 @@
           </div>
         </div>
       {%- endif -%}
+      {% capture class_form %}main-product-form {% if type_form == 'sticky-add-cart' %}form-sticky-add-cart{% endif %}{% endcapture %}
       {%- form 'product',
         product,
         id: product_form_id,
-        class: 'main-product-form',
+        class: class_form,
         novalidate: 'novalidate',
         data-type: 'add-to-cart-form'
       -%}
