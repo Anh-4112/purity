@@ -868,6 +868,13 @@
         "default": true
       },
       {
+        "type": "checkbox",
+        "id": "show_product_recommendations_mobile",
+        "label": "t:settings_schema.cart.settings.product_recommendations.show_on_mobile.label",
+        "default": false,
+        "visible_if": "{{ settings.enable_product_recommendations != false }}"
+      },
+      {
         "type": "text",
         "id": "product_recommendations_heading",
         "default": "You may also like...",
@@ -890,6 +897,16 @@
           }
         ],
         "default": "auto"
+      },
+      {
+        "type": "range",
+        "label": "t:sections.all.product_to_show.label",
+        "id": "product_to_show",
+        "min": 2,
+        "max": 12,
+        "step": 1,
+        "default": 8,
+        "visible_if": "{{ settings.recommendation_product_type == 'auto' and settings.enable_product_recommendations != false }}"
       },
       {
         "type": "product_list",
