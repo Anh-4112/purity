@@ -1,3 +1,4 @@
+{{ 'bought-together-product.css' | asset_url | stylesheet_tag }}
 {%- if product.metafields.custom.frequently_bought_together.value -%}
   <script src="{{ 'section-bought-together-product.js' | asset_url }}" defer="defer" type="module"></script>
   {%- liquid
@@ -25,61 +26,7 @@
   --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
   {% style %}
-    .bought-together-list .product-item {
-      --input-height: 4rem;
-    }
-    input[type='checkbox']:checked ~ .bought-together-label {
-      opacity: 0;
-    }
-    @media (min-width: 1025px) {
-      .bought-together-list .product-item {
-        --input-height: 5.2rem;
-        flex: 0 0 auto;
-        width: calc((100% - 108px) / 3);
-      }
-    }
-    @media (max-width: 1024.98px) {
-      .bought-together-list {
-        align-items: center;
-        gap: 10px;
-      }
-      .bought-together-list .product-item__inner {
-        background-color: var(--color-background-2);
-        border-radius: var(--img-rounded);
-        overflow: hidden;
-      }
-      .bought-together-list .product__inner {
-        --img-rounded: 0;
-      }
-      .bought-together-list .product__information {
-        margin: 0;
-        padding: 2rem 2rem 2rem 0;
-        width: calc(100% - 130px);
-        flex: 0 0 auto;
-      }
-    }
-    .bought-together-list .icon-plus:first-child {
-      display: none;
-    }
-    @media (max-width: 767.98px) {
-      .bought-together-list .product__inner {
-        display: flex;
-        flex-direction: row-reverse;
-        gap: 2rem;
-      }
-      .bought-together-list card-bought-together {
-        position: unset;
-      }
-      .bought-together-list .checkmark {
-        position: relative;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 0;
-      }
-      .bought-together-list .product-item__inner {
-        background-color: transparent;
-      }
-    }
+    
   {% endstyle %}
   <div
     class="section color-{{ section_st.color_scheme }} section__bought-together-products gradient{% if section_st.show_divider %} border-top{% endif %}"
@@ -92,7 +39,7 @@
         data-price="{{ product.selected_or_first_available_variant.price }}"
       >
         <div class="box-total col-1025-w-custom w-full">
-          <div class="sticky-md top-30 rounded border p-30 p-1025-50 text-{{ text_alignment }}">
+          <div class="sticky-md header-bought top-30 rounded border p-30 p-1025-50 text-{{ text_alignment }}">
             {%- if section_st.heading != blank
               or section_st.description != blank
               or section_st.subheading != blank
@@ -242,7 +189,7 @@
         </div>
         <div
           class="bought-together-list flex column flex-1025-row wrap gap-20 col-1025-remaining w-full"
-          style="--width: 11rem;"
+          style="--width: 9rem;"
         >
           {%- for items in product.metafields.custom.frequently_bought_together.value -%}
             {% if items != blank and items.id != product.id %}
@@ -280,8 +227,8 @@
           {%- endfor -%}
         </div>
         <div
-          class="bought-together-list__mobile flex hidden-md"
-          style="--width: 11rem;"
+          class="bought-together-list__mobile flex w-full hidden-md overflow-auto overflow-x-auto pb-10 gap-10"
+          style="--width: 9rem;"
         >
           {%- for items in product.metafields.custom.frequently_bought_together.value -%}
             {% if items != blank and items.id != product.id %}
@@ -309,7 +256,7 @@
                 indexFor: forloop.index,
                 select_type: 'default',
                 select_class: ' mt-10 mt-1025-15 w-1025-full max-w-100',
-                class: ' w-full w-1025-auto',
+                class: ' w-1025-auto shrink-0',
                 style_layout: ' flex gap-20 block-1025 w-full w-1025-auto',
                 image_class: ' flex-auto w-custom w-full-1025',
                 info_class: ' hidden'
@@ -360,7 +307,7 @@
     >
       <modal-overlay class="modal-overlay invisible transition-drawer cursor-crosshair"></modal-overlay>
       <div
-        class="modal-popup-inner w-full invisible-1025 flex column modal-focus transition modal-draggable rounded max-w-custom m-auto z-15 bg-white"
+        class="modal-popup-inner relative w-full invisible-1025 flex column modal-focus transition modal-draggable rounded max-w-custom m-auto z-15 bg-white"
         tabindex="-1"
         style="--max-width: 60rem;"
       >
@@ -374,113 +321,116 @@
             </div>
           {%- endif -%}
         </draggable-modal>
-        <div class="drawer__body grow-1 h-full overflow-y-auto custom-scrollbar p-30">
-          <product-form class="bought-together-products-form">
-            <form
-              method="post"
-              action="{{ routes.cart_add_url }}"
-              accept-charset="UTF-8"
-              enctype="multipart/form-data"
-              novalidate="novalidate"
-              data-type="add-to-cart-form"
-            >
-              <input type="hidden" name="form_type" value="product">
-              <input type="hidden" name="utf8" value="✓">
-              <div class="bought-together-products-list">
-                <div class="variant-select current-product">
-                  <input
-                    type="hidden"
-                    name="items[][id]"
-                    value="{{ product.selected_or_first_available_variant.id }}"
-                  >
-                  <input type="hidden" name="items[][quantity]" class="quantity" value="1">
-                </div>
-                {%- for items in product.metafields.custom.frequently_bought_together.value -%}
+        <div class="drawer__body grow-1 h-full overflow-hidden overflow-y-auto custom-scrollbar p-20">
+          
+        </div>
+        <span class="absolute left-0 right-0 start-0 z-2 h-full pointer-none overlay-bought hidden-1025"></span>
+        <product-form class="bought-together-products-form px-20 py-16 border-top relative z-3">
+          
+          <form
+            method="post"
+            action="{{ routes.cart_add_url }}"
+            accept-charset="UTF-8"
+            enctype="multipart/form-data"
+            novalidate="novalidate"
+            data-type="add-to-cart-form"
+          >
+            <input type="hidden" name="form_type" value="product">
+            <input type="hidden" name="utf8" value="✓">
+            <div class="bought-together-products-list">
+              <div class="variant-select current-product">
+                <input
+                  type="hidden"
+                  name="items[][id]"
+                  value="{{ product.selected_or_first_available_variant.id }}"
+                >
+                <input type="hidden" name="items[][quantity]" class="quantity" value="1">
+              </div>
+              {%- for items in product.metafields.custom.frequently_bought_together.value -%}
+                {%- liquid
+                  assign product_available = items.variants | where: 'available'
+                  assign loop_index = forloop.index
+                -%}
+                {% if items != blank and items.id != product.id %}
+                  <div class="variant-select" product-id="{{ items.id }}">
+                    {%- if items.variants.size > 1 -%}
+                      {% for variant in product_available %}
+                        {%- liquid
+                          assign selected = false
+                          assign quantity = variant.inventory_quantity
+                        -%}
+                        {% if quantity < 1 and variant.available == false %}
+                          {% continue %}
+                        {% else %}
+                          {% assign selected = true %}
+                          {% assign show_button_add_all = true %}
+                        {% endif %}
+                        <input
+                          type="hidden"
+                          name="items[][id]"
+                          data-index="{{ loop_index }}"
+                          value="{{ variant.id }}"
+                        >
+                        <input type="hidden" name="items[][quantity]" class="quantity" value="1">
+                        {% if selected %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                    {%- else -%}
+                      {%- if items.selected_or_first_available_variant.inventory_quantity > 0
+                        or items.selected_or_first_available_variant.available == true
+                      -%}
+                        {% assign show_button_add_all = true %}
+                        <input
+                          type="hidden"
+                          name="items[][id]"
+                          data-index="{{ loop_index }}"
+                          value="{{ product.selected_or_first_available_variant.id }}"
+                        >
+                        <input type="hidden" name="items[][quantity]" class="quantity" value="1">
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                {% endif %}
+              {%- endfor -%}
+            </div>
+            {%- if show_button_add_all -%}
+              {%- liquid
+                assign price = product.selected_or_first_available_variant.price
+              -%}
+              {%- for items in product.metafields.custom.frequently_bought_together.value -%}
+                {% if items != blank and items.id != product.id %}
                   {%- liquid
                     assign product_available = items.variants | where: 'available'
-                    assign loop_index = forloop.index
+                    assign current_variant = items.selected_or_first_available_variant
+                    assign price = current_variant.price | plus: price
                   -%}
-                  {% if items != blank and items.id != product.id %}
-                    <div class="variant-select" product-id="{{ items.id }}">
-                      {%- if items.variants.size > 1 -%}
-                        {% for variant in product_available %}
-                          {%- liquid
-                            assign selected = false
-                            assign quantity = variant.inventory_quantity
-                          -%}
-                          {% if quantity < 1 and variant.available == false %}
-                            {% continue %}
-                          {% else %}
-                            {% assign selected = true %}
-                            {% assign show_button_add_all = true %}
-                          {% endif %}
-                          <input
-                            type="hidden"
-                            name="items[][id]"
-                            data-index="{{ loop_index }}"
-                            value="{{ variant.id }}"
-                          >
-                          <input type="hidden" name="items[][quantity]" class="quantity" value="1">
-                          {% if selected %}
-                            {% break %}
-                          {% endif %}
-                        {% endfor %}
-                      {%- else -%}
-                        {%- if items.selected_or_first_available_variant.inventory_quantity > 0
-                          or items.selected_or_first_available_variant.available == true
-                        -%}
-                          {% assign show_button_add_all = true %}
-                          <input
-                            type="hidden"
-                            name="items[][id]"
-                            data-index="{{ loop_index }}"
-                            value="{{ product.selected_or_first_available_variant.id }}"
-                          >
-                          <input type="hidden" name="items[][quantity]" class="quantity" value="1">
-                        {% endif %}
-                      {% endif %}
-                    </div>
-                  {% endif %}
-                {%- endfor -%}
-              </div>
-              {%- if show_button_add_all -%}
-                {%- liquid
-                  assign price = product.selected_or_first_available_variant.price
-                -%}
-                {%- for items in product.metafields.custom.frequently_bought_together.value -%}
-                  {% if items != blank and items.id != product.id %}
-                    {%- liquid
-                      assign product_available = items.variants | where: 'available'
-                      assign current_variant = items.selected_or_first_available_variant
-                      assign price = current_variant.price | plus: price
-                    -%}
-                  {% endif %}
-                {%- endfor -%}
-                <button
-                  type="submit"
-                  name="add"
-                  class="btn pointer btn-primary w-full relative product_submit_button product-form__submit word-wrap relative"
-                  aria-label="{{ 'products.product.add_all_to_cart' | t }}"
-                >
-                  <span class="btn-label hidden-on-load transition-short flex content-center">
-                    {{- 'products.product.add_all_to_cart' | t -}}
-                    <span class="dot-total mx-3"> - </span>
-                    <div class="total-price">
-                      <span class="price">
-                        {%- if settings.currency_code_enabled %}
-                          {{ price | money_with_currency }}
-                        {% else %}
-                          {{ price | money }}
-                        {% endif -%}
-                      </span>
-                    </div>
-                  </span>
-                  {%- render 'loader' -%}
-                </button>
-              {% endif %}
-            </form>
-          </product-form>
-        </div>
+                {% endif %}
+              {%- endfor -%}
+              <button
+                type="submit"
+                name="add"
+                class="btn pointer btn-primary w-full relative product_submit_button product-form__submit word-wrap relative"
+                aria-label="{{ 'products.product.add_all_to_cart' | t }}"
+              >
+                <span class="btn-label hidden-on-load transition-short flex content-center">
+                  {{- 'products.product.add_all_to_cart' | t -}}
+                  <span class="dot-total mx-3"> - </span>
+                  <div class="total-price">
+                    <span class="price">
+                      {%- if settings.currency_code_enabled %}
+                        {{ price | money_with_currency }}
+                      {% else %}
+                        {{ price | money }}
+                      {% endif -%}
+                    </span>
+                  </div>
+                </span>
+                {%- render 'loader' -%}
+              </button>
+            {% endif %}
+          </form>
+        </product-form>
       </div>
     </bought-together-popup>
   </div>
