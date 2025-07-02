@@ -202,6 +202,7 @@ export async function eventModal(
   actionMobile = false
 ) {
   if (event == "open") {
+    document.dispatchEvent(new CustomEvent('modal:opened'));
     root.classList.add("open-modal");
     element.classList.remove("content-hidden");
     element.classList.add("active");
@@ -235,6 +236,7 @@ export async function eventModal(
       element.querySelector(".modal-focus");
     trapFocus(elementFocus);
   } else {
+    document.dispatchEvent(new CustomEvent('modal:closed'));
     const active_modal = document.querySelectorAll(".active-modal-js.active");
     const modal_element = element.classList.contains("active-modal-js")
       ? element
