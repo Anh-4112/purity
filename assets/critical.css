@@ -307,7 +307,11 @@ summary::-webkit-details-marker {
 }
 
 :where(h4, .h4) {
-  --size: clamp(1.8rem, calc(1.8rem + (24 - 18) * var(--responsive-rate)), 2.4rem);
+  --size: clamp(
+    1.8rem,
+    calc(1.8rem + (24 - 18) * var(--responsive-rate)),
+    2.4rem
+  );
   line-height: 1.6;
 }
 
@@ -471,7 +475,7 @@ select {
   cursor: pointer;
   -moz-appearance: none;
   -webkit-appearance: none;
-  padding: 5px 35px 5px 20px;
+  padding: 5px 42px 5px 26px;
   background: var(--input-bg)
     url("data:image/svg+xml,%3Csvg width='12' height='6.84' viewBox='0 0 10 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.08984 1.32227L4.58984 4.82227C4.69922 4.94076 4.83594 5 5 5C5.16406 5 5.30078 4.94076 5.41016 4.82227L8.91016 1.32227C9.02865 1.21289 9.08789 1.08073 9.08789 0.925781C9.08789 0.761719 9.02865 0.620443 8.91016 0.501953C8.80078 0.392578 8.66406 0.337891 8.5 0.337891C8.33594 0.337891 8.19922 0.392578 8.08984 0.501953L5 3.5918L1.91016 0.501953C1.80078 0.392578 1.66406 0.337891 1.5 0.337891C1.33594 0.337891 1.19922 0.392578 1.08984 0.501953C0.971354 0.620443 0.912109 0.761719 0.912109 0.925781C0.912109 1.08073 0.971354 1.21289 1.08984 1.32227Z' fill='%23111111'/%3E%3C/svg%3E")
     no-repeat;
@@ -2120,6 +2124,7 @@ body:not(.template-index) .transparent-logo {
     justify-content: center;
     border-radius: 50%;
     z-index: 2;
+    will-change: transform;
   }
 
   .btn__quick-shop .icon-loader {

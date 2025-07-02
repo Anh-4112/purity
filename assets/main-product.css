@@ -102,6 +102,12 @@
   .product-form__buttons .quantity__input {
     --width: 4.7rem;
   }
+  .sticky-add-cart {
+    inset-inline: 1.6rem;
+  }
+  .sticky-add-cart__inner {
+    border-radius: var(--img-rounded);
+  }
 }
 @media (max-width: 767.98px) {
   .sec__main-product {
@@ -145,6 +151,50 @@
   }
   .main-product:has(.block-product__share) .btn-share-mobile {
     display: inline-flex;
+  }
+  .quickview_inner .drawer__body {
+    max-height: calc(100dvh - var(--draggable-modal, 135px));
+  }
+  .quickview_inner .product-detail__information {
+    padding-bottom: 9rem;
+  }
+  .quickview_inner .product__submit-form-cart {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(var(--color-white));
+    padding: 15px var(--bs-gutter-x);
+    border-top: 1px solid var(--color-border);
+  }
+  .quickview_inner .product__submit-form-cart:before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 60%;
+    transform: translateY(-100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 100%);
+  }
+  .template-product.mobile-sticky-bar-enabled .back-to-top {
+    bottom: 15rem;
+  }
+  .template-product .back-to-top {
+    display: none;
+  }
+  .sticky-add-cart {
+    bottom: 0;
+  }
+  .mobile-sticky-bar-enabled
+    .section-header-sticky.header-sticky-hidden
+    + .content-for-layout
+    .sticky-add-cart.show-sticky-cart {
+    transform: translateY(-66px);
+  }
+  .mobile-sticky-bar-enabled .footer_bottom-inner {
+    padding-bottom: 6rem;
   }
 }
 @media (min-width: 1025px) {
@@ -202,9 +252,16 @@ video-product-gallery iframe,
 .product-form__recipient-error-message-wrapper {
   align-items: flex-start;
 }
+.sticky-add-cart__inner {
+  max-width: 90rem;
+}
+.sticky-add-cart__inner .product__information {
+  flex: 0 0 auto;
+  width: clamp(35%, 14vw, 60%);
+}
 .sticky__item-info variant-swatch-select {
   flex: 0 0 auto;
-  max-width: clamp(35%, 14vw, 60%);
+  max-width: calc(100% - 80px);
 }
 .sticky__item-info variant-swatch-select select {
   width: 100%;
