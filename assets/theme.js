@@ -1051,7 +1051,7 @@ class QuantityInput extends HTMLElement {
     const dataTotalPrice = priceElement?.getAttribute("data-total-price");
     const totalPrice = Number(dataTotalPrice) * Number(previousValue);
     const sticky = form.classList.contains("form-sticky-add-cart");
-    const mainProductPriceElement = mainProduct.querySelector(
+    const mainProductPriceElement = mainProduct?.querySelector(
       ".product-detail__buy-buttons .total-price__detail"
     );
     if (sticky && mainProductPriceElement) {

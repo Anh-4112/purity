@@ -10,7 +10,7 @@ class MainCartEdit extends HTMLElement {
     this.quantity = this.getAttribute("data-quantity");
     this.index = this.getAttribute("data-index");
     const href = this.getAttribute("data-href");
-    const urlLocal = "http://127.0.0.1:9292";
+    const urlLocal = window.shopUrl;
     const variant =
       href.indexOf("?") > -1 ||
       href.indexOf("?variant=") > -1 ||
@@ -62,6 +62,7 @@ class MainCartEdit extends HTMLElement {
       })
       .finally(() => {
         const modal = document.querySelector("main-cart-edit-popup");
+        if (!modal) return;
         const quantity = modal.querySelector(
           'quantity-input [name="quantity"]'
         );

@@ -1,7 +1,13 @@
 {% liquid
   assign product_form_id = 'product-form-main-cart-edit-' | append: section.id
+  assign theme_st = settings
 %}
 <main-cart-edit-popup class="modal modal_type_popup active-modal-js fixed inset-0 z-22 w-full flex align-center invisible-1025 transition-drawer">
+  {% style %}
+    main-cart-edit-popup .saving-price {
+      display: none;
+    }
+  {% endstyle %}
   <modal-overlay class="modal-overlay invisible transition-drawer pointer"></modal-overlay>
   <div
     class="modal-popup-inner w-full invisible-1025 flex column modal-focus transition modal-draggable rounded max-w-custom m-auto z-15 bg-white"
@@ -23,25 +29,84 @@
         </svg>
       </button>
     </draggable-modal>
-    <div class="drawer__body grow-1 h-full overflow-y-auto custom-scrollbar p-30" id="Product-{{ section.id }}" style="--width: 5rem;">
-      {% render 'card-product',
-        card_product: product,
-        section_id: section.id,
-        show_video: false,
-        disable_quickview: true,
-        disable_badge: true,
-        disable_rate: true,
-        disable_vendor: true,
-        disable_tag: true,
-        disable_hover_image: true,
-        show_quick_add: true,
-        disable_price: true,
-        disable_color_swatches: true,
-        style_layout: ' flex gap-10 align-center',
-        image_class: ' flex-auto w-custom rounded-10',
-        image_rounded: ' rounded-10',
-        info_class: ' flex-1 mt-0 col-remaining'
-      %}
+    <div
+      class="drawer__body grow-1 h-full overflow-y-auto custom-scrollbar p-30"
+      id="Product-{{ section.id }}"
+      style="--width: 5rem;"
+    >
+      <div
+        class="cart__edit-wrapper flex align-start align-1025-center gap"
+        style="--gap-desktop: 25px; --gap: 15px;"
+      >
+        {% liquid
+          assign featured_media = product.selected_or_first_available_variant.featured_media
+          assign first_image_found = false
+          if featured_media == blank
+            for media in product.media
+              if media.media_type == 'image' and first_image_found == false
+                assign featured_media = media
+              endif
+              assign first_image_found = true
+            endfor
+          endif
+          assign alt_features = featured_media.alt | default: product.title | escape
+        %}
+        {% if featured_media != blank %}
+          <div class="cart__image flex align-center gap-4">
+            <div class="cart-item__media w-custom" style="--width: 9rem;">
+              {%- liquid
+                assign ratio = ''
+                if theme_st.product_image_ratio != 'adapt'
+                  case theme_st.product_image_ratio
+                    when 'square'
+                      assign ratio = '1/1'
+                    when 'landscape'
+                      assign ratio = '4/3'
+                    when 'portrait'
+                      assign ratio = '3/4'
+                  endcase
+                else
+                  assign ratio = featured_media.aspect_ratio
+                endif
+              -%}
+              <div
+                class="banner__media hover-effect rounded-10"
+              >
+                <div
+                  class="product-image focus-inset block"
+                  style="--aspect-ratio: {{ ratio }}"
+                >
+                  {% render 'responsive-image',
+                    type: 'product',
+                    class: 'cart-item__image featured-image',
+                    custom_widths: '360, 160, 90',
+                    image: featured_media,
+                    image_alt: alt_features,
+                    disable_lazy_loading: true
+                  %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        <div
+          class="cart-edit-info flex wrap nowrap-1025 gap-0 gap-1025-20 flex-1 align-center"
+          style="--col-width: 100%;--gap-desktop: 20px;--gap: 10px;"
+        >
+          <div class="cart__product-name-price w-full col-1025-w-custom">
+            <div
+              class="product__cart-name heading-style lh-global"
+            >
+              {{- product.title | escape -}}
+            </div>
+            <div class="block-product__price">
+              <div class="price">
+                {%- render 'price', scope: 'detail', product: product -%}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="block-product__variant-picker">
         {%- render 'variant-swatches', product: product, scope: 'detail', is_dropdown: false -%}
       </div>
