@@ -1,0 +1,52 @@
+{% style %}
+  {% if block.settings.show_divider %}
+        .accordion details:first-child{
+           border-block-start: 1px solid var(--color-border);
+       }
+       .accordion details:not(:first-child){
+           border-block-start: 1px solid var(--color-border);
+       }
+        .accordion details:last-child {
+           border-block-end: 1px solid var(--color-border);
+       }
+  {% endif %}
+{% endstyle %}
+<div class="accordion accordion-{{ block.id }}" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+{% schema %}
+{
+  "name": "t:sections.custom_section.blocks.accordion.name",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.all.divider.show_divider",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_accordion-row"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.custom_section.blocks.accordion.name",
+      "category": "t:sections.group.blocks.layout",
+      "blocks": [
+        {
+          "type": "_accordion-row"
+        },
+        {
+          "type": "_accordion-row"
+        },
+        {
+          "type": "_accordion-row"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
