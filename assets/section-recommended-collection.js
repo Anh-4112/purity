@@ -12,6 +12,7 @@ if (!customElements.get("section-selected")) {
         this.collectionSelectText = this.querySelector(
           ".collection-select__text"
         );
+        this.titleGroups = this.querySelectorAll(".title-group");
         this.collectionList = this.querySelector(".collection-list");
         this.collectionItems = this.querySelectorAll(".collection-item");
         this.collectionGroups = this.querySelectorAll(".collection-group");
@@ -23,6 +24,16 @@ if (!customElements.get("section-selected")) {
 
       init() {
         this.setupAccessibility();
+
+        // Set the first title-group as active by default on page load
+        if (this.titleGroups.length > 0) {
+          const firstTitleGroup = this.titleGroups[0];
+          const firstTitleItem = firstTitleGroup.querySelector(".title-item");
+          if (firstTitleItem) {
+            firstTitleGroup.classList.add("active");
+            this.selectTitle(firstTitleItem, true); // Pass true to indicate initial load
+          }
+        }
 
         if (this.titleSelectText) {
           this.titleSelectText.addEventListener("click", () =>
@@ -150,6 +161,15 @@ if (!customElements.get("section-selected")) {
       selectTitle(item) {
         const blockId = item.getAttribute("data-block-id");
         const title = item.textContent.trim();
+
+        this.titleGroups.forEach((group) => {
+          const groupItem = group.querySelector(".title-item");
+          if (groupItem && groupItem.getAttribute("data-block-id") === blockId) {
+            group.classList.add("active");
+          } else {
+            group.classList.remove("active");
+          }
+        });
 
         this.titleSelectText.textContent = title;
         this.titleSelectText.appendChild(this.createSvgIcon());

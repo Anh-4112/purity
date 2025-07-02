@@ -668,6 +668,39 @@ blockquote {
   .modal__header {
     justify-content: center;
   }
+  .cart-drawer .modal-inner:not(.draw-mb) {
+    overflow: unset;
+  }
+  .cart-drawer .modal-inner:not(.draw-mb) .drawer__body {
+    max-height: calc(100dvh - 100px);
+  }
+  draggable-modal:not(.modal__header),
+  draggable-localization {
+    padding-block: 1.25rem;
+  }
+  draggable-modal.modal__header::before {
+    top: 18%;
+  }
+  :is(draggable-modal, draggable-localization)::before {
+    content: "";
+    background-color: #e5e5e5;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 6rem;
+    height: 0.4rem;
+    transform: translateX(-50%);
+    border-radius: 1rem;
+  }
+  :is(draggable-modal, draggable-localization)::after {
+    content: "";
+    height: 2.4rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: 1;
+  }
 }
 :where(.modal-overlay) {
   background: #0006;
