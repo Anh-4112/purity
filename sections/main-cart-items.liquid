@@ -113,7 +113,7 @@
           {%- endif -%}
           {%- if cart_duration_show and cart.items.size > 0 -%}
             <script src="{{ 'countdown-timer.js' | asset_url }}" defer="defer"></script>
-            <div class="cart-countdown-time text-center mt-16 mt-1024-24">
+            <div class="cart-countdown-time text-center mt-16 mt-1025-24">
               <countdown-timer
                 data-deadline-mins="{{ cart_duration }}"
                 data-message="{{ 'sections.cart.timeout_message' | t }}"
@@ -150,7 +150,7 @@
               <div class="flex column-reverse column-1025 gap-30">
                 {% if cart != empty %}
                   {% if show_icon_with_text %}
-                    <div class="icon-with-text gap-20{% unless section_st.show_block_on_mobile %} hidden flex-1025{% else %} flex-1025{% endunless %}">
+                    <div class="icon-with-text gap-20{% unless section_st.show_icon_with_text_on_mobile %} hidden flex-1025{% else %} flex-1025{% endunless %}">
                       {%- for block in section.blocks -%}
                         {%- liquid
                           assign block_st = block.settings
@@ -203,15 +203,15 @@
                     <div class="cart-items">
                       {%- for item in cart.items -%}
                         <div
-                          class="cart-item product__item border-bottom py-20 py-1025-20 loading_snippet"
+                          class="cart-item product__item border-bottom py-16 py-1025-20 loading_snippet"
                           id="CartItem-{{ item.index | plus: 1 }}"
                         >
                           <div
                             class="cart__info-wrapper flex align-start align-1025-center gap"
-                            style="--gap-desktop: 25px; --gap: 15px;"
+                            style="--gap-desktop: 24px; --gap: 15px;"
                           >
                             {% if item.image %}
-                              <div class="cart__image flex align-center gap-4">
+                              <div class="cart__image flex align-center gap-10">
                                 <div class="hidden block-1025">
                                   <main-cart-remove-button
                                     id="Remove-{{ item.index | plus: 1 }}"
@@ -220,7 +220,7 @@
                                     <a
                                       href="{{ item.url_to_remove }}"
                                       class="button button--tertiary inline-flex align-center hover-icon-zoom relative w-custom flex-start col-md-w-custom h-30 mt-8"
-                                      style="--width: 2rem;--col-width: 4rem;"
+                                      style="--width: 2rem;--col-width:3rem;"
                                       aria-label="{{ 'sections.cart.remove_title' | t }}"
                                     >
                                       <svg
@@ -354,7 +354,7 @@
                               </div>
                             {% endif %}
                             <div
-                              class="cart-item-info flex wrap nowrap-1025 gap-0 gap-1025-20 flex-1 align-center"
+                              class="cart-item-info flex wrap nowrap-1025 gap-0 gap-1025-20 flex-1 align-center space-between"
                               style="--col-width: 51%;--gap-desktop: 20px;--gap: 10px;"
                             >
                               <div class="cart__product-name-price w-full col-1025-w-custom">
@@ -369,7 +369,10 @@
                                   or item.properties.size != 0
                                   or item.selling_plan_allocation != null
                                 -%}
-                                  <div class="product_option-cart fs-small flex wrap gap-custom" style="--gap: 2;">
+                                  <div
+                                    class="product_option-cart fs-small flex wrap gap-custom mt-4"
+                                    style="--gap: 2px;"
+                                  >
                                     {%- if item.product.has_only_default_variant == false -%}
                                       {%- for option in item.options_with_values -%}
                                         <div class="product-option">
@@ -401,12 +404,12 @@
                                       {%- endif -%}
                                     {%- endfor -%}
                                   </div>
-                                  <p class="product-option">
+                                  <p class="product-option mt-4">
                                     {{ item.selling_plan_allocation.selling_plan.name }}
                                   </p>
                                 {%- endif -%}
                                 {%- if item.original_price != item.final_price -%}
-                                  <div class="cart-item__discounted-prices">
+                                  <div class="cart-item__discounted-prices mt-4">
                                     <span class="visually-hidden">
                                       {{ 'products.product.price.regular_price' | t }}
                                     </span>
@@ -421,7 +424,7 @@
                                     </strong>
                                   </div>
                                 {%- else -%}
-                                  <div class="mt-20 d-none block-1025 heading-style">
+                                  <div class="d-none block-1025 heading-style mt-4">
                                     {{ item.original_price | money }}
                                   </div>
                                 {%- endif -%}
@@ -432,15 +435,15 @@
                                 >
                                   {%- for discount in item.discounts -%}
                                     <li
-                                      class="discounts__discount fs-13 h-custom inline-flex align-center bg-custom text-color px-12 rounded"
-                                      style="--height: 2.8rem;--bg-color-custom: #D9266B26;--color-text: #D9266B;--img-rounded: 3rem;"
+                                      class="discounts__discount fs-13 py-4 inline-flex align-center text-center bg-custom text-color px-12 rounded"
+                                      style="--bg-color-custom: #D9266B26;--color-text: #D9266B;--img-rounded: 3rem;"
                                     >
                                       {{ discount.title }} (-{{ discount.amount | money }})
                                     </li>
                                   {%- endfor -%}
                                 </ul>
                               </div>
-                              <div class="flex grow-1 align-start align-1025-center space-between column-reverse row-1025 w-full gap-10 col-1025-remaining">
+                              <div class="flex grow-1 align-start align-1025-center space-between column-reverse row-1025 w-full gap-10 col-1025-remaining mt-16 mt-1025-0">
                                 <div class="cart-item__quantity-wrapper product-form__input product-form__quantity">
                                   <label class="visually-hidden" for="Quantity-{{ item.index | plus: 1 }}">
                                     {{ 'products.product.quantity.label' | t }}
@@ -473,7 +476,7 @@
                                     <input
                                       class="quantity__input border-0 p-0 text-center w-custom heading-color"
                                       type="number"
-                                      style="--width: 5rem;--input-height: auto;"
+                                      style="--input-height: auto;"
                                       type="number"
                                       data-quantity-variant-id="{{ item.variant.id }}"
                                       name="updates[]"
@@ -518,7 +521,7 @@
                                     ></p>
                                   </div>
                                 </div>
-                                <div class="cart-item__price-wrapper heading-style text-end-1025 word-break grow-1">
+                                <div class="cart-item__price-wrapper heading-style text-end-1025 word-break grow-1 hidden block-1025">
                                   {%- if item.original_line_price != item.final_line_price -%}
                                     <div class="cart-item__discounted-prices">
                                       <span class="visually-hidden">
@@ -657,7 +660,7 @@
                         data-loop="false"
                         data-speed="300"
                         data-pagination="custom"
-                        data-spacing="20"
+                        data-spacing="24"
                         data-mobile="1"
                         data-desktop="2"
                         data-tablet="2"
@@ -686,7 +689,7 @@
                                   disable_countdown: true,
                                   disable_scrolling_text: true,
                                   disable_color_swatches: true,
-                                  class: ' swiper-slide bg-secondary rounded-10 p-16',
+                                  class: ' swiper-slide bg-secondary rounded-20 p-16',
                                   style_layout: ' flex gap-16 align-center me-10',
                                   image_class: ' flex-auto w-custom rounded-10',
                                   image_rounded: ' rounded-10',
@@ -1020,7 +1023,7 @@
                   <div class="js-contents fs-small pb-16 pb-1025-24">
                     {%- if cart.cart_level_discount_applications.size > 0 -%}
                       <ul
-                        class="discounts list-unstyled column gap-4 hidden flex-1025"
+                        class="discounts list-unstyled column gap-4 hidden flex-1025 mb-4"
                         role="list"
                         aria-label="{{ 'customer.order.discount' | t }}"
                       >
@@ -1151,7 +1154,7 @@
               </div>
               {% if trust_badges %}
                 <div
-                  class="trust-badges bg-secondary rounded drawer-spacing mt-24 gap{% unless section_st.show_block_on_mobile %} hidden grid-1025{% else %} grid{% endunless %}"
+                  class="trust-badges bg-secondary rounded drawer-spacing mt-24 gap{% unless section_st.show_check_badge_on_mobile %} hidden grid-1025{% else %} grid{% endunless %}"
                   style="--padding-block-desktop: 4rem;--padding-inline-desktop: 4rem;--padding-block: var(--bs-gutter-x);--gap-desktop: 2.4rem;--gap: 2.4rem;"
                 >
                   {%- for block in section.blocks -%}
@@ -1207,64 +1210,64 @@
               {% endif %}
             </div>
           </div>
+          <div class="checkout__sticky__wrapper container bg-white fixed shadow transition-drawer bottom-0 inset-x-0 w-full z-10 py-16">
+            <div class="total_price-inner flex hidden-1025 wrap gap-10 align-center space-between h5">
+              <span class="totals__subtotal"> {{ 'sections.cart.total' | t }}:</span>
+              {{ cart.total_price | money_with_currency }}
+            </div>
+            <div class="js-contents fs-small">
+              {%- if cart.cart_level_discount_applications.size > 0 -%}
+                <ul
+                  class="discounts list-unstyled column gap-4 flex hidden-1025 pb-16 pb-1025-24"
+                  role="list"
+                  aria-label="{{ 'customer.order.discount' | t }}"
+                >
+                  {%- for discount in cart.cart_level_discount_applications -%}
+                    <li
+                      class="discounts__discount discounts__discount fs-13 lh-global flex gap-5 text-white heading-color flex space-between"
+                      style="--body-line-height: 1.6;--bg-color-custom:#D0473E;--height: 3rem;--img-rounded: 3rem;"
+                    >
+                      <div class="flex content-center gap-4 fs-small">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none">
+                          <use href="#icon-discount"/>
+                        </svg>
+                        {{ discount.title }}
+                      </div>
+
+                      <div class="bg-custom color-white h-custom flex content-center rounded px-16">
+                        -{{ discount.total_allocated_amount | money }}
+                      </div>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+            <form action="{{ routes.cart_url }}" method="POST">
+              <div class="cart__ctas gap-8 grid hidden-1025">
+                <noscript>
+                  <button type="submit" class="cart__update-button" form="cart">
+                    {{ 'sections.cart.update' | t }}
+                  </button>
+                </noscript>
+                <button
+                  type="submit"
+                  name="checkout"
+                  class="grow-1 btn btn-primary"
+                >
+                  <span class="hidden-on-load transition-short flex content-center gap-8">
+                    <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                      <use href="#icon-lock" />
+                    </svg>
+                    {{ 'sections.cart.checkout' | t -}}
+                  </span>
+                  {%- render 'loader' -%}
+                </button>
+                <div id="cart-errors" class="error empty-hidden"></div>
+              </div>
+            </form>
+          </div>
         </main-cart>
       {% endif %}
-      <div class="checkout__sticky__wrapper container bg-white fixed shadow transition-drawer bottom-0 inset-x-0 w-full z-10 py-16">
-        <div class="total_price-inner flex hidden-1025 wrap gap-10 align-center space-between h5">
-          <span class="totals__subtotal"> {{ 'sections.cart.total' | t }}:</span>
-          {{ cart.total_price | money_with_currency }}
-        </div>
-        <div class="js-contents fs-small">
-          {%- if cart.cart_level_discount_applications.size > 0 -%}
-            <ul
-              class="discounts list-unstyled column gap-4 flex hidden-1025 pb-16 pb-1025-24"
-              role="list"
-              aria-label="{{ 'customer.order.discount' | t }}"
-            >
-              {%- for discount in cart.cart_level_discount_applications -%}
-                <li
-                  class="discounts__discount discounts__discount fs-13 lh-global flex gap-5 text-white heading-color flex space-between"
-                  style="--body-line-height: 1.6;--bg-color-custom:#D0473E;--height: 3rem;--img-rounded: 3rem;"
-                >
-                  <div class="flex content-center gap-4 fs-small">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none">
-                      <use href="#icon-discount"/>
-                    </svg>
-                    {{ discount.title }}
-                  </div>
-
-                  <div class="bg-custom color-white h-custom flex content-center rounded px-16">
-                    -{{ discount.total_allocated_amount | money }}
-                  </div>
-                </li>
-              {%- endfor -%}
-            </ul>
-          {%- endif -%}
-        </div>
-        <form action="{{ routes.cart_url }}" method="POST">
-          <div class="cart__ctas gap-8 grid hidden-1025">
-            <noscript>
-              <button type="submit" class="cart__update-button" form="cart">
-                {{ 'sections.cart.update' | t }}
-              </button>
-            </noscript>
-            <button
-              type="submit"
-              name="checkout"
-              class="grow-1 btn btn-primary"
-            >
-              <span class="hidden-on-load transition-short flex content-center gap-8">
-                <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
-                  <use href="#icon-lock" />
-                </svg>
-                {{ 'sections.cart.checkout' | t -}}
-              </span>
-              {%- render 'loader' -%}
-            </button>
-            <div id="cart-errors" class="error empty-hidden"></div>
-          </div>
-        </form>
-      </div>
     </div>
   </div>
 </div>
@@ -1341,9 +1344,19 @@
       "label": "t:sections.cart-drawer.settings.show_discount"
     },
     {
+      "type": "header",
+      "content": "t:sections.collection-highlights.blocks.header"
+    },
+    {
       "type": "checkbox",
-      "id": "show_block_on_mobile",
-      "label": "t:sections.cart-drawer.settings.show_block_on_mobile",
+      "id": "show_check_badge_on_mobile",
+      "label": "t:sections.cart-drawer.settings.show_check_badge_on_mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icon_with_text_on_mobile",
+      "label": "t:sections.cart-drawer.settings.show_icon_with_text_on_mobile",
       "default": false
     },
     {

@@ -161,9 +161,9 @@ blockquote {
 .drawer__header {
   --padding-block: 1.65rem;
 }
-@media (min-width: 1025px) {
+@media (min-width: 767.98px) {
   .drawer__header {
-    --padding-block-desktop: 1.9rem;
+    --padding-block-desktop: 2.1rem;
   }
 }
 .p-5 {
@@ -239,9 +239,6 @@ blockquote {
 .py-12 {
   padding-block: 1.2rem;
 }
-.py-16 {
-  padding-block: 1.6rem;
-}
 .py-17 {
   padding-block: 1.7rem;
 }
@@ -265,9 +262,6 @@ blockquote {
 }
 .pt-5 {
   padding-top: 0.5rem;
-}
-.pt-12 {
-  padding-top: 1.2rem;
 }
 .pt-17 {
   padding-top: 1.7rem;
@@ -703,33 +697,6 @@ blockquote {
   }
   .cart-drawer .modal-inner:not(.draw-mb) .drawer__body {
     max-height: calc(100dvh - 100px);
-  }
-  draggable-modal:not(.modal__header),
-  draggable-localization {
-    padding-block: 1.25rem;
-  }
-  draggable-modal.modal__header::before {
-    top: 18%;
-  }
-  :is(draggable-modal, draggable-localization)::before {
-    content: "";
-    background-color: #e5e5e5;
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    width: 6rem;
-    height: 0.4rem;
-    transform: translateX(-50%);
-    border-radius: 1rem;
-  }
-  :is(draggable-modal, draggable-localization)::after {
-    content: "";
-    height: 2.4rem;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
-    z-index: 1;
   }
 }
 :where(.modal-overlay) {
@@ -1491,7 +1458,7 @@ blockquote {
   draggable-modal.modal__header::before {
     top: 18%;
   }
-  :is(draggable-modal, draggable-localization)::before {
+  :is(draggable-modal, draggable-localization):not(.hidden-dragg)::before {
     content: "";
     background-color: #e5e5e5;
     position: absolute;
@@ -1502,7 +1469,7 @@ blockquote {
     transform: translateX(-50%);
     border-radius: 1rem;
   }
-  :is(draggable-modal, draggable-localization)::after {
+  :is(draggable-modal, draggable-localization):not(.hidden-dragg)::after {
     content: "";
     height: 2.4rem;
     position: absolute;
@@ -2008,6 +1975,9 @@ cart-discount-element.open .cart-addons-content {
     overflow: visible;
     margin: auto;
   }
+  .main-cart-upsell-product .product-image {
+    --width: 6rem;
+  }
 }
 @media (min-width: 1025px) {
   .minicar_recommend .product__information {
@@ -2469,4 +2439,8 @@ cart-drawer {
   .before-you-leave-inner .modal__close svg {
     color: rgb(var(--color-white));
   }
+}
+.drawer__footer .notification_inline {
+  margin-top: -1rem;
+  margin-bottom: 2rem;
 }
