@@ -65,7 +65,7 @@
     --section-pt: {{ section_st.padding_top }}; --section-pb: {{ section_st.padding_bottom }};
 {%- endcapture -%}
 <div
-  class="section__bundle-product section color-{{ section_st.color_scheme }}{% if section_st.show_divider %} border-top{% endif %}"
+  class="section__bundle-product section overflow-hidden color-{{ section_st.color_scheme }}{% if section_st.show_divider %} border-top{% endif %}"
   style="{{ style | strip | strip_newlines }}"
 >
   <div
@@ -144,7 +144,7 @@
       >
         {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
           <div
-            class="section-header w-full text-{{ text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}"
+            class="section-header w-full text-{{ text_alignment }}"
           >
             {%- if section_st.subheading != blank -%}
               {% if scroll_animation %}
@@ -203,13 +203,15 @@
             class="block"
           >
         {% endif %}
-        <div class="bundle-products__list">
+        <div class="bundle-products__list{% if enable_quick_add %} enable_quick-add{% endif %}">
           <carousel-mobile
             data-items="1"
             data-enable-carousel-mobile="true"
-            data-mobile="1"
+            data-mobile="1.1"
             data-bundle="true"
             data-show-pagination="false"
+            class="overflow-visible-mb"
+            data-spacing="12"
           >
             {%- for block in section.blocks -%}
               {%- liquid
@@ -331,7 +333,7 @@
               {%- if show_button_add_all -%}
                 <button
                   type="submit"
-                  class="btn pointer btn-primary w-full relative product_submit_button product-form__submit word-wrap relative mt-30 mt-1025-40"
+                  class="btn pointer btn-primary w-full relative product_submit_button product-form__submit word-wrap relative mt-24 mt-1025-40"
                   aria-label="{{ 'products.product.add_all_to_cart' | t }}"
                 >
                   <span class="hidden-on-load transition-short flex content-center">
