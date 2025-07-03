@@ -15,8 +15,10 @@
   assign free_shipping_message = theme_st.free_shipping_message
   assign select_product_gift_wrap = theme_st.select_product_gift_wrap
   assign enable_product_recommendations = theme_st.enable_product_recommendations
+  assign show_product_recommendations_mobile = theme_st.show_product_recommendations_mobile
   assign product_recommendations_heading = theme_st.product_recommendations_heading
   assign recommendation_product_type = theme_st.recommendation_product_type
+  assign product_to_show = theme_st.product_to_show
   assign select_product_recommendation = theme_st.select_product_recommendation
   assign action_add_cart_desktop = theme_st.action_add_cart_desktop
   assign open_cart_mobile = theme_st.open_cart_mobile
@@ -524,12 +526,12 @@
                 </form>
               </cart-items>
               {%- if enable_product_recommendations -%}
-                <div class="drawer__cart-recommendations drawer-left drawer-spacing beside">
+                <div class="drawer__cart-recommendations drawer-left drawer-spacing beside {% if show_product_recommendations_mobile == false %} hidden-mobile {% endif %}">
                   <mini-cart-recommendations
                     class="swiper__controls-group"
                     style="--position-arrow: static;--swiper-navigation-size: 20px;--padding: 0;"
                     data-type="{{ recommendation_product_type }}"
-                    data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit=12&section_id=main-cart-upsell"
+                    data-url="{{ routes.product_recommendations_url }}?product_id={{ cart.items.first.product_id }}&limit={{ product_to_show }}&section_id=main-cart-upsell"
                   >
                     {% if product_recommendations_heading != blank %}
                       <div class="flex gap-10 align-center space-between mb-12">
