@@ -38,7 +38,7 @@
 >
   <div class="{{ section_width }}">
     {%- if section_st.title != blank or section_st.description != blank or section_st.subheading != blank -%}
-      <div class="section-header section-header__in-section hidden-1025 d-block text-{{ section_st.text_alignment }}{% if section.blocks.size > 0 %} mb-30 mb-md-40{% endif %}">
+      <div class="section-header section-header__in-section hidden-1025 d-block text-{{ section_st.text_alignment }}">
         {% assign animate_delay = 25 %}
         {%- if section_st.subheading != blank -%}
           {% if scroll_animation %}
@@ -91,10 +91,10 @@
     {%- endif -%}
     <div
       class="collection-highlight__blocks relative flex wrap gap"
-      style="--gap-desktop: {{ column_gap_desktop }}px;--col-width: {{ highlight_collection_width }}%;--row-gap: 3rem;"
+      style="--gap-desktop: {{ column_gap_desktop }}px;--col-width: {{ highlight_collection_width }}%;--row-gap: 2.4rem;"
     >
       {% if request.visual_preview_mode %}
-        {% render '_preview-collection-highlights' , section_st: section_st %}
+        {% render '_preview-collection-highlights', section_st: section_st %}
       {% else %}
         {% content_for 'blocks' %}
       {% endif %}
