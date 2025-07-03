@@ -1,4 +1,5 @@
 
+
 .overlay-bought{
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 80%, #fff 100%);
   bottom: 79px;
@@ -10,43 +11,49 @@
 input[type='checkbox']:checked~.bought-together-label {
   opacity: 0;
 }
-
+.bought-together-list .icon-plus:first-child {
+  display: none;
+}
+.section__bought-together-products{
+  background-color: var(--color-background-2);
+}
+.bought-together-list .product-item{
+  background-color:white;
+  padding: 1.6rem;
+  border-radius: var(--img-rounded);
+}
+@media (min-width: 1400px) {
+  .header-bought{
+    max-width: 29rem;
+    margin: auto;
+  }
+}
 @media (min-width: 1025px) {
   .bought-together-list .product-item {
-    --input-height: 5.2rem;
+    --input-height: 4.6rem;
     flex: 0 0 auto;
     width: calc((100% - 108px) / 3);
   }
 }
-
 @media (max-width: 1024.98px) {
   .bought-together-list {
     align-items: center;
     gap: 10px;
   }
 
-  .bought-together-list .product-item__inner {
-    background-color: var(--color-background-2);
-    border-radius: var(--img-rounded);
-    overflow: hidden;
-  }
-
   .bought-together-list .product__information {
     margin: 0;
   }
 }
-
-.bought-together-list .icon-plus:first-child {
-  display: none;
-}
-
 @media (max-width: 767.98px) {
   .bought-together-list .product__inner {
     display: flex;
     flex-direction: row-reverse;
     gap: 1.6rem;
   }
-
+  .bought-together-list .product-item{
+    padding: 0;
+  }
   .bought-together-list card-bought-together {
     position: unset;
   }
@@ -81,11 +88,15 @@ input[type='checkbox']:checked~.bought-together-label {
     justify-content: flex-start;
     padding: 2.7rem 2rem 1rem;
   }
-  bought-together-popup select{
+  bought-together-popup .bought-together-list select{
+    height: 35px;
     border: 0;
     padding: 0 4rem 0 0;
+    font-size: calc(var(--body-font-size) - 2px);
   }
   bought-together-popup select:focus{
     box-shadow: none;
+    outline-offset: 2px;
+    outline: 1px solid #1d1d1fb3;
   }
 }

@@ -48,26 +48,28 @@
     <bundle-header
       class="bundle-header block text-{{ text_alignment }}"
     >
-      <div class="bundle-title mb-10 gap-10">
-        {%- if title != blank -%}
-          <h2 class="block section-heading {{ header_size }}">
-            {{ block.settings.title }}
-          </h2>
-        {%- endif -%}
-        <span
-          class="toggle-bundle w-30 h-custom hidden-1025 inline-flex flex-end align-center"
-          style="--height: 40px;"
-        >
-          <svg class="icon icon-down icon-rotate transition-short" width="12" height="8" fill="none">
-            <path fill="currentColor" fill-opacity=".85" d="M.26 2.023A.763.763 0 0 1 0 1.44.85.85 0 0 1 .26.819c.161-.16.362-.24.603-.24.24 0 .441.08.602.24L6 5.354 10.535.819c.16-.16.361-.24.602-.24.24 0 .442.08.602.24A.85.85 0 0 1 12 1.44a.763.763 0 0 1-.26.582L6.601 7.16A.785.785 0 0 1 6 7.42a.785.785 0 0 1-.602-.26L.261 2.023Z"/>
-          </svg>
-        </span>
-      </div>
-      {%- if description != blank -%}
-        <div class="section-description prose">
-          {{ block.settings.description }}
+      <div class="bundle-title">
+        <div class="flex space-between align-center mb-10 gap-10">
+          {%- if title != blank -%}
+            <h2 class="block section-heading {{ header_size }}">
+              {{ block.settings.title }}
+            </h2>
+          {%- endif -%}
+          <span
+            class="toggle-bundle w-30 h-custom hidden-1025 inline-flex flex-end align-center"
+            style="--height: 40px;"
+          >
+            <svg class="icon icon-down icon-rotate transition-short" width="12" height="8" fill="none">
+              <path fill="currentColor" fill-opacity=".85" d="M.26 2.023A.763.763 0 0 1 0 1.44.85.85 0 0 1 .26.819c.161-.16.362-.24.603-.24.24 0 .441.08.602.24L6 5.354 10.535.819c.16-.16.361-.24.602-.24.24 0 .442.08.602.24A.85.85 0 0 1 12 1.44a.763.763 0 0 1-.26.582L6.601 7.16A.785.785 0 0 1 6 7.42a.785.785 0 0 1-.602-.26L.261 2.023Z"/>
+            </svg>
+          </span>
         </div>
-      {%- endif -%}
+        {%- if description != blank -%}
+          <div class="section-description prose">
+            {{ block.settings.description }}
+          </div>
+        {%- endif -%}
+      </div>
     </bundle-header>
   {%- endif -%}
   <div class="bundle-content flex column gap-20 gap-1025-25">
