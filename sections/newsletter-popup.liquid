@@ -172,7 +172,14 @@
     </div>
   </newsletter-modal-popup>
 </newsletter-popup>
-
+<script type="module">
+  import { setupFormValidation } from '{{ "form-action.js" | asset_url }}';
+  document.addEventListener('DOMContentLoaded', () => {
+    setupFormValidation({
+      formSelector: 'form.newsletter__form--popup',
+    });
+  });
+</script>
 {% schema %}
 {
   "name": "t:sections.newsletter_popup.name",

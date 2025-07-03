@@ -82,7 +82,6 @@ class VariantInput extends HTMLElement {
       this.querySelectorAll(".product-variants-option").forEach((v) => {
         v.classList.remove("active");
       });
-
       if (target.hasAttribute("data-href")) {
         const currentProduct = this.closest(".product__item-js");
         if (target.hasAttribute("value")) {
@@ -194,6 +193,14 @@ class VariantInput extends HTMLElement {
             bought_together.querySelector(`.current-product`);
           current_product.querySelector(`input[name="items[][id]"]`).value =
             variantId;
+        }
+
+        const modalEdit = document.querySelector("main-cart-edit-popup");
+        if (modalEdit) {
+          const variantInput = modalEdit.querySelector("variant-input");
+          const productUrl = variantInput.getAttribute("data-product-url");
+          const requestUrl = productUrl + "?variant=" + variantId;
+          _this.createResponsiveProduct(requestUrl, modalEdit);
         }
       }
     }
@@ -378,7 +385,9 @@ class VariantInput extends HTMLElement {
       cartStrings.money_format
     );
 
-    const totalElementMobile = document.querySelector("button-bought-together-mobile .total-price .price");
+    const totalElementMobile = document.querySelector(
+      "button-bought-together-mobile .total-price .price"
+    );
     if (totalElementMobile) {
       totalElementMobile.innerHTML = NextSkyTheme.formatMoney(
         total_price,
@@ -582,29 +591,29 @@ class VariantSwatchSelect extends VariantInput {
 
   updateTotalPriceCompactProductBundle(event) {
     const currentTarget = event.currentTarget;
-    const currentSection = currentTarget.closest('section');
-    
-    const bundleProducts = currentSection?.querySelector('bundle-products');
+    const currentSection = currentTarget.closest("section");
+
+    const bundleProducts = currentSection?.querySelector("bundle-products");
     if (!bundleProducts) return;
 
-    const productForm = bundleProducts.querySelector('.bundle-products-form');
+    const productForm = bundleProducts.querySelector(".bundle-products-form");
     if (!productForm) return;
 
     let totalPrice = 0;
-    
-    const bundleItems = bundleProducts.querySelectorAll('bundle-item');
-    bundleItems.forEach(item => {
-      const select = item.querySelector('select');
+
+    const bundleItems = bundleProducts.querySelectorAll("bundle-item");
+    bundleItems.forEach((item) => {
+      const select = item.querySelector("select");
       if (select && select.value) {
         const selectedOption = select.options[select.selectedIndex];
-        const price = selectedOption.getAttribute('data-price');
+        const price = selectedOption.getAttribute("data-price");
         if (price) {
           totalPrice += parseFloat(price);
         }
       }
     });
 
-    const totalPriceElement = productForm.querySelector('.total-price');
+    const totalPriceElement = productForm.querySelector(".total-price");
     if (totalPriceElement && totalPrice > 0) {
       const formattedPrice = NextSkyTheme.formatMoney(
         totalPrice,

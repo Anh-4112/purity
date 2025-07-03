@@ -1040,16 +1040,26 @@ class QuantityInput extends HTMLElement {
       }
     }
 
-    this.updateTotalPrice(this.input.value);
+    this.updateTotalPrice(this.input.value, main_product);
   }
 
-  updateTotalPrice(previousValue) {
+  updateTotalPrice(previousValue, mainProduct) {
     const form = this.closest("form");
     if (!form) return;
     const priceElement = form.querySelector(".total-price__detail");
     if (!priceElement) return;
     const dataTotalPrice = priceElement?.getAttribute("data-total-price");
     const totalPrice = Number(dataTotalPrice) * Number(previousValue);
+    const sticky = form.classList.contains("form-sticky-add-cart");
+    const mainProductPriceElement = mainProduct?.querySelector(
+      ".product-detail__buy-buttons .total-price__detail"
+    );
+    if (sticky && mainProductPriceElement) {
+      mainProductPriceElement.textContent = NextSkyTheme.formatMoney(
+        totalPrice,
+        themeGlobalVariables.settings.money_format
+      );
+    }
     priceElement.textContent = NextSkyTheme.formatMoney(
       totalPrice,
       themeGlobalVariables.settings.money_format

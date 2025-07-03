@@ -10,6 +10,8 @@ function initSlide(_this) {
     ? _this?.dataset.direction
     : "horizontal";
   const heightAuto = _this?.dataset.heightAuto === "true";
+  const directionVerticalMobile =
+    _this?.dataset.directionVerticalMobile === "true";
   let autoPlaySpeed = _this?.dataset.autoPlaySpeed
     ? _this?.dataset.autoPlaySpeed
     : 3000;
@@ -48,8 +50,22 @@ function initSlide(_this) {
   } else if (spacingMobile > 5) {
     spacingMobile = 5;
   }
-  if (direction == "vertical" || heightAuto) {
+  if (direction == "vertical") {
     _this.style.maxHeight = _this.offsetHeight + "px";
+  }
+  if (directionVerticalMobile) {
+    const mediaQuery = window.matchMedia("(max-width: 767.98px)");
+    const handleMediaQueryChange = (mediaQuery) => {
+      if (mediaQuery.matches) {
+        _this.style.maxHeight = _this.offsetHeight + "px";
+      } else {
+        _this.style.maxHeight = "";
+      }
+    };
+    handleMediaQueryChange(mediaQuery);
+    mediaQuery.addEventListener("change", () =>
+      handleMediaQueryChange(mediaQuery)
+    );
   }
   let nextEl = _this.querySelector(".swiper-button-next");
   let prevEl = _this.querySelector(".swiper-button-prev");
@@ -65,7 +81,7 @@ function initSlide(_this) {
     spaceBetween: spacingMobile,
     mousewheel: mousewheel,
     autoplay: autoplay,
-    direction: direction,
+    direction: directionVerticalMobile ? "vertical" : direction,
     loop: loop,
     effect: effect,
     speed: speed,
@@ -95,15 +111,17 @@ function initSlide(_this) {
         slidesPerView: itemTablet,
         spaceBetween: spacing,
         grid: {
-          rows: row
-        }
+          rows: row,
+        },
+        direction: directionVerticalMobile ? "horizontal" : direction,
       },
       1025: {
         slidesPerView: itemDesktop,
         spaceBetween: spacing,
         grid: {
-          rows: row
-        }
+          rows: row,
+        },
+        direction: directionVerticalMobile ? "horizontal" : direction,
       },
     },
     on: {

@@ -8,6 +8,7 @@ class ShopableVideo extends SlideSection {
     this.innerWidth = window.innerWidth;
     this.autoplayVideo = this.dataset.autoplayVideo === "true";
     this.initShopableVideo();
+    this.modalOpen = false;
   }
 
   connectedCallback() {
@@ -30,6 +31,30 @@ class ShopableVideo extends SlideSection {
     };
     handleMediaQueryChange(mediaQuery);
     mediaQuery.addEventListener("change", handleMediaQueryChange);
+    document.addEventListener(
+      "modal:opened",
+      this.handleModalOpened.bind(this)
+    );
+    document.addEventListener(
+      "modal:closed",
+      this.handleModalClosed.bind(this)
+    );
+  }
+
+  handleModalOpened() {
+    this.modalOpen = true;
+    if (this.swiper && this.swiper.autoplay) {
+      this.swiper.autoplay.stop();
+    }
+  }
+
+    handleModalClosed() {
+    this.modalOpen = false;
+    if (this.swiper && this.swiper.autoplay) {
+      setTimeout(() => {
+        this.swiper.autoplay.start();
+      }, 100);
+    }
   }
 
   handleCenterSlides() {
@@ -321,15 +346,17 @@ class ShopableVideo extends SlideSection {
     if (!this.autoplayVideo) return;
     const playButton = slide.querySelector(".play-button");
     if (playButton) playButton.classList.add("active");
-    
+
     const contextVideos = this.querySelectorAll("video");
     contextVideos.forEach((v) => {
       if (v !== video && v._progressBar) {
-        if (typeof v._progressBar.destroy === 'function') {
+        if (typeof v._progressBar.destroy === "function") {
           v._progressBar.destroy();
         } else {
           v._progressBar.hide();
-          const progressContainer = v.parentElement.querySelector('.video-progress-bar');
+          const progressContainer = v.parentElement.querySelector(
+            ".video-progress-bar"
+          );
           if (progressContainer) {
             progressContainer.remove();
           }
@@ -337,30 +364,32 @@ class ShopableVideo extends SlideSection {
         v._progressBar = null;
       }
     });
-    
+
     if (video._progressBar) {
-      if (typeof video._progressBar.destroy === 'function') {
+      if (typeof video._progressBar.destroy === "function") {
         video._progressBar.destroy();
       } else {
         video._progressBar.hide();
-        const progressContainer = video.parentElement.querySelector('.video-progress-bar');
+        const progressContainer = video.parentElement.querySelector(
+          ".video-progress-bar"
+        );
         if (progressContainer) {
           progressContainer.remove();
         }
       }
       video._progressBar = null;
     }
-    
-    const videoContainer = video.closest('.video_inner') || video.parentElement;
+
+    const videoContainer = video.closest(".video_inner") || video.parentElement;
     video._progressBar = createVideoProgressBar(video, {
       container: videoContainer,
-      allowHide: true
+      allowHide: true,
     });
-    
+
     if (video._progressBar) {
       video._progressBar.show();
     }
-    
+
     const playPromise = video.play();
     if (playPromise !== undefined) {
       playPromise.catch(() => {
@@ -375,13 +404,15 @@ class ShopableVideo extends SlideSection {
       if (!video.paused) {
         video.pause();
       }
-      
+
       if (video._progressBar) {
-        if (typeof video._progressBar.destroy === 'function') {
+        if (typeof video._progressBar.destroy === "function") {
           video._progressBar.destroy();
         } else {
           video._progressBar.hide();
-          const progressContainer = video.parentElement.querySelector('.video-progress-bar');
+          const progressContainer = video.parentElement.querySelector(
+            ".video-progress-bar"
+          );
           if (progressContainer) {
             progressContainer.remove();
           }
@@ -710,15 +741,18 @@ class ShopableItem extends HTMLElement {
 
   openVideo(event) {
     const currentTarget = event.currentTarget;
-    currentTarget.closest(".section-shopable-video").querySelectorAll("video-local-shopable").forEach((el) => {
-      loadContentVideo(el);
-    });
+    currentTarget
+      .closest(".section-shopable-video")
+      .querySelectorAll("video-local-shopable")
+      .forEach((el) => {
+        loadContentVideo(el);
+      });
     if (currentTarget.classList.contains("sticky-video")) {
       return;
     }
     if (this.querySelector("video")) {
       const currentItem = this;
-      
+
       this.closest(".section-shopable-video")
         .querySelectorAll("shopable-item")
         .forEach((el) => {
@@ -731,16 +765,20 @@ class ShopableItem extends HTMLElement {
             if (!video.paused) {
               video.pause();
             }
-            if (el.querySelector(".play-button")?.classList.contains("active")) {
+            if (
+              el.querySelector(".play-button")?.classList.contains("active")
+            ) {
               el.querySelector(".play-button").classList.remove("active");
             }
-            
+
             if (el !== currentItem && video._progressBar) {
-              if (typeof video._progressBar.destroy === 'function') {
+              if (typeof video._progressBar.destroy === "function") {
                 video._progressBar.destroy();
               } else {
                 video._progressBar.hide();
-                const progressContainer = video.parentElement.querySelector('.video-progress-bar');
+                const progressContainer = video.parentElement.querySelector(
+                  ".video-progress-bar"
+                );
                 if (progressContainer) {
                   progressContainer.remove();
                 }
@@ -751,28 +789,34 @@ class ShopableItem extends HTMLElement {
         });
       const currentVideo = this.querySelector("video");
       currentVideo.muted = true;
-      
+
       const playPromise = currentVideo.play();
       if (playPromise !== undefined) {
-        playPromise.then(() => {
-          const shopableVideo = this.closest("shopable-video");
-          if (shopableVideo && typeof shopableVideo._createProgressBarForVideo === 'function') {
-            shopableVideo._createProgressBarForVideo(currentVideo);
-          } else {
-            const videoContainer = currentVideo.closest('.video_inner') || currentVideo.parentElement;
-            currentVideo._progressBar = createVideoProgressBar(currentVideo, {
-              container: videoContainer,
-              allowHide: true
-            });
-            
-            if (currentVideo._progressBar) {
-              currentVideo._progressBar.show();
+        playPromise
+          .then(() => {
+            const shopableVideo = this.closest("shopable-video");
+            if (
+              shopableVideo &&
+              typeof shopableVideo._createProgressBarForVideo === "function"
+            ) {
+              shopableVideo._createProgressBarForVideo(currentVideo);
+            } else {
+              const videoContainer =
+                currentVideo.closest(".video_inner") ||
+                currentVideo.parentElement;
+              currentVideo._progressBar = createVideoProgressBar(currentVideo, {
+                container: videoContainer,
+                allowHide: true,
+              });
+
+              if (currentVideo._progressBar) {
+                currentVideo._progressBar.show();
+              }
             }
-          }
-        }).catch(() => {
-        });
+          })
+          .catch(() => {});
       }
-      
+
       this.querySelector(".play-button").classList.add("active");
     }
   }
@@ -809,10 +853,12 @@ class ShopableItem extends HTMLElement {
 
     const allShopableItems =
       this.closest("shopable-video").querySelectorAll("shopable-item");
-    
+
     allShopableItems.forEach((item) => {
       if (item !== this) {
-        const otherVideoElement = item.querySelector("video-local-shopable video");
+        const otherVideoElement = item.querySelector(
+          "video-local-shopable video"
+        );
         const otherPlayButton = item.querySelector(".play-button");
         const otherMuteButton = item.querySelector(".mute-button");
 
@@ -822,13 +868,16 @@ class ShopableItem extends HTMLElement {
           }
           if (otherPlayButton) otherPlayButton.classList.remove("active");
           if (otherMuteButton) otherMuteButton.classList.remove("active");
-          
+
           if (otherVideoElement._progressBar) {
-            if (typeof otherVideoElement._progressBar.destroy === 'function') {
+            if (typeof otherVideoElement._progressBar.destroy === "function") {
               otherVideoElement._progressBar.destroy();
             } else {
               otherVideoElement._progressBar.hide();
-              const progressContainer = otherVideoElement.parentElement.querySelector('.video-progress-bar');
+              const progressContainer =
+                otherVideoElement.parentElement.querySelector(
+                  ".video-progress-bar"
+                );
               if (progressContainer) {
                 progressContainer.remove();
               }
@@ -840,11 +889,13 @@ class ShopableItem extends HTMLElement {
     });
 
     if (video._progressBar) {
-      if (typeof video._progressBar.destroy === 'function') {
+      if (typeof video._progressBar.destroy === "function") {
         video._progressBar.destroy();
       } else {
         video._progressBar.hide();
-        const progressContainer = video.parentElement.querySelector('.video-progress-bar');
+        const progressContainer = video.parentElement.querySelector(
+          ".video-progress-bar"
+        );
         if (progressContainer) {
           progressContainer.remove();
         }
@@ -859,17 +910,21 @@ class ShopableItem extends HTMLElement {
         .then(() => {
           if (playButton) playButton.classList.add("active");
           if (muteButton) muteButton.classList.add("active");
-          
+
           const shopableVideo = this.closest("shopable-video");
-          if (shopableVideo && typeof shopableVideo._createProgressBarForVideo === 'function') {
+          if (
+            shopableVideo &&
+            typeof shopableVideo._createProgressBarForVideo === "function"
+          ) {
             shopableVideo._createProgressBarForVideo(video);
           } else {
-            const videoContainer = video.closest('.video_inner') || video.parentElement;
+            const videoContainer =
+              video.closest(".video_inner") || video.parentElement;
             video._progressBar = createVideoProgressBar(video, {
               container: videoContainer,
-              allowHide: true
+              allowHide: true,
             });
-            
+
             if (video._progressBar) {
               video._progressBar.show();
             }
@@ -881,13 +936,15 @@ class ShopableItem extends HTMLElement {
       video.pause();
       if (playButton) playButton.classList.remove("active");
       if (muteButton) muteButton.classList.remove("active");
-      
+
       if (video._progressBar) {
-        if (typeof video._progressBar.destroy === 'function') {
+        if (typeof video._progressBar.destroy === "function") {
           video._progressBar.destroy();
         } else {
           video._progressBar.hide();
-          const progressContainer = video.parentElement.querySelector('.video-progress-bar');
+          const progressContainer = video.parentElement.querySelector(
+            ".video-progress-bar"
+          );
           if (progressContainer) {
             progressContainer.remove();
           }
@@ -947,32 +1004,34 @@ class ShopableItem extends HTMLElement {
       const videoLocal = videoElement.closest("video-local");
       const playButton = videoLocal?.querySelector(".play-button-popup");
       const modalPopup = slide.closest("modal-popup");
-      
+
       if (videoElement._clickHandler) {
         videoElement.removeEventListener("click", videoElement._clickHandler);
         playButton.removeEventListener("click", videoElement._clickHandler);
       }
-      
+
       const self = this;
-      
+
       videoElement._clickHandler = function (event) {
         event.preventDefault();
         event.stopPropagation();
-        
+
         if (videoElement.paused) {
           videoElement.play();
           if (playButton) playButton.classList.add("active");
           if (videoLocal) videoLocal.classList.remove("active");
-          
-          if (typeof self._createProgressBarForVideo === 'function') {
+
+          if (typeof self._createProgressBarForVideo === "function") {
             self._createProgressBarForVideo(videoElement);
           } else {
-            const videoContainer = videoElement.closest('.video_inner') || videoElement.parentElement;
+            const videoContainer =
+              videoElement.closest(".video_inner") ||
+              videoElement.parentElement;
             videoElement._progressBar = createVideoProgressBar(videoElement, {
               container: videoContainer,
-              allowHide: true
+              allowHide: true,
             });
-            
+
             if (videoElement._progressBar) {
               videoElement._progressBar.show();
             }
@@ -981,13 +1040,14 @@ class ShopableItem extends HTMLElement {
           videoElement.pause();
           if (playButton) playButton.classList.remove("active");
           if (videoLocal) videoLocal.classList.add("active");
-          
+
           if (videoElement._progressBar) {
-            if (typeof videoElement._progressBar.destroy === 'function') {
+            if (typeof videoElement._progressBar.destroy === "function") {
               videoElement._progressBar.destroy();
             } else {
               videoElement._progressBar.hide();
-              const progressContainer = videoElement.parentElement.querySelector('.video-progress-bar');
+              const progressContainer =
+                videoElement.parentElement.querySelector(".video-progress-bar");
               if (progressContainer) {
                 progressContainer.remove();
               }
@@ -1088,49 +1148,53 @@ class ShopableItem extends HTMLElement {
       }
     }
     this.updateSwiperState(modalPopup);
-    
-    const activeSlide = swiperContainer.swiper.slides[swiperContainer.swiper.activeIndex];
+
+    const activeSlide =
+      swiperContainer.swiper.slides[swiperContainer.swiper.activeIndex];
     if (activeSlide) {
       const activeVideo = activeSlide.querySelector("video");
       if (activeVideo) {
         if (!activeVideo.paused) {
-          if (typeof this._createProgressBarForVideo === 'function') {
+          if (typeof this._createProgressBarForVideo === "function") {
             this._createProgressBarForVideo(activeVideo);
           } else {
-            const videoContainer = activeVideo.closest('.video_inner') || activeVideo.parentElement;
+            const videoContainer =
+              activeVideo.closest(".video_inner") || activeVideo.parentElement;
             activeVideo._progressBar = createVideoProgressBar(activeVideo, {
               container: videoContainer,
-              allowHide: true
+              allowHide: true,
             });
-            
+
             if (activeVideo._progressBar) {
               activeVideo._progressBar.show();
             }
           }
         } else {
           const playHandler = () => {
-            if (typeof this._createProgressBarForVideo === 'function') {
+            if (typeof this._createProgressBarForVideo === "function") {
               this._createProgressBarForVideo(activeVideo);
             } else {
-              const videoContainer = activeVideo.closest('.video_inner') || activeVideo.parentElement;
+              const videoContainer =
+                activeVideo.closest(".video_inner") ||
+                activeVideo.parentElement;
               activeVideo._progressBar = createVideoProgressBar(activeVideo, {
                 container: videoContainer,
-                allowHide: true
+                allowHide: true,
               });
-              
+
               if (activeVideo._progressBar) {
                 activeVideo._progressBar.show();
               }
             }
-            
-            activeVideo.removeEventListener('play', playHandler);
+
+            activeVideo.removeEventListener("play", playHandler);
           };
-          
-          activeVideo.addEventListener('play', playHandler);
+
+          activeVideo.addEventListener("play", playHandler);
         }
       }
     }
-    
+
     modalPopup.removeAttribute("data-loading");
   }
 
@@ -1192,7 +1256,9 @@ class ShopableItem extends HTMLElement {
           this._modalObserver = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
               if (mutation.attributeName === "class") {
-                const isModalOpen = rootElement.classList.contains("open-modal-shopable-video");
+                const isModalOpen = rootElement.classList.contains(
+                  "open-modal-shopable-video"
+                );
                 this.isModalOpen = isModalOpen;
 
                 if (isModalOpen) {
@@ -1294,17 +1360,23 @@ class ShopableItem extends HTMLElement {
               video.muted = false;
               btnMute.classList.add("active");
               btnMuteMobile.classList.add("active");
-              
-              if (typeof _self._createProgressBarForVideo === 'function') {
-                const videoContext = video.closest('modal-popup') || video.closest('.section-shopable-video');
-                const contextVideos = videoContext ? videoContext.querySelectorAll("video") : [];
+
+              if (typeof _self._createProgressBarForVideo === "function") {
+                const videoContext =
+                  video.closest("modal-popup") ||
+                  video.closest(".section-shopable-video");
+                const contextVideos = videoContext
+                  ? videoContext.querySelectorAll("video")
+                  : [];
                 contextVideos.forEach((v) => {
                   if (v !== video && v._progressBar) {
-                    if (typeof v._progressBar.destroy === 'function') {
+                    if (typeof v._progressBar.destroy === "function") {
                       v._progressBar.destroy();
                     } else {
                       v._progressBar.hide();
-                      const progressContainer = v.parentElement.querySelector('.video-progress-bar');
+                      const progressContainer = v.parentElement.querySelector(
+                        ".video-progress-bar"
+                      );
                       if (progressContainer) {
                         progressContainer.remove();
                       }
@@ -1313,63 +1385,78 @@ class ShopableItem extends HTMLElement {
                   }
                 });
               }
-              
+
               if (!video.paused) {
-                if (typeof _self._createProgressBarForVideo === 'function') {
+                if (typeof _self._createProgressBarForVideo === "function") {
                   _self._createProgressBarForVideo(video);
                 } else {
-                  const videoContainer = video.closest('.video_inner') || video.parentElement;
+                  const videoContainer =
+                    video.closest(".video_inner") || video.parentElement;
                   video._progressBar = createVideoProgressBar(video, {
                     container: videoContainer,
-                    allowHide: true
+                    allowHide: true,
                   });
-                  
+
                   if (video._progressBar) {
                     video._progressBar.show();
                   }
                 }
               } else {
                 if (video._playListenerForProgress) {
-                  video.removeEventListener('play', video._playListenerForProgress);
+                  video.removeEventListener(
+                    "play",
+                    video._playListenerForProgress
+                  );
                 }
-                
-                video._playListenerForProgress = function() {
-                  if (typeof _self._createProgressBarForVideo === 'function') {
+
+                video._playListenerForProgress = function () {
+                  if (typeof _self._createProgressBarForVideo === "function") {
                     _self._createProgressBarForVideo(video);
                   } else {
-                    const videoContainer = video.closest('.video_inner') || video.parentElement;
+                    const videoContainer =
+                      video.closest(".video_inner") || video.parentElement;
                     video._progressBar = createVideoProgressBar(video, {
                       container: videoContainer,
-                      allowHide: true
+                      allowHide: true,
                     });
-                    
+
                     if (video._progressBar) {
                       video._progressBar.show();
                     }
                   }
-                  
-                  video.removeEventListener('play', video._playListenerForProgress);
+
+                  video.removeEventListener(
+                    "play",
+                    video._playListenerForProgress
+                  );
                   video._playListenerForProgress = null;
                 };
-                
-                video.addEventListener('play', video._playListenerForProgress, { once: true });
+
+                video.addEventListener("play", video._playListenerForProgress, {
+                  once: true,
+                });
               }
             } else {
               video.muted = true;
               btnMute.classList.remove("active");
               btnMuteMobile.classList.remove("active");
-              
+
               if (video._playListenerForProgress) {
-                video.removeEventListener('play', video._playListenerForProgress);
+                video.removeEventListener(
+                  "play",
+                  video._playListenerForProgress
+                );
                 video._playListenerForProgress = null;
               }
-              
+
               if (video._progressBar) {
-                if (typeof video._progressBar.destroy === 'function') {
+                if (typeof video._progressBar.destroy === "function") {
                   video._progressBar.destroy();
                 } else {
                   video._progressBar.hide();
-                  const progressContainer = video.parentElement.querySelector('.video-progress-bar');
+                  const progressContainer = video.parentElement.querySelector(
+                    ".video-progress-bar"
+                  );
                   if (progressContainer) {
                     progressContainer.remove();
                   }
@@ -1389,16 +1476,21 @@ class ShopableItem extends HTMLElement {
 
   _createProgressBarForVideo(video) {
     if (!video) return;
-    const videoContext = video.closest('modal-popup') || video.closest('.section-shopable-video');
-    const contextVideos = videoContext ? videoContext.querySelectorAll("video") : [];
-    
+    const videoContext =
+      video.closest("modal-popup") || video.closest(".section-shopable-video");
+    const contextVideos = videoContext
+      ? videoContext.querySelectorAll("video")
+      : [];
+
     contextVideos.forEach((v) => {
       if (v !== video && v._progressBar) {
-        if (typeof v._progressBar.destroy === 'function') {
+        if (typeof v._progressBar.destroy === "function") {
           v._progressBar.destroy();
         } else {
           v._progressBar.hide();
-          const progressContainer = v.parentElement.querySelector('.video-progress-bar');
+          const progressContainer = v.parentElement.querySelector(
+            ".video-progress-bar"
+          );
           if (progressContainer) {
             progressContainer.remove();
           }
@@ -1406,26 +1498,28 @@ class ShopableItem extends HTMLElement {
         v._progressBar = null;
       }
     });
-    
+
     if (video._progressBar) {
-      if (typeof video._progressBar.destroy === 'function') {
+      if (typeof video._progressBar.destroy === "function") {
         video._progressBar.destroy();
       } else {
         video._progressBar.hide();
-        const progressContainer = video.parentElement.querySelector('.video-progress-bar');
+        const progressContainer = video.parentElement.querySelector(
+          ".video-progress-bar"
+        );
         if (progressContainer) {
           progressContainer.remove();
         }
       }
       video._progressBar = null;
     }
-    
-    const videoContainer = video.closest('.video_inner') || video.parentElement;
+
+    const videoContainer = video.closest(".video_inner") || video.parentElement;
     video._progressBar = createVideoProgressBar(video, {
       container: videoContainer,
-      allowHide: true
+      allowHide: true,
     });
-    
+
     if (video._progressBar) {
       video._progressBar.show();
     }
