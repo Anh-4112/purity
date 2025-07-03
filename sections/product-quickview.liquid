@@ -17,6 +17,21 @@
     aria-label="{{ 'products.product.quickview' | t }}"
     tabindex="-1"
   >
+    <button
+      is="button-close-model"
+      class="modal__close pointer btn-reset wh-58 flex-1025 content-center absolute z-3 top-0 left-0-mb right-0-1025 hidden-md"
+      aria-label="Close"
+    >
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        class="transition-short will-change icon-zoom"
+      >
+        <use href="#icon-close"></use>
+      </svg>
+    </button>
     <div class="drawer__body h-full overflow-y-auto custom-scrollbar">
       <div class="quickview-product h-full flex wrap nowrap-md gap-20 py-gutter-x py-md-0">
         {% if product.media.size > 0 %}
